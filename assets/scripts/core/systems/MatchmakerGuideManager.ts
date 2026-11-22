@@ -1,4 +1,4 @@
-// @spec-source → 家族子嗣與血統總規格書 (doc_spec_1241) 3.2 配偶三來源；PROG-2-9612
+// @spec-source → 家族子嗣與血統總規格書 (doc_spec_1241) 3.2 配偶三來源；PROG-2-9613
 /**
  * MatchmakerGuideManager — 結緣媒人導流判定與文案邏輯（純函式，不依賴 cc）。
  *

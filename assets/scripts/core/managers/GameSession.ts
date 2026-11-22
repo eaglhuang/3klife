@@ -569,7 +569,7 @@ export interface MatchmakerOfferNotice {
 
 export interface SeasonAdvancedPayload {
     advance: SeasonAdvanceResult;
-    /** 本季媒人說親導流通知（紅娘叩門／春季說親，PROG-2-9612）；沒有時省略 */
+    /** 本季媒人說親導流通知（紅娘叩門／春季說親，PROG-2-9613）；沒有時省略 */
     matchmakerOfferNotice?: MatchmakerOfferNotice;
     /** 本季到期結算的大廳任務回報（PROG-2-9130）；沒有任務結算時省略 */
     hallMissionReport?: HallMissionSeasonReport;
@@ -980,7 +980,7 @@ export class GameSession implements AcademyRecordPort {
     private _breedingBirthRecords: BreedingBirthRecord[] = [];
     /** 世家系統解鎖旗標（PM 暫定）：第一位子嗣誕生時寫入；舊檔以出生紀錄推導。 */
     private _familySystemUnlockedFlag = false;
-    /** 結緣媒人首次紅娘叩門完成旗標（PROG-2-9612）：開場教學後首次換季完成後寫入，讀檔不重複 */
+    /** 結緣媒人首次紅娘叩門完成旗標（PROG-2-9613）：開場教學後首次換季完成後寫入，讀檔不重複 */
     private _matchmakerFirstVisitDone = false;
     /** 新玩家開場進行中的幕 id（PROG-2-1371）；開場結束為 null */
     private _postLoadHook: (() => void | Promise<void>) | null = null;
@@ -2583,7 +2583,7 @@ export class GameSession implements AcademyRecordPort {
         return this._familySystemUnlockedFlag || this._breedingBirthRecords.length > 0;
     }
 
-    /** 結緣媒人首次紅娘叩門是否已完成（PROG-2-9612） */
+    /** 結緣媒人首次紅娘叩門是否已完成（PROG-2-9613） */
     public get matchmakerFirstVisitDone(): boolean {
         return this._matchmakerFirstVisitDone;
     }
@@ -6217,7 +6217,7 @@ export class GameSession implements AcademyRecordPort {
             this._familySynergy = finalizeAdultChildren(this._familySynergy, this._roster.getAll());
             this._marriageProposal = rollMarriageProposal(this._roster.getAll(), this._clanTier, `suitor-${governanceSeason}`, remarkRandomOf(`marriage|${governanceSeason}|${this._seeded.snapshot().state}`), this._familySynergy);
         }
-        // 結緣媒人導流判定（PROG-2-9612）：開場教學後首次換季（紅娘叩門）與春季常規求親導流
+        // 結緣媒人導流判定（PROG-2-9613）：開場教學後首次換季（紅娘叩門）與春季常規求親導流
         let matchmakerOfferNotice: MatchmakerOfferNotice | undefined;
         const offer = this.matchmakerOffer();
         const spouseCap = this._familyConfig ? spouseCapFor(this._familyConfig, this.territoryLevel) : 2;

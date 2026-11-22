@@ -1,5 +1,5 @@
 /**
- * MatchmakerFlow.test.ts — 結緣媒人導流與大廳隊列通用化測試（PROG-2-9612）
+ * MatchmakerFlow.test.ts — 結緣媒人導流與大廳隊列通用化測試（PROG-2-9613）
  *
  * 覆蓋：
  * 1. 世界觀無年齡硬規則：開場教學後首次換季觸發 first-visit，存檔旗標生效，讀檔換季不重複。
@@ -40,7 +40,7 @@ async function createTestSession() {
 }
 
 export function createMatchmakerFlowSuite(): TestSuite {
-    const suite = new TestSuite('MatchmakerFlow (結緣媒人導流與大廳隊列通用化 PROG-2-9612)');
+    const suite = new TestSuite('MatchmakerFlow (結緣媒人導流與大廳隊列通用化 PROG-2-9613)');
 
     suite.test('1. 首次換季紅娘叩門（first-visit）與存檔旗標防重複', async () => {
         const session = await createTestSession();

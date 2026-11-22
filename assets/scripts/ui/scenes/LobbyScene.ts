@@ -581,7 +581,7 @@ export class LobbyScene extends Component {
     private _hallBoard: HallBoardPanelController | null = null;
     /** 大廳輪替走動的當班名單狀態（60 秒換一批）與聊天台詞庫（Issue #2135） */
     private _hallWalkerState: WalkerPlanState = INITIAL_WALKER_STATE;
-    /** 大廳通用導流隊列（PROG-2-9612）：晉升、媒人、年終典禮通用引導隊列 */
+    /** 大廳通用導流隊列（PROG-2-9613）：晉升、媒人、年終典禮通用引導隊列 */
     private readonly _guideQueue: LobbyGuideQueue = new LobbyGuideQueue();
     private _activeMatchmakerPresenter: MatchmakerDialogPresenter | null = null;
     /** 晉升解鎖大廳導流（PROG-2-9610）：晉升完成後若有新機能解鎖，由大廳武將頂金色驚嘆號引導並提供捷徑 */
@@ -4575,7 +4575,7 @@ ${spent}`,
         });
         const taskMarks = new Set(plan.volunteerIds);
         const markStyleById = new Map<string, string>();
-        // PROG-2-9610 / PROG-2-9612：大廳通用導流（晉升、媒人叩門等），挑一位在場走動的武將頭頂掛大金色「！」；
+        // PROG-2-9610 / PROG-2-9613：大廳通用導流（晉升、媒人叩門等），挑一位在場走動的武將頭頂掛大金色「！」；
         // 已選的人還在場就沿用（輪替不換人，玩家看到的標記與點到的泡泡才是同一位）
         if (this._guideQueue.hasPending && generals.length > 0) {
             const anchorId = this._guideQueue.bindAnchorGeneral(generals);
@@ -4601,7 +4601,7 @@ ${spent}`,
         const session = services().session;
         const profile = session.hallStageProfile(generalId);
         if (!profile) return null;
-        // 大廳通用導流隊列（PROG-2-9612）：若有待引導項（晉升、媒人叩門等），掛標記者優先出導流泡泡
+        // 大廳通用導流隊列（PROG-2-9613）：若有待引導項（晉升、媒人叩門等），掛標記者優先出導流泡泡
         const activeGuide = this._guideQueue.peek();
         if (activeGuide && generalId === (this._guideQueue.anchorGeneralId ?? this._promotionGuideGeneralId)) {
             return {
@@ -5027,7 +5027,7 @@ ${spent}`,
         );
     }
 
-    /** 結緣媒人導流排入大廳隊列（PROG-2-9612） */
+    /** 結緣媒人導流排入大廳隊列（PROG-2-9613） */
     private _enqueueMatchmakerGuide(notice: MatchmakerOfferNotice): void {
         const isFirst = notice.promptType === 'first-visit';
         const fallbackSpeech = isFirst ? MATCHMAKER_FIRST_VISIT_SPEECH : MATCHMAKER_SPRING_VISIT_SPEECH;
