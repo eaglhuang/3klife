@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 235,
-    "in_progress": 4,
-    "open": 86,
-    "total": 325
+    "done": 242,
+    "in_progress": 7,
+    "open": 85,
+    "total": 334
   },
   "tasks": [
     {
@@ -14337,6 +14337,60 @@
         "戰敗敗因診斷"
       ],
       "notes": "2026-11-22 | 狀態: in-progress | 驗證: 單元測試 9089 過、tsc 0 錯、compute-gate quick 全過 | 變更: 第一階段：診斷為委任 AI 太弱（不是難度）。同存檔無頭模擬 5 關×20 種亂數，舊版勝場 虎牢關1/瓦口隘17/水淹七軍13/濡須夜劫6/博望坡11 → 新版全 20/20（normal、hard 難度也維持 19～20）。舊版缺點：每回合只出 1 隊、出兵口被堵仍硬選、不放奧義戰法、主將從不出陣。新增 DelegateTactics（避堵選路、放招目標、主將出陣門檻 0.5 暫定）；自動代打補三道防護：結束回合早退會重排、代放主將、代為決定單挑；非終局通知不再關自動代打 | 阻塞: 戰敗敗因診斷與戰損保護提案留第二階段 || 2026-11-22 | 狀態: done | 驗證: 單元測試 9112 過、tsc 0 錯、quick 閘門全過、CI SUCCESS；實機截圖（虎牢關戰敗結算出現兩行軍師診斷＋照建議再戰鈕，重打開場顯示軍師提醒） | 變更: 第二階段 PR 2495（7cba5a6）：DefeatDiagnosis 敗因規則（沒出陣/主將倒下/兵派太少/奧義閒置/實力差距/時限/換路）取前 2 條，結算加第三顆建議鈕（prepare=回去整備回大廳、replay=照建議再戰帶開場提醒）；撤退、自動結算不診斷 | 阻塞: 戰損保護 A～D 已提案給總PM 待裁決，裁決後另開卡",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9714",
+      "title": "虎符卡面板繪製次數優化（文字改 BITMAP 進動態圖集合批）",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T08:59:37+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "9713 後戰場平均 200 次繪製；無頭量測虎符卡面板整塊占 48 次（164→116），每張卡 12 次。原因：每個文字各自一張貼圖且與外框圖交錯，無法合批。比照 9713 頭頂標籤，把卡上文字改 BITMAP 快取進動態圖集，與外框圖同批。",
+      "related": [
+        "PROG-2-9713",
+        "PROG-2-9310"
+      ],
+      "depends": [],
+      "acceptance": [
+        "虎符卡面板繪製次數由 48 降到 30 以下",
+        "卡面外觀與改前一致（截圖比對）",
+        "單元測試、tsc、quick 閘門通過"
+      ],
+      "deliverables": [
+        "TigerTallyComposite 文字快取模式",
+        "量測前後數據"
+      ],
+      "notes": "2026-11-22 | 狀態: in-progress | 驗證: pending | 變更: 開卡；基準 面板 48 次、每卡 12 次 | 阻塞: 無 || 2026-11-22 | 狀態: done | 驗證: 單元測試 9126 過、tsc 0 錯、quick 閘門；實機無頭量測 虎符面板繪製 48→20（每卡 12→5）、整場 164→144；卡面截圖前後一致 | 變更: TigerTallyComposite 填值後把卡上 NONE 文字改 BITMAP 進動態圖集，與底板同批；新增 TallyCardBatching 接線測試 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
