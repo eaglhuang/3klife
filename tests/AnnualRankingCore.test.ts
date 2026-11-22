@@ -1,12 +1,13 @@
 /**
- * 史境天下風雲榜與年終頒獎典禮核心測試（PROG-2-9601）
+ * 史境天下風雲榜與年終頒獎典禮核心測試（PROG-2-9601 PR1 + PR2）
  * 遵循專案 TestRunner 與 run-cli 自動註冊機制
  * 覆蓋：
  * 1. TC-RNK-01：年度結算、帳本歸零、歷年快照封存
- * 2. TC-RNK-02：戰場記帳一致性（手動、極速決戰、委託代打）
+ * 2. TC-RNK-02：戰場記帳一致性（手動、極速決戰、委託代打經由 Hook 寫入）
  * 3. TC-RNK-03：可插拔擴充架構（自訂 Provider 零改動擴充）
- * 4. 平時大廳前 3 名 ＋ 玩家自己名次過濾邏輯（11/22 使用者裁決）
+ * 4. 平時大廳前 3 名 ＋ 玩家自己名次過濾邏輯與 View 遮蔽（11/22 使用者裁決）
  * 5. 首發 4 大榜單數值算例與上限邊界驗證
+ * 6. PR2 典禮演出腳本組裝、雙主持傳承、諸侯全息立繪彈幕、梯形大合照 DTO
  */
 
 import { TestSuite, assert } from './TestRunner';
@@ -17,6 +18,9 @@ import { BoardConfig, RankingContext, RankingEvidence } from '../assets/scripts/
 import { KillsRankingProvider } from '../assets/scripts/core/systems/annual_ranking/providers/KillsRankingProvider';
 import { GovernanceRankingProvider } from '../assets/scripts/core/systems/annual_ranking/providers/GovernanceRankingProvider';
 import { RookieRankingProvider } from '../assets/scripts/core/systems/annual_ranking/providers/RookieRankingProvider';
+import { AnnualRankingHook } from '../assets/scripts/core/systems/annual_ranking/AnnualRankingHook';
+import { CeremonyScriptAssembler } from '../assets/scripts/core/systems/annual_ranking/CeremonyScriptAssembler';
+import { LobbyRankingBoardView } from '../assets/scripts/core/systems/annual_ranking/LobbyRankingBoardView';
 
 export function createAnnualRankingCoreSuite(): TestSuite {
   const suite = new TestSuite('AnnualRankingCore (史境天下風雲榜核心機制 PROG-2-9601)');
@@ -124,20 +128,22 @@ export function createAnnualRankingCoreSuite(): TestSuite {
     assert.equals(500, snap1?.metrics['zhuge_liang']['gov.totalOutput']);
   });
 
-  suite.test('TC-RNK-02: 戰場記帳一致性（手動、極速決戰、委託代打）', () => {
-    const ledger = new AnnualGeneralLedger(1);
-    // 三位武將在相同條件下分別透過手動、極速決戰、委託代打結算
-    ledger.recordBattlePerformance('gen_manual', 2000, 1200, 'elite', true, 'manual');
-    ledger.recordBattlePerformance('gen_speed', 2000, 1200, 'elite', true, 'speed');
-    ledger.recordBattlePerformance('gen_delegate', 2000, 1200, 'elite', true, 'delegate');
+  suite.test('TC-RNK-02: 戰場記帳一致性（手動、極速決戰、委託代打經由 Hook 寫入）', () => {
+    AnnualRankingManager.resetInstance();
+    const manager = new AnnualRankingManager(testConfig);
+
+    // 三位武將在相同條件下分別透過手動、極速決戰、委託代打經由 Hook 結算
+    AnnualRankingHook.recordBattle({ generalId: 'gen_manual', kills: 2000, enemyPower: 1200, duelTier: 'elite', isCommander: true, battleMode: 'manual' }, manager.ledger);
+    AnnualRankingHook.recordBattle({ generalId: 'gen_speed', kills: 2000, enemyPower: 1200, duelTier: 'elite', isCommander: true, battleMode: 'speed' }, manager.ledger);
+    AnnualRankingHook.recordBattle({ generalId: 'gen_delegate', kills: 2000, enemyPower: 1200, duelTier: 'elite', isCommander: true, battleMode: 'delegate' }, manager.ledger);
 
     const provider = new KillsRankingProvider();
     const context: RankingContext = { year: 1, quarter: 4, generals: {} };
     const config = testConfig.boards[0];
 
-    const scoreManual = provider.evaluate('gen_manual', ledger, context, config);
-    const scoreSpeed = provider.evaluate('gen_speed', ledger, context, config);
-    const scoreDelegate = provider.evaluate('gen_delegate', ledger, context, config);
+    const scoreManual = provider.evaluate('gen_manual', manager.ledger, context, config);
+    const scoreSpeed = provider.evaluate('gen_speed', manager.ledger, context, config);
+    const scoreDelegate = provider.evaluate('gen_delegate', manager.ledger, context, config);
 
     assert.isTrue(scoreManual > 0);
     assert.equals(scoreManual, scoreSpeed, '極速決戰得分應與手動戰鬥完全相同');
@@ -148,7 +154,6 @@ export function createAnnualRankingCoreSuite(): TestSuite {
     AnnualRankingManager.resetInstance();
     const manager = new AnnualRankingManager(testConfig);
 
-    // 自訂擴充第 5 榜：私塾名師榜（IRankingBoardProvider）
     class PrivateTutorRankingProvider implements IRankingBoardProvider {
       public readonly boardId: string = 'private_tutor';
       public readonly evaluatorKey: string = 'private_tutor';
@@ -168,10 +173,8 @@ export function createAnnualRankingCoreSuite(): TestSuite {
       }
     }
 
-    // 註冊自訂 Provider
     manager.registry.registerProvider(new PrivateTutorRankingProvider());
 
-    // 擴充配置增加該榜單
     const expandedConfig = {
       ...testConfig,
       boards: [
@@ -202,7 +205,7 @@ export function createAnnualRankingCoreSuite(): TestSuite {
     assert.equals(1, results['private_tutor'].candidates[0].rank);
   });
 
-  suite.test('平時大廳即時風雲榜入口資料過濾（僅回傳前 3 名 ＋ 玩家自己名次）', () => {
+  suite.test('平時大廳看板與 View 控制器（僅展示前 3 名 ＋ 玩家自己名次，其餘遮蔽）', () => {
     AnnualRankingManager.resetInstance();
     const manager = new AnnualRankingManager(testConfig);
 
@@ -228,28 +231,77 @@ export function createAnnualRankingCoreSuite(): TestSuite {
 
     const context: RankingContext = {
       year: 1,
-      quarter: 2,
+      quarter: 2, // 平時第 2 季
       generals: generalInfoMap
     };
 
-    const previews = manager.getLobbyPreviews(
+    const view = new LobbyRankingBoardView(manager);
+    const display = view.getBoardDisplayCards(
+      'kills',
       generals.map(g => g.id),
       ['player_gen'],
       context
     );
 
-    const killsPreview = previews.find(p => p.boardId === 'kills');
-    assert.isTrue(killsPreview !== undefined);
-    assert.equals(3, killsPreview?.topThree.length, '前三名應恰好 3 筆');
-    assert.equals(1, killsPreview?.topThree[0].rank);
-    assert.equals(2, killsPreview?.topThree[1].rank);
-    assert.equals(3, killsPreview?.topThree[2].rank);
+    // 驗證卡片清單：前 3 名 ＋ 玩家自家武將（共 4 張）
+    assert.equals(4, display.cards.length);
+    assert.equals('第 1 名', display.cards[0].rankText);
+    assert.equals('第 2 名', display.cards[1].rankText);
+    assert.equals('第 3 名', display.cards[2].rankText);
 
-    // 驗證玩家自己名次提取
-    assert.isTrue(killsPreview?.playerSelf !== undefined, '應提取出玩家自家武將名次');
-    assert.equals('player_gen', killsPreview?.playerSelf?.generalId);
-    assert.equals(6, killsPreview?.playerSelf?.rank, '玩家武將應為第 6 名');
-    assert.equals(false, killsPreview?.isYearEndRevealed, '平時季度不揭曉完整名冊');
+    // 玩家武將卡片在第 4 張，展示名次為第 6 名
+    assert.equals('第 6 名', display.cards[3].rankText);
+    assert.equals('player_gen', display.cards[3].generalId);
+    assert.equals(true, display.cards[3].isPlayer);
+    assert.equals(false, display.cards[3].isMasked);
+    assert.equals(false, display.isYearEndRevealed);
+  });
+
+  suite.test('年終典禮演出組裝器與大合照 DTO 構建驗證', () => {
+    AnnualRankingManager.resetInstance();
+    const manager = new AnnualRankingManager(testConfig);
+
+    // 模擬年終殺敵與新人武將數據
+    manager.ledger.recordBattlePerformance('guan_yu', 3000, 2000, 'legend', true, 'manual');
+    manager.ledger.recordBattlePerformance('zhang_fei', 2500, 1800, 'elite', true, 'manual');
+
+    const generalMap = new Map();
+    generalMap.set('guan_yu', { generalId: 'guan_yu', isPlayerFaction: true });
+    generalMap.set('zhang_fei', { generalId: 'zhang_fei', isPlayerFaction: true });
+
+    const context: RankingContext = { year: 1, quarter: 4, generals: generalMap };
+    const boardResults = manager.evaluateYearEnd(['guan_yu', 'zhang_fei'], context);
+
+    // 組裝典禮演出劇本
+    const assembly = CeremonyScriptAssembler.assembleCeremony({
+      year: 1,
+      boardResults,
+      livingMonarchIds: [
+        { id: 'cao_cao', name: '曹操', factionId: 'wei' },
+        { id: 'liu_bei', name: '劉備', factionId: 'shu' }
+      ],
+      playerFactionId: 'shu',
+      gameTick: 1040
+    });
+
+    // 驗證雙主持人（第 1 屆為史小境＋司馬徽）
+    assert.equals('shi_xiaojing', assembly.hosts[0].hostId);
+    assert.equals('sima_hui', assembly.hosts[1].hostId);
+    assert.equals(true, assembly.hosts[0].isFirstYearHost);
+
+    // 驗證 StoryCue 包含開場、諸侯全息立繪連線、聚光燈、冠軍感言、大合照快門
+    const cueTypes = assembly.cues.map(c => c.type);
+    assert.isTrue(cueTypes.indexOf('PROLOGUE_HOST_ENTRY') >= 0);
+    assert.isTrue(cueTypes.indexOf('MONARCH_HOLOGRAM_CONNECT') >= 0);
+    assert.isTrue(cueTypes.indexOf('CHAMPION_SPOTLIGHT') >= 0);
+    assert.isTrue(cueTypes.indexOf('GRAND_PHOTO_SHUTTER') >= 0);
+
+    // 驗證大合照 DTO 站位結構
+    const photo = assembly.photoBackdropDto;
+    assert.equals(1, photo.year);
+    assert.equals('TRAPEZOID_TWO_LAYER', photo.layoutPattern);
+    assert.isTrue(photo.frontRowGenerals.indexOf('guan_yu') >= 0, '冠軍應在前排焦點');
+    assert.isTrue(photo.backRowGenerals.indexOf('cao_cao') >= 0, '諸侯投影應在後排');
   });
 
   suite.test('殺敵榜上限與戰力 Clamp 邊界驗證', () => {

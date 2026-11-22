@@ -35,6 +35,9 @@ export class AnnualRankingManager {
       this._config = config;
     }
     this.registerDefaultProviders();
+    if (!AnnualRankingManager._instance) {
+      AnnualRankingManager._instance = this;
+    }
   }
 
   public static getInstance(config?: AnnualRankingConfig): AnnualRankingManager {

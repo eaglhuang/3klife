@@ -12,7 +12,7 @@ export class RookieRankingProvider implements IRankingBoardProvider {
   public readonly evaluatorKey: string = 'rookie';
 
   public isEligible(generalId: string, context: RankingContext, config: BoardConfig): boolean {
-    const maxAge = config.maxAge || 22;
+    const maxAge = config.maxAge;
     if (!context.generals) {
       return true;
     }
@@ -45,10 +45,10 @@ export class RookieRankingProvider implements IRankingBoardProvider {
     context: RankingContext,
     config: BoardConfig
   ): number {
-    const prodigyBonus = config.prodigyBonus || 150;
-    const debutBaseMin = config.debutBaseMin || 50;
-    const debutBaseMax = config.debutBaseMax || 350;
-    const weights = config.scoreWeights || { debut: 1.0, kills: 1.0, governance: 1.0, charmVotes: 0.8 };
+    const prodigyBonus = config.prodigyBonus;
+    const debutBaseMin = config.debutBaseMin;
+    const debutBaseMax = config.debutBaseMax;
+    const weights = config.scoreWeights;
 
     let info: any = undefined;
     if (context.generals) {
