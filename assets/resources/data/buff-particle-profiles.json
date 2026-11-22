@@ -1,90 +1,6 @@
 {
   "version": 1,
   "variants": {
-    "AtkGain": {
-      "spark": {
-        "capacity": 30,
-        "rateOverTime": 22,
-        "burstCount": 18,
-        "burstTime": 0.04,
-        "startSize": 0.14,
-        "startLifetime": 0.62,
-        "startSpeed": 1.28,
-        "gravityModifier": 0,
-        "startDelay": 0,
-        "simulationSpeed": 1.08,
-        "shapeRadius": 0.18,
-        "shapeAngle": 14,
-        "startY": 0.08,
-        "floatY": 0.24,
-        "quadCount": 10,
-        "quadRadius": 0.24,
-        "quadRise": 0.26,
-        "color": [255, 210, 120, 232]
-      },
-      "accent": {
-        "capacity": 18,
-        "rateOverTime": 10,
-        "burstCount": 8,
-        "burstTime": 0.1,
-        "startSize": 0.2,
-        "startLifetime": 0.86,
-        "startSpeed": 0.84,
-        "gravityModifier": 0,
-        "startDelay": 0.05,
-        "simulationSpeed": 1,
-        "shapeRadius": 0.12,
-        "shapeAngle": 8,
-        "startY": 0.12,
-        "floatY": 0.2,
-        "quadCount": 6,
-        "quadRadius": 0.18,
-        "quadRise": 0.18,
-        "color": [255, 232, 160, 180]
-      }
-    },
-    "HpGain": {
-      "spark": {
-        "capacity": 34,
-        "rateOverTime": 28,
-        "burstCount": 22,
-        "burstTime": 0.05,
-        "startSize": 0.18,
-        "startLifetime": 0.82,
-        "startSpeed": 1.06,
-        "gravityModifier": 0,
-        "startDelay": 0,
-        "simulationSpeed": 1.02,
-        "shapeRadius": 0.22,
-        "shapeAngle": 18,
-        "startY": 0.1,
-        "floatY": 0.28,
-        "quadCount": 14,
-        "quadRadius": 0.3,
-        "quadRise": 0.3,
-        "color": [180, 255, 214, 224]
-      },
-      "accent": {
-        "capacity": 22,
-        "rateOverTime": 14,
-        "burstCount": 12,
-        "burstTime": 0.12,
-        "startSize": 0.26,
-        "startLifetime": 1.02,
-        "startSpeed": 0.72,
-        "gravityModifier": 0,
-        "startDelay": 0.06,
-        "simulationSpeed": 0.96,
-        "shapeRadius": 0.16,
-        "shapeAngle": 10,
-        "startY": 0.14,
-        "floatY": 0.24,
-        "quadCount": 8,
-        "quadRadius": 0.22,
-        "quadRise": 0.2,
-        "color": [132, 255, 206, 188]
-      }
-    },
     "AtkLoss": {
       "spark": {
         "capacity": 20,
@@ -104,7 +20,12 @@
         "quadCount": 8,
         "quadRadius": 0.22,
         "quadRise": 0.18,
-        "color": [138, 88, 72, 188]
+        "color": [
+          138,
+          88,
+          72,
+          188
+        ]
       },
       "accent": {
         "capacity": 16,
@@ -124,7 +45,12 @@
         "quadCount": 5,
         "quadRadius": 0.18,
         "quadRise": 0.14,
-        "color": [94, 58, 52, 152]
+        "color": [
+          94,
+          58,
+          52,
+          152
+        ]
       }
     },
     "HpLoss": {
@@ -146,7 +72,12 @@
         "quadCount": 11,
         "quadRadius": 0.26,
         "quadRise": 0.22,
-        "color": [114, 94, 82, 176]
+        "color": [
+          114,
+          94,
+          82,
+          176
+        ]
       },
       "accent": {
         "capacity": 18,
@@ -166,7 +97,12 @@
         "quadCount": 6,
         "quadRadius": 0.2,
         "quadRise": 0.16,
-        "color": [92, 70, 64, 144]
+        "color": [
+          92,
+          70,
+          64,
+          144
+        ]
       }
     }
   }

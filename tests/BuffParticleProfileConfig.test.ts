@@ -11,7 +11,7 @@ export function createBuffParticleProfileConfigSuite(): TestSuite {
         const table = normalizeBuffParticleProfileTable({
             version: 2,
             variants: {
-                AtkGain: {
+                AtkLoss: {
                     spark: {
                         rateOverTime: 99,
                     },
@@ -20,14 +20,14 @@ export function createBuffParticleProfileConfigSuite(): TestSuite {
         });
 
         assert.equals(2, table.version);
-        assert.equals(99, table.variants.AtkGain.spark.rateOverTime);
+        assert.equals(99, table.variants.AtkLoss.spark.rateOverTime);
         assert.equals(
-            DEFAULT_BUFF_PARTICLE_PROFILES.AtkGain.spark.startSize,
-            table.variants.AtkGain.spark.startSize,
+            DEFAULT_BUFF_PARTICLE_PROFILES.AtkLoss.spark.startSize,
+            table.variants.AtkLoss.spark.startSize,
         );
         assert.equals(
-            DEFAULT_BUFF_PARTICLE_PROFILES.HpGain.accent.startSpeed,
-            table.variants.HpGain.accent.startSpeed,
+            DEFAULT_BUFF_PARTICLE_PROFILES.HpLoss.accent.startSpeed,
+            table.variants.HpLoss.accent.startSpeed,
         );
     });
 
@@ -56,8 +56,8 @@ export function createBuffParticleProfileConfigSuite(): TestSuite {
             table.variants.AtkLoss.spark.capacity,
         );
         assert.equals(
-            DEFAULT_BUFF_PARTICLE_PROFILES.HpGain.accent.quadCount,
-            table.variants.HpGain.accent.quadCount,
+            DEFAULT_BUFF_PARTICLE_PROFILES.HpLoss.accent.quadCount,
+            table.variants.HpLoss.accent.quadCount,
         );
     });
 

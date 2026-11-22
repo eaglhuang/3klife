@@ -261,9 +261,7 @@ export class UnitRenderer extends Component {
   private discMesh: Mesh | null = null;  // 圓形陰影 mesh，對照 Unity: blob shadow disc
   private ringMesh: Mesh | null = null;  // Faction Ring mesh
   private raftMaterial: Material | null = null;
-  private atkGainPool: BuffGainEffectPool | null = null;
   private atkLossPool: BuffGainEffectPool | null = null;
-  private hpGainPool:  BuffGainEffectPool | null = null;
   private hpLossPool:  BuffGainEffectPool | null = null;
   private readonly unitViews = new Map<string, UnitView>();
   private readonly movingUnits = new Set<string>();
@@ -1342,13 +1340,12 @@ export class UnitRenderer extends Component {
     const worldPos = this.getUnitWorldPosition(lane, depth, 0.02);
     if (!worldPos) return;
     UCUFLogger.info(LogCategory.BATTLE, `[UnitRenderer] playBuffEffect unit=${unitId} lane=${lane} depth=${depth} atk=${attackDelta} hp=${hpDelta}`);
-    if (attackDelta > 0) this.atkGainPool?.play(worldPos);
+    // 增益（ATK+／HP+）已改由 UnitBuffPickupVfx 的腳下特效負責，這裡只剩減益
     if (attackDelta < 0) this.atkLossPool?.play(worldPos);
-    if (hpDelta > 0)     this.hpGainPool?.play(worldPos);
     if (hpDelta < 0)     this.hpLossPool?.play(worldPos);
   }
 
-  /** 建立 4 個 BuffGainEffectPool：ATK±、HP± 各自獨立，使用對應貼圖與顏色風格 */
+  /** 建立 2 個 BuffGainEffectPool：ATK−、HP−（增益已改由腳下特效負責，PROG-2-9734） */
   private async setupAllEffectPools(): Promise<void> {
     if (!this.worldRoot) return;
 
@@ -1361,30 +1358,18 @@ export class UnitRenderer extends Component {
       return pool;
     };
 
-    const atkBuffRing = new Color(255, 212, 132, 255);
-    const atkBuffMain = new Color(255, 244, 214, 255);
-    const atkBuffArrow = new Color(255, 191, 96, 255);
-
-    const healBuffRing = new Color(110, 255, 196, 255);
-    const healBuffMain = new Color(210, 255, 236, 255);
-    const healBuffArrow = new Color(144, 255, 206, 255);
-
     const debuffRing = new Color(96, 28, 28, 220);
     const debuffMain = new Color(190, 72, 72, 236);
     const debuffArrow = new Color(128, 42, 42, 220);
 
-    this.atkGainPool = makePool("Pool_AtkGain");
     this.atkLossPool = makePool("Pool_AtkLoss");
-    this.hpGainPool  = makePool("Pool_HpGain");
     this.hpLossPool  = makePool("Pool_HpLoss");
 
     await Promise.all([
-      this.atkGainPool.initialize({ variant: "AtkGain", prefabPath: "fx/buff/buff_gain_3d", ringTexturePath: "vfx_core:textures/rings/tex_ring_addatk",  mainTexturePath: "vfx_core:textures/icons/tex_icon_addatk",  arrowTexturePath: "vfx_core:textures/shapes/tex_shape_arrow_addatk",  sparkTexturePath: "vfx_core:textures/glow/ex_hit_flash",  arrowUp: true,  mainScaleMultiplier: 0.78, ringColor: atkBuffRing, mainColor: atkBuffMain, arrowColor: atkBuffArrow, label: "AtkGain" }),
       this.atkLossPool.initialize({ variant: "AtkLoss", prefabPath: "fx/buff/buff_debuff_3d", ringTexturePath: "vfx_core:textures/rings/tex_ring_addatk",  mainTexturePath: "vfx_core:textures/icons/tex_icon_addatk",  arrowTexturePath: "vfx_core:textures/shapes/tex_shape_arrow_addatk",  sparkTexturePath: "vfx_core:textures/glow/ex_hit_flash",  arrowUp: false, mainScaleMultiplier: 0.78, ringColor: debuffRing, mainColor: debuffMain, arrowColor: debuffArrow, label: "AtkLoss" }),
-      this.hpGainPool.initialize({ variant: "HpGain", prefabPath: "fx/buff/buff_gain_3d", ringTexturePath: "vfx_core:textures/rings/tex_ring_addlife", mainTexturePath: "vfx_core:textures/icons/tex_icon_addlife", arrowTexturePath: "vfx_core:textures/shapes/tex_shape_arrow_addlife", sparkTexturePath: "vfx_core:textures/rings/ex_energy_ring", arrowUp: true,  useDualArrows: true, mainRotationDeg: 90, ringColor: healBuffRing, mainColor: healBuffMain, arrowColor: healBuffArrow, label: "HpGain" }),
       this.hpLossPool.initialize({ variant: "HpLoss", prefabPath: "fx/buff/buff_debuff_3d", ringTexturePath: "vfx_core:textures/rings/tex_ring_addlife", mainTexturePath: "vfx_core:textures/icons/tex_icon_addlife", arrowTexturePath: "vfx_core:textures/shapes/tex_shape_arrow_addlife", sparkTexturePath: "vfx_core:textures/glow/ex_hit_flash", arrowUp: false, useDualArrows: true, mainRotationDeg: 90, ringColor: debuffRing, mainColor: debuffMain, arrowColor: debuffArrow, label: "HpLoss" }),
     ]);
-    UCUFLogger.info(LogCategory.BATTLE, "[UnitRenderer] ✅ 全部特效 Pool 初始化完成 (ATK±, HP±)");
+    UCUFLogger.info(LogCategory.BATTLE, "[UnitRenderer] ✅ 全部特效 Pool 初始化完成 (ATK−, HP−)");
   }
 
   private ensureRoots(): void {
@@ -2101,10 +2086,10 @@ export class UnitRenderer extends Component {
    * 吃到 buff 格（PROG-2-9411）：格子上的圖示飛到單位頭頂圖示列，抵達時頭頂整排彈一下、腳下亮光環。
    * 要在刷新畫面（標記被收起）之前呼叫；那格沒有標記或單位已不在畫面上時，退回原本的刷新時補播。
    */
-  public playTileBuffPickup(unitId: string, lane: number, depth: number, badge: TileBuffBadge): void {
+  public playTileBuffPickup(unitId: string, lane: number, depth: number, badge: TileBuffBadge, factor: number): void {
     const view = this.unitViews.get(unitId);
-    // 吃到的當下：部隊腳下播 2.5 秒大特效（跟著部隊走）；與頭頂圖示飛入互不等待
-    if (view) this.unitBuffPickupVfx.play(unitId, () => (isValid(view.worldNode) ? this.unitGroundFoot(view) : null), badge.kind.startsWith('attack') ? 'attack' : 'hp', badge.isDebuff);
+    // 吃到的當下：部隊腳下播 2.5 秒大特效（跟著部隊走，依倍率分級）；與頭頂圖示飛入互不等待
+    if (view) this.unitBuffPickupVfx.play(unitId, () => (isValid(view.worldNode) ? this.unitGroundFoot(view) : null), badge.kind.startsWith('attack') ? 'attack' : 'hp', badge.isDebuff, factor);
     const from = this.tileBuffMarkers.iconPositionOf({ lane, depth }, this.tileBuffFlyFrom);
     if (!view || !from || !view.labelNode.active) { this.playStatusGain(unitId, badge.isDebuff); return; }
     const target = (): Vec3 | null => {

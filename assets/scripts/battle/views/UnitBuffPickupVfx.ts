@@ -11,7 +11,7 @@
  * Unity 對照：一個 ParticleSystem 池＋「跟隨目標」的 Follow 元件；PickupSlotTable 是誰在用哪一個的登記簿。
  */
 import { Graphics, Node, UITransform, isValid } from 'cc';
-import { PickupSlotTable, type PickupSlot } from '../shared/TileBuffVfxMath';
+import { PickupSlotTable, tileBuffTierIndex, type PickupSlot } from '../shared/TileBuffVfxMath';
 import { drawPickupFrame, getTileBuffVfxConfig, type TileBuffVfxKind } from './TileBuffVfx';
 
 interface PickupView {
@@ -21,6 +21,8 @@ interface PickupView {
   sparkG: Graphics;
   kind: TileBuffVfxKind;
   isDebuff: boolean;
+  /** 層級（stackTiers 的索引）：由吃到的倍率決定，×2／×3／×5 分三級 */
+  tierIndex: number;
   getFoot: () => { x: number; y: number } | null;
   lastX: number;
   lastY: number;
@@ -50,8 +52,11 @@ export class UnitBuffPickupVfx {
     return { started: t?.started ?? 0, expired: t?.expired ?? 0, active: t?.activeCount() ?? 0 };
   }
 
-  /** 吃到 buff 當下呼叫。設定檔還沒讀到時略過（戰鬥一開始就會載入，實務上不會發生） */
-  public play(unitKey: string, getFoot: () => { x: number; y: number } | null, kind: TileBuffVfxKind, isDebuff: boolean): void {
+  /**
+   * 吃到 buff 當下呼叫。設定檔還沒讀到時略過（戰鬥一開始就會載入，實務上不會發生）
+   * @param factor 倍數（×3、÷5 的 3、5）；依 stackTiers 的 minFactor 選層級
+   */
+  public play(unitKey: string, getFoot: () => { x: number; y: number } | null, kind: TileBuffVfxKind, isDebuff: boolean, factor: number): void {
     const cfg = getTileBuffVfxConfig();
     const root = this.getRoot();
     if (!cfg || !root || !isValid(root)) return;
@@ -60,6 +65,7 @@ export class UnitBuffPickupVfx {
     const view = this.views[slot.index] ?? (this.views[slot.index] = this.createView(root));
     view.kind = kind;
     view.isDebuff = isDebuff;
+    view.tierIndex = tileBuffTierIndex(cfg.stackTiers, factor);
     view.getFoot = getFoot;
     const foot = getFoot();
     if (foot) { view.lastX = foot.x; view.lastY = foot.y; }
@@ -71,7 +77,7 @@ export class UnitBuffPickupVfx {
     view.ground.active = true;
     view.spark.active = true;
     view.spark.setSiblingIndex(view.spark.parent ? view.spark.parent.children.length - 1 : 0);
-    drawPickupFrame(view.groundG, view.sparkG, cfg, kind, isDebuff, 0);
+    drawPickupFrame(view.groundG, view.sparkG, cfg, kind, isDebuff, view.tierIndex, 0);
   }
 
   /** 每幀：跟著部隊腳下移動並重畫；到期的隱藏回收 */
@@ -88,7 +94,7 @@ export class UnitBuffPickupVfx {
       if (foot) { view.lastX = foot.x; view.lastY = foot.y; }
       view.ground.setPosition(view.lastX, view.lastY, 0);
       view.spark.setPosition(view.lastX, view.lastY, 0);
-      drawPickupFrame(view.groundG, view.sparkG, cfg, view.kind, view.isDebuff, slot.elapsed);
+      drawPickupFrame(view.groundG, view.sparkG, cfg, view.kind, view.isDebuff, view.tierIndex, slot.elapsed);
     }
     for (const slot of expired) this.hide(this.views[slot.index]);
   }
@@ -118,6 +124,6 @@ export class UnitBuffPickupVfx {
     };
     const ground = make('BuffPickupGround', this.getGroundParent() ?? root);
     const spark = make('BuffPickupSparks', root);
-    return { ground: ground.node, groundG: ground.g, spark: spark.node, sparkG: spark.g, kind: 'attack', isDebuff: false, getFoot: () => null, lastX: 0, lastY: 0 };
+    return { ground: ground.node, groundG: ground.g, spark: spark.node, sparkG: spark.g, kind: 'attack', isDebuff: false, tierIndex: 0, getFoot: () => null, lastX: 0, lastY: 0 };
   }
 }
