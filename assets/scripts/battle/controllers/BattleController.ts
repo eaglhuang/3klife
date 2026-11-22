@@ -16,8 +16,8 @@ import {
 } from "../../core/config/Constants";
 import { GeneralUnit } from "../../core/models/GeneralUnit";
 import type { AiDifficulty } from "../../core/systems/AiSpCharge";
-import type { AiDifficultyEntry } from "../../core/systems/AiDifficultyTable";
-import { aiShouldUseUltimate } from '../../core/systems/AiUltimateDecision';
+import type { AiDifficultyEntry, AiIqLevel } from "../../core/systems/AiDifficultyTable";
+import { aiShouldUseUltimate, type AiUltimateRules } from '../../core/systems/AiUltimateDecision';
 import { aiUltimateFamilyPermits } from '../../core/systems/AiUltimateFamilyRule';
 import { isUltimateSlotUnlocked } from '../../core/systems/UltimateSlotUnlock';
 import { TroopUnit } from "../../core/models/TroopUnit";
@@ -100,6 +100,7 @@ import {
   type SortieSummary,
 } from '../../core/systems/SortieDeploy';
 import {
+  delegateAiIqOf,
   delegatePickDeploy,
   delegateQualityOf,
   sortDelegateCandidates,
@@ -594,7 +595,15 @@ export class BattleController {
     if (!targetUnitUid) return done;
     if (general.canUseSkill()) {
       const ultimate = buildUltimateSkills(general)[0];
-      if (ultimate) {
+      // 委任代打同敵方：SP 滿還要過奧義判斷（IQ 比例門檻＋家族審批），不符合就留著 SP 不放（PROG-2-9723）
+      const shouldCast = !!ultimate && !!this.delegateQuality && this.shouldFactionCastUltimate(
+        Faction.Player,
+        general,
+        delegateAiIqOf(this.delegateQuality),
+        this.state.aiUltimateRules,
+        ultimate?.ultimateId ?? '',
+      );
+      if (ultimate && shouldCast) {
         done.ultimate = this.triggerPlayerBattleSkill(ultimate.skillId, SkillSourceType.Ultimate, {
           targetMode: resolveBattleSkillTargetMode(ultimate.skillId, BattleSkillTargetMode.EnemyAll),
           ultimateId: ultimate.ultimateId ?? null,
@@ -653,6 +662,7 @@ export class BattleController {
   public configureAiDifficulty(entry: AiDifficultyEntry): void {
     this.state.aiDuelAcceptThreshold = entry.duelAcceptThreshold;
     this.state.aiIq = entry.aiIq;
+    this.state.aiUltimateRules = entry.ultimateRules;
     this.state.aiCanUseUltimate = entry.canUseUltimate;
     this.state.aiTacticIq = entry.aiIq;
     this.enemyAi.iq = entry.aiIq;
@@ -1034,9 +1044,7 @@ export class BattleController {
   }
 
   /**
-   * 敵方奧義決策（AIS-07）：難度表允許、精力已滿、有解鎖奧義，且 aiShouldUseUltimate 判定施放時，回傳奧義組合。
-   * 數值暫定（PM 裁定）：estimatedKills＝目前存活、兵力 ≤ 敵將單次預估傷害的我方單位數（範圍暫以全體我方計）；
-   * isLosing＝敵方存活單位少於玩家。
+   * 敵方奧義決策（AIS-07）：難度表允許、精力已滿、有解鎖奧義，且奧義判斷（同 shouldFactionCastUltimate）通過時，回傳奧義組合。
    */
   public chooseEnemyUltimate(): { battleSkillId: string; ultimateId: string } | null {
     const general = this.state.getGeneral(Faction.Enemy);
@@ -1050,24 +1058,44 @@ export class BattleController {
     const battleSkillId = linked ?? general.skillId;
     if (!battleSkillId) return null;
 
-    const playerCount = this.livingUnitsOf(Faction.Player).length;
-    const enemyCount = this.livingUnitsOf(Faction.Enemy).length;
-    const estimatedKills = this.livingUnitsOf(Faction.Player)
+    const shouldUse = this.shouldFactionCastUltimate(Faction.Enemy, general, this.state.aiIq, this.state.aiUltimateRules, ultimateId);
+    return shouldUse ? { battleSkillId, ultimateId } : null;
+  }
+
+  /**
+   * 奧義施放判斷（PROG-2-9723）：敵方 AI 與委任代打共用，依 IQ 與精力比例（aiShouldUseUltimate）加上家族審批（aiUltimateFamilyPermits）。
+   * 數值暫定（PM 裁定）：estimatedKills＝目前存活、兵力 ≤ 施放者單次預估傷害的對方單位數（範圍暫以全體對方計）；
+   * isLosing＝施放陣營存活單位少於對方。沒有 rules（未設定難度表）時不放。
+   */
+  private shouldFactionCastUltimate(
+    faction: Faction,
+    general: GeneralUnit,
+    iq: AiIqLevel,
+    rules: AiUltimateRules | null,
+    ultimateId: string,
+  ): boolean {
+    if (!rules) return false;
+    const foe = faction === Faction.Enemy ? Faction.Player : Faction.Enemy;
+    const ownCount = this.livingUnitsOf(faction).length;
+    const foeCount = this.livingUnitsOf(foe).length;
+    const estimatedKills = this.livingUnitsOf(foe)
       .filter(unit => unit.currentHp <= this.estimateEnemyStrikeDamage(general, unit)).length;
-    const shouldUse = aiShouldUseUltimate({
-      iq: this.state.aiIq,
+    const isLosing = ownCount < foeCount;
+    return aiShouldUseUltimate({
+      iq,
       vitality: general.vitality,
-      enemyCount: playerCount,
+      maxVitality: general.maxVitality,
+      enemyCount: foeCount,
       estimatedKills,
-      isLosing: enemyCount < playerCount,
+      isLosing,
+      rules,
     }) && aiUltimateFamilyPermits(findUltimateFamily(ultimateId), {
       estimatedKills,
-      enemyCount: playerCount,
+      enemyCount: foeCount,
       selfHpRatio: general.maxHp > 0 ? general.currentHp / general.maxHp : 0,
-      allyHpRatio: this.hpRatioOf(Faction.Enemy),
-      isLosing: enemyCount < playerCount,
+      allyHpRatio: this.hpRatioOf(faction),
+      isLosing,
     });
-    return shouldUse ? { battleSkillId, ultimateId } : null;
   }
 
   /** 敵方施放奧義：生效後才清空精力並發事件（與玩家奧義同一套 SP 規則） */
