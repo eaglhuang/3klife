@@ -80,6 +80,7 @@ import { UnitStatusIconBar, StatusHaloPool, STATUS_ICON_SIZE } from "./UnitStatu
 import { UnitFeedbackGlowPool } from "./UnitFeedbackGlow";
 import { NameplateCombatFade, getBattleUiFeedback } from "../shared/BattleUiFeedback";
 import { TileBuffMarkers } from "./TileBuffMarkers";
+import { UnitBuffPickupVfx } from "./UnitBuffPickupVfx";
 import type { TileBuffBadge } from "../shared/TileBuffBadge";
 import { BADGE_HIT_PRIORITY_SEC, badgeRectFromExtent, easePlateOffset, stackBadgeOffsets, unionExtent, type LabelRect, type LocalExtent, type StackBadgeEntry } from "../shared/GeneralPlateAvoidance";
 import { buildUnitStatusContext, computeUnitStatusIcons, gainedTones, newlyGainedKinds, type StatusIconKind } from "../shared/UnitStatusIcons";
@@ -314,6 +315,12 @@ export class UnitRenderer extends Component {
       const pos = this.boardRenderer?.getCellWorldPosition(cell.lane, cell.depth, 0);
       if (pos) this.projectWorldPoint(pos, node);
     },
+  );
+  /** 部隊吃到 buff 當下腳下的 2.5 秒大特效（PROG-2-9734） */
+  private readonly unitBuffPickupVfx = new UnitBuffPickupVfx(
+    () => this.uiRoot,
+    () => this.tileBuffMarkers.groundNode(),
+    () => this.canvasNode?.layer ?? Layers.Enum.UI_2D,
   );
   private readonly tileBuffFlyFrom = new Vec3();
   private readonly tileBuffFlyTo = new Vec3();
@@ -1208,6 +1215,7 @@ export class UnitRenderer extends Component {
     perfEnd('fxShots', t); t = perfBegin();
 
     this.tileBuffMarkers.update(dt);
+    this.unitBuffPickupVfx.update(dt);
     perfEnd('tileBuff', t); t = perfBegin();
     // 徽章代理節點跟上本幀最終位置（投影、避讓都做完之後；PROG-2-9713）
     this.badgeLayers?.sync();
@@ -2095,6 +2103,8 @@ export class UnitRenderer extends Component {
    */
   public playTileBuffPickup(unitId: string, lane: number, depth: number, badge: TileBuffBadge): void {
     const view = this.unitViews.get(unitId);
+    // 吃到的當下：部隊腳下播 2.5 秒大特效（跟著部隊走）；與頭頂圖示飛入互不等待
+    if (view) this.unitBuffPickupVfx.play(unitId, () => (isValid(view.worldNode) ? this.unitGroundFoot(view) : null), badge.kind.startsWith('attack') ? 'attack' : 'hp', badge.isDebuff);
     const from = this.tileBuffMarkers.iconPositionOf({ lane, depth }, this.tileBuffFlyFrom);
     if (!view || !from || !view.labelNode.active) { this.playStatusGain(unitId, badge.isDebuff); return; }
     const target = (): Vec3 | null => {
