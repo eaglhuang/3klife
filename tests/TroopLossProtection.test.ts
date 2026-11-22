@@ -1,8 +1,8 @@
 /**
  * TroopLossProtection.test.ts — 第 1 年敗戰新手保護＋傷兵營（PROG-2-9717）
  *
- * 損兵上限＝戰前城市兵源 30%（陣亡＋傷兵總量）、上限內 60% 進傷兵營、傷兵營每季康復 30%；
- * 只限第 1 年敗戰，勝利、平手、第 2 年不保護；傷兵營進存檔。
+ * 損兵上限＝戰前城市兵源 30%（陣亡＋傷兵總量），只限第 1 年敗戰；
+ * 60% 進傷兵營、傷兵營每季康復 30%，全年度適用（勝利、平手、第 2 年起都送營）；傷兵營進存檔。
  */
 import * as fs from 'fs';
 import * as path from 'path';
@@ -134,28 +134,32 @@ export function createTroopLossProtectionSuite(): TestSuite {
         const b = setup();
         const q = await b.recordBattle(['lead-1'], 'enemy-win', { offBoard: true });
         assert.equals(240, q.aftermath?.lostTroops, '3000 × 8% = 240');
-        assert.equals(0, q.aftermath?.noviceProtectionReduced);
+        assert.equals(undefined, q.aftermath?.noviceProtectionReduced, '240 低於上限，沒有減免');
         assert.equals(144, b.military.woundedCamp);
     });
 
-    suite.test('勝利與平手不受影響：損兵全額、傷兵營不動、沒有保護文字', async () => {
+    suite.test('勝利與平手：損兵全額、60% 進傷兵營、沒有新手保護減免文字', async () => {
         for (const result of ['player-win', 'draw'] as const) {
             const session = setup();
             const r = await session.recordBattle(['lead-1'], result, { sortie: { lostTroops: 2000, foodSpent: 0 } });
-            assert.equals(1000, session.military.cityTroops);
-            assert.equals(0, session.military.woundedCamp);
+            assert.equals(1000, session.military.cityTroops, '城市兵源全額扣損兵');
+            assert.equals(1200, session.military.woundedCamp, '2000 × 60% 進傷兵營');
             assert.equals(undefined, r.aftermath?.noviceProtectionReduced);
+            assert.equals(1200, r.aftermath?.woundedSent);
             assert.equals(0, r.aftermathLines.filter((l) => l.indexOf('新手保護') >= 0).length);
+            assert.isTrue(r.aftermathLines.indexOf('傷兵 1200 人送入傷兵營，每季康復 30%') >= 0);
         }
     });
 
-    suite.test('第 2 年敗戰不保護：損兵全額、傷兵營不動', async () => {
+    suite.test('第 2 年敗戰：有傷兵營但沒有 30% 上限，損兵全額', async () => {
         const session = setup();
         setYear(session, 2);
-        const r = await session.recordBattle(['lead-1'], 'enemy-win', { sortie: { lostTroops: 2000, foodSpent: 0 } });
-        assert.equals(1000, session.military.cityTroops);
-        assert.equals(0, session.military.woundedCamp);
-        assert.equals(undefined, r.aftermath?.woundedSent);
+        const r = await session.recordBattle(['lead-1'], 'enemy-win', { sortie: { lostTroops: RAW_LOST, foodSpent: 0 } });
+        assert.equals(0, session.military.cityTroops, '3000 全額扣光，不套 30% 上限');
+        assert.equals(1800, session.military.woundedCamp, '3000 × 60% 進傷兵營');
+        assert.equals(undefined, r.aftermath?.noviceProtectionReduced);
+        assert.equals(1800, r.aftermath?.woundedSent);
+        assert.equals(0, r.aftermathLines.filter((l) => l.indexOf('新手保護') >= 0).length);
     });
 
     suite.test('每季康復受兵源上限限制；傷兵營舊存檔缺欄位補 0', () => {

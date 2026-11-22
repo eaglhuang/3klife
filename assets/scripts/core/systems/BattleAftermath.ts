@@ -87,9 +87,9 @@ export interface BattleAftermathLedger {
     lostTroops: number;
     /** 守城大敗流失的人口（PROG-2-9425，由呼叫端填入）；沒有時不顯示 */
     populationLost?: number;
-    /** 新手保護（第 1 年敗戰，PROG-2-9717）減免的損兵數；沒適用時不填 */
+    /** 新手保護（第 1 年敗戰，PROG-2-9717）減免的損兵數；沒有減免時不填 */
     noviceProtectionReduced?: number;
-    /** 送入傷兵營的人數（新手保護敗戰）；沒適用時不填 */
+    /** 送入傷兵營的人數（全年度適用）；沒有傷兵時不填 */
     woundedSent?: number;
     /** 傷兵營每季康復百分比（來自 data/troop-loss-rules.json），給結算文字用 */
     woundedRecoveryPercent?: number;
