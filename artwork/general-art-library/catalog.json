@@ -423,7 +423,7 @@
         ]
       },
       "avatar": {
-        "activeVersion": "0002",
+        "activeVersion": "0003",
         "status": "integrated",
         "history": [
           {
@@ -435,6 +435,14 @@
             "version": "0002",
             "file": "avatars/zhen_ji__甄姬__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/zhen_ji__甄姬__avatar_0003.png",
+            "status": "integrated",
+            "sha256": "d2a6c4d200bb984fd27f76fe39ed26f9d4a953207991018b7fc56aee89dfeee8",
+            "canvas": "1254x1254 RGBA",
+            "note": "使用者核可的半身像；保留完整髮飾、自然三分之四臉部角度、雙肩與上胸，正式收錄。"
           }
         ]
       },
