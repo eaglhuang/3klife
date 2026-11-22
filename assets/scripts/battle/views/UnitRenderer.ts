@@ -291,6 +291,7 @@ export class UnitRenderer extends Component {
   private feedbackGlows: UnitFeedbackGlowPool | null = null;
   /** 名牌戰鬥淡出（PROG-2-9731）：攻擊、受擊演出期間淡出，結束後淡回 */
   private readonly plateFade = new NameplateCombatFade();
+  private readonly healHolds = new Map<string, number>();
   private plateFadeApplied = false;
   /** 高倍率攻擊提示門檻（PROG-2-9422）；載入 data/attack-surge-highlight 前先用預設 */
   private attackSurgeConfig: AttackSurgeConfig = { ...DEFAULT_ATTACK_SURGE_CONFIG };
@@ -1939,7 +1940,9 @@ export class UnitRenderer extends Component {
     const isGeneral = this.isGeneralAvatarUnit(unit);
     view.attackLabel.string = statWithBonusText(unit.getEffectiveAttack(), attackBonus, isGeneral ? "攻 " : "");
     view.typeLabel.string = isGeneral ? "將" : troopTypeGlyph(unit.type);
-    view.hpLabel.string = statWithBonusText(Math.max(0, unit.currentHp), hpBonus, isGeneral ? "命 " : "");
+    // PROG-2-9731：治療三步——血條最後才升，期間顯示治療前的血量（別處刷新也不會提早跳）
+    const shownHp = this.healHolds.get(unit.id) ?? unit.currentHp;
+    view.hpLabel.string = statWithBonusText(Math.max(0, shownHp), hpBonus, isGeneral ? "命 " : "");
     // PROG-2-9422（Q-C1 選 A）：攻擊疊到 2 倍以上變金、4 倍以上變紅加脈動光環，敵我都適用
     const surgeTier = attackSurgeTier(unit.getEffectiveAttack(), unit.attack, this.attackSurgeConfig);
     view.attackLabel.color = surgeTier === "none" ? this.statToneColor(statBonusTone(attackBonus)) : this.attackSurgeColor(surgeTier);
@@ -1947,7 +1950,7 @@ export class UnitRenderer extends Component {
     view.hpLabel.color = this.statToneColor(statBonusTone(hpBonus));
     view.troopType = unit.type;
     view.labelOpacity.opacity = 255;
-    const hpState = unitHpBarState(unit.currentHp, unit.getEffectiveMaxHp(), unit.faction === Faction.Player);
+    const hpState = unitHpBarState(shownHp, unit.getEffectiveMaxHp(), unit.faction === Faction.Player);
     if (view.hpState) view.hpChip = hpChipOnChange(view.hpChip ?? null, view.hpState.ratio, hpState.ratio);
     view.hpState = hpState;
     this.drawHpBar(view.hpBar, hpState, view.hpChip?.lag);
@@ -1976,6 +1979,10 @@ export class UnitRenderer extends Component {
   public endCombatPresentation(): void { this.plateFade.end(); }
   /** 佇列清空或治療要讓玩家看血條時：放掉所有淡出計數，名牌馬上開始淡回 */
   public releaseNameplateFade(): void { this.plateFade.releaseNow(); }
+  /** 治療事件一到先把該單位的顯示血量定在治療前，等血條那一步才放開（只記第一次，連續治療不被覆蓋） */
+  public holdHealHp(unitId: string, hpBefore: number): void { if (!this.healHolds.has(unitId)) this.healHolds.set(unitId, hpBefore); }
+  /** 放開血量定格；不帶 id 放開全部（演出佇列結束的保底，避免血條卡在舊值） */
+  public releaseHealHp(unitId?: string): void { if (unitId === undefined) this.healHolds.clear(); else this.healHolds.delete(unitId); }
   /** QA 用：目前名牌不透明度比例（0~1） */
   public debugNameplateAlpha(): number { return this.plateFade.alpha; }
 

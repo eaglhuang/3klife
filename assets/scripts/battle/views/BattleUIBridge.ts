@@ -831,6 +831,7 @@ export class BattleUIBridge {
     // PROG-2-9731：治療三步依序——治療光 → 綠字（＋治療聲）→ 血條增加。
     // 以前事件一到就同時跳字、播聲、刷新血條，比蓄力中的出招還早 0.4 秒；現在排進戰鬥動畫佇列，
     // 出招特效之後才開始。每個目標只佔佇列 queueStaggerSec，多目標治療的三步互相重疊、不會拖長回合。
+    c.unitRenderer?.holdHealHp?.(data.unitId, Math.max(0, data.hp - data.amount));
     this._enqueueCombatVisual(`unit-heal:${data.unitId}`, () => {
       const cfg = getBattleUiFeedback().heal;
       const plan = planHealSteps(cfg);
@@ -842,7 +843,7 @@ export class BattleUIBridge {
         if (u) c.unitRenderer?.playHealFloat?.(u, data.amount);
         playBattleAudio(BATTLE_AUDIO_CUE.unitHeal);
       }, plan.floatAtSec);
-      this.scene.scheduleOnce(() => this.refreshBattleViews(), plan.hpBarAtSec);
+      this.scene.scheduleOnce(() => { c.unitRenderer?.releaseHealHp?.(data.unitId); this.refreshBattleViews(); }, plan.hpBarAtSec);
       return new Promise<void>((resolve) => this.scene.scheduleOnce(() => resolve(), cfg.queueStaggerSec));
     });
   }
