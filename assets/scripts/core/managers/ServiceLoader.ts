@@ -66,6 +66,7 @@ import { configureMindMarriageRules, MIND_MARRIAGE_RULES_JSON, type MindMarriage
 import { CLAN_LINEAGE_RULES_JSON, configureClanLineageRules, type ClanLineageRulesConfig } from "../systems/ClanTradition";
 import { configureAcademyStories } from "../systems/nurture/AcademyStoryTexts";
 import { QUICK_RESOLVE_CONFIG_JSON, configureQuickResolve } from "../systems/QuickResolveGate";
+import { configureTroopLossRules, TROOP_LOSS_RULES_JSON, type TroopLossRulesConfig } from "../systems/CommandSortieLoss";
 import { ACADEMY_ENROLL_RULES_JSON, configureAcademyEnrollRules, type AcademyEnrollRulesConfig } from "../systems/nurture/AcademyEnrollRules";
 import { createAcademyQuestAdapter } from "../../shared/quest/AcademyQuest";
 import { DEFAULT_QUEST_CONFIG, normalizeQuestConfig } from "../../shared/quest/QuestConfig";
@@ -513,6 +514,7 @@ export class ServiceLoader {
             loadSafe<Partial<MindMarriageRulesConfig>>(MIND_MARRIAGE_RULES_JSON, configureMindMarriageRules),
             loadSafe<Partial<AcademyInheritMarksConfig>>(ACADEMY_INHERIT_MARKS_JSON, configureAcademyInheritMarks),
             loadSafe<Partial<AcademyEnrollRulesConfig>>(ACADEMY_ENROLL_RULES_JSON, configureAcademyEnrollRules),
+            loadSafe<Partial<TroopLossRulesConfig>>(TROOP_LOSS_RULES_JSON, configureTroopLossRules),
             loadSafe<unknown>(STORY_CONFIG_JSON, (raw) => { this.storyConfig = normalizeStoryConfig(raw); this.localApi?.setStoryConfig(this.storyConfig); configureAcademyStories(this.storyConfig); }),
             loadSafe<unknown>(REWARD_CONFIG_JSON, (raw) => { this.rewardConfig = normalizeRewardConfig(raw); this.applyRewardConfig(); }),
             loadSafe<unknown>(QUEST_CONFIG_JSON, (raw) => { this.questConfig = normalizeQuestConfig(raw); this.localApi?.setQuestConfig(this.questConfig); }),
