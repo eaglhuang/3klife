@@ -6180,9 +6180,44 @@
             "version": "0002",
             "file": "avatars/xu_shu__徐庶__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/xu_shu__徐庶__avatar_0003.png",
+            "status": "integrated",
+            "sha256": "3087c1c392b8d8ecd2da357fa5e341dae3a8aad2bc1abed14a8f6fe685e27720",
+            "canvas": "1254x1254 RGBA",
+            "note": "補作徐庶頭肩來源圖，保留清秀面容、深色盤髮、銀白文士冠與綠白文士服；自然側角，頭部配件完整，雙肩上緣入鏡。"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/xu_shu__徐庶__small_avatar_0001.png",
+            "status": "integrated",
+            "sha256": "4241860da5695e3e9a5006affae7ed2b096d043718f87836edc37deb32c4a97f",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0003",
+            "sourceAvatarFile": "avatars/xu_shu__徐庶__avatar_0003.png",
+            "method": "crop-only; uniform resize; face-centered; no rotation",
+            "cropBox": {
+              "x": 274.5,
+              "y": 57.48,
+              "width": 876,
+              "height": 876
+            },
+            "headHeightRatio": 0.75,
+            "faceHeightRatio": 0.393,
+            "faceWidthRatio": 0.355,
+            "centerlineErrorPx": 0.5,
+            "note": "頭高75%、臉高39.3%、臉寬35.5%；臉框中線誤差0.5px；完整保留髮型、銀白文士冠與髮簪、耳朵、臉與下巴；自然三分之四側角。250px核可基準比較通過，雙肩下緣部分可見。臉高達38%下限；再放大會破壞冠飾與髮簪完整度。僅等比例裁切縮放，未旋轉或修臉。"
+          }
+        ]
       }
     },
     {
