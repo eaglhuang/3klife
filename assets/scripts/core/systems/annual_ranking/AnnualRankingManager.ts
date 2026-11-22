@@ -68,6 +68,24 @@ export class AnnualRankingManager {
   }
 
   /**
+   * 演藝熱度記帳（衰減參數取自 annual-ranking-config.json 的 charm 榜單，不硬編碼）
+   */
+  public recordCharmPerformance(
+    generalId: string,
+    playTitle: string,
+    theaterPrestige: number,
+    playHeat: number,
+    repeatCount: number = 0,
+    banquetDiploHype: number = 0
+  ): void {
+    const charm = this._config?.boards.find((b) => b.boardId === 'charm');
+    this._ledger.recordCharmPerformance(
+      generalId, playTitle, theaterPrestige, playHeat, repeatCount, banquetDiploHype,
+      charm?.repeatDecayMin, charm?.repeatDecayStep
+    );
+  }
+
+  /**
    * 註冊預設首發 4 大榜單 Provider
    */
   public registerDefaultProviders(): void {

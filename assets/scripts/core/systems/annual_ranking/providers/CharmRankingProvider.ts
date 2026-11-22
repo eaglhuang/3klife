@@ -24,6 +24,12 @@ export class CharmRankingProvider implements IRankingBoardProvider {
     const maxTotalVotes = config.maxTotalVotes || 9999;
     const hypeDivisor = config.hypeDivisor || 50;
     const maxSingleGeneralVotes = config.maxSingleGeneralVotes || 50;
+    const voterMin = config.voterMin ?? 10;
+    const voterMax = config.voterMax ?? 150;
+    const mwBase = config.matchWeightBase ?? 0.8;
+    const mwStep = config.matchWeightStep ?? 0.1;
+    const mwBuckets = config.matchWeightBuckets ?? 5;
+    const mwSeedMul = config.matchWeightSeedMul ?? 7;
 
     const totalHype = ledger.getMetric(generalId, 'charm.totalHype');
     if (totalHype <= 0) {
@@ -31,7 +37,7 @@ export class CharmRankingProvider implements IRankingBoardProvider {
     }
 
     // 取得候選武將的魅力數值（CHA，基準 50~100）
-    let cha = 70;
+    let cha = config.defaultCha !== undefined ? config.defaultCha : 70;
     if (context.generals) {
       const info = context.generals instanceof Map ? context.generals.get(generalId) : context.generals[generalId];
       if (info && info.cha !== undefined) {
@@ -47,17 +53,17 @@ export class CharmRankingProvider implements IRankingBoardProvider {
     if (context.generals) {
       const count = context.generals instanceof Map ? context.generals.size : Object.keys(context.generals).length;
       // 假設投票群體約 10~150 人
-      const voterCount = Math.max(10, Math.min(150, count));
+      const voterCount = Math.max(voterMin, Math.min(voterMax, count));
       // Persona 共振微幅隨機因子（確定性加權）
       for (let i = 0; i < voterCount; i++) {
         // 使用確定性權重
-        const matchWeight = 0.8 + ((i * 7 + cha) % 5) * 0.1; // 0.8 ~ 1.2
+        const matchWeight = mwBase + ((i * mwSeedMul + cha) % mwBuckets) * mwStep;
         const vote = Math.min(maxSingleGeneralVotes, Math.round(baseVotePerGeneral * matchWeight));
         totalVotes += vote;
       }
     } else {
       // 預設基礎群眾投票
-      totalVotes = Math.round(baseVotePerGeneral * 25);
+      totalVotes = Math.round(baseVotePerGeneral * (config.fallbackVoterMultiplier ?? 25));
     }
 
     return Math.min(maxTotalVotes, totalVotes);
@@ -71,7 +77,7 @@ export class CharmRankingProvider implements IRankingBoardProvider {
     config: BoardConfig
   ): RankingEvidence {
     const highlights = ledger.getHighlights(generalId);
-    let topPlay = '鳳儀亭';
+    let topPlay = config.fallbackTopPlayTitle ?? '';
     let maxHype = 0;
 
     for (const h of highlights) {

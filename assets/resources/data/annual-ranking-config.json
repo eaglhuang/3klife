@@ -60,7 +60,17 @@
       "hypeDivisor": 50,
       "maxSingleGeneralVotes": 50,
       "repeatDecayMin": 0.6,
-      "repeatDecayMax": 1.0
+      "repeatDecayMax": 1.0,
+      "repeatDecayStep": 0.1,
+      "defaultCha": 70,
+      "voterMin": 10,
+      "voterMax": 150,
+      "fallbackVoterMultiplier": 25,
+      "matchWeightBase": 0.8,
+      "matchWeightStep": 0.1,
+      "matchWeightBuckets": 5,
+      "matchWeightSeedMul": 7,
+      "fallbackTopPlayTitle": "鳳儀亭"
     },
     {
       "boardId": "rookie",

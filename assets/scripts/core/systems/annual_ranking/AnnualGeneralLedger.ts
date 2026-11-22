@@ -162,10 +162,12 @@ export class AnnualGeneralLedger {
     theaterPrestige: number,
     playHeat: number,
     repeatCount: number = 0,
-    banquetDiploHype: number = 0
+    banquetDiploHype: number = 0,
+    decayMin: number = 0.6,
+    decayStep: number = 0.1
   ): void {
     // 依據 doc_spec_1181 §6.3 計算 repeatDecay
-    const decay = Math.max(0.6, 1.0 - repeatCount * 0.1);
+    const decay = Math.max(decayMin, 1.0 - repeatCount * decayStep);
     const playHype = theaterPrestige * playHeat * decay;
     const totalHype = playHype + banquetDiploHype;
 

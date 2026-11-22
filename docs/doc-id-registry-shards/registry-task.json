@@ -16636,5 +16636,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9729.md",
     "title": "[PROG-2-9729] 戰鬥音效分層：受擊輕重、分兵種腳步、變調與隨機音量",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2964",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9601.md",
+    "title": "[PROG-2-9601] 史境天下風雲榜計分核心與平時即時看板（W1a）",
+    "category": "task"
   }
 ]
