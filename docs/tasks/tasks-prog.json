@@ -26,8 +26,8 @@
   "summary": {
     "done": 260,
     "in_progress": 7,
-    "open": 85,
-    "total": 352
+    "open": 86,
+    "total": 353
   },
   "tasks": [
     {
@@ -15272,7 +15272,60 @@
     },
     {
       "doc_id": "",
-      "id": "PROG-2-9733",
+      "id": "PROG-2-9831",
+      "title": "LLM 批次文案工具與大廳武將聊天台詞第一批（API 贈送額度）",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "2026-11-22T20:00:00+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "tools_node/llm-batch：Batch API 工具、Agent SDK 以 API 金鑰執行器；大廳聊天台詞第一批 20 位武將寫入 hall-chat-lines.json",
+      "related": [
+        "PROG-2-2251"
+      ],
+      "depends": [],
+      "acceptance": [
+        "批次工具含 schema 驗證、費用統計、單批上限",
+        "單元測試通過",
+        "20 位武將台詞通過品質檢查並寫入正式資料"
+      ],
+      "deliverables": [
+        "tools_node/llm-batch/*",
+        "assets/resources/data/hall-map/hall-chat-lines.json"
+      ],
+      "notes": "2026-11-22 | 狀態: done | 驗證: 單元測試 6 項過、compute-gate quick 4/4、24 位台詞載入達底線 | 變更: tools_node/llm-batch、hall-chat-lines 補 20 位 | 阻塞: 未跑 web 建置實玩",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9735",
       "title": "戰場天氣：季節機率抽取、劇情關固定、戰前顯示",
       "owner": "claude-code-opus-5-5",
       "priority": "P1",
@@ -15281,7 +15334,7 @@
       "phase": "M0",
       "created": "2026-11-22",
       "created_by_agent": "claude-code-opus-5-5",
-      "started_at": "2026-11-22T20:05:48+08:00",
+      "started_at": "2026-11-22T21:39:08+08:00",
       "started_by_agent": "claude-code-opus-5-5",
       "chain_id": "",
       "chain_step": "",
@@ -15297,13 +15350,13 @@
         "playtest 12/12、standard 閘門過"
       ],
       "deliverables": [
-        "docs/遊戲規格文件/系統規格書/戰場適性系統.md（分片 shard-d K–Q）",
+        "docs/遊戲規格文件/系統規格書/戰場適性系統-shards/shard-d.md（K–Q）",
         "assets/resources/data/battle-weather-season.json",
         "assets/scripts/core/systems/BattleWeatherRoll.ts",
         "assets/scripts/core/systems/WeatherEffectText.ts",
         "tests/BattleWeatherRoll.test.ts"
       ],
-      "notes": "2026-11-22 | 狀態: done | 驗證: 單元測試 9239 通過、tsc 0 錯、standard 閘門過、playtest 12/12、戰前截圖與戰場 BattleState.weather 一致（FOG） | 變更: 季節抽天氣＋劇情固定＋戰前偵查面板顯示天氣；RAIN→RAINY；戰場適性系統.md 分片 | 阻塞: 無；待辦：赤壁關、雷暴機械損毀與士氣效果、天氣適性數值表",
+      "notes": "2026-11-22 | 狀態: done | 驗證: 單元測試 9239 通過、tsc 0 錯、standard 閘門過、playtest 12/12、戰前截圖與戰場 BattleState.weather 一致（FOG） | 變更: 季節抽天氣＋劇情固定＋戰前偵查面板顯示天氣；RAIN→RAINY；戰場適性系統新增 shard-d（K–Q）；原卡號 9733 與 #2524 撞號改 9735 | 阻塞: 無；待辦：赤壁關、雷暴機械損毀與士氣效果、天氣適性數值表",
       "brief": {
         "style": "classic",
         "label": "",
