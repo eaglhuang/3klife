@@ -411,6 +411,7 @@ export const view = {
     getScaleX: (): number => 1,
     setResolutionPolicy: (_policy: number): void => undefined,
     on: (_event: string, _cb: () => void): void => undefined,
+    off: (_event: string, _cb: () => void): void => undefined,
 };
 
 /** Spine 組件最小型別替身（只供 SpineGeneralOverlay 型別檢查；測試以執行期 stub 替換實作）。 */

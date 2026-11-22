@@ -11,7 +11,7 @@
  * Unity 對照：Prefab Variant Builder + EditorWindow 動態生成 UI 的組合
  */
 import { _decorator, Button, Component, Label, Node, Sprite, UITransform,
-         UIOpacity, Color, tween, Font, Widget, Layout, Graphics } from 'cc';
+         UIOpacity, Color, tween, Font, Widget, Layout, Graphics, view } from 'cc';
 import { UISkinResolver, ResolvedButtonSkin } from './UISkinResolver';
 import { services } from '../../core/managers/ServiceLoader';
 import { resolveSize, widgetStretchSize, DEFAULT_TRANSITION } from './UISpecTypes';
@@ -39,6 +39,16 @@ import { SolidBackground } from '../components/SolidBackground';
 import { GradientBackground } from '../components/GradientBackground';
 
 const { ccclass } = _decorator;
+
+/** True when a skin layer is a full-cover background: equal to the parent on one axis, not larger on the other. */
+export function coversParentOnOneAxis(
+    layerWidth: number | undefined, layerHeight: number | undefined, parentWidth: number, parentHeight: number,
+): boolean {
+    if (layerWidth === undefined || layerHeight === undefined || parentWidth <= 0 || parentHeight <= 0) return false;
+    const sameW = Math.abs(layerWidth - parentWidth) <= 1;
+    const sameH = Math.abs(layerHeight - parentHeight) <= 1;
+    return (sameW && layerHeight <= parentHeight + 1) || (sameH && layerWidth <= parentWidth + 1);
+}
 
 @ccclass('UIPreviewBuilder')
 export class UIPreviewBuilder extends Component {
@@ -170,6 +180,7 @@ export class UIPreviewBuilder extends Component {
         // Unity 對照：Canvas.ForceUpdateCanvases() — 強制更新所有 RectTransform
         // ─────────────────────────────────────────────────────────────────────
         this._postBuildPass(rootNode);
+        this._watchHostResize(host);
         this._dedupeTabSwitchNodes(rootNode);
         await this._applyScreenBackdrop(layout.id, host, rootNode, designWidth, designHeight);
         if (!isBuildHostAlive(host)) return this._abortedBuild(layout);
@@ -207,6 +218,7 @@ export class UIPreviewBuilder extends Component {
 
     protected lateUpdate(): void {
         this.shadowManager.syncDetachedShadows();
+        this._realignIfHostResized();
     }
 
     /**
@@ -864,7 +876,8 @@ export class UIPreviewBuilder extends Component {
 
             if (layer.widget) {
                 this.layoutBuilder.applyWidget(child, layer.widget, parentWidth, parentHeight);
-            } else if (layer.expand !== false) {
+            } else if (layer.expand !== false || coversParentOnOneAxis(layer.width, layer.height, parentWidth, parentHeight)) {
+                // Full-cover layers must follow the parent, or wide screens show the clear color at the sides
                 this.layoutBuilder.applyWidget(child, { top: 0, left: 0, right: 0, bottom: 0 }, parentWidth, parentHeight);
             }
 
@@ -927,11 +940,18 @@ export class UIPreviewBuilder extends Component {
         sprite.spriteFrame = frame;
         // Cover the actual host size (Widget-stretched on wide windows), not only the design size
         const hostSize = host.getComponent(UITransform);
-        const coverWidth = Math.max(width, hostSize?.width ?? 0);
-        const coverHeight = Math.max(height, hostSize?.height ?? 0);
-        const fit = coverSize(frame.originalSize.width, frame.originalSize.height, coverWidth, coverHeight);
-        t.width = fit.width;
-        t.height = fit.height;
+        // Host may be widened after build on wide screens: also use the visible size, refit on resize
+        const refit = (): void => {
+            const visible = view.getVisibleSize?.();
+            const coverWidth = Math.max(width, hostSize?.width ?? 0, visible?.width ?? 0);
+            const coverHeight = Math.max(height, hostSize?.height ?? 0, visible?.height ?? 0);
+            const fit = coverSize(frame.originalSize.width, frame.originalSize.height, coverWidth, coverHeight);
+            t.width = fit.width;
+            t.height = fit.height;
+        };
+        refit();
+        view.on?.('canvas-resize', refit);
+        node.once(Node.EventType.NODE_DESTROYED, () => view.off?.('canvas-resize', refit));
         host.addChild(node);
         // Keep centered on host; cover size is never smaller than host, so no edge is exposed
         const centering = node.addComponent(Widget);
@@ -958,6 +978,32 @@ export class UIPreviewBuilder extends Component {
             }
         };
         strip(root);
+    }
+
+    private _watchedHost: Node | null = null;
+    private _alignedHostW = -1;
+    private _alignedHostH = -1;
+
+    /**
+     * Wide/narrow screens: the host is resized after build (activation or window resize), but children
+     * with ON_WINDOW_RESIZE widgets (incl. skin background layers) do not follow, exposing the clear color.
+     * Remember the build-time host size; lateUpdate re-aligns widgets top-down once when it changes.
+     */
+    private _watchHostResize(host: Node): void {
+        this._watchedHost = host;
+        const t = host.getComponent(UITransform);
+        this._alignedHostW = t?.width ?? -1;
+        this._alignedHostH = t?.height ?? -1;
+    }
+
+    private _realignIfHostResized(): void {
+        const host = this._watchedHost;
+        if (!host || !isBuildHostAlive(host)) return;
+        const t = host.getComponent(UITransform);
+        if (!t || (t.width === this._alignedHostW && t.height === this._alignedHostH)) return;
+        this._alignedHostW = t.width;
+        this._alignedHostH = t.height;
+        this._realignAllWidgets(host);
     }
 
     protected _postBuildPass(root: Node): void {
