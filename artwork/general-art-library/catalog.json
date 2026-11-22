@@ -2489,39 +2489,74 @@
       "uid": "ma-chao",
       "name": "馬超",
       "standing": {
-        "status": "integrated",
+        "status": "asset-imported",
         "history": [
           {
             "version": "0002",
             "file": "standing/ma_chao__馬超__standing_0002.png",
-            "status": "integrated"
+            "status": "superseded"
+          },
+          {
+            "version": "0003",
+            "file": "standing/ma_chao__馬超__standing_0003.png",
+            "status": "asset-imported",
+            "sha256": "58b4dab2ce3c0bb9856d0c984d7678e1e71c4a0e6587e7e207b241418e724560",
+            "canvas": "1024x1536 RGBA",
+            "note": "依重建男性品質基準；赤紅馬尾、銀白金馬紋甲與騎將長槍。"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "avatar": {
-        "status": "integrated",
+        "status": "asset-imported",
         "history": [
           {
             "version": "0002",
             "file": "avatars/ma_chao__馬超__avatar_0002.png",
-            "status": "integrated"
+            "status": "superseded"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/ma_chao__馬超__avatar_0003.png",
+            "status": "asset-imported",
+            "sha256": "74123e8d942dc401ba6d9c3173cb3848f3b3ea283dc7e58c9c831f5cd8123081",
+            "canvas": "720x720 RGBA",
+            "sourceBustFile": "busts/ma_chao__馬超__bust_0001.png",
+            "method": "crop-only; uniform crop and resize; no redraw, rotation or retouch",
+            "cropBox": {
+              "x": 280,
+              "y": 0,
+              "width": 400,
+              "height": 400
+            },
+            "createdAt": "2026-11-23"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "battle": {
-        "activeVersion": "0002",
+        "activeVersion": "0003",
         "status": "asset-imported",
         "displayStatus": "not-yet-verified",
         "history": [
           {
             "version": "0002",
             "file": "battle/ma_chao__馬超__battle_0002.png",
-            "status": "asset-imported",
+            "status": "superseded",
             "sha256": "20cae32214b92988dbeec0490839465681312cca827b5948ed307b57cd35d3d8",
             "canvas": "1024x1536 RGBA",
             "weaponClass": "long-polearm"
+          },
+          {
+            "version": "0003",
+            "file": "battle/ma_chao__馬超__battle_0003.png",
+            "status": "asset-imported",
+            "sha256": "d714a64fa6331c926ccae381693909eadf2d982c746bd6b12d0f920d6f176547",
+            "canvas": "1199x1312 RGBA",
+            "weaponClass": "spear",
+            "sourceStanding": "standing/ma_chao__馬超__standing_0003.png",
+            "poseLabel": "低角度前弓斜向突進",
+            "note": "同套服裝與馬紋長槍設計；保留完整全身與武器，遊戲顯示未驗證。"
           }
         ]
       },
@@ -2584,6 +2619,27 @@
             "sourceSha256ForResize": "b6d063440f8cc07c66dfa42d337a991cf5f0288eb5437099dd119b423200504d"
           }
         ]
+      },
+      "bust": {
+        "history": [
+          {
+            "version": "0001",
+            "file": "busts/ma_chao__馬超__bust_0001.png",
+            "status": "asset-imported",
+            "sha256": "fd32f036fabcd953a28b46cd3ee1f232e3f3cc47218adf645dedc73a5b5e0dae",
+            "canvas": "900x1000 RGBA",
+            "sourceStandingFile": "standing/ma_chao__馬超__standing_0003.png",
+            "method": "crop-only; no redraw, rotation or retouch",
+            "cropBox": {
+              "x": 62,
+              "y": 0,
+              "width": 900,
+              "height": 1000
+            }
+          }
+        ],
+        "activeVersion": "0001",
+        "status": "asset-imported"
       }
     },
     {
