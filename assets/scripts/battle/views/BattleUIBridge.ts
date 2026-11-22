@@ -1075,7 +1075,7 @@ export class BattleUIBridge {
 
   private _onTileBuffSpawned(): void { this.refreshBattleViews(); }
 
-  private _onTileBuffConsumed(data: { unitId: string; faction: Faction; lane: number; depth: number; buffText: string; attackDelta: number; hpDelta: number }): void {
+  private _onTileBuffConsumed(data: { unitId: string; faction: Faction; lane: number; depth: number; buffText: string; attackDelta: number; hpDelta: number; factor: number }): void {
     const c = this.ctx;
     const deltaText = tileBuffDeltaText(data.attackDelta, data.hpDelta);
     const isDebuff = tileBuffPickupIsDebuff(data.attackDelta, data.hpDelta);
@@ -1087,9 +1087,9 @@ export class BattleUIBridge {
     if (data.attackDelta !== 0 || data.hpDelta !== 0) {
       c.unitRenderer?.playBuffEffect(data.unitId, data.lane, data.depth, data.attackDelta, data.hpDelta);
       // 格子上的同款圖示飛到頭頂，抵達時頭頂圖示列彈出＋腳下光環（要在刷新收起標記之前呼叫）
-      // 事件到這裡時格子已被吃掉，由增減量反推是哪一種圖示
+      // 事件到這裡時格子已被吃掉，由增減量反推是哪一種圖示；倍率由事件帶過來，決定腳下特效的層數
       const badge = tileBuffBadgeOf(tileBuffSourceFromDelta(data.attackDelta, data.hpDelta));
-      c.unitRenderer?.playTileBuffPickup(data.unitId, data.lane, data.depth, badge);
+      c.unitRenderer?.playTileBuffPickup(data.unitId, data.lane, data.depth, badge, data.factor);
     }
     this.refreshBattleViews();
   }

@@ -132,6 +132,8 @@ export class BattleTileBuffLifecycleManager {
       buffText: buff.text,
       attackDelta,
       hpDelta,
+      // 倍數（×3、÷5 的 3、5）：腳下特效依此分級
+      factor: buff.factor,
     });
   }
 }

@@ -9,7 +9,7 @@
     { "minFactor": 5, "rings": 3, "particles": 11, "ticks": 18, "glow": 1.0 }
   ],
   "pickup": {
-    "durationSec": 2.5, "fadeInSec": 0.2, "fadeOutSec": 0.7, "poolMax": 8, "tierIndex": 1,
+    "durationSec": 2.5, "fadeInSec": 0.2, "fadeOutSec": 0.7, "poolMax": 8,
     "rx": 78, "ry": 28, "tickSpeed": 0.7, "baseAlpha": 120
   },
   "attack": {
