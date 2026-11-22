@@ -5,7 +5,7 @@
   "indexPath": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計.md",
   "type": "markdown-h2",
   "preambleShard": "shard-a",
-  "defaultShard": "shard-f",
+  "defaultShard": "shard-g",
   "shards": [
     {
       "name": "shard-a",
@@ -35,7 +35,22 @@
     {
       "name": "shard-f",
       "title": "10–11 學府實作卡拆分建議、待決選擇題",
-      "pattern": "."
+      "pattern": "^1[0-1][.] "
+    },
+    {
+      "name": "shard-g",
+      "title": "12 學府人源缺口方案（待決選擇題 Q13）",
+      "pattern": "^12[.] "
+    },
+    {
+      "name": "shard-h",
+      "title": "13 學府新版規則：人源與子嗣節奏、入學加分、修業變化、失敗與結業影響（依 11/21 裁決）",
+      "pattern": "^13[.] "
+    },
+    {
+      "name": "shard-i",
+      "title": "14 教官就是武將（教官卡退場）、共用框架對應、建議 JSON、驗收、實作卡切分",
+      "pattern": "^14[.] "
     }
   ]
 }

@@ -165,7 +165,7 @@
                   "effects": [
                     {
                       "kind": "resource",
-                      "res": "silver",
+                      "res": "gold",
                       "amount": -40
                     },
                     {
@@ -525,7 +525,7 @@
                   },
                   {
                     "kind": "resource",
-                    "res": "silver",
+                    "res": "gold",
                     "amount": 60
                   }
                 ]

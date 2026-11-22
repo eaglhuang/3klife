@@ -91,6 +91,8 @@ export interface LobbyCityHubInput {
     readonly officerRank: string;
     readonly gold: number;
     readonly gems: number;
+    /** 家族銀兩（PROG-2-9593）：金＝國家公庫，銀兩＝家族；沒給顯示 0 */
+    readonly silver?: number;
     readonly food: number;
     readonly cityTroops: number;
     readonly cityTroopsCap: number;
@@ -173,8 +175,9 @@ export function buildLobbyCityHubView(input: LobbyCityHubInput): LobbyCityHubFlo
         lordFaction: PLAYER_HOME_CITY.faction,
         lordSub: `${input.officerRank || '白身'}　主將 ${input.leadName ?? '未定'}`,
         resGold: `金 ${num(input.gold)}`,
+        resSilver: `銀兩 ${num(input.silver ?? 0)}`,
         resGem: `玉 ${num(input.gems)}`,
-        resFood: `糧 ${num(input.food)}`,
+        resFood: `糧草 ${num(input.food)}`,
         resTroops: `兵 ${num(input.cityTroops)}`,
         cityName: PLAYER_HOME_CITY.name,
         cityRegion: `${PLAYER_HOME_CITY.region}・主城　領地 ${input.territoryCount}`,

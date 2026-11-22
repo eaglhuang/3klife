@@ -178,7 +178,7 @@
                     },
                     {
                       "kind": "resource",
-                      "res": "silver",
+                      "res": "gold",
                       "amount": -10
                     }
                   ]
@@ -768,7 +768,7 @@
               },
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": 40
               },
               {
@@ -793,7 +793,7 @@
               },
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": -20
               }
             ]
@@ -808,7 +808,7 @@
               },
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": -20
               }
             ]
@@ -885,7 +885,7 @@
                   },
                   {
                     "kind": "resource",
-                    "res": "silver",
+                    "res": "gold",
                     "amount": -60
                   },
                   {
@@ -927,7 +927,7 @@
               },
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": -50
               }
             ]
@@ -947,7 +947,7 @@
               },
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": -60
               }
             ]
@@ -963,7 +963,7 @@
               },
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": -70
               },
               {

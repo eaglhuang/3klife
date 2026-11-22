@@ -41,6 +41,18 @@
  *   --jade      選用：玉的用途（商店看玉、許願祭壇用玉買加速卡，PROG-2-9149）
  *   --year      選用：原步驟後接一年循環（每季內政／任務牆／戰鬥／抽卡／培育／推進一季），輸出 year-report.json（PROG-2-9141）
  *   --battles-per-season  --year 時每季出征場數（預設 2）
+ *   --no-auto-play  戰鬥改逐回合手按結束回合（預設開場按一次「自動」走自動代打，PROG-2-9711）
+ *   --academy   選用：學府實玩（PROG-2-9192）：推進到第 2 年第 1 季 → 入學潁川（核對入學令 −1）→ 36 回合 → 結業彈窗 → 回大廳；
+ *               另在複製存檔的第二情境用 ?qaAcademy=11 驗快進入口。輸出 academy-report.json（回合數、打斷、評級、前後季數、節點數、
+ *               apiCalls＝學府寫入呼叫共通 API 的次數，分 item／skill／reward／story／occupancy／save）與 ac-*.png 截圖。
+ *               結業串接推季（PROG-2-9191）、打斷彈窗讀劇情資料（PROG-2-9190）未完成的部分記在報告 todo
+ *
+ *   --family-only 搭配 --family：只跑開場與家族步驟，其餘略過
+ *   --family    配偶上場實玩（PROG-2-9582；需 --dir）：複製存檔到全新情境，網址 ?qaFamily=spouse／nursing 經共通 API 納入首子系統配偶，
+ *               截出征選單與內政畫面（fam-*.png）並輸出 family-report.json；驗收：配偶在出征選單、哺乳中的母親不在但可當太守
+ * 網址參數（QA 快進，不帶就完全不介入；只在本機 adapter 的 debug.fastForward 生效）：
+ *   ?qaFamily=spouse|nursing   進大廳後經 family.enrollSpouse 納入首子系統配偶；nursing 再經 occupancy.acquire 進哺乳占用
+ *   ?qaAcademy=<回合數 1~36>   進大廳後自動入學並連續訓練到已完成指定回合，停在下一回合的打斷點（11 → 第 12 回合期中打斷）
  *
  * puppeteer-core 從本 repo 的 node_modules 找；在 git worktree 內會自動改找主目錄的 node_modules，
  * 也可用環境變數 PLAYTEST_NODE_MODULES 指定。
@@ -138,6 +150,11 @@ function startStaticServer(rootDir) {
     const resolvedRoot = path.resolve(rootDir);
     const server = http.createServer((req, res) => {
         const urlPath = decodeURIComponent((req.url || '/').split('?')[0]);
+        // 同源空白頁：不載遊戲，給 --academy 的 qa 第二情境先寫入 IndexedDB 用（PROG-2-9192）
+        if (urlPath === '/__pt-blank.html') {
+            res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' }).end('<!doctype html><title>blank</title>');
+            return;
+        }
         const relative = urlPath === '/' ? 'index.html' : urlPath.replace(/^\/+/, '');
         const filePath = path.resolve(resolvedRoot, relative);
         if (filePath !== resolvedRoot && !filePath.startsWith(resolvedRoot + path.sep)) {
@@ -194,6 +211,8 @@ function installPageHelpers() {
     });
     const pt = {
         sceneName: () => (scene() ? scene().name : null),
+        /** 節點總數與作用中節點數（記憶體預算觀察用） */
+        nodeCount: () => { let total = 0; let active = 0; walk(scene(), (node) => { total++; if (node.activeInHierarchy) active++; }); return { total, active }; },
         hasButton: (re) => Boolean(findButton(re)),
         /** 診斷用：名稱含 Btn/Button/Return/Back 的作用中節點，附是否有 Button 元件與 interactable */
         dumpBtnLike: () => {
@@ -286,6 +305,7 @@ function createCollector() {
 }
 
 async function main() {
+    let perfProbe = null; // --perf：每步量 FPS／long task／heap／draw call／CPU 熱點（tools_node/perf-probe.js）
     const args = parseArgs(process.argv.slice(2));
     const viewport = parseViewport(args.viewport);
     const stuckMs = Number(args.stuck || DEFAULT_STUCK_MS);
@@ -342,6 +362,26 @@ async function main() {
     let exitCode = 1;
     let reachedLobby = false;
 
+    /** 把 console error／pageerror／失敗請求收進 collector（主頁與 qa 第二情境共用） */
+    function attachCollectors(p) {
+        p.on('console', (message) => {
+            const text = message.text();
+            if (message.type() !== 'error') return;
+            if (DUPLICATE_RESOURCE_ERROR.test(text) || IGNORED_CONSOLE_PATTERNS.some((re) => re.test(text))) return;
+            collector.push('console-error', text);
+        });
+        p.on('pageerror', (error) => collector.push('pageerror', (error && error.stack) || error));
+        p.on('requestfailed', (request) => {
+            if (IGNORED_CONSOLE_PATTERNS.some((re) => re.test(request.url()))) return;
+            collector.push('request-failed', `${request.url()} (${request.failure() && request.failure().errorText})`);
+        });
+        p.on('response', (response) => {
+            if (response.status() >= 400 && !IGNORED_CONSOLE_PATTERNS.some((re) => re.test(response.url()))) {
+                collector.push('http-error', `${response.status()} ${response.url()}`);
+            }
+        });
+    }
+
     const emitStep = (rec) => {
         const status = rec.skipped ? 'SKIP' : rec.ok ? 'PASS' : 'FAIL';
         console.log(`[playtest] ${String(rec.index).padStart(2, '0')} ${status} ${rec.name} (${rec.durationMs}ms)${rec.reason ? ' — ' + rec.reason : ''}`);
@@ -353,7 +393,16 @@ async function main() {
      */
     async function step(name, fn, { skipIfFailed = false } = {}) {
         stepIndex += 1;
+        // --family-only：只跑開場與家族步驟，其餘略過（配偶實玩單獨驗收用，省下整輪 10 分鐘）
+        const skippedByFamilyOnly = Boolean(args['family-only']) && !/^(boot-login-lobby|new-player-opening|family-)/.test(name);
         const rec = { index: stepIndex, name, ok: false, durationMs: 0, screenshot: null, reason: null, detail: {}, console: [], pageErrors: [] };
+        if (skippedByFamilyOnly) {
+            rec.reason = '--family-only，略過';
+            rec.skipped = true;
+            report.steps.push(rec);
+            emitStep(rec);
+            return false;
+        }
         if (skipIfFailed && !reachedLobby) {
             rec.reason = '前置步驟失敗，略過';
             rec.skipped = true;
@@ -363,6 +412,7 @@ async function main() {
         }
         const from = collector.entries.length;
         const t0 = Date.now();
+        if (perfProbe) await perfProbe.begin().catch(() => {});
         rm.takeBlocked(); // 清掉前一步殘留的「被擋住」紀錄
         try {
             const detail = await fn(rec);
@@ -379,6 +429,8 @@ async function main() {
             }
         }
         rec.durationMs = Date.now() - t0;
+        if (perfProbe) rec.perf = await perfProbe.end().catch(() => null);
+        if (args.inject && page) rec.inject = await page.evaluate(() => (window.__injectReport ? window.__injectReport() : 'no-report')).catch((e) => 'ERR ' + e.message);
         const slice = collector.entries.slice(from);
         rec.pageErrors = slice.filter((e) => e.kind === 'pageerror').map((e) => e.detail);
         rec.console = slice.filter((e) => e.kind === 'console-error' || e.kind === 'request-failed' || e.kind === 'http-error').map((e) => `${e.kind}: ${e.detail}`);
@@ -406,7 +458,8 @@ async function main() {
             if (value) return value;
             await delay(300);
         }
-        throw new Error(`逾時 ${Math.round(timeoutMs / 1000)} 秒：${label}`);
+        // label 可給函式：失敗當下才取診斷字串（直接寫樣板字串會在等待「開始前」就取值，抓不到逾時當時的畫面）
+        throw new Error(`逾時 ${Math.round(timeoutMs / 1000)} 秒：${typeof label === 'function' ? await label() : label}`);
     }
 
     const scene = () => page.evaluate(() => window.__pt.sceneName());
@@ -445,6 +498,11 @@ async function main() {
     const openSub = async (cat, textRe) => {
         if (!(await clickButton('^' + cat + '$'))) return null;
         await delay(1200);
+        const hit = await clickByText('^BtnSub', textRe);
+        if (hit) return hit;
+        // 底欄分類鈕是開關：上一步（例如太守府尚未解鎖時按了鎖著的子選單）留下展開的子選單時，這一下會把它收起來；再按一次重新展開
+        if (!(await clickButton('^' + cat + '$'))) return null;
+        await delay(1200);
         return clickByText('^BtnSub', textRe);
     };
 
@@ -453,28 +511,16 @@ async function main() {
             executablePath: browserPath,
             headless: true,
             defaultViewport: viewport,
-            args: ['--disable-gpu', '--no-sandbox', '--disable-dev-shm-usage', '--disable-http-cache', '--allow-file-access-from-files'],
+            args: [...(args.gpu ? [] : ['--disable-gpu']), '--no-sandbox', '--disable-dev-shm-usage', '--disable-http-cache', '--allow-file-access-from-files'],
         });
         // 每次執行都是全新情境：沒有舊的 localStorage／IndexedDB／快取，等同新玩家
         context = await browser.createBrowserContext();
         page = await context.newPage();
         await page.setViewport(viewport);
-        page.on('console', (message) => {
-            const text = message.text();
-            if (message.type() !== 'error') return;
-            if (DUPLICATE_RESOURCE_ERROR.test(text) || IGNORED_CONSOLE_PATTERNS.some((p) => p.test(text))) return;
-            collector.push('console-error', text);
-        });
-        page.on('pageerror', (error) => collector.push('pageerror', (error && error.stack) || error));
-        page.on('requestfailed', (request) => {
-            if (IGNORED_CONSOLE_PATTERNS.some((p) => p.test(request.url()))) return;
-            collector.push('request-failed', `${request.url()} (${request.failure() && request.failure().errorText})`);
-        });
-        page.on('response', (response) => {
-            if (response.status() >= 400 && !IGNORED_CONSOLE_PATTERNS.some((p) => p.test(response.url()))) {
-                collector.push('http-error', `${response.status()} ${response.url()}`);
-            }
-        });
+        attachCollectors(page);
+        // --inject <js>：每個文件載入前先執行的量測腳本（例如包 measureText 計數）
+        if (typeof args.inject === 'string') await page.evaluateOnNewDocument(fs.readFileSync(path.resolve(projectRoot, args.inject), 'utf8'));
+        if (args.perf) perfProbe = await require('./perf-probe').create(page);
 
         // ── 1. 開機 → LoginScene → 開始遊戲 → LobbyScene，等載入遮罩消失 ──
         const bootOk = await step('boot-login-lobby', async (rec) => {
@@ -605,7 +651,7 @@ async function main() {
                     await delay(800);
                     return rec.detail;
                 }
-                const opened = await openSub('BtnCatDomestic', '太守府');
+                const opened = await openSub('BtnCatDomestic', '^太守府'); // 鎖著的項目文字開頭是「🔒」，不會被點到（太守府郡守官階才開放）
                 rec.detail.governorHallOpened = Boolean(opened);
                 if (opened) {
                     await delay(2500);
@@ -976,6 +1022,63 @@ async function main() {
             return rec.detail;
         }, { skipIfFailed: true });
 
+        // ── 3b-3. 商業任務與銀兩（PROG-2-9611）：頂欄銀兩、內政牆商業任務報酬標示、派出、結算飄字與頂欄銀兩增加 ──
+        await step('lobby-commerce-silver', async (rec) => {
+            await requireLobby();
+            await backToLobbyBar();
+            await closeMissionLayers();
+            await waitToastGone();
+            const readSilver = async () => readNum(await rm.textOfNodeName('LobbyHallScreen_silver_value'));
+            const silver0 = await readSilver();
+            rec.detail.silverBefore = silver0;
+            if (!(silver0 > 0)) throw new Error(`頂欄銀兩讀不到或為 0（${silver0}）`);
+            await shot(rec, 'commerce-topbar-silver');
+            const COMMERCE = /市集巡察|特產運銷|平抑物價/;
+            let found = null;
+            for (const wall of [WALL_LEFT, WALL_RIGHT]) {
+                const cards = (await rm.wallCards(wall)) || [];
+                const hit = cards.find((c) => COMMERCE.test(String(c.title || '')));
+                if (hit) { found = { wall, card: hit }; break; }
+            }
+            if (!found) throw new Error('第一年內政牆找不到商業任務（市集巡察／特產運銷／平抑物價），保底失效');
+            const title = String(found.card.title).trim();
+            rec.detail.commerceTitle = title;
+            await rm.click({ ucuf: found.wall, childIndex: found.card.childIndex }, `商業任務「${title}」`);
+            await waitUntil(async () => (await rm.present({ name: MISSION_DIALOG })) || null, 30000, '商業任務詳情窗沒有開出');
+            await delay(1000);
+            const dialogTexts = (await rm.textsUnder(MISSION_DIALOG)) || [];
+            rec.detail.commerceDialog = dialogTexts.slice(0, 24);
+            await shot(rec, 'commerce-detail-reward');
+            if (!dialogTexts.some((t) => t.includes('銀兩'))) throw new Error(`商業任務詳情窗沒有「銀兩」報酬標示（文字：${dialogTexts.slice(0, 20).join(' / ')}）`);
+            await waitToastGone();
+            await rm.click({ name: '^BtnExecute$', under: MISSION_DIALOG }, '執行商業任務');
+            const statusTexts = await waitUntil(async () => { const t = await rm.texts('進行中，還有 \\d+ 季'); return t.length ? t : null; }, 8000, '').catch(() => []);
+            rec.detail.activeStatusTexts = statusTexts;
+            await shot(rec, 'commerce-after-dispatch');
+            if (!statusTexts.length) throw new Error('派出商業任務後任務板看不到「進行中，還有 N 季」');
+            await closeMissionLayers();
+            await waitToastGone();
+            const remain = Math.min(3, Math.max(1, ...statusTexts.map((t) => Number((/還有\s*(\d+)\s*季/.exec(t) || [])[1]) || 1)));
+            const reports = [];
+            for (let i = 0; i < remain; i++) {
+                await requireLobby();
+                await backToLobbyBar();
+                await closeMissionLayers();
+                await rm.click({ ucuf: 'lobby-hall-screen.back' }, '右上「推進一季」');
+                await runSeasonPopups(rec, `commerce-advance${i + 1}`, reports);
+            }
+            const hallReport = reports.find((r) => (r.texts || []).some((t) => t.includes('大廳任務')));
+            if (!hallReport) throw new Error('推進後季度結算沒有「大廳任務」區塊');
+            const block = (hallReport.texts || []).join('\n');
+            rec.detail.settleBlock = block.slice(0, 400);
+            if (!/銀兩\s*\+\s*\d+/.test(block)) throw new Error(`結算飄字／區塊沒有「銀兩 +N」：${block.slice(0, 300)}`);
+            const silver1 = await readSilver();
+            rec.detail.silverAfter = silver1;
+            if (!(silver1 > silver0)) throw new Error(`結算後頂欄銀兩沒有增加（${silver0} → ${silver1}）`);
+            await shot(rec, 'commerce-topbar-silver-after');
+            return rec.detail;
+        }, { skipIfFailed: true });
+
         await step('lobby-advance-season', async (rec) => {
             await requireLobby();
             await backToLobbyBar();
@@ -1124,7 +1227,7 @@ async function main() {
         await step('character-intro-tabs', async (rec) => {
             // 關掉轉蛋等面板回到大廳主畫面，再開武將名冊
             await backToLobbyBar();
-            await waitUntil(() => page.evaluate(() => window.__pt.hasButton('^BtnCatGenerals$')), 30000, `回大廳後沒有底欄按鈕（場景 ${await scene()}；節點 ${(await page.evaluate(() => window.__pt.dumpBtnLike())).join(', ')}）`);
+            await waitUntil(() => page.evaluate(() => window.__pt.hasButton('^BtnCatGenerals$')), 30000, async () => `回大廳後沒有底欄按鈕（場景 ${await scene()}；節點 ${(await page.evaluate(() => window.__pt.dumpBtnLike())).join(', ')}）`);
             rec.detail.rosterEntry = '底欄「武將」→「武將名冊」';
             if (!(await openSub('BtnCatGenerals', '武將名冊'))) throw new Error(`找不到「武將 → 武將名冊」入口（可按按鈕：${(await listButtons()).join(', ')}）`);
             await delay(2500);
@@ -1164,6 +1267,78 @@ async function main() {
          * 出征打一場戰鬥到結算並回大廳（原第 6 步抽成函式，一年循環每季重用）。
          * opts.shotTag 有給時，結算畫面出現時截一張並記錄勝負文字（rec.detail.result／settleShot）。
          */
+        /** 已在戰場（BattleScene）後：加速、佈陣、打到結算、回大廳。runBattle 與年終守城（換季後自動進戰場）共用 */
+        const driveBattle = async (rec, opts, battleT0) => {
+            // 加速（若有）
+            await delay(1500);
+            await clickButton('^BtnFastForward$');
+            // 首戰教學框：收起；再把第一張兵卡拖到我方底線第 3 路（座標以 1920x1080 截圖比例換算）
+            await clickByText('.*', '^\\s*收起\\s*$');
+            await delay(800);
+            const vp = page.viewport();
+            const sx = vp.width * (120 / 1920), sy = vp.height * (285 / 1080);
+            const ex = vp.width * (570 / 1920), ey = vp.height * (760 / 1080);
+            await page.mouse.move(sx, sy);
+            await page.mouse.down();
+            await page.mouse.move((sx + ex) / 2, (sy + ey) / 2, { steps: 12 });
+            await page.mouse.move(ex, ey, { steps: 12 });
+            await page.mouse.up();
+            await delay(1000);
+            // 自動代打（PROG-2-9707／9711）：開場按一次「自動」＝委任出兵＋每回合自動結束回合；只按一次，再按會跳到極速決戰
+            // --no-auto-play 可改回逐回合手按結束回合
+            const autoPlay = !args['no-auto-play'] && opts.autoPlay !== false && Boolean(await clickButton('^BtnAuto$'));
+            rec.detail.autoPlay = autoPlay;
+            rec.detail.endTurnFallbacks = 0;
+            await delay(800);
+            // 等結算：BattleReview 出現，或場景自動回大廳
+            // 回合數有在前進就不算卡住；停滯超過 BATTLE_LIMIT_MS 或總時間超過 6 分鐘才判失敗
+            let settled = null;
+            let lastRound = -1;
+            let lastProgressAt = Date.now();
+            const hardDeadline = Date.now() + 360000;
+            while (!settled) {
+                if ((await scene()) === 'LobbyScene') { settled = 'auto-lobby'; break; }
+                if (await page.evaluate(() => window.__pt.scenePresence('BattleReview'))) { settled = 'review'; break; }
+                if ((await page.evaluate(() => window.__pt.textsMatching('^(勝利|失敗|戰敗|平手)$'))).length) { settled = 'review'; break; }
+                const roundTexts = await page.evaluate(() => window.__pt.textsMatching('^第\\s*\\d+\\s*回合$'));
+                const round = roundTexts.length ? Number(String(roundTexts[0]).replace(/\D/g, '')) : -1;
+                if (round !== lastRound) { lastRound = round; lastProgressAt = Date.now(); }
+                rec.detail.lastRound = lastRound;
+                // 首戰教學戰打不死（回合持續推進仍無勝負）：超過 20 回合改按右上「退」結束教學，記錄為 retreat
+                if (lastRound >= 20) {
+                    rec.detail.retreatedAtRound = rec.detail.retreatedAtRound || lastRound;
+                    await clickByText('.*', '^\\s*退\\s*$');
+                    await clickByText('.*', '^\\s*(確認|確定|是|撤退|結束教學)\\s*$');
+                }
+                // 自動代打時由遊戲自己結束回合；同一回合停超過 12 秒才補按（計入 endTurnFallbacks，代表自動代打沒推進）
+                // 沒開自動代打時逐回合手按結束回合；絕不再按自動鈕（第二次按＝跳到極速決戰）
+                if (!autoPlay || Date.now() - lastProgressAt > 12000) {
+                    if ((await clickButton('^(BtnEndTurn|btnEndTurn|EndTurnBtn)$')) && autoPlay) rec.detail.endTurnFallbacks += 1;
+                }
+                if (Date.now() - lastProgressAt > BATTLE_LIMIT_MS) throw new Error(`戰鬥卡住：第 ${lastRound} 回合起超過 ${Math.round(BATTLE_LIMIT_MS / 1000)} 秒沒有推進（可按按鈕：${(await listButtons()).join(', ')}）`);
+                if (Date.now() > hardDeadline) throw new Error(`戰鬥 6 分鐘內未結算（停在第 ${lastRound} 回合；回合仍在推進，疑似戰鬥變長）`);
+                await delay(1000);
+            }
+            rec.detail.settledBy = settled;
+            rec.detail.battleMs = Date.now() - battleT0;
+            if (settled === 'review') {
+                rec.detail.result = (await page.evaluate(() => window.__pt.textsMatching('^(勝利|失敗|戰敗|平手)$')))[0] || null;
+                // 戰後獎懲（PROG-2-9149）在 recordBattle 存檔後才補進結算框，要等一下才看得到
+                if (opts.shotTag) await delay(3000);
+                rec.detail.reviewTexts = await page.evaluate(() => window.__pt.textsMatching('.{2,}')).then((t) => t.slice(0, 60)).catch(() => []);
+                if (opts.shotTag) await shot(rec, opts.shotTag);
+                await waitUntil(async () => {
+                    if ((await scene()) === 'LobbyScene') return true;
+                    const hit = (await clickByText('.*', '返回大廳')) || await clickButton('^(BtnBattleReviewClose|BtnReturnLobby|BtnBackLobby|BtnReturn|BtnContinue|BtnConfirm|BtnNext|BtnClose|BtnFinish|BtnBack)$');
+                    if (!hit) await delay(1000);
+                    return false;
+                }, 60000, `結算後無法回大廳（可按按鈕：${(await listButtons()).join(', ')}）`);
+            }
+            await requireLobby();
+            rec.detail.returnedToLobby = true;
+            return rec.detail;
+        };
+
         const runBattle = async (rec, opts = {}) => {
             // 回到大廳
             for (let i = 0; i < 6 && (await scene()) !== 'LobbyScene'; i++) {
@@ -1172,7 +1347,7 @@ async function main() {
             }
             await requireLobby();
             await backToLobbyBar();
-            await waitUntil(() => page.evaluate(() => window.__pt.hasButton('^BtnCatSortie$')), 30000, `回大廳後沒有底欄按鈕（場景 ${await scene()}；節點 ${(await page.evaluate(() => window.__pt.dumpBtnLike())).join(', ')}）`);
+            await waitUntil(() => page.evaluate(() => window.__pt.hasButton('^BtnCatSortie$')), 30000, async () => `回大廳後沒有底欄按鈕（場景 ${await scene()}；節點 ${(await page.evaluate(() => window.__pt.dumpBtnLike())).join(', ')}）`);
             if (!(await openSub('BtnCatSortie', '戰場'))) throw new Error(`大廳找不到「出征 → 戰場」入口（可按按鈕：${(await listButtons()).join(', ')}）`);
             await delay(2500);
             rec.detail.buttonsAfterOpen = await listButtons();
@@ -1214,65 +1389,7 @@ async function main() {
                 return rec.detail;
             }
 
-            // 加速（若有）；自動戰鬥若預設已開就不重複點
-            await delay(1500);
-            await clickButton('^BtnFastForward$');
-            // 首戰教學框：收起；再把第一張兵卡拖到我方底線第 3 路（座標以 1920x1080 截圖比例換算）
-            await clickByText('.*', '^\\s*收起\\s*$');
-            await delay(800);
-            const vp = page.viewport();
-            const sx = vp.width * (120 / 1920), sy = vp.height * (285 / 1080);
-            const ex = vp.width * (570 / 1920), ey = vp.height * (760 / 1080);
-            await page.mouse.move(sx, sy);
-            await page.mouse.down();
-            await page.mouse.move((sx + ex) / 2, (sy + ey) / 2, { steps: 12 });
-            await page.mouse.move(ex, ey, { steps: 12 });
-            await page.mouse.up();
-            await delay(1000);
-            // 等結算：BattleReview 出現，或場景自動回大廳
-            // 回合數有在前進就不算卡住；停滯超過 BATTLE_LIMIT_MS 或總時間超過 6 分鐘才判失敗
-            let settled = null;
-            let lastRound = -1;
-            let lastProgressAt = Date.now();
-            const hardDeadline = Date.now() + 360000;
-            while (!settled) {
-                if ((await scene()) === 'LobbyScene') { settled = 'auto-lobby'; break; }
-                if (await page.evaluate(() => window.__pt.scenePresence('BattleReview'))) { settled = 'review'; break; }
-                if ((await page.evaluate(() => window.__pt.textsMatching('^(勝利|失敗|戰敗|平手)$'))).length) { settled = 'review'; break; }
-                const roundTexts = await page.evaluate(() => window.__pt.textsMatching('^第\\s*\\d+\\s*回合$'));
-                const round = roundTexts.length ? Number(String(roundTexts[0]).replace(/\D/g, '')) : -1;
-                if (round !== lastRound) { lastRound = round; lastProgressAt = Date.now(); }
-                rec.detail.lastRound = lastRound;
-                // 首戰教學戰打不死（回合持續推進仍無勝負）：超過 20 回合改按右上「退」結束教學，記錄為 retreat
-                if (lastRound >= 20) {
-                    rec.detail.retreatedAtRound = rec.detail.retreatedAtRound || lastRound;
-                    await clickByText('.*', '^\\s*退\\s*$');
-                    await clickByText('.*', '^\\s*(確認|確定|是|撤退|結束教學)\\s*$');
-                }
-                await clickButton('^BtnAuto$');
-                await clickButton('^(BtnEndTurn|btnEndTurn|EndTurnBtn)$');
-                if (Date.now() - lastProgressAt > BATTLE_LIMIT_MS) throw new Error(`戰鬥卡住：第 ${lastRound} 回合起超過 ${Math.round(BATTLE_LIMIT_MS / 1000)} 秒沒有推進（可按按鈕：${(await listButtons()).join(', ')}）`);
-                if (Date.now() > hardDeadline) throw new Error(`戰鬥 6 分鐘內未結算（停在第 ${lastRound} 回合；回合仍在推進，疑似戰鬥變長）`);
-                await delay(1000);
-            }
-            rec.detail.settledBy = settled;
-            rec.detail.battleMs = Date.now() - battleT0;
-            if (settled === 'review') {
-                rec.detail.result = (await page.evaluate(() => window.__pt.textsMatching('^(勝利|失敗|戰敗|平手)$')))[0] || null;
-                // 戰後獎懲（PROG-2-9149）在 recordBattle 存檔後才補進結算框，要等一下才看得到
-                if (opts.shotTag) await delay(3000);
-                rec.detail.reviewTexts = await page.evaluate(() => window.__pt.textsMatching('.{2,}')).then((t) => t.slice(0, 60)).catch(() => []);
-                if (opts.shotTag) await shot(rec, opts.shotTag);
-                await waitUntil(async () => {
-                    if ((await scene()) === 'LobbyScene') return true;
-                    const hit = (await clickByText('.*', '返回大廳')) || await clickButton('^(BtnBattleReviewClose|BtnReturnLobby|BtnBackLobby|BtnReturn|BtnContinue|BtnConfirm|BtnNext|BtnClose|BtnFinish|BtnBack)$');
-                    if (!hit) await delay(1000);
-                    return false;
-                }, 60000, `結算後無法回大廳（可按按鈕：${(await listButtons()).join(', ')}）`);
-            }
-            await requireLobby();
-            rec.detail.returnedToLobby = true;
-            return rec.detail;
+            return driveBattle(rec, opts, battleT0);
         };
         await step('battle-to-settlement', async (rec) => {
             // 戰後獎懲（PROG-2-9149）：記戰前頂欄、結算畫面截圖，回大廳後再記頂欄，看糧／金／兵源的變化
@@ -1325,6 +1442,139 @@ async function main() {
             const barBack = await waitUntil(() => page.evaluate(() => window.__pt.hasButton('^BtnCatShop$')), 15000, '').catch(() => false);
             rec.detail.lobbyBarAfterReturn = Boolean(barBack);
             if (!barBack) throw new Error(`轉蛋按「返回大廳」後底欄按鈕（BtnCat*）全部消失，畫面看似大廳但節點不在（場景 ${await scene()}；Btn 類節點 ${(await page.evaluate(() => window.__pt.dumpBtnLike())).join(', ')}）`);
+            return rec.detail;
+        }, { skipIfFailed: true });
+
+        // ── 6c. 重複卡彈窗（--dup）：紅顏池連抽到已持有者，必須跳「宿命牽引・名將重逢」選擇窗（不得自動轉換），截圖後選「升星」 ──
+        if (args.dup) await step('gacha-duplicate-popup', async (rec) => {
+            await requireLobby();
+            await backToLobbyBar();
+            await waitUntil(() => page.evaluate(() => window.__pt.hasButton('^BtnCatShop$')), 30000, '底欄「商城」鈕未出現');
+            if (!(await openSub('BtnCatShop', '轉蛋'))) throw new Error('大廳找不到「商店 → 轉蛋」入口');
+            await delay(2500);
+            // 開發自動補款（測試用）：紅顏池十連 1600 靈玉，新局只有 1280
+            await page.evaluate(() => window.localStorage.setItem('ucuf.gacha.dev-auto-topup', 'true'));
+            for (let i = 0; i < 6; i++) {
+                if ((await rm.allTexts()).some((t) => /紅顏召喚/.test(t))) break;
+                await clickButton('^BtnPoolNext$'); await delay(1200);
+            }
+            if (!(await rm.allTexts()).some((t) => /紅顏召喚/.test(t))) throw new Error('切不到「紅顏召喚」池');
+            rec.detail.pulls = 0;
+            let seen = false;
+            for (let n = 0; n < 14 && !seen; n++) {
+                if (!(await clickButton('^BtnPullTen$'))) throw new Error('找不到十連鈕 BtnPullTen');
+                rec.detail.pulls += 1;
+                if (n === 0) { await delay(2500); await shot(rec, 'dup-first-pull'); }
+                for (let k = 0; k < 10; k++) {
+                    await delay(1500);
+                    if (await page.evaluate(() => window.__pt.hasButton('^BtnDupStarUp$'))) { seen = true; break; }
+                    if (await clickButton('^GachaPullResult_(close|back)$')) continue;
+                    if (!(await page.evaluate(() => window.__pt.scenePresence('^GachaPullResult_stage$')))) break;
+                    await page.mouse.click(Math.round(viewport.width / 2), Math.round(viewport.height / 2));
+                }
+            }
+            if (!seen) throw new Error(`連抽 ${rec.detail.pulls} 次都沒出現重複卡彈窗（BtnDupStarUp）`);
+            rec.detail.popupTexts = (await rm.allTexts()).filter((t) => /名將重逢|復生|灌注|升星/.test(t)).slice(0, 8);
+            await delay(2500); // 左側立繪是非同步載入，等它畫出來再截圖
+            await shot(rec, 'dup-popup');
+            await clickButton('^BtnDupStarUp$');
+            await delay(1500);
+            for (let i = 0; i < 8; i++) {
+                if (await clickButton('^BtnDupStarUp$')) { await delay(1200); continue; }
+                if (await clickByText('.*', '^\s*繼續\s*$')) { await delay(1200); continue; }
+                if (await clickButton('^GachaPullResult_(close|back)$')) { await delay(1200); continue; }
+                if (!(await page.evaluate(() => window.__pt.scenePresence('^GachaPullResult_stage$')))) break;
+                await page.mouse.click(Math.round(viewport.width / 2), Math.round(viewport.height / 2));
+                await delay(1200);
+            }
+            await shot(rec, 'dup-after');
+            await clickButton('^GachaReturnToLobby$');
+            await delay(1500);
+            return rec.detail;
+        }, { skipIfFailed: true });
+
+        // ── 6c-2. 結果卡配色（--gacha-card，PROG-2-9810）：名將池十連，結果畫面逐卡截圖（外框／角標／星列要照稀有度），並回報每張卡的稀有度文字 ──
+        if (args['gacha-card']) await step('gacha-result-cards', async (rec) => {
+            // 上一步（gacha-pools）通常還停在轉蛋畫面：已有十連鈕就直接用，免得關面板時又撞到主將選擇層
+            if (!(await page.evaluate(() => window.__pt.hasButton('^BtnPullTen$')))) {
+                await requireLobby();
+                await backToLobbyBar();
+                await waitUntil(() => page.evaluate(() => window.__pt.hasButton('^BtnCatShop$')), 30000, '底欄「商城」鈕未出現');
+                if (!(await openSub('BtnCatShop', '轉蛋'))) throw new Error('大廳找不到「商店 → 轉蛋」入口');
+                await delay(2500);
+            }
+            await page.evaluate(() => window.localStorage.setItem('ucuf.gacha.dev-auto-topup', 'true'));
+            for (let round = 0; round < 1; round++) {
+                if (!(await clickButton('^BtnPullTen$'))) throw new Error('找不到十連鈕 BtnPullTen');
+                // 結果畫面出現後先不點任何東西（點「升星」「繼續」會連結果畫面一起收掉）：等翻牌演完，
+                // 再把蓋在上面的重複卡彈窗暫時隱藏，只為了讓截圖看得到十張卡本身
+                let seen = 0;
+                for (let k = 0; k < 40 && seen < 2; k++) {
+                    await delay(1500);
+                    seen = (await page.evaluate(() => window.__pt.scenePresence('^GachaPullResult_stage$'))) ? seen + 1 : 0;
+                }
+                if (seen < 2) { await shot(rec, 'gacha-result-cards-stuck'); throw new Error('十連後沒有出現結果畫面 GachaPullResult_stage'); }
+                // 等翻牌與展示區收邊演完：十張卡的稀有度字樣都出現（至多等 60 秒）
+                for (let k = 0; k < 40; k++) {
+                    await delay(1500);
+                    const tags = (await rm.allTexts()).filter((t) => /^(N|R|SR|SSR|UR)$/.test(String(t).trim()));
+                    if (tags.length >= 10) break;
+                }
+                rec.detail.hiddenOverlays = await page.evaluate(() => {
+                    const hidden = [];
+                    const walk = (n) => { if (/^(DuplicatePullPopupHost|RedFaceShowcaseHost)$/.test(n.name) && n.active) { n.active = false; hidden.push(n.name); } n.children.forEach(walk); };
+                    walk(window.cc.director.getScene());
+                    return hidden;
+                });
+                // 先拍「武將展示」畫面（英雄徽章顏色），再點舞台任一處讓十張卡面板出現
+                await shot(rec, 'gacha-result-hero');
+                await page.mouse.click(Math.round(viewport.width / 2), Math.round(viewport.height / 2));
+                await delay(1500);
+                (rec.detail.rounds = rec.detail.rounds || []).push({ texts: (await rm.allTexts()).filter((t) => /^(N|R|SR|SSR|UR)$/.test(String(t).trim())) });
+                await shot(rec, `gacha-result-cards-${round + 1}`);
+                for (let i = 0; i < 6; i++) {
+                    if (await clickButton('^GachaPullResult_(close|back)$')) { await delay(1200); }
+                    if (!(await page.evaluate(() => window.__pt.scenePresence('^GachaPullResult_stage$')))) break;
+                }
+            }
+            await clickButton('^GachaReturnToLobby$');
+            await delay(1500);
+            return rec.detail;
+        }, { skipIfFailed: true });
+
+        // ── 6d. 教官池（--support，PROG-2-9243）：切到教官池截圖、開「詳情」看完整機率表、用開局連線券十連、截結果 ──
+        if (args.support) await step('gacha-support-pool', async (rec) => {
+            await requireLobby();
+            await backToLobbyBar();
+            await waitUntil(() => page.evaluate(() => window.__pt.hasButton('^BtnCatShop$')), 30000, '底欄「商城」鈕未出現');
+            if (!(await openSub('BtnCatShop', '轉蛋'))) throw new Error('大廳找不到「商店 → 轉蛋」入口');
+            await delay(2500);
+            for (let i = 0; i < 6; i++) {
+                if ((await rm.allTexts()).some((t) => /教學投影卡/.test(t))) break;
+                await clickButton('^BtnPoolNext$'); await delay(1500);
+            }
+            if (!(await rm.allTexts()).some((t) => /教學投影卡/.test(t))) throw new Error('切不到「教官池」');
+            rec.detail.poolTexts = (await rm.allTexts()).filter((t) => /教官池|連線券|教學投影/.test(t)).slice(0, 8);
+            await shot(rec, 'support-pool');
+            if (!(await clickButton('^BtnPoolDetail$'))) throw new Error('找不到詳情鈕 BtnPoolDetail');
+            await delay(1500);
+            rec.detail.rateTexts = (await rm.allTexts()).filter((t) => /共 \d|UP（|保底|%/.test(t)).slice(0, 30);
+            await shot(rec, 'support-rates');
+            if (!rec.detail.rateTexts.length) throw new Error('機率說明沒有列出任何機率列');
+            await rm.tryClick({ name: '^CloseButton$', button: true });
+            await delay(800);
+            if (!(await clickButton('^BtnPullTen$'))) throw new Error('找不到十連鈕 BtnPullTen');
+            await delay(3500);
+            await shot(rec, 'support-result');
+            rec.detail.resultTexts = (await rm.allTexts()).filter((t) => /教學投影|SSR|傳承|學分|剩餘/.test(t)).slice(0, 20);
+            for (let k = 0; k < 6; k++) {
+                if (await clickButton('^GachaPullResult_(close|back)$')) { await delay(1200); break; }
+                if (!(await page.evaluate(() => window.__pt.scenePresence('^GachaPullResult_stage$')))) break;
+                await page.mouse.click(Math.round(viewport.width / 2), Math.round(viewport.height / 2));
+                await delay(1500);
+            }
+            await clickButton('^GachaReturnToLobby$');
+            await delay(1500);
             return rec.detail;
         }, { skipIfFailed: true });
 
@@ -1424,7 +1674,7 @@ async function main() {
                 if (!promoted.tiers.length) throw new Error('給官職經驗後沒有晉升');
                 const popup = await waitUntil(async () => {
                     const texts = await rm.allTexts();
-                    return texts.some((t) => /^晉升「/.test(t)) ? texts.filter((t) => /^晉升「|新開放|：|下一官職/.test(t)) : null;
+                    return texts.some((t) => /^(晉升「|朝廷敕封：晉升【)/.test(t)) ? texts.filter((t) => /^晉升「|^朝廷敕封|史小境|新開放|：|下一官職/.test(t)) : null;
                 }, 20000, '晉升後 20 秒內沒有出現晉升彈窗').catch((e) => { throw e; });
                 rec.detail.popupTexts = popup;
                 await delay(600);
@@ -1432,6 +1682,32 @@ async function main() {
                 const ok = await clickByText('^BtnRankUnlockOk$', '.*') || await clickButton('^BtnRankUnlockOk$');
                 rec.detail.popupClosed = Boolean(ok);
                 await delay(800);
+                // 晉升大廳導流（PROG-2-9610）：首位走動武將頭頂金色「！」→ 點擊 → 導流泡泡（含「立即前往」）
+                rec.detail.hallGuide = {};
+                const guideMarks = await waitUntil(async () => {
+                    const marks = await page.evaluate(() => Object.keys(window.__pt.nameCounts('^mark-')));
+                    return marks.length ? marks : null;
+                }, 8000, '晉升後大廳武將頭頂沒有出現「！」標記').catch((e) => { rec.detail.hallGuide.markError = e.message; return []; });
+                rec.detail.hallGuide.marks = guideMarks;
+                await shot(rec, 'rank-unlock-hall-mark');
+                // 點頭頂掛「！」的那位（mark-<id> 對應 crowd-<id>）；泡泡必須出在同一人身上（PROG-2-9820）
+                const markedId = (guideMarks[0] || '').replace(/^mark-/, '');
+                rec.detail.hallGuide.markedId = markedId;
+                const guideTapped = markedId ? await rm.tryClick({ name: `^crowd-${markedId}$` }) : false;
+                rec.detail.hallGuide.tapped = Boolean(guideTapped);
+                await delay(900);
+                rec.detail.hallGuide.bubbleTexts = (await rm.allTexts()).filter((t) => /新解鎖|立即前往|大喜/.test(t));
+                await shot(rec, 'rank-unlock-hall-bubble');
+                if (!rec.detail.hallGuide.tapped) throw new Error('點不到頭頂掛「！」的武將');
+                if (!rec.detail.hallGuide.bubbleTexts.some((t) => /立即前往/.test(t))) throw new Error('點「！」武將後沒有出現導流泡泡');
+                // 消費導流（點「立即前往」）後標記應消失
+                const goTapped = await rm.tryClick({ text: '立即前往', button: true }) || await rm.tryClick({ text: '立即前往' });
+                rec.detail.hallGuide.goTapped = Boolean(goTapped);
+                await delay(1500);
+                rec.detail.hallGuide.marksAfter = await page.evaluate(() => Object.keys(window.__pt.nameCounts('^mark-')));
+                await backToLobbyBar();
+                await delay(600);
+                await shot(rec, 'rank-unlock-hall-mark-consumed');
                 // 晉升後原本鎖著的按鈕解鎖
                 if (!(await clickButton('^BtnCatDomestic$'))) throw new Error('晉升後找不到底欄「內政」');
                 await delay(1200);
@@ -1562,7 +1838,7 @@ async function main() {
                     rec.detail.newButtons = btns.filter((b) => !prevButtons.has(b));
                     prevButtons = new Set(btns);
                     try {
-                        const opened = await openSub('BtnCatDomestic', '太守府');
+                        const opened = await openSub('BtnCatDomestic', '^太守府'); // 鎖著的項目文字開頭是「🔒」，不會被點到（太守府郡守官階才開放）
                         if (opened) {
                             await delay(2000);
                             rec.detail.governorTexts = (await rm.allTexts()).filter((t) => /人口|民心|黃金|糧|等級|紅利|成長/.test(t)).slice(0, 30);
@@ -1672,17 +1948,20 @@ async function main() {
                     if (!diff.result) throw new Error(`轉蛋畫面沒有可按的單抽鈕（可按按鈕：${rec.detail.buttons.join(', ')}）`);
                     return rec.detail;
                 });
-                // 5. 培育：開「開獎・培育」面板，記錄內容並嘗試點第一個可按的操作鈕
+                // 5. 培育 → 學府：開入學畫面截圖並記錄（舊培育訓練已下線；實際入學與 36 回合走 --academy），再用「返回」鈕關掉
                 await ys('nurture', async (rec) => {
-                    const opened = await openSub('BtnCatNurture', '開獎');
-                    if (!opened) throw new Error('底欄「培育」→「開獎・培育」打不開');
+                    const opened = await openSub('BtnCatNurture', '學府');
+                    if (!opened) throw new Error('底欄「培育」→「學府」打不開');
                     await delay(2500);
                     rec.detail.buttons = await listButtons();
                     rec.detail.panelTexts = (await rm.allTexts()).slice(0, 40);
-                    await shot(rec, 'nurture-open');
-                    const diff = await withTextDiff(() => clickButton('(Nurture|Train|Start|Roll|Reveal|Draw|Confirm|Next|Select|Choose|Child|Card|Row)'), 1800);
-                    rec.detail.clicked = diff.result; rec.detail.added = diff.added; rec.detail.toast = diff.toast;
-                    await shot(rec, 'nurture-after');
+                    // 入學鈕（AcEnrollConfirm）在不能入學時（少年名將未滿 15 歲）是灰的、不算可按按鈕，所以改認入學畫面一定會有的返回鈕與書院選項
+                    rec.detail.enrollScreen = rec.detail.buttons.some((n) => /^(?:[Bb]tn)?(?:AcEnrollConfirm|AcEnrollBack)$/.test(n)) && rec.detail.buttons.some((n) => /^AcAcademy\d+$/.test(n));
+                    await shot(rec, 'academy-enroll-open');
+                    const closed = await clickButton('^(?:[Bb]tn)?AcEnrollBack$');
+                    rec.detail.closed = Boolean(closed);
+                    await delay(800);
+                    if (!rec.detail.enrollScreen) throw new Error(`學府入學畫面沒有出現（沒有返回鈕／書院選項；畫面按鈕：${rec.detail.buttons.join('、') || '無'}）`);
                     return rec.detail;
                 });
                 // 6. 推進一季；處理所有換季彈窗
@@ -1693,6 +1972,21 @@ async function main() {
                     const popupLog = [];
                     await rm.click({ ucuf: 'lobby-hall-screen.back' }, '右上「推進一季」');
                     const popups = await runSeasonPopups(rec, 'adv', reports, popupLog);
+                    // 第 1 年末換季會自動進「年終守城」戰場（PROG-2-9431）：打到結算回大廳再處理戰後彈窗；機器忙時戰場與彈窗會晚到，季別沒變就多清幾輪
+                    const clearYearEnd = async (tagSuffix) => {
+                        for (let b = 0; b < 2 && (await scene()) === 'BattleScene'; b++) {
+                            rec.detail.yearEndBattles = (rec.detail.yearEndBattles || 0) + 1;
+                            await driveBattle(rec, {}, Date.now());
+                            await delay(2000);
+                            popups.push(...await runSeasonPopups(rec, `adv${tagSuffix}b${b + 1}`, reports, popupLog).catch(() => []));
+                        }
+                    };
+                    await clearYearEnd('');
+                    for (let k = 0; k < 5 && cur.ordinal !== null && (await readSeason()).ordinal === cur.ordinal; k++) {
+                        await delay(3000);
+                        popups.push(...await runSeasonPopups(rec, `adv-r${k + 1}`, reports, popupLog).catch(() => []));
+                        await clearYearEnd(`-r${k + 1}`);
+                    }
                     rec.detail.popups = popups.map((p) => p.kind);
                     rec.detail.popupTexts = popupLog;
                     yq.popups = popups.map((p) => p.kind);
@@ -1721,6 +2015,540 @@ async function main() {
             yearReport.finishedAt = new Date().toISOString();
             yearReport.endSeason = (await readSeason().catch(() => ({ text: null }))).text;
             writeYearReport();
+        }
+
+        // ── 9b. 配偶上場實玩（--family，選用；PROG-2-9582 F11）：把目前存檔複製到全新情境，網址帶 qaFamily=spouse／nursing，
+        //        QA 快進經共通 API（family.enrollSpouse、occupancy.acquire）納入首子系統配偶，再截出征選主將畫面與內政指派太守畫面。
+        //        驗收 1：配偶出現在出征選單；驗收 2：哺乳中的母親不在出征選單，但仍可當太守。輸出 family-report.json 與 fam-*.png ──
+        if (args.family) {
+            const fr = { tool: 'tools_node/playtest-online.js --family', startedAt: new Date().toISOString(), scenarios: {}, screenshots: [] };
+            const writeFamilyReport = () => fs.writeFileSync(path.join(outDir, 'family-report.json'), JSON.stringify(fr, null, 2), 'utf8');
+            await step('family-qa-spouse-sortie', async (rec) => {
+                if (!args.dir) { rec.detail.skipped = 'qa 第二情境需要本機建置目錄（--dir）才有同源空白頁，--url 模式略過'; return rec.detail; }
+                const dump = await page.evaluate(() => new Promise((resolve, reject) => {
+                    const open = indexedDB.open('3KLifeData');
+                    open.onerror = () => reject(open.error);
+                    open.onsuccess = () => {
+                        const db = open.result;
+                        if (!db.objectStoreNames.contains('kv')) { resolve({ version: db.version, rows: [] }); return; }
+                        const req = db.transaction('kv', 'readonly').objectStore('kv').getAll();
+                        req.onerror = () => reject(req.error);
+                        req.onsuccess = () => resolve({ version: db.version, rows: req.result.map((r) => ({ key: r.key, json: JSON.stringify(r) })) });
+                    };
+                }));
+                const origContext = context;
+                const origPage = page;
+                const runScenario = async (scenario) => {
+                    const sc = { texts: {}, buttons: {}, screenshots: [] };
+                    fr.scenarios[scenario] = sc;
+                    const qaContext = await browser.createBrowserContext();
+                    const qaPage = await qaContext.newPage();
+                    await qaPage.setViewport(viewport);
+                    attachCollectors(qaPage);
+                    try {
+                        await qaPage.goto(`${target}__pt-blank.html`, { waitUntil: 'load' });
+                        await qaPage.evaluate((d) => new Promise((resolve, reject) => {
+                            const open = indexedDB.open('3KLifeData', d.version);
+                            open.onupgradeneeded = () => { if (!open.result.objectStoreNames.contains('kv')) open.result.createObjectStore('kv', { keyPath: 'key' }); };
+                            open.onerror = () => reject(open.error);
+                            open.onsuccess = () => {
+                                const db = open.result;
+                                const tx = db.transaction('kv', 'readwrite');
+                                for (const r of d.rows) tx.objectStore('kv').put(JSON.parse(r.json));
+                                tx.oncomplete = () => { db.close(); resolve(true); };
+                                tx.onerror = () => reject(tx.error);
+                            };
+                        }), dump);
+                        context = qaContext;
+                        page = qaPage;
+                        await qaPage.goto(`${target}?qaFamily=${scenario}`, { waitUntil: 'load', timeout: stuckMs });
+                        await waitUntil(() => page.evaluate(() => Boolean(window.cc && window.cc.director && window.cc.director.getScene())), stuckMs, 'qa 情境引擎未就緒');
+                        await installHelpers();
+                        await waitUntil(async () => (await scene()) === 'LoginScene', stuckMs, 'qa 情境未進入 LoginScene');
+                        await delay(Number(args['login-settle'] || 12000));
+                        await clickLoginStart();
+                        await waitUntil(async () => (await scene()) === 'LobbyScene', stuckMs, 'qa 情境未進入 LobbyScene');
+                        let qa = null;
+                        await waitUntil(async () => { qa = await page.evaluate(() => window.__qaFamily || null); return qa && qa.state !== 'running'; }, 60000, `qaFamily=${scenario} 60 秒內沒有完成`);
+                        if (qa.state !== 'done') throw new Error(`qaFamily=${scenario} 失敗：${JSON.stringify(qa)}`);
+                        sc.qa = qa.result;
+                        const gid = qa.result.generalId;
+                        // 名冊與出征名單（純讀取）：配偶在名冊；出征名單有沒有她就是兩個驗收的差別
+                        sc.state = await page.evaluate(async (id) => {
+                            const loader = await window.System.import('chunks:///_virtual/ServiceLoader.ts');
+                            const s = loader.services().session;
+                            const g = (s.roster || []).find((x) => x.id === id);
+                            return {
+                                name: g ? g.name : null, inRoster: !!g, isSpouse: s.isSpouse(id),
+                                deployable: s.getDeployableGenerals().some((x) => x.id === id),
+                                occupancy: s.occupancyHost.service.query(id).map((r) => r.kind),
+                            };
+                        }, gid);
+                        const shotTo = async (tag) => {
+                            const file = path.join(outDir, `fam-${scenario}-${tag}.png`);
+                            await page.screenshot({ path: file });
+                            const rel = path.relative(projectRoot, file).replace(/\\/g, '/');
+                            sc.screenshots.push(rel);
+                            fr.screenshots.push(rel);
+                        };
+                        // 出征編制畫面（出征選單：主將之外可選的參謀官／後勤官候選就是可出征名單）：由遊戲內同一個入口開啟，
+                        // 再用真滑鼠一位一位切換參謀官，記下每位候選名字；配偶在可出征名單才會被切到，哺乳中的母親不會出現
+                        await requireLobby();
+                        await backToLobbyBar();
+                        sc.sortieOpened = await page.evaluate(() => {
+                            const walk = (n, out) => { out.push(n); for (const c of (n.children || [])) walk(c, out); return out; };
+                            for (const n of walk(window.cc.director.getScene(), [])) {
+                                for (const comp of (n.components || [])) {
+                                    if (comp && typeof comp._openSortieSetup === 'function') { comp._openSortieSetup(); return true; }
+                                }
+                            }
+                            return false;
+                        });
+                        await delay(2500);
+                        sc.buttons.sortie = await listButtons();
+                        const seen = [];
+                        const readStrategist = async () => {
+                            const t = await rm.allTexts();
+                            const i = t.findIndex((x) => /^參謀官$/.test(x));
+                            return i >= 0 ? t[i + 1] : null;
+                        };
+                        // 新納入的配偶排在名冊最後：從「不派」往前切（上一位）幾下就會繞到名冊尾端；最多切 6 下，沒遇到她就是不在候選
+                        let spouseShot = false;
+                        seen.push(await readStrategist());
+                        for (let i = 0; i < 6 && !spouseShot; i++) {
+                            if (!(await clickButton('^btnPrevStrategist$'))) break;
+                            await delay(700);
+                            const nm = await readStrategist();
+                            seen.push(nm);
+                            if (nm && sc.state.name && nm === sc.state.name) { await shotTo('sortie-strategist'); spouseShot = true; }
+                        }
+                        sc.sortieStrategistCandidates = seen;
+                        sc.spouseInSortieCandidates = Boolean(sc.state.name && seen.includes(sc.state.name));
+                        sc.texts.sortie = (await rm.allTexts()).slice(0, 80);
+                        await shotTo('sortie');
+                        for (let i = 0; i < 4; i++) { if (!(await clickButton('^(btnCloseSortie|BtnCloseSortie)$'))) break; await delay(800); }
+                        // 指派太守（遊戲內同一條 assignGovernor 規則，與內政畫面「換將」呼叫的是同一個）：哺乳中的母親也要能當太守，
+                        // 指派完再開內政畫面，農耕格的「主事」就會顯示她的名字
+                        sc.governorCandidate = await page.evaluate(async (id) => {
+                            const loader = await window.System.import('chunks:///_virtual/ServiceLoader.ts');
+                            const s = loader.services().session;
+                            return { assignable: s.assignGovernor('farming', id).ok };
+                        }, gid);
+                        // 內政指派太守：開內政畫面，截太守候選
+                        await backToLobbyBar();
+                        sc.buttons.domesticMenu = (await clickButton('^BtnCatDomestic$')) ? await page.evaluate(() => window.__pt.buttonTexts('^BtnSub')) : null;
+                        await delay(1500);
+                        const domOpened = await clickByText('^BtnSub', '^內政$');
+                        sc.domesticOpened = Boolean(domOpened);
+                        await delay(2500);
+                        sc.texts.domestic = (await rm.allTexts()).slice(0, 80);
+                        sc.spouseShownAsGovernor = Boolean(sc.state.name && sc.texts.domestic.some((t) => String(t).includes(sc.state.name)));
+                        sc.buttons.domestic = await listButtons();
+                        await shotTo('domestic');
+                    } finally {
+                        page = origPage;
+                        context = origContext;
+                        await qaPage.close().catch(() => undefined);
+                        await qaContext.close().catch(() => undefined);
+                    }
+                };
+                try {
+                    await runScenario('spouse');
+                    await runScenario('nursing');
+                } finally {
+                    fr.finishedAt = new Date().toISOString();
+                    writeFamilyReport();
+                }
+                rec.detail.report = path.relative(projectRoot, path.join(outDir, 'family-report.json')).replace(/\\/g, '/');
+                const sp = fr.scenarios.spouse.state, nu = fr.scenarios.nursing.state;
+                if (!sp || !sp.deployable || !fr.scenarios.spouse.spouseInSortieCandidates) throw new Error(`驗收 1 失敗：配偶沒有出現在出征名單（${JSON.stringify(sp)}）`);
+                if (!nu || nu.deployable || fr.scenarios.nursing.spouseInSortieCandidates || !nu.occupancy.includes('nursing')) throw new Error(`驗收 2 失敗：哺乳中的母親仍在出征名單或沒有哺乳占用（${JSON.stringify(nu)}）`);
+                if (!fr.scenarios.nursing.governorCandidate || !fr.scenarios.nursing.governorCandidate.assignable) throw new Error('驗收 2 失敗：哺乳中的母親不能當太守');
+                return rec.detail;
+            }, { skipIfFailed: false });
+        }
+
+        // ── 10. 學府實玩（--academy，選用；PROG-2-9192）：開局少年名將 → 推進到第 2 年第 1 季 → 入學潁川（扣入學令）→ 36 回合 → 結業 → 回大廳；
+        //        另在複製存檔的第二個情境用網址 qaAcademy=11 驗快進入口；輸出 academy-report.json（含 apiCalls：學府寫入呼叫共通 API 的次數）──
+        if (args.academy) {
+            const ACADEMY_ENROLL_SEASON = 8; // 第 2 年春（頂欄序數）：少年名將第 1 年末滿 15 歲後入學
+            const ar = {
+                tool: 'tools_node/playtest-online.js --academy', startedAt: new Date().toISOString(),
+                youth: null, seasonBeforeEnroll: null, seasonAfterGraduation: null, seasonsBefore: null, seasonsAfter: null,
+                tokenBefore: null, tokenAfterEnroll: null, turnsPlayed: 0, interrupts: [], graduationRating: null, graduationTexts: [],
+                nodeCounts: {}, apiCalls: null, occupancy: null, taskWall: null, qaFastForward: null, screenshots: [], todo: [],
+            };
+            const writeAcademyReport = () => fs.writeFileSync(path.join(outDir, 'academy-report.json'), JSON.stringify(ar, null, 2), 'utf8');
+            const acShot = async (tag) => {
+                const file = path.join(outDir, `ac-${tag}.png`);
+                await page.screenshot({ path: file });
+                ar.screenshots.push(path.relative(projectRoot, file).replace(/\\/g, '/'));
+                return file;
+            };
+            /** 讀遊戲內的學府狀態（純讀取，不改任何東西） */
+            const readAcademy = () => page.evaluate(async () => {
+                const loader = await window.System.import('chunks:///_virtual/ServiceLoader.ts');
+                const s = loader.services().session;
+                const rec = s.academyRecord;
+                const c = rec && rec.committed;
+                const g = c && c.gimmickStatePayload ? c.gimmickStatePayload : {};
+                return {
+                    hasRecord: !!rec, graduated: !!(c && c.graduated), turn: c ? c.currentTurn : null, energy: c ? c.energy : null,
+                    stats: c ? c.stats : null, pendingInterrupt: c ? c.pendingInterrupt : null, interruptOptions: c ? c.interruptOptions : [],
+                    learnedTactics: c ? c.learnedTactics : [], controlMode: c ? c.controlMode : null, childId: c ? c.childId : null,
+                    debatePending: !!g.debatePending, eventPending: !!g.eventPending, handLen: (g.handCards || []).length, pendingCard: !!g.pendingCard,
+                    tokens: s.itemCount('ITEM_ADMISSION_TOKEN'), seasons: s.gameTime.totalSeasonsElapsed, active: s.isAcademyActive,
+                    roster: (s.roster || []).filter((x) => (x.age || 99) < 20).slice(0, 6).map((x) => ({ id: x.id, name: x.name, age: x.age, fate: x.fate && x.fate.choice, grad: x.graduationRating || null })),
+                };
+            });
+            /** 在共通 API 入口掛計數（只計次，不改行為）：命令一律經 handle／invoke 進來，依命令名分組 */
+            const installApiCounter = () => page.evaluate(async () => {
+                const loader = await window.System.import('chunks:///_virtual/ServiceLoader.ts');
+                const api = loader.services().api;
+                if (api.__ptCounted) return 'already';
+                window.__ptApi = window.__ptApi || { calls: {} };
+                const bump = (name) => { window.__ptApi.calls[name] = (window.__ptApi.calls[name] || 0) + 1; };
+                const handle = api.handle.bind(api);
+                api.handle = (req) => { bump(req && req.cmd); return handle(req); };
+                const invoke = api.invoke.bind(api);
+                api.invoke = (name, args2) => { bump(name); return invoke(name, args2); };
+                api.__ptCounted = true;
+                return 'installed';
+            });
+            /** 計數 → 報告格式：寫入命令（cmd）依前綴分六組，查詢（query）另列；apiCalls 只算會改狀態的命令 */
+            const summarizeApi = async () => {
+                const calls = await page.evaluate(() => (window.__ptApi && window.__ptApi.calls) || {});
+                const QUERIES = new Set(['item.count', 'item.list', 'item.ledger', 'reward.pools', 'reward.pity', 'story.available', 'story.pending', 'story.seen', 'story.flags', 'skill.list', 'skill.canLearn', 'occupancy.query', 'save.load', 'save.rev', 'wallet.balance']);
+                const GROUPS = ['item', 'skill', 'reward', 'story', 'occupancy', 'save'];
+                const out = { item: 0, skill: 0, reward: 0, story: 0, occupancy: 0, save: 0, other: 0, total: 0, queries: 0, byCommand: calls };
+                for (const [name, n] of Object.entries(calls)) {
+                    if (QUERIES.has(name)) { out.queries += n; continue; }
+                    const group = name.split('.')[0];
+                    out[GROUPS.includes(group) ? group : 'other'] += n;
+                    out.total += n;
+                }
+                return out;
+            };
+            /** 到大廳底欄「培育」→「學府」；回傳點到的子選單文字 */
+            const openAcademyMenu = async () => {
+                await backToLobbyBar();
+                await closeMissionLayers();
+                return openSub('BtnCatNurture', '學府');
+            };
+
+            // 10-1. 推進到第 2 年第 1 季（頂欄序數 ≥ 8）：每次推進一季並處理彈窗
+            await step('academy-advance-to-year2', async (rec) => {
+                await requireLobby();
+                await installApiCounter();
+                const log = [];
+                for (let i = 0; i < 6; i++) {
+                    await backToLobbyBar();
+                    await closeMissionLayers();
+                    const cur = await readSeason();
+                    if (cur.ordinal !== null && cur.ordinal >= ACADEMY_ENROLL_SEASON) break;
+                    await rm.click({ ucuf: 'lobby-hall-screen.back' }, '右上「推進一季」');
+                    await runSeasonPopups(rec, `adv${i + 1}`);
+                    // 第 1 年末換季會自動進「年終守城」戰場：打到結算回大廳，再處理戰後彈窗
+                    for (let b = 0; b < 2 && (await scene()) === 'BattleScene'; b++) {
+                        rec.detail.yearEndBattles = (rec.detail.yearEndBattles || 0) + 1;
+                        await driveBattle(rec, {}, Date.now());
+                        await delay(2000);
+                        await runSeasonPopups(rec, `adv${i + 1}b${b + 1}`).catch(() => []);
+                    }
+                    await delay(800);
+                    let after = await readSeason();
+                    // 機器忙時年終換季與彈窗會很晚才冒出：季別沒變就再處理一輪彈窗（含晚到的季報、事件、年報與守城戰），最多 5 輪
+                    for (let k = 0; k < 5 && after.ordinal === cur.ordinal; k++) {
+                        await delay(3000);
+                        await runSeasonPopups(rec, `adv${i + 1}r${k + 1}`).catch(() => []);
+                        for (let b = 0; b < 2 && (await scene()) === 'BattleScene'; b++) {
+                            rec.detail.yearEndBattles = (rec.detail.yearEndBattles || 0) + 1;
+                            await driveBattle(rec, {}, Date.now());
+                            await delay(2000);
+                            await runSeasonPopups(rec, `adv${i + 1}r${k + 1}b${b + 1}`).catch(() => []);
+                        }
+                        after = await readSeason();
+                    }
+                    // 季別已前進但事件／年報可能還沒處理完：再清一輪，避免遮住大廳與下一次推進
+                    await runSeasonPopups(rec, `adv${i + 1}z`).catch(() => []);
+                    log.push(`${cur.text} → ${after.text}`);
+                    if (cur.ordinal !== null && after.ordinal !== cur.ordinal + 1) throw new Error(`季別沒有前進：「${cur.text}」→「${after.text || '讀不到'}」`);
+                }
+                const now = await readSeason();
+                rec.detail.advanced = log;
+                rec.detail.season = now.text;
+                ar.seasonBeforeEnroll = now.text;
+                if (now.ordinal === null || now.ordinal < ACADEMY_ENROLL_SEASON) throw new Error(`沒推進到第 2 年第 1 季：目前「${now.text}」`);
+                const st = await readAcademy();
+                ar.youth = st.roster[0] || null;
+                rec.detail.roster = st.roster;
+                ar.seasonsBefore = st.seasons;
+                await waitToastGone();
+                return rec.detail;
+            }, { skipIfFailed: true });
+
+            // 10-1b. QA 快進入口 qaAcademy=11：把「入學前」存檔複製到全新情境，網址帶 qaAcademy=11 進大廳，第一個學府畫面要是第 12 回合期中打斷
+            await step('academy-qa-fast-forward', async (rec) => {
+                if (!args.dir) { rec.detail.skipped = 'qa 第二情境需要本機建置目錄（--dir）才有同源空白頁，--url 模式略過'; return rec.detail; }
+                const dump = await page.evaluate(() => new Promise((resolve, reject) => {
+                    const open = indexedDB.open('3KLifeData');
+                    open.onerror = () => reject(open.error);
+                    open.onsuccess = () => {
+                        const db = open.result;
+                        if (!db.objectStoreNames.contains('kv')) { resolve({ version: db.version, rows: [] }); return; }
+                        const req = db.transaction('kv', 'readonly').objectStore('kv').getAll();
+                        req.onerror = () => reject(req.error);
+                        req.onsuccess = () => resolve({ version: db.version, rows: req.result.map((r) => ({ key: r.key, json: JSON.stringify(r) })) });
+                    };
+                }));
+                rec.detail.dumpRows = dump.rows.length;
+                const origContext = context;
+                const origPage = page;
+                const qaContext = await browser.createBrowserContext();
+                const qaPage = await qaContext.newPage();
+                await qaPage.setViewport(viewport);
+                attachCollectors(qaPage);
+                const qaLogs = [];
+                qaPage.on('console', (m) => { const t = m.text(); if (/qaAcademy|學府|academy|debug\./i.test(t)) qaLogs.push(`${m.type()}: ${t.slice(0, 300)}`); });
+                try {
+                    // 同源空白頁（不載遊戲）才能寫 IndexedDB；寫完再開帶參數的遊戲網址
+                    await qaPage.goto(`${target}__pt-blank.html`, { waitUntil: 'load' });
+                    await qaPage.evaluate((d) => new Promise((resolve, reject) => {
+                        const open = indexedDB.open('3KLifeData', d.version);
+                        open.onupgradeneeded = () => { if (!open.result.objectStoreNames.contains('kv')) open.result.createObjectStore('kv', { keyPath: 'key' }); };
+                        open.onerror = () => reject(open.error);
+                        open.onsuccess = () => {
+                            const db = open.result;
+                            const tx = db.transaction('kv', 'readwrite');
+                            for (const r of d.rows) tx.objectStore('kv').put(JSON.parse(r.json));
+                            tx.oncomplete = () => { db.close(); resolve(true); };
+                            tx.onerror = () => reject(tx.error);
+                        };
+                    }), dump);
+                    context = qaContext;
+                    page = qaPage;
+                    await qaPage.goto(`${target}?qaAcademy=11`, { waitUntil: 'load', timeout: stuckMs });
+                    await waitUntil(() => page.evaluate(() => Boolean(window.cc && window.cc.director && window.cc.director.getScene())), stuckMs, 'qa 情境引擎未就緒');
+                    await installHelpers();
+                    await waitUntil(async () => (await scene()) === 'LoginScene', stuckMs, 'qa 情境未進入 LoginScene');
+                    await delay(Number(args['login-settle'] || 12000));
+                    await clickLoginStart();
+                    await waitUntil(async () => (await scene()) === 'LobbyScene', stuckMs, 'qa 情境未進入 LobbyScene');
+                    // 快進完成：學府紀錄停在第 12 回合、期中打斷掛上；畫面上修業畫面作用中
+                    let st = null;
+                    await waitUntil(async () => {
+                        st = await readAcademy().catch(() => null);
+                        return st && st.hasRecord && st.turn === 12 && st.pendingInterrupt === 'MIDTERM';
+                    }, 300000, 'qaAcademy=11 沒有停在第 12 回合期中打斷').catch(async (e) => { throw new Error(`${e.message}；最後狀態 ${JSON.stringify(st)}；結果 ${JSON.stringify(await page.evaluate(() => window.__qaAcademy).catch(() => null))}；console：${qaLogs.filter((l) => !/UCUF/.test(l)).join(' | ') || '無'}`); });
+                    await delay(3000);
+                    const buttons = await listButtons();
+                    const texts = (await rm.allTexts()).slice(0, 40);
+                    const file = await acShot('qa-midterm-interrupt');
+                    rec.detail.qaState = { turn: st.turn, pending: st.pendingInterrupt, energy: st.energy, tokens: st.tokens, options: st.interruptOptions };
+                    rec.detail.buttons = buttons;
+                    rec.detail.texts = texts;
+                    rec.detail.shot = path.relative(projectRoot, file).replace(/\\/g, '/');
+                    // 第 11 回合結算畫面還開著時要先按「確認」，打斷鈕才會出現（與 36 回合流程一致），結算確認鈕也算「打斷即將彈出」
+                    const interruptVisible = buttons.some((n) => /^(?:[Bb]tn)?Ac(?:Interrupt|Confirm)$/.test(n));
+                    ar.qaFastForward = { url: '?qaAcademy=11', turn: st.turn, pendingInterrupt: st.pendingInterrupt, interruptButtonVisible: interruptVisible, texts: texts.slice(0, 20), screenshot: rec.detail.shot };
+                    if (!interruptVisible) throw new Error(`第一個學府畫面沒有打斷鈕／結算確認鈕（畫面按鈕：${buttons.join('、') || '無'}）`);
+                } finally {
+                    page = origPage;
+                    context = origContext;
+                    await qaPage.close().catch(() => undefined);
+                    await qaContext.close().catch(() => undefined);
+                }
+                return rec.detail;
+            }, { skipIfFailed: true });
+
+            // 10-2. 入學：開「培育」→「學府」，截入學畫面，點「入學」，核對入學令 −1（item.consume）與紀錄建立
+            await step('academy-enroll', async (rec) => {
+                await requireLobby();
+                await installApiCounter();
+                await page.evaluate(() => { window.__ptApi = { calls: {} }; }); // 計數從入學前一刻歸零
+                const opened = await openAcademyMenu();
+                if (!opened) throw new Error('底欄「培育」→「學府」打不開');
+                await delay(2500);
+                const before = await readAcademy();
+                ar.tokenBefore = before.tokens;
+                rec.detail.buttons = await listButtons();
+                rec.detail.enrollTexts = (await rm.allTexts()).slice(0, 40);
+                await acShot('01-enroll');
+                if (!(await clickButton('^(?:[Bb]tn)?AcEnrollConfirm$'))) throw new Error(`入學畫面點不到「入學」鈕（畫面按鈕：${rec.detail.buttons.join('、') || '無'}；畫面文字：${rec.detail.enrollTexts.slice(0, 12).join(' / ')}）`);
+                let st = null;
+                await waitUntil(async () => { st = await readAcademy(); return st.hasRecord; }, 20000, '點入學後 20 秒內沒有建立學府紀錄（可能缺入學令、年齡不足或被擋）');
+                await delay(1500);
+                ar.tokenAfterEnroll = st.tokens;
+                rec.detail.tokens = { before: before.tokens, after: st.tokens };
+                rec.detail.turn = st.turn;
+                rec.detail.sessionTexts = (await rm.allTexts()).slice(0, 40);
+                await acShot('02-session-turn1-start');
+                if (st.tokens !== before.tokens - 1) throw new Error(`入學後入學令沒有 −1：入學前 ${before.tokens}、入學後 ${st.tokens}（item.consume 沒生效）`);
+                return rec.detail;
+            }, { skipIfFailed: true });
+
+            // 10-3. 修業中的武將不在任務牆（OCC-M）：占用登記表有此人；任務牆與詳情窗文字不含此人
+            await step('academy-occupancy-taskwall', async (rec) => {
+                const st = await readAcademy();
+                const youthId = st.childId;
+                const youthName = ((st.roster || []).find((x) => x.id === youthId) || {}).name || youthId;
+                const occ = await page.evaluate(async () => {
+                    const loader = await window.System.import('chunks:///_virtual/ServiceLoader.ts');
+                    const res = await loader.services().api.query('occupancy.query', {});
+                    return res && res.ok ? res.result : { error: res && res.reason };
+                });
+                ar.occupancy = { youthId, youthName, occupiedIds: occ.occupiedIds || null, records: occ.records || null, error: occ.error || null };
+                rec.detail.occupancy = ar.occupancy;
+                // 修業畫面先暫離，回大廳點任務牆第一張卡，收集詳情窗與牆面全部文字，找這位武將的名字
+                await clickButton('^(?:[Bb]tn)?AcLeave$');
+                await delay(1500);
+                await backToLobbyBar();
+                await closeMissionLayers();
+                // 走動武將的名牌（HallStageCrowd，輪替隨機）不是任務牆內容，略過；否則輪到修業中的武將上場就誤判
+                const wallTexts = (await rm.textsUnder('^lobby-hall-screen$', '^HallStageCrowd$')) || [];
+                let dialogTexts = [];
+                let wallError = null;
+                try {
+                    await openFirstWallCard(rec);
+                    dialogTexts = (await rm.textsUnder(MISSION_DIALOG)) || [];
+                    await acShot('03-taskwall-detail');
+                    // 點「委任」看候選（若有）；只收集文字，不執行
+                    await clickByText('.*', '^\\s*委任\\s*$');
+                    await delay(1500);
+                    dialogTexts = dialogTexts.concat((await rm.textsUnder(MISSION_DIALOG)) || [], (await rm.textsUnder('^HallBoardHost$')) || []);
+                    await acShot('03-taskwall-delegate');
+                } catch (e) { wallError = String((e && e.message) || e).split('\n')[0]; }
+                await closeMissionLayers();
+                const all = [...wallTexts, ...dialogTexts];
+                const listed = all.filter((t) => youthName && t.includes(youthName));
+                ar.taskWall = { youthName, listed: listed.length > 0, listedInWall: wallTexts.filter((t) => youthName && t.includes(youthName)).length, listedInDialog: dialogTexts.filter((t) => youthName && t.includes(youthName)).length, listedTexts: listed.slice(0, 6), wallError, dialogTextSample: dialogTexts.slice(0, 20) };
+                rec.detail.taskWall = ar.taskWall;
+                const inRegistry = Array.isArray(ar.occupancy.occupiedIds) && ar.occupancy.occupiedIds.includes(youthId);
+                if (!inRegistry) throw new Error(`占用登記表沒有修業中的武將 ${youthId}（occupancy.query occupiedIds：${JSON.stringify(ar.occupancy.occupiedIds)}）`);
+                if (listed.length) throw new Error(`修業中的武將「${youthName}」仍出現在任務牆畫面文字：${listed.slice(0, 3).join(' / ')}`);
+                return rec.detail;
+            }, { skipIfFailed: true });
+
+            // 10-4. 36 回合：每回合真滑鼠「訓練／休息 → 確認結算」；遇專屬互動與打斷點照規則點；關鍵點截圖
+            await step('academy-36-turns', async (rec) => {
+                await requireLobby();
+                const opened = await openAcademyMenu();
+                if (!opened) throw new Error('底欄「培育」→「學府修業中」打不開');
+                await delay(2000);
+                const seenInterrupt = new Set();
+                const turnLog = [];
+                let guard = 0;
+                let lastTurn = 0;
+                let stuckSince = Date.now();
+                const deadline = Date.now() + 25 * 60 * 1000;
+                while (Date.now() < deadline) {
+                    guard++;
+                    const st = await readAcademy();
+                    if (!st.hasRecord || st.graduated) break;
+                    if (st.turn !== lastTurn) { lastTurn = st.turn; stuckSince = Date.now(); }
+                    const buttons = await listButtons();
+                    if (Date.now() - stuckSince > 90000) throw new Error(`第 ${st.turn} 回合卡住超過 90 秒（打斷 ${st.pendingInterrupt}、精力 ${st.energy}、按鈕 ${buttons.join('、')}）`);
+                    if (st.pendingInterrupt) {
+                        const key = `${st.pendingInterrupt}@${st.turn}`;
+                        if (!seenInterrupt.has(key)) {
+                            seenInterrupt.add(key);
+                            await delay(800);
+                            const texts = (await rm.allTexts()).slice(0, 40);
+                            const tag = { MIDTERM: '04-midterm-interrupt', COMING_OF_AGE: '06-coming-of-age-interrupt', RESONANCE: 'x-resonance-interrupt', GRADUATION: '08-graduation-interrupt' }[st.pendingInterrupt] || `x-${st.pendingInterrupt}`;
+                            await acShot(tag);
+                            ar.interrupts.push({ kind: st.pendingInterrupt, turn: st.turn, options: st.interruptOptions, texts, screenshot: `ac-${tag}.png` });
+                        }
+                        if (buttons.some((n) => /^(?:[Bb]tn)?AcInterrupt$/.test(n)) && await clickButton('^(?:[Bb]tn)?AcInterrupt$')) {
+                            await delay(1000);
+                            if (st.pendingInterrupt === 'MIDTERM' || st.pendingInterrupt === 'COMING_OF_AGE') {
+                                await acShot(st.pendingInterrupt === 'MIDTERM' ? '05-after-midterm-reward-toast' : '07-after-coming-of-age-toast');
+                                ar.interrupts[ar.interrupts.length - 1].afterTexts = (await rm.allTexts()).slice(0, 30);
+                            }
+                        } else if (buttons.some((n) => /^(?:[Bb]tn)?AcConfirm$/.test(n))) {
+                            // 前一回合結算畫面還沒關：打斷鈕要確認結算後才出現
+                            await clickButton('^(?:[Bb]tn)?AcConfirm$'); await delay(900);
+                        } else { await delay(800); }
+                        continue;
+                    }
+                    if (buttons.some((n) => /^(?:[Bb]tn)?AcConfirm$/.test(n))) {
+                        // 結算確認；第 1 回合與第 36 回合結算畫面截圖
+                        if (st.turn === 1 && !ar.screenshots.some((s) => /ac-02b-/.test(s))) await acShot('02b-turn1-settle');
+                        if (st.turn === 36) await acShot('08a-turn36-settle');
+                        if (await clickButton('^(?:[Bb]tn)?AcConfirm$')) await delay(900);
+                        continue;
+                    }
+                    if (st.eventPending) { if (await clickButton('^(?:[Bb]tn)?AcEventA$')) await delay(900); else await delay(600); continue; }
+                    if (st.debatePending) {
+                        if (st.handLen === 0) { if (await clickButton('^(?:[Bb]tn)?AcSkip$')) await delay(900); else await delay(600); continue; }
+                        for (let i = 0; i < Math.min(3, st.handLen); i++) { await clickButton(`^(?:[Bb]tn)?AcCard${i}$`); await delay(350); }
+                        if (await clickButton('^(?:[Bb]tn)?AcDebate$')) await delay(900);
+                        continue;
+                    }
+                    const train = st.energy >= 20;
+                    const t = st.turn;
+                    if (await clickButton(train ? '^(?:[Bb]tn)?AcTrain_int$' : '^(?:[Bb]tn)?AcRest$')) {
+                        turnLog.push({ turn: t, action: train ? 'TRAIN:int' : 'REST', energyBefore: st.energy });
+                        await delay(900);
+                        if (t === 1) await acShot('02a-turn1-after-train');
+                    } else {
+                        await delay(700);
+                    }
+                    if (guard > 1500) throw new Error('36 回合迴圈超過 1500 次仍未結業');
+                }
+                const fin = await readAcademy();
+                ar.turnsPlayed = turnLog.length;
+                rec.detail.turnsPlayed = turnLog.length;
+                rec.detail.lastTurn = lastTurn;
+                rec.detail.graduated = fin.graduated || !fin.hasRecord;
+                rec.detail.interrupts = ar.interrupts.map((i) => `${i.kind}@${i.turn}`);
+                rec.detail.finalStats = fin.stats;
+                ar.nodeCounts.beforeGraduation = await page.evaluate(() => (window.__pt.nodeCount ? window.__pt.nodeCount() : null)).catch(() => null);
+                if (!fin.graduated && fin.hasRecord) throw new Error(`36 回合沒走完：停在第 ${fin.turn} 回合`);
+                return rec.detail;
+            }, { skipIfFailed: true });
+
+            // 10-5. 結業：結算彈窗出現（評級、新戰法顯示中文名）→ 關閉 → 回大廳；9191（結業串接推季）尚未完成，推季與清紀錄屬待辦
+            await step('academy-graduation', async (rec) => {
+                const found = await waitUntil(async () => (await listButtons()).some((n) => /^(?:[Bb]tn)?Academy(?:Grad|Graduation)Close(?:Button)?$/.test(n)), 30000, '').catch(() => false);
+                rec.detail.popupFound = !!found;
+                const texts = (await rm.allTexts()).slice(0, 60);
+                ar.graduationTexts = texts;
+                await acShot('09-graduation-popup');
+                const st = await readAcademy();
+                rec.detail.learnedTactics = st.learnedTactics;
+                rec.detail.graduationTexts = texts;
+                if (!found) throw new Error(`結業後 30 秒內沒有出現結業結算彈窗（btnAcademyGradClose）；畫面按鈕：${(await listButtons()).join('、')}`);
+                const raw = texts.filter((t) => /TACTIC_|TRT_|ITEM_/.test(t));
+                if (raw.length) rec.detail.rawIdTexts = raw;
+                await clickButton('^(?:[Bb]tn)?Academy(?:Grad|Graduation)Close(?:Button)?$');
+                await delay(2000);
+                await backToLobbyBar();
+                await acShot('10-back-to-lobby');
+                const after = await readAcademy();
+                ar.seasonsAfter = after.seasons;
+                ar.seasonAfterGraduation = (await readSeason()).text;
+                rec.detail.after = { hasRecord: after.hasRecord, seasons: after.seasons, season: ar.seasonAfterGraduation };
+                if (raw.length) throw new Error(`結業彈窗出現未翻成中文的 id：${raw.slice(0, 3).join(' / ')}`);
+                return rec.detail;
+            }, { skipIfFailed: true });
+
+            // 10-6. 收尾：apiCalls、評級、節點數、報告
+            await step('academy-report', async (rec) => {
+                ar.apiCalls = await summarizeApi();
+                ar.nodeCounts.final = await page.evaluate(() => (window.__pt.nodeCount ? window.__pt.nodeCount() : null)).catch(() => null);
+                ar.graduationRating = await page.evaluate(async () => {
+                    const loader = await window.System.import('chunks:///_virtual/ServiceLoader.ts');
+                    const g = loader.services().session.roster.find((x) => x.graduationRating);
+                    return g ? g.graduationRating : null;
+                }).catch(() => null);
+                ar.todo.push('結業後推進一季與清除修業紀錄：待 PROG-2-9191（結業串接）完成後補驗與截圖');
+                ar.todo.push('打斷彈窗改讀劇情 base 事件定義（STY-M）、開獎 toast 接線：待 PROG-2-9190；目前畫面是占位打斷鈕「以預設選項繼續」');
+                ar.finishedAt = new Date().toISOString();
+                writeAcademyReport();
+                rec.detail.apiCalls = ar.apiCalls;
+                return rec.detail;
+            });
+            writeAcademyReport();
         }
 
         report.finishedAt = new Date().toISOString();

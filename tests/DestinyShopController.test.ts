@@ -72,10 +72,10 @@ export function createDestinyShopControllerSuite(): TestSuite {
         const { deps, calls } = fakeDeps(1);
         const ctrl = new DestinyShopController(deps);
         ctrl.open('GENERAL_STANDARD_01', '名將池', SSR);
-        assert.isFalse(ctrl.exchange());
+        assert.isFalse((ctrl.exchange() as boolean));
         assert.equals(0, calls.length);
         assert.equals('確認兌換', ctrl.getView().texts.exchangeDestinyLabel);
-        assert.isTrue(ctrl.exchange());
+        assert.isTrue((ctrl.exchange() as boolean));
         assert.equals('lu-bu', calls.join(','));
         assert.isTrue(ctrl.getView().texts.dshopNotice.includes('已兌換「呂布」'));
         assert.isFalse(ctrl.getView().enabled.btnExchangeDestiny, '資格用完後兌換鈕不能按');
@@ -89,7 +89,7 @@ export function createDestinyShopControllerSuite(): TestSuite {
         ctrl.cycle(1);
         assert.equals('zhao-yun', ctrl.targetId);
         assert.equals('兌換', ctrl.getView().texts.exchangeDestinyLabel);
-        assert.isFalse(ctrl.exchange(), '換人後第一次按仍只是標記');
+        assert.isFalse((ctrl.exchange() as boolean), '換人後第一次按仍只是標記');
         assert.equals(0, calls.length);
 
         const poor = new DestinyShopController(fakeDeps(0).deps);
@@ -105,7 +105,7 @@ export function createDestinyShopControllerSuite(): TestSuite {
         assert.isFalse(view.actives.dshopPanel);
         assert.isTrue(view.actives.dshopEmptyHint);
         assert.isFalse(view.enabled.btnPrevDestiny);
-        assert.isFalse(ctrl.exchange());
+        assert.isFalse((ctrl.exchange() as boolean));
     });
 
     suite.test('轉蛋頁入口文字：天命值 N/200，有資格時標示可兌換；紅顏池不累計', () => {

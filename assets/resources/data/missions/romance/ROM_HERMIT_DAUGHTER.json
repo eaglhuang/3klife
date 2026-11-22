@@ -198,7 +198,7 @@
               },
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": -20
               }
             ]
@@ -826,7 +826,7 @@
               },
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": -30
               }
             ]
@@ -841,7 +841,7 @@
               },
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": -40
               }
             ]
@@ -1001,7 +1001,7 @@
               },
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": -50
               }
             ]

@@ -93,5 +93,5 @@ export function consumeItem(inventory: PlayerInventory, itemId: string, amount =
 export function grantSeasonalOracleTokens(inventory: PlayerInventory, seasons = 1): { inventory: PlayerInventory; granted: number } {
     const have = itemCount(inventory, ITEM_ORACLE_TOKEN);
     const granted = Math.max(0, Math.min(ORACLE_TOKEN_PER_SEASON * Math.max(0, Math.floor(seasons)), ORACLE_TOKEN_FREE_CAP - have));
-    return { inventory: addItem(inventory, ITEM_ORACLE_TOKEN, granted), granted };
+    return { inventory: granted > 0 ? { ...inventory, [ITEM_ORACLE_TOKEN]: have + granted } : inventory, granted };
 }

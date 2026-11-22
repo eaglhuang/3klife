@@ -13,7 +13,7 @@
  * Unity 對照：GameHUDController，監聽事件更新各個 Binding
  */
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
-import { _decorator, Button, Color, Director, director, Label, Node, Sprite, UITransform, Widget } from 'cc';
+import { _decorator, Button, Color, Director, director, Label, Node, Sprite, Tween, tween, UITransform, Vec3, Widget } from 'cc';
 import { bringNodeToFront } from '../core/NodeBringToFront';
 import { stretchWidgetToParent } from '../core/WidgetStretch';
 import { BattleArtController } from '../core/BattleArtController';
@@ -27,7 +27,7 @@ import { UITemplateBinder } from '../core/UITemplateBinder';
 import { BattleSettingsComposite } from './BattleSettingsComposite';
 import { SolidBackground } from './SolidBackground';
 import { isVitalityBarGrayed, vitalityBarRatio } from '../../core/systems/VitalityBarView';
-import { FORTRESS_MAX_HP, fortressBarRatio } from '../../core/systems/FortressBarView';
+import { DEFENSE_FORTRESS_WARN_RATIO, FORTRESS_MAX_HP, defenseFortressBarText, fortressBarRatio } from '../../core/systems/FortressBarView';
 import { foodLabelText } from '../../core/systems/FoodLabelText';
 import { turnLabelText } from '../../core/systems/TimeUpJudgement';
 const { ccclass } = _decorator;
@@ -38,6 +38,13 @@ const VITALITY_FILL_COLOR = new Color(240, 200, 60, 255);
 /** 我軍陣地血條為藍色（doc_ui_0001 §2.1）；敵軍維持紅色 */
 const PLAYER_FORTRESS_FILL_COLOR = new Color(70, 150, 255, 255);
 const VITALITY_TRACK_COLOR = new Color(0, 0, 0, 160);
+/** 守城戰我方城寨血條（PROG-2-9430）：頂欄正下方置中 */
+const DEFENSE_BAR_NODE = 'DefenseFortressBar';
+const DEFENSE_BAR_WIDTH = 520;
+const DEFENSE_BAR_HEIGHT = 30;
+const DEFENSE_BAR_TOP = 96;
+const DEFENSE_BAR_TRACK_COLOR = new Color(10, 14, 28, 200);
+const DEFENSE_BAR_WARN_COLOR = new Color(225, 70, 55, 255);
 /** 體力歸零時底板變灰，表示已無法發動大招 */
 const VITALITY_TRACK_GRAYED_COLOR = new Color(90, 90, 90, 200);
 
@@ -52,6 +59,12 @@ export class BattleHUDComposite extends CompositePanel {
     private _spFill: Node | null = null;
     private _spReadyLabel: Label | null = null;
     private _buildCompleted = false;
+    private _rootNode: Node | null = null;
+    private _defenseBarVisible = false;
+    private _defenseBarMaxHp = FORTRESS_MAX_HP;
+    private _defenseBarNode: Node | null = null;
+    private _defenseBarFill: Node | null = null;
+    private _defenseBarLabel: Label | null = null;
     private _playerGeneralMaxHp = 1;
     private _enemyGeneralMaxHp  = 1;
     private readonly _unsubs: Array<() => void> = [];
@@ -215,6 +228,9 @@ export class BattleHUDComposite extends CompositePanel {
         this._ensureVitalityBar(rootNode);
         this._renderPlayerVitality();
 
+        this._rootNode = rootNode;
+        this._renderDefenseFortressBar(false);
+
         this._buildCompleted = true;
         this._flushReadyWaiters(true);
     }
@@ -265,9 +281,23 @@ export class BattleHUDComposite extends CompositePanel {
 
     /** 更新頂部城寨血條；畫面未建好前只暫存數值（PROG-2-1889） */
     public setFortressHp(faction: Faction, hp: number): void {
+        const dropped = faction === Faction.Player && hp < this._playerFortressHp;
         if (faction === Faction.Player) this._playerFortressHp = hp;
         else                            this._enemyFortressHp  = hp;
         this._renderFortress(faction);
+        if (faction === Faction.Player) this._renderDefenseFortressBar(dropped);
+    }
+
+    /**
+     * 守城戰顯示我方城寨血條（PROG-2-9430）。新版 HUD 版面沒有城寨血條節點，執行期在頂欄正下方建立；
+     * 一般關卡不顯示。畫面未建好前只記旗標，建好後補畫。
+     * Unity 對照：依關卡模式 SetActive 一條 Slider。
+     */
+    public setDefenseFortressBarVisible(visible: boolean, maxHp?: number): void {
+        this._defenseBarVisible = visible;
+        // 守城城寨上限讀 data/defense-battle（PROG-2-9431）；沒給用預設 500
+        this._defenseBarMaxHp = maxHp !== undefined && Number.isFinite(maxHp) && maxHp > 0 ? maxHp : FORTRESS_MAX_HP;
+        this._renderDefenseFortressBar(false);
     }
 
     public setPlayerName(name: string): void {
@@ -576,6 +606,73 @@ export class BattleHUDComposite extends CompositePanel {
         const max   = faction === Faction.Player ? this._playerGeneralMaxHp : this._enemyGeneralMaxHp;
         const label = faction === Faction.Player ? this._playerFortressLabel : this._enemyFortressLabel;
         if (label) label.string = `${hp} / ${max}`;
+    }
+
+    private _ensureDefenseFortressBar(): boolean {
+        if (this._defenseBarNode?.isValid) return true;
+        const root = this._rootNode;
+        if (!root?.isValid) return false;
+        const node = new Node(DEFENSE_BAR_NODE);
+        node.layer = root.layer;
+        root.addChild(node);
+        node.addComponent(UITransform).setContentSize(DEFENSE_BAR_WIDTH, DEFENSE_BAR_HEIGHT);
+        node.addComponent(SolidBackground).color = DEFENSE_BAR_TRACK_COLOR;
+        const widget = node.addComponent(Widget);
+        widget.isAlignTop = true;
+        widget.top = DEFENSE_BAR_TOP;
+        widget.isAlignHorizontalCenter = true;
+        widget.horizontalCenter = 0;
+        widget.updateAlignment();
+
+        const fill = new Node('Fill');
+        fill.layer = root.layer;
+        node.addChild(fill);
+        fill.addComponent(UITransform).setAnchorPoint(0, 0.5);
+        fill.getComponent(UITransform)!.setContentSize(DEFENSE_BAR_WIDTH, DEFENSE_BAR_HEIGHT);
+        fill.addComponent(SolidBackground).color = PLAYER_FORTRESS_FILL_COLOR;
+        fill.setPosition(-DEFENSE_BAR_WIDTH / 2, 0, 0);
+
+        const text = new Node('Label');
+        text.layer = root.layer;
+        node.addChild(text);
+        text.addComponent(UITransform).setContentSize(DEFENSE_BAR_WIDTH, DEFENSE_BAR_HEIGHT);
+        const label = text.addComponent(Label);
+        label.fontSize = 22;
+        label.lineHeight = DEFENSE_BAR_HEIGHT;
+        label.isBold = true;
+        label.horizontalAlign = Label.HorizontalAlign.CENTER;
+        label.verticalAlign = Label.VerticalAlign.CENTER;
+        label.enableOutline = true;
+        label.outlineColor = new Color(10, 10, 20, 255);
+        label.outlineWidth = 2;
+
+        this._defenseBarNode = node;
+        this._defenseBarFill = fill;
+        this._defenseBarLabel = label;
+        return true;
+    }
+
+    /** 畫守城血條；掉血時血條輕震一下提醒玩家城寨被打 */
+    private _renderDefenseFortressBar(dropped: boolean): void {
+        if (!this._buildCompleted && !this._rootNode) return;
+        if (!this._defenseBarVisible) {
+            if (this._defenseBarNode?.isValid) this._defenseBarNode.active = false;
+            return;
+        }
+        if (!this._ensureDefenseFortressBar()) return;
+        const node = this._defenseBarNode!;
+        node.active = true;
+        bringNodeToFront(node);
+        const ratio = fortressBarRatio(this._playerFortressHp, this._defenseBarMaxHp);
+        this._setBarFillRatio(this._defenseBarFill, DEFENSE_BAR_WIDTH, ratio);
+        const fillBg = this._defenseBarFill?.getComponent(SolidBackground);
+        if (fillBg) fillBg.color = ratio <= DEFENSE_FORTRESS_WARN_RATIO ? DEFENSE_BAR_WARN_COLOR : PLAYER_FORTRESS_FILL_COLOR;
+        if (this._defenseBarLabel) this._defenseBarLabel.string = defenseFortressBarText(this._playerFortressHp, this._defenseBarMaxHp);
+        if (dropped) {
+            Tween.stopAllByTarget(node);
+            node.setScale(1.08, 1.08, 1);
+            tween(node).to(0.25, { scale: new Vec3(1, 1, 1) }, { easing: 'backOut' }).start();
+        }
     }
 
     private _renderFortress(faction: Faction): void {

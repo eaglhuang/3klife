@@ -81,7 +81,7 @@ export function createDelegateWiringSuite(): TestSuite {
         assert.equals(1, ctrl.pickDelegateLane(), '路 0 與路 2 各有一隊，空路 1 最少');
     });
 
-    suite.test('runPlayerDelegateDeployPhase：委任關閉時不部署；開啟後部署一隊', () => {
+    suite.test('runPlayerDelegateDeployPhase：委任關閉時不部署；開啟後用滿部署額度並讓主將出陣（PROG-2-9712）', () => {
         const ctrl = battleWithSortie(90);
         const before = ctrl.state.units.size;
         ctrl.runPlayerDelegateDeployPhase();
@@ -89,7 +89,26 @@ export function createDelegateWiringSuite(): TestSuite {
         ctrl.setDelegateEnabled(true);
         assert.isTrue(ctrl.isDelegateEnabled());
         ctrl.runPlayerDelegateDeployPhase();
-        assert.equals(before + 1, ctrl.state.units.size, '開啟後每回合部署一隊');
+        const limit = ctrl.getPlayerDeployProgress().limit;
+        assert.isTrue(ctrl.getPlayerDeployProgress().reached, '部署額度用滿');
+        assert.isDefined(ctrl.playerGeneralUnitId ?? undefined, '主將出陣');
+        assert.equals(before + limit + 1, ctrl.state.units.size, '部署 limit 隊＋主將化身');
+    });
+
+    suite.test('pickDelegateLane：出兵口被敵兵堵住的路排除；全堵住回 -1（PROG-2-9712）', () => {
+        const ctrl = battleWithSortie(90);
+        const block = (lane: number): void => {
+            const foe = new TroopUnit(`foe-${lane}`, TroopType.Infantry, Faction.Enemy, { hp: 1000, attack: 1, defense: 10, moveRange: 1, attackRange: 1 });
+            foe.moveTo(lane, 0);
+            ctrl.state.addUnit(foe);
+            ctrl.state.getCell(lane, 0)!.occupantId = foe.id;
+        };
+        block(0);
+        assert.equals(1, ctrl.pickDelegateLane(), '路 0 出兵口被堵，改挑路 1');
+        for (const lane of [1, 2, 3, 4]) block(lane);
+        assert.equals(-1, ctrl.pickDelegateLane(), '五路都堵住');
+        ctrl.setDelegateEnabled(true);
+        assert.equals(null, ctrl.tryDelegateDeployAuto(), '沒路可出就不部署');
     });
 
     suite.test('setDelegateEnabled 可切換開關狀態', () => {

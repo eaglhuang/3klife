@@ -13,6 +13,8 @@ import { SEASONS_PER_YEAR, formatSeasonLabel } from '../../core/systems/GameCloc
 import type { MissionDetailView } from '../../core/mission/MissionTypes';
 import type { CandidateView, IMissionService, MissionCardView } from '../../core/mission/service/IMissionService';
 import { findCard, type WallOfTheme } from './MissionBoardPresenter';
+import { HALL_FUND_NAME, hallFundNameOf } from '../../core/systems/HallMissionActions';
+import type { MissionBlock } from '../../core/mission/MissionTypes';
 
 export const MISSION_WALL_NAME: Readonly<Record<string, string>> = Object.freeze({ Military: '軍事', Domestic: '內政', Expedition: '天下沙盤' });
 export const MISSION_DIFFICULTY_NAME: Readonly<Record<string, string>> = Object.freeze({ EASY: '簡單', NORMAL: '普通', ELITE: '菁英', ADVANCED: '高級', HELL: '地獄' });
@@ -66,7 +68,7 @@ export interface MissionCandidateOption {
 }
 
 /** 候選全員：可派在前（保持服務排序）、不可派在後附原因；不從清單消失 */
-export function candidateOptions(candidates: readonly CandidateView[]): MissionCandidateOption[] {
+export function candidateOptions(candidates: readonly CandidateView[], blockLabel?: (block: MissionBlock) => string): MissionCandidateOption[] {
     const available: MissionCandidateOption[] = [];
     const unavailable: MissionCandidateOption[] = [];
     for (const c of candidates) {
@@ -77,7 +79,7 @@ export function candidateOptions(candidates: readonly CandidateView[]): MissionC
                 ...(c.memoryHint ? { memoryHint: c.memoryHint } : {}),
             });
         } else {
-            unavailable.push({ id: c.generalId, label: c.name, group: 'unavailable', blockedText: c.blockText });
+            unavailable.push({ id: c.generalId, label: c.name, group: 'unavailable', blockedText: blockLabel ? c.block.map(blockLabel).join('、') : c.blockText });
         }
     }
     return [...available, ...unavailable];
@@ -87,7 +89,7 @@ export function candidateOptions(candidates: readonly CandidateView[]): MissionC
 
 export interface MissionDialogContext {
     season: number;
-    stock: { grain: number; silver: number; troops: number };
+    stock: { grain: number; gold: number; silver: number; troops: number };
     /** 再探要花的糧草（資料表值） */
     reconGrainCost: number;
     /** 單靠再探的情報上限（資料表值）；沒給時視為 90 */
@@ -114,8 +116,9 @@ export interface MissionDialogState {
     costFoodRatio: number;
     costTroopValueLabel: string;
     costTroopRatio: number;
-    costSilverValueLabel: string;
-    costSilverRatio: number;
+    costFundNameLabel: string;
+    costFundValueLabel: string;
+    costFundRatio: number;
     costTimeValueLabel: string;
     costTimeRatio: number;
     rewardBaseLabel: string;
@@ -165,7 +168,8 @@ export function buildMissionDialogState(service: IMissionService, missionId: str
     const shortages: string[] = [];
     if (d.cost.grain > ctx.stock.grain) shortages.push(`糧草不足（需 ${d.cost.grain}，現有 ${Math.max(0, Math.floor(ctx.stock.grain))}）`);
     if (d.cost.troops > ctx.stock.troops) shortages.push(`兵源不足（需 ${d.cost.troops}，現有 ${Math.max(0, Math.floor(ctx.stock.troops))}）`);
-    if (d.cost.silver > ctx.stock.silver) shortages.push(`黃金不足（需 ${d.cost.silver}，現有 ${Math.max(0, Math.floor(ctx.stock.silver))}）`);
+    if (d.cost.gold > ctx.stock.gold) shortages.push(`${HALL_FUND_NAME.gold}不足（需 ${d.cost.gold}，現有 ${Math.max(0, Math.floor(ctx.stock.gold))}）`);
+    if (d.cost.silver > ctx.stock.silver) shortages.push(`${HALL_FUND_NAME.silver}不足（需 ${d.cost.silver}，現有 ${Math.max(0, Math.floor(ctx.stock.silver))}）`);
 
     const blocked: Partial<Record<DetailActionKey, string>> = {};
     const offered: DetailActionKey[] = [];
@@ -215,8 +219,11 @@ export function buildMissionDialogState(service: IMissionService, missionId: str
         costFoodRatio: ratio(d.cost.grain, 400),
         costTroopValueLabel: costLabel(d.cost.troops, ctx.stock.troops),
         costTroopRatio: ratio(d.cost.troops, 500),
-        costSilverValueLabel: costLabel(d.cost.silver, ctx.stock.silver),
-        costSilverRatio: ratio(d.cost.silver, 300),
+        // 耗金走國家公庫、耗銀兩走家族：只耗一種就顯示那一種，兩種都耗並列；都不耗顯示金 0
+        costFundNameLabel: hallFundNameOf(d.cost.gold, d.cost.silver),
+        costFundValueLabel: d.cost.gold > 0 && d.cost.silver > 0 ? `${costLabel(d.cost.gold, ctx.stock.gold)}／${costLabel(d.cost.silver, ctx.stock.silver)}`
+            : d.cost.silver > 0 ? costLabel(d.cost.silver, ctx.stock.silver) : costLabel(d.cost.gold, ctx.stock.gold),
+        costFundRatio: ratio(Math.max(d.cost.gold, d.cost.silver), 300),
         costTimeValueLabel: `${d.durationSeasons} 季`,
         costTimeRatio: ratio(d.durationSeasons, 3),
         rewardBaseLabel: d.reward.text,

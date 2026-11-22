@@ -12,7 +12,7 @@ export interface MissionDifficultyBalance {
     /** 該難度的需求戰力（成功率底值公式用，沿用舊規格 §7.2） */
     needPower: number;
     /** 缺省耗費（定義未寫 cost 時使用） */
-    cost: { grain: number; troops: number; silver: number };
+    cost: { grain: number; troops: number; gold: number; silver: number };
     energy: number;
 }
 
@@ -99,7 +99,7 @@ export interface MissionBalance {
         riskMid: number;
     };
     /** 資源入帳上限（宿主套用帳本時截斷，糧草另取軍備帳上限較小者） */
-    resourceCaps: { grain: number; silver: number; troops: number };
+    resourceCaps: { grain: number; gold: number; silver: number; troops: number };
     /** 歷史紀錄保留筆數 */
     recordLimit: number;
     difficulties: Record<MissionDifficulty, MissionDifficultyBalance>;
@@ -126,17 +126,17 @@ export const DEFAULT_MISSION_BALANCE: MissionBalance = {
         rateHigh: 0.65, rateMid: 0.4, rangeHalfWidth: 10, rangeStep: 5,
         decoyMaxIntel: 50, decoyFactor: 1,
         rewardStarCuts: [150, 350], rewardRangePct: 0.2, rewardRangeStep: 5,
-        rewardWeights: { grain: 1, silver: 1.5, troops: 1, generalExp: 1.5, officerExp: 1.5, fame: 5 },
+        rewardWeights: { grain: 1, gold: 1.5, silver: 1.5, troops: 1, generalExp: 1.5, officerExp: 1.5, fame: 5 },
         riskLow: 0.1, riskMid: 0.25,
     },
-    resourceCaps: { grain: 10000, silver: 5000, troops: 3000 },
+    resourceCaps: { grain: 10000, gold: 5000, silver: 5000, troops: 3000 },
     recordLimit: 50,
     difficulties: {
-        EASY: { needPower: 100, cost: { grain: 40, troops: 50, silver: 30 }, energy: 10 },
-        NORMAL: { needPower: 180, cost: { grain: 60, troops: 80, silver: 50 }, energy: 10 },
-        ELITE: { needPower: 260, cost: { grain: 100, troops: 150, silver: 80 }, energy: 15 },
-        ADVANCED: { needPower: 330, cost: { grain: 180, troops: 250, silver: 140 }, energy: 15 },
-        HELL: { needPower: 400, cost: { grain: 300, troops: 400, silver: 220 }, energy: 20 },
+        EASY: { needPower: 100, cost: { grain: 40, troops: 50, gold: 30, silver: 0 }, energy: 10 },
+        NORMAL: { needPower: 180, cost: { grain: 60, troops: 80, gold: 50, silver: 0 }, energy: 10 },
+        ELITE: { needPower: 260, cost: { grain: 100, troops: 150, gold: 80, silver: 0 }, energy: 15 },
+        ADVANCED: { needPower: 330, cost: { grain: 180, troops: 250, gold: 140, silver: 0 }, energy: 15 },
+        HELL: { needPower: 400, cost: { grain: 300, troops: 400, gold: 220, silver: 0 }, energy: 20 },
     },
 };
 

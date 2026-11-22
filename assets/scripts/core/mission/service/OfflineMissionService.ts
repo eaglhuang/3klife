@@ -110,11 +110,12 @@ export class OfflineMissionService implements IMissionService {
         return result;
     }
 
-    private _shortages(cost: { grain: number; silver: number; troops: number }): MissionShortage[] {
+    private _shortages(cost: { grain: number; gold: number; silver: number; troops: number }): MissionShortage[] {
         const have = this._host.stock();
         const out: MissionShortage[] = [];
         if (have.grain < cost.grain) out.push({ resource: 'grain', need: cost.grain, have: have.grain });
         if (have.troops < cost.troops) out.push({ resource: 'troops', need: cost.troops, have: have.troops });
+        if (have.gold < cost.gold) out.push({ resource: 'gold', need: cost.gold, have: have.gold });
         if (have.silver < cost.silver) out.push({ resource: 'silver', need: cost.silver, have: have.silver });
         return out;
     }
@@ -198,7 +199,7 @@ export class OfflineMissionService implements IMissionService {
                 id: inst.id, defId: inst.defId, title: lg.title, brief: '', theme: inst.theme, difficulty: lg.difficulty, intel: inst.intel,
                 intelBand: intelBandOf(inst.intel, this._balance), facts: [], objective: { state: 'hidden', text: '' }, hints: [],
                 rate: { state: 'exact', text: `${Math.round((inst.dispatch?.rate ?? 0) * 100)}%` }, risk: { state: 'hidden', text: '' }, riskTags: [],
-                reward: { state: 'hidden', text: '' }, hiddenRewards: [], cost: { grain: 0, troops: 0, silver: 0, energy: 0 }, durationSeasons: 1,
+                reward: { state: 'hidden', text: '' }, hiddenRewards: [], cost: { grain: 0, troops: 0, gold: 0, silver: 0, energy: 0 }, durationSeasons: 1,
                 expireSeason: inst.expireSeason, status: inst.status, canRecon: false, canWait: false,
             });
         }
@@ -247,7 +248,7 @@ export class OfflineMissionService implements IMissionService {
             }
             const r = applyRecon(def, inst, scoutIntelBonus(scout, bal), bal);
             if (r.ok === false) return fail<ReconResult>(r.code === 'NOT_OPEN' ? 'NOT_OPEN' : 'INTEL_FULL');
-            const cost = { grain: bal.recon.grainCost, silver: 0, troops: 0 };
+            const cost = { grain: bal.recon.grainCost, gold: 0, silver: 0, troops: 0 };
             const short = this._shortages(cost);
             if (short.length > 0) return fail<ReconResult>('SHORT_RESOURCE', `糧草不足，再探需要 ${cost.grain}（現有 ${short[0].have}）`, short);
             if (!this._host.spend(cost)) return fail<ReconResult>('SHORT_RESOURCE', '糧草不足', this._shortages(cost));
@@ -312,7 +313,7 @@ export class OfflineMissionService implements IMissionService {
             const { lock, cost } = locked;
             const short = this._shortages(cost);
             if (short.length > 0) return fail<DispatchResult>('SHORT_RESOURCE', short.map(s => `${RES_NAME[s.resource]}不足（需 ${s.need}，現有 ${s.have}）`).join('、'), short);
-            if (!this._host.spend({ grain: cost.grain, silver: cost.silver, troops: cost.troops })) return fail<DispatchResult>('SHORT_RESOURCE', '資源不足', this._shortages(cost));
+            if (!this._host.spend({ grain: cost.grain, gold: cost.gold, silver: cost.silver, troops: cost.troops })) return fail<DispatchResult>('SHORT_RESOURCE', '資源不足', this._shortages(cost));
             this._host.drainEnergy(general.id, cost.energy);
             inst.status = 'ACTIVE';
             inst.dispatch = lock;
@@ -398,6 +399,7 @@ export class OfflineMissionService implements IMissionService {
             if (ok && inst.legacy) {
                 const rw = inst.legacy.rewards;
                 if (rw.grain > 0) entries.push({ ...base, kind: 'resource', res: 'grain', amount: rw.grain });
+                if (rw.gold > 0) entries.push({ ...base, kind: 'resource', res: 'gold', amount: rw.gold });
                 if (rw.silver > 0) entries.push({ ...base, kind: 'resource', res: 'silver', amount: rw.silver });
                 if (rw.generalExp > 0) entries.push({ ...base, kind: 'generalExp', amount: rw.generalExp });
             }
@@ -511,4 +513,4 @@ export class OfflineMissionService implements IMissionService {
     public clampForTest(v: number, lo: number, hi: number): number { return clampNumber(v, lo, hi); }
 }
 
-const RES_NAME: Record<MissionShortage['resource'], string> = { grain: '糧草', troops: '兵源', silver: '黃金', energy: '精力' };
+export const RES_NAME: Record<MissionShortage['resource'], string> = { grain: '糧草', troops: '兵源', gold: '金', silver: '銀兩', energy: '精力' };

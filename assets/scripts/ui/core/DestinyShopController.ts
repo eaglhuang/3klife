@@ -28,7 +28,8 @@ export interface DestinyShopDeps {
     credits(poolId: string): number;
     pullsToNext(poolId: string): number;
     /** 兌換成功回傳 reason = null */
-    exchange(poolId: string, targetId: string): { reason: DestinyShopBlockReason | null };
+    /** 兌換成功 reason = null；走共通 API 時回傳 Promise（redeem 是命令） */
+    exchange(poolId: string, targetId: string): { reason: DestinyShopBlockReason | null } | Promise<{ reason: DestinyShopBlockReason | null }>;
 }
 
 const BLOCK_TEXT: Record<DestinyShopBlockReason, string> = {
@@ -89,7 +90,7 @@ export class DestinyShopController {
     }
 
     /** 第一次按只標記待確認；同一位再按一次才兌換。回傳是否真的兌換成功 */
-    exchange(): boolean {
+    exchange(): boolean | Promise<boolean> {
         const current = this._resolve();
         if (!current) return false;
         if (this._armedId !== current.id) {
@@ -98,9 +99,12 @@ export class DestinyShopController {
             return false;
         }
         this._armedId = null;
-        const { reason } = this._deps.exchange(this._poolId, current.id);
-        this._notice = reason ? BLOCK_TEXT[reason] : `已兌換「${current.name}」。`;
-        return reason === null;
+        const finish = ({ reason }: { reason: DestinyShopBlockReason | null }): boolean => {
+            this._notice = reason ? BLOCK_TEXT[reason] : `已兌換「${current.name}」。`;
+            return reason === null;
+        };
+        const out = this._deps.exchange(this._poolId, current.id);
+        return out instanceof Promise ? out.then(finish) : finish(out);
     }
 
     getView(): DestinyShopView {

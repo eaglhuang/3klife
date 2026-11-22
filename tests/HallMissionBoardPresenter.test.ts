@@ -17,7 +17,7 @@ function task(id: string, overrides: Record<string, unknown> = {}): Record<strin
         AI_Assign_Enabled: false,
         Available_Actions: ['ASSIGN'],
         Rewards: {
-            Base: [{ Type: 'GRAIN', Amount: 1200 }, { Type: 'SILVER', Amount: 300 }],
+            Base: [{ Type: 'GRAIN', Amount: 1200 }, { Type: 'GOLD', Amount: 300 }],
             Perfect_Bonus: [],
         },
         Costs: { GRAIN: 0, TROOPS: 0, SILVER: 0, TIME_MINUTES: 0 },
@@ -80,7 +80,7 @@ export function createHallMissionBoardPresenterSuite(): TestSuite {
         const [row] = buildHallBoardRows(loaded.hub, 'Military', { rankTier: 3, worldStage: 0, intel: 100 });
         assert.equals('精英', row.difficultyText);
         assert.equals('官階 2 以上', row.requiredRankText);
-        assert.equals('糧草 +1200、黃金 +300', row.rewardText);
+        assert.equals('糧草 +1200、金 +300', row.rewardText);
         assert.equals('任務B', row.title);
     });
 

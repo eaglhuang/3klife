@@ -11,6 +11,7 @@ import type { SkinSlot } from '../core/UISpecTypes';
 import type { RivalRostersConfig } from '../../core/systems/RivalOfficers';
 import { buildRivalOfficerSetup, type RivalOfficerSetupInput, type RivalSetupGeneral } from '../../core/systems/RivalOfficerSetup';
 import { inspiredTacticName } from '../../core/systems/InspiredTacticMap';
+import { skillNameOf } from '../../core/systems/skill/SkillCatalog';
 import { parseLimitedPoolWindows } from '../../core/systems/LimitedPoolSchedule';
 import { expandLimitedPoolRotations, parseLimitedPoolRotations } from '../../core/systems/LimitedPoolRotation';
 import { _decorator, BlockInputEvents, Button, Canvas, Color, Component, director, instantiate, JsonAsset, Label, Mask, Node, Sprite, sys, UITransform, Widget, resources, input, Input, EventKeyboard, KeyCode } from 'cc';
@@ -26,6 +27,7 @@ import type { HallMapEventCatalog } from '../../core/systems/HallMapEventMapper'
 import type { HallMapLayout, HallMapTurnStep } from '../../core/systems/HallMapFocusPlanner';
 import { buildLobbyHallWallView, type LobbyHallWallView } from '../../core/systems/LobbyHallWallView';
 import { boardToHub, findCard, missionRowStatusText, type WallOfTheme } from '../mission/MissionBoardPresenter';
+import { MISSION_BLOCK_TEXT, type MissionBlock } from '../../core/mission/MissionTypes';
 import { buildMissionDialogState, candidateOptions, intelGainFloatText, type MissionDialogState } from '../mission/MissionDetailPresenter';
 import { buildLobbyHallAltarView } from '../core/LobbyHallAltarView';
 import { buildHallMapTurnSteps, hasHallMapFocus, type HallMapProvinceSource } from '../../core/systems/HallMapSeasonTurn';
@@ -62,6 +64,8 @@ import { LobbyLeaderboardComposite, type LobbyLeaderboardOpenPayload } from '../
 import { SeasonReportComposite, type SeasonReportOpenPayload } from '../components/SeasonReportComposite';
 import { SandtableTerritoryComposite, type SandtableTerritoryOpenPayload } from '../components/SandtableTerritoryComposite';
 import { LocalGachaService, type LocalGachaResultEntry } from '../../core/services/LocalGachaService';
+import type { DestinyShopBlockReason } from '../../core/systems/DestinyShop';
+import type { RewardGrantResult, RewardTallyView } from '../../shared/api/ApiCommands';
 import { PlayerRosterService } from '../../core/services/PlayerRosterService';
 import type { BloodlineStageAwakenedPayload, BloodlineStageCapRaisedPayload } from '../../core/managers/GameSession';
 import { GAME_SESSION_EVENTS, GameSession, type AddGeneralsResult, type ClanPrestigeChangedPayload, type ClanTierUpPayload, type MilestoneUpPayload, type CustomGoldFactorBornPayload, type LifeImprintedPayload, type RivalSeasonEventsPayload } from '../../core/managers/GameSession';
@@ -78,6 +82,8 @@ import { isStageSeasonOpen, parseStageSeasonSchedule, seasonLockedHint, stageOpe
 import { buildBattlefieldReconForEncounter } from '../../core/systems/BattlefieldRecon';
 import { buildEnvScoutLines } from '../core/EnvScoutPresenter';
 import { lifespanCommandForBattleKind } from '../../core/systems/LifespanWiring';
+import { createSortieState } from '../../core/systems/SortieDeploy';
+import { resolveEnemyReserve } from '../../core/systems/QuickResolveGate';
 import type { UnveilingEvent } from '../../core/systems/Unveiling';
 import { type AgingEvent } from '../../core/systems/GeneralAging';
 import { ownedLivingGenerals } from '../core/OwnedRosterSource';
@@ -153,7 +159,9 @@ import { MentorBorrowController } from '../core/MentorBorrowController';
 import { GraduationRecordController } from '../core/GraduationRecordController';
 import { AcademyGraduationController } from '../core/AcademyGraduationController';
 import { AcademyFlowController } from '../core/AcademyFlowController';
-import { GameAcademySaveStore } from '../../core/services/GameAcademySaveStore';
+import { parseQaAcademyParams } from '../core/AcademyQaFastForward';
+import { fastForwardFamily, parseQaFamilyParams } from '../core/FamilyQaFastForward';
+import { AcademyApiClient } from '../core/AcademyApi';
 import { ancestralInheritToastText, newAncestralInheritViews } from '../core/AcademyInheritView';
 import { ClanShrineController } from '../core/ClanShrineController';
 import { OpeningOfferPopupController } from '../core/OpeningOfferPopupController';
@@ -172,7 +180,7 @@ import { OfficerPanelsController } from '../core/OfficerPanelsController';
 import { BLOODLINE_VIGNETTE_CELL_COUNT, bloodlineVignetteOpenLabel, bloodlineVignetteViewOf } from '../core/BloodlineVignetteText';
 import { installOfficerTierTable, type OfficerTierRow } from '../../core/systems/OfficerTierTable';
 import { shouldShowMentorUnlockPrompt } from '../../core/systems/MentorGuidance';
-import { buildRankUnlockPopupView, installOfficerFeatureUnlocks, lobbyActionLock, lockedActionToast, nextRankPreviewLine } from '../../core/systems/OfficerFeatureUnlocks';
+import { buildPromotionHallGuide, buildRankUnlockPopupView, installOfficerFeatureUnlocks, lobbyActionLock, lockedActionToast, nextRankPreviewLine, PromotionHallGuide } from '../../core/systems/OfficerFeatureUnlocks';
 import { installSageProgressTable } from '../../core/systems/SageFavor';
 import { installSandtableTerritories } from '../../core/systems/SandtableTerritories';
 import { OFFICER_PROMOTION_FREEZE_TIMING, officerPromotionFreezeTitles, officerPromotionNoticeOf, officerPromotionRewardTotal } from '../../core/systems/HallMissionSettlement';
@@ -190,13 +198,24 @@ import { mercBondedLine, mercDayThreeLine, mercFarewellLine, mercTrustLine } fro
 import { RED_FACE_SHOW_MAX_ROWS, RedFaceGalleryController, RedFaceShowcaseController, RedFaceShowcaseDeps, toRedFaceTabFlowView } from '../core/RedFaceShowcaseController';
 import { GACHA_NODES, GACHA_POOL_INDEX, GACHA_POOLS, GachaPoolDef, RED_FACE_SECTION_ROW_BUTTON } from '../core/GachaScreenNodes';
 import { LocalGachaApi } from '../../core/gacha/LocalGachaApi';
-import { parseGachaMainPools, type GachaApi, type GachaCurrencyId, type GachaMainPoolConfig } from '../../core/gacha/GachaApi';
+import { migrateLegacyPity } from '../../core/gacha/GachaPityMigration';
+import { gachaRewardEnabled } from '../../core/gacha/GachaRewardFlag';
+import { RewardGachaPort, type RewardGachaPullOutcome } from '../../core/gacha/RewardGachaPull';
+import { supportCardItemMembers } from '../../core/gacha/SupportCardGachaView';
+import { buildRateTableRows } from '../../core/gacha/GachaRateTable';
+import { findSupportCard } from '../../shared/support/SupportCardConfig';
+import { buildRewardPools, legacyPoolIdsOf, type RosterMember } from '../../shared/reward/RewardRoster';
+import { GachaWalletPort } from '../../core/api/localserver/GachaWalletPort';
+import { isApiFail } from '../../shared/api/ApiProtocol';
+import { ADMISSION_TOKEN_ID } from '../../shared/item/ItemConfig';
+import { gachaCostOf, parseGachaMainPools, pickPullCurrency, type GachaApi, type GachaCurrencyId, type GachaMainPoolConfig } from '../../core/gacha/GachaApi';
 import { gachaApiView, gachaAutoSizeNodes, gachaHeroIdOf, gachaWalletLabelTexts } from '../core/GachaApiTexts';
 import { buildPoolDetailRows, checkGachaAffordable, planGachaButton, syncMainPoolCosts, type GachaButtonKind } from '../../core/gacha/GachaButtonRules';
 import { bindGachaPoolDetail, setGachaTexts, textLabelOf, updateGachaWalletStrip, raiseGachaWalletStrip } from '../core/GachaScreenExtras';
 import { GachaPoolSwitcher } from '../core/GachaPoolSwitcher';
 import { PORTRAIT_GALLERY_PAGE_SIZE } from '../core/PortraitGallery';
-import { FaceMarks, PORTRAIT_FRAME_SPEC, PortraitFrameSpec, SHOWCASE_PORTRAIT_SPEC, buildPortraitHeadReference, fitPortraitByHead, fitPortraitInFrame } from '../core/PortraitFrameFit';
+import { FaceMarks, PORTRAIT_FRAME_SPEC, PortraitFrameSpec, SHOWCASE_PORTRAIT_SPEC, buildPortraitHeadReference, fitPortraitByHead, fitPortraitInFrame, fitSilhouetteToFrame } from '../core/PortraitFrameFit';
+import { buildDupPopupAliases } from '../core/GachaResultCardTheme';
 import { LobbyOpeningPanels } from '../core/LobbyOpeningPanels';
 import { INTRO_TICK_SEC, OpeningIntroController } from '../core/OpeningIntroController';
 import { InitialShowcaseController } from '../core/InitialShowcaseController';
@@ -218,7 +237,7 @@ import { ITEM_LONGEVITY_PILL, ITEM_ORACLE_TOKEN, ITEM_WOOD } from '../../core/sy
 import { ITEM_SHOP_OFFERS, JOB_CHANGE_ORDER_OFFER } from '../../core/systems/ItemShopPricing';
 import { ShopMainController } from '../core/ShopMainController';
 import { PrisonerPopupController } from '../core/PrisonerPopupController';
-import { DuplicatePullPopupController, DUPLICATE_INFUSION_VALUE, infusionTargetsOf, rebirthTargetsOf, splitOwnedDuplicates, starUpTargetsOf, type DuplicatePullChoice, type DuplicatePullEntry, type DuplicatePullRoute } from '../core/DuplicatePullPopupController';
+import { DuplicatePullPopupController, DUPLICATE_INFUSION_VALUE, infusionTargetsOf, rebirthTargetsOf, splitOwnedDuplicates, starUpTargetsOf, type DuplicatePullChoice, type DuplicatePullEntry, type DuplicatePullQuips, type DuplicatePullRoute } from '../core/DuplicatePullPopupController';
 import { buildLobbyScout, ScoutPanelController } from '../core/ScoutPanelController';
 import type { TacticCounterTagTable } from '../../core/systems/LoadoutCheck';
 import { spiritSlotViewOf } from '../../core/systems/SpiritSlotState';
@@ -314,6 +333,8 @@ const GALLERY_ENTRY_NODE_NAME = 'GeneralVersionGalleryEntry';
 const CHARACTER_DS3_SIDE_ACTION_INDEX = { journal: 0, soulInject: 1, gallery: 2, totalTp: 3, expertView: 4, volunteer: 5, jobChange: 6 };
 const JOB_CHANGE_ENTRY_NODE_NAME = 'btnGeneralJobChange';
 const VOLUNTEER_TASK_NODE_NAME = 'btnVolunteerTask';
+/** 晉升導流頭頂「！」的樣式名（hall-stage-decor.json 的 markStyles） */
+const PROMOTION_MARK_STYLE = 'promotion';
 const JOURNAL_PEEK_NODE_NAME = 'JournalPeekBubble';
 const EXPERT_VIEW_NODE_NAME = 'btnExpertView';
 const EXPERT_VIEW_ON_LINE = '專家視圖已開啟：直接顯示完整族譜與數值，功能解鎖不變。';
@@ -440,6 +461,9 @@ function alignSubMenuToHall(
     widget.bottom = 156;
 }
 
+/** 重複卡彈窗左側立繪框（436×610） */
+const DUPLICATE_HERO_PORTRAIT_SPEC: PortraitFrameSpec = { ...PORTRAIT_FRAME_SPEC, frameWidth: 436, frameHeight: 610, faceHeight: 54, eyeFromTop: 110 };
+
 @ccclass('LobbyScene')
 export class LobbyScene extends Component {
 
@@ -479,6 +503,8 @@ export class LobbyScene extends Component {
     private _graduation: GraduationRecordController<UIScreenPreviewHost> | null = null;
     /** 學府結業結算彈窗（PROG-2-1956） */
     private _academyGraduation: AcademyGraduationController<UIScreenPreviewHost> | null = null;
+    /** 結業結算進行中（防重入，PROG-2-9211） */
+    private _academyGraduating = false;
     private _academyTacticNames: ReadonlyMap<string, string> | null = null;
     /** 學府入學與 36 回合修業畫面（PROG-2-9189） */
     private _academyFlow: AcademyFlowController<UIScreenPreviewHost> | null = null;
@@ -551,6 +577,10 @@ export class LobbyScene extends Component {
     private _hallBoard: HallBoardPanelController | null = null;
     /** 大廳輪替走動的當班名單狀態（60 秒換一批）與聊天台詞庫（Issue #2135） */
     private _hallWalkerState: WalkerPlanState = INITIAL_WALKER_STATE;
+    /** 晉升解鎖大廳導流（PROG-2-9610）：晉升完成後若有新機能解鎖，由大廳武將頂金色驚嘆號引導並提供捷徑 */
+    private _pendingPromotionGuide: PromotionHallGuide | null = null;
+    /** 晉升導流「！」掛在哪位武將頭上；只有點這位才出導流泡泡，標記與泡泡必須同一人 */
+    private _promotionGuideGeneralId: string | null = null;
     /** 大廳台詞：內建底稿＋本機快取（store），對外只經由 LobbyDialogueProvider 取台詞 */
     private _hallChatStore: HallChatStore | null = null;
     private _hallDialogue: LobbyDialogueProvider | null = null;
@@ -710,6 +740,9 @@ export class LobbyScene extends Component {
             name: general.name,
             infusionAvailable: cards.get(general.id) !== null,
             starUp: services().session.starUpProgress(general.id),
+            ...(general.title ? { title: general.title } : {}),
+            rarity: general.rarityTier === 'legendary' || general.rarityTier === 'mythic' ? 'SSR' : general.rarityTier === 'epic' ? 'SR' : 'R',
+            rebirthCount: services().session.roster.find((owned) => owned.id === general.id)?.rebirthCount ?? 1,
         })));
         const rebirth = await services().session.addGenerals(rebirthTargetsOf(owned, choices), { rebirthOnDuplicate: true, fromGacha: true });
         const base = this._gachaEnrollResult ?? { added: [], duplicates: [], rebirths: [], bondPointsGained: 0 };
@@ -786,6 +819,8 @@ export class LobbyScene extends Component {
         installAdaptiveResolution();
         // 讀存檔前先備妥服務（存檔後端、名冊、生命週期）；否則 load() 因未設定存檔服務而失敗，每次重開都被當成新玩家
         services().initialize(this.node);
+        // 共通 API（PROG-2-9201）：本場景的錢包服務是單機權威，綁給本機 adapter 的 wallet.* 命令
+        services().bindWalletAuthority(new GachaWalletPort(this._localGachaService));
         this._offBeforeSwitch = services().scene.onBeforeSwitch((target) => { this._cancelMountScheduler(); this._retention.onBeforeSwitch(target); });
         input.on(Input.EventType.KEY_UP, this._onEscapeKeyUp, this);
         void this._loadLimitedPoolSchedule();
@@ -991,6 +1026,8 @@ export class LobbyScene extends Component {
 
         // 核心架構合一：幕府政廳即為主大廳，登入後直接坐鎮大堂；新玩家開場走完才開（PROG-2-2222）
         if (!this._isOpeningInProgress()) this._openLobbyHall();
+        // QA 快進（PROG-2-9582）：只靠共通 API 與已載入的存檔，不等背景面板，所以在背景掛載之前就啟動
+        void this._startQaFamily();
         void this._runDeferredMounts();
         } catch (error) {
             SceneLoadProgress.fail();
@@ -1196,6 +1233,14 @@ export class LobbyScene extends Component {
                     services().event.emit('SHOW_TOAST', { message, duration: 2 });
                 }
                 const toastsEndAt = Date.now() + promotionToasts.length * 2200;
+                // 晉升大廳導流（PROG-2-9610）：若有新解鎖功能，設置武將頭頂金色「！」與導流泡泡
+                // 只有新解鎖功能帶有大廳入口時才導流，避免「立即前往」找不到目的地；僅存記憶體，重進大廳即清除
+                const hallGuide = buildPromotionHallGuide(payload.tiers, (k, ...args) => services().i18n.t(k, ...args));
+                this._pendingPromotionGuide = hallGuide?.primaryFeature.lobbyAction ? hallGuide : null;
+                this._promotionGuideGeneralId = null;
+                if (this._pendingPromotionGuide) {
+                    this._lobbyHall?.refreshStage(Date.now() / 1000);
+                }
                 // 升官動畫（官職系統 E-6，PROG-2-1859）：每升一階播一次大字定格
                 // 晉升解鎖彈窗（PROG-2-9151）：定格動畫播完再列出這次新開放的功能
                 // 提示（朝議已定…）會蓋住彈窗標題，等提示播完才跳彈窗
@@ -1436,6 +1481,7 @@ export class LobbyScene extends Component {
         });
         await popup.mount();
         this._quickSortiePopup = popup;
+        void services().loadQuickResolveConfig();
     }
 
     /** 出戰：新手教學戰或沒有關卡資料時照舊直接進戰場，其餘先彈出模式選擇 */
@@ -1453,6 +1499,8 @@ export class LobbyScene extends Component {
         const opened = popup.open({
             stageName: encounter.name,
             enemyName,
+            // 極速決戰可用條件（PROG-2-9709）：首次挑戰劇情關／守城／單挑／次數用完沒軍令狀 → 按鈕灰掉並顯示原因
+            gate: services().session.checkQuickResolve(encounter),
             command: () => { void this._enterBattle(); },
             quick: () => this._runQuickSortie(encounter),
         });
@@ -1471,11 +1519,20 @@ export class LobbyScene extends Component {
         if (!(await this._askScoutBeforeSortie())) return null;
         const session = services().session;
         const pgId = session.resolveLeadGeneralId(encounter.playerGeneralId);
+        // 先計次（免費次數或軍令狀）：偵查詢問按了返回的取消不計次；條件不符（換日、道具被用掉）直接不結算
+        if (!(await session.spendQuickResolveUse(encounter))) {
+            services().event.emit('SHOW_TOAST', { message: `極速決戰不可用：${session.checkQuickResolve(encounter).reason || '次數不足'}`, duration: 3 });
+            return null;
+        }
         const siege = lifespanCommandForBattleKind(encounter.battleKind);
         if (siege && pgId) await session.spendSiegeLifespan(pgId);
         const player = session.roster.find((g) => g.id === pgId) ?? this._generals.find((g) => g.id === pgId) ?? null;
         const enemy = this._generals.find((g) => g.id === encounter.enemyGeneralId) ?? null;
-        const resolution = resolveQuickSortie(player, enemy, session.firstBattleCleared, Math.random);
+        // 整支出征部隊：我方預備兵力＝出征帳本的兵源池（還沒上場全算預備）；敵方用設定的固定預備兵力（暫定）
+        const sortieInput = pgId ? session.getSortieInput(pgId) : null;
+        let playerReserve = 0;
+        try { playerReserve = sortieInput ? createSortieState(sortieInput).poolMax : 0; } catch { playerReserve = 0; }
+        const resolution = resolveQuickSortie(player, enemy, session.firstBattleCleared, Math.random, { playerTroops: playerReserve, enemyTroops: resolveEnemyReserve(encounter, 0) });
         const clock = session.gameTime;
         const kind = resolution.result === 'player-win' ? 'win' : resolution.result === 'enemy-win' ? 'lose' : 'draw';
         session.recordAutoResolveBattle({
@@ -1548,7 +1605,7 @@ export class LobbyScene extends Component {
             graduate: (generalId, snapshot) => services().session.graduateFromAcademy(generalId, snapshot),
             view: () => ({
                 lookup: (key: string): string => services().i18n.t(key),
-                tacticName: (id) => this._academyTacticNames?.get(id) ?? inspiredTacticName(id),
+                tacticName: (id) => skillNameOf(id) ?? this._academyTacticNames?.get(id) ?? inspiredTacticName(id),
             }),
             toast: (message) => { services().event.emit('SHOW_TOAST', { message, duration: 2.5 }); },
         });
@@ -1556,6 +1613,9 @@ export class LobbyScene extends Component {
     }
 
     /** 學府修業的語系文字；語系缺鍵時用傳入的 zh-TW 預設 */
+    /** 武將不可接任務的原因（哺乳期、教官、出征中…）：走 i18n，缺字才退回程式內預設 */
+    private readonly _missionBlockLabel = (block: MissionBlock): string => this._academyText(`ui.mission.block.${block}`, MISSION_BLOCK_TEXT[block]);
+
     private _academyText(key: string, fallback: string): string {
         const text = services().i18n.t(key);
         return text === key ? fallback : text;
@@ -1570,8 +1630,9 @@ export class LobbyScene extends Component {
 
     /** 學府入學與修業畫面（PROG-2-9189）：入口在培育類別的「學府」 */
     private async _mountAcademyFlow(): Promise<void> {
+        // 任務／獎勵／劇情／物品定義表只在這支載入（原本只有開結緣畫面才載）；入學走 task.accept 要有 ACADEMY_36，否則回 E350。重複呼叫不會重載
+        await services().loadBloodlineRuleTables();
         const session = services().session;
-        const store = new GameAcademySaveStore(session);
         this._academyFlow = new AcademyFlowController<UIScreenPreviewHost>({
             mountEnrollHost: (bindings) => this._mountPreviewScreenHost('AcademyEnrollHost', 'academy-enroll-screen', bindings),
             mountSessionHost: (bindings) => this._mountPreviewScreenHost('AcademySessionHost', 'academy-session-screen', bindings),
@@ -1583,23 +1644,100 @@ export class LobbyScene extends Component {
             nurtureBlockReasons: (childId) => services().nurture.checkStart(childId).reasons,
             loadMentorCards: async () => attachSupportToCards((await services().legacy?.getMentorCards()) ?? [], await this._loadSupportCatalog()),
             lockedMentorIds: () => services().nurture.lockedMentorIds(),
-            tokensLeft: () => services().nurture.admissionsLeft(),
-            consumeToken: () => services().nurture.consumeAdmissionToken(),
-            refundToken: () => services().nurture.refundAdmissionToken(),
+            // 入學令改走物品庫存（PROG-2-9203）：家庭倉庫的 ITEM_ADMISSION_TOKEN；NurtureService.admission 只留給舊培育入口
+            tokensLeft: () => session.itemCount(ADMISSION_TOKEN_ID),
+            consumeToken: async () => !isApiFail(await services().api.cmd('item.consume', { itemId: ADMISSION_TOKEN_ID, qty: 1, sink: 'ENROLL' })),
+            refundToken: async () => { await services().api.cmd('item.grant', { itemId: ADMISSION_TOKEN_ID, qty: 1, source: 'REFUND' }); },
             clanUuid: () => session.clanUuid,
             clanPrestigeTier: () => session.clanPrestigeTier,
             admissionTurn: () => session.gameTime.totalSeasonsElapsed,
-            worldSeed: () => `3klife-world|${session.clanUuid}`,
-            store,
-            persist: async () => {
-                if (session.hasSaveService) await session.save();
-            },
+            // 存檔（save.write）、36 回合任務推進（task.advance）、世界種子（rng.issueSeed）一律走共通 API（PROG-2-9215）
+            api: new AcademyApiClient(services().api),
             isActive: () => session.isAcademyActive,
             onChanged: () => { this._refreshCityHub(); },
+            onGraduated: (snapshot) => { void this._settleAcademyGraduation(snapshot); },
         });
         await this._academyFlow.mount();
+        // 舊存檔補結業（PROG-2-9211）：紀錄已 graduated 卻沒結算，進大廳自動補
+        this._academyFlow.settlePendingGraduation();
         if (session.isAcademyActive) {
             services().event.emit('SHOW_TOAST', { message: this._academyText('ui.academy.flow.lobby.resume_toast', '學府修業進行中，請回到學府繼續'), duration: 3 });
+        }
+        this._startQaAcademy();
+    }
+
+    /**
+     * QA 快進（PROG-2-9582）：網址帶 qaFamily=spouse|nursing 才介入；納入首子系統配偶（family.enrollSpouse），
+     * nursing 再走 occupancy.acquire 進哺乳占用。結果掛 window.__qaFamily 供 QA 腳本讀取。沒帶參數時完全不動。
+     */
+    private async _startQaFamily(): Promise<void> {
+        const scenario = parseQaFamilyParams((globalThis as { window?: { location?: { search?: string } } }).window?.location?.search);
+        if (!scenario) return;
+        const publish = (value: unknown): void => { (globalThis as { __qaFamily?: unknown }).__qaFamily = value; };
+        publish({ state: 'running', scenario });
+        try {
+            const api = services().api;
+            const result = await fastForwardFamily({
+                cmd: async (name, args) => {
+                    const res = await api.cmd(name, args);
+                    return isApiFail(res) ? { ok: false, reason: res.reason } : { ok: true, result: res.result };
+                },
+            }, scenario);
+            publish({ state: 'done', result });
+        } catch (err) {
+            publish({ state: 'error', message: (err as Error)?.message ?? String(err) });
+        }
+    }
+
+    /**
+     * QA 快進（PROG-2-9192）：網址帶 qaAcademy=<回合> 才介入。綁定偵錯宿主後呼叫共通 API 的 debug.fastForward，
+     * 由修業控制器入學並連續 commit 到指定回合；沒帶參數時完全不動，不影響一般玩家流程。
+     */
+    private _startQaAcademy(): void {
+        const flow = this._academyFlow;
+        const qa = parseQaAcademyParams((globalThis as { window?: { location?: { search?: string } } }).window?.location?.search);
+        if (!flow || !qa) return;
+        // 結果掛在 window.__qaAcademy，供 QA 腳本與人工在主控台查看（done 帶快進結果，error 帶原因）
+        const publish = (value: unknown): void => { (globalThis as { __qaAcademy?: unknown }).__qaAcademy = value; };
+        services().bindDebugHost({
+            fastForwardAcademy: async (turns) => {
+                publish({ state: 'running', turns });
+                try {
+                    const result = await flow.qaFastForward(turns);
+                    publish({ state: 'done', result });
+                    return result;
+                } catch (err) {
+                    publish({ state: 'error', message: (err as Error)?.message ?? String(err) });
+                    throw err;
+                }
+            },
+        });
+        // 命令只回「已啟動」（串行佇列不能等快進跑完），失敗時記警告
+        void services().api.cmd('debug.fastForward', { target: 'academy', turns: qa.turns }).then((res) => {
+            if (isApiFail(res)) {
+                UCUFLogger.warn(LogCategory.UI, `[LobbyScene] qaAcademy 快進失敗：${res.reason}`);
+                publish({ state: 'failed', reason: res.reason });
+            }
+        });
+    }
+
+    /**
+     * 修業結業後結算（PROG-2-9211，暫行，PROG-2-9191 取代）：寫回武將、清修業紀錄（graduateFromAcademy 內一次存檔），
+     * 開結業結算彈窗。失敗時保留紀錄（不凍結外界時間），下次進大廳會再補一次。
+     * 新學戰法已改走 skill.grant（PROG-2-9204，在 GameSession.graduateFromAcademy 內）；戰法顯示名取自技能定義庫。
+     * TODO(PROG-2-9191)：整段結算改走 task.settle → reward.grant → skill.grant 單一交易。
+     */
+    private async _settleAcademyGraduation(snapshot: Readonly<AcademyStateSnapshot>): Promise<void> {
+        if (this._academyGraduating) return;
+        this._academyGraduating = true;
+        try {
+            const result = await this.showAcademyGraduation(snapshot.childId, snapshot);
+            const host = this._academyGraduation?.host;
+            if (result) this._academyFlow?.closeAll(); // 修業畫面收起，只留結業結算彈窗
+            if (result && host) this._bringNodeToFront(host.node);
+        } finally {
+            this._academyGraduating = false;
+            this._refreshCityHub();
         }
     }
 
@@ -1802,6 +1940,11 @@ export class LobbyScene extends Component {
     }
 
     private _runCityHubAction(action: LobbyActionId): void {
+        if (this._pendingPromotionGuide && this._pendingPromotionGuide.primaryFeature.lobbyAction === action) {
+            this._pendingPromotionGuide = null;
+            this._promotionGuideGeneralId = null;
+            this._lobbyHall?.refreshStage(Date.now() / 1000);
+        }
         this._closeSecondaryOverlayHosts();
         const run: Record<LobbyActionId, () => void> = {
             battle: () => this.onClickEnterBattle(),
@@ -1859,6 +2002,7 @@ export class LobbyScene extends Component {
             officerRank: officerDisplayOf(session.officerState).rankName,
             gold: wallet.gold,
             gems: wallet.gems,
+            silver: session.silverLedger.silverBalance(),
             food: session.military.food,
             cityTroops: session.military.cityTroops,
             cityTroopsCap: session.military.cityTroopsCap,
@@ -2358,9 +2502,10 @@ export class LobbyScene extends Component {
             ordersOwned: () => services().session.itemCount(ITEM_JOB_CHANGE_ORDER),
             changeJob: (generalId, subClass) => services().session.changeJob(generalId, subClass),
             gems: () => this._localGachaService.getCurrencyAmount('gems'),
+            // 示範遷移（PROG-2-9201）：扣靈玉改走共通 API 的 wallet.spend；餘額不足由權威端回 E301 且不扣
             buyOrder: async () => {
-                const gacha = this._localGachaService;
-                if (!gacha.spendCurrency('gems', JOB_CHANGE_ORDER_OFFER.price)) return false;
+                const paid = await services().api.cmd('wallet.spend', { currency: 'gems', amount: JOB_CHANGE_ORDER_OFFER.price, reason: 'JOB_CHANGE_ORDER' });
+                if (!paid.ok) return false;
                 await services().session.addItem(ITEM_JOB_CHANGE_ORDER, 1, 'SHOP');
                 return true;
             },
@@ -2838,6 +2983,7 @@ export class LobbyScene extends Component {
                 notifyStarterYouth: name => services().event.emit('SHOW_TOAST', { message: services().i18n.t('ui.opening.starter_child_hint', name), duration: 6 }),
                 pickStarterYouth: options => this._pickStarterYouth(options),
                 advanceOpening: event => { this._advanceOpening(event); },
+                rollDestinyRound: () => this._rollDestinyRound(),
                 presentDestinyPool: (view, actions) => this._presentDestinyPool(view, actions),
                 closeDestinyPool: () => { if (this._destinyPoolHost) this._destinyPoolHost.node.active = false; },
                 onOverlayChanged: () => { this._seasonChroniclePopup?.refreshAvailability(); },
@@ -3475,7 +3621,8 @@ export class LobbyScene extends Component {
 
     /** 開場優先掛載期間，把正在顯示的開場面板拉回最上層，後掛的面板不會蓋住旁白（PROG-2-2223）。 */
     private _keepOpeningOnTop(): void {
-        const nodes = [this._introHost?.node, this._showcaseHost?.node, ...(this._openingPanels?.activeHostNodes() ?? [])];
+        // 少年挑選（PROG-2-9194）出現時宿命池節點仍未收起，必須排在最後拉到最上層，否則被宿命池結果面板蓋住點不到（PROG-2-9214）
+        const nodes = [this._introHost?.node, this._showcaseHost?.node, ...(this._openingPanels?.activeHostNodes() ?? []), this._youthPickHost?.node];
         for (const node of nodes) {
             if (node?.active) this._bringNodeToFront(node);
         }
@@ -3820,7 +3967,11 @@ export class LobbyScene extends Component {
         if (tiers.length === 0) return;
         // 晉升縣府佐官那一次，彈窗多一句教官提醒與去教官池的按鈕；旗標記住只跳一次（PROG-2-9167）
         const mentorPrompt = shouldShowMentorUnlockPrompt(tiers, services().session.mentorUnlockPromptShown);
-        const view = buildRankUnlockPopupView(Math.min(...tiers) - 1, Math.max(...tiers), mentorPrompt);
+        const view = buildRankUnlockPopupView(Math.min(...tiers) - 1, Math.max(...tiers), {
+            mentorPrompt,
+            imperialDecree: true,
+            lookup: (key: string, ...args: (string | number)[]) => services().i18n.t(key, ...args),
+        });
         const host = this._rankUnlockHost;
         if (!view || !host?.binder) return;
         if (mentorPrompt) void services().session.markMentorUnlockPromptShown();
@@ -4039,7 +4190,8 @@ export class LobbyScene extends Component {
         const spent = [
             v.cost.grain > 0 ? `糧草 -${v.cost.grain}` : '',
             v.cost.troops > 0 ? `兵源 -${v.cost.troops}` : '',
-            v.cost.silver > 0 ? `黃金 -${v.cost.silver}` : '',
+            v.cost.gold > 0 ? `金 -${v.cost.gold}` : '',
+            v.cost.silver > 0 ? `銀兩 -${v.cost.silver}` : '',
         ].filter((text) => text.length > 0).join('、');
         const duration = Math.max(1, v.returnSeason - this._hallSeason());
         services().event.emit('SHOW_TOAST', {
@@ -4087,7 +4239,7 @@ ${spent}`,
         const card = board.ok ? findCard(board.value, missionId) : undefined;
         const patch: Parameters<LobbyMissionDetailDialogComposite['applyStatePatch']>[0] = {
             ...next,
-            ...(cands.ok ? { availableGenerals: candidateOptions(cands.value) } : {}),
+            ...(cands.ok ? { availableGenerals: candidateOptions(cands.value, this._missionBlockLabel) } : {}),
         };
         if (next.locked && card?.executorName) patch.selectedGeneralLabel = card.executorName;
         panel.applyStatePatch(patch);
@@ -4125,7 +4277,7 @@ ${spent}`,
         const lockedExecutor = state.locked ? openCard?.executorName : undefined;
         void services().ui.open(UIID.LobbyMissionDetailDialog, {
             state,
-            availableGenerals: candidateOptions(candidates),
+            availableGenerals: candidateOptions(candidates, this._missionBlockLabel),
             selectedGeneralId: lockedExecutor ? undefined : selected?.generalId,
             ...(lockedExecutor ? { selectedGeneralLabel: lockedExecutor } : {}),
             onGeneralSelected: (option) => { this._refreshHallDialog(missionId, option.id); },
@@ -4374,7 +4526,9 @@ ${spent}`,
             walkable: !!wander && spinePathFor(wander, c.id) !== null,
         }));
         // 自告奮勇：任務資料指名的自薦者，加上武將心智算出心情 EAGER、想找差事做的人（PROG-2-9146）
-        const volunteerIds = owned.filter(c => !c.assigned && (this._hallBoard?.volunteerTaskFor(c.id) || session.hallStageProfile(c.id)?.mood === 'EAGER')).map(c => c.id);
+        // 任務牆只算一次再逐位查（逐位重算整面牆會讓大廳每 5 秒卡一次）
+        const volunteerOf = this._hallBoard?.volunteerTaskLookup() ?? null;
+        const volunteerIds = owned.filter(c => !c.assigned && (volunteerOf?.(c.id) || session.hallStageProfile(c.id)?.mood === 'EAGER')).map(c => c.id);
         const plan = planHallWalkers({
             state: this._hallWalkerState,
             nowSec: Date.now() / 1000,
@@ -4389,7 +4543,17 @@ ${spent}`,
             const title = displayTitleOf(profile.title, profile.name);
             return [title ? { id, name: profile.name, title } : { id, name: profile.name }];
         });
-        return { generals, taskMarkIds: new Set(plan.volunteerIds) };
+        const taskMarks = new Set(plan.volunteerIds);
+        const markStyleById = new Map<string, string>();
+        // PROG-2-9610：晉升導流待引導時，挑一位在場走動的武將頭頂掛大金色「！」；
+        // 已選的人還在場就沿用（輪替不換人，玩家看到的標記與點到的泡泡才是同一位）
+        if (this._pendingPromotionGuide && generals.length > 0) {
+            const kept = generals.find(g => g.id === this._promotionGuideGeneralId);
+            this._promotionGuideGeneralId = (kept ?? generals[0]).id;
+            taskMarks.add(this._promotionGuideGeneralId);
+            markStyleById.set(this._promotionGuideGeneralId, PROMOTION_MARK_STYLE);
+        }
+        return { generals, taskMarkIds: taskMarks, markStyleById };
     }
 
     /**
@@ -4400,6 +4564,27 @@ ${spent}`,
         const session = services().session;
         const profile = session.hallStageProfile(generalId);
         if (!profile) return null;
+        // 晉升解鎖導流（PROG-2-9610）：若有新解鎖功能，武將優先以口語泡泡提示並提供直達按鈕
+        // 只有頭頂掛著「！」的那位才出導流泡泡；其他人照常聊天（泡泡與標記不同人會讓玩家搞不清誰在說話）
+        if (this._pendingPromotionGuide && generalId === this._promotionGuideGeneralId) {
+            const guide = this._pendingPromotionGuide;
+            const text = guide.guideSpeech;
+            const actionId = guide.primaryFeature.lobbyAction as LobbyActionId;
+            return {
+                name: profile.name,
+                text,
+                volunteer: {
+                    acceptLabel: guide.acceptLabel,
+                    declineLabel: guide.declineLabel,
+                    onAccept: () => {
+                        this._pendingPromotionGuide = null;
+                        this._promotionGuideGeneralId = null;
+                        this._lobbyHall?.refreshStage(Date.now() / 1000);
+                        this._runCityHubAction(actionId);
+                    },
+                },
+            };
+        }
         const volunteer = this._hallBoard?.volunteerTaskFor(generalId) ?? null;
         if (volunteer) {
             const text = this._speakLobby(generalId, 'volunteer', { task: volunteer.taskTitle });
@@ -4519,6 +4704,7 @@ ${spent}`,
         const clanCard = lobbyClanCardTexts(buildSpiritFamilyOverviewRows(Object.values(session.inventoryViews.spiritCards), (templateId) => this._generals.find((g) => g.id === templateId)?.name));
         this._lobbyHall.setTopbar({
             gold: wallet.gold,
+            silver: session.silverLedger.silverBalance(),
             gems: wallet.gems,
             food: session.military.food,
             troops: session.military.cityTroops,
@@ -4633,6 +4819,7 @@ ${spent}`,
         keys: readonly string[],
         nodeIds: (i: number) => readonly [mask: string, portrait: string] = (i) => [`frame${i}Mask`, `frame${i}Portrait`],
         spec: PortraitFrameSpec = PORTRAIT_FRAME_SPEC,
+        fillSilhouette = false,
     ): void {
         const seq = (this._avatarSeq.get(prefix) ?? 0) + 1;
         this._avatarSeq.set(prefix, seq);
@@ -4665,7 +4852,9 @@ ${spent}`,
                 const headFit = headRef && bounds[id] ? fitPortraitByHead(bounds[id], headRef, spec) : null;
                 const place = portrait
                     ? headFit ?? fitPortraitInFrame(size.width, size.height, marks[id], spec)
-                    : { width: 200, height: 200, x: 0, y: spec.frameHeight / 2 - 40 - 100 };
+                    : fillSilhouette
+                        ? fitSilhouetteToFrame(size.width, size.height, spec.frameWidth, spec.frameHeight)
+                        : { width: 200, height: 200, x: 0, y: spec.frameHeight / 2 - 40 - 100 };
                 sprite.node.getComponent(UITransform)?.setContentSize(place.width, place.height);
                 sprite.node.setPosition(place.x, place.y);
                 sprite.enabled = true;
@@ -4707,6 +4896,7 @@ ${spent}`,
             grantGold: (amount) => { gacha.grantCurrency('gold', amount); },
             random: Math.random,
             leaderName: (id) => this._generals.find((g) => g.id === id)?.name,
+            onWarDeclared: (nationId) => { services().session.beginHomeWar(nationId); },
             recordBattle: (squad, nationId, battle) => { services().session.recordRivalCampaign(squad, nationId, battle); },
             respondProposal: (nationId, accept) => services().session.respondRivalProposal(nationId, accept, (amount) => { gacha.grantCurrency('gold', amount); }),
         });
@@ -4747,6 +4937,8 @@ ${spent}`,
                 if (payload?.governanceEventLine) services().event.emit('SHOW_TOAST', { message: payload.governanceEventLine, duration: 3 });
                 // 年度月旦評放榜（血統傳承 G4 §G，PROG-2-1803）
                 for (const message of payload?.yuedanLines ?? []) services().event.emit('SHOW_TOAST', { message, duration: 4 });
+                for (const message of payload?.nursingLines ?? []) services().event.emit('SHOW_TOAST', { message, duration: 4 });
+                if (payload?.clanStipendLine) services().event.emit('SHOW_TOAST', { message: payload.clanStipendLine, duration: 4 });
                 // 立春子嗣天象（doc_spec_0312 §2，PROG-2-2106）
                 for (const message of payload?.omenLines ?? []) services().event.emit('SHOW_TOAST', { message, duration: 4 });
                 // 糧草告急（經濟 §G）、囚犯交出傳家寶（道具 §G，PROG-2-1774）
@@ -5152,6 +5344,8 @@ ${spent}`,
             if (this._duplicatePull.choose(route)) this._closeDuplicatePullPopup();
             else this._refreshDuplicatePullPopup();
         };
+        void services().resource.loadJson<DuplicatePullQuips>('data/duplicate-pull-quips', { tags: ['LobbyScene'] })
+            .then((quips) => this._duplicatePull.setQuips(quips)).catch(() => undefined);
         this._duplicatePullHost = await this._mountPreviewScreenHost('DuplicatePullPopupHost', 'duplicate-pull-popup-screen', [
             { buttonId: 'btnDupRebirth', handler: () => { choose('rebirth'); } },
             { buttonId: 'btnDupInfusion', handler: () => { choose('infusion'); } },
@@ -5219,8 +5413,15 @@ ${spent}`,
     }
 
     private _refreshDuplicatePullPopup(): void {
-        const binder = this._duplicatePullHost?.binder;
-        if (binder) applyFlowView(binder, this._duplicatePull.getView());
+        const host = this._duplicatePullHost;
+        const binder = host?.binder;
+        if (!host || !binder) return;
+        const view = this._duplicatePull.getView();
+        applyFlowView(binder, view);
+        // 左側稀有度徽章、立繪外框、徽章字色照稀有度色票（與十連結果卡同一套，PROG-2-9810）
+        void host.restyleWithSlots(buildDupPopupAliases(view.texts.dupRarity));
+        // 左側重逢名將立繪：沿用六框的頭頂對齊；沒立繪時 _applyFramePortraits 會退成剪影頭像
+        if (view.portraitKey) this._applyFramePortraits(binder, 'dupHero', [view.portraitKey], () => ['dupHeroMask', 'dupHeroPortrait'], DUPLICATE_HERO_PORTRAIT_SPEC, true);
     }
 
     private _closeDuplicatePullPopup(): void {
@@ -5253,15 +5454,31 @@ ${spent}`,
     private async _mountDestinyShop(): Promise<void> {
         const gacha = this._localGachaService;
         const shop = new DestinyShopController({
-            credits: (poolId) => gacha.getDestinyShopCredits(poolId),
-            pullsToNext: (poolId) => gacha.getPullsToNextDestinyCredit(poolId),
+            // 已走共通 API 的池（名將池）：額度讀 reward.pity 累計計數（開店與兌換後刷新快取）；其餘池仍讀舊保底表
+            credits: (poolId) => this._destinyTallies.get(poolId)?.credits ?? gacha.getDestinyShopCredits(poolId),
+            pullsToNext: (poolId) => this._destinyTallies.get(poolId)?.toNext ?? gacha.getPullsToNextDestinyCredit(poolId),
             exchange: (poolId, targetId) => {
-                const { entry, reason } = gacha.exchangeDestinyShop(poolId, this._destinyPoolGenerals.get(poolId) ?? [], targetId);
-                if (entry) {
-                    void this._onGachaPullSuccess([entry]);
-                    this._refreshWalletPreviewState();
+                const generals = this._destinyPoolGenerals.get(poolId) ?? [];
+                const finish = (entry: LocalGachaResultEntry | null, reason: DestinyShopBlockReason | null): { reason: DestinyShopBlockReason | null } => {
+                    if (entry) {
+                        void this._onGachaPullSuccess([entry]);
+                        this._refreshWalletPreviewState();
+                    }
+                    return { reason };
+                };
+                const port = this._gachaRewardPort;
+                if (!port || !port.handles(poolId)) {
+                    const { entry, reason } = gacha.exchangeDestinyShop(poolId, generals, targetId);
+                    return finish(entry, reason);
                 }
-                return { reason };
+                return (async () => {
+                    const blocked = gacha.checkDestinyTarget(generals, targetId);
+                    if (blocked) return finish(null, blocked);
+                    if (!(await port.redeem(poolId))) return finish(null, 'no-credit');
+                    const { entry, reason } = gacha.exchangeDestinyShop(poolId, generals, targetId, true);
+                    await this._refreshDestinyTally(poolId);
+                    return finish(entry, reason);
+                })();
             },
         });
         this._destinyShop = shop;
@@ -5269,8 +5486,19 @@ ${spent}`,
             { buttonId: 'btnCloseDestiny', handler: () => { if (this._destinyShopHost) this._destinyShopHost.node.active = false; } },
             { buttonId: 'btnPrevDestiny', handler: () => { shop.cycle(-1); this._refreshDestinyShop(); } },
             { buttonId: 'btnNextDestiny', handler: () => { shop.cycle(1); this._refreshDestinyShop(); } },
-            { buttonId: 'btnExchangeDestiny', handler: () => { shop.exchange(); this._refreshDestinyShop(); } },
+            { buttonId: 'btnExchangeDestiny', handler: () => { void Promise.resolve(shop.exchange()).then(() => this._refreshDestinyShop()); } },
         ]);
+    }
+
+    /** 天命商店額度快取（reward.pity 的累計計數，池 id → 進度）；同步的畫面讀它，開店與兌換後刷新 */
+    private readonly _destinyTallies = new Map<string, RewardTallyView>();
+
+    private async _refreshDestinyTally(poolId: string): Promise<void> {
+        const port = this._gachaRewardPort;
+        const tally = port && port.handles(poolId) ? await port.tally(poolId) : null;
+        if (tally) this._destinyTallies.set(poolId, tally);
+        else this._destinyTallies.delete(poolId);
+        this._refreshDestinyShop();
     }
 
     /** 各池兌換用的候選名單（與抽卡同一份），開店時填入 */
@@ -5296,6 +5524,7 @@ ${spent}`,
         this._destinyPoolGenerals.set(pool.poolId, generals);
         const candidates = this._localGachaService.getDestinyShopCandidates(generals).map((g) => ({ id: g.id, name: g.name }));
         this._destinyShop.open(pool.poolId, pool.title, candidates);
+        await this._refreshDestinyTally(pool.poolId);
         host.node.active = true;
         this._bringNodeToFront(host.node);
         this._refreshDestinyShop();
@@ -5670,13 +5899,13 @@ ${spent}`,
                 .filter((g) => g.status !== 'dead' && (g.age ?? 0) >= BREEDING_MIN_AGE)
                 .map((g) => g.id));
             let adults = adultIds();
-            const hall = { settled: 0, succeeded: 0, grain: 0, silver: 0, generalExp: 0 };
+            const hall = { settled: 0, succeeded: 0, grain: 0, gold: 0, silver: 0, generalExp: 0 };
             const result = await fastForwardSeasons(async () => {
                 const payload = await this._advanceSeasonWithSalaries();
                 const report = payload.hallMissionReport;
                 if (report) {
                     hall.settled += report.settled; hall.succeeded += report.succeeded;
-                    hall.grain += report.gains.grain; hall.silver += report.gains.silver; hall.generalExp += report.gains.generalExp;
+                    hall.grain += report.gains.grain; hall.gold += report.gains.gold; hall.silver += report.gains.silver; hall.generalExp += report.gains.generalExp;
                 }
                 return payload;
             }, () => {
@@ -5693,7 +5922,7 @@ ${spent}`,
             // 快轉沒有季度結算窗：大廳任務的成敗與入帳總額用提示補上（PROG-2-9130）
             if (hall.settled > 0) {
                 const gained = [
-                    hall.grain > 0 ? `糧草 +${hall.grain}` : '', hall.silver > 0 ? `黃金 +${hall.silver}` : '',
+                    hall.grain > 0 ? `糧草 +${hall.grain}` : '', hall.gold > 0 ? `金 +${hall.gold}` : '', hall.silver > 0 ? `銀兩 +${hall.silver}` : '',
                     hall.generalExp > 0 ? `武將經驗 +${hall.generalExp}` : '',
                 ].filter((text) => text.length > 0).join('、');
                 services().event.emit('SHOW_TOAST', {
@@ -5863,7 +6092,7 @@ ${spent}`,
             if (results[0]?.poolId === MENTOR_POOL_ID) {
                 const names = results.map((entry) => entry.general.name).join('、');
                 // 升星／積分提示併進同一則，避免被「獲得教官卡」蓋掉（PROG-2-1095）
-                const message = [`獲得教官卡：${names}（培育入場可編入）`, ...mentorNotes].join('\n');
+                const message = [`獲得教學投影卡：${names}（學府修業可編入）`, ...mentorNotes].join('\n');
                 services().event.emit('SHOW_TOAST', { message, duration: 3 });
                 return;
             }
@@ -7075,7 +7304,17 @@ ${spent}`,
         const [pools, wallet] = await Promise.all([api.listPools(), api.getWallet()]);
         const dto = pools.find((entry) => entry.poolId === pool.poolId);
         if (!dto) { this._showToast('這個卡池目前未開放。'); return; }
-        showGachaInfoModal(`${dto.name} 詳情`, dto.sub, buildPoolDetailRows(dto, wallet));
+        const rows = buildPoolDetailRows(dto, wallet);
+        // 走共通 API 的池另附完整機率表（逐張機率與保底，機率說明；與抽樣同一份資料）
+        const view = await this._gachaRewardPort?.disclosure(pool.poolId) ?? null;
+        if (view) rows.push(...buildRateTableRows(view, (nameKey, entryId) => this._gachaEntryName(nameKey, entryId)));
+        showGachaInfoModal(`${dto.name} 詳情`, dto.sub, rows);
+    }
+
+    /** 機率表的項目名稱：武將項目（general.<id>）查名冊，支援卡項目（nameKey）查卡表；查不到顯示 id */
+    private _gachaEntryName(nameKey: string | null, entryId: string): string {
+        if (nameKey?.startsWith('general.')) return this._generals.find((g) => g.id === entryId)?.name ?? entryId;
+        return services().supportCardsConfig().cards.find((c) => c.nameKey === nameKey)?.name ?? entryId;
     }
 
     private _openUIOnNextTick(uiId: UIID): void {
@@ -7090,6 +7329,7 @@ ${spent}`,
      */
     public returnToLobbyHall(): void {
         if (this._gachaHost) this._gachaHost.node.active = false;
+        this._releaseGachaRewardPools();
         if (this._shopMainHost) this._shopMainHost.node.active = false;
         this._closeSecondaryOverlayHosts();
         this._openLobbyHall();
@@ -7968,6 +8208,130 @@ ${spent}`,
         return ids.length > 0 ? this._generals.filter((general) => ids.includes(general.id)) : this._generals;
     }
 
+    /** 轉蛋抽取走共通 API（reward.roll）的轉接；null＝旗標關閉或獎池尚未載入／已釋放，走舊路徑（GCH-R4） */
+    private _gachaRewardPort: RewardGachaPort | null = null;
+    private _gachaRewardLoading: Promise<void> | null = null;
+
+    private _gachaRewardOn(): boolean {
+        return gachaRewardEnabled((globalThis as { location?: { search?: string } }).location?.search);
+    }
+
+    /**
+     * 開啟轉蛋畫面時才載入獎池：精簡名冊（只取 id、稀有度、性別）依名單檔展開成逐角色項目，換入共通 API 的獎池設定。
+     * 精簡名冊只是展開時的暫存，展開完就丟；離開轉蛋畫面時整批獎池釋放（_releaseGachaRewardPools）。
+     */
+    private async _ensureGachaRewardPools(): Promise<void> {
+        if (this._gachaRewardPort || !this._gachaRewardOn()) return;
+        if (!this._gachaRewardLoading) {
+            this._gachaRewardLoading = (async () => {
+                const raw = await this._loadDataJson<unknown>('data/gacha-reward-pools');
+                if (!raw || this._generals.length === 0) return;
+                const loader = services();
+                const pools = buildRewardPools(raw, this._compactRoster(), supportCardItemMembers(loader.supportCardsConfig().cards));
+                if (pools.length === 0) return;
+                loader.setGachaRewardPools(pools);
+                loader.bindGeneralGrantHost({
+                    resolve: (id) => this._cloneGeneralById(id),
+                    enroll: (general) => ({ duplicate: loader.session.enrollGenerals([general], { fromGacha: true }).duplicates.length > 0 }),
+                });
+                // 舊保底存檔一次性轉成 reward.pity 階梯與累計計數（GCH-R5）；已轉過的池不重複
+                const authority = loader.session.rewardAuthority();
+                const migration = migrateLegacyPity(this._localGachaService.readPityBook(), authority.meta(), pools, legacyPoolIdsOf(raw));
+                if (migration.migrated.length > 0) authority.setMeta(migration.meta);
+                this._gachaRewardPort = new RewardGachaPort(loader.api, legacyPoolIdsOf(raw), {
+                    resolveGeneral: (id) => this._cloneGeneralById(id),
+                    resolveSupportCard: (id) => findSupportCard(loader.supportCardsConfig(), id),
+                    afterPull: (info) => {
+                        this._localGachaService.recordExternalPull(info.poolId, info.currency as 'gems' | 'bronze', info.cost, info.results);
+                        loader.session.queueGachaMentorDraw({ drawn: info.results.map((r) => r.general), time: { ...loader.session.gameTime }, poolId: info.poolId });
+                        this._saveGachaState();
+                    },
+                }, Date.now, true);
+            })().catch((error) => {
+                UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 轉蛋獎池載入失敗，改走舊路徑', error);
+            }).finally(() => { this._gachaRewardLoading = null; });
+        }
+        await this._gachaRewardLoading;
+    }
+
+    /** 精簡名冊：只留 id、稀有度、性別、名單別名要的欄位，不把整份武將資料交給獎池展開 */
+    private _compactRoster(): RosterMember[] {
+        return this._generals.map((g) => ({ id: g.id, gender: g.gender, rarityTier: g.rarityTier, characterCategory: g.characterCategory }));
+    }
+
+    private _destinyRoundSeq = 0;
+
+    /**
+     * 開場宿命池抽一輪（GCH-R7）：走共通 API 的 reward.roll（POOL_DESTINY，draw.slots：1 位宿命名將＋9 位一般武將，不重複）。
+     * 只取得 id，不入冊（按「確定」才由開新局一次入冊）；獎池與發武將入口只在這一抽期間存在，抽完釋放。
+     * 旗標關閉、資料沒載入或 API 失敗回 null，由呼叫端退回本機抽法。
+     */
+    private async _rollDestinyRound(): Promise<readonly string[] | null> {
+        if (!this._gachaRewardOn() || this._generals.length === 0) return null;
+        const raw = await this._loadDataJson<unknown>('data/gacha-reward-pools');
+        if (!raw) return null;
+        const pools = buildRewardPools(raw, this._compactRoster());
+        if (!pools.some((p) => p.id === 'POOL_DESTINY')) return null;
+        const loader = services();
+        const keepPools = this._gachaRewardPort !== null;
+        loader.setGachaRewardPools(pools);
+        loader.bindGeneralGrantHost({ resolve: (id) => this._cloneGeneralById(id), enroll: () => ({ duplicate: false }) });
+        try {
+            this._destinyRoundSeq += 1;
+            const res = await loader.api.cmd<RewardGrantResult>('reward.roll', {
+                poolId: 'POOL_DESTINY', count: 1, grantKey: `opening:destiny:${Date.now()}-${this._destinyRoundSeq}`, source: { kind: 'opening', ref: 'destiny' },
+            });
+            if (isApiFail(res)) return null;
+            return res.result.plan.map((line) => String(line.applied.generalId ?? ''));
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 宿命池走共通 API 失敗，改用本機抽法', error);
+            return null;
+        } finally {
+            if (!keepPools) {
+                loader.setGachaRewardPools(null);
+                loader.bindGeneralGrantHost(null);
+            }
+        }
+    }
+
+    /** 離開轉蛋畫面：釋放展開後的獎池與發武將入口（下次開畫面再載） */
+    private _releaseGachaRewardPools(): void {
+        if (!this._gachaRewardPort) return;
+        this._gachaRewardPort = null;
+        this._destinyTallies.clear();
+        services().setGachaRewardPools(null);
+        services().bindGeneralGrantHost(null);
+    }
+
+    private _cloneGeneralById(id: string): GeneralConfig | null {
+        const found = this._generals.find((g) => g.id === id);
+        return found ? (JSON.parse(JSON.stringify(found)) as GeneralConfig) : null;
+    }
+
+    /** 走共通 API 抽卡前的報價：依價格表與餘額挑貨幣；不足時丟錯（開發自動補款開著則補到夠） */
+    private async _quoteGachaReward(poolId: string, drawCount: number): Promise<{ currency: GachaCurrencyId; cost: number }> {
+        await this._loadGachaMainPools();
+        const config = this._gachaMainPools.find((entry) => entry.poolId === poolId);
+        if (!config) throw new Error('找不到這個卡池的價格設定');
+        const wallet = await this._getGachaApi().getWallet();
+        const pick = pickPullCurrency(config, drawCount, wallet);
+        if (pick.ok) return { currency: pick.currency, cost: pick.cost };
+        const miss = pick as { error: string; shortfall: number };
+        if (miss.error === 'INSUFFICIENT_CURRENCY' && this._localGachaService.devTopUp(config.currencies[0], gachaCostOf(config, drawCount))) {
+            return { currency: config.currencies[0], cost: gachaCostOf(config, drawCount) };
+        }
+        throw new Error(miss.error === 'CURRENCY_NOT_ALLOWED' ? '這個卡池不收這種貨幣' : `餘額不足，還差 ${miss.shortfall}`);
+    }
+
+    /**
+     * 走共通 API 的抽卡結果：記下入冊結果給提示用（舊路徑由 enroll 回呼寫入）。
+     * 重複卡不自動轉 bundle：交回既有重複卡彈窗流程（_routeGachaOwnedDuplicates：復生重練／血脈灌注／升星），與舊路徑一致。
+     */
+    private _onGachaRewardPulled(outcome: RewardGachaPullOutcome): void {
+        this._gachaOwnedDuplicates = outcome.duplicates;
+        this._gachaEnrollResult = { added: outcome.added, duplicates: [], rebirths: [], bondPointsGained: 0 };
+    }
+
     /** 轉蛋標準 API（本機實作；日後換伺服器實作，畫面不改，PROG-2-9024） */
     private _getGachaApi(): GachaApi {
         if (this._gachaApi) return this._gachaApi;
@@ -7977,11 +8341,15 @@ ${spent}`,
             service: this._localGachaService,
             pools: () => this._gachaMainPools,
             candidates: (poolId) => this._gachaCandidatesCache.get(poolId) ?? [],
+            reward: () => this._gachaRewardPort,
+            // 教官池 UP 卡 → 橫幅展示該卡所投影的武將（教學投影不是武將本人，但畫面主角用投影對象）
+            showcaseOfUp: (entryId) => findSupportCard(services().supportCardsConfig(), entryId)?.projectionOf ?? null,
         });
         return this._gachaApi;
     }
 
     private async _loadGachaMainPools(): Promise<void> {
+        await this._ensureGachaRewardPools();
         if (this._gachaMainPools.length > 0) return;
         // 價格以抽卡規則實際扣的為準（紅顏池靈玉計價，PROG-2-9117）
         this._gachaMainPools = syncMainPoolCosts(
@@ -8142,6 +8510,9 @@ ${spent}`,
             // 各池呈現（標題、貨幣、再抽方式）讀池設定，所有抽卡走轉蛋系統（PROG-2-9020）
             loadPools: () => this._loadDataJson<GachaConfig[]>('data/gacha-config'),
             onAfterPullSuccess: (results) => { this._gachaPullSettled = this._onGachaPullSuccess(results); },
+            rewardPull: () => this._gachaRewardPort,
+            rewardQuote: (poolId, drawCount) => this._quoteGachaReward(poolId, drawCount),
+            onRewardPulled: (outcome) => this._onGachaRewardPulled(outcome),
             // 展示到哪位武將才跳哪位的提示（PROG-2-9143）；等入冊與重複分流都做完才算得出轉生結果
             bannerLinesOf: async (generalId) => {
                 await this._gachaPullSettled;

@@ -9,6 +9,7 @@
 import { ACADEMY_STAT_BIAS_PCT, ACADEMY_STAT_KEYS, ACADEMY_TOTAL_TURNS, academyPhaseOf, AcademyControlMode, AcademyId, type AcademyInterruptKind, type AcademyStateSnapshot, type AcademyStatKey } from '../../core/systems/nurture/AcademyTypes';
 import { ACADEMY_ENERGY_MAX } from '../../core/systems/nurture/AcademyTypes';
 import { YINGCHUAN_EVENTS, YINGCHUAN_HAND_LIMIT, yingchuanStateOf, type EssayCard } from '../../core/systems/nurture/YingchuanAcademy';
+import { academyGraduatedTextKey, academyInterruptTextKeys } from '../../core/systems/nurture/AcademyStoryTexts';
 
 export const ACADEMY_FLOW_FALLBACK_ZH_TW: Readonly<Record<string, string>> = {
     "ui.academy.flow.title_enroll": "學府入學",
@@ -31,6 +32,9 @@ export const ACADEMY_FLOW_FALLBACK_ZH_TW: Readonly<Record<string, string>> = {
     "ui.academy.flow.enroll.child": "{0}（{1} 歲）",
     "ui.academy.flow.enroll.stats": "武力 {0}　統率 {1}　智力 {2}　政治 {3}　魅力 {4}",
     "ui.academy.flow.enroll.empty": "目前沒有可入學的子嗣（需已抓周、未結業，且年滿 15 歲及冠）",
+    "ui.academy.flow.enroll.prep_board": "【學府籌備看板】\n目前尚無及冠門生可直接入學。\n\n【即將及冠預告】\n{0}\n\n【推薦籌備行動】\n1. 前往轉蛋教官池：召募 SSR 先賢教官\n2. 前往結緣：與配偶結緣，培育新的子嗣\n3. 備妥入學令：入學需要消耗一枚入學令",
+    "ui.academy.flow.enroll.prep_item": "• {0}（{1} 歲，距入學還差 {2} 年）",
+    "ui.academy.flow.enroll.prep_none": "（暫無即將及冠門生，請先至家族培育子嗣）",
     "ui.academy.flow.enroll.hint_young": "15 歲及冠方可入學（還差 {0} 年）",
     "ui.academy.flow.enroll.err.too_young": "15 歲及冠方可入學（還差 {0} 年）",
     "ui.academy.flow.enroll.hint_adult": "已及冠：建議請先祖教官指導（已置頂）",
@@ -103,7 +107,7 @@ export const ACADEMY_FLOW_FALLBACK_ZH_TW: Readonly<Record<string, string>> = {
     "ui.academy.flow.int.kind.RESONANCE": "重大共鳴",
     "ui.academy.flow.int.kind.GRADUATION": "結業確認",
     "ui.academy.flow.int.continue": "以預設選項繼續",
-    "ui.academy.flow.graduated": "修業圓滿！結業結算由後續版本接手。",
+    "ui.academy.flow.graduated": "修業圓滿！結業結算已寫回武將。",
     "ui.academy.flow.lobby.resume_toast": "學府修業進行中，請回到學府繼續",
     "ui.academy.flow.lobby.frozen_toast": "學府修業中，外界時間靜止",
     "ui.academy.flow.lobby.menu": "學府",
@@ -178,6 +182,13 @@ export interface EnrollMentorSlotInfo {
     isAncestor: boolean;
 }
 
+export interface PrepUpcomingStudent {
+    id: string;
+    name: string;
+    age: number;
+    yearsUntilEnroll: number;
+}
+
 export interface EnrollViewModel {
     childCount: number;
     /** 目前子嗣（沒有時為 null，顯示空白提示） */
@@ -195,6 +206,8 @@ export interface EnrollViewModel {
     notice: string;
     /** 控制器判定的最終可否入學（年齡、令牌、教官與既有修業都已算入） */
     canEnroll: boolean;
+    /** 學府籌備看板：即將入學的少年倒數名單（當無可立即入學的子嗣時提供） */
+    prepUpcoming?: readonly PrepUpcomingStudent[];
 }
 
 const CONTROL_MODES: readonly AcademyControlMode[] = [AcademyControlMode.MANUAL, AcademyControlMode.SEMI_AUTO, AcademyControlMode.AUTO];
@@ -212,11 +225,18 @@ export const ENROLL_MENTOR_BUTTONS = 4;
 export function enrollView(vm: Readonly<EnrollViewModel>, lookup: AcademyFlowTextLookup = IDENTITY_LOOKUP): AcademyFlowViewState {
     const t = (key: string, ...args: (string | number)[]): string => academyTextOf(lookup, K + key, ...args);
     const has = vm.child !== null;
+    let emptyText = t('enroll.empty');
+    if (!has && vm.prepUpcoming !== undefined) {
+        const items = vm.prepUpcoming.length > 0
+            ? vm.prepUpcoming.slice(0, 5).map((s) => t('enroll.prep_item', s.name, s.age, s.yearsUntilEnroll)).join('\n')
+            : t('enroll.prep_none');
+        emptyText = t('enroll.prep_board', items);
+    }
     const texts: Record<string, string> = {
         acEnrollTitle: t('title_enroll'),
         acEnrollPager: has ? t('enroll.pager', vm.childIndex + 1, vm.childCount) : '',
         acEnrollBackLabel: t('back'),
-        acEnrollEmpty: t('enroll.empty'),
+        acEnrollEmpty: emptyText,
         acEnrollChild: vm.child ? t('enroll.child', vm.child.name, vm.child.age) : '',
         acEnrollStats: vm.child
             ? t('enroll.stats', vm.child.stats.str, vm.child.stats.lea, vm.child.stats.int, vm.child.stats.pol, vm.child.stats.cha)
@@ -279,8 +299,16 @@ export interface SessionViewModel {
     pickedCards: readonly number[];
 }
 
+/** 打斷種類的名稱：文字 key 讀劇情資料（story-config.json 的 popup 標題），資料缺漏回空字串 */
 export function interruptKindText(lookup: AcademyFlowTextLookup, kind: AcademyInterruptKind): string {
-    return academyTextOf(lookup, `${K}int.kind.${kind}`);
+    const keys = academyInterruptTextKeys(kind);
+    return keys && keys.titleKey ? academyTextOf(lookup, keys.titleKey) : '';
+}
+
+/** 打斷點占位彈窗的整句文字：內文 key 讀劇情資料，{0} 代入打斷種類名稱 */
+function interruptPopupText(lookup: AcademyFlowTextLookup, kind: AcademyInterruptKind): string {
+    const keys = academyInterruptTextKeys(kind);
+    return keys && keys.textKey ? academyTextOf(lookup, keys.textKey, interruptKindText(lookup, kind)) : '';
 }
 
 /** 清談大會要選幾張：手牌不足 3 張時全選 */
@@ -324,7 +352,7 @@ export function sessionView(vm: Readonly<SessionViewModel>, lookup: AcademyFlowT
         acSessNotice: vm.notice,
         acConfirmLabel: t('settle.confirm'),
         acInterruptLabel: t('int.continue'),
-        acInterruptText: s.pendingInterrupt ? t('int.title', interruptKindText(lookup, s.pendingInterrupt)) : '',
+        acInterruptText: s.pendingInterrupt ? interruptPopupText(lookup, s.pendingInterrupt) : '',
         acDebateLabel: t('yc.btn_debate'),
         acSkipLabel: t('yc.btn_skip'),
         acDeclineLabel: t('yc.btn_decline'),
@@ -333,7 +361,10 @@ export function sessionView(vm: Readonly<SessionViewModel>, lookup: AcademyFlowT
         ? t('sess.mentors_none')
         : t('sess.mentors', g.mentors.map((m) => t('sess.mentor_entry', m.name, m.bond, 100)).join('、'));
     if (vm.mode === 'settling' && vm.settle) texts.acSessLog = settleText(lookup, vm.settle);
-    else if (vm.mode === 'graduated') texts.acSessLog = t('graduated');
+    else if (vm.mode === 'graduated') {
+        const graduatedKey = academyGraduatedTextKey();
+        texts.acSessLog = graduatedKey ? academyTextOf(lookup, graduatedKey) : '';
+    }
     else if (blockedByGimmick) texts.acSessLog = t('sess.blocked');
     else texts.acSessLog = s.chronicles.length > 0
         ? s.chronicles.slice(-2).map((c) => t('settle.chronicle', c.title, c.turn)).join('\n')

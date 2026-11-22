@@ -1,6 +1,6 @@
 {
   "id": "duplicate-pull-popup-main",
-  "version": 1,
+  "version": 2,
   "canvas": {
     "fitWidth": true,
     "fitHeight": true,
@@ -38,97 +38,376 @@
           "hCenter": true,
           "vCenter": true
         },
-        "width": 1560,
-        "height": 760,
-        "skinSlot": "dup.card.bg",
+        "width": 1600,
+        "height": 900,
+        "skinSlot": "dup.panel.bg",
         "children": [
+          {
+            "type": "panel",
+            "name": "DupHeadBand",
+            "widget": {
+              "top": 6,
+              "left": 6,
+              "right": 6
+            },
+            "height": 112,
+            "skinSlot": "dup.head.band"
+          },
+          {
+            "type": "panel",
+            "name": "DupInnerFrame",
+            "widget": {
+              "top": 10,
+              "left": 10,
+              "right": 10,
+              "bottom": 10
+            },
+            "skinSlot": "dup.panel.inner"
+          },
           {
             "type": "label",
             "name": "DupTitle",
             "id": "dupTitle",
             "widget": {
-              "top": 26,
+              "top": 28,
               "left": 200,
               "right": 200
             },
-            "height": 48,
+            "height": 70,
             "text": "宿命牽引・名將重逢",
             "styleSlot": "dup.label.title"
           },
           {
-            "type": "label",
-            "name": "DupPager",
-            "id": "dupPager",
+            "type": "panel",
+            "name": "DupPagerBg",
+            "id": "dupPagerBg",
             "widget": {
-              "top": 34,
-              "right": 40
+              "top": 36,
+              "right": 48
             },
-            "height": 32,
-            "text": "",
-            "styleSlot": "dup.label.meta",
-            "width": 160
+            "width": 150,
+            "height": 46,
+            "skinSlot": "dup.pager.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "DupPager",
+                "id": "dupPager",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "text": "",
+                "styleSlot": "dup.label.pager"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "DupHero",
+            "id": "dupHero",
+            "widget": {
+              "top": 140,
+              "left": 40
+            },
+            "width": 440,
+            "height": 720,
+            "skinSlot": "dup.hero.bg",
+            "children": [
+              {
+                "type": "container",
+                "name": "DupHeroMask",
+                "id": "dupHeroMask",
+                "widget": {
+                  "top": 2,
+                  "left": 2
+                },
+                "width": 436,
+                "height": 610,
+                "children": [
+                  {
+                    "type": "image",
+                    "name": "DupHeroPortrait",
+                    "id": "dupHeroPortrait",
+                    "widget": null,
+                    "width": 436,
+                    "height": 610,
+                    "skinSlot": "dup.portrait"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "DupHeroPlate",
+                "widget": {
+                  "bottom": 2,
+                  "left": 2,
+                  "right": 2
+                },
+                "height": 110,
+                "skinSlot": "dup.hero.plate"
+              },
+              {
+                "type": "label",
+                "name": "DupHeroName",
+                "id": "dupHeroName",
+                "widget": {
+                  "bottom": 52,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 60,
+                "text": "",
+                "styleSlot": "dup.label.heroName"
+              },
+              {
+                "type": "label",
+                "name": "DupHeroSub",
+                "id": "dupHeroSub",
+                "widget": {
+                  "bottom": 14,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 30,
+                "text": "",
+                "styleSlot": "dup.label.heroSub"
+              },
+              {
+                "type": "panel",
+                "name": "DupRarityBg",
+                "id": "dupRarityBg",
+                "widget": {
+                  "top": 16,
+                  "left": 18
+                },
+                "width": 104,
+                "height": 52,
+                "skinSlot": "dup.rarity.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "DupRarity",
+                    "id": "dupRarity",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "text": "SSR",
+                    "styleSlot": "dup.label.rarity"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "DupStamp",
+                "id": "dupStamp",
+                "widget": {
+                  "top": 18,
+                  "right": 16
+                },
+                "width": 118,
+                "height": 118,
+                "skinSlot": "dup.stamp.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "DupStampText",
+                    "id": "dupStampText",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "text": "已持有\n本體",
+                    "styleSlot": "dup.label.stamp"
+                  }
+                ]
+              }
+            ]
           },
           {
             "type": "label",
             "name": "DupSubtitle",
             "id": "dupSubtitle",
             "widget": {
-              "top": 88,
-              "left": 48,
-              "right": 48
+              "top": 144,
+              "left": 520
             },
-            "height": 36,
+            "width": 1040,
+            "height": 42,
             "text": "",
             "styleSlot": "dup.label.subtitle"
+          },
+          {
+            "type": "panel",
+            "name": "DupQuipAvatar",
+            "widget": {
+              "top": 196,
+              "left": 520
+            },
+            "width": 52,
+            "height": 52,
+            "skinSlot": "dup.quip.avatar",
+            "children": [
+              {
+                "type": "label",
+                "name": "DupQuipAvatarText",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "text": "境",
+                "styleSlot": "dup.label.quipName"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "DupQuipBubble",
+            "id": "dupQuipBubble",
+            "widget": {
+              "top": 196,
+              "left": 586
+            },
+            "width": 974,
+            "height": 52,
+            "skinSlot": "dup.quip.bubble",
+            "children": [
+              {
+                "type": "label",
+                "name": "DupQuip",
+                "id": "dupQuip",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 20,
+                  "right": 20
+                },
+                "text": "",
+                "styleSlot": "dup.label.quip"
+              }
+            ]
           },
           {
             "type": "panel",
             "name": "DupRebirthCard",
             "id": "dupRebirthCard",
             "widget": {
-              "top": 150,
-              "left": 48
+              "top": 270,
+              "left": 520
             },
-            "width": 468,
-            "height": 470,
-            "skinSlot": "dup.card.rebirth.bg",
+            "width": 330,
+            "height": 500,
+            "skinSlot": "dup.card.Rebirth.bg",
             "children": [
+              {
+                "type": "panel",
+                "name": "DupRebirthCrest",
+                "widget": {
+                  "top": 22,
+                  "hCenter": true
+                },
+                "width": 84,
+                "height": 84,
+                "skinSlot": "dup.crest.Rebirth",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "DupRebirthCrestText",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "text": "龍",
+                    "styleSlot": "dup.label.Rebirth.crest"
+                  }
+                ]
+              },
               {
                 "type": "label",
                 "name": "DupRebirthTitle",
                 "id": "dupRebirthTitle",
                 "widget": {
-                  "top": 22,
-                  "left": 24,
-                  "right": 24
+                  "top": 114,
+                  "left": 10,
+                  "right": 10
                 },
-                "height": 44,
+                "height": 52,
                 "text": "復生重練",
-                "styleSlot": "dup.label.rebirth.title"
+                "styleSlot": "dup.label.Rebirth.title"
               },
               {
                 "type": "label",
                 "name": "DupRebirthTagline",
                 "id": "dupRebirthTagline",
                 "widget": {
-                  "top": 72,
-                  "left": 24,
-                  "right": 24
+                  "top": 170,
+                  "left": 10,
+                  "right": 10
                 },
-                "height": 30,
+                "height": 28,
                 "text": "青龍靈光／突破極限",
                 "styleSlot": "dup.label.tagline"
+              },
+              {
+                "type": "panel",
+                "name": "DupRebirthDelta",
+                "widget": {
+                  "top": 204,
+                  "left": 20,
+                  "right": 20
+                },
+                "height": 96,
+                "skinSlot": "dup.delta.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "DupRebirthDeltaK",
+                    "id": "dupRebirthDeltaK",
+                    "widget": {
+                      "top": 6,
+                      "left": 6,
+                      "right": 6
+                    },
+                    "height": 24,
+                    "text": "轉生次數",
+                    "styleSlot": "dup.label.deltaK"
+                  },
+                  {
+                    "type": "label",
+                    "name": "DupRebirthDeltaV",
+                    "id": "dupRebirthDeltaV",
+                    "widget": {
+                      "top": 30,
+                      "left": 6,
+                      "right": 6
+                    },
+                    "height": 50,
+                    "text": "",
+                    "styleSlot": "dup.label.deltaV"
+                  }
+                ]
               },
               {
                 "type": "label",
                 "name": "DupRebirthBody",
                 "id": "dupRebirthBody",
                 "widget": {
-                  "top": 120,
-                  "left": 40,
-                  "right": 32
+                  "top": 322,
+                  "left": 28,
+                  "right": 14
                 },
-                "height": 220,
+                "height": 96,
                 "text": "",
                 "styleSlot": "dup.label.body"
               },
@@ -137,23 +416,23 @@
                 "name": "BtnDupRebirth",
                 "id": "btnDupRebirth",
                 "widget": {
-                  "bottom": 26,
-                  "hCenter": true
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
                 },
-                "width": 320,
-                "height": 64,
-                "skinSlot": "dup.button.rebirth.bg",
+                "height": 76,
+                "skinSlot": "dup.button.Rebirth.bg",
                 "children": [
                   {
                     "type": "label",
-                    "name": "BtnDupRebirthLabel",
+                    "name": "DupRebirthLabel",
                     "id": "dupRebirthLabel",
                     "widget": {
-                      "vCenter": true,
+                      "top": 0,
+                      "bottom": 0,
                       "left": 0,
                       "right": 0
                     },
-                    "height": 40,
                     "text": "選擇復生重練",
                     "styleSlot": "dup.label.button.choice"
                   }
@@ -166,49 +445,140 @@
             "name": "DupStarUpCard",
             "id": "dupStarUpCard",
             "widget": {
-              "top": 150,
-              "hCenter": true
+              "top": 270,
+              "left": 874
             },
-            "width": 468,
-            "height": 470,
-            "skinSlot": "dup.card.starup.bg",
+            "width": 330,
+            "height": 500,
+            "skinSlot": "dup.card.StarUp.bg",
             "children": [
+              {
+                "type": "panel",
+                "name": "DupStarUpCrest",
+                "widget": {
+                  "top": 22,
+                  "hCenter": true
+                },
+                "width": 84,
+                "height": 84,
+                "skinSlot": "dup.crest.StarUp",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "DupStarUpCrestText",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "text": "星",
+                    "styleSlot": "dup.label.StarUp.crest"
+                  }
+                ]
+              },
               {
                 "type": "label",
                 "name": "DupStarUpTitle",
                 "id": "dupStarUpTitle",
                 "widget": {
-                  "top": 22,
-                  "left": 24,
-                  "right": 24
+                  "top": 114,
+                  "left": 10,
+                  "right": 10
                 },
-                "height": 44,
+                "height": 52,
                 "text": "升星",
-                "styleSlot": "dup.label.starup.title"
+                "styleSlot": "dup.label.StarUp.title"
               },
               {
                 "type": "label",
                 "name": "DupStarUpTagline",
                 "id": "dupStarUpTagline",
                 "widget": {
-                  "top": 72,
-                  "left": 24,
-                  "right": 24
+                  "top": 170,
+                  "left": 10,
+                  "right": 10
                 },
-                "height": 30,
+                "height": 28,
                 "text": "同名精魄／累積星級",
                 "styleSlot": "dup.label.tagline"
+              },
+              {
+                "type": "panel",
+                "name": "DupStarUpDelta",
+                "widget": {
+                  "top": 204,
+                  "left": 20,
+                  "right": 20
+                },
+                "height": 114,
+                "skinSlot": "dup.delta.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "DupStarUpDeltaK",
+                    "id": "dupStarUpDeltaK",
+                    "widget": {
+                      "top": 6,
+                      "left": 6,
+                      "right": 6
+                    },
+                    "height": 24,
+                    "text": "同名卡",
+                    "styleSlot": "dup.label.deltaK"
+                  },
+                  {
+                    "type": "label",
+                    "name": "DupStarUpDeltaV",
+                    "id": "dupStarUpDeltaV",
+                    "widget": {
+                      "top": 30,
+                      "left": 6,
+                      "right": 6
+                    },
+                    "height": 50,
+                    "text": "",
+                    "styleSlot": "dup.label.deltaV"
+                  },
+                  {
+                    "type": "panel",
+                    "name": "DupStarUpBarTrack",
+                    "id": "dupStarUpBarTrack",
+                    "widget": {
+                      "top": 90,
+                      "left": 14,
+                      "right": 14
+                    },
+                    "height": 12,
+                    "skinSlot": "dup.bar.track",
+                    "children": [
+                      {
+                        "type": "panel",
+                        "name": "DupStarUpBarFill",
+                        "id": "dupStarUpBarFill",
+                        "widget": {
+                          "top": 0,
+                          "bottom": 0,
+                          "left": 0
+                        },
+                        "width": 10,
+                        "height": 12,
+                        "skinSlot": "dup.bar.fill.StarUp"
+                      }
+                    ]
+                  }
+                ]
               },
               {
                 "type": "label",
                 "name": "DupStarUpBody",
                 "id": "dupStarUpBody",
                 "widget": {
-                  "top": 120,
-                  "left": 40,
-                  "right": 32
+                  "top": 326,
+                  "left": 28,
+                  "right": 14
                 },
-                "height": 220,
+                "height": 96,
                 "text": "",
                 "styleSlot": "dup.label.body"
               },
@@ -217,25 +587,88 @@
                 "name": "BtnDupStarUp",
                 "id": "btnDupStarUp",
                 "widget": {
-                  "bottom": 26,
-                  "hCenter": true
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
                 },
-                "width": 320,
-                "height": 64,
-                "skinSlot": "dup.button.starup.bg",
+                "height": 76,
+                "skinSlot": "dup.button.StarUp.bg",
                 "children": [
                   {
                     "type": "label",
-                    "name": "BtnDupStarUpLabel",
+                    "name": "DupStarUpLabel",
                     "id": "dupStarUpLabel",
                     "widget": {
-                      "vCenter": true,
+                      "top": 0,
+                      "bottom": 0,
                       "left": 0,
                       "right": 0
                     },
-                    "height": 40,
                     "text": "選擇升星",
                     "styleSlot": "dup.label.button.choice"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "DupStarUpDim",
+                "id": "dupStarUpDim",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "skinSlot": "dup.card.dim"
+              },
+              {
+                "type": "panel",
+                "name": "DupStarUpBtnCover",
+                "id": "dupStarUpBtnCover",
+                "widget": {
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 76,
+                "skinSlot": "dup.btn.cover"
+              },
+              {
+                "type": "label",
+                "name": "DupStarUpReason",
+                "id": "dupStarUpReason",
+                "widget": {
+                  "bottom": 0,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 76,
+                "text": "",
+                "styleSlot": "dup.label.reason"
+              },
+              {
+                "type": "panel",
+                "name": "DupStarUpRecommendBg",
+                "id": "dupStarUpRecommend",
+                "widget": {
+                  "top": -16,
+                  "right": 18
+                },
+                "width": 78,
+                "height": 32,
+                "skinSlot": "dup.recommend.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "DupStarUpRecommendText",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "text": "推薦",
+                    "styleSlot": "dup.label.recommend"
                   }
                 ]
               }
@@ -246,62 +679,113 @@
             "name": "DupInfusionCard",
             "id": "dupInfusionCard",
             "widget": {
-              "top": 150,
-              "right": 48
+              "top": 270,
+              "left": 1228
             },
-            "width": 468,
-            "height": 470,
-            "skinSlot": "dup.card.infusion.bg",
+            "width": 330,
+            "height": 500,
+            "skinSlot": "dup.card.Infusion.bg",
             "children": [
+              {
+                "type": "panel",
+                "name": "DupInfusionCrest",
+                "widget": {
+                  "top": 22,
+                  "hCenter": true
+                },
+                "width": 84,
+                "height": 84,
+                "skinSlot": "dup.crest.Infusion",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "DupInfusionCrestText",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "text": "鳳",
+                    "styleSlot": "dup.label.Infusion.crest"
+                  }
+                ]
+              },
               {
                 "type": "label",
                 "name": "DupInfusionTitle",
                 "id": "dupInfusionTitle",
                 "widget": {
-                  "top": 22,
-                  "left": 24,
-                  "right": 24
+                  "top": 114,
+                  "left": 10,
+                  "right": 10
                 },
-                "height": 44,
+                "height": 52,
                 "text": "血脈灌注",
-                "styleSlot": "dup.label.infusion.title"
-              },
-              {
-                "type": "label",
-                "name": "DupInfusionRecommend",
-                "id": "dupInfusionRecommend",
-                "widget": {
-                  "top": 26,
-                  "right": 24
-                },
-                "width": 96,
-                "height": 36,
-                "text": "推薦",
-                "styleSlot": "dup.label.recommend"
+                "styleSlot": "dup.label.Infusion.title"
               },
               {
                 "type": "label",
                 "name": "DupInfusionTagline",
                 "id": "dupInfusionTagline",
                 "widget": {
-                  "top": 72,
-                  "left": 24,
-                  "right": 24
+                  "top": 170,
+                  "left": 10,
+                  "right": 10
                 },
-                "height": 30,
+                "height": 28,
                 "text": "金鳳神芒／即時增強",
                 "styleSlot": "dup.label.tagline"
+              },
+              {
+                "type": "panel",
+                "name": "DupInfusionDelta",
+                "widget": {
+                  "top": 204,
+                  "left": 20,
+                  "right": 20
+                },
+                "height": 96,
+                "skinSlot": "dup.delta.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "DupInfusionDeltaK",
+                    "id": "dupInfusionDeltaK",
+                    "widget": {
+                      "top": 6,
+                      "left": 6,
+                      "right": 6
+                    },
+                    "height": 24,
+                    "text": "英靈卡傳承經驗",
+                    "styleSlot": "dup.label.deltaK"
+                  },
+                  {
+                    "type": "label",
+                    "name": "DupInfusionDeltaV",
+                    "id": "dupInfusionDeltaV",
+                    "widget": {
+                      "top": 30,
+                      "left": 6,
+                      "right": 6
+                    },
+                    "height": 50,
+                    "text": "",
+                    "styleSlot": "dup.label.deltaV"
+                  }
+                ]
               },
               {
                 "type": "label",
                 "name": "DupInfusionBody",
                 "id": "dupInfusionBody",
                 "widget": {
-                  "top": 120,
-                  "left": 40,
-                  "right": 32
+                  "top": 322,
+                  "left": 28,
+                  "right": 14
                 },
-                "height": 220,
+                "height": 96,
                 "text": "",
                 "styleSlot": "dup.label.body"
               },
@@ -310,27 +794,64 @@
                 "name": "BtnDupInfusion",
                 "id": "btnDupInfusion",
                 "widget": {
-                  "bottom": 26,
-                  "hCenter": true
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
                 },
-                "width": 320,
-                "height": 64,
-                "skinSlot": "dup.button.infusion.bg",
+                "height": 76,
+                "skinSlot": "dup.button.Infusion.bg",
                 "children": [
                   {
                     "type": "label",
-                    "name": "BtnDupInfusionLabel",
+                    "name": "DupInfusionLabel",
                     "id": "dupInfusionLabel",
                     "widget": {
-                      "vCenter": true,
+                      "top": 0,
+                      "bottom": 0,
                       "left": 0,
                       "right": 0
                     },
-                    "height": 40,
                     "text": "選擇血脈灌注",
                     "styleSlot": "dup.label.button.choice"
                   }
                 ]
+              },
+              {
+                "type": "panel",
+                "name": "DupInfusionDim",
+                "id": "dupInfusionDim",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "skinSlot": "dup.card.dim"
+              },
+              {
+                "type": "panel",
+                "name": "DupInfusionBtnCover",
+                "id": "dupInfusionBtnCover",
+                "widget": {
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 76,
+                "skinSlot": "dup.btn.cover"
+              },
+              {
+                "type": "label",
+                "name": "DupInfusionReason",
+                "id": "dupInfusionReason",
+                "widget": {
+                  "bottom": 0,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 76,
+                "text": "",
+                "styleSlot": "dup.label.reason"
               }
             ]
           },
@@ -339,27 +860,66 @@
             "name": "BtnDupBatchDefault",
             "id": "btnDupBatchDefault",
             "widget": {
-              "bottom": 30,
-              "left": 48
+              "top": 800,
+              "left": 520
             },
-            "width": 760,
-            "height": 52,
-            "skinSlot": "dup.button.toggle.bg",
+            "width": 640,
+            "height": 64,
+            "skinSlot": "dup.toggle.bg",
             "children": [
               {
+                "type": "panel",
+                "name": "DupCheckBox",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0
+                },
+                "width": 38,
+                "height": 38,
+                "skinSlot": "dup.check.box",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "DupCheckMark",
+                    "id": "dupBatchCheck",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "text": "",
+                    "styleSlot": "dup.label.check"
+                  }
+                ]
+              },
+              {
                 "type": "label",
-                "name": "BtnDupBatchDefaultLabel",
+                "name": "DupBatchLabel",
                 "id": "dupBatchLabel",
                 "widget": {
                   "vCenter": true,
-                  "left": 0,
+                  "left": 52,
                   "right": 0
                 },
                 "height": 40,
-                "text": "[ ] 本次抽卡批次預設沿用此選擇",
-                "styleSlot": "dup.label.button"
+                "text": "本次抽卡批次預設沿用此選擇",
+                "styleSlot": "dup.label.batch"
               }
             ]
+          },
+          {
+            "type": "label",
+            "name": "DupRemain",
+            "id": "dupRemain",
+            "widget": {
+              "top": 800,
+              "left": 1120
+            },
+            "width": 440,
+            "height": 64,
+            "text": "",
+            "styleSlot": "dup.label.remain"
           }
         ]
       }

@@ -31,7 +31,7 @@ import { EnemyAI, AI_USABLE_TYPES } from "./EnemyAI";
 import { isBattleSkillImplemented, resolveBattleSkillProfile, resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
 import { BattleSkillSourceTranslator } from '../skills/adapters/BattleSkillSourceTranslator';
 import { BattleSkillDispatcher, type GeneralSkillCastOptions } from '../runtime/BattleSkillDispatcher';
-import { findAncestorSignatureSkillId, findUltBasePowerTable, findUltimateBattleSkillId, findUltimateDamageDef, findUltimateSpecialRule, findUltimateFamily, findUltimateVitalityCostPct } from '../views/BattleSceneLoader';
+import { buildUltimateSkills, findAncestorSignatureSkillId, findUltBasePowerTable, findUltimateBattleSkillId, findUltimateDamageDef, findUltimateSpecialRule, findUltimateFamily, findUltimateVitalityCostPct } from '../views/BattleSceneLoader';
 import { BattleFlowStateMachine } from './BattleFlowStateMachine';
 import { BattleRuntimeOrchestrator } from '../orchestrators/BattleRuntimeOrchestrator';
 import { executeBattleCombatPhase } from '../runtime/phases/BattleCombatPhase';
@@ -106,6 +106,7 @@ import {
   type DelegateQuality,
   type DelegateSituation,
 } from '../../core/systems/DelegateAi';
+import { pickDelegateLaneSmart, pickDelegateSkillTarget, shouldDelegateGeneralSortie } from '../../core/systems/DelegateTactics';
 import { FormulaSystem } from '../../core/systems/FormulaSystem';
 import { buildEnemyTacticCandidates } from '../shared/EnemyTacticCandidates';
 import { fillTacticNumbers, type TacticMetrics } from '../shared/EnemyTacticNumbers';
@@ -119,7 +120,7 @@ import type { TacticAiSituation } from '../shared/TacticAiRules';
 import { estimateHealValue, hasChokePointLane, hasDenseArea } from '../shared/EnemyTacticBoard';
 import { resolveEnemyInitialDeployment, type EnemyInitialDeploymentEntry } from '../shared/EnemyInitialDeployment';
 import { DEFAULT_TIME_UP_JUDGEMENT, isTimeUpRule, parseTimeUpJudgementConfig, type TimeUpJudgementConfig, type TimeUpRule } from "../../core/systems/TimeUpJudgement";
-import { DEFAULT_DEFENSE_BATTLE, parseDefenseBattleConfig, type DefenseBattleConfig } from "../../core/systems/DefenseBattle";
+import { DEFAULT_DEFENSE_BATTLE, defenseReinforceAllowance, parseDefenseBattleConfig, type DefenseBattleConfig } from "../../core/systems/DefenseBattle";
 
 /**
  * [P2-N3] 部署失敗原因：food = 糧草不足（原 dp）。
@@ -197,6 +198,7 @@ export class BattleController {
   private readonly _deployedTallyIds = new Set<string>();
   /** 出征軍勢 / 糧草帳本；null = 舊版 demo 戰鬥（不扣軍勢） */
   private sortie: SortieState | null = null;
+  private previewSortie = false;
   /** 委任 AI 品質（PROG-2-0908）；null 為未開委任 */
   private delegateQuality: DelegateQuality | null = null;
 
@@ -244,6 +246,11 @@ export class BattleController {
     },
     this.skillSourceTranslator,
   );
+
+  /** 我方每回合可部署幾隊（教學戰較少；戰敗敗因診斷用，PROG-2-9712） */
+  public get playerDeployLimitPerTurn(): number {
+    return this.turnManager.playerDeployLimit;
+  }
 
   /** 玩家武將化身的小兵單位 ID（null = 武將尚未出陣） */
   public get playerGeneralUnitId(): string | null {
@@ -323,6 +330,7 @@ export class BattleController {
     this.pendingAdvanceTurnResult = null;
     this.pendingEnemyTurnResult = null;
     this.sortie = null;
+    this.previewSortie = false;
     services().buff.clearAll(); // 清除上一場的狀態效果
     services().battle.beginBattle();
     this.applyTutorialRules();
@@ -553,7 +561,62 @@ export class BattleController {
    */
   public runPlayerDelegateDeployPhase(): void {
     if (!this.delegateQuality || !this.sortie) return;
-    this.tryDelegateDeploy(this.pickDelegateLane());
+    // 第一年連敗補強（PROG-2-9712）：先放招、再用滿部署額度、最後讓主將出陣。舊版每回合只出 1 隊、從不放招也不出陣
+    this.runDelegateSkillPhase();
+    const limit = this.turnManager.playerDeployLimit;
+    for (let i = 0; i < limit && this.turnManager.canDeployPlayer(); i += 1) {
+      if (!this.tryDelegateDeployAuto()?.ok) break;
+    }
+    this.tryDelegateGeneralSortie();
+  }
+
+  /** 委任自動部署一隊（PROG-2-9712）：兵種照委任保留策略挑（糧耗低優先），路線排除被堵住的出兵口 */
+  public tryDelegateDeployAuto(situation: DelegateSituation = { bossTargetVisible: false }): DeployOutcome | null {
+    if (!this.delegateQuality || !this.sortie) return null;
+    this.syncSortieWithField();
+    const candidates = sortDelegateCandidates(this.sortie, DEPLOY_SUGGESTION_CANDIDATES);
+    const pick = delegatePickDeploy(this.sortie, candidates, this.delegateQuality, situation);
+    if (pick.troopType === null) return null;
+    const lane = this.pickDelegateLane();
+    if (lane < 0) return null;
+    return this.tryDeployTroop(pick.troopType as TroopType, lane);
+  }
+
+  /**
+   * 委任放招（PROG-2-9712）：精力滿就放第一個奧義，計謀點夠就放天賦戰法；目標是最逼近我方的敵軍。
+   * 演出走既有 GeneralSkillUsed 事件（奧義分鏡、蓄力），與玩家手動施放相同。放不出去（條件不符、需要選格）就略過。
+   */
+  public runDelegateSkillPhase(): { ultimate: boolean; tactic: boolean } {
+    const done = { ultimate: false, tactic: false };
+    const general = this.state.playerGeneral;
+    if (!this.delegateQuality || !general || general.isDead() || !this.canUsePlayerSkills()) return done;
+    const targetUnitUid = pickDelegateSkillTarget(this.livingUnitsOf(Faction.Enemy));
+    if (!targetUnitUid) return done;
+    if (general.canUseSkill()) {
+      const ultimate = buildUltimateSkills(general)[0];
+      if (ultimate) {
+        done.ultimate = this.triggerPlayerBattleSkill(ultimate.skillId, SkillSourceType.Ultimate, {
+          targetMode: resolveBattleSkillTargetMode(ultimate.skillId, BattleSkillTargetMode.EnemyAll),
+          ultimateId: ultimate.ultimateId ?? null,
+          targetUnitUid,
+        });
+      }
+    }
+    const tactic = this.getPlayerSeedTacticDescriptor();
+    if (tactic && this.getPlayerTacticPointState().enabled) {
+      done.tactic = this.triggerPlayerSeedTactic({ targetMode: tactic.targetMode, targetUnitUid });
+    }
+    return done;
+  }
+
+  /** 委任帶主將出陣（PROG-2-9712）：出兵口有空、主將血量過門檻就上場（出陣＝全軍攻擊加倍，既有規則） */
+  public tryDelegateGeneralSortie(): TroopUnit | null {
+    const general = this.state.playerGeneral;
+    if (!this.delegateQuality || !general || general.isDead()) return null;
+    if (!shouldDelegateGeneralSortie({ canSortie: this.canPlayerGeneralDuel(), hp: general.currentHp, maxHp: general.maxHp })) return null;
+    const lane = this.pickDelegateLane();
+    if (lane < 0 || this.startGeneralDuel() !== 'ok') return null;
+    return this.placeGeneralOnBoard(lane, 0);
   }
 
   /**
@@ -564,18 +627,22 @@ export class BattleController {
     if (this.flowStateMachine.canAdvanceTurn()) this.runPlayerDelegateDeployPhase();
   }
 
-  /** 我方存活部隊最少的那一路，同數取較小路號（PROG-2-0913 暫定） */
+  /**
+   * 委任選路（PROG-2-9712）：我方存活部隊最少的那一路、同數取較小路號（PROG-2-0913 原規則），
+   * 但出兵口（depth 0）被占或不能進入的路排除；全被堵住回 -1。
+   */
   public pickDelegateLane(): number {
-    const counts: number[] = Array.from({ length: GAME_CONFIG.GRID_LANES }, () => 0);
+    const lanes = GAME_CONFIG.GRID_LANES;
+    const own: number[] = new Array<number>(lanes).fill(0);
     for (const unit of this.state.units.values()) {
       if (unit.faction !== Faction.Player || unit.currentHp <= 0) continue;
-      if (unit.lane >= 0 && unit.lane < counts.length) counts[unit.lane] += 1;
+      if (unit.lane >= 0 && unit.lane < lanes) own[unit.lane] += 1;
     }
-    let best = 0;
-    for (let lane = 1; lane < counts.length; lane += 1) {
-      if (counts[lane] < counts[best]) best = lane;
+    const deployBlocked: boolean[] = [];
+    for (let lane = 0; lane < lanes; lane += 1) {
+      deployBlocked.push(!!this.state.getCell(lane, 0)?.occupantId || this.combatResolver.isCellMovementBlocked(lane, 0));
     }
-    return best;
+    return pickDelegateLaneSmart({ deployBlocked, ownByLane: own });
   }
 
   /**
@@ -668,6 +735,14 @@ export class BattleController {
   private defenseBattleConfig: DefenseBattleConfig = { ...DEFAULT_DEFENSE_BATTLE };
   private defenseBattleConfigLoaded = false;
 
+  /** 守城戰開場：我方城寨上限與血量改用設定檔（PROG-2-9431）；非守城不動。要在 initBattle 之後呼叫 */
+  public applyDefenseFortress(): void {
+    if (this.state.siegeDefender !== Faction.Player) return;
+    const max = this.defenseBattleConfig.fortressMaxHp;
+    this.state.playerFortressMaxHp = max;
+    this.state.playerFortressHp = max;
+  }
+
   /** AI 虎符配發（PROG-2-1337）：虎符模板全表中，只留 AI 會出的兵種，依敵將適性與難度配發 */
   private allocateEnemyTallies(difficulty: AiDifficulty): void {
     const enemy = this.state.getGeneral(Faction.Enemy);
@@ -678,7 +753,13 @@ export class BattleController {
     this.enemyAi.tallyTroopTypes = tallies.map(tally => tally.troopType as TroopType);
   }
 
-  public configureSortie(input: CreateSortieInput): SortieState {
+  /** 本場帳本是 QA 預覽補的模擬帳本（PROG-2-9711）：可部署、可委任，戰後不寫回存檔 */
+  public isPreviewSortie(): boolean {
+    return this.sortie !== null && this.previewSortie;
+  }
+
+  public configureSortie(input: CreateSortieInput, options: { preview?: boolean } = {}): SortieState {
+    this.previewSortie = options.preview === true;
     // 主將自帶的戰法一定要付得起：上限不夠就墊高到該戰法的成本
     const sortieInput = this._tutorialBattle ? { ...input, tutorialPoolMin: GAME_CONFIG.tutorialSortiePoolMin } : input;
     this.sortie = ensureTacticCapCovers(createSortieState(sortieInput), getTacticTpCost(this.resolveSeedTacticId({})));
@@ -1372,6 +1453,8 @@ export class BattleController {
           difficultyBonus: this.state.aiDifficultyBonus,
           tutorialBattle: this.tutorialBattle,
           leakHintedLanes: this.leakHintedLanes,
+          defenseEngineerReinforce: this.state.siegeDefender === Faction.Player ? defenseReinforceAllowance(this.defenseBattleConfig, this.state.defenseEngineersReinforced) : 0,
+          random: () => services().session.randomSource(),
           spawnEnemyUnit: (type, lane, depth, unitName) => {
             const unit = this.unitSpawner.spawnUnit(type, Faction.Enemy, lane, depth, unitName);
             this.turnManager.markUnitDeployed(unit.id);
@@ -1498,6 +1581,7 @@ export class BattleController {
           castEnemySeedTactic: (battleSkillId, tacticId) => this.castBattleSkill(Faction.Enemy, { battleSkillId, tacticId }),
           chooseEnemyTactic: () => this.chooseEnemyTactic(),
           shouldEnemyHoldTactic: () => this.shouldEnemyHoldTactic(),
+          defenseEngineerBombard: this.state.siegeDefender === Faction.Player ? this.defenseBattleConfig.engineerBombardDamage : 0,
         });
         if (phaseName === 'enemy-special-resolve' && this.state.battleTactic === BattleTactic.FloodAttack) {
           resolveBattleTacticBehavior(this.state.battleTactic).advanceTurn(this.state, {
@@ -1833,6 +1917,12 @@ export class BattleController {
    * 玩家武將放置到指定格子（點擊棋盤後調用）。
    * @returns 成功回傳武將化身的 TroopUnit，失敗回傳 null
    */
+  /** 取消等待選格出陣（PROG-2-9712，自動代打找不到空格時用）：流程回到可下指令 */
+  public cancelGeneralDuelPlacement(): void {
+    this.isWaitingDuelPlacement = false;
+    this.flowStateMachine.completeGeneralDuelPlacement();
+  }
+
   public placeGeneralOnBoard(lane: number, depth: number): TroopUnit | null {
     if (!this.flowStateMachine.isGeneralDuelPlacement()) {
       return null;

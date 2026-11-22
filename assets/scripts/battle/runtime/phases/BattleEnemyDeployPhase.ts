@@ -1,5 +1,6 @@
 // @spec-source → 戰場部署系統.md (doc_spec_0040)、demo_技術架構.md (doc_tech_0015)；PROG-2-1429 依建檔紀錄補標出處
-import { Faction, GAME_CONFIG, TROOP_DEPLOY_COST, type TroopType } from '../../../core/config/Constants';
+import { Faction, GAME_CONFIG, TROOP_DEPLOY_COST, TroopType } from '../../../core/config/Constants';
+import { pickDefenseReinforceLane } from '../../../core/systems/DefenseBattle';
 import {
   BOSS_GUARD_TROOP,
   BOSS_GUARD_UNIT_NAME,
@@ -31,6 +32,10 @@ export interface BattleEnemyDeployPhaseContext {
   guide?(line: string): void;
   /** 已經提醒過「沒人守」的路線；由控制器保管，整場共用，免得同一路每回合洗版（PROG-2-9349） */
   readonly leakHintedLanes?: Set<number>;
+  /** 守城戰每回合補派工兵隊數（PROG-2-9429）；非守城或未設定為 0 */
+  readonly defenseEngineerReinforce?: number;
+  /** 補派選路同數時的亂數；缺省取第一條 */
+  readonly random?: () => number;
 }
 
 export function executeBattleEnemyDeployPhase(context: BattleEnemyDeployPhaseContext): void {
@@ -55,6 +60,7 @@ export function executeBattleEnemyDeployPhase(context: BattleEnemyDeployPhaseCon
     context.turnManager.enemyFood = Math.max(0, context.turnManager.enemyFood - TROOP_DEPLOY_COST[decision.type]);
     spawnedLanes.push(decision.lane);
   }
+  reinforceDefenseEngineers(context, deployDepth);
   // 教學引導：告訴新玩家敵軍從哪一路來、要在同一路正面迎擊（PROG-2-9340）
   if (context.tutorialBattle && spawnedLanes.length > 0) context.guide?.(tutorialEnemyLaneHintLine(spawnedLanes));
   // 教學引導：敵軍所在的路上我方一隊都沒有，就提醒補防。敵軍出兵後、玩家下一次部署前就跳，還來得及攔（PROG-2-9349）
@@ -64,6 +70,26 @@ export function executeBattleEnemyDeployPhase(context: BattleEnemyDeployPhaseCon
     const fresh = open.filter((lane) => !context.leakHintedLanes!.has(lane));
     for (const lane of fresh) context.leakHintedLanes.add(lane);
     if (fresh.length > 0) context.guide?.(tutorialUnguardedLaneHintLine(fresh));
+  }
+}
+
+/** 守城補派工兵（PROG-2-9429）：派到我方部隊最少、且部署格空著的路；不扣敵軍糧草 */
+function reinforceDefenseEngineers(context: BattleEnemyDeployPhaseContext, deployDepth: number): void {
+  const count = context.defenseEngineerReinforce ?? 0;
+  if (count <= 0 || context.tutorialBattle || context.state.siegeDefender !== Faction.Player) return;
+  for (let i = 0; i < count; i++) {
+    const playerCount = new Array<number>(GAME_CONFIG.GRID_LANES).fill(0);
+    for (const [, unit] of context.state.units) {
+      if (unit.faction === Faction.Player && !unit.isDead() && unit.lane >= 0 && unit.lane < GAME_CONFIG.GRID_LANES) playerCount[unit.lane] += 1;
+    }
+    const open: number[] = [];
+    for (let lane = 0; lane < GAME_CONFIG.GRID_LANES; lane++) {
+      if (!context.state.getCell(lane, deployDepth)?.occupantId && !context.isCellMovementBlocked(lane, deployDepth)) open.push(lane);
+    }
+    const lane = pickDefenseReinforceLane(open, playerCount, context.random ?? (() => 0));
+    if (lane === null) return;
+    context.spawnEnemyUnit(TroopType.Engineer, lane, deployDepth);
+    context.state.defenseEngineersReinforced += 1;
   }
 }
 

@@ -44,6 +44,7 @@
     "injury": "可能受傷",
     "capture": "可能被俘",
     "troops": "可能折損兵卒",
+    "gold": "可能虧損金",
     "silver": "可能虧損銀兩",
     "fame": "可能損及名聲",
     "betrayal": "恐有內奸"

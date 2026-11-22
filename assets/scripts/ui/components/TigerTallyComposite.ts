@@ -36,6 +36,19 @@ const TALLY_CARD_ART_FALLBACK_PATH = 'ui/tiger-tally/card-art/troops/spriteFrame
 const TALLY_TYPE_BADGE_FALLBACK_PATH = 'sprites/battle/battle_unit_type_underlay';
 const TROOP_TYPE_SUITE_UNDERLAY_PATH = 'sprites/battle/battle_unit_type_underlay';
 const WHITE = new Color(255, 255, 255, 255);
+
+/**
+ * 卡上文字改點陣快取（PROG-2-9714）：畫好的字打包進動態圖集，與同在圖集內的底板圖合成同一批繪製。
+ * 原本每個文字各自一張貼圖、又夾在底板圖之間，每張卡要 12 次繪製、整個面板 48 次。
+ * 不用 CHAR：字元圖集是全專案共用的稀缺預算，中文會撐爆（見 LabelCjkCache）。
+ * 必須在字串與 SHRINK 設好之後才切：切換快取模式會立刻重排，空字串時節點會被縮成極窄（同 UnitRenderer 徽章）。
+ * Unity 對照：把 TMP 文字烘成 Sprite Atlas 裡的圖，讓 UI Batcher 能跟底圖合批。
+ */
+function useBitmapCacheForCardLabels(cardNode: Node): void {
+    for (const label of cardNode.getComponentsInChildren(Label)) {
+        if (label.cacheMode === Label.CacheMode.NONE) label.cacheMode = Label.CacheMode.BITMAP;
+    }
+}
 const TALLY_SHELL_CORE_BORDER = [40, 40, 40, 40] as const;
 const RARITY_TEXT_COLORS: Record<TallyCardData['rarity'], Color> = {
     normal: new Color(210, 172, 114, 255),
@@ -229,6 +242,7 @@ export class TigerTallyComposite extends CompositePanel {
                 starsLabel.string = this._resolveStars(data);
                 starsLabel.color = this._resolveRarityTextColor(data.rarity);
             }
+            useBitmapCacheForCardLabels(cardNode);
 
             const loadSeq = ++this._cardLoadSeq[slot - 1];
             void this._applyShellFamily(cardNode, slot, data, loadSeq);

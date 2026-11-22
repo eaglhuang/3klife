@@ -21,6 +21,15 @@
     { "defId": "MIL_RECRUIT_SCOUT", "chainOnly": true, "note": "由巡查烽燧連鎖產生" },
     { "defId": "ESP_TRAITOR_HUNT", "chainOnly": true, "note": "由烽燧、使者護送等任務連鎖產生" },
     { "defId": "ESP_SPY_RING", "chainOnly": true, "note": "由清查內奸等任務連鎖產生" },
-    { "defId": "ROM_HERMIT_DAUGHTER", "chainOnly": true, "note": "由遊說隱士出山、請醫之後連鎖產生" }
-  ]
+    { "defId": "ROM_HERMIT_DAUGHTER", "chainOnly": true, "note": "由遊說隱士出山、請醫之後連鎖產生" },
+    { "defId": "DOM_COMMERCE_01", "weight": 5, "note": "第一年商業任務：市集巡察，穩定產出銀兩" },
+    { "defId": "DOM_COMMERCE_02", "weight": 4, "note": "第一年商業任務：特產運銷，穩定產出銀兩" },
+    { "defId": "DOM_COMMERCE_03", "weight": 4, "note": "第一年商業任務：平抑物價，穩定產出銀兩" }
+  ],
+  "yearOneCommerceGuaranteed": {
+    "maxSeason": 4,
+    "targetWall": "Domestic",
+    "minCount": 1,
+    "commerceDefIds": ["DOM_COMMERCE_01", "DOM_COMMERCE_02", "DOM_COMMERCE_03"]
+  }
 }

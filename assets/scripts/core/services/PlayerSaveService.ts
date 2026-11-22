@@ -44,6 +44,15 @@ import type { GeneralConfig } from '../models/GeneralUnit';
 import type { DataStorageAdapter } from '../storage/DataStorageAdapter';
 import { GameClock, GameTimeState } from '../systems/GameClock';
 import type { NurtureState } from './NurtureService';
+import { normalizeItemMeta, type ItemMeta } from '../../shared/item/ItemRules';
+import { normalizeRewardMeta, type RewardMeta } from '../../shared/reward/RewardRules';
+import { normalizeQuestState } from '../../shared/quest/QuestService';
+import type { QuestStateV1 } from '../../shared/quest/QuestTypes';
+import { normalizeFamilyState } from '../../shared/family/FamilyService';
+import { isEmptyFamilyState, type FamilyStateV1 } from '../../shared/family/FamilyTypes';
+import { normalizeStoryMeta, type StoryMeta } from '../../shared/story/StoryRules';
+import { normalizeOccupancyRecords } from '../../shared/occupancy/OccupancyService';
+import type { OccupancyRecord } from '../../shared/occupancy/OccupancyTypes';
 import { normalizeDeck } from './PlayerDeckRules';
 import { RandomState, validateRandomState } from '../systems/SeededRandom';
 import { createTallyLoyaltyState, type TallyLoyaltyState } from '../systems/TigerTallyLoyalty';
@@ -60,7 +69,7 @@ import { normalizeFemaleSystemState, type FemaleSystemState } from '../systems/F
 import { normalizeGachaPityBook, type GachaPityBook } from '../systems/GachaDraw';
 import { SAVE_VERSION_LATEST, saveVersionOf } from '../storage/SaveVersion';
 import { migratePlayerSaveRaw } from '../storage/PlayerSaveMigrations';
-import { normalizeYearAgingEvents } from '../systems/YearReport';
+import { normalizeYearAgingEvents, normalizeYearEndDefenseResult, type YearEndDefenseResult } from '../systems/YearReport';
 import type { AgingEvent } from '../systems/GeneralAging';
 import { mapSnapshotToSixTables } from './PlayerSaveTableRows';
 import { normalizeBorrowLedger, type BorrowLedger } from '../systems/FriendBorrow';
@@ -118,6 +127,7 @@ import { normalizeEnrollGrantDay } from '../systems/DailyFreeEnroll';
 import { normalizeAcquisitionLog, type ItemAcquisitionRecord } from '../systems/ItemAcquisitionLog';
 import { normalizeAiAdaptiveStreak, type AiAdaptiveStreak } from '../systems/AiAdaptiveDifficulty';
 import { normalizeExtremeTaskState, type ExtremeTaskState } from '../systems/ExtremeTaskBoard';
+import { isDefaultQuickResolveState, normalizeQuickResolveSave, quickResolveSaveOf, type QuickResolveSave } from '../systems/QuickResolveGate';
 import { normalizePendingSceneGambit, type PendingSceneGambit } from '../systems/HallSceneGambit';
 import { isDefaultSeasonPassState, normalizeSeasonPassState, type SeasonPassState } from '../systems/SeasonPass';
 import { normalizeAcademyRecord, type PersistedAcademyRecord } from './GameAcademySaveStore';
@@ -187,6 +197,18 @@ export interface PlayerSaveSnapshot {
     legacyCount?: number;
     /** 已傳道過的名將 id（MENT-15 一生一次）；後加的選填欄位，舊檔讀回為空陣列 */
     legendaryMentoringUsedIds?: string[];
+    /** 物品庫存 base 中繼資料（PROG-2-9203）：定期發放高水位與取得／消耗帳本；選填，舊檔缺值讀回為空，版號不升（自帶 v） */
+    itemMeta?: ItemMeta;
+    /** 獎勵 base 中繼資料（PROG-2-9205）：伺服器私有亂數會話、保底計數、發放紀錄（冪等）；選填，舊檔缺值讀回為空，版號不升（自帶 v） */
+    rewardMeta?: RewardMeta;
+    /** 任務 base 狀態（PROG-2-9209 QST-M）：實例、步驟、閘門、暫離、結算紀錄；空狀態不寫，舊檔缺值讀回為空，版號不升（自帶 v） */
+    questState?: QuestStateV1;
+    /** 劇情 base 中繼資料（PROG-2-9208）：旗標、已看紀錄、等待選擇的打斷佇列、已完成實例（冪等）；選填，舊檔缺值讀回為空，版號不升（自帶 v） */
+    storyMeta?: StoryMeta;
+    /** 人員占用登記表（PROG-2-9207 OCC-M；只存 academy／mentorAssign），空表不寫；舊檔缺值讀回為空，學府占用由學府紀錄對帳重建 */
+    occupancy?: OccupancyRecord[];
+    /** 家族成員登記表（PROG-2-9441 F1）：配偶、親生、義子（含開局義子特例）、家臣子嗣、分家標記；空表不寫，舊檔缺值讀回為空，版號不升（自帶 v） */
+    familyState?: FamilyStateV1;
     /** 官職狀態（OFC-03）：階位、經驗、解鎖歷史；舊檔沒有此欄位時讀回為階位 1；版號不升（扁平欄位） */
     officerState?: OfficerState;
     /** 世界沙盤已放置標記數（OFC-06）；扁平選填欄位，舊檔沒有時讀回 0；版號不升 */
@@ -249,7 +271,7 @@ export interface PlayerSaveSnapshot {
     familySystemUnlocked?: boolean;
     /** 新玩家開場進行中的幕 id（PROG-2-1371）：讀檔後從該幕接續；開場結束或舊檔沒有時不寫入；版號不升 */
     openingPhase?: string;
-    /** 免費入學令已發放的最大登入日（YYYY-MM-DD，ITM-06 高水位）：只在有發過時寫入；回撥時鐘不重領（PROG-2-1374 修正） */
+    /** 已處理的最大登入日（YYYY-MM-DD 高水位）：舊稱免費入學令已發放日；入學令每日發放已退場（PROG-2-9206），欄位保留以相容舊存檔並供離線行為判斷 */
     enrollGrantDay?: string;
     /** 道具取得來源紀錄（ITM-05）；選填，舊檔沒有此欄位時來源視為 UNKNOWN，版號不升 */
     itemAcquisitionLog?: ItemAcquisitionRecord[];
@@ -267,6 +289,8 @@ export interface PlayerSaveSnapshot {
     pendingSceneGambit?: PendingSceneGambit;
     /** 祠堂每日供奉最後領取日（PROG-2-1915）；選填，舊檔缺值視為未領 */
     shrineOfferingDay?: string;
+    /** 極速決戰每日次數與天下征鋒 Boss 關勝利紀錄（PROG-2-9709）；選填，舊檔缺值視為今日未用、Boss 關未勝過，版號不升 */
+    quickResolve?: QuickResolveSave;
     /** 季度通行證 Mock（ECO-13）；全新狀態不寫入 */
     seasonPass?: SeasonPassState;
     /** 進行中的學府修業紀錄（PROG-2-9189）：含入學當下的外界時鐘；缺值代表沒有進行中的修業（舊存檔相容），版號不升 */
@@ -302,7 +326,7 @@ export interface PlayerSaveSnapshot {
     /** 轉蛋錢包（玉／黃金／召喚券）；後加的選填欄位，舊檔讀回為 undefined（由轉蛋服務改讀舊 localStorage 一次）（PROG-2-0338） */
     gachaWallet?: GachaWalletSave;
     /** 名聲等非軍備資源（暫定）；後加的選填欄位，舊檔讀回補 0 */
-    resources?: { fame: number; scorePoints?: number; autoNurtureTickets?: number; mainlineNurtureClearedOnce?: boolean; firstBattleCleared?: boolean; openingRedFaceShown?: boolean; mentorGuideDone?: boolean; mentorUnlockPromptShown?: boolean; yearEndDefenseYear?: number };
+    resources?: { fame: number; scorePoints?: number; autoNurtureTickets?: number; mainlineNurtureClearedOnce?: boolean; firstBattleCleared?: boolean; openingRedFaceShown?: boolean; mentorGuideDone?: boolean; mentorUnlockPromptShown?: boolean; yearEndDefenseYear?: number; yearEndDefenseResult?: YearEndDefenseResult };
     /** 內政本季紀錄（同季只能選一項）；後加的選填欄位，舊檔讀回為空紀錄 */
     domestic?: DomesticSeasonLog;
     /** 本季治理事件；後加的選填欄位，舊檔讀回視為沒有事件（PROG-2-1773） */
@@ -656,7 +680,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         femaleSources: normalizeFemaleSourcesMap(snapshot.femaleSources),
         pendingLifespanDeaths: normalizePendingLifespanDeaths(snapshot.pendingLifespanDeaths),
         yearAgingEvents: normalizeYearAgingEvents(snapshot.yearAgingEvents),
-        ...(snapshot.resources !== undefined && snapshot.resources !== null ? { resources: { fame: normalizeFame((snapshot.resources as { fame?: unknown }).fame), scorePoints: normalizeScorePoints((snapshot.resources as { scorePoints?: unknown }).scorePoints), autoNurtureTickets: normalizeAutoNurtureTickets((snapshot.resources as { autoNurtureTickets?: unknown }).autoNurtureTickets), mainlineNurtureClearedOnce: normalizeFlag((snapshot.resources as { mainlineNurtureClearedOnce?: unknown }).mainlineNurtureClearedOnce), ...optionalFlag((snapshot.resources as { firstBattleCleared?: unknown }).firstBattleCleared, 'firstBattleCleared'), ...optionalFlag((snapshot.resources as { openingRedFaceShown?: unknown }).openingRedFaceShown, 'openingRedFaceShown'), ...optionalFlag((snapshot.resources as { mentorGuideDone?: unknown }).mentorGuideDone, 'mentorGuideDone'), ...optionalFlag((snapshot.resources as { mentorUnlockPromptShown?: unknown }).mentorUnlockPromptShown, 'mentorUnlockPromptShown'), ...(normalizeYearEndDefenseYear((snapshot.resources as { yearEndDefenseYear?: unknown }).yearEndDefenseYear) > 0 ? { yearEndDefenseYear: normalizeYearEndDefenseYear((snapshot.resources as { yearEndDefenseYear?: unknown }).yearEndDefenseYear) } : {}) } } : {}),
+        ...(snapshot.resources !== undefined && snapshot.resources !== null ? { resources: { fame: normalizeFame((snapshot.resources as { fame?: unknown }).fame), scorePoints: normalizeScorePoints((snapshot.resources as { scorePoints?: unknown }).scorePoints), autoNurtureTickets: normalizeAutoNurtureTickets((snapshot.resources as { autoNurtureTickets?: unknown }).autoNurtureTickets), mainlineNurtureClearedOnce: normalizeFlag((snapshot.resources as { mainlineNurtureClearedOnce?: unknown }).mainlineNurtureClearedOnce), ...optionalFlag((snapshot.resources as { firstBattleCleared?: unknown }).firstBattleCleared, 'firstBattleCleared'), ...optionalFlag((snapshot.resources as { openingRedFaceShown?: unknown }).openingRedFaceShown, 'openingRedFaceShown'), ...optionalFlag((snapshot.resources as { mentorGuideDone?: unknown }).mentorGuideDone, 'mentorGuideDone'), ...optionalFlag((snapshot.resources as { mentorUnlockPromptShown?: unknown }).mentorUnlockPromptShown, 'mentorUnlockPromptShown'), ...(normalizeYearEndDefenseYear((snapshot.resources as { yearEndDefenseYear?: unknown }).yearEndDefenseYear) > 0 ? { yearEndDefenseYear: normalizeYearEndDefenseYear((snapshot.resources as { yearEndDefenseYear?: unknown }).yearEndDefenseYear) } : {}), ...yearEndDefenseResultField((snapshot.resources as { yearEndDefenseResult?: unknown }).yearEndDefenseResult) } } : {}),
         ...(snapshot.domestic !== undefined ? { domestic: normalizeDomesticLog(snapshot.domestic) } : {}),
         ...(snapshot.governanceEvent ? { governanceEvent: normalizeGovernanceEvent(snapshot.governanceEvent) } : {}),
         ...(snapshot.governanceBoosts ? { governanceBoosts: normalizeGovernanceBoosts(snapshot.governanceBoosts) } : {}),
@@ -736,6 +760,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.extremeTask !== undefined ? { extremeTask: normalizeExtremeTaskState(snapshot.extremeTask) } : {}),
         ...(normalizeClanPrestige(snapshot.clanPrestige) > 0 ? { clanPrestige: normalizeClanPrestige(snapshot.clanPrestige) } : {}),
         ...(normalizeShrineOfferingDay(snapshot.shrineOfferingDay) !== null ? { shrineOfferingDay: normalizeShrineOfferingDay(snapshot.shrineOfferingDay)! } : {}),
+        ...(!isDefaultQuickResolveState(normalizeQuickResolveSave(snapshot.quickResolve)) ? { quickResolve: quickResolveSaveOf(normalizeQuickResolveSave(snapshot.quickResolve)) } : {}),
         ...(!isDefaultSeasonPassState(normalizeSeasonPassState(snapshot.seasonPass)) ? { seasonPass: normalizeSeasonPassState(snapshot.seasonPass) } : {}),
         ...(normalizeAcademyRecord(snapshot.academy, snapshot.gameTime) ? { academy: normalizeAcademyRecord(snapshot.academy, snapshot.gameTime)! } : {}),
         ...(snapshot.gachaMentorJournal !== undefined ? { gachaMentorJournal: normalizeGachaMentorJournal(snapshot.gachaMentorJournal) } : {}),
@@ -747,6 +772,12 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.inventoryRecords !== undefined ? { inventoryRecords: normalizeInventoryRecords(snapshot.inventoryRecords) } : {}),
         // 編制預設（PROG-2-0791）：#538 漏掉這一欄，存檔時會被丟掉
         ...(snapshot.sortiePresets !== undefined ? { sortiePresets: normalizeSortiePresets(snapshot.sortiePresets) } : {}),
+        ...(snapshot.itemMeta !== undefined ? { itemMeta: normalizeItemMeta(snapshot.itemMeta) } : {}),
+        ...(snapshot.rewardMeta !== undefined ? { rewardMeta: normalizeRewardMeta(snapshot.rewardMeta) } : {}),
+        ...(snapshot.questState !== undefined ? { questState: normalizeQuestState(snapshot.questState) } : {}),
+        ...(snapshot.storyMeta !== undefined ? { storyMeta: normalizeStoryMeta(snapshot.storyMeta) } : {}),
+        ...(normalizeOccupancyRecords(snapshot.occupancy).length > 0 ? { occupancy: normalizeOccupancyRecords(snapshot.occupancy) } : {}),
+        ...(isEmptyFamilyState(normalizeFamilyState(snapshot.familyState)) ? {} : { familyState: normalizeFamilyState(snapshot.familyState) }),
         ...(snapshot.legendaryMentoringUsedIds !== undefined ? { legendaryMentoringUsedIds: normalizeLegendaryMentoringUsedIds(snapshot.legendaryMentoringUsedIds) } : {}),
     };
 }
@@ -801,6 +832,12 @@ export function normalizeYearEndDefenseYear(value: unknown): number {
     return typeof value === 'number' && Number.isInteger(value) && value > 0 ? value : 0;
 }
 
+/** 年終守城結果（PROG-2-9431）：合法才寫回存檔，壞值丟掉 */
+function yearEndDefenseResultField(value: unknown): { yearEndDefenseResult?: YearEndDefenseResult } {
+    const result = normalizeYearEndDefenseResult(value);
+    return result ? { yearEndDefenseResult: result } : {};
+}
+
 export function normalizeFlag(value: unknown): boolean {
     return value === true;
 }
@@ -837,7 +874,7 @@ export class PlayerSaveService {
      * 寫入新存檔前，若目前主檔有效，先把它保留到備份槽（DS-14）。
      * 主檔已損壞時不覆蓋既有備份，避免好的備份被壞檔取代。
      */
-    public async save(snapshot: PlayerSaveSnapshot): Promise<void> {
+    public async save(snapshot: PlayerSaveSnapshot, saveRev?: number): Promise<void> {
         await this._ensureReady();
         const validated = validatePlayerSaveSnapshot(snapshot);
         this._lastSixTableErrors = mapSnapshotToSixTables(validated).errors;
@@ -846,6 +883,15 @@ export class PlayerSaveService {
             await this._adapter.set(this._backupKey, previous);
         }
         await this._adapter.set(this._key, validated);
+        // 存檔版本戳（PROG-2-9201）：另存一個旁路鍵，不進快照；舊檔沒有此鍵讀回 0，快照格式與頂層欄位白名單都不變
+        if (saveRev !== undefined) await this._adapter.set(this._revKey, saveRev);
+    }
+
+    /** 共通 API 的存檔版本戳（單調遞增整數）；沒有或壞掉視為 0 */
+    public async loadRev(): Promise<number> {
+        await this._ensureReady();
+        const raw = await this._adapter.get<unknown>(this._revKey);
+        return typeof raw === 'number' && Number.isInteger(raw) && raw >= 0 ? raw : 0;
     }
 
     /**
@@ -871,6 +917,11 @@ export class PlayerSaveService {
         await this._ensureReady();
         await this._adapter.delete(this._key);
         await this._adapter.delete(this._backupKey);
+        await this._adapter.delete(this._revKey);
+    }
+
+    private get _revKey(): string {
+        return `${this._key}.rev`;
     }
 
     private get _backupKey(): string {

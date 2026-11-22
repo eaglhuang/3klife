@@ -9,7 +9,7 @@ import { pickPullCurrency, type GachaCurrencyId, type GachaPoolDto, type GachaWa
 import { GACHA_NODES, GACHA_RATE_NODES, GACHA_RATE_ROWS, type GachaPoolDef } from './GachaScreenNodes';
 
 export const GACHA_CURRENCY_LABEL: Readonly<Record<GachaCurrencyId, string>> = {
-    gems: '靈玉', gold: '黃金', tickets: '召喚券', bronze: '銅錢符', oracle: '求籤令', mentorTickets: '支援券', scorePoints: '積分',
+    gems: '靈玉', gold: '黃金', tickets: '召喚券', bronze: '銅錢符', oracle: '求籤令', mentorTickets: '連線券', scorePoints: '積分',
 };
 
 const HOUR_MS = 60 * 60 * 1000;
@@ -56,6 +56,20 @@ function spacedName(name: string): string {
  */
 export function gachaHeroIdOf(pool: GachaPoolDef, dto: GachaPoolDto): string | null {
     return (pool.key === 'limited' ? dto.featuredGeneralIds[0] : dto.showcaseGeneralId) ?? null;
+}
+
+/**
+ * 十連鈕下方小字：取獎池「最近的硬保底」（hardAt 最小的階）逐字寫出，數字與階級都來自獎池（reward.pools），不寫死。
+ * 例：教官池 SR 第 10 抽、SSR 第 80 抽 → 「第 10 抽必出 SR 以上」。沒有獎池資料的舊池取小保底進度條（SSR）的抽數：「第 50 抽必出 SSR」。
+ */
+export function tenNoteOf(dto: Pick<GachaPoolDto, 'pities'> & { pity: Pick<GachaPoolDto['pity'], 'max'> & { label?: string } }): string {
+    const nearest = (dto.pities ?? []).slice().sort((a, b) => a.hardAt - b.hardAt)[0];
+    if (!nearest) {
+        // 沒有獎池資料的舊池：保底進度條本身就是 SSR 小保底（pity.max 抽必出），照實寫，不再誤稱 SR 以上
+        const tier = /^SR/.test(dto.pity.label ?? '') ? 'SR 以上' : 'SSR';
+        return `第 ${dto.pity.max} 抽必出 ${tier}`;
+    }
+    return `第 ${nearest.hardAt} 抽必出 ${nearest.tier === 'SSR' ? 'SSR' : `${nearest.tier} 以上`}`;
 }
 
 /** 十連鈕下方的保底小字節點（原稿 GachaDs3_div_37） */
@@ -106,11 +120,11 @@ export function gachaApiView(
         [GACHA_NODES.pullTenOriginalCost]: String(dto.singleCost * 10),
         ...gachaWalletLabelTexts(wallet, mainCurrency),
         // 十連鈕下方小字：只寫程式真的有的保底（累計每 N 抽必出 SR 以上；十連本身沒有額外保底，原稿「必得 SR 以上 1 名」程式沒做）
-        [GACHA_TEN_NOTE_NODE]: `每 ${dto.pity.max} 抽必得 SR 以上`,
+        [GACHA_TEN_NOTE_NODE]: tenNoteOf(dto),
         [GACHA_NODES.goldSummonLabel]: '×500',
         [pool.eventChip]: limited
             ? `★ 本期限定 · ${dto.endsAtMs ? formatRemaining(dto.endsAtMs, nowMs) : '期間限定'}`
-            : dto.series,
+            : (dto.showcaseIsUp ? dto.series.replace(/常設$/, '本期 UP') : dto.series),
         [pool.guarantee]: limited
             ? `👑 ${dto.pity.destinyMax} 抽可換限定 SSR`
             : `✦ ${dto.pity.label.replace(/進度$/, '')} ${dto.pity.max} 抽`,

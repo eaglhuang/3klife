@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — 其它類
 
-> 生成日期: 2026-11-20
+> 生成日期: 2026-11-21
 > 這是 `doc-id-registry.md` 的「其它類」分片，第 5/7 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-other.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -8,290 +8,290 @@
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
-| `doc_other_1876` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0188-atomic-wave-checkpoint-closeback-saga.task.md | ATM-GOV-0188 - Atomic Wave Checkpoint 與 Cross-Repo Closeback Saga |
-| `doc_other_1877` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0189-plan-level-executor-recovery-cli.task.md | ATM-GOV-0189 - Plan-Level Executor 主迴圈、收單策略與復原 CLI |
-| `doc_other_1878` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0190-real-paired-ab-analyzer-v3.task.md | ATM-GOV-0190 - Real Paired A/B、Analyzer v3 與 Rollout Verdict |
-| `doc_other_1881` | docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0001-runner-sync-orphan-cleanup.task.md | TASK-LANE-0001 - Runner-sync Orphan Queue-head Cleanup |
-| `doc_other_1882` | docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0002-runner-sync-health-admission.task.md | TASK-LANE-0002 - Runner-sync Queue Health Admission |
-| `doc_other_1883` | docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0003-taskflow-runner-sync-closeback-lane.task.md | TASK-LANE-0003 - Taskflow Runner-sync Closeback Lane |
-| `doc_other_1884` | docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0010-lane-session-store-events.task.md | TASK-LANE-0010 - Lane Session Store and Event Stream |
-| `doc_other_1885` | docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0011-lane-command-envelope.task.md | TASK-LANE-0011 - Lane Command and Envelope Echo |
-| `doc_other_1886` | docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0012-claim-stamping-direction-metadata.task.md | TASK-LANE-0012 - Lane Claim Stamping and Direction Metadata |
-| `doc_other_1887` | docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0013-commit-lane-attribution.task.md | TASK-LANE-0013 - Lane Commit Attribution |
-| `doc_other_1888` | docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0014-lane-adoption-handoff.task.md | TASK-LANE-0014 - Lane Adoption and Handoff Command |
-| `doc_other_1889` | docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0015-framework-temp-lock-lane-key.task.md | TASK-LANE-0015 - Framework Temp Lock Lane Key |
-| `doc_other_1890` | docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0016-fresh-reservation-lane-key.task.md | TASK-LANE-0016 - Fresh Task Reservation Lane Key |
-| `doc_other_1891` | docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0017-lane-aware-conflict-broker-lifecycle.task.md | TASK-LANE-0017 - Lane-aware Claim Conflict and Broker Lifecycle |
-| `doc_other_1892` | docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0018-lane-heartbeat-sweep-docs.task.md | TASK-LANE-0018 - Lane Heartbeat Sweep Analyzer and Docs |
-| `doc_other_1893` | docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0019-lane-session-event-history-analyzer.task.md | TASK-LANE-0019 - Lane Session Event History Analyzer Evidence |
-| `doc_other_1894` | docs/ai_atomic_framework/governance-optimization/tasks/TASK-LANE-0020-cross-lane-repair-claim-adjudication.task.md | TASK-LANE-0020 - Cross-Lane Repair-Claim Adjudication |
-| `doc_other_1895` | docs/ai_atomic_framework/map-replacement-protocol/tasks/TASK-MRP-0028-closure-packet-repair-ux.task.md | TASK-MRP-0028 Closure Packet Repair UX and Parent Tree Semantics |
-| `doc_other_1896` | docs/ai_atomic_framework/multi-agent-orchestration/atm-core-runner-broker-design.md | ATM Core Runner Broker Design |
-| `doc_other_1897` | docs/ai_atomic_framework/multi-agent-orchestration/HANDOFF-2026-06-17-DOGFOOD-BUGFIX-CONTINUATION.md | MAO Dogfood / Bugfix Worker Handoff — 0041–0042 收工後接續 |
-| `doc_other_1898` | docs/ai_atomic_framework/multi-agent-orchestration/HANDOFF-2026-06-17-M7-M8-MAO-CONTINUATION.md | MAO M7/M8 Worker Handoff — Closeback Continuation |
-| `doc_other_1899` | docs/ai_atomic_framework/multi-agent-orchestration/LESSONS-MAO-WAVE-MODE-BATCH-CLOSEBACK.md | MAO Wave Mode — 批次收口經驗教訓 |
-| `doc_other_1900` | docs/ai_atomic_framework/multi-agent-orchestration/MAO多AI並行治理計畫書.md | MAO 多 AI 並行治理計畫書 |
-| `doc_other_1901` | docs/ai_atomic_framework/multi-agent-orchestration/MAO多AI並行治理計畫書2.md | MAO 多 AI 並行治理計畫書2 — Team Agents Wave Mode |
-| `doc_other_1902` | docs/ai_atomic_framework/multi-agent-orchestration/PLAN-MAO-0014-0022-TWO-PHASE-BATCH.md | 規劃書：MAO 0014–0022 兩階段切點批次治理 |
-| `doc_other_1903` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0001-logical-parallel-routing-architecture-contract.task.md | TASK-MAO-0001 - logical parallel routing architecture contract |
-| `doc_other_1904` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0002-route-context-state-schema.task.md | TASK-MAO-0002 - route context state schema |
-| `doc_other_1905` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0003-route-lifecycle-cli.task.md | TASK-MAO-0003 - route lifecycle CLI |
-| `doc_other_1906` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0004-next-route-task-selector.task.md | TASK-MAO-0004 - next route and task selector |
-| `doc_other_1907` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0005-broker-intent-registry.task.md | TASK-MAO-0005 - broker intent registry |
-| `doc_other_1908` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0006-logical-conflict-matrix.task.md | TASK-MAO-0006 - logical conflict matrix |
-| `doc_other_1909` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0007-freeze-resume-protocol.task.md | TASK-MAO-0007 - freeze resume protocol |
-| `doc_other_1910` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0008-patch-envelope-contract.task.md | TASK-MAO-0008 - patch envelope contract |
-| `doc_other_1911` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0009-steward-arbitration-flow.task.md | TASK-MAO-0009 - steward arbitration flow |
-| `doc_other_1912` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0010-multi-agent-simulator-benchmark.task.md | TASK-MAO-0010 - multi-agent simulator benchmark |
-| `doc_other_1913` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0011-reproducible-runner-build-audit.task.md | TASK-MAO-0011 - reproducible runner build audit |
-| `doc_other_1914` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0012-runner-build-scope-manifest.task.md | TASK-MAO-0012 - runner sync scope manifest |
-| `doc_other_1915` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0013-atm-core-scope-classifier.task.md | TASK-MAO-0013 - runner sync steward classifier and stale gate |
-| `doc_other_1916` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0014-runner-ref-publish-primitive.task.md | TASK-MAO-0014 - runner ref publish primitive |
-| `doc_other_1917` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0015-patch-envelope-atm-core-specialization.task.md | TASK-MAO-0015 - patch envelope ATM core specialization |
-| `doc_other_1918` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0016-runner-submit-patch-pipeline.task.md | TASK-MAO-0016 - runner submit-patch pipeline |
-| `doc_other_1919` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0017-runner-version-stream-state-machine.task.md | TASK-MAO-0017 - runner version stream state machine |
-| `doc_other_1920` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0018-closure-runner-binding.task.md | TASK-MAO-0018 - closure packet runner binding |
-| `doc_other_1921` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0019-cross-repo-dual-binding-closure.task.md | TASK-MAO-0019 - cross-repo dual binding closure |
-| `doc_other_1922` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0020-broker-bootstrap-self-update-recovery.task.md | TASK-MAO-0020 - broker bootstrap self-update recovery |
-| `doc_other_1923` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0021-runner-broker-failure-mode-coverage.task.md | TASK-MAO-0021 - runner broker failure-mode coverage |
-| `doc_other_1924` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0022-external-core-contributor-pipeline.task.md | TASK-MAO-0022 - external core contributor pipeline |
-| `doc_other_1925` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0023-team-agents-wave-mode-architecture-contract.task.md | TASK-MAO-0023 - Team Agents wave mode architecture contract |
-| `doc_other_1926` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0024-wave-candidate-planner-and-dag-grouping.task.md | TASK-MAO-0024 - Wave candidate planner and DAG grouping |
-| `doc_other_1927` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0025-wave-execution-envelope-schema.task.md | TASK-MAO-0025 - Wave execution envelope schema |
-| `doc_other_1928` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0026-team-wave-broker-admission-integration.task.md | TASK-MAO-0026 - Team wave broker admission integration |
-| `doc_other_1929` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0027-team-wave-runtime-record-and-dispatch-surface.task.md | TASK-MAO-0027 - Team wave runtime record and dispatch surface |
-| `doc_other_1930` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0028-worker-report-ingestion-contract.task.md | TASK-MAO-0028 - Worker report ingestion contract |
-| `doc_other_1931` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0029-per-task-evidence-slicing-from-wave-diff.task.md | TASK-MAO-0029 - Per-task evidence slicing from wave diff |
-| `doc_other_1932` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0030-wave-checkpoint-partial-completion-semantics.task.md | TASK-MAO-0030 - Wave checkpoint partial-completion semantics |
-| `doc_other_1933` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0031-coordinator-only-git-and-closeout-guard-for-waves.task.md | TASK-MAO-0031 - Coordinator-only git and closeout guard for waves |
-| `doc_other_1934` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0032-validator-and-reviewer-team-agents-roles-for-waves.task.md | TASK-MAO-0032 - Validator and reviewer Team Agents roles for waves |
-| `doc_other_1935` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0033-team-wave-dogfood-benchmark-with-cid-phase-b-shape.task.md | TASK-MAO-0033 - Team wave dogfood benchmark with CID Phase B shape |
-| `doc_other_1936` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0034-operator-docs-and-migration-guide-for-team-agents-wave-mode.task.md | TASK-MAO-0034 - Operator docs and migration guide for Team Agents Wave Mode |
-| `doc_other_1937` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0035-staged-cross-file-consistency-and-session-residue-guardrails.task.md | TASK-MAO-0035 - Staged cross-file consistency and session residue guardrails |
-| `doc_other_1938` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0036-cli-result-contract-and-exit-code-policy.task.md | TASK-MAO-0036 - CLI result contract and exit code policy |
-| `doc_other_1939` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0037-protected-override-audit-ledger.task.md | TASK-MAO-0037 - Protected override audit ledger |
-| `doc_other_1940` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0038-closeback-orchestration-route-correctness.task.md | TASK-MAO-0038 - Closeback orchestration route correctness |
-| `doc_other_1941` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0039-historical-close-dry-run-remediation.task.md | TASK-MAO-0039 - Historical close pre-close remediation and write rollback summary |
-| `doc_other_1942` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0040-task-scoped-commit-bundle-resolver.task.md | TASK-MAO-0040 - Task-scoped commit bundle resolver, foreign-staged restore, and host git compatibility |
-| `doc_other_1943` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0041-evidence-bundle-and-directory-deliverables.task.md | TASK-MAO-0041 - Evidence bundle manifest and directory deliverables |
-| `doc_other_1944` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0042-validator-scope-taxonomy.task.md | TASK-MAO-0042 - Validator scope taxonomy and close gating |
-| `doc_other_1945` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0043-claim-repair-and-lifecycle-owner.task.md | TASK-MAO-0043 - Claim repair diagnose/write and lifecycle owner rule |
-| `doc_other_1946` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0044-task-view-dashboard.task.md | TASK-MAO-0044 - Task-view dashboard over preflight and completion summary |
-| `doc_other_1947` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0045-closeback-operator-runbook.task.md | TASK-MAO-0045 - Closeback operator runbook, restore protocol, and banned-pattern guide |
-| `doc_other_1948` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0046-route-freeze-protocol-runtime-integration.task.md | TASK-MAO-0046 - Route freeze protocol runtime integration |
-| `doc_other_1949` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0047-patch-envelope-broker-handoff-integration.task.md | TASK-MAO-0047 - Patch envelope broker export and handoff integration |
-| `doc_other_1950` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0048-mao-event-replay-benchmark-from-task-history.task.md | TASK-MAO-0048 - MAO event replay benchmark from task history |
-| `doc_other_1951` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0049-task-scope-amendment-audit-lane.task.md | TASK-MAO-0049 - Task scope add audit lane |
-| `doc_other_1952` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0050-close-write-transaction-atomicity-and-rollback.task.md | TASK-MAO-0050 - Close write transaction atomicity and rollback |
-| `doc_other_1953` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0051-close-window-exclusive-staged-index-lock.task.md | TASK-MAO-0051 - Close window exclusive staged index lock |
-| `doc_other_1954` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0052-close-operator-discoverability-via-next-playbook.task.md | TASK-MAO-0052 - Close operator discoverability via next playbook |
-| `doc_other_1955` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0053-per-actor-identity-slot-routing.task.md | TASK-MAO-0053 - Per-actor identity slot routing for parallel-agent commits |
-| `doc_other_1956` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0054-tasks-reserve-planning-card-precheck.task.md | TASK-MAO-0054 - tasks reserve planning-card precheck and auto-import |
-| `doc_other_1957` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0055-tasks-claim-auto-intent-and-closeout-safety.task.md | TASK-MAO-0055 - tasks claim auto-intent and closeout-only mutation safety |
-| `doc_other_1958` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0056-scope-amendment-error-clarity-and-claim-first.task.md | TASK-MAO-0056 - Scope amendment error clarity and --claim-first convenience |
-| `doc_other_1959` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0057-taskflow-close-defer-governance-dirty.task.md | TASK-MAO-0057 - taskflow close --defer-governance-dirty and operator lane discoverability |
-| `doc_other_1960` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0058-governed-branch-commit-queue-and-head-race-recovery.task.md | TASK-MAO-0058 - governed branch commit queue and HEAD race recovery |
-| `doc_other_1961` | docs/ai_atomic_framework/multi-agent-orchestration/tasks/TASK-MAO-0059-broker-conflict-resolution-replay-benchmark.task.md | TASK-MAO-0059 - broker conflict resolution replay benchmark |
-| `doc_other_1962` | docs/ai_atomic_framework/rft-hardening/atm-cli-oversized-module-refactor-plan.md | ATM CLI oversized module refactor plan (RFT series) |
-| `doc_other_1963` | docs/ai_atomic_framework/rft-hardening/TASK-RFT-0008-external-dispatch-brief-2026-06-14.md | TASK-RFT-0008 External Dispatch Brief |
-| `doc_other_1964` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0001-next-ts-atomic-map-extraction.task.md | TASK-RFT-0001 - next.ts atomic-map extraction |
-| `doc_other_1965` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0002-hook-ts-phase-split.task.md | TASK-RFT-0002 - hook.ts split by phase |
-| `doc_other_1966` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0003-framework-development-temp-claim-lifecycle.task.md | TASK-RFT-0003 - framework-development.ts temp-claim lifecycle extraction |
-| `doc_other_1967` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0004-task-ledger-invariant-registry.task.md | TASK-RFT-0004 - validate-task-ledger-governance.ts invariant registry split |
-| `doc_other_1968` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0005-captain-dispatch-mailbox-lane-split.task.md | TASK-RFT-0005 - captain-dispatch-mailbox.ts lane split |
-| `doc_other_1969` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0006-police-family-role-split.task.md | TASK-RFT-0006 - police/family.ts role split |
-| `doc_other_1970` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0007-evidence-verb-split.task.md | TASK-RFT-0007 - evidence.ts verb split |
-| `doc_other_1971` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0008-taskflow-size-tripwire-and-commit-message-strategy.task.md | TASK-RFT-0008 - taskflow close fast validation surface and test atom decomposition |
-| `doc_other_1972` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0009-taskflow-production-close-atom-split.task.md | TASK-RFT-0009 - taskflow.ts production close atom split and size tripwire recovery |
-| `doc_other_1973` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0010-tasks-ts-thin-facade-recovery.task.md | TASK-RFT-0010 - tasks.ts thin-facade recovery |
-| `doc_other_1974` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0011-atm-governance-fix-wave.task.md | TASK-RFT-0011 — ATM governance-fix wave |
-| `doc_other_1975` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0012-tasks-orchestrator-body-extraction.task.md | TASK-RFT-0012 — tasks.ts orchestrator body extraction |
-| `doc_other_1976` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0013-tasks-close-helper-cluster-split.task.md | TASK-RFT-0013 — tasks.ts close helper cluster split |
-| `doc_other_1977` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0014-governance-surface-deletion-pass.task.md | TASK-RFT-0014 — Governance surface deletion pass |
-| `doc_other_1978` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0015-onefile-nested-launcher-recursion.task.md | TASK-RFT-0015 — Onefile nested launcher recursion runs stale runner |
-| `doc_other_1979` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0016-onefile-size-budget-trim.task.md | TASK-RFT-0016 — Onefile size budget trim |
-| `doc_other_1980` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0017-tasks-claim-lifecycle-orchestrator.task.md | TASK-RFT-0017 - tasks.ts claim lifecycle orchestrator split |
-| `doc_other_1981` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0018-tasks-reconcile-repair-deliver-close.task.md | TASK-RFT-0018 - tasks.ts reconcile / repair / deliver-close orchestrator split |
-| `doc_other_1982` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0019-tasks-card-parser-scope-queue-final-facade.task.md | TASK-RFT-0019 - tasks.ts card parser + scope/queue final facade split |
-| `doc_other_1983` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0020-git-governance-commit-scope-policy-map.task.md | TASK-RFT-0020 - git-governance.ts commit-scope policy map extraction |
-| `doc_other_1984` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0021-team-command-strategy-map.task.md | TASK-RFT-0021 - team.ts route and execution strategy map extraction |
-| `doc_other_1985` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0022-next-action-assembly-map.task.md | TASK-RFT-0022 - next.ts nextAction assembly second-wave extraction |
-| `doc_other_1986` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0023-team-agents-validator-suite-map.task.md | TASK-RFT-0023 - validate-team-agents.ts validator suite map extraction |
-| `doc_other_1987` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0024-tasks-legacy-compat-facade-map.task.md | TASK-RFT-0024 - tasks legacy implementation compatibility facade split |
-| `doc_other_1988` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0025-closure-packet-schema-fragment-map.task.md | TASK-RFT-0025 - closure packet schema fragment and diagnostics map |
-| `doc_other_1989` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0026-central-atomization-line-bound.task.md | TASK-RFT-0026 - central configurable ATM atomic line bound |
-| `doc_other_1990` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0027-atomization-large-module-map-rollout.task.md | TASK-RFT-0027 - apply configurable atomization line bound to existing RFT oversized modules |
-| `doc_other_1991` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0028-team-agent-governance-dogfood.task.md | TASK-RFT-0028 - dogfood Team Agents after close transaction and shadow-first gates are stable |
-| `doc_other_1992` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0029-team-command-facade-atomization.task.md | TASK-RFT-0029 - Atomize team.ts with a Strangler Facade command-handler architecture |
-| `doc_other_1993` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0030-team-legacy-command-path-extraction.task.md | TASK-RFT-0030 - Extract team-legacy command paths into bounded modules |
-| `doc_other_1994` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0031-next-command-router-extraction.task.md | TASK-RFT-0031 - Extract next.ts route resolution into bounded modules |
-| `doc_other_1995` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0032-git-governance-command-extraction.task.md | TASK-RFT-0032 - Extract git-governance commit and push guards into bounded modules |
-| `doc_other_1996` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0033-tasks-legacy-impl-extraction.task.md | TASK-RFT-0033 - Extract tasks legacy implementation into command modules |
-| `doc_other_1997` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0034-closure-packet-schema-extraction.task.md | TASK-RFT-0034 - Split closure-packet schema into bounded schema modules |
-| `doc_other_1998` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0035-task-ledger-suite-extraction.task.md | TASK-RFT-0035 - Split task-ledger validator suite implementation |
-| `doc_other_1999` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0036-evidence-bundle-io-extraction.task.md | TASK-RFT-0036 - Split evidence bundle IO into bounded modules |
-| `doc_other_2000` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0037-pre-commit-hook-extraction.task.md | TASK-RFT-0037 - Split pre-commit hook guard implementation into bounded modules |
-| `doc_other_2001` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0038-team-legacy-runtime-contract-extraction.task.md | TASK-RFT-0038 - Extract team legacy runtime contract helpers |
-| `doc_other_2002` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0039-team-legacy-patrol-contract-extraction.task.md | TASK-RFT-0039 - Extract team legacy patrol contract helpers |
-| `doc_other_2003` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0040-team-legacy-permission-lease-extraction.task.md | TASK-RFT-0040 - Extract team legacy permission lease policy |
-| `doc_other_2004` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0041-team-legacy-provider-execution-extraction.task.md | TASK-RFT-0041 - Extract team legacy provider execution orchestration |
-| `doc_other_2005` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0042-team-legacy-crew-decision-extraction.task.md | TASK-RFT-0042 - Extract team legacy crew decision policy map |
-| `doc_other_2006` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0043-team-legacy-plan-orchestration-extraction.task.md | TASK-RFT-0043 - Extract team legacy plan orchestration map |
-| `doc_other_2007` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0044-team-legacy-runtime-governance-surfaces.task.md | TASK-RFT-0044 - Extract team legacy runtime governance surfaces |
-| `doc_other_2008` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0045-taskflow-dryrun-spec-atom-map.task.md | TASK-RFT-0045 - Split taskflow dry-run regression suite atom map |
-| `doc_other_2009` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0046-next-prompt-results-contract-extraction.task.md | TASK-RFT-0046 - Extract next prompt-result contracts below 600 lines |
-| `doc_other_2010` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0047-next-route-resolution-strategy-map.task.md | TASK-RFT-0047 - Extract next route-resolution strategy map below 600 lines |
-| `doc_other_2011` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0048-next-playbook-projection-contracts.task.md | TASK-RFT-0048 - Extract next playbook projection contracts below 600 lines |
-| `doc_other_2012` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0049-next-command-facade-final-600.task.md | TASK-RFT-0049 - Finish next command facade below 600 lines |
-| `doc_other_2013` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0050-team-legacy-facade-final-600.task.md | TASK-RFT-0050 - Finish team legacy facade below 600 lines |
-| `doc_other_2014` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0051-broker-command-facade-final-600.task.md | TASK-RFT-0051 - Finish broker command facade below 600 lines |
-| `doc_other_2015` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0052-validate-cli-script-map-final-600.task.md | TASK-RFT-0052 - Finish validate-cli script map below 600 lines |
-| `doc_other_2016` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0053-run-validators-orchestrator-final-600.task.md | TASK-RFT-0053 - Split run-validators orchestrator below 600 lines |
-| `doc_other_2017` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0054-taskflow-command-facade-final-600.task.md | TASK-RFT-0054 - Split taskflow command facade below 600 lines |
-| `doc_other_2018` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0055-validate-governance-commands-final-600.task.md | TASK-RFT-0055 - Split validate-governance-commands facade below 600 lines |
-| `doc_other_2019` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0056-integration-hooks-command-facade-final-600.task.md | TASK-RFT-0056 - Split integration-hooks command facade below 600 lines |
-| `doc_other_2020` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0057-batch-command-facade-final-600.task.md | TASK-RFT-0057 - Split batch command facade below 600 lines |
-| `doc_other_2021` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0058-shared-command-facade-final-600.task.md | TASK-RFT-0058 - Split shared command facade below 600 lines |
-| `doc_other_2022` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0059-plugin-bootstrap-facade-final-600.task.md | TASK-RFT-0059 - Split plugin bootstrap facade below 600 lines |
-| `doc_other_2023` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0060-capture-broker-evidence-final-600.task.md | TASK-RFT-0060 |
-| `doc_other_2024` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0061-task-option-parsers-final-600.task.md | TASK-RFT-0061 |
-| `doc_other_2025` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0062-validate-prompt-scoped-next-final-600.task.md | TASK-RFT-0062 |
-| `doc_other_2026` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0063-validate-police-family-final-600.task.md | TASK-RFT-0063 |
-| `doc_other_2027` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0064-team-knowledge-final-600.task.md | TASK-RFT-0064 |
-| `doc_other_2028` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0065-team-brokered-write-final-600.task.md | TASK-RFT-0065 |
-| `doc_other_2029` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0066-task-direction-governance-final-600.task.md | TASK-RFT-0066 |
-| `doc_other_2030` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0067-git-hooks-enforcement-final-600.task.md | TASK-RFT-0067 - Split git hooks enforcement validator below 600 lines |
-| `doc_other_2031` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0068-cli-route-command-final-600.task.md | TASK-RFT-0068 - Split CLI route command below 600 lines |
-| `doc_other_2032` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0069-core-registry-final-600.task.md | TASK-RFT-0069 - Split core registry facade below 600 lines |
-| `doc_other_2033` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0070-task-import-validator-final-600.task.md | TASK-RFT-0070 - Split task import validator below 600 lines |
-| `doc_other_2034` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0071-collect-broker-evidence-final-600.task.md | TASK-RFT-0071 - Split Broker Evidence Collector Below 600 Lines |
-| `doc_other_2035` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0072-broker-decision-final-600.task.md | TASK-RFT-0072 - Split Broker Decision Below 600 Lines |
-| `doc_other_2036` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0073-atm-chart-final-600.task.md | TASK-RFT-0073 - Split Atm-Chart Command Below 600 Lines |
-| `doc_other_2037` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0074-integration-command-final-600.task.md | TASK-RFT-0074 - Split Integration Command Below 600 Lines |
-| `doc_other_2038` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0075-validate-schemas-final-600.task.md | TASK-RFT-0075 - Split Validate-Schemas Script Below 600 Lines |
-| `doc_other_2039` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0076-doctor-command-final-600.task.md | TASK-RFT-0076 - Split Doctor Command Below 600 Lines |
-| `doc_other_2040` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0077-close-orchestrator-final-600.task.md | TASK-RFT-0077 - Split Close Orchestrator Below 600 Lines |
-| `doc_other_2041` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0078-atomization-map-physical-cap.task.md | TASK-RFT-0078 - Cap Atomization Coverage Map Physical Files |
-| `doc_other_2042` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0079-atom-ref-readability-final-600.task.md | TASK-RFT-0079 - Atom Ref Readability Final 600 |
-| `doc_other_2043` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0080-plugin-governance-stores-final-600.task.md | TASK-RFT-0080 - Split Plugin Governance Local Stores Below 600 Lines |
-| `doc_other_2044` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0081-team-lane-final-600.task.md | TASK-RFT-0081 - Split Core Broker Team Lane Below 600 Lines |
-| `doc_other_2045` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0082-task-direction-final-600.task.md | TASK-RFT-0082 - Split CLI Task Direction Below 600 Lines |
-| `doc_other_2046` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0083-mao-parallel-routing-runner-final-600.task.md | TASK-RFT-0083 - Split MAO Parallel Routing Benchmark Runner Below 600 Lines |
-| `doc_other_2047` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0084-validate-guidance-final-600.task.md | TASK-RFT-0084 - Split Guidance Validator Below 600 Lines |
-| `doc_other_2048` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0085-operational-bench-runner-final-600.task.md | TASK-RFT-0085 - Split Operational Bench Runner Below 600 Lines |
-| `doc_other_2049` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0086-registry-lineage-normalization-final-600.task.md | TASK-RFT-0086 - Split Registry Lineage Normalization Below 600 Lines |
-| `doc_other_2050` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0087-test-runner-report-support-final-600.task.md | TASK-RFT-0087 - Split Test Runner Report Support Below 600 Lines |
-| `doc_other_2051` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0088-map-generator-support-final-600.task.md | TASK-RFT-0088 - Split Map Generator Support Below 600 Lines |
-| `doc_other_2052` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0089-git-commit-task-scoped-staging-test-final-600.task.md | TASK-RFT-0089 - Split Git Commit Task-Scoped Staging Test Below 600 Lines |
-| `doc_other_2053` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0090-map-curator-final-600.task.md | TASK-RFT-0090 - Split Atom Map Curator Below 600 Lines |
-| `doc_other_2054` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0091-python-language-adapter-map.task.md | TASK-RFT-0091 - Split Python Language Adapter Atom Map |
-| `doc_other_2055` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0092-replacement-lane-map.task.md | TASK-RFT-0092 - Split Replacement Lane Atom Map |
-| `doc_other_2056` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0093-internal-release-map.task.md | TASK-RFT-0093 - Split Internal Release Command |
-| `doc_other_2057` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0094-commit-range-guard-map.task.md | TASK-RFT-0094 - Split Commit Range Guard |
-| `doc_other_2058` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0095-upgrade-proposal-map.task.md | TASK-RFT-0095 - Split Upgrade Proposal Command |
-| `doc_other_2059` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0096-core-spec-parser-final-600.task.md | TASK-RFT-0096 - Split Core Spec Parser Under 600 Lines |
-| `doc_other_2060` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0097-global-physical-line-budget-gate.task.md | TASK-RFT-0097 - Establish Global Physical-Line-Budget Gate |
-| `doc_other_2061` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0098-touched-file-physical-line-admission.task.md | TASK-RFT-0098 - Touched-File Physical-Line Admission Gate |
-| `doc_other_2062` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0099-semantic-atomization-metrics.task.md | TASK-RFT-0099 - Semantic Atomization Metrics for RFT Gate Evidence |
-| `doc_other_2063` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0100-continuation-card-generation.task.md | TASK-RFT-0100 - Automatic RFT Continuation-Card Generation |
-| `doc_other_2064` | docs/ai_atomic_framework/skl-tool-first-upgrade/00-verified-facts.md | SKL Tool-First 已驗證事實 |
-| `doc_other_2065` | docs/ai_atomic_framework/skl-tool-first-upgrade/SKL-tool-first-upgrade-plan.md | SKL Tool-First 升級計畫書 |
-| `doc_other_2066` | docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0001-skl-tool-first-plan-and-task-pack.task.md | TASK-SKL-0001 - SKL tool-first plan and task pack |
-| `doc_other_2067` | docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0002-tool-bridge-v1-schema-and-result-adapter.task.md | TASK-SKL-0002 |
-| `doc_other_2068` | docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0003-next-claim-framework-mode-tools.task.md | TASK-SKL-0003 |
-| `doc_other_2069` | docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0004-evidence-guard-taskflow-governed-commit-tools.task.md | TASK-SKL-0004 |
-| `doc_other_2070` | docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0005-skill-tool-first-orchestration-migration.task.md | TASK-SKL-0005 |
-| `doc_other_2071` | docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0006-governed-commit-and-close-lane-hardening.task.md | TASK-SKL-0006 |
-| `doc_other_2072` | docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0007-shared-skill-growth-contract-and-learning-loop.task.md | TASK-SKL-0007 |
-| `doc_other_2073` | docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0008-team-role-skill-pack-and-capability-boundary-contract.task.md | TASK-SKL-0008 |
-| `doc_other_2074` | docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0009-team-role-routing-matrix-and-playbook-slices.task.md | TASK-SKL-0009 |
-| `doc_other_2075` | docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0010-provider-neutral-role-skill-pack-manifest.task.md | TASK-SKL-0010 |
-| `doc_other_2076` | docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0011-agent-plus-skill-runtime-pilot.task.md | TASK-SKL-0011 |
-| `doc_other_2077` | docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0012-team-role-growth-and-observability-integration.task.md | TASK-SKL-0012 |
-| `doc_other_2078` | docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0013-error-code-resolver-shared-skill.task.md | TASK-SKL-0013 |
-| `doc_other_2079` | docs/ai_atomic_framework/skl-tool-first-upgrade/tasks/TASK-SKL-0013-planning-authority-resolution-gate.task.md | TASK-SKL-0013 - Planning Authority Resolution Gate |
-| `doc_other_2080` | docs/ai_atomic_framework/team-agents/ATM 多 Agent 寫入治理里程碑計劃.md | ATM 多 Agent 寫入治理里程碑計劃 |
-| `doc_other_2081` | docs/ai_atomic_framework/team-agents/ATM 多廠商 Agent Runtime 與 Integration 藍圖.md | ATM 多廠商 Agent Runtime 與 Integration 藍圖 |
-| `doc_other_2082` | docs/ai_atomic_framework/team-agents/ATM多語言WorkerAdaptor方案.md | ATM 多語言 Worker Adaptor 方案 |
-| `doc_other_2083` | docs/ai_atomic_framework/team-agents/CAPTAIN-DISPATCH-2026-07-02-framework-sync-candidates-and-task-recommendations.md | Captain Dispatch: Framework Sync Candidates And Task Recommendations |
-| `doc_other_2084` | docs/ai_atomic_framework/team-agents/CAPTAIN-HANDOFF-2026-06-15-ATM-FEATURE-14-CONTINUATION.md | Captain Handoff - ATM Feature 14 Continuation |
-| `doc_other_2085` | docs/ai_atomic_framework/team-agents/CAPTAIN-HANDOFF-2026-06-15-TEAM-AGENTS-0016-CONTINUATION.md | Captain Handoff - Team Agents 0016 Continuation |
-| `doc_other_2086` | docs/ai_atomic_framework/team-agents/CAPTAIN-HANDOFF-2026-06-19-TEAM-AGENTS-RUNTIME-INTEGRATION-CONTINUATION.md | Captain Handoff - Team Agents Runtime / Integration Continuation |
-| `doc_other_2087` | docs/ai_atomic_framework/team-agents/CAPTAIN-HANDOFF-2026-07-11-TASK-TEAM-0053-GEMINI-DIRECT-CONTINUATION.md | Captain Handoff - TASK-TEAM-0053 Gemini Direct Continuation |
-| `doc_other_2088` | docs/ai_atomic_framework/team-agents/CROSS-VENDOR-TEAM-MARKDOWN-HANDOFF-PLAN-2026-07-11.md | Cross-Vendor Team Markdown Handoff Plan |
-| `doc_other_2089` | docs/ai_atomic_framework/team-agents/TASK-TEAM-0004-external-dispatch-brief-2026-06-14.md | TASK-TEAM-0004 External Dispatch Brief |
-| `doc_other_2090` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0018-team-lease-fencing-deadlock-contract.task.md | TASK-TEAM-0018 Team lease fencing and deadlock contract |
-| `doc_other_2091` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0019-team-sandbox-attestation-closure-contract.task.md | TASK-TEAM-0019 Team sandbox attestation and closure contract |
-| `doc_other_2092` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0020-team-knowledge-storage-boundary-index-contract.task.md | TASK-TEAM-0020 — Team knowledge storage boundary and index contract |
-| `doc_other_2093` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0021-team-knowledge-build-query-dry-run.task.md | TASK-TEAM-0021 — Team knowledge build and query dry-run |
-| `doc_other_2094` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0022-captain-knowledge-preflight-brief-integration.task.md | TASK-TEAM-0022 — Captain knowledge preflight brief integration |
-| `doc_other_2095` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0023-team-knowledge-retention-disk-budget-guard.task.md | TASK-TEAM-0023 — Team knowledge retention and disk budget guard |
-| `doc_other_2096` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0024-hybrid-knowledge-retrieval-opt-in.task.md | TASK-TEAM-0024 — Hybrid knowledge retrieval opt-in |
-| `doc_other_2097` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0025-task-import-dispatch-metadata-preservation.task.md | TASK-TEAM-0025 - Task import dispatch metadata preservation |
-| `doc_other_2098` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0026-team-safe-mirror-import-ledger-reconciliation-lane.task.md | TASK-TEAM-0026 - TEAM safe mirror/import ledger reconciliation lane |
-| `doc_other_2099` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0027-team-command-atom-boundary-preflight.task.md | TASK-TEAM-0027 - Team command atom boundary preflight |
-| `doc_other_2100` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0028-team-same-atom-cid-negative-control.task.md | TASK-TEAM-0028 — Team same-atom CID negative control |
-| `doc_other_2101` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0030-team-agents-planning-repo-path-lease-normalization.task.md | TASK-TEAM-0030 Team Agents planning-repo path lease normalization |
-| `doc_other_2102` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0031-team-runtime-mode-and-adapter-contract.task.md | TASK-TEAM-0031 Team runtime mode and adapter contract |
-| `doc_other_2103` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0032-editor-subagent-bridge-contract.task.md | TASK-TEAM-0032 Editor subagent bridge contract |
-| `doc_other_2104` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0033-team-reviewer-validator-rework-route-state-machine.task.md | TASK-TEAM-0033 Team reviewer-validator rework route state machine |
-| `doc_other_2105` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0034-role-artifact-handoff-and-bounded-retry-contract.task.md | TASK-TEAM-0034 Role artifact handoff and bounded retry contract |
-| `doc_other_2106` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0035-nodejs-reference-worker-adapter-and-broker-only-fallback.task.md | TASK-TEAM-0035 Node.js reference worker adapter and broker-only fallback |
-| `doc_other_2107` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0036-python-and-csharp-reference-worker-adapter-examples.task.md | TASK-TEAM-0036 Python and C# reference worker adapter examples |
-| `doc_other_2108` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0037-vendor-neutral-team-agent-provider-contract-and-orchestration-kernel.task.md | TASK-TEAM-0037 Vendor-neutral Team agent provider contract and orchestration kernel |
-| `doc_other_2109` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0038-permission-broker-and-configurable-policy-layer.task.md | TASK-TEAM-0038 Permission broker and configurable policy layer |
-| `doc_other_2110` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0039-governed-repo-vendor-integration-config-surface.task.md | TASK-TEAM-0039 Governed-repo vendor integration config surface |
-| `doc_other_2111` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0040-cross-vendor-observability-and-query-log.task.md | TASK-TEAM-0040 Cross-vendor observability and query log |
-| `doc_other_2112` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0041-provider-selection-defaults-and-role-overrides.task.md | TASK-TEAM-0041 Provider selection defaults and role overrides |
-| `doc_other_2113` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0042-openai-and-azure-openai-runtime-bridges.task.md | TASK-TEAM-0042 OpenAI and Azure OpenAI runtime bridges |
-| `doc_other_2114` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0043-claude-code-and-gemini-execution-bridges.task.md | TASK-TEAM-0043 Claude Code and Gemini execution bridges |
-| `doc_other_2115` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0044-microsoft-foundry-provider-family-bridge.task.md | TASK-TEAM-0044 Microsoft Foundry provider family bridge |
-| `doc_other_2116` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0045-integration-capability-manifest-and-verification-wiring.task.md | TASK-TEAM-0045 Integration capability manifest and verification wiring |
-| `doc_other_2117` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0046-broker-conflict-resolution-command.task.md | TASK-TEAM-0046 Broker conflict resolution command |
-| `doc_other_2118` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0047-broker-override-gate-parity.task.md | TASK-TEAM-0047 Broker override gate parity |
-| `doc_other_2119` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0048-conflict-ux-and-captain-playbook.task.md | TASK-TEAM-0048 Conflict UX and Captain playbook |
-| `doc_other_2120` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0050-team-start-provider-execution-wiring.task.md | TASK-TEAM-0050 Team start provider execution wiring |
-| `doc_other_2121` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0051-per-role-provider-config-and-sizing-roster.task.md | TASK-TEAM-0051 Per-role provider selection config surface and sizing-driven roster |
-| `doc_other_2122` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0052-heterogeneous-multi-bot-e2e-proof.task.md | TASK-TEAM-0052 Heterogeneous multi-bot team run end-to-end proof |
-| `doc_other_2123` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0053-gemini-direct-api-bridge.task.md | TASK-TEAM-0053 Gemini direct API bridge for Team provider matrix |
-| `doc_other_2124` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0066-paid-multi-vendor-live-dogfood.task.md | TASK-TEAM-0066 Paid OpenAI and Anthropic Team Agents live dogfood |
-| `doc_other_2125` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0067-direct-provider-execute-admission-repair.task.md | TASK-TEAM-0067 Repair direct-provider execute admission and fail-closed semantics |
-| `doc_other_2126` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0068-direct-provider-scoped-path-forwarding.task.md | TASK-TEAM-0068 Forward governed task scope to direct provider bridges |
-| `doc_other_2127` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0069-lock-cleanup-canonical-direction-lock.task.md | TASK-TEAM-0069 Release canonical direction lock during stale lock cleanup |
-| `doc_other_2128` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0070-openai-metadata-string-values.task.md | TASK-TEAM-0070 Normalize OpenAI Responses metadata values to strings |
-| `doc_other_2129` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0071-three-vendor-artifact-handoff-and-context-benchmark.task.md | TASK-TEAM-0071 Three-vendor direct execution, artifact handoff, and context benchmark |
-| `doc_other_2130` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0072-cross-vendor-team-markdown-handoff-runtime-ledger.task.md | TASK-TEAM-0072 Cross-vendor Team Markdown Handoff runtime ledger and archive promotion |
-| `doc_other_2131` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0073-cross-vendor-team-markdown-handoff-hard-gates.task.md | TASK-TEAM-0073 Cross-vendor Team Markdown Handoff hard gates and bounded context |
-| `doc_other_2132` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0074-cross-vendor-team-markdown-handoff-assurance.task.md | TASK-TEAM-0074 Cross-vendor Team Markdown Handoff patrol, documentation, and three-vendor dogfood |
-| `doc_other_2133` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0075-handoff-hard-gate-parity-and-integrity-regression.task.md | TASK-TEAM-0075 Handoff hard-gate parity and integrity regression |
-| `doc_other_2134` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0076-broker-shared-surface-parallel-coordination.task.md | TASK-TEAM-0076 Broker shared-surface parallel coordination and steward queue |
-| `doc_other_2135` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0077-node-utf8-skill-repair-and-captain-guidance.task.md | TASK-TEAM-0077 Node UTF-8 verification and Captain encoding guidance |
-| `doc_other_2136` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0078-next-claim-admission-atom-map-and-observability.task.md | TASK-TEAM-0078 Atomize next claim admission and queue observability |
-| `doc_other_2137` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0079-next-claim-shared-surface-queue-admission.task.md | TASK-TEAM-0079 Queue-aware next claim admission |
-| `doc_other_2138` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0080-adopt-closure-lane-residue-and-scope-shrink.task.md | TASK-TEAM-0080 Adopt closure-lane residue |
-| `doc_other_2139` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0081-git-head-evidence-failed-commit-reconciliation.task.md | TASK-TEAM-0081 Reconcile git-head evidence from failed commits |
-| `doc_other_2140` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0082-deliverable-path-validation-and-card-repair-lane.task.md | TASK-TEAM-0082 Deliverable path validation and card repair lane |
-| `doc_other_2141` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0083-proposal-first-plan-start-parity-and-l5-dogfood.task.md | TASK-TEAM-0083 Proposal-first plan/start parity and L5 dogfood |
-| `doc_other_2142` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0084-protected-foreign-staged-resolution-authorized-defer.task.md | TASK-TEAM-0084 Protected foreign staged resolution-authorized defer follow-up |
-| `doc_other_2143` | docs/ai_atomic_framework/team-agents/tasks/TASK-TEAM-0085-team-lane-backlog-hygiene-and-operator-friction.task.md | TASK-TEAM-0085 TEAM lane backlog hygiene and operator-friction records |
-| `doc_other_2144` | docs/ai_atomic_framework/team-agents/TEAM_AGENTS_CAPTAIN_LED_SOP.md | Team Agents Captain-Led SOP |
-| `doc_other_2145` | docs/ai_atomic_framework/team-agents/TEAM-AGENTS-VOCABULARY-CANON-AND-REPLAN-2026-07-10.md | Team Agents 分級詞彙正典與重新規劃(2026-07-10 全目錄稽核版) |
-| `doc_other_2146` | docs/ai_atomic_framework/team-agents/TEAM-BROKER-ENFORCEMENT-INTEGRATION-PLAN-2026-07-10.md | Team Broker 實戰強制性整合計畫（M8E Enforcement Lane） |
-| `doc_other_2147` | docs/ai_atomic_framework/temporary-governance/temporary-governance-plan.md | ATM Temporary Governance Quarantine Plan |
-| `doc_other_2148` | docs/doc-id-registry-md-shards/doc-id-registry-other-part-04.md | Doc ID Registry Markdown Index — 其它類 |
-| `doc_other_2149` | docs/doc-id-registry-md-shards/doc-id-registry-other-part-05.md | Doc ID Registry Markdown Index — 其它類 |
-| `doc_other_2150` | docs/keep-memory/gotcha_atm-claim-session-traps.md | ATM claim / session 陷阱 |
-| `doc_other_2151` | docs/keep-memory/gotcha_atm-close-sequence.md | ATM 收口標準序（約 20 次任務收口驗證，2026-07-12/13） |
-| `doc_other_2152` | docs/keep-memory/gotcha_atm-skill-template-sync.md | skill 分發鏈：安裝副本 vs 源頭模板 |
-| `doc_other_2153` | docs/keep-memory/gotcha_atm-two-captain-close-storm.md | 雙隊長 close 風暴收斂戰術（MEM lane 實戰，2026-07-14/15） |
-| `doc_other_2154` | docs/keep-memory/gotcha_atm-two-captain-concurrency.md | 雙隊長並行守則（2026-07-12/13 與 codex-backlog-captain 12 小時實戰） |
-| `doc_other_2155` | docs/keep.registry.md | keep.registry — 跨專案記憶入口登錄表 |
-| `doc_other_2156` | docs/reports/3klife-cross-repo-packet-warning-baseline.md | 3KLife Cross-Repo Packet Warning Baseline |
-| `doc_other_2157` | docs/reports/3klife-legacy-baseline-warning-baseline.md | 3KLife Legacy Baseline Warning Baseline |
-| `doc_other_2158` | docs/reports/3klife-manual-done-closeback-backfill.md | 3KLife manual done closeback backfill |
-| `doc_other_2159` | docs/reports/3klife-planning-only-warning-baseline.md | 3KLife Planning-only Warning Baseline |
-| `doc_other_2160` | docs/reports/3klife-stale-claim-and-lock-cleanup.md | 3KLife Stale Claim And Lock Cleanup |
-| `doc_other_2161` | docs/reports/3klife-stale-runtime-lock-cleanup-closeout.md | 3KLife Stale Runtime Lock Cleanup Closeout |
-| `doc_other_2162` | docs/reports/3klife-task-audit-debt-triage.md | 3KLife Task Audit Debt Triage |
-| `doc_other_2163` | docs/reports/3klife-transition-event-missing-backfill.md | 3KLife Transition Event Missing Backfill |
-| `doc_other_2164` | docs/reports/3klife-transition-evidence-missing-backfill.md | 3KLife transition evidence missing backfill |
+| `doc_other_3407` | docs/ai_atomic_framework/framework-drafts/release-trust-ops.md | Release Trust Continuous Verification |
+| `doc_other_3408` | docs/ai_atomic_framework/framework-function-atomization-manifest-shards/manifest-inventory.md | Framework Function Atomization Manifest — Function Inventory 與 Gate |
+| `doc_other_3409` | docs/ai_atomic_framework/framework-function-atomization-manifest-shards/manifest-machine-readable.md | Framework Function Atomization Manifest — Machine-Readable Inventory |
+| `doc_other_3410` | docs/ai_atomic_framework/framework-function-atomization-manifest.md | Framework Function Atomization Manifest |
+| `doc_other_3411` | docs/ai_atomic_framework/git-boundary-admission/git-boundary-admission-plan.md | ATM Git Boundary Admission Plan |
+| `doc_other_3412` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0001-pre-push-admission-architecture-contract.task.md | TASK-GIT-0001 |
+| `doc_other_3413` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0002-git-diff-to-mutation-request-converter.task.md | TASK-GIT-0002 |
+| `doc_other_3414` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0003-format-adapter-remote-diff-bridge.task.md | TASK-GIT-0003 |
+| `doc_other_3415` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0004-git-admission-cli.task.md | TASK-GIT-0004 |
+| `doc_other_3416` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0005-pre-push-hook-installer.task.md | TASK-GIT-0005 |
+| `doc_other_3417` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0006-git-boundary-evidence-envelope.task.md | TASK-GIT-0006 |
+| `doc_other_3418` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0007-neutral-steward-git-apply-dry-run.task.md | TASK-GIT-0007 |
+| `doc_other_3419` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0008-structured-file-fixture-suite.task.md | TASK-GIT-0008 |
+| `doc_other_3420` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0009-post-push-fail-fallback.task.md | TASK-GIT-0009 |
+| `doc_other_3421` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0010-operator-policy-and-bypass-audit.task.md | TASK-GIT-0010 |
+| `doc_other_3422` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0011-adopter-docs-and-runbook.task.md | TASK-GIT-0011 |
+| `doc_other_3423` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0012-end-to-end-dogfood-and-paper-evidence.task.md | TASK-GIT-0012 |
+| `doc_other_3424` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0013-agent-raw-git-deny-and-atm-git-tool-gate.task.md | TASK-GIT-0013 |
+| `doc_other_3425` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0014-atm-git-push-wrapper-and-tool-only-push-lane.task.md | TASK-GIT-0014 |
+| `doc_other_3426` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0015-broker-owned-staging-index-arbitration.task.md | TASK-GIT-0015 |
+| `doc_other_3427` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0016-restricted-external-worker-execution-surface-and-atm-only-guidance.task.md | TASK-GIT-0016 - Restricted external-worker execution surface and ATM-only guidance |
+| `doc_other_3428` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0017-runner-publication-inventory-and-framework-temp-commit-surface-parity.task.md | TASK-GIT-0017 - Runner publication inventory and framework-temp claim/commit-surface parity |
+| `doc_other_3429` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0018-brokered-external-worker-launcher-and-capability-bound-process-execution.task.md | TASK-GIT-0018 Claim-issued work-admission ticket authority, attribution, and recovery |
+| `doc_other_3430` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0019-adapter-enforcement-capability-attestation-and-fail-closed-write-dispatch.task.md | TASK-GIT-0019 Unified ticket coverage gates and cross-adapter rollout evidence |
+| `doc_other_3431` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0020-protected-governance-state-integrity-chain-and-bypass-detection.task.md | TASK-GIT-0020 Protected governance-state integrity chain and bypass detection |
+| `doc_other_3432` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0021-cross-adapter-controlled-execution-dogfood-and-rollout-evidence.task.md | TASK-GIT-0021 Cross-adapter controlled-execution dogfood and rollout evidence |
+| `doc_other_3433` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0022-runner-publication-disposition-enforcement-and-clean-worktree-finalization.task.md | TASK-GIT-0022 - Runner Publication Disposition Enforcement and Clean-Worktree Finalization |
+| `doc_other_3434` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0023-foreign-generated-residue-admission-deferral-and-ticket-continuity.task.md | TASK-GIT-0023 Foreign generated residue admission deferral and ticket continuity |
+| `doc_other_3435` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0024-historical-work-admission-attestation-and-terminal-ownership-convergence.task.md | TASK-GIT-0024 Historical work-admission attestation and terminal ownership convergence |
+| `doc_other_3436` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0025-g9-1-lock-projection-and-ticket-scope-parity-correction.task.md | TASK-GIT-0025 G9.1 lock projection and ticket scope parity correction |
+| `doc_other_3437` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0026-evidence-context-bundle-atomicity-correction.task.md | TASK-GIT-0026 Evidence context bundle atomicity correction |
+| `doc_other_3438` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0027-index-lease-consumption-and-atomic-staged-bundle-parking.task.md | TASK-GIT-0027 Index lease consumption and atomic staged-bundle parking |
+| `doc_other_3439` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0028-task-scoped-commit-transaction-adapter-extraction-and-index-lease-bridge.task.md | TASK-GIT-0028 Task-scoped commit transaction adapter extraction and index lease bridge |
+| `doc_other_3440` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0029-seal-governed-commit-attribution-transaction.task.md | TASK-GIT-0029 Seal governed commit attribution transaction |
+| `doc_other_3441` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0030-represent-deletions-in-sealed-commit-bundles.task.md | TASK-GIT-0030 Represent deletions in sealed commit bundles |
+| `doc_other_3442` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0031-cover-sealed-commit-concurrency-and-override-free-attribution-gates.task.md | TASK-GIT-0031 Cover sealed commit concurrency and override-free attribution gates |
+| `doc_other_3443` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0032-broker-managed-transactional-commit-queue-and-receipt-closeout.task.md | TASK-GIT-0032 Broker-managed transactional commit queue and receipt closeout |
+| `doc_other_3444` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0033-commit-hook-deletion-rename-parity.task.md | TASK-GIT-0033 Commit hook deletion rename parity |
+| `doc_other_3445` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0034-git-read-failures-and-lossless-paths.task.md | TASK-GIT-0034 Git read failures and lossless paths |
+| `doc_other_3446` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0035-commit-failure-cancellation-preserves-work.task.md | TASK-GIT-0035 Commit failure cancellation preserves work |
+| `doc_other_3447` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0036-commit-success-matches-intended-tree.task.md | TASK-GIT-0036 Commit success matches intended tree |
+| `doc_other_3448` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0037-runner-publication-preflight-and-build-reuse.task.md | TASK-GIT-0037 Runner publication preflight and build reuse |
+| `doc_other_3449` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0038-queue-terminal-release-and-recovery-parity.task.md | TASK-GIT-0038 Queue terminal release and recovery parity |
+| `doc_other_3450` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0039-reconcile-staged-deletion-and-rename-readers-after-false-close-parity-gap.task.md | TASK-GIT-0039 Reconcile staged deletion and rename readers after false-close parity gap |
+| `doc_other_3451` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0040-make-context-map-advisor-preserve-staged-deletion-semantics.task.md | TASK-GIT-0040 Make context-map advisor preserve staged deletion semantics |
+| `doc_other_3452` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0041-preserve-staged-deletion-semantics-in-encoding-guard.task.md | TASK-GIT-0041 Preserve staged deletion semantics in encoding guard |
+| `doc_other_3453` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0042-audit-staged-rename-endpoints-across-commit-and-hook-readers.task.md | TASK-GIT-0042 Audit staged rename endpoints across commit and hook readers |
+| `doc_other_3454` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0043-preserve-both-endpoints-at-staged-rename-scope-boundaries.task.md | TASK-GIT-0043 Preserve both endpoints at staged rename scope boundaries |
+| `doc_other_3455` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0044-eliminate-context-map-advisor-timing-false-negatives.task.md | TASK-GIT-0044 Eliminate context-map advisor timing false negatives |
+| `doc_other_3456` | docs/ai_atomic_framework/governance-optimization/ATM-GOV-2.0-2.1-captain-handoff-2026-07-20.md | ATM GOV 2.0 / 2.1 隊長交接文件 |
+| `doc_other_3457` | docs/ai_atomic_framework/governance-optimization/ATM-GOV-2.0-2.1-v2.2-captain-handoff-2026-07-20.md | ATM 2.0 / 2.1 v2.2 Captain Handoff - 2026-07-20 |
+| `doc_other_3458` | docs/ai_atomic_framework/governance-optimization/ATM-GOV-3.0-captain-handoff-2026-07-21.md | ATM Plan 3.0 Captain Handoff - 2026-07-21 |
+| `doc_other_3459` | docs/ai_atomic_framework/governance-optimization/ATM-GOV-3.1-captain-handoff-2026-07-22.md | ATM Plan 3.1 Captain Handoff — 2026-07-22 |
+| `doc_other_3460` | docs/ai_atomic_framework/governance-optimization/ATM-GOV-3.1-captain-handoff-2026-07-25.md | Plan 3.1 Captain handoff and operations pack |
+| `doc_other_3461` | docs/ai_atomic_framework/governance-optimization/ATM-GOV-3.1-captain-handoff-2026-07-29-git-recovery.md | Plan 3.1 Captain Handoff - 2026-07-29 Git Recovery |
+| `doc_other_3462` | docs/ai_atomic_framework/governance-optimization/ATM-GOV-3.2-captain-handoff-2026-07-30.md | Plan 3.2 Captain Handoff - 2026-07-30 |
+| `doc_other_3463` | docs/ai_atomic_framework/governance-optimization/ATM-MATT-POCOCK-SKILLS-initiative-handoff-2026-07-24.md | ATM × Matt Pocock Skills Initiative Handoff — 2026-07-24 |
+| `doc_other_3464` | docs/ai_atomic_framework/governance-optimization/end-to-end-auto-batch-performance-plan-v2.md | ATM 端到端自動併批與效能證明計畫 2.0（v2.2 Closure Amendment） |
+| `doc_other_3465` | docs/ai_atomic_framework/governance-optimization/end-to-end-auto-batch-performance-plan-v3-2.md | ATM 3.2 Close-Time Gate Economy and Deep-Module Validation Plan |
+| `doc_other_3466` | docs/ai_atomic_framework/governance-optimization/end-to-end-auto-batch-performance-plan-v3.md | ATM 3.0 真平行治理一致性與收官計畫 |
+| `doc_other_3467` | docs/ai_atomic_framework/governance-optimization/end-to-end-auto-batch-performance-plan-v4-1.md | ATM Plan 4.1 Hard Causal Dependency and Parallel Work Proof |
+| `doc_other_3468` | docs/ai_atomic_framework/governance-optimization/end-to-end-auto-batch-performance-plan-v4.md | ATM 4.0 Proof-Carrying Quality Gauntlet and Governance Coverage Closure Plan |
+| `doc_other_3469` | docs/ai_atomic_framework/governance-optimization/end-to-end-auto-batch-performance-plan.md | ATM 端到端自動併批與效能證明計畫 |
+| `doc_other_3470` | docs/ai_atomic_framework/governance-optimization/findings/broker-correctness-sample-0001-glob-false-negative.md | Broker correctness sample 0001 — glob targetFiles false negative |
+| `doc_other_3471` | docs/ai_atomic_framework/governance-optimization/follow-ups/ATM-GOV-0412-runner-compatibility-digest-precondition.plan.md | ATM-GOV-0412 Enforce runner compatibility digest before governed writes |
+| `doc_other_3472` | docs/ai_atomic_framework/governance-optimization/follow-ups/ATM-GOV-0413-claim-side-adoption-of-bounded-unowned-wip.plan.md | ATM-GOV-0413 — Claim-side adoption of bounded unowned WIP |
+| `doc_other_3473` | docs/ai_atomic_framework/governance-optimization/lane-session-rollout-plan.md | ATM Lane Session Rollout Plan |
+| `doc_other_3474` | docs/ai_atomic_framework/governance-optimization/plan-3-0-false-green-lessons-learned-2026-07-22.md | ATM Plan 3.0 假綠燈收官 Lessons Learned |
+| `doc_other_3475` | docs/ai_atomic_framework/governance-optimization/plan-3x-4x-execution-checklist-2026-08-08.md | Plan 3.0–4.0 Execution and Exit Checklist |
+| `doc_other_3476` | docs/ai_atomic_framework/governance-optimization/plan-3x-4x-false-green-correction-complete-closeout-runbook-2026-08-09.md | Plan 3.0–4.0 False-Green Correction and Complete Closeout Runbook |
+| `doc_other_3477` | docs/ai_atomic_framework/governance-optimization/plan-3x-4x-objective-evidence-matrix-2026-07-31.md | Plan 3.0–4.0 Objective Evidence Matrix — Audit Baseline |
+| `doc_other_3478` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0124-charter-authority-bundle.task.md | ATM-GOV-0124 - Install the content-bound Charter authority bundle |
+| `doc_other_3479` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0125-captain-quick-wins.task.md | ATM-GOV-0125 - Land low-risk Captain guidance and recovery quick wins |
+| `doc_other_3480` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0126-paired-cost-baseline.task.md | ATM-GOV-0126 - Establish paired monetary-cost and time efficiency baselines |
+| `doc_other_3481` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0127-release-steward-safety.task.md | ATM-GOV-0127 - Protect foreign WIP with an exclusive release steward lane |
+| `doc_other_3482` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0128-multi-captain-index-isolation.task.md | ATM-GOV-0128 - Converge multi-Captain serialization and index isolation |
+| `doc_other_3483` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0129-seal-and-commit.task.md | ATM-GOV-0129 - Make sealed commit the close transaction truth |
+| `doc_other_3484` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0130-close-crash-residue-recovery.task.md | ATM-GOV-0130 - Recover close, claim release, and residue crash states |
+| `doc_other_3485` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0131-validation-receipt-reuse.task.md | ATM-GOV-0131 - Unify wrapper-generated validation receipts |
+| `doc_other_3486` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0132-framework-taskflow-opener.task.md | ATM-GOV-0132 - Provide a safe framework taskflow opener lane |
+| `doc_other_3487` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0133-planning-source-seal.task.md | ATM-GOV-0133 - Seal external planning-source identity before claim and close |
+| `doc_other_3488` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0134-governance-hotfile-sharding.task.md | ATM-GOV-0134 - Shard governance hotfiles behind generated compatibility projections |
+| `doc_other_3489` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0135-shadow-first-team-scheduler.task.md | ATM-GOV-0135 - Run Team workers in shadow-first contribution workspaces |
+| `doc_other_3490` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0136-contribution-composer.task.md | ATM-GOV-0136 - Compose Team contribution manifests into one final tree |
+| `doc_other_3491` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0137-team-admission-projection.task.md | ATM-GOV-0137 - Unify Team admission projection and scale-down decisions |
+| `doc_other_3492` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0138-broker-registry-transaction.task.md | ATM-GOV-0138 - Make Broker registry updates atomic and thin under shadow-first Team |
+| `doc_other_3493` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0139-obligation-map-canary.task.md | ATM-GOV-0139 - Introduce path-to-validator obligations with sealed-commit canary lane |
+| `doc_other_3494` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0140-team-efficiency-controller.task.md | ATM-GOV-0140 - Enforce Team monetary-cost, time and quality efficiency controller |
+| `doc_other_3495` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0141-batch-mode-integration.task.md | ATM-GOV-0141 - Integrate Batch mode with sealed close and Team admission |
+| `doc_other_3496` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0142-release-publication-steward.task.md | ATM-GOV-0142 - Productize release publication ownership and sealed source receipts |
+| `doc_other_3497` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0143-provider-billing-cost-accounting.task.md | ATM-GOV-0143 - Capture provider billing usage and compute versioned real monetary cost |
+| `doc_other_3498` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0144-official-pricing-catalog-refresh.task.md | ATM-GOV-0144 - Refresh the standard model-price catalog from official provider sources |
+| `doc_other_3499` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0145-pre-team-foundation-dual-captain-e2e.task.md | ATM-GOV-0145 - Replace Pre-Team Foundation Gate meta-test with real dual-Captain E2E |
+| `doc_other_3500` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0146-close-mutex-ttl-heartbeat.task.md | ATM-GOV-0146 - Align close transaction mutex TTL with governed commit window |
+| `doc_other_3501` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0147-runtime-residue-error-code-cleanup.task.md | ATM-GOV-0147 - Teach residue cleanup expired git-index leases and register Team task-required errors |
+| `doc_other_3502` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0148-unified-global-resource-admission.task.md | ATM-GOV-0148 - Project global governance resources into unified Broker admission |
+| `doc_other_3503` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0149-dual-captain-broker-spawn-e2e.task.md | ATM-GOV-0149 - Add true dual-Captain Broker spawn E2E |
+| `doc_other_3504` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0150-runner-sync-coalescing-steward-queue.task.md | ATM-GOV-0150 - Implement runner-sync coalescing steward queue |
+| `doc_other_3505` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0151-generated-projection-steward.task.md | ATM-GOV-0151 - Move generated projection rebuilds to steward lane |
+| `doc_other_3506` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0152-unified-admission-runtime-aliases.task.md | ATM-GOV-0152 - Alias legacy global locks into unified Broker admission |
+| `doc_other_3507` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0153-real-team-dogfood-promotion-evidence.task.md | ATM-GOV-0153 - Collect real Team dogfood promotion evidence |
+| `doc_other_3508` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0154-runner-sync-steward-release.task.md | ATM-GOV-0154 - Add runner-sync steward release command |
+| `doc_other_3509` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0155-runner-sync-after-dispatch-adapter-parity.task.md | ATM-GOV-0155 - Runner Sync After Dispatch Planning Gate Adapter Parity |
+| `doc_other_3510` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0156-sealed-runner-build-input-cache.task.md | ATM-GOV-0156 - Add Sealed Runner Build Input Cache And Timing Metrics |
+| `doc_other_3511` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0157-ledger-import-tier1-admission.task.md | ATM-GOV-0157 - Classify task import force writes as Tier 1 ledger ingestion |
+| `doc_other_3512` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0158-runner-sync-foreign-wip-build-input-admission.task.md | ATM-GOV-0158 - Scope Runner-Sync Foreign WIP Admission To Build-Input Conflicts |
+| `doc_other_3513` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0159-scope-classification-lane-events-foundation.task.md | ATM-GOV-0159 - Add Shared Code Docs Ledger Scope Classification And Lane Event Foundation |
+| `doc_other_3514` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0160-dependency-gate-code-only-planning-artifacts.task.md | ATM-GOV-0160 - Make Dependency Gates Block Code Only And Allow Planning Artifacts |
+| `doc_other_3515` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0161-tier2-broker-ticket-unified-exit.task.md | ATM-GOV-0161 - Convert Tier 2 Shared-Surface Refusals Into Broker Tickets |
+| `doc_other_3516` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0162-related-task-batching-wave-surface.task.md | ATM-GOV-0162 - Add Related-Task Batching For Commit Build And Projection Windows |
+| `doc_other_3517` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0163-sealed-build-node-modules-wipe.task.md | ATM-GOV-0163 - Sealed Runner Build Must Not Wipe Host node_modules |
+| `doc_other_3518` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0164-unlink-before-worktree-remove.task.md | ATM-GOV-0164 - Unlink Junction Before git worktree remove |
+| `doc_other_3519` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0165-taskflow-runner-staleness-scope-gate.task.md | ATM-GOV-0165 - Scope Runner Staleness Close Gate To Non-Code Tasks |
+| `doc_other_3520` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0166-ledger-plan-source-realign-verb.task.md | ATM-GOV-0166 - Closed-Ledger Planning Source Realign Verb |
+| `doc_other_3521` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0167-lane-dual-session-e2e.task.md | ATM-GOV-0167 - Lane Session Dual-Lane End-to-End Acceptance |
+| `doc_other_3522` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0168-lane-aware-same-task-claim-conflict.task.md | ATM-GOV-0168 - Lane-Aware Same-Task Claim Conflict and Adopt Rebind |
+| `doc_other_3523` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0169-foreign-unstaged-wip-claim-admission.task.md | ATM-GOV-0169 - Foreign Unstaged WIP Claim Admission |
+| `doc_other_3524` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0170-oversized-file-extraction-claim-pathway.task.md | ATM-GOV-0170 - Oversized File Extraction Claim Pathway |
+| `doc_other_3525` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0171-runner-sync-receipt-clean-close.task.md | ATM-GOV-0171 - Governed Runner-Sync Receipt and Clean-Close Pathway |
+| `doc_other_3526` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0172-unified-wave-manifest-policy.task.md | ATM-GOV-0172 - Unified Wave Manifest and Policy |
+| `doc_other_3527` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0173-batch-wave-selector.task.md | ATM-GOV-0173 - Batch Wave Selector |
+| `doc_other_3528` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0174-executor-neutral-team-wave-runtime.task.md | ATM-GOV-0174 - Executor-Neutral Team Wave Runtime |
+| `doc_other_3529` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0175-durable-broker-scheduler.task.md | ATM-GOV-0175 - Durable Broker Scheduler |
+| `doc_other_3530` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0176-shared-delivery-commit-executor.task.md | ATM-GOV-0176 - Shared Delivery Commit Executor |
+| `doc_other_3531` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0177-shared-build-projection-checkpoint.task.md | ATM-GOV-0177 - Shared Build/Projection Executor and Atomic Wave Checkpoint |
+| `doc_other_3532` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0178-parallel-analyzer-v2-failure-matrix.task.md | ATM-GOV-0178 - Parallel Analyzer v2 and End-to-End Failure Matrix |
+| `doc_other_3533` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0179-strict-paired-ab-dogfood-circuit-breaker.task.md | ATM-GOV-0179 - Strict Paired A/B Dogfood and Default-On Circuit Breaker |
+| `doc_other_3534` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0180-taskflow-scope-glob-and-multi-add.task.md | ATM-GOV-0180 — taskflow scope glob for new files + scope add multi-flag |
+| `doc_other_3535` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0181-abandon-residue-governed-disposition.task.md | ATM-GOV-0181 — abandon residue governed disposition |
+| `doc_other_3536` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0182-plan-scoped-routing-wip-preflight.task.md | ATM-GOV-0182 - Plan-Scoped Routing、Identity 與 WIP Provenance Preflight |
+| `doc_other_3537` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0183-durable-plan-batchrun-shadow-journal.task.md | ATM-GOV-0183 - Durable Plan BatchRun、Lane Stamping 與 Shadow Journal |
+| `doc_other_3538` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0184-real-team-wave-worker-executor.task.md | ATM-GOV-0184 - Real Team Wave Worker Executor |
+| `doc_other_3539` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0185-validator-dag-shared-cache.task.md | ATM-GOV-0185 - Validator DAG、共享結果與安全 Cache |
+| `doc_other_3540` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0186-real-shared-delivery-commit-executor.task.md | ATM-GOV-0186 - Real Shared Delivery Commit Executor |
+| `doc_other_3541` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0187-real-build-projection-runner-sync-executor.task.md | ATM-GOV-0187 - Real Build、Projection 與 Runner-Sync Executor |
+| `doc_other_3542` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0188-atomic-wave-checkpoint-closeback-saga.task.md | ATM-GOV-0188 - Atomic Wave Checkpoint 與 Cross-Repo Closeback Saga |
+| `doc_other_3543` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0189-plan-level-executor-recovery-cli.task.md | ATM-GOV-0189 - Plan-Level Executor 主迴圈、收單策略與復原 CLI |
+| `doc_other_3544` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0190-real-paired-ab-analyzer-v3.task.md | ATM-GOV-0190 - Real Paired A/B、Analyzer v3 與 Rollout Verdict |
+| `doc_other_3545` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0191-runner-sync-incremental-build.task.md | ATM-GOV-0191 - Runner-sync cache-miss 增量 Build Executor |
+| `doc_other_3546` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0194-add-runner-sync-incremental-build-on-cache-miss.task.md | ATM-GOV-0194 Add runner-sync incremental build on cache miss |
+| `doc_other_3547` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0195-gate-telemetry-coverage-repair-and-m2-preflight.task.md | ATM-GOV-0195 Gate telemetry coverage repair and M2 preflight |
+| `doc_other_3548` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0196-observed-telemetry-coverage-and-task-seal-enforcement.task.md | ATM-GOV-0196 Observed telemetry coverage and task seal enforcement |
+| `doc_other_3549` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0197-runtime-telemetry-boundary-compact-receipts-and-session-lifecycle.task.md | ATM-GOV-0197 Runtime telemetry boundary compact receipts and session lifecycle |
+| `doc_other_3550` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0198-true-resumable-plan-executor-orchestration-loop.task.md | ATM-GOV-0198 True resumable plan executor orchestration loop |
+| `doc_other_3551` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0199-live-broker-decision-outcome-telemetry-and-correctness-adjudication.task.md | ATM-GOV-0199 Live broker decision outcome telemetry and correctness adjudication |
+| `doc_other_3552` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0200-validator-observed-lifecycle-and-evidence-driven-tiering.task.md | ATM-GOV-0200 Validator observed lifecycle and evidence driven tiering |
+| `doc_other_3553` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0201-runner-incremental-dogfood-and-dominant-phase-optimization.task.md | ATM-GOV-0201 Runner incremental dogfood and dominant phase optimization |
+| `doc_other_3554` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0202-real-paired-ab-v4-and-rollout-verdict.task.md | ATM-GOV-0202 Real paired AB v4 and rollout verdict |
+| `doc_other_3555` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0203-first-layer-routing-compact-orientation-and-windows-safe-command-contracts.task.md | ATM-GOV-0203 First layer routing compact orientation and Windows safe command contracts |
+| `doc_other_3556` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0204-task-import-parser-canonical-id-boundary-repair.task.md | ATM-GOV-0204 Task import parser canonical ID boundary repair |
+| `doc_other_3557` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0205-canonical-telemetry-observation-interface-migration.task.md | ATM-GOV-0205 Canonical telemetry observation interface migration |
+| `doc_other_3558` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0206-broker-resource-overlap-matcher-repair.task.md | ATM-GOV-0206 |
+| `doc_other_3559` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0207-canonical-broker-transaction-authority-and-linearizable-state.task.md | ATM-GOV-0207 Canonical broker transaction authority and linearizable state |
+| `doc_other_3560` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0208-content-anchored-code-boundary-and-resolver-substrate.task.md | ATM-GOV-0208 Content anchored code boundary and resolver substrate |
+| `doc_other_3561` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0209-versioned-read-write-sets-and-structured-overlap-evidence.task.md | ATM-GOV-0209 Versioned read write sets and structured overlap evidence |
+| `doc_other_3562` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0210-parallel-task-start-and-isolated-proposal-lanes.task.md | ATM-GOV-0210 Parallel task start and isolated proposal lanes |
+| `doc_other_3563` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0211-compose-first-broker-ticket-state-machine-and-fair-scheduling.task.md | ATM-GOV-0211 Compose first broker ticket state machine and fair scheduling |
+| `doc_other_3564` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0212-transactional-bounded-composer-and-serializable-publish.task.md | ATM-GOV-0212 Transactional bounded composer and serializable publish |
+| `doc_other_3565` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0213-cid-and-read-set-semantic-revalidation-adjudicator.task.md | ATM-GOV-0213 CID and read set semantic revalidation adjudicator |
+| `doc_other_3566` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0214-shared-delivery-saga-and-crash-safe-exactly-once-lifecycle.task.md | ATM-GOV-0214 Shared delivery saga and crash safe exactly once lifecycle |
+| `doc_other_3567` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0215-broker-overlap-callsite-convergence-repair.task.md | ATM-GOV-0215 |
+| `doc_other_3568` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0216-unified-parallel-admission-policy.task.md | ATM-GOV-0216 Unified parallel admission policy |
+| `doc_other_3569` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0217-multi-process-ticket-consistency.task.md | ATM-GOV-0217 Multi-process ticket consistency |
+| `doc_other_3570` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0218-runner-sync-self-hosting-closed-loop.task.md | ATM-GOV-0218 Runner sync self-hosting closed loop |
+| `doc_other_3571` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0219-transactional-shared-delivery.task.md | ATM-GOV-0219 Transactional shared delivery |
+| `doc_other_3572` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0220-task-and-lane-lifecycle-repair.task.md | ATM-GOV-0220 Task and lane lifecycle repair |
+| `doc_other_3573` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0221-canonical-telemetry-and-evidence-seal.task.md | ATM-GOV-0221 Canonical telemetry and evidence seal |
+| `doc_other_3574` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0222-managed-plan-executor-and-first-layer-ux.task.md | ATM-GOV-0222 Managed plan executor and first-layer UX |
+| `doc_other_3575` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0223-real-multi-process-and-multi-agent-dogfood.task.md | ATM-GOV-0223 Real multi-process and multi-agent dogfood |
+| `doc_other_3576` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0224-complete-paired-ab-and-safety-controller.task.md | ATM-GOV-0224 Complete paired AB and safety controller |
+| `doc_other_3577` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0225-final-closure-for-atm-2-0-and-2-1.task.md | ATM-GOV-0225 Final closure for ATM 2.0 and 2.1 |
+| `doc_other_3578` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0226-atm-3-0-divergence-census-and-replay-contract.task.md | ATM-GOV-0226 ATM 3.0 divergence census and replay contract |
+| `doc_other_3579` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0227-canonical-broker-arbitration-authority.task.md | ATM-GOV-0227 Canonical broker arbitration authority |
+| `doc_other_3580` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0228-atomic-broker-projection-and-reconciliation.task.md | ATM-GOV-0228 Atomic broker projection and reconciliation |
+| `doc_other_3581` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0229-linked-surface-scope-closure-inference.task.md | ATM-GOV-0229 Linked surface scope closure inference |
+| `doc_other_3582` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0230-runner-sync-stale-reservation-lifecycle.task.md | ATM-GOV-0230 Runner sync stale reservation lifecycle |
+| `doc_other_3583` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0231-generalized-command-manifest-and-recovery-emission.task.md | ATM-GOV-0231 Generalized command manifest and recovery emission |
+| `doc_other_3584` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0232-task-import-parser-and-recovery-boundary-reconciliation.task.md | ATM-GOV-0232 Task import parser and recovery boundary reconciliation |
+| `doc_other_3585` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0233-transactional-ticket-completion-and-legacy-bcr-migration.task.md | ATM-GOV-0233 Transactional ticket completion and legacy BCR migration |
+| `doc_other_3586` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0234-real-multiprocess-parallel-replay-and-telemetry-proof.task.md | ATM-GOV-0234 Real multiprocess parallel replay and telemetry proof |
+| `doc_other_3587` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0235-atm-3-0-final-closure-and-circuit-breaker-verdict.task.md | ATM-GOV-0235 ATM 3.0 final closure and circuit breaker verdict |
+| `doc_other_3588` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0236-plan-3-0-shared-governance-state-readiness-gate.task.md | ATM-GOV-0236 Plan 3.0 shared governance state readiness gate |
+| `doc_other_3589` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0237-plan-3-real-dogfood-shared-replay-surface-a.task.md | ATM-GOV-0237 Plan 3 real dogfood shared replay surface A |
+| `doc_other_3590` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0238-plan-3-real-dogfood-shared-replay-surface-b.task.md | ATM-GOV-0238 Plan 3 real dogfood shared replay surface B |
+| `doc_other_3591` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0239-fail-closed-closure-truth-and-authority-reconciliation.task.md | ATM-GOV-0239 Fail-closed closure truth and authority reconciliation |
+| `doc_other_3592` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0240-historical-runner-red-green-discrimination-harness.task.md | ATM-GOV-0240 Historical runner red-green discrimination harness |
+| `doc_other_3593` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0241-event-derived-replay-lifecycle-receipt-contract.task.md | ATM-GOV-0241 Event-derived replay lifecycle receipt contract |
+| `doc_other_3594` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0242-real-two-card-queued-dogfood-orchestrator.task.md | ATM-GOV-0242 Real two-card compose-first and fallback dogfood orchestrator |
+| `doc_other_3595` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0243-matched-ab-ba-governed-workload-benchmark.task.md | ATM-GOV-0243 Matched AB BA governed workload benchmark |
+| `doc_other_3596` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0244-backlog-rollback-parity-and-circuit-breaker-closeback.task.md | ATM-GOV-0244 Backlog rollback parity and circuit-breaker closeback |
+| `doc_other_3597` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0245-plan-3-1-evidence-aggregator-and-final-verdict.task.md | ATM-GOV-0245 Plan 3.1 evidence aggregator and final verdict |
+| `doc_other_3598` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0246-dual-captain-dogfood-dashboard-and-sealed-run-manifest.task.md | ATM-GOV-0246 Dual-captain dogfood dashboard and sealed run manifest |
+| `doc_other_3599` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0247-single-canonical-worktree-compose-first-invariant-and-git-topology-boundary.task.md | ATM-GOV-0247 Single canonical worktree compose-first invariant and Git topology boundary |
+| `doc_other_3600` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0248-non-git-proposal-workspace-provider-and-steward-write-path-migration.task.md | ATM-GOV-0248 Non-Git proposal workspace provider and steward write-path migration |
+| `doc_other_3601` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0249-transactional-compose-output-and-single-write-steward-apply.task.md | ATM-GOV-0249 Transactional compose output and single-write steward apply |
+| `doc_other_3602` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0250-receipt-bound-shared-write-admission-and-steward-only-delivery.task.md | ATM-GOV-0250 Receipt-bound shared-write admission and steward-only delivery |
+| `doc_other_3603` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0251-acceptance-evidence-predicates-and-realness-taxonomy.task.md | ATM-GOV-0251 Acceptance evidence predicates and realness taxonomy |
+| `doc_other_3604` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0252-independent-acceptance-closure-gate-and-two-key-verifier.task.md | ATM-GOV-0252 Independent acceptance closure gate and two-key verifier |
+| `doc_other_3605` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0253-cross-authority-two-phase-closeback-saga.task.md | ATM-GOV-0253 Cross-authority two-phase closeback saga |
+| `doc_other_3606` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0254-transactional-patch-materialization-and-post-compose-semantic-validation.task.md | ATM-GOV-0254 Transactional patch materialization and post-compose semantic validation |
+| `doc_other_3607` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0255-broker-resolution-authority-parity-and-claim-admission-proof.task.md | ATM-GOV-0255 Broker resolution authority parity and claim-admission proof |
+| `doc_other_3608` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0256-runner-sync-source-snapshot-and-cache-hit-freshness-gate.task.md | ATM-GOV-0256 Runner-sync source snapshot and cache-hit freshness gate |
+| `doc_other_3609` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0257-actor-identity-continuity-across-captain-and-shared-write-lanes.task.md | ATM-GOV-0257 Actor identity continuity across captain and shared-write lanes |
+| `doc_other_3610` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0258-broker-managed-transactional-stage-commit-queue.task.md | ATM-GOV-0258 Broker-managed transactional stage commit queue |
+| `doc_other_3611` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0259-write-ticket-scope-amendment-guard-and-out-of-scope-wip-recorder.task.md | ATM-GOV-0259 Write-ticket scope amendment guard and out-of-scope WIP recorder |
+| `doc_other_3612` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0260-staged-candidate-line-budget-and-nested-commit-recovery.task.md | ATM-GOV-0260 Staged candidate line-budget and nested commit recovery |
+| `doc_other_3613` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0261-vcs-neutral-commit-candidate-isolation-and-git-adapter-fallback.task.md | ATM-GOV-0261 VCS-neutral commit candidate isolation and Git adapter fallback |
+| `doc_other_3614` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0262-canonical-overlap-matcher-call-site-parity.task.md | ATM-GOV-0262 Canonical overlap matcher call-site parity |
+| `doc_other_3615` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0263-autonomous-continuation-and-executable-recovery-parity.task.md | ATM-GOV-0263 Autonomous continuation and executable recovery parity |
+| `doc_other_3616` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0264-same-atom-bounded-proposal-admission-and-compose-routing.task.md | ATM-GOV-0264 Canonical Broker Admission Facade and same-atom bounded proposal routing |
+| `doc_other_3617` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0265-shared-mutation-finalization-and-sealed-runner-publication.task.md | ATM-GOV-0265 Shared mutation finalization and sealed runner publication |
+| `doc_other_3618` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0266-runner-sync-sealed-input-continuity-and-durable-steward-finalization.task.md | ATM-GOV-0266 Runner-sync sealed-input continuity and durable steward finalization |
+| `doc_other_3619` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0267-runner-version-selection-qualification-and-feedback-loop.task.md | ATM-GOV-0267 Runner version selection qualification and feedback loop |
+| `doc_other_3620` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0268-runner-selection-producer-contract-and-snapshot-provider.task.md | ATM-GOV-0268 Runner selection producer contract and snapshot provider |
+| `doc_other_3621` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0269-validation-plan-observability-and-resumable-standard-gate.task.md | ATM-GOV-0269 Validation plan observability and resumable standard gate |
+| `doc_other_3622` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0270-evidence-freshness-engine-for-incremental-close-validation.task.md | ATM-GOV-0270 Evidence freshness engine for incremental close validation |
+| `doc_other_3623` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0271-governance-close-saga-legal-recovery-coordinator.task.md | ATM-GOV-0271 Governance close saga legal recovery coordinator |
+| `doc_other_3624` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0272-public-forward-and-emergency-attestation-authority.task.md | ATM-GOV-0272 Public forward and emergency attestation authority |
+| `doc_other_3625` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0273-target-planning-and-runner-closeback-boundary-split.task.md | ATM-GOV-0273 Target planning and runner closeback boundary split |
+| `doc_other_3626` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0274-enforce-same-task-different-lane-claim-rejection.task.md | ATM-GOV-0274 Enforce same-task different-lane claim rejection |
+| `doc_other_3627` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0275-preserve-foreign-work-during-dual-captain-governed-commit.task.md | ATM-GOV-0275 Preserve foreign work during dual-captain governed commit |
+| `doc_other_3628` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0276-planning-seal-benign-upgrade-and-task-import-fidelity-guard.task.md | ATM-GOV-0276 Planning seal benign upgrade and task import fidelity guard |
+| `doc_other_3629` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0277-model-relative-coverage-semantics-and-quality-certificate-vocabulary.task.md | ATM-GOV-0277 Model-relative coverage semantics and quality certificate vocabulary |
+| `doc_other_3630` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0279-obligation-inventory-schema-and-inventory-drift-detector.task.md | ATM-GOV-0279 Obligation inventory schema and inventory drift detector |
+| `doc_other_3631` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0280-coverage-universe-compiler-interface-reachability-and-canonical-obligation-ids.task.md | ATM-GOV-0280 CoverageUniverseCompiler interface reachability and canonical obligation IDs |
+| `doc_other_3632` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0281-constraint-solver-infeasibility-abstraction-proofs-semantic-quotient.task.md | ATM-GOV-0281 constraint solver, infeasibility/abstraction proofs, semantic quotient |
+| `doc_other_3633` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0282-concurrency-partial-order-reduction-and-schedule-obligations.task.md | ATM-GOV-0282 concurrency partial-order reduction and schedule obligations |
+| `doc_other_3634` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0283-task-lane-broker-close-runner-first-model-adapters.task.md | ATM-GOV-0283 Task/Lane/Broker/Close/Runner first model adapters |
+| `doc_other_3635` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0284-quality-gauntlet-facade-and-closure-assurance-machine-reducer-events.task.md | ATM-GOV-0284 QualityGauntlet facade and ClosureAssuranceMachine reducer events |
+| `doc_other_3636` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0285-validator-catalog-selection-bridge-and-resumable-probe-scheduler.task.md | ATM-GOV-0285 Validator catalog selection bridge and resumable probe scheduler |
+| `doc_other_3637` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0287-legal-recovery-and-checkpoint-projection-for-check-in-close-phase-release.task.md | ATM-GOV-0287 legal recovery and checkpoint projection for check-in/close/phase/release |
+| `doc_other_3638` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0288-js-ts-structural-coverage-adapter-and-authoritative-denominator-reconciliation.task.md | ATM-GOV-0288 JS/TS structural coverage adapter and authoritative denominator reconciliation |
+| `doc_other_3639` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0289-changed-impacted-repository-coverage-ratchet-and-baseline-migration.task.md | ATM-GOV-0289 changed/impacted/repository coverage ratchet and baseline migration |
+| `doc_other_3640` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0290-cyclomatic-complexity-crap-module-interface-size-adapter.task.md | ATM-GOV-0290 cyclomatic complexity, CRAP, module/interface size adapter |
+| `doc_other_3641` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0291-dependency-graph-forbidden-edge-cycle-and-public-interface-bypass-gate.task.md | ATM-GOV-0291 dependency graph, forbidden edge, cycle and public-interface bypass gate |
+| `doc_other_3642` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0293-fault-fingerprint-and-semantic-family-matching-policy.task.md | ATM-GOV-0293 Fault fingerprint and semantic family matching policy |
+| `doc_other_3643` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0294-causal-neighborhood-compiler-and-factor-combination-generator.task.md | ATM-GOV-0294 Causal neighborhood compiler and factor combination generator |
+| `doc_other_3644` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0296-sandboxed-test-patch-proposal-monotonic-acceptance-and-minimization.task.md | ATM-GOV-0296 sandboxed test patch proposal, monotonic acceptance and minimization |
+| `doc_other_3645` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0297-example-branch-and-mutation-survivor-directed-generators.task.md | ATM-GOV-0297 example/branch and mutation-survivor-directed generators |
+| `doc_other_3646` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0298-property-metamorphic-model-based-generator-pack.task.md | ATM-GOV-0298 property/metamorphic/model-based generator pack |
+| `doc_other_3647` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0299-concurrency-fuzz-torture-fault-generator-pack.task.md | ATM-GOV-0299 concurrency/fuzz/torture/fault generator pack |
+| `doc_other_3648` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0300-acceptance-gherkin-and-acceptance-spec-mutation.task.md | ATM-GOV-0300 acceptance/Gherkin and acceptance-spec mutation |
+| `doc_other_3649` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0302-security-quality-dimension-and-risk-acceptance-receipts.task.md | ATM-GOV-0302 security quality dimension and risk acceptance receipts |
+| `doc_other_3650` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0303-performance-memory-resilience-ratchet-and-benchmark-evidence.task.md | ATM-GOV-0303 performance, memory, resilience ratchet and benchmark evidence |
+| `doc_other_3651` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0305-cumulative-regression-family-store-and-selective-routing.task.md | ATM-GOV-0305 Cumulative regression family store and selective routing |
+| `doc_other_3652` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0306-mutation-adapter-lineage-and-equivalence-governance.task.md | ATM-GOV-0306 Mutation adapter, lineage, and equivalence governance |
+| `doc_other_3653` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0307-state-replay-and-known-incident-corpus-closure.task.md | ATM-GOV-0307 State replay and known incident corpus closure |
+| `doc_other_3654` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0312-coverage-certificate-quality-vector-and-explicit-non-claims.task.md | ATM-GOV-0312 Coverage certificate, quality vector, and explicit non-claims |
+| `doc_other_3655` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0313-canonical-test-catalog-namespace-repair-and-historical-shard-migration.task.md | ATM-GOV-0313 Canonical test-catalog namespace repair and historical shard migration |
+| `doc_other_3656` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0314-plan-4-0-selected-versus-full-shadow-comparison-and-escaped-defect-adjudication.task.md | ATM-GOV-0314 Plan 4.0 selected-versus-full shadow comparison and escaped-defect adjudication |
+| `doc_other_3657` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0315-plan-4-0-six-editor-runtime-adapter-parity-canary.task.md | ATM-GOV-0315 Plan 4.0 six-editor runtime adapter parity canary |
+| `doc_other_3658` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0316-plan-4-0-hostile-dual-captain-dogfood-and-phase-exit-saturation.task.md | ATM-GOV-0316 Plan 4.0 hostile dual-captain dogfood and phase-exit saturation |
+| `doc_other_3659` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0317-plan-4-0-final-four-plan-objective-certification-and-legacy-authority-retirement.task.md | ATM-GOV-0317 Plan 4.0 final four-plan objective certification and legacy-authority retirement |
+| `doc_other_3660` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0318-evidence-freshness-cache-resume-and-certificate-binding.task.md | ATM-GOV-0318 Evidence freshness, cache, resume and certificate binding |
+| `doc_other_3661` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0319-seed-commitment-hidden-negative-controls-and-anti-gaming-checks.task.md | ATM-GOV-0319 Seed commitment, hidden negative controls and anti-gaming checks |
+| `doc_other_3662` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0320-independent-oracle-arbitration-flaky-evidence-adjudication-and-exam-authority-separation.task.md | ATM-GOV-0320 Independent oracle arbitration, flaky evidence adjudication and exam-authority separation |
+| `doc_other_3663` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0321-sealed-quality-authority-policy-epoch-protected-exam-surfaces-and-role-capabilities.task.md | ATM-GOV-0321 Sealed quality authority, policy epoch, protected exam surfaces and role capabilities |
+| `doc_other_3664` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0322-gap-normalization-lexicographic-planning-and-deterministic-proposal-ordering.task.md | ATM-GOV-0322 Gap normalization, lexicographic planning and deterministic proposal ordering |
+| `doc_other_3665` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0324-recent-governance-operator-regression-closure-and-transaction-status-receipts.task.md | ATM-GOV-0324 recent governance operator regression closure and transaction-status receipts |
+| `doc_other_3666` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0325-freeze-false-green-evidence-and-establish-reproducible-baseline.task.md | ATM-GOV-0325 Freeze false-green evidence and establish reproducible baseline |
+| `doc_other_3667` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0326-reconcile-planning-target-ledger-projection-and-closure-authority.task.md | ATM-GOV-0326 Reconcile planning target ledger projection and closure authority |
+| `doc_other_3668` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0327-audit-governance-bypasses-and-classify-rescue-worktree-history.task.md | ATM-GOV-0327 Audit governance bypasses and classify rescue worktree history |
+| `doc_other_3669` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0328-eliminate-test-facade-timing-margin-flake-with-measured-policy.task.md | ATM-GOV-0328 Eliminate test facade timing-margin flake with measured policy |
+| `doc_other_3670` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0329-restore-validator-catalog-profile-and-ci-closure-coverage.task.md | ATM-GOV-0329 Restore validator catalog profile and CI closure coverage |
+| `doc_other_3671` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0330-replace-caller-supplied-evidence-with-observed-source-adapters.task.md | ATM-GOV-0330 Replace caller-supplied evidence with observed source adapters |
+| `doc_other_3672` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0331-wire-deep-evidence-modules-into-production-callers-and-remove-shallow-shells.task.md | ATM-GOV-0331 Wire deep evidence modules into production callers and remove shallow shells |
+| `doc_other_3673` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0332-build-reproducible-multi-layer-evidence-dashboards.task.md | ATM-GOV-0332 Build reproducible multi-layer evidence dashboards |
+| `doc_other_3674` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0333-replay-and-certify-every-plan-3-0-objective.task.md | ATM-GOV-0333 Replay and certify every Plan 3.0 objective |
+| `doc_other_3675` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0334-replay-and-certify-every-plan-3-1-objective.task.md | ATM-GOV-0334 Replay and certify every Plan 3.1 objective |
+| `doc_other_3676` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0335-replay-and-certify-every-plan-3-2-objective.task.md | ATM-GOV-0335 Replay and certify every Plan 3.2 objective |
+| `doc_other_3677` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0336-rebuild-and-revalidate-the-plan-4-foundation-chain.task.md | ATM-GOV-0336 Rebuild and revalidate the Plan 4 foundation chain |
+| `doc_other_3678` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0337-run-real-selected-versus-full-shadow-comparison.task.md | ATM-GOV-0337 Run real selected-versus-full shadow comparison |
+| `doc_other_3679` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0338-prove-six-editor-adapter-parity-from-sealed-source.task.md | ATM-GOV-0338 Prove six-editor adapter parity from sealed source |
+| `doc_other_3680` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0339-execute-hostile-dual-captain-dogfood-paired-experiments-and-saturation.task.md | ATM-GOV-0339 Execute hostile dual-captain dogfood paired experiments and saturation |
+| `doc_other_3681` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0340-rebuild-backlog-census-and-close-every-open-like-disposition.task.md | ATM-GOV-0340 Rebuild backlog census and close every open-like disposition |
+| `doc_other_3682` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0341-produce-independent-four-plan-certification-and-governed-release.task.md | ATM-GOV-0341 Produce independent four-plan certification and governed release |
+| `doc_other_3683` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0342-restore-lane-registry-claim-authority-continuity.task.md | ATM-GOV-0342 — Restore Lane-Registry Claim Authority Continuity |
+| `doc_other_3684` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0343-preserve-same-task-retained-wip-continuity-across-fresh-lane-reclaim.task.md | ATM-GOV-0343 Preserve same-task retained WIP continuity across fresh lane reclaim |
+| `doc_other_3685` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0344-restore-taskflow-close-failure-index-and-worktree-atomicity.task.md | ATM-GOV-0344 — Restore taskflow close failure index and worktree atomicity |
+| `doc_other_3686` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0345-make-sealed-runner-publication-atomic-across-task-close-and-queue-release.task.md | ATM-GOV-0345 Make sealed runner publication atomic across task close and queue release |
+| `doc_other_3687` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0346-stabilize-validate-skew-matrix-timeout-boundary-and-ci-facade-closure.task.md | ATM-GOV-0346 Stabilize validate-skew-matrix timeout boundary and CI facade closure |
+| `doc_other_3688` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0347-recover-active-claim-direction-locks-and-honor-explicit-task-claims.task.md | ATM-GOV-0347 Recover active claim direction locks and honor explicit task claims |
+| `doc_other_3689` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0348-scope-commit-work-admission-to-the-ticket-bundle-not-the-whole-index.task.md | ATM-GOV-0348 Scope commit work admission to the ticket bundle, not the whole staged index |
+| `doc_other_3690` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0349-bridge-batch-checkpoint-runner-recovery-through-verified-lease.task.md | ATM-GOV-0349 Bridge batch checkpoint runner recovery through verified lease |
+| `doc_other_3691` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0350-unify-current-task-close-evidence-bundle-classification.task.md | ATM-GOV-0350 Unify current-task close evidence bundle classification |
+| `doc_other_3692` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0351-make-deferred-foreign-index-commit-failures-transactionally-reversible.task.md | ATM-GOV-0351 make deferred foreign index commit failures transactionally reversible |
+| `doc_other_3693` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0352-disclose-close-window-staged-index-blockers-at-taskflow-close-dry-run.task.md | ATM-GOV-0352 Disclose close-window staged-index blockers at taskflow close dry-run |

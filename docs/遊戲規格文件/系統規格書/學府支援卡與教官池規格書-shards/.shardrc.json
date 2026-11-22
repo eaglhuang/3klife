@@ -1,0 +1,51 @@
+{
+  "version": 1,
+  "source": "../學府支援卡與教官池規格書.md",
+  "indexTitle": "學府支援卡與教官池規格書（分片索引）",
+  "indexPath": "docs/遊戲規格文件/系統規格書/學府支援卡與教官池規格書.md",
+  "type": "markdown-h2",
+  "preambleShard": "shard-a",
+  "defaultShard": "shard-h",
+  "shards": [
+    {
+      "name": "shard-a",
+      "title": "1–4 結論、世界觀（頭盔連線）、文案語氣指南與 5 個範例、卡面三類與資料模型",
+      "pattern": "^(1|2|3|4)[.]"
+    },
+    {
+      "name": "shard-b",
+      "title": "5–9 成長（等級＋傳承）、效果欄與數值曲線、課程槽位到場與羈絆與促膝論道、連續事件、點撥",
+      "pattern": "^(5|6|7|8|9)[.]"
+    },
+    {
+      "name": "shard-c",
+      "title": "10–13 師門（牌組）與借用、師承譜系組合、學府風格加權、結業稱號與學閥",
+      "pattern": "^1[0-3][.]"
+    },
+    {
+      "name": "shard-d",
+      "title": "14–15 初版 25 張卡名單、學府戰法點撥表",
+      "pattern": "^1[4-5][.]"
+    },
+    {
+      "name": "shard-e",
+      "title": "附錄 A 歷史名師名士卡 11 張（等級效果表、連續事件）",
+      "pattern": "^附錄 A"
+    },
+    {
+      "name": "shard-f",
+      "title": "附錄 B 武將特別版卡 8 張",
+      "pattern": "^附錄 B"
+    },
+    {
+      "name": "shard-g",
+      "title": "附錄 C 紅顏教官卡 6 張",
+      "pattern": "^附錄 C"
+    },
+    {
+      "name": "shard-h",
+      "title": "16–25 四池轉蛋與機率保底、重複卡材料、物品化、共用框架對應、並存與舊規格處置、JSON（含 POOL_SUPPORT）、驗收、實作卡表、待決",
+      "pattern": "^(1[6-9]|2[0-5])[.]"
+    }
+  ]
+}

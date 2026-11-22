@@ -132,7 +132,7 @@
                   "effects": [
                     {
                       "kind": "resource",
-                      "res": "silver",
+                      "res": "gold",
                       "amount": 80
                     },
                     {
@@ -153,7 +153,7 @@
               "effects": [
                 {
                   "kind": "resource",
-                  "res": "silver",
+                  "res": "gold",
                   "amount": 120
                 },
                 {
@@ -175,11 +175,11 @@
                 "eq": "HONEST",
                 "then": {
                   "kind": "effects",
-                  "narrative": "倉裡糧食如數，貧戶皆有所得。",
+                  "narrative": "倉裡糧草如數，貧戶皆有所得。",
                   "effects": [
                     {
                       "kind": "resource",
-                      "res": "silver",
+                      "res": "gold",
                       "amount": 90
                     },
                     {
@@ -193,7 +193,7 @@
                 "eq": "SHORTFALL",
                 "then": {
                   "kind": "effects",
-                  "narrative": "糧食只夠一半人，後面排隊的人鬧了起來。",
+                  "narrative": "糧草只夠一半人，後面排隊的人鬧了起來。",
                   "effects": [
                     {
                       "kind": "fame",
@@ -215,7 +215,7 @@
                   "effects": [
                     {
                       "kind": "resource",
-                      "res": "silver",
+                      "res": "gold",
                       "amount": 40
                     },
                     {
@@ -254,11 +254,11 @@
                 "eq": "SHORTFALL",
                 "then": {
                   "kind": "effects",
-                  "narrative": "倉門一開，只見空倉，眾人以為你私吞了糧食，激起民變。",
+                  "narrative": "倉門一開，只見空倉，眾人以為你私吞了糧草，激起民變。",
                   "effects": [
                     {
                       "kind": "resource",
-                      "res": "silver",
+                      "res": "gold",
                       "amount": -90
                     },
                     {
@@ -286,7 +286,7 @@
                   "effects": [
                     {
                       "kind": "resource",
-                      "res": "silver",
+                      "res": "gold",
                       "amount": -60
                     },
                     {
@@ -313,7 +313,7 @@
               "effects": [
                 {
                   "kind": "resource",
-                  "res": "silver",
+                  "res": "gold",
                   "amount": -40
                 },
                 {
@@ -377,7 +377,7 @@
                   "effects": [
                     {
                       "kind": "resource",
-                      "res": "silver",
+                      "res": "gold",
                       "amount": 110
                     },
                     {
@@ -403,7 +403,7 @@
               "effects": [
                 {
                   "kind": "resource",
-                  "res": "silver",
+                  "res": "gold",
                   "amount": 130
                 },
                 {
@@ -429,7 +429,7 @@
                   "effects": [
                     {
                       "kind": "resource",
-                      "res": "silver",
+                      "res": "gold",
                       "amount": 40
                     },
                     {
@@ -455,7 +455,7 @@
               "effects": [
                 {
                   "kind": "resource",
-                  "res": "silver",
+                  "res": "gold",
                   "amount": 100
                 },
                 {
@@ -489,7 +489,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": -50
               },
               {
@@ -545,7 +545,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": 100
               },
               {
@@ -574,7 +574,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": 90
               },
               {
@@ -608,7 +608,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": -40
               },
               {
@@ -644,7 +644,7 @@
       "presented": {
         "objectiveText": "放賑之餘，借機登記流離戶口",
         "hints": [
-          "倉裡糧食足夠，趁此機會能把流民戶口一併理清"
+          "倉裡糧草足夠，趁此機會能把流民戶口一併理清"
         ]
       },
       "modifiers": {
@@ -666,7 +666,7 @@
                 "effects": [
                   {
                     "kind": "resource",
-                    "res": "silver",
+                    "res": "gold",
                     "amount": 180
                   },
                   {
@@ -702,7 +702,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": 140
               },
               {
@@ -721,7 +721,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": 80
               },
               {
@@ -736,7 +736,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": -20
               },
               {
@@ -789,7 +789,7 @@
                 "effects": [
                   {
                     "kind": "resource",
-                    "res": "silver",
+                    "res": "gold",
                     "amount": 200
                   },
                   {
@@ -826,7 +826,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": 140
               },
               {
@@ -864,7 +864,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": -30
               },
               {
@@ -898,7 +898,7 @@
         }
       },
       "presented": {
-        "objectiveText": "以官威加民意，迫豪族開出囤積的糧食",
+        "objectiveText": "以官威加民意，迫豪族開出囤積的糧草",
         "hints": [
           "豪族囤的糧就藏在城外莊園的地窖裡"
         ]
@@ -922,7 +922,7 @@
                 "effects": [
                   {
                     "kind": "resource",
-                    "res": "silver",
+                    "res": "gold",
                     "amount": 260
                   },
                   {
@@ -959,7 +959,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": 190
               },
               {
@@ -983,7 +983,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": 70
               },
               {
@@ -998,7 +998,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": -30
               },
               {

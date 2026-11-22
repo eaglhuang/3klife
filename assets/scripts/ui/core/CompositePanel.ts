@@ -22,6 +22,7 @@
  */
 import { Node, tween, UIOpacity, UITransform } from 'cc';
 import { UIPreviewBuilder }   from './UIPreviewBuilder';
+import { refreshLabelLazily } from './LabelLayoutDeferral';
 import { UITemplateBinder }   from './UITemplateBinder';
 import { ChildPanelBase, PanelServices } from './ChildPanelBase';
 import { UILayoutNodeSpec, TabRoute, TransitionDef } from './UISpecTypes';
@@ -514,6 +515,8 @@ export abstract class CompositePanel extends UIPreviewBuilder {
                     markForUpdateRenderData?: (enable?: boolean) => void;
                     updateRenderData?: (force?: boolean) => void;
                 };
+                // 固定外框的 Label 排版不改節點尺寸，標髒讓引擎幀末刷新一次即可（PROG-2-9801）
+                if (refreshLabelLazily(component)) continue;
                 renderable.markForUpdateRenderData?.(true);
                 renderable.updateRenderData?.(true);
             }

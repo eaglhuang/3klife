@@ -93,7 +93,7 @@
     "riskThreshold": { "conservative": 1.5, "steady": 1.3, "bold": 1.1 },
     "resourceFloorDefault": 0.3, "presets": 3, "lockAfterFirstTick": true
   },
-  "autoBattle": { "enabled": true, "maxScale": "small", "excludeSiege": true, "excludeMajorWar": true, "needsRuling": "Q9" },
+  "autoBattle": { "enabled": true, "maxScale": "small", "excludeSiege": true, "excludeMajorWar": true, "ruling": "user-1121-Q9" },
   "mustInterrupt": [
     "childGrasp", "childUnveil", "childTrial", "childEnroll", "newbornNaming", "childIllDeath",
     "academyEnroll", "academyGraduate", "yearEndSiege", "attackOnPlayerCity", "declareWar", "majorBattle",

@@ -39,7 +39,7 @@ export function createGachaSystemSuite(): TestSuite {
         assert.equals('召喚券', gachaPoolTitle(beauty, 1));
         assert.equals('gems', beauty.currency);
         const mentor = resolveGachaPoolPresentation(byId('mentor-pool'));
-        assert.equals('支援券十連', gachaPoolTitle(mentor, 10));
+        assert.equals('教官池十連', gachaPoolTitle(mentor, 10));
         assert.equals('mentorTickets', mentor.currency);
         assert.equals('mentorCard', mentor.inventory);
         assert.equals(null, mentor.labels);

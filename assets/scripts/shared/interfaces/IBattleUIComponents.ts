@@ -16,6 +16,8 @@ export interface IBattleHUDLike {
     setPlayerTallySetLabels?(labels: string[]): void;
     /** 玩家精力條（FORM-11）；舊 HUD 不實作 */
     setPlayerVitality?(vitality: number, maxVitality: number): void;
+    /** 守城戰我方城寨血條（PROG-2-9430）；只有玩家是守方時開啟；舊 HUD 不實作 */
+    setDefenseFortressBarVisible?(visible: boolean, maxHp?: number): void;
     setEnemyName(name: string): void;
     refresh(turn: number, food: number, maxFood: number, playerHp: number, playerMaxHp: number, enemyHp: number, enemyMaxHp: number): void;
     waitUntilReady(timeoutMs?: number): Promise<boolean>;
@@ -43,6 +45,8 @@ export interface IBattleLogLike {
     waitUntilReady(timeoutMs?: number): Promise<boolean>;
     /** 委任鈕亮暗（PROG-2-1766）；測試替身可不實作 */
     setDelegateActive?(active: boolean): void;
+    /** 自動代打鈕亮暗（PROG-2-9707）；由戰場橋接層呼叫，測試替身可不實作 */
+    setAutoActive?(active: boolean): void;
 }
 
 export interface IDuelChallengeLike {
@@ -60,6 +64,8 @@ export interface IResultPopupLike {
     appendDetails?(lines: readonly string[]): void;
     /** 下一次結算窗要不要顯示「再戰一次」（年終守城不可重打，PROG-2-9426） */
     setReplayAllowed?(allowed: boolean): void;
+    /** 下一次結算窗的「下一步建議」按鈕文字；null＝不顯示（戰敗敗因診斷，PROG-2-9712） */
+    setDefeatAdvice?(label: string | null): void;
     /** 勝敗停頓期間先載主將頭像，結算窗開出來不先閃剪影（PROG-2-9427） */
     preloadAvatar?(generalId?: string): void;
     /** 戰場覺醒定格演出（PROG-2-1702） */

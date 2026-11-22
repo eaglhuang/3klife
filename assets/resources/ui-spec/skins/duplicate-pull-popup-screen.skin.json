@@ -1,157 +1,606 @@
 {
   "id": "duplicate-pull-popup-screen.skin",
-  "version": 1,
+  "version": 2,
   "bundle": "lobby_ui",
   "atlasPolicy": "lobby_ui",
   "slots": {
     "dup.backdrop.bg": {
       "kind": "color-rect",
-      "color": "backgroundDeep",
+      "color": "#0A0A0A",
+      "alpha": 214
+    },
+    "dup.panel.bg": {
+      "kind": "color-rect",
+      "color": "#1A1611",
+      "alpha": 255,
+      "cornerRadius": 18,
+      "borderWidth": 2,
+      "borderColor": "#D4AF37"
+    },
+    "dup.panel.inner": {
+      "kind": "color-rect",
+      "color": "#1A1611",
+      "alpha": 0,
+      "cornerRadius": 12,
+      "borderWidth": 1,
+      "borderColor": "#5A4C25"
+    },
+    "dup.head.band": {
+      "kind": "color-rect",
+      "color": "#B22222",
+      "alpha": 90
+    },
+    "dup.pager.bg": {
+      "kind": "color-rect",
+      "color": "#000000",
+      "alpha": 130,
+      "cornerRadius": 22,
+      "borderWidth": 1,
+      "borderColor": "#4D4635"
+    },
+    "dup.hero.bg": {
+      "kind": "color-rect",
+      "color": "#2A1238",
+      "alpha": 255,
+      "cornerRadius": 14,
+      "borderWidth": 2,
+      "borderColor": "#9C27B0"
+    },
+    "dup.hero.plate": {
+      "kind": "color-rect",
+      "color": "#000000",
       "alpha": 200
     },
-    "dup.card.bg": {
+    "dup.rarity.bg": {
       "kind": "color-rect",
-      "color": "backgroundDeep",
-      "alpha": 246
+      "color": "#8E36B0",
+      "alpha": 255,
+      "cornerRadius": 8
     },
-    "dup.card.rebirth.bg": {
+    "dup.stamp.bg": {
       "kind": "color-rect",
-      "color": "backgroundMid",
-      "alpha": 230
+      "color": "#F0EBDD",
+      "alpha": 245,
+      "cornerRadius": 59,
+      "borderWidth": 4,
+      "borderColor": "#B22222"
     },
-    "dup.card.starup.bg": {
+    "dup.quip.avatar": {
       "kind": "color-rect",
-      "color": "backgroundMid",
-      "alpha": 230
+      "color": "#2F5750",
+      "alpha": 255,
+      "cornerRadius": 26,
+      "borderWidth": 2,
+      "borderColor": "#D4AF37"
     },
-    "dup.card.infusion.bg": {
+    "dup.quip.bubble": {
       "kind": "color-rect",
-      "color": "backgroundMid",
-      "alpha": 230
+      "color": "#F0EBDD",
+      "alpha": 245,
+      "cornerRadius": 16
     },
-    "dup.button.rebirth.bg": {
+    "dup.delta.bg": {
       "kind": "color-rect",
-      "color": "dupRebirthCyan",
-      "alpha": 220
+      "color": "#000000",
+      "alpha": 102,
+      "cornerRadius": 10,
+      "borderWidth": 1,
+      "borderColor": "#3A3732"
     },
-    "dup.button.starup.bg": {
+    "dup.bar.track": {
       "kind": "color-rect",
-      "color": "dupStarUpRose",
-      "alpha": 220
+      "color": "#FFFFFF",
+      "alpha": 30,
+      "cornerRadius": 6
     },
-    "dup.button.infusion.bg": {
+    "dup.card.dim": {
       "kind": "color-rect",
-      "color": "dupInfusionGold",
-      "alpha": 220
+      "color": "#1D1D1D",
+      "alpha": 190,
+      "cornerRadius": 14
     },
-    "dup.button.toggle.bg": {
+    "dup.btn.cover": {
       "kind": "color-rect",
-      "color": "primary",
-      "alpha": 120
+      "color": "#3A3A3A",
+      "alpha": 255
+    },
+    "dup.recommend.bg": {
+      "kind": "color-rect",
+      "color": "#B22222",
+      "alpha": 255,
+      "cornerRadius": 12
+    },
+    "dup.toggle.bg": {
+      "kind": "color-rect",
+      "color": "#000000",
+      "alpha": 0
+    },
+    "dup.check.box": {
+      "kind": "color-rect",
+      "color": "#D4AF37",
+      "alpha": 40,
+      "cornerRadius": 6,
+      "borderWidth": 2,
+      "borderColor": "#D4AF37"
     },
     "dup.label.title": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 36,
-      "lineHeight": 44,
-      "color": "secondaryLight",
-      "overflow": "CLAMP",
+      "fontSize": 56,
+      "lineHeight": 73,
+      "color": "#FFE088",
+      "overflow": "SHRINK",
       "isBold": true,
+      "horizontalAlign": "CENTER",
+      "letterSpacing": 10,
+      "outlineColor": "#5A3D0A",
+      "outlineWidth": 2
+    },
+    "dup.label.pager": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 30,
+      "lineHeight": 39,
+      "color": "#E5E2E1",
+      "overflow": "SHRINK",
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "dup.label.rarity": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 36,
+      "lineHeight": 47,
+      "color": "#FFFFFF",
+      "overflow": "SHRINK",
+      "isBold": true,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "dup.label.stamp": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 30,
+      "lineHeight": 39,
+      "color": "#B22222",
+      "overflow": "SHRINK",
+      "isBold": true,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "dup.label.heroName": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 50,
+      "lineHeight": 65,
+      "color": "#FFE088",
+      "overflow": "SHRINK",
+      "isBold": true,
+      "horizontalAlign": "CENTER",
+      "letterSpacing": 8
+    },
+    "dup.label.heroSub": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 22,
+      "lineHeight": 29,
+      "color": "#D0C5AF",
+      "overflow": "SHRINK",
       "horizontalAlign": "CENTER"
     },
     "dup.label.subtitle": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 26,
-      "lineHeight": 34,
-      "color": "secondaryLight",
+      "fontSize": 30,
+      "lineHeight": 39,
+      "color": "#E5E2E1",
       "overflow": "SHRINK",
-      "horizontalAlign": "CENTER"
+      "horizontalAlign": "LEFT"
     },
-    "dup.label.meta": {
+    "dup.label.quipName": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 22,
-      "lineHeight": 30,
-      "color": "secondaryLight",
-      "overflow": "SHRINK"
-    },
-    "dup.label.rebirth.title": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 34,
-      "lineHeight": 42,
-      "color": "dupRebirthCyan",
-      "overflow": "CLAMP",
+      "fontSize": 24,
+      "lineHeight": 31,
+      "color": "#FFE088",
+      "overflow": "SHRINK",
       "isBold": true,
-      "horizontalAlign": "CENTER"
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
     },
-    "dup.label.starup.title": {
+    "dup.label.quip": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 34,
-      "lineHeight": 42,
-      "color": "dupStarUpRose",
-      "overflow": "CLAMP",
-      "isBold": true,
-      "horizontalAlign": "CENTER"
-    },
-    "dup.label.infusion.title": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 34,
-      "lineHeight": 42,
-      "color": "dupInfusionGold",
-      "overflow": "CLAMP",
-      "isBold": true,
-      "horizontalAlign": "CENTER"
+      "fontSize": 24,
+      "lineHeight": 31,
+      "color": "#2D2926",
+      "overflow": "SHRINK",
+      "horizontalAlign": "LEFT",
+      "verticalAlign": "CENTER"
     },
     "dup.label.tagline": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 22,
-      "lineHeight": 30,
-      "color": "secondaryLight",
+      "fontSize": 20,
+      "lineHeight": 26,
+      "color": "#BDB3A0",
       "overflow": "SHRINK",
       "horizontalAlign": "CENTER"
+    },
+    "dup.label.deltaK": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 18,
+      "lineHeight": 23,
+      "color": "#A89F8C",
+      "overflow": "SHRINK",
+      "horizontalAlign": "CENTER"
+    },
+    "dup.label.deltaV": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 34,
+      "lineHeight": 44,
+      "color": "#FFFFFF",
+      "overflow": "SHRINK",
+      "isBold": true,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
     },
     "dup.label.body": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 24,
-      "lineHeight": 32,
-      "color": "secondaryLight",
-      "overflow": "SHRINK"
+      "fontSize": 21,
+      "lineHeight": 31,
+      "color": "#D8D2C4",
+      "overflow": "SHRINK",
+      "horizontalAlign": "LEFT"
     },
     "dup.label.recommend": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 24,
-      "lineHeight": 32,
-      "color": "dupInfusionGold",
+      "fontSize": 20,
+      "lineHeight": 26,
+      "color": "#FFFFFF",
       "overflow": "SHRINK",
       "isBold": true,
-      "horizontalAlign": "RIGHT"
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "dup.label.reason": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 24,
+      "lineHeight": 31,
+      "color": "#DDDDDD",
+      "overflow": "SHRINK",
+      "isBold": true,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "dup.label.batch": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 26,
+      "lineHeight": 34,
+      "color": "#E5E2E1",
+      "overflow": "SHRINK",
+      "horizontalAlign": "LEFT",
+      "verticalAlign": "CENTER"
+    },
+    "dup.label.check": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 26,
+      "lineHeight": 34,
+      "color": "#FFE088",
+      "overflow": "SHRINK",
+      "isBold": true,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "dup.label.remain": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 22,
+      "lineHeight": 29,
+      "color": "#A89F8C",
+      "overflow": "SHRINK",
+      "horizontalAlign": "RIGHT",
+      "verticalAlign": "CENTER"
     },
     "dup.label.button.choice": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 26,
-      "lineHeight": 34,
-      "color": "textInk",
+      "fontSize": 30,
+      "lineHeight": 39,
+      "color": "#1A1408",
       "overflow": "SHRINK",
       "isBold": true,
-      "horizontalAlign": "CENTER"
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
+      "letterSpacing": 4
     },
-    "dup.label.button": {
+    "dup.card.Rebirth.bg": {
+      "kind": "color-rect",
+      "color": "#2A261F",
+      "alpha": 255,
+      "cornerRadius": 14,
+      "borderWidth": 2,
+      "borderColor": "#2E8B57"
+    },
+    "dup.crest.Rebirth": {
+      "kind": "color-rect",
+      "color": "#2E8B57",
+      "alpha": 255,
+      "cornerRadius": 42,
+      "borderWidth": 3,
+      "borderColor": "#7FE0A8"
+    },
+    "dup.button.Rebirth.bg": {
+      "kind": "color-rect",
+      "color": "#7FE0A8",
+      "alpha": 255,
+      "cornerRadius": 10
+    },
+    "dup.bar.fill.Rebirth": {
+      "kind": "color-rect",
+      "color": "#7FE0A8",
+      "alpha": 255,
+      "cornerRadius": 6
+    },
+    "dup.label.Rebirth.title": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 26,
-      "lineHeight": 34,
-      "color": "secondaryLight",
+      "fontSize": 40,
+      "lineHeight": 52,
+      "color": "#7FE0A8",
       "overflow": "SHRINK",
       "isBold": true,
-      "horizontalAlign": "CENTER"
+      "horizontalAlign": "CENTER",
+      "letterSpacing": 6
+    },
+    "dup.label.Rebirth.crest": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 44,
+      "lineHeight": 57,
+      "color": "#FFFFFF",
+      "overflow": "SHRINK",
+      "isBold": true,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "dup.card.StarUp.bg": {
+      "kind": "color-rect",
+      "color": "#2A261F",
+      "alpha": 255,
+      "cornerRadius": 14,
+      "borderWidth": 2,
+      "borderColor": "#B8860B"
+    },
+    "dup.crest.StarUp": {
+      "kind": "color-rect",
+      "color": "#B8860B",
+      "alpha": 255,
+      "cornerRadius": 42,
+      "borderWidth": 3,
+      "borderColor": "#FFE088"
+    },
+    "dup.button.StarUp.bg": {
+      "kind": "color-rect",
+      "color": "#FFE088",
+      "alpha": 255,
+      "cornerRadius": 10
+    },
+    "dup.bar.fill.StarUp": {
+      "kind": "color-rect",
+      "color": "#FFE088",
+      "alpha": 255,
+      "cornerRadius": 6
+    },
+    "dup.label.StarUp.title": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 40,
+      "lineHeight": 52,
+      "color": "#FFE088",
+      "overflow": "SHRINK",
+      "isBold": true,
+      "horizontalAlign": "CENTER",
+      "letterSpacing": 6
+    },
+    "dup.label.StarUp.crest": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 44,
+      "lineHeight": 57,
+      "color": "#FFFFFF",
+      "overflow": "SHRINK",
+      "isBold": true,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "dup.card.Infusion.bg": {
+      "kind": "color-rect",
+      "color": "#2A261F",
+      "alpha": 255,
+      "cornerRadius": 14,
+      "borderWidth": 2,
+      "borderColor": "#B22222"
+    },
+    "dup.crest.Infusion": {
+      "kind": "color-rect",
+      "color": "#B22222",
+      "alpha": 255,
+      "cornerRadius": 42,
+      "borderWidth": 3,
+      "borderColor": "#FF9A7A"
+    },
+    "dup.button.Infusion.bg": {
+      "kind": "color-rect",
+      "color": "#FF9A7A",
+      "alpha": 255,
+      "cornerRadius": 10
+    },
+    "dup.bar.fill.Infusion": {
+      "kind": "color-rect",
+      "color": "#FF9A7A",
+      "alpha": 255,
+      "cornerRadius": 6
+    },
+    "dup.label.Infusion.title": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 40,
+      "lineHeight": 52,
+      "color": "#FF9A7A",
+      "overflow": "SHRINK",
+      "isBold": true,
+      "horizontalAlign": "CENTER",
+      "letterSpacing": 6
+    },
+    "dup.label.Infusion.crest": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 44,
+      "lineHeight": 57,
+      "color": "#FFFFFF",
+      "overflow": "SHRINK",
+      "isBold": true,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "dup.portrait": {
+      "kind": "sprite-frame",
+      "path": "sprites/ui_avatars/unknown_avatar_f",
+      "expectedWidth": 256,
+      "expectedHeight": 256
+    },
+    "dup.hero.bg.N": {
+      "kind": "color-rect",
+      "color": "#2A2A2A",
+      "alpha": 255,
+      "cornerRadius": 14,
+      "borderWidth": 2,
+      "borderColor": "#E0E0E0"
+    },
+    "dup.rarity.bg.N": {
+      "kind": "color-rect",
+      "color": "#E0E0E0",
+      "alpha": 255,
+      "cornerRadius": 8
+    },
+    "dup.label.rarity.N": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 36,
+      "lineHeight": 47,
+      "color": "#1A1A1A",
+      "overflow": "SHRINK",
+      "isBold": true,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "dup.hero.bg.R": {
+      "kind": "color-rect",
+      "color": "#14281A",
+      "alpha": 255,
+      "cornerRadius": 14,
+      "borderWidth": 3,
+      "borderColor": "#4CAF50"
+    },
+    "dup.rarity.bg.R": {
+      "kind": "color-rect",
+      "color": "#4CAF50",
+      "alpha": 255,
+      "cornerRadius": 8
+    },
+    "dup.label.rarity.R": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 36,
+      "lineHeight": 47,
+      "color": "#FFFFFF",
+      "overflow": "SHRINK",
+      "isBold": true,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "dup.hero.bg.SR": {
+      "kind": "color-rect",
+      "color": "#0E1F33",
+      "alpha": 255,
+      "cornerRadius": 14,
+      "borderWidth": 4,
+      "borderColor": "#2196F3"
+    },
+    "dup.rarity.bg.SR": {
+      "kind": "color-rect",
+      "color": "#2196F3",
+      "alpha": 255,
+      "cornerRadius": 8
+    },
+    "dup.label.rarity.SR": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 36,
+      "lineHeight": 47,
+      "color": "#FFFFFF",
+      "overflow": "SHRINK",
+      "isBold": true,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "dup.hero.bg.SSR": {
+      "kind": "color-rect",
+      "color": "#2A1238",
+      "alpha": 255,
+      "cornerRadius": 14,
+      "borderWidth": 5,
+      "borderColor": "#9C27B0"
+    },
+    "dup.rarity.bg.SSR": {
+      "kind": "color-rect",
+      "color": "#9C27B0",
+      "alpha": 255,
+      "cornerRadius": 8
+    },
+    "dup.label.rarity.SSR": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 36,
+      "lineHeight": 47,
+      "color": "#FFFFFF",
+      "overflow": "SHRINK",
+      "isBold": true,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
+    },
+    "dup.hero.bg.UR": {
+      "kind": "color-rect",
+      "color": "#33270A",
+      "alpha": 255,
+      "cornerRadius": 14,
+      "borderWidth": 5,
+      "borderColor": "#FFC107"
+    },
+    "dup.rarity.bg.UR": {
+      "kind": "color-rect",
+      "color": "#FFC107",
+      "alpha": 255,
+      "cornerRadius": 8
+    },
+    "dup.label.rarity.UR": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 36,
+      "lineHeight": 47,
+      "color": "#3A2400",
+      "overflow": "SHRINK",
+      "isBold": true,
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER"
     }
   }
 }

@@ -8,8 +8,9 @@ import { buildGachaSyncRecord } from '../systems/GachaSyncRecord';
 import { featuredGeneralsOf, isLimitedPoolOpen, limitedPoolAcceptsCurrency, type LimitedPoolWindow } from '../systems/LimitedPoolSchedule';
 import type { GachaCurrencyType } from '../systems/GachaCurrency';
 import { checkWalletBalance, formatInsufficientMessage, QA_STARTER_GACHA_WALLET, STARTER_GACHA_WALLET } from './GachaWalletRules';
-import { GACHA_MENTOR_RARITY_RATES, GACHA_RARITY_RATES, drawGeneralOnce, normalizeGachaPity, resolveGachaPityBook, type GachaPityBook, type GachaPool } from '../systems/GachaDraw';
+import { GACHA_MENTOR_RARITY_RATES, GACHA_RARITY_RATES, drawGeneralOnce, normalizeGachaPity, resolveGachaPityBook, type GachaPityBook, type GachaPityState, type GachaPool } from '../systems/GachaDraw';
 import { destinyShopCredits, exchangeDestinyShop, pullsToNextDestinyCredit, type DestinyShopBlockReason } from '../systems/DestinyShop';
+import { formatDrawResultText, inferRarityTier } from '../gacha/GachaRarity';
 import { ActionLogStore, type GachaActionType, type GachaCurrencyKey, type GachaHistoryRecord } from './ActionLogStore';
 
 export interface LocalGachaRollOptions {
@@ -114,27 +115,6 @@ function normalizeWalletSnapshot(value: Partial<LocalGachaWalletSnapshot>): Loca
     };
 }
 
-function inferRarityTier(general: GeneralConfig): GeneralDetailRarityTier {
-    const explicit = general.rarityTier;
-    if (explicit) {
-        return explicit;
-    }
-
-    switch (general.characterCategory) {
-        case 'mythical':
-            return 'mythic';
-        case 'titled':
-            return 'legendary';
-        case 'famed':
-            return 'epic';
-        case 'general':
-            return 'rare';
-        case 'civilian':
-        default:
-            return 'common';
-    }
-}
-
 function isSsrTier(tier: GeneralDetailRarityTier): boolean {
     return tier === 'legendary' || tier === 'mythic';
 }
@@ -157,9 +137,6 @@ function buildGachaPool(candidates: GeneralConfig[], upGeneralIds: readonly stri
     return { ssrUp, ssrOther, srUp, srOther, rOther };
 }
 
-function formatDrawResultText(index: number, general: GeneralConfig, rarityTier: GeneralDetailRarityTier): string {
-    return `#${index + 1} [${rarityTier}] ${general.name}`;
-}
 
 
 /**
@@ -219,6 +196,12 @@ export class LocalGachaService {
     /** 開發開關：餘額不足時自動補款。正式流程預設關閉。 */
     public isDevAutoTopUpEnabled(): boolean {
         return sys.localStorage.getItem(DEV_AUTO_TOPUP_KEY) === 'true';
+    }
+
+    /** 開發用自動補款開著時，餘額不夠 cost 就補到夠並回 true（共通 API 路徑的抽卡報價用，與舊路徑同一套補款規則） */
+    public devTopUp(currencyKey: GachaCurrencyKey, cost: number): boolean {
+        if (!this.isDevAutoTopUpEnabled()) return false;
+        try { this._assertSufficientCurrency(currencyKey, cost); return true; } catch { return false; }
     }
 
     public setDevAutoTopUpEnabled(enabled: boolean): void {
@@ -371,6 +354,11 @@ export class LocalGachaService {
         return this._limitedWindows.find((w) => w.poolId === poolId && isLimitedPoolOpen(w, nowMs)) ?? null;
     }
 
+    /** 舊保底表（遷移到 reward.pity 時讀；GCH-R5） */
+    public readPityBook(): GachaPityBook {
+        return this._pityBookOf();
+    }
+
     /** 天命商店（PROG-2-1157）：本池目前可兌換次數（每池每滿 200 抽 1 次） */
     public getDestinyShopCredits(poolId: string): number {
         return destinyShopCredits(this._pityBookOf()[poolId]);
@@ -386,6 +374,13 @@ export class LocalGachaService {
         return this._filterCandidates(generals).filter((general) => isSsrTier(inferRarityTier(general)));
     }
 
+    /** 天命商店兌換對象是否合法（在本池且為 SSR）；合法回 null。共通 API 扣資格前先驗，不合法不消耗次數 */
+    public checkDestinyTarget(generals: GeneralConfig[], targetId: string): DestinyShopBlockReason | null {
+        if (!this._filterCandidates(generals).some((general) => general.id === targetId)) return 'not-in-pool';
+        if (!this.getDestinyShopCandidates(generals).some((general) => general.id === targetId)) return 'not-ssr';
+        return null;
+    }
+
     /**
      * 天命商店兌換（PROG-2-1157）：用一次大保底資格換本池任一位 SSR。
      * generals 是本池候選名單（與抽卡時相同）。成功時回傳 entry，入冊與保底寫回同一批存檔；
@@ -395,12 +390,20 @@ export class LocalGachaService {
         poolId: string,
         generals: GeneralConfig[],
         targetId: string,
+        /** 資格已由共通 API（reward.pity.redeem）扣過：只驗對象、入冊與寫紀錄，不碰舊保底表（GCH-R5） */
+        externalCredit = false,
     ): { entry: LocalGachaResultEntry | null; reason: DestinyShopBlockReason | null } {
         const candidates = this._filterCandidates(generals);
         const ssrIds = this.getDestinyShopCandidates(generals).map((general) => general.id);
-        const outcome = exchangeDestinyShop(this._pityBookOf()[poolId], targetId, candidates.map((general) => general.id), ssrIds);
-        const nextPity = outcome.nextPity;
-        if (!nextPity) return { entry: null, reason: outcome.reason };
+        let nextPity: GachaPityState | null = null;
+        if (externalCredit) {
+            const blocked = this.checkDestinyTarget(generals, targetId);
+            if (blocked) return { entry: null, reason: blocked };
+        } else {
+            const outcome = exchangeDestinyShop(this._pityBookOf()[poolId], targetId, candidates.map((general) => general.id), ssrIds);
+            nextPity = outcome.nextPity;
+            if (!nextPity) return { entry: null, reason: outcome.reason };
+        }
 
         const general = cloneGeneral(candidates.find((candidate) => candidate.id === targetId)!);
         const rarityTier = inferRarityTier(general);
@@ -431,8 +434,10 @@ export class LocalGachaService {
 
         const commit = (): void => {
             this._saveStore?.enroll?.([entry]);
-            this._pityBookCache = { ...this._pityBookOf(), [poolId]: nextPity };
-            this._persistPityBook();
+            if (nextPity) {
+                this._pityBookCache = { ...this._pityBookOf(), [poolId]: nextPity };
+                this._persistPityBook();
+            }
         };
         if (this._saveStore?.batch) {
             this._saveStore.batch(commit);
@@ -440,6 +445,30 @@ export class LocalGachaService {
             commit();
         }
         return { entry, reason: null };
+    }
+
+    /**
+     * 抽卡改走共通 API（reward.roll）後，只補抽卡紀錄（不扣款、不入冊、不動舊保底表）：
+     * 扣款在錢包命令、入冊在發武將 handler，這裡讓「抽卡紀錄」畫面看得到這一批。
+     */
+    public recordExternalPull(poolId: string, currencyKey: GachaCurrencyKey, cost: number, results: readonly LocalGachaResultEntry[]): boolean {
+        return services().sync.pushAction(
+            'LOCAL_GACHA_PULL',
+            {
+                poolId,
+                drawCount: results.length,
+                cost,
+                currencyKey,
+                localOnly: true,
+                results: results.map((entry) => ({
+                    id: entry.general.id,
+                    name: entry.general.name,
+                    rarityTier: entry.rarityTier,
+                    displayText: entry.displayText,
+                })),
+            },
+            SyncActionType.DEFERRABLE,
+        );
     }
 
     private async _performGacha(request: PerformGachaRequest): Promise<LocalGachaResultEntry[]> {

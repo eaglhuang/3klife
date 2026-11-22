@@ -5,7 +5,8 @@
  * 入學：只開潁川書院；子嗣須年滿最低入學年齡（academy-enroll-rules.json，預設 15 歲及冠），
  * 消耗 1 張入學令（沿用舊入學令來源、不限季節），教官依祠堂等級給 3~4 格。
  * 修業：每個動作先在記憶體 commit（防 SL 管理器寫入未確認紀錄），再落盤；落盤失敗就把紀錄還原、動作不生效。
- * 修業無法放棄：離開畫面只是暫離，回來由 recover() 接續同一回合；存檔由 GameAcademySaveStore 持有。
+ * 修業無法放棄：離開畫面只是暫離，回來由 recover() 接續同一回合；存檔、任務推進與種子都走 AcademyApi
+ * （save.write／task.advance／rng.issueSeed，PROG-2-9215），本檔不認識 GameSession。
  *
  * 預留給後續卡的呼叫點：
  *   - deps.openInterrupt（PROG-2-9190）：第 12／24／36 回合打斷點彈窗；回傳 true 表示由彈窗接手，
@@ -16,7 +17,7 @@
  */
 import { AcademyAntiSLManager } from '../../core/systems/nurture/AcademyAntiSLManager';
 import type { MentorCard } from '../../core/models/MentorCard';
-import type { GameAcademySaveStore } from '../../core/services/GameAcademySaveStore';
+import { AcademyRecordCache, completedTurnsOf, type AcademyApi } from './AcademyApi';
 import { academyEnrollRules, checkEnrollAge, shouldRecommendAncestor } from '../../core/systems/nurture/AcademyEnrollRules';
 import {
     ACADEMY_STAT_KEYS,
@@ -50,7 +51,10 @@ import {
     type AcademySessionMode,
     type AcademySettleSummary,
     type EnrollViewModel,
+    type PrepUpcomingStudent,
 } from './AcademyFlowView';
+
+import { fastForwardAcademy, type AcademyFastForwardResult } from './AcademyQaFastForward';
 
 const K = 'ui.academy.flow.';
 /** 入學畫面「還需要檢查」的舊培育擋因：年齡、季節、入學令、教官都由學府自己判斷，不看這些 */
@@ -81,6 +85,10 @@ export interface AcademyChildLike {
     pol?: number;
     cha?: number;
     fate?: { choice?: string } | null;
+    /** 投靠少年名將標記（PROG-2-9194）：不走抓周宿命，只看年滿入學年齡 */
+    youth?: { enrollAge: number } | null;
+    /** 開局義子標記（PROG-2-9609，11/21 使用者裁決第 29 條）：趙雲、關羽、諸葛亮 */
+    adoptSource?: string;
     graduationRating?: string;
     captivity?: unknown;
 }
@@ -99,24 +107,23 @@ export interface AcademyFlowDeps<H extends AcademyHostLike> {
     loadMentorCards(): Promise<MentorCard[]>;
     lockedMentorIds(): readonly string[];
     tokensLeft(): number;
-    consumeToken(): boolean;
-    refundToken(): void;
+    /** 扣 1 張入學令（走物品庫存 item.consume，PROG-2-9203）；不足回 false 且不扣 */
+    consumeToken(): boolean | Promise<boolean>;
+    /** 退回剛扣的 1 張（落盤失敗時用） */
+    refundToken(): void | Promise<void>;
     clanUuid(): string;
     clanPrestigeTier(): number;
     /** 入學當下已過幾季，進亂數種子（同一存檔固定） */
     admissionTurn(): number;
-    worldSeed(): string;
-    // 存檔
-    store: GameAcademySaveStore;
-    /** 落盤（GameSession.save）；失敗要丟錯 */
-    persist(): Promise<void>;
+    /** 共通 API 出口：存檔（save）、36 回合任務推進（task.advance）、世界種子（rng） */
+    api: AcademyApi;
     /** 有進行中（未結業）的修業 */
     isActive(): boolean;
     /** 狀態變動時通知宿主更新大廳入口（可選） */
     onChanged?(): void;
     /** PROG-2-9190 接手打斷點彈窗；回傳 true 表示已接手 */
     openInterrupt?(snapshot: Readonly<AcademyStateSnapshot>): boolean;
-    /** PROG-2-9191 接手結業結算 */
+    /** 結業結算（PROG-2-9211 暫行，PROG-2-9191 取代）：LobbyScene 接 showAcademyGraduation */
     onGraduated?(snapshot: Readonly<AcademyStateSnapshot>): void;
 }
 
@@ -136,6 +143,14 @@ export class AcademyFlowController<H extends AcademyHostLike> {
     private _enrollHost: H | null = null;
     private _sessionHost: H | null = null;
     private readonly _manager: AcademyAntiSLManager;
+    /** 防 SL 管理器的同步快取；權威端是 api（save.read／save.write） */
+    private readonly _store = new AcademyRecordCache();
+    /** 世界種子（rng.issueSeed 簽發，入學前再取一次） */
+    private _worldSeed = '';
+    /** 目前修業對應的任務 id */
+    private _qid: string | null = null;
+    /** 有「下一次動作會再寫一次」的落盤失敗尚未補上 */
+    private _unsaved = false;
     private _childIndex = 0;
     private _deck: MentorDeck | null = null;
     private _candidates: MentorCard[] = [];
@@ -149,7 +164,7 @@ export class AcademyFlowController<H extends AcademyHostLike> {
     private _busy = false;
 
     constructor(private readonly _deps: AcademyFlowDeps<H>) {
-        this._manager = new AcademyAntiSLManager(_deps.store, YINGCHUAN_GIMMICK);
+        this._manager = new AcademyAntiSLManager(this._store, YINGCHUAN_GIMMICK);
     }
 
     private get _lookup(): AcademyFlowTextLookup {
@@ -192,13 +207,22 @@ export class AcademyFlowController<H extends AcademyHostLike> {
             ...ACADEMY_STAT_KEYS.map((key) => ({ buttonId: `btnAcTrain_${key}`, handler: () => { void this.act({ actionType: 'TRAIN', targetStat: key }); } })),
             ...Array.from({ length: 5 }, (_, i) => ({ buttonId: `btnAcCard${i}`, handler: () => { void this.pickCard(i); } })),
         ];
+        await this._hydrate();
         this._enrollHost = await this._deps.mountEnrollHost(enrollBindings);
         this._sessionHost = await this._deps.mountSessionHost(sessionBindings);
         this.closeAll();
     }
 
+    /** 從權威端讀回修業紀錄與種子（掛載與每次從大廳進入時；讀檔、結業清檔後快取才不會過期） */
+    private async _hydrate(): Promise<void> {
+        // 上一次「確認」的落盤失敗時，快取比權威端新；不要拿舊的蓋掉，等下一次動作補寫
+        if (!this._unsaved) this._store.replace(await this._deps.api.loadRecord());
+        this._worldSeed = await this._deps.api.issueSeed();
+    }
+
     /** 大廳「學府」入口：有進行中的修業就直接回修業畫面，否則開入學畫面 */
     public async openFromMenu(): Promise<void> {
+        await this._hydrate();
         if (this._deps.isActive()) await this.openSession();
         else await this.openEnroll();
     }
@@ -210,10 +234,30 @@ export class AcademyFlowController<H extends AcademyHostLike> {
 
     // ── 入學 ────────────────────────────────────────────
 
-    /** 可選的子嗣：活著、已選宿命、尚未結業 */
+    /** 可選的子嗣：活著、已選宿命或投靠少年或開局義子、尚未結業且未被俘（PROG-2-9609，11/21 使用者裁決第 29 條） */
     public enrollChildren(): AcademyChildLike[] {
         return this._deps.roster().filter((g) => (g.status ?? '').toLowerCase() !== 'dead'
-            && !!g.fate?.choice && !g.graduationRating && !g.captivity);
+            && (!!g.fate?.choice || !!g.youth || g.adoptSource === 'starter') && !g.graduationRating && !g.captivity);
+    }
+
+    /** 學府籌備名單：找出尚未及冠（未滿 15 歲）且活著、未結業之門生，計算距及冠年數（升冪排序）（PROG-2-9609） */
+    public prepUpcomingStudents(): PrepUpcomingStudent[] {
+        const rules = academyEnrollRules();
+        const minAge = rules.minEnrollAge;
+        return this._deps.roster()
+            .filter((g) => (g.status ?? '').toLowerCase() !== 'dead' && !g.graduationRating && !g.captivity)
+            .filter((g) => (g.age ?? 0) < minAge)
+            .map((g) => {
+                const age = Math.floor(g.age ?? 0);
+                const yearsUntilEnroll = Math.max(1, minAge - age);
+                return {
+                    id: g.id,
+                    name: g.name,
+                    age,
+                    yearsUntilEnroll,
+                };
+            })
+            .sort((a, b) => a.yearsUntilEnroll - b.yearsUntilEnroll);
     }
 
     private _currentChild(): AcademyChildLike | null {
@@ -275,7 +319,7 @@ export class AcademyFlowController<H extends AcademyHostLike> {
 
     private _probeAdmission(): AcademyAdmission {
         return {
-            worldSeed: this._deps.worldSeed(), clanUuid: this._deps.clanUuid(), childId: 'probe', academyId: AcademyId.YINGCHUAN,
+            worldSeed: this._worldSeed, clanUuid: this._deps.clanUuid(), childId: 'probe', academyId: AcademyId.YINGCHUAN,
             admissionTurn: this._deps.admissionTurn(), initialStats: { str: 0, lea: 0, int: 0, pol: 0, cha: 0 },
         };
     }
@@ -338,6 +382,7 @@ export class AcademyFlowController<H extends AcademyHostLike> {
             tokens,
             notice: this._notice,
             canEnroll: !!child && elig.yearsShort === 0 && !elig.blocked && tokens > 0 && chosen.length > 0 && !this._deps.isActive(),
+            prepUpcoming: list.length === 0 ? this.prepUpcomingStudents() : undefined,
         };
     }
 
@@ -345,27 +390,41 @@ export class AcademyFlowController<H extends AcademyHostLike> {
         if (this._enrollHost) this._deps.apply(this._enrollHost, enrollView(this._enrollModel(), this._lookup));
     }
 
-    /** 入學：建快照 → 套祠堂與先祖傳承 → 指派教官 → 扣入學令 → 寫入並落盤；落盤失敗全部還原 */
-    public async enroll(): Promise<boolean> {
+    /**
+     * 入學：建快照 → 套祠堂與先祖傳承 → 指派教官 → 扣入學令 → 寫入並落盤；落盤失敗全部還原。
+     * qa 只給 debug.fastForward 的偵錯入口（PROG-2-9192）：略過年齡與入學令檢查，其餘照走；玩家按鈕一律不帶。
+     */
+    public async enroll(opts: { qa?: boolean } = {}): Promise<boolean> {
         if (this._busy) return false;
         const child = this._currentChild();
         if (!child) { this._failEnroll(this._t('enroll.err.no_child')); return false; }
         if (this._deps.isActive()) { this._failEnroll(this._t('enroll.err.active')); return false; }
         const elig = this.eligibility(child);
-        if (elig.yearsShort > 0) { this._failEnroll(this._t('enroll.err.too_young', elig.yearsShort)); return false; }
+        if (elig.yearsShort > 0 && !opts.qa) { this._failEnroll(this._t('enroll.err.too_young', elig.yearsShort)); return false; }
         if (elig.blocked) { this._failEnroll(this._t('enroll.err.failed', this._deps.nurtureBlockReasons(child.id).join(','))); return false; }
         const cards = this._chosenMentors();
         if (cards.length === 0) { this._failEnroll(this._t('enroll.err.no_mentor')); return false; }
-        if (!this._deps.consumeToken()) { this._failEnroll(this._t('enroll.err.no_token')); return false; }
+        // 先佔住 busy 再等扣令（扣令是非同步命令），避免連點重複入學
         this._busy = true;
+        let tokenTaken = false;
         try {
+            if (!opts.qa) {
+                if (!(await this._deps.consumeToken())) { this._failEnroll(this._t('enroll.err.no_token')); return false; }
+                tokenTaken = true;
+            }
+            this._worldSeed = await this._deps.api.issueSeed();
+            // 先開學府任務（占用由任務框架登記，孩子忙碌時在這裡被擋下）；落盤失敗再撤回
+            const qid = await this._deps.api.acceptTask(child.id, `academy:enroll:${child.id}:${this._deps.admissionTurn()}:${Date.now().toString(36)}`);
             const snapshot = this._buildSnapshot(child, cards);
             this._manager.begin(snapshot);
             try {
-                await this._deps.persist();
+                await this._deps.api.saveRecord(this._store.read());
+                this._qid = qid;
             } catch {
-                this._deps.store.restore(null);
-                this._deps.refundToken();
+                this._store.replace(null);
+                try { await this._deps.api.abandonTask(qid); } catch { /* 任務殘留由下次入學前的 syncTask 對齊 */ }
+                await this._deps.refundToken();
+                tokenTaken = false;
                 this._failEnroll(this._t('enroll.err.save'));
                 return false;
             }
@@ -376,8 +435,8 @@ export class AcademyFlowController<H extends AcademyHostLike> {
             this._deps.toast(this._t('enroll.done', child.name, academyNameOf(this._lookup, AcademyId.YINGCHUAN)));
             this._deps.onChanged?.();
         } catch (err) {
-            this._deps.store.restore(null);
-            this._deps.refundToken();
+            this._store.replace(null);
+            if (tokenTaken) await this._deps.refundToken();
             this._failEnroll(this._t('enroll.err.failed', (err as Error)?.message ?? String(err)));
             return false;
         } finally {
@@ -385,6 +444,22 @@ export class AcademyFlowController<H extends AcademyHostLike> {
         }
         await this.openSession();
         return true;
+    }
+
+    /** 把快取裡的紀錄寫到權威端（save.write）；失敗要丟錯 */
+    private async _advanceTask(before: Readonly<AcademyStateSnapshot>): Promise<void> {
+        if (!this._qid) this._qid = (await this._deps.api.syncTask(before.childId, completedTurnsOf(before))).qid;
+        await this._deps.api.advanceTurn(this._qid, completedTurnsOf(before));
+    }
+
+    private async _persist(): Promise<void> {
+        await this._deps.api.saveRecord(this._store.read());
+        this._unsaved = false;
+    }
+
+    /** 不影響動作結果的落盤（確認結算、補寫恢復狀態）：失敗不擋流程，記下待補 */
+    private async _persistQuiet(): Promise<void> {
+        try { await this._persist(); } catch { this._unsaved = true; }
     }
 
     private _failEnroll(message: string): void {
@@ -395,7 +470,7 @@ export class AcademyFlowController<H extends AcademyHostLike> {
 
     private _buildSnapshot(child: AcademyChildLike, cards: readonly MentorCard[]): AcademyStateSnapshot {
         const admission: AcademyAdmission = {
-            worldSeed: this._deps.worldSeed(), clanUuid: this._deps.clanUuid(), childId: child.id, academyId: AcademyId.YINGCHUAN,
+            worldSeed: this._worldSeed, clanUuid: this._deps.clanUuid(), childId: child.id, academyId: AcademyId.YINGCHUAN,
             admissionTurn: this._deps.admissionTurn(), controlMode: this._controlMode,
             initialStats: { str: child.str ?? 0, lea: child.lea ?? 0, int: child.int ?? 0, pol: child.pol ?? 0, cha: child.cha ?? 0 },
         };
@@ -421,7 +496,7 @@ export class AcademyFlowController<H extends AcademyHostLike> {
     // ── 修業 ────────────────────────────────────────────
 
     private _snapshot(): AcademyStateSnapshot | null {
-        return this._deps.store.read()?.committed ?? null;
+        return this._store.read()?.committed ?? null;
     }
 
     private _modeOf(snap: Readonly<AcademyStateSnapshot>): AcademySessionMode {
@@ -433,20 +508,27 @@ export class AcademyFlowController<H extends AcademyHostLike> {
     public async openSession(): Promise<void> {
         const host = this._sessionHost;
         if (!host) return;
-        const record = this._deps.store.read();
+        const record = this._store.read();
         if (!record) { this._deps.toast(this._t('lobby.resume_toast')); return; }
         this._busy = true;
         try {
             this._picked = [];
             this._notice = '';
             this._settle = null;
+            // 任務與紀錄對齊（舊存檔補開、暫離恢復）；任務服務出錯不擋修業畫面，下一次動作會再報錯
+            try {
+                this._qid = (await this._deps.api.syncTask(record.committed.childId, completedTurnsOf(record.committed))).qid;
+            } catch (err) {
+                this._qid = null;
+                this._notice = this._t('sess.err.action', (err as Error)?.message ?? String(err));
+            }
             if (!record.acknowledged && record.before) {
                 const recovered = this._manager.recover();
                 const settle = settleOf(record.before, record.committed, true);
                 settle.crashWarning = recovered?.warning ? (recovered.snapshot.sessionCrashCounter) : 0;
                 this._settle = settle;
                 this._mode = 'settling';
-                try { await this._deps.persist(); } catch { /* 下一次動作會再寫一次 */ }
+                await this._persistQuiet();
             } else {
                 this._mode = this._modeOf(record.committed);
             }
@@ -483,7 +565,7 @@ export class AcademyFlowController<H extends AcademyHostLike> {
     public async act(action: AcademyActionPayload): Promise<boolean> {
         const allowed = this._mode === 'idle' || (action.actionType === 'RESOLVE_INTERRUPT' && this._mode === 'interrupt');
         if (this._busy || !allowed) return false;
-        const before = this._deps.store.read();
+        const before = this._store.read();
         if (!before) return false;
         this._busy = true;
         try {
@@ -496,10 +578,22 @@ export class AcademyFlowController<H extends AcademyHostLike> {
                 this._refreshSession();
                 return false;
             }
+            // 回合推進走 task.advance（TRAIN／REST 才算打完一回合）；先於落盤，失敗時動作不生效，重送冪等
+            if (action.actionType === 'TRAIN' || action.actionType === 'REST') {
+                try {
+                    await this._advanceTask(before.committed);
+                } catch (err) {
+                    this._store.replace(before);
+                    this._notice = this._t('sess.err.action', (err as Error)?.message ?? String(err));
+                    this._deps.toast(this._notice);
+                    this._refreshSession();
+                    return false;
+                }
+            }
             try {
-                await this._deps.persist();
+                await this._persist();
             } catch {
-                this._deps.store.restore(before);
+                this._store.replace(before);
                 this._notice = this._t('sess.err.save');
                 this._deps.toast(this._notice);
                 this._refreshSession();
@@ -512,7 +606,7 @@ export class AcademyFlowController<H extends AcademyHostLike> {
                 this._mode = 'settling';
             } else {
                 this._manager.acknowledge();
-                try { await this._deps.persist(); } catch { /* 下一次動作會再寫一次 */ }
+                await this._persistQuiet();
                 this._settle = null;
                 this._mode = this._modeOf(next);
             }
@@ -532,6 +626,18 @@ export class AcademyFlowController<H extends AcademyHostLike> {
         else this._notifyInterrupt();
     }
 
+    /**
+     * 補結業（PROG-2-9211）：紀錄已是 graduated 卻沒結算（舊存檔、或結業彈窗前就關掉遊戲）時，
+     * 重新交給 onGraduated 結算。沒有這種紀錄回傳 false。
+     */
+    public settlePendingGraduation(): boolean {
+        const snap = this._snapshot();
+        if (!snap || !snap.graduated) return false;
+        this._mode = 'graduated';
+        this._deps.onGraduated?.(snap);
+        return true;
+    }
+
     /** 結算畫面的「確認」：確認紀錄後回到可操作狀態；已結業則關閉修業畫面 */
     public async confirm(): Promise<void> {
         if (this._busy) return;
@@ -540,7 +646,7 @@ export class AcademyFlowController<H extends AcademyHostLike> {
         this._busy = true;
         try {
             const snap = this._manager.acknowledge();
-            try { await this._deps.persist(); } catch { /* 下一次動作會再寫一次 */ }
+            await this._persistQuiet();
             this._settle = null;
             this._mode = this._modeOf(snap);
         } finally {
@@ -560,23 +666,24 @@ export class AcademyFlowController<H extends AcademyHostLike> {
     /** 暫離：結算中先確認紀錄（正常離開不算異常中斷），修業進度保留，大廳有入口可回來 */
     public async leave(): Promise<void> {
         if (this._mode === 'settling') await this.confirm();
+        if (this._qid) { try { await this._deps.api.pauseTask(this._qid); } catch { /* 暫離標記失敗不擋離開，回來時 syncTask 會恢復 */ } }
         this.closeAll();
         this._deps.onChanged?.();
     }
 
     /** 修業中切換控制模式：改寫已確認的紀錄（不推進回合），落盤失敗就還原 */
     public async cycleSessionMode(): Promise<void> {
-        const record = this._deps.store.read();
+        const record = this._store.read();
         if (this._busy || this._mode !== 'idle' || !record) return;
         this._busy = true;
         try {
             const committed = JSON.parse(JSON.stringify(record.committed)) as AcademyStateSnapshot;
             committed.controlMode = nextControlMode(committed.controlMode);
-            this._deps.store.write({ committed, before: record.before, action: record.action, acknowledged: true });
+            this._store.write({ committed, before: record.before, action: record.action, acknowledged: true });
             try {
-                await this._deps.persist();
+                await this._persist();
             } catch {
-                this._deps.store.restore(record);
+                this._store.replace(record);
                 this._notice = this._t('sess.err.save');
                 this._deps.toast(this._notice);
             }
@@ -610,6 +717,25 @@ export class AcademyFlowController<H extends AcademyHostLike> {
 
     public get mode(): AcademySessionMode {
         return this._mode;
+    }
+
+    /**
+     * QA 快進（PROG-2-9192，只由本機 adapter 的 debug.fastForward 呼叫）：沒有進行中的修業就先以 QA 入學，
+     * 再連續 commit 到「已完成 turns 回合」，最後開修業畫面（停在打斷點時由畫面彈出）。
+     */
+    public async qaFastForward(turns: number): Promise<AcademyFastForwardResult> {
+        // 教官候選只在開入學畫面時載入；快進不經過該畫面，入學前要先載入（否則會因沒有教官被擋）
+        if (!this._deps.isActive()) await this._loadMentors();
+        if (!this._deps.isActive() && !(await this.enroll({ qa: true }))) return { completedTurns: 0, steps: 0, stoppedBy: 'no-record' };
+        if (!this._sessionHost?.node.active) await this.openSession();
+        const result = await fastForwardAcademy({
+            snapshot: () => this._snapshot(),
+            mode: () => this._mode,
+            act: (action) => this.act(action),
+            confirm: () => this.confirm(),
+        }, turns, YINGCHUAN_GIMMICK);
+        await this.openSession();
+        return result;
     }
 
     public get trainStatKeys(): readonly AcademyStatKey[] {

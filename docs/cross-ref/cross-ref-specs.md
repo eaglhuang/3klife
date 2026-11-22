@@ -1,10 +1,10 @@
 <!-- doc_id: doc_index_0002 -->
 # Cross-Reference: 規格書索引（文件 → 相關文件）
 
-> 這是 doc_index_0007 的 A 節分片。完整索引見 `docs/cross-reference-index.md (doc_index_0007)` (doc_index_0007)。
+> 這是 doc_index_1126 的 A 節分片。完整索引見 `docs/cross-reference-index.md (doc_index_1126)` (doc_index_1126)。
 > 最後更新請參考母檔 Header。
 >
-> **doc_id 查詢**：用 `node tools_node/resolve-doc-id.js <搜尋詞>` 查文件代號，或瀏覽 `docs/doc-id-registry.md (doc_other_0006)` (doc_other_0006)。
+> **doc_id 查詢**：用 `node tools_node/resolve-doc-id.js <搜尋詞>` 查文件代號，或瀏覽 `docs/doc-id-registry.md (doc_other_4198)` (doc_other_4198)。
 > ⚠️ **壓縮版（doc_id 索引）**：中文名稱已移除，查詢名稱請用 resolve-doc-id.js。人類可讀進度 → `docs/cross-ref/cross-ref-進度.md (doc_index_0017)` (doc_index_0017)
 
 ## A. 規格書索引（文件 → 相關文件）
@@ -74,6 +74,7 @@
 | doc_spec_0041 |—|doc_spec_0010、doc_spec_0038、doc_data_0001|
 | doc_spec_0038 |doc_spec_0041、doc_spec_0039（格子戰法定義）、doc_spec_0016、doc_ui_0012、doc_ui_0001、doc_spec_0040|doc_spec_0010、doc_spec_0026、doc_spec_0027、doc_spec_0016|
 | doc_spec_0019 |doc_spec_0040|doc_spec_0042|
+| doc_spec_1236（年終守城戰） |—|doc_spec_0049、doc_spec_0376、doc_spec_0525、doc_spec_1182、doc_spec_1184、doc_spec_1186|
 | doc_data_0002 |—|doc_data_0001、doc_spec_0040|
 | doc_spec_0007 |doc_spec_0002、doc_ui_0027|doc_spec_0040、doc_spec_0044、doc_spec_0012、doc_spec_0041、doc_spec_0032|
 | doc_spec_0020 |doc_spec_0002、doc_spec_0039|doc_spec_0032、doc_spec_0037、doc_spec_0014、doc_spec_0022、doc_spec_0018|
@@ -101,7 +102,7 @@
 | doc_spec_0025 |—|doc_spec_0029、doc_spec_0027|
 | doc_spec_0015 |doc_tech_0014、doc_ui_0027、doc_spec_0176、doc_spec_0177|doc_spec_0002、doc_spec_0025、doc_spec_0040|
 | doc_spec_0176 |doc_spec_0177、doc_tech_0014|doc_spec_0015、doc_spec_0016、doc_spec_0026、doc_tech_0014、doc_spec_0177|
-| doc_spec_0177 |doc_spec_0176、doc_tech_0014、doc_ui_0012、doc_tech_0080|doc_spec_0176、doc_spec_0015、doc_tech_0012、doc_tech_0014、doc_spec_0170、doc_spec_0171、doc_spec_0172、doc_tech_0080、doc_other_0085|
+| doc_spec_0177 |doc_spec_0176、doc_tech_0014、doc_ui_0012、doc_tech_0080|doc_spec_0176、doc_spec_0015、doc_tech_0012、doc_tech_0014、doc_spec_0170、doc_spec_0171、doc_spec_0172、doc_tech_0080、doc_other_4228|
 | doc_spec_0006 |doc_spec_0028|doc_spec_0009|
 | doc_spec_0003 |—|doc_spec_0028、doc_spec_0029、doc_spec_0021、doc_spec_0026|
 | doc_spec_0021 |doc_spec_0003|doc_spec_0032、doc_spec_0016|
@@ -127,8 +128,8 @@
 | doc_spec_0161 |doc_tech_0007、doc_ui_0001|doc_spec_0040、doc_spec_0012、doc_data_0001|
 | doc_tech_0015 |—|doc_data_0001、doc_spec_0038、doc_spec_0033、doc_spec_0039|
 | doc_tech_0007 |—|doc_spec_0161|
-| doc_spec_0159 |doc_index_0011|doc_index_0007|
-| doc_spec_0001 |doc_index_0011|doc_spec_0159、doc_index_0007|
+| doc_spec_0159 |doc_index_0011|doc_index_1126|
+| doc_spec_0001 |doc_index_0011|doc_spec_0159、doc_index_1126|
 | doc_tech_0008 |—|doc_spec_0031、doc_spec_0011、doc_spec_0042|
 | doc_tech_0009 |doc_tech_0015、doc_tech_0014、doc_spec_0008、doc_spec_0010、doc_spec_0011| — |
 | doc_ui_0027 |doc_spec_0004、doc_ui_0049、doc_ui_0012、doc_ui_0009|doc_spec_0031、doc_tech_0008、doc_spec_0011、doc_spec_0012、doc_spec_0015、doc_spec_0007、doc_spec_0032|
@@ -136,18 +137,18 @@
 | doc_ui_0011 |doc_ui_0012、doc_ui_0049|—|
 | doc_ui_0001 |doc_ui_0049|doc_spec_0161、doc_spec_0040、doc_spec_0012、doc_spec_0038、doc_spec_0030、doc_spec_0039（§ 6 場景視覺主題）、doc_art_0002|
 | doc_art_0003 |doc_ui_0049、doc_tech_0015|doc_index_0011|
-| doc_ui_0051 |doc_ui_0049、doc_ui_0027、doc_art_0003、doc_ui_0035、doc_art_0002、doc_agentskill_0011|doc_index_0011 § 4.1|
+| doc_ui_0051 |doc_ui_0049、doc_ui_0027、doc_art_0003、doc_ui_0035、doc_art_0002、doc_agentskill_0004|doc_index_0011 § 4.1|
 | doc_art_0002 |doc_ui_0049、doc_ui_0027、doc_art_0003、doc_ui_0012、doc_ui_0001|doc_ui_0051、doc_ui_0050|
 | doc_ui_0032 |doc_ui_0036、doc_ui_0045|doc_index_0012、doc_ui_0049、doc_ui_0050、doc_art_0002|
-| doc_ui_0045 |doc_ui_0032、doc_agentskill_0023、doc_agentskill_0031|doc_index_0012、doc_ui_0049、doc_ui_0050、doc_art_0003|
+| doc_ui_0045 |doc_ui_0032、doc_agentskill_0023、doc_agentskill_0030|doc_index_0012、doc_ui_0049、doc_ui_0050、doc_art_0003|
 | doc_ui_0037 |doc_ui_0045、doc_ui_0032|doc_index_0012、doc_ui_0049、doc_ui_0050、doc_art_0003、doc_ui_0036|
 | doc_ui_0033 |doc_ui_0032|doc_index_0012、doc_ui_0049、doc_ui_0050、doc_art_0002、doc_ui_0034|
 | doc_ui_0034 |doc_ui_0032、doc_ui_0033|doc_index_0012、doc_ui_0033、doc_ui_0050|
 | doc_ui_0036 |doc_ui_0032|doc_index_0012、doc_ui_0049、doc_ui_0050、doc_art_0002、doc_ui_0001|
 | doc_ui_0035 |—|doc_ui_0051 § 8、doc_index_0011、doc_art_0003|
-| doc_ui_0049 |doc_agentskill_0022、doc_agentskill_0029、doc_agentskill_0027、doc_agentskill_0011|doc_index_0011、doc_ui_0027、doc_ui_0001、doc_art_0003、doc_ui_0012、doc_ui_0011|
+| doc_ui_0049 |doc_agentskill_0022、doc_agentskill_0029、doc_agentskill_0027、doc_agentskill_0004|doc_index_0011、doc_ui_0027、doc_ui_0001、doc_art_0003、doc_ui_0012、doc_ui_0011|
 | doc_tech_0012 |doc_spec_0177|doc_tech_0014|
-| doc_tech_0080 |doc_spec_0177|doc_other_0085、doc_other_0086、doc_other_0087、doc_other_0088|
+| doc_tech_0080 |doc_spec_0177|doc_other_4228、doc_other_4229、doc_other_4230、doc_other_4231|
 | doc_other_0011 |—|doc_spec_0002、doc_tech_0014、doc_ui_0012|
 
 ---
@@ -204,13 +205,15 @@
 
 | 規格書 | 被依賴（下游） | 依賴（上游） |
 |---|---|---|
-| doc_spec_1182（共用框架總綱） | doc_spec_1183、doc_spec_1184、doc_spec_1185、doc_spec_1186、doc_spec_1187、doc_spec_1188 | doc_spec_1181、doc_spec_1180、doc_spec_1179、doc_spec_0655、doc_tech_0010、doc_tech_0013、doc_spec_0334、doc_spec_0469、doc_spec_0656、doc_spec_0683、doc_spec_0662 |
+| doc_spec_1182（共用框架總綱） | doc_spec_1183、doc_spec_1184、doc_spec_1185、doc_spec_1186、doc_spec_1187、doc_spec_1188、doc_spec_1247、doc_spec_1248 | doc_spec_1181、doc_spec_1180、doc_spec_1179、doc_spec_0655、doc_tech_0010、doc_tech_0013、doc_spec_0334、doc_spec_0469、doc_spec_0656、doc_spec_0683、doc_spec_0662 |
 | doc_spec_1183（買賣商店） | doc_spec_1186 | doc_spec_1182、doc_spec_1184、doc_spec_1186 |
 | doc_spec_1184（物品庫存） | doc_spec_1183、doc_spec_1185、doc_spec_1186、doc_spec_1187、doc_spec_1188 | doc_spec_1182 |
-| doc_spec_1185（任務） | doc_spec_1186、doc_spec_1188 | doc_spec_1182、doc_spec_1184、doc_spec_1186、doc_spec_1188 |
+| doc_spec_1185（任務） / doc_spec_1254（分片索引） | doc_spec_1186、doc_spec_1188 | doc_spec_1182、doc_spec_1184、doc_spec_1186、doc_spec_1188 |
 | doc_spec_1186（獎勵） | doc_spec_1183、doc_spec_1185、doc_spec_1187、doc_spec_1188 | doc_spec_1182、doc_spec_1184、doc_spec_1188 |
 | doc_spec_1187（技能） | doc_spec_1186、doc_spec_1188 | doc_spec_1182、doc_spec_1184、doc_spec_1186 |
 | doc_spec_1188（劇情演出） | doc_spec_1185、doc_spec_1186、doc_spec_1187 | doc_spec_1182、doc_spec_1185、doc_spec_1186 |
+| doc_spec_1248（人員占用，第 7 個共用框架） | doc_spec_1181、doc_spec_1180、doc_spec_1179、doc_spec_1182 | doc_spec_1182 |
+| doc_spec_1247（貨幣與資源總規格） | doc_spec_1181、doc_spec_1184、doc_spec_1183、doc_spec_1186、doc_spec_0404、doc_spec_0033 | doc_spec_1182、doc_spec_1184 |
 
 #### 各框架 ↔ 依賴它的既有規格（框架 → 既有規格）
 
@@ -238,3 +241,33 @@
 | HTTPS 強制與 PII 遮蔽 | doc_spec_0683 | doc_spec_1182 5.11 |
 | 官職權限快照 API | doc_spec_0591 | 權限檢查範例 |
 | SYNC-06 補丁白名單（server/schema/sync06-patch-whitelist.ts） | 見 PROG-2-1396 | doc_spec_1182 5.7（clientOwned／critical 拆分） |
+
+### 首子與開場流程（PROG-2-9212）
+
+| doc_id | 規格書 | 說明 |
+|---|---|---|
+| doc_spec_1233 | 首子誕生與少年名將開場流程規格書.md | 開場總順序、少年名將三選一、首子與貂蟬結緣關係、取名、出生禮、周歲抓周、存檔與 API（上游：doc_spec_1180、1172、0470、0031、0618、1182；已回寫註記：0031、0470、0618、0003、1180 shard-b） |
+
+> 「依 11/20 裁決修訂」清掃（PROG-2-9212）：doc_spec_1168、0308、1130、1172、0182、0580、0033、0260、1181（shard-e／i）。
+
+### 家族、子嗣、配偶、教官與學府（PROG-2-9224，依 11/21 裁決）
+
+| doc_id | 規格書 | 說明 |
+|---|---|---|
+| doc_spec_1241 | 家族子嗣與血統總規格書.md | 總綱：配偶三來源與上場、待產哺乳 OCC、子嗣、繼承與家門奇才、主角不死、分家外嫁、義子、家臣子嗣、共用框架對應、JSON、實作卡切分（上游：doc_spec_1233、1180、1179、1181、1182；分規格：0268、0530、0531、0580、0011、0181~0185、0446、0532） |
+| doc_spec_1179（第 13、14 章） | 學府修業畫面與接線設計.md | 學府新版規則（人源只收自家子嗣、入學加分、修業變化、失敗與結業影響）、教官就是武將（教官卡退場）；shard-h、shard-i |
+
+### 學府支援卡與教官池（PROG-2-9230，11/21 下午裁決，恢復並改寫教官卡）
+
+| doc_id | 規格書 | 說明 |
+|---|---|---|
+| doc_spec_1264 | 學府支援卡與教官池規格書.md | 連線卡（支援卡）：三類同池、等級＋傳承、效果欄、到場與促膝論道、57 段連續事件、點撥、師門牌組與師承組合、風格加權、四池轉蛋與 `POOL_SUPPORT`、共用框架對應、實作卡 SUP-1～15；shard-a～h（doc_spec_1265～1272，e～g 為 25 張卡附錄） |
+| doc_spec_1273 | 世界觀與故事總綱規格書.md | 「AI 武將覺醒」世界觀：一頁版故事大綱、史境公司與頭盔、不死不老與時間流速說法、三條主線鉤子（公司祕密、AI 越來越像人、天命之人）、各系統說法、14 位核心人設、時事梗規範、10 則文案；與開場信原稿並列待決；shard-a、b（doc_spec_1274～1275） |
+| doc_spec_1280 | 武將私塾補習班系統規格書.md | 在世武將下班開私塾（補習班）：開班與學生資格、學費 escrow 與推薦卡、一期 6 堂與教室、專長／戰法／家傳奧義課與幼幼班；友誼分數（−100～100、7 級）＝即時推算 prior＋稀疏偏移量（只存與我方接觸者，AI–AI 不存）；OCC 新增 tutorTeach／tutorLearn 與 yield 讓位規則；與學府、支援卡區隔；JSON 草案、TC、待決 Q-T1～10、實作卡 PS-1～10；shard-a～c（doc_spec_1281～1283） |
+| doc_spec_1287 | 史境天下風雲榜與年終頒獎典禮系統規格書.md | 世界級年度五大排行榜（殺敵、治理、紅顏魅力、教官樹人、最佳新人）＋四層可插拔獨立擴充架構（含私塾人氣名師擴充範例）＋純年度歸零重算＋心智與血統白因子連動＋AI 全真實沙盤前置＋每年年末頒獎典禮（雙主持動態傳承、君王 3D 全息投影、大合照快照 DTO 變背景、歷年風雲史冊永久查詢）＋W1a～W3 拆卡；shard-a～c（doc_spec_1284～1286） |
+| doc_spec_1288 | 結緣事件文案範例.md | 配合 F3 配偶三來源（結緣好感 7 則、外交聯姻 6 則、媒人說親 7 則）撰寫 20 則輕鬆詼諧口語文案範例（對齊 doc_spec_1273）；供遊戲內 UI 入口使用 |
+| doc_spec_1291 | 第一年體驗走查.md | 新玩家第一年「不卡關」體驗走查與修正清單：四季節奏對帳、四大核心痛點（學府前十幾年閒置、銀兩隱形零收入、戰鬥挫折診斷、功能解鎖指引）深度剖析與派工拆卡建議；shard-a～c（doc_spec_1292～1294） |
+| doc_spec_1179（14.11） | 學府修業畫面與接線設計.md | 支援卡接線點 |
+| doc_spec_1186（12.8） | 獎勵系統Base框架規格書.md | 第四池教官池 |
+
+> 「依 11/21 裁決修訂」註記（PROG-2-9224）：doc_spec_1179（shard-d／e／f／g）、1233（shard-a／b）、1181（shard-g）、1180（shard-k／n）、0310、0482、0318、0562、0563、0569 及教官卡相關規格（教官系統（支援卡）、教官支援卡四大原型／詞條 Schema、教官訓練格爆發、教官精力欄位、教官靈感戰法六招、名將身後傳承）。

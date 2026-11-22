@@ -81,7 +81,7 @@ export function computeFitness(input: FitnessInput): FitnessResult {
 
 // ───────────────────────── 耗費 ─────────────────────────
 
-export interface MissionCost { grain: number; troops: number; silver: number; energy: number }
+export interface MissionCost { grain: number; troops: number; gold: number; silver: number; energy: number }
 
 /** 耗費：定義缺省用難度表；分支 costMul 縮放。耗費一律明牌，所以此值可直接給 UI */
 export function computeCost(def: MissionDefinition, branch: MissionBranch | null, balance: MissionBalance = DEFAULT_MISSION_BALANCE): MissionCost {
@@ -91,6 +91,7 @@ export function computeCost(def: MissionDefinition, branch: MissionBranch | null
     return {
         grain: pick(def.cost?.grain, d.cost.grain),
         troops: pick(def.cost?.troops, d.cost.troops),
+        gold: pick(def.cost?.gold, d.cost.gold),
         silver: pick(def.cost?.silver, d.cost.silver),
         energy: def.energy ?? d.energy,
     };

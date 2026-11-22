@@ -222,6 +222,17 @@
       "description": "tsc -p tsconfig.test.json 的錯誤數不得超過 tools_node/test-tsc-baseline.json 的基準（4）；超過即阻擋"
     },
     {
+      "id": "api-bypass",
+      "label": "防繞過共通 API 基準棘輪",
+      "cmd": "node",
+      "args": [
+        "tools_node/check-api-bypass.js"
+      ],
+      "priority": 12.6,
+      "failAction": "block",
+      "description": "玩法與 UI 不得直接改庫存、貨幣、存檔；繞過點數只准減不准增（tools_node/api-bypass-baseline.json，PROG-2-9201）"
+    },
+    {
       "id": "atm-police",
       "label": "ATM Police Gate",
       "cmd": "node",
@@ -276,7 +287,8 @@
       "gates": [
         "ts-syntax",
         "encoding",
-        "eslint-rules"
+        "eslint-rules",
+        "api-bypass"
       ]
     },
     "standard": {
@@ -292,6 +304,7 @@
         "import-boundary",
         "dead-code",
         "test-tsc",
+        "api-bypass",
         "story-layers",
         "start-scene-refs",
         "untracked-meta"

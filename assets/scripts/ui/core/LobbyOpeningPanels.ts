@@ -45,6 +45,8 @@ export interface LobbyOpeningPanelPorts {
      * 回傳選中的成年版武將 id；未提供時用設定的預設人選。
      */
     pickStarterYouth?: (options: readonly StarterYouthOption[]) => Promise<string>;
+    /** 宿命池抽一輪走共通 API（reward.roll，draw.slots）：回傳十位武將 id；未提供或回 null 時用本機抽法 */
+    rollDestinyRound?: () => Promise<readonly string[] | null>;
     /** 確定開局後收掉宿命池畫面 */
     closeDestinyPool?: () => void;
     /** 開場信件的標題與本文（已查好 i18n 的字串） */
@@ -188,6 +190,7 @@ export class LobbyOpeningPanels {
             session,
             random: session.randomSource,
             seed: () => Math.floor(session.randomSource() * 4294967296),
+            rollRound: this._ports.rollDestinyRound ? () => this._ports.rollDestinyRound!() : undefined,
             pickYouth: this._ports.pickStarterYouth ? options => this._ports.pickStarterYouth!(options) : undefined,
             onStarted: async () => {
                 if (session.hasSaveService) await session.save();
@@ -222,7 +225,12 @@ export class LobbyOpeningPanels {
     /** 打開宿命池：第一次自動轉一輪；設定載入失敗、沒有畫面接口時回 false */
     public openDestiny(): boolean {
         if (!this._destiny || !this._ports.presentDestinyPool) return false;
-        if (this._destiny.state.phase === 'idle') this._destiny.roll();
+        const destiny = this._destiny;
+        if (destiny.state.phase === 'idle' && this._ports.rollDestinyRound) {
+            void destiny.rollAsync().then(() => this._presentDestiny());
+            return true;
+        }
+        if (destiny.state.phase === 'idle') destiny.roll();
         void this._presentDestiny();
         return true;
     }
@@ -236,7 +244,10 @@ export class LobbyOpeningPanels {
         if (!destiny || !present) return;
         try {
             this._destinyNode = await present(destiny.getView(), {
-                reroll: () => { if (destiny.reroll()) void this._presentDestiny(); },
+                reroll: () => {
+                    if (!this._ports.rollDestinyRound) { if (destiny.reroll()) void this._presentDestiny(); return; }
+                    void destiny.rerollAsync().then((ok) => { if (ok) void this._presentDestiny(); });
+                },
                 confirm: () => { void destiny.confirm().then(() => this.afterDestinyAction()); },
             });
             if (this._destinyNode) this._ports.bringToFront(this._destinyNode);

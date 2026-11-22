@@ -1,4 +1,4 @@
-import { Color, EffectAsset, Material, Node, UITransform, Vec4, resources, sp } from 'cc';
+import { Color, EffectAsset, JsonAsset, Material, Node, UITransform, Vec4, resources, sp } from 'cc';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { UnitAction, UnitPresentationCore, UnitPresentationState, resolveClipName } from '../shared/UnitPresentationCore';
 import { dustBeatsFor, stepBobOffset } from '../shared/MoveFeedback';
@@ -7,7 +7,7 @@ import { DeployLandingSample, deployLandingTotalSec, landingCrossed, memberDeplo
 import { UnitSpineConfig } from '../shared/UnitPresentationConfig';
 import { AttackStyle, pickAttackClip } from '../shared/AttackStyle';
 import { DuelExchange, DuelPresentationCore } from '../shared/DuelPresentationCore';
-import { hitFeedbackTotalSec, hitFlashStrength, sampleHitRecoil, sampleHitShake } from './BattlePresentationTiming';
+import { getHitFlashCurve, hitFeedbackTotalSec, hitFlashStrength, parseHitFlashCurve, sampleHitRecoil, sampleHitShake, setHitFlashCurve } from './BattlePresentationTiming';
 
 interface Entry {
   config: UnitSpineConfig;
@@ -23,7 +23,8 @@ interface Entry {
   /** 目前要顯示的人數（含帶頭者），由呼叫端依兵力決定。 */
   members: number;
   /** 受擊回饋進行中的狀態（PROG-2-9401）；結束後為 null。只疊加在畫面位置與顏色上，不碰移動與動作狀態。 */
-  hit: { elapsed: number; amplitude: number; flash: boolean; push: number } | null;
+  /** frame：受擊後第幾格；holdEnd：全白停留最後一格時的 elapsed（PROG-2-9483） */
+  hit: { elapsed: number; amplitude: number; flash: boolean; push: number; frame: number; holdEnd: number } | null;
   /** 命中頓格剩餘秒數（PROG-2-9412）；大於 0 時骨架動畫與動作計時都停住。 */
   freeze: number;
   /** 目前畫在骨架上的閃白強度（0 = 正常色）；只在數值改變時才寫 color，省得每幀弄髒渲染資料。 */
@@ -55,6 +56,19 @@ const HIT_FLASH_EFFECT_PATH = 'effects/spine-hit-flash';
 let hitFlashMaterial: Material | null = null;
 let hitFlashLoading = false;
 const hitFlashWaiters: Array<() => void> = [];
+/** 受擊閃白曲線設定（PROG-2-9483）：第一次建立疊層時讀一次，讀到之前用預設值。 */
+let hitFlashCurveRequested = false;
+function ensureHitFlashCurve(): void {
+  if (hitFlashCurveRequested) return;
+  hitFlashCurveRequested = true;
+  try {
+    resources.load('data/battle-hit-feedback', JsonAsset, (err, asset) => {
+      if (err || !asset) return; // 讀不到用預設
+      setHitFlashCurve(parseHitFlashCurve(asset.json));
+    });
+  } catch { /* 資源系統未就緒：用預設 */ }
+}
+
 function ensureHitFlashMaterial(onReady: () => void): void {
   if (hitFlashMaterial) { onReady(); return; }
   hitFlashWaiters.push(onReady);
@@ -80,6 +94,9 @@ function ensureHitFlashMaterial(onReady: () => void): void {
  */
 const SQUAD_ONE_SHOT_STAGGER_SEC = 0.12;
 
+/** 節點池每個骨架路徑最多保留幾個閒置節點（PROG-2-9706）；超過的直接銷毀，避免池無限長大吃記憶體。 */
+export const SPINE_UNIT_POOL_MAX_PER_PATH = 24;
+
 /** 武將與兵種共用的 Cocos/Spine 薄接層；素材路徑與動作皆由設定提供。 */
 export class SpineUnitOverlay {
   private readonly entries = new Map<string, Entry>();
@@ -87,9 +104,17 @@ export class SpineUnitOverlay {
   private readonly pendingRemovals = new Set<string>();
   /** 已要求落地但疊層還沒建立的單位（playDeploy 可能早於第一次 sync） */
   private readonly pendingDeploys = new Set<string>();
+  /**
+   * 骨架節點池（PROG-2-9706）：以骨架資料路徑為 key 存放閒置（已隱藏、已重設）的節點，
+   * 部署／陣亡時重用而不重建，少一次 new Node + addComponent + 銷毀的卡頓與 GC。
+   * 池只活在這個疊層實例內，clear()（場景銷毀時由 UnitRenderer 呼叫）會整池銷毀，不會跨場景殘留。
+   */
+  private readonly nodePool = new Map<string, Node[]>();
   private duel: { core: DuelPresentationCore; ids: [string, string]; resolve: (played: boolean) => void } | null = null;
+  /** 地面層容器（格子 buff 標記、揚塵）：每幀排序後固定送回最底，依序排在 index 0、1…（PROG-2-9708） */
+  private groundNodes: () => ReadonlyArray<Node | null> = () => [];
   constructor(private readonly getParent: () => Node | null, private readonly layer: () => number, private readonly onFootfall?: FootfallListener,
-    private readonly onLanding?: LandingListener) {}
+    private readonly onLanding?: LandingListener) { ensureHitFlashCurve(); }
 
   public sync(id: string, config: UnitSpineConfig, x: number, y: number, facing: 1 | -1, moving: boolean, dt: number, visible = true, members = 1): boolean {
     this.pendingRemovals.delete(id);
@@ -146,7 +171,12 @@ export class SpineUnitOverlay {
       }
     }
     for (const [id, entry] of this.entries) {
-      if (entry.hit) entry.hit.elapsed += dt;
+      if (entry.hit) {
+        // 受擊當格不加時間（frame 0、elapsed 0），之後每格往前；停留期間記下最後一格的時間，退色從這裡起算
+        if (entry.hit.frame >= 0) entry.hit.elapsed += dt;
+        entry.hit.frame += 1;
+        if (entry.hit.frame < getHitFlashCurve().holdFrames) entry.hit.holdEnd = entry.hit.elapsed;
+      }
       if (entry.charge) { entry.charge.t += Math.max(0, dt); if (entry.charge.t >= entry.charge.dur) entry.charge = null; }
       const landingPrev = this.advanceDeploy(entry, dt);
       const frozen = entry.freeze > 0;
@@ -166,7 +196,25 @@ export class SpineUnitOverlay {
       sorted.push({ node: entry.node, y: footY });
       entry.followers.forEach((node, i) => { if (node.isValid && node.active) sorted.push({ node, y: footY + (entry.config.squad?.[i]?.y ?? 0) }); });
     }
-    sorted.sort((a, b) => b.y - a.y).forEach((item, index) => item.node.setSiblingIndex(index));
+    // 只在小兵原本占的區段內重排（從目前最低的兄弟索引起排），不搶到 index 0：
+    // 壓在最底層的格子 buff 標記、落地揚塵等地面節點要留在小兵底下（PROG-2-9708）
+    let base = Number.POSITIVE_INFINITY;
+    for (const item of sorted) base = Math.min(base, item.node.getSiblingIndex());
+    if (!Number.isFinite(base)) base = 0;
+    sorted.sort((a, b) => b.y - a.y).forEach((item, index) => item.node.setSiblingIndex(base + index));
+    // 新單位建立時會插到 index 0，把地面層擠上來；這裡送回最底（已在定位就不動，平常不產生重排）
+    const parent = this.getParent();
+    let slot = 0;
+    for (const ground of this.groundNodes()) {
+      if (!ground?.isValid || ground.parent !== parent) continue;
+      if (ground.getSiblingIndex() !== slot) ground.setSiblingIndex(slot);
+      slot += 1;
+    }
+  }
+
+  /** 指定要永遠壓在單位底下的地面層容器（PROG-2-9708） */
+  public setGroundNodes(provider: () => ReadonlyArray<Node | null>): void {
+    this.groundNodes = provider;
   }
 
   /** attackStyle 只對 'attack' 有效：依兵種風格播分動作，缺動作時退回通用攻擊動作（PROG-2-9400）。 */
@@ -177,7 +225,7 @@ export class SpineUnitOverlay {
     const has = (name: string): boolean => !!runtime?.findAnimation(name);
     if (!has(resolveClipName(entry.config.clips[action], has))) return false;
     const clip = action === 'attack' && attackStyle
-      ? pickAttackClip(attackStyle, entry.config.clips.attack, name => !!runtime.findAnimation(name)) : undefined;
+      ? pickAttackClip(attackStyle, entry.config.clips.attack, has) : undefined;
     if (action !== 'fall' || entry.core.snapshot().action !== 'fall') entry.core.play(action, clip);
     // 倒地時不再抖動閃色，避免和 fall、boom 疊在一起（下一次 apply 會把顏色刷回正常）
     if (action === 'fall') entry.hit = null;
@@ -193,7 +241,7 @@ export class SpineUnitOverlay {
   public hit(id: string, amplitudePx: number, flash = true, pushPx = 0): boolean {
     const entry = this.entries.get(id);
     if (!entry?.node?.isValid) return false;
-    entry.hit = { elapsed: 0, amplitude: Math.max(0, amplitudePx), flash, push: Math.max(0, pushPx) };
+    entry.hit = { elapsed: 0, amplitude: Math.max(0, amplitudePx), flash, push: Math.max(0, pushPx), frame: -1, holdEnd: 0 };
     return true;
   }
 
@@ -242,8 +290,13 @@ export class SpineUnitOverlay {
     this.pendingDeploys.delete(id);
     const entry = this.entries.get(id);
     if (entry) this.finishLoading(entry, false);
-    if (entry?.node?.isValid) entry.node.destroy();
-    entry?.followers.forEach(node => { if (node.isValid) node.destroy(); });
+    if (entry) {
+      // 回收而不銷毀（PROG-2-9706）：release 會強制把閃白、顏色、動作、造型全部還原
+      if (entry.node) this.releaseNode(entry.config.path, entry.node);
+      entry.followers.forEach(node => this.releaseNode(entry.config.path, node));
+      entry.node = null;
+      entry.followers = [];
+    }
     this.entries.delete(id);
   }
   private waitForEntry(id: string): Promise<boolean> {
@@ -271,7 +324,72 @@ export class SpineUnitOverlay {
   }
   public clear(): void {
     if (this.duel) { this.duel.resolve(true); this.duel = null; }
-    for (const id of this.entries.keys()) this.remove(id);
+    for (const id of Array.from(this.entries.keys())) this.remove(id);
+    // 整池銷毀：場景結束後不留任何閒置節點
+    for (const nodes of this.nodePool.values()) for (const node of nodes) if (node.isValid) node.destroy();
+    this.nodePool.clear();
+  }
+
+  /** 目前池內閒置節點數（測試與除錯用）；不帶路徑回傳全部。 */
+  public pooledCount(path?: string): number {
+    if (path !== undefined) return this.nodePool.get(path)?.length ?? 0;
+    let total = 0;
+    for (const nodes of this.nodePool.values()) total += nodes.length;
+    return total;
+  }
+
+  /** 把節點還原成「剛建好」的乾淨狀態：閃白強度歸零、顏色全白、動作清空、造型與變換歸位。 */
+  private resetNode(node: Node): void {
+    const skeleton = node.getComponent(sp.Skeleton);
+    if (!skeleton) return;
+    // 閃白材質：u_flash 歸零（每個材質實例都寫）；沒有材質時 strength 0 會把相乘色刷回白
+    this.setSkeletonFlash(skeleton, 0);
+    skeleton.color = Color.WHITE;
+    skeleton.timeScale = 1;
+    skeleton.clearTracks();
+    skeleton.setToSetupPose();
+    skeleton.setSkin('default');
+    node.setScale(1, 1, 1);
+    node.setPosition(0, 0, 0);
+  }
+
+  private releaseNode(path: string, node: Node): void {
+    if (!node.isValid) return;
+    const pool = this.nodePool.get(path) ?? [];
+    if (pool.length >= SPINE_UNIT_POOL_MAX_PER_PATH || !node.getComponent(sp.Skeleton)) { node.destroy(); return; }
+    this.resetNode(node);
+    node.active = false;
+    pool.push(node);
+    this.nodePool.set(path, pool);
+  }
+
+  /** 從池裡取一個同路徑的乾淨節點；池空、節點已失效（父節點被銷毀）就丟掉再試，全沒有回 null 由呼叫端新建。 */
+  private acquireNode(path: string, parent: Node, name: string, data: sp.SkeletonData): Node | null {
+    const pool = this.nodePool.get(path);
+    while (pool && pool.length > 0) {
+      const node = pool.pop() as Node;
+      const skeleton = node.isValid ? node.getComponent(sp.Skeleton) : null;
+      if (!skeleton) continue;
+      if (node.parent !== parent) parent.addChild(node);
+      this.resetNode(node); // 取出時再保險重設一次，不信任回收時的狀態
+      node.name = name;
+      node.layer = this.layer();
+      node.active = true;
+      node.setSiblingIndex(0);
+      if (skeleton.skeletonData !== data) skeleton.skeletonData = data;
+      return node;
+    }
+    return null;
+  }
+
+  private createNode(path: string, parent: Node, name: string, data: sp.SkeletonData): Node {
+    const pooled = this.acquireNode(path, parent, name, data);
+    if (pooled) return pooled;
+    const node = new Node(name);
+    node.layer = this.layer(); node.addComponent(UITransform); parent.addChild(node); node.setSiblingIndex(0);
+    const skeleton = node.addComponent(sp.Skeleton);
+    skeleton.premultipliedAlpha = false; skeleton.skeletonData = data;
+    return node;
   }
 
   private apply(entry: Entry, state: UnitPresentationState): void {
@@ -284,7 +402,7 @@ export class SpineUnitOverlay {
     const hit = entry.hit;
     const chargePose = entry.charge ? sampleChargePose(entry.charge.t, entry.charge.dur) : { scale: 1, shakeX: 0 };
     const shakeX = (hit ? sampleHitShake(hit.elapsed, hit.amplitude) : 0) + chargePose.shakeX;
-    const flash = hit?.flash ? hitFlashStrength(hit.elapsed) : 0;
+    const flash = hit?.flash ? hitFlashStrength(hit.frame, hit.elapsed - hit.holdEnd) : 0;
     // 受擊後退：往面向的反方向推（單位都面向敵方），隊員跟著帶頭者位置走，所以整隊一起退
     const recoilX = hit && hit.push > 0 ? -state.facing * hit.push * sampleHitRecoil(hit.elapsed) : 0;
     if (hit && hit.elapsed >= hitFeedbackTotalSec()) entry.hit = null;
@@ -443,24 +561,21 @@ export class SpineUnitOverlay {
         this.finishLoading(entry, false);
         return;
       }
-      const node = new Node(`SpineUnit_${id}`);
-      node.layer = this.layer(); node.addComponent(UITransform); parent.addChild(node); node.setSiblingIndex(0);
-      const skeleton = node.addComponent(sp.Skeleton);
-      skeleton.premultipliedAlpha = false; skeleton.skeletonData = data;
+      const node = this.createNode(entry.config.path, parent, `SpineUnit_${id}`, data);
       entry.node = node;
       // 隊員直接沿用同一份 data（Cocos 對同一路徑只留一份骨架與貼圖），所以多兩個人只多節點與動畫狀態
       for (let i = 0; i < (entry.config.squad?.length ?? 0); i += 1) {
-        const follower = new Node(`SpineUnit_${id}_m${i + 1}`);
-        follower.layer = this.layer(); follower.addComponent(UITransform); parent.addChild(follower); follower.setSiblingIndex(0);
-        const followerSkel = follower.addComponent(sp.Skeleton);
-        followerSkel.premultipliedAlpha = false; followerSkel.skeletonData = data;
-        entry.followers.push(follower);
+        entry.followers.push(this.createNode(entry.config.path, parent, `SpineUnit_${id}_m${i + 1}`, data));
       }
       // 受擊閃白材質：載好就套到帶頭者與隊員；閃色強度歸零重畫，避免先前寫過的相乘暖色殘留
       ensureHitFlashMaterial(() => {
+        // 單位已移除（節點可能已回收給別的單位）就不要再碰，否則會誤改別人的顏色
+        if (this.entries.get(id) !== entry) return;
         for (const n of [node, ...entry.followers]) {
           const skel = n.isValid ? n.getComponent(sp.Skeleton) : null;
-          if (skel) { skel.customMaterial = hitFlashMaterial; skel.color = Color.WHITE; }
+          if (!skel) continue;
+          if (skel.customMaterial !== hitFlashMaterial) skel.customMaterial = hitFlashMaterial; // 池內重用的節點已套過，不重設以免重建材質實例
+          skel.color = Color.WHITE;
         }
         entry.flashPainted = -1;
       });

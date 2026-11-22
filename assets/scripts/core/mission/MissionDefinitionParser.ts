@@ -98,7 +98,7 @@ export function parseMissionDefinition(raw: unknown, opts: ParseOptions = {}): M
         const amountOk = (v: unknown): boolean => isNum(v) || (isObj(v) && isNum(v.base) && ['reward', 'risk', 'none'].includes(v.mulKey as string));
         switch (e.kind) {
             case 'resource':
-                if (!['grain', 'troops', 'silver'].includes(e.res as string)) bad(`${path}.res`, '資源必須是 grain/troops/silver');
+                if (!['grain', 'troops', 'gold', 'silver'].includes(e.res as string)) bad(`${path}.res`, '資源必須是 grain/troops/gold/silver');
                 if (!amountOk(e.amount)) bad(`${path}.amount`, 'amount 必須是數字或 {base,mulKey}');
                 break;
             case 'generalExp': case 'fame': case 'officerExp':

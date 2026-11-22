@@ -118,6 +118,7 @@ export class Node {
 
     constructor(public name: string = "") {}
     declare position: Vec3;
+    declare scale: Vec3;
     declare activeInHierarchy: boolean;
     getChildByPath(path: string): Node | null {
         let cur: Node | null = this;
@@ -314,7 +315,7 @@ export class AudioSource {
 }
 export class AudioClip { name: string = ""; }
 export class CurveRange { constant = 0; }
-export class Vec4 { constructor(public x = 0, public y = 0, public z = 0, public w = 0) {} }
+export class Vec4 { constructor(public x = 0, public y = 0, public z = 0, public w = 0) {} set(x: number, y: number, z: number, w: number): this { this.x = x; this.y = y; this.z = z; this.w = w; return this; } }
 export class Rect { constructor(public x = 0, public y = 0, public width = 0, public height = 0) {} }
 export class Widget {
     [key: string]: any;
@@ -411,3 +412,20 @@ export const view = {
     setResolutionPolicy: (_policy: number): void => undefined,
     on: (_event: string, _cb: () => void): void => undefined,
 };
+
+/** Spine 組件最小型別替身（只供 SpineGeneralOverlay 型別檢查；測試以執行期 stub 替換實作）。 */
+export namespace sp {
+    export class SkeletonData {
+        getRuntimeData(): { findAnimation(name: string): unknown; findSkin(name: string): unknown } { return { findAnimation: () => null, findSkin: () => null }; }
+    }
+    export class Skeleton {
+        premultipliedAlpha = true; skeletonData: SkeletonData | null = null; customMaterial: Material | null = null;
+        color: Color = new Color(); timeScale = 1;
+        setAnimation(_track: number, _name: string, _loop: boolean): { trackTime: number; delay: number } | null { return null; }
+        addAnimation(_track: number, _name: string, _loop: boolean, _delay: number): unknown { return null; }
+        getCurrent(_track: number): { animation?: unknown; loop: boolean; trackTime: number; animationEnd: number } | null { return null; }
+        setSkin(_name: string): void { /* mock */ }
+        clearTracks(): void { /* mock */ }
+        setToSetupPose(): void { /* mock */ }
+    }
+}

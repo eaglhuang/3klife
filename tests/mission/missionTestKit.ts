@@ -70,7 +70,7 @@ export class FakeMissionHost implements MissionHostPort {
     public tier = 5;
     public fameNow = 100;
     public roster: MissionGeneralFacts[] = [];
-    public stockNow: MissionStock = { grain: 5000, silver: 5000, troops: 3000 };
+    public stockNow: MissionStock = { grain: 5000, gold: 5000, silver: 5000, troops: 3000 };
     public affinity: Record<string, number> = {};
     public volunteers = new Set<string>();
     public ledgers: MissionLedgerEntry[][] = [];
@@ -86,8 +86,8 @@ export class FakeMissionHost implements MissionHostPort {
     public volunteerIdsFor(_def: MissionDef): ReadonlySet<string> { return this.volunteers; }
     public stock(): MissionStock { return { ...this.stockNow }; }
     public spend(c: MissionStock): boolean {
-        if (this.stockNow.grain < c.grain || this.stockNow.silver < c.silver || this.stockNow.troops < c.troops) return false;
-        this.stockNow = { grain: this.stockNow.grain - c.grain, silver: this.stockNow.silver - c.silver, troops: this.stockNow.troops - c.troops };
+        if (this.stockNow.grain < c.grain || this.stockNow.gold < c.gold || this.stockNow.silver < c.silver || this.stockNow.troops < c.troops) return false;
+        this.stockNow = { grain: this.stockNow.grain - c.grain, gold: this.stockNow.gold - c.gold, silver: this.stockNow.silver - c.silver, troops: this.stockNow.troops - c.troops };
         return true;
     }
     public drainEnergy(id: string, n: number): void {

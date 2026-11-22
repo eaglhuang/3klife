@@ -173,7 +173,7 @@ export function createHallMissionSessionSuite(): TestSuite {
         const svc = session.missionService!;
         const card = openCards(session).find((c) => {
             const d = svc.getDetail(c.id);
-            return d.ok && d.value.cost.silver > 0;
+            return d.ok && d.value.cost.gold > 0;
         });
         if (!card) throw new Error('找不到需要黃金的任務');
         const stock = JSON.stringify(session.hallMissionStock());

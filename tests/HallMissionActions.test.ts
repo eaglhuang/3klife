@@ -104,7 +104,7 @@ export function createHallMissionActionsSuite(): TestSuite {
         assert.equals('1,200', bar.costFoodValueLabel);
         assert.equals(0.6, bar.costFoodRatio);
         assert.equals('250', bar.costTroopValueLabel);
-        assert.equals(0, bar.costSilverRatio);
+        assert.equals(0, bar.costFundRatio);
         assert.equals('2 小時 30 分', bar.costTimeValueLabel);
         const state = hallTaskDialogStateOf({ Intel_Reveal_Percent: 0, Available_Actions: [], Costs: { GRAIN: 10, TROOPS: 0, SILVER: 0, TIME_MINUTES: 0 } });
         assert.equals('10', state.costFoodValueLabel);

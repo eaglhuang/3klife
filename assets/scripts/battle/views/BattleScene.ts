@@ -11,6 +11,7 @@ import {
 } from "../../core/config/Constants";
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { services } from "../../core/managers/ServiceLoader";
+import { installBattleSfxGate, uninstallBattleSfxGate } from "../shared/BattleAudio";
 import { bindHeldTallyInstances } from '../../core/config/TallyCardCatalog';
 import { tallyBattleInfoOf } from "../../core/systems/TigerTallyStar";
 import { IBattleEntryParams, DEFAULT_BATTLE_ENTRY_PARAMS, formatBattleEntryLog, formatBattleStageTitle } from '../../shared/BattleEntryParams';
@@ -24,7 +25,7 @@ import { BoardRenderer } from "./BoardRenderer";
 import { UnitRenderer } from "./UnitRenderer";
 import { SceneBackground } from "./SceneBackground";
 import { Camera, view } from "cc";
-import { loadDamageFonts, prewarmVfxPools, prewarmBattleAudioClips, loadEncounter, loadEnemyScale, createGeneral, loadGeneralConfig, buildTallyCards, buildUltimateSkills, buildTacticSummary, loadBattleSkillMetadata, buildRosterSortieInput, buildOrderLoyalty, playerPowerOfGeneral } from './BattleSceneLoader';
+import { loadDamageFonts, prewarmVfxPools, prewarmBattleAudioClips, loadEncounter, loadEnemyScale, createGeneral, loadGeneralConfig, buildTallyCards, buildUltimateSkills, buildTacticSummary, loadBattleSkillMetadata, resolveBattleSortieInput, buildOrderLoyalty, playerPowerOfGeneral } from './BattleSceneLoader';
 import { BattleSkillTargetingFlow } from './BattleSkillTargetingFlow';
 import { BattleSceneFlow } from './BattleSceneFlow';
 import { validateBattleStateReadModel, validateSortieLoadoutReadModel } from '../../core/systems/ReadModelValidators';
@@ -165,6 +166,7 @@ export class BattleScene extends Component {
       // 1. 初始化服務容器（必須在所有 services() 呼叫之前）
       // 傳入 this.node 作為 hostNode，讓 AudioSystem 得以掛載 AudioSource
       services().initialize(this.node);
+      installBattleSfxGate(); // PROG-2-9481：所有音效走同一個節流閘門
       // ensureGlobalDevOverlay(); // 解耦移除
       UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] ServiceLoader 初始化完成");
 
@@ -214,6 +216,9 @@ export class BattleScene extends Component {
 
       // 3. 從 encounters.json 讀取遭遇戰設定
       const encounter = await loadEncounter(this.currentEncounterId);
+      // 極速決戰可用條件（PROG-2-9709）：關卡資料與設定檔先備好，戰場內再按自動才判得出能不能跳過
+      this.sceneContext.encounterStage = encounter ? { id: encounter.id, battleKind: encounter.battleKind, allowQuickResolve: encounter.allowQuickResolve, enemyReserve: encounter.enemyReserve } : null;
+      void services().loadQuickResolveConfig();
       const pgId = battleParams.playerGeneralId;
       const egId = battleParams.enemyGeneralId;
       const terrain: TerrainGrid | undefined = encounter?.terrain;
@@ -275,13 +280,16 @@ export class BattleScene extends Component {
       // 守城戰（PROG-2-9425）：沒設回合上限時用 data/defense-battle 的上限，時限到判我方勝
       const turnLimitRule = resolveDefenseTurnLimit(encounter, await this.ctrl.loadDefenseBattleConfig());
       this.ctrl.configureEncounterTurnLimit(turnLimitRule.turnLimit, turnLimitRule.timeUpRule);
+      // 守城戰我方城寨上限讀 data/defense-battle（PROG-2-9431）
+      this.ctrl.applyDefenseFortress();
       // 天氣排程（PROG-2-0401）：入口參數優先，沒有才用 encounter 設定
       const weatherSchedule = battleParams.weatherSchedule ?? encounter?.weatherSchedule;
       if (weatherSchedule) this.ctrl.setWeatherSchedule(weatherSchedule);
       // 名冊武將出戰：部署改扣出征軍勢與糧草（PROG-2-0070）
-      const sortieInput = buildRosterSortieInput(pg);
+      // QA 預覽／直進戰場沒有帳本時補模擬帳本，委任才出得了兵（PROG-2-9711）
+      const sortie = resolveBattleSortieInput(pg, battleParams.entrySource);
       const scenePresetId = scenePresetIdOf(encounter?.battleKind);
-      if (sortieInput) this.ctrl.configureSortie({ ...sortieInput, scenePresetId });
+      if (sortie) this.ctrl.configureSortie({ ...sortie.input, scenePresetId }, { preview: sortie.preview });
       // 戰前檢查出征編制 read model（DS-06）：只記錄，不擋戰鬥；實際生效的參謀／後勤已由 session 過濾
       const support = services().session.getSortieSupportSummary(pg.id);
       const sortieCheck = validateSortieLoadoutReadModel({ Commander_UID: pg.id, Strategist_UID: support.strategist?.id ?? null, Deputy_UID: support.deputy?.id ?? null });
@@ -414,6 +422,9 @@ export class BattleScene extends Component {
       this.hud?.setPlayerName(pg.name);
       this.hud?.setEnemyName(eg.name);
       this.hud?.setStageTitle(formatBattleStageTitle(encounter?.name));
+      // 守城戰顯示我方城寨血條（PROG-2-9430）
+      this.hud?.setDefenseFortressBarVisible?.(this.ctrl.state.siegeDefender === Faction.Player, this.ctrl.state.playerFortressMaxHp);
+      this.hud?.setFortressHp(Faction.Player, this.ctrl.state.playerFortressHp);
       this.hud?.refresh(
         snap.turn,
         snap.playerFood,
@@ -486,6 +497,7 @@ export class BattleScene extends Component {
         onBoardPlacement: (x, y) => this.turnFlowManager?.doDeployRaycast(x, y),
         onReplay: () => this.onReplay(),
         onBack: () => this._onBackToLobby(),
+        onAutoPlayStarted: () => this.turnFlowManager?.scheduleAutoPlayEndTurn(),
       });
       this.refreshBattleViews();
       if (battleParams.tutorial) {
@@ -536,6 +548,7 @@ export class BattleScene extends Component {
   }
 
   onDestroy(): void {
+    uninstallBattleSfxGate();
     this.sceneContext.combatVisualQueue.length = 0;
     this.sceneContext.isDrainingCombatVisual = false;
     this.sceneContext.isAdvancingTurn = false;

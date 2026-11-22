@@ -30,6 +30,7 @@ import { setEnemyTurnPlayback } from './BattleTimeScale';
 import { services } from '../../core/managers/ServiceLoader';
 import { duelLogType } from '../../core/systems/DailyNewsEngine';
 import type { BattleResult } from '../BattleTypes';
+import { shouldAutoEndTurn } from '../../core/systems/AutoPlay';
 
 export class TurnFlowManager {
   private _advanceTurnGeneration = 0;
@@ -42,6 +43,8 @@ export class TurnFlowManager {
   private _duelFallback: DuelChallengeFallback | null = null;
   /** 單挑彈窗正等玩家決定接不接：這段是等人，不算演出卡死（PROG-2-9404） */
   private _duelDecisionPending = false;
+  /** 自動代打的「自動結束回合」已排程（避免重複排程，PROG-2-9707） */
+  private _autoEndTurnScheduled = false;
 
   constructor(
     private readonly ctx: BattleSceneContext,
@@ -145,6 +148,55 @@ export class TurnFlowManager {
     this.bridge.playTurnBanner(Faction.Player);
     c.boardRenderer?.setDeployHintFaction(Faction.Player);
     this.bridge.refreshBattleViews();
+    this.scheduleAutoPlayEndTurn();
+  }
+
+  /**
+   * 自動代打（PROG-2-9707）：玩家回合開始後約 1 秒自動按結束回合，一路打到戰鬥結束。
+   * 部署由委任機制在 resolvePlayerTurn 前完成；沒有出征軍勢時只自動結束回合。
+   * 單挑面板或等待出陣時不硬推，延後再試；自動代打關閉或戰鬥結束就停止。
+   */
+  public scheduleAutoPlayEndTurn(): void {
+    if (this._autoEndTurnScheduled || !this.bridge.isAutoPlayActive) return;
+    this._autoEndTurnScheduled = true;
+    this.scene.scheduleOnce(() => {
+      this._autoEndTurnScheduled = false;
+      const c = this.ctx;
+      const active = this.bridge.isAutoPlayActive;
+      if (!active || !c.ctrl || c.ctrl.state.battleEndAnnounced) return;
+      if (c.isAdvancingTurn) return; // finalizeAdvance 會再排一次
+      // 等待選格出陣時代為放置主將（PROG-2-9712）：否則自動代打永遠在等玩家點格子
+      if (c.ctrl.isWaitingDuelPlacement && !c.isDuelPanelActive) this._autoPlaceGeneral();
+      if (!shouldAutoEndTurn({
+        active,
+        battleEnded: c.ctrl.state.battleEndAnnounced,
+        isAdvancingTurn: c.isAdvancingTurn,
+        waitingDuelPlacement: c.ctrl.isWaitingDuelPlacement,
+        duelPanelActive: c.isDuelPanelActive,
+      })) { this.scheduleAutoPlayEndTurn(); return; }
+      this.onEndTurn();
+      // onEndTurn 有幾種靜默早退（流程不在可下指令狀態等）；早退後沒有 finalizeAdvance 會再排，
+      // 自動代打就斷線、只能手動一直按結束回合（PROG-2-9712）。沒進入推進就記下原因並再排一次
+      if (!c.isAdvancingTurn && this.bridge.isAutoPlayActive && !c.ctrl.state.battleEndAnnounced) {
+        UCUFLogger.warn(LogCategory.BATTLE, `[TurnFlowManager] 自動代打結束回合未生效（canAdvance=${c.ctrl.canAdvanceBattleTurn()} waitingDuel=${c.ctrl.isWaitingDuelPlacement} duelPanel=${c.isDuelPanelActive}），稍後重試`);
+        this.scheduleAutoPlayEndTurn();
+      }
+    }, BATTLE_TURN_FLOW_TIMING.autoPlayEndTurnDelaySec);
+  }
+
+  /** 自動代打代為放置等待出陣的主將（PROG-2-9712）：委任選路挑出兵口；沒有空格就取消出陣 */
+  private _autoPlaceGeneral(): void {
+    const ctrl = this.ctx.ctrl;
+    if (!ctrl) return;
+    const lane = ctrl.pickDelegateLane();
+    const unit = lane >= 0 ? ctrl.placeGeneralOnBoard(lane, 0) : null;
+    if (unit) {
+      this.ctx.battleLogPanel?.append(`自動代打：我方武將出陣至 ${battleCellLabel(lane, 0)}`);
+      this.bridge.refreshBattleViews();
+      this.ctx.unitRenderer?.playDeploy(unit);
+      return;
+    }
+    ctrl.cancelGeneralDuelPlacement();
   }
 
   /**
@@ -187,7 +239,7 @@ export class TurnFlowManager {
    * 玩家部署一支後呼叫。還有部署額度時不自動結束回合：玩家可連續部署，或自己按「結束回合」。
    * 部署額度用完（行動力歸 0）就自動結束回合，不用再按（使用者 2026-11-17，PROG-2-9397）。
    * 「委任」開啟時維持每次部署後自動推進，否則委任 AI 的出兵流程會卡在等玩家按結束回合。
-   * 「自動戰鬥」是直接算出勝負（AutoBattleToggled → BattleEnded），不經過這裡。
+   * 「自動代打」（PROG-2-9707）靠委任部署＋scheduleAutoPlayEndTurn 推進；再按自動才是直接算勝負（跳過演出）。
    */
   public onPlayerDeployed(): void {
     const c = this.ctx;
@@ -373,6 +425,16 @@ export class TurnFlowManager {
     const decision = c.ctrl.evaluateDuelAcceptance(Faction.Enemy);
     const playerScore = 1.0 - decision.score;
     c.isDuelPanelActive = true;
+
+    // 自動代打中不等玩家點選（PROG-2-9712）：照單挑評估代為接受或拒絕，停一下讓玩家看到發生了什麼
+    if (this.bridge.isAutoPlayActive) {
+      const line = `自動代打：${decision.accepted ? '接受' : '拒絕'}${enemyGeneralName}的單挑`;
+      c.battleLogPanel?.append(line);
+      c.deployRuntime?.showToast(line, BATTLE_TURN_FLOW_TIMING.autoDuelDecisionDelaySec);
+      this._duelDecisionPending = true;
+      this.scene.scheduleOnce(() => { void this._onPlayerDuelDecision(decision.accepted); }, BATTLE_TURN_FLOW_TIMING.autoDuelDecisionDelaySec);
+      return;
+    }
 
     // 場景未綁定 duelChallengePanel 時（場景檔為 null）改用執行期建立的後備彈窗，
     // 讓玩家真正選擇接受或拒絕；只有建立或顯示失敗才退回自動接受。

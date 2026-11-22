@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "source": "../年終守城戰規格書.md",
+  "indexTitle": "年終守城戰規格書（分片索引）",
+  "indexPath": "docs/遊戲規格文件/系統規格書/年終守城戰規格書.md",
+  "type": "markdown-h2",
+  "preambleShard": "shard-a",
+  "defaultShard": "shard-d",
+  "shards": [
+    {"name": "shard-a", "title": "1–3 定位入口、敵軍三檔、城寨回合與勝敗", "pattern": "^[1-3][.] "},
+    {"name": "shard-b", "title": "4–6 敵方工兵、戰後結算、守城→年報→換年", "pattern": "^[4-6][.] "},
+    {"name": "shard-c", "title": "7–10 HUD 城寨血條、共用框架、數值檔、測試驗收", "pattern": "^([7-9]|10)[.] "},
+    {"name": "shard-d", "title": "11–12 待裁決矛盾、來源索引", "pattern": "."}
+  ]
+}

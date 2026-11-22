@@ -135,7 +135,8 @@ function rewardFor(balance, wall, diff) {
     const r = balance.wallRewards[wall];
     return {
         grain: Math.round(d.reward.grain * r.grain),
-        silver: Math.round(d.reward.silver * r.silver),
+        // 公務牆（軍務／政務／外交）的錢一律走金（國家公庫）；銀兩（家族）只給手寫的商業、民生任務
+        gold: Math.round(d.reward.gold * r.gold),
         exp: Math.round(d.reward.generalExp * r.generalExp),
         fame: d.fame,
     };
@@ -144,7 +145,7 @@ function rewardFor(balance, wall, diff) {
 function rewardEffects(rw, factor) {
     const list = [];
     if (rw.grain > 0) list.push({ kind: 'resource', res: 'grain', amount: mul(Math.round(rw.grain * factor), 'reward') });
-    if (rw.silver > 0) list.push({ kind: 'resource', res: 'silver', amount: mul(Math.round(rw.silver * factor), 'reward') });
+    if (rw.gold > 0) list.push({ kind: 'resource', res: 'gold', amount: mul(Math.round(rw.gold * factor), 'reward') });
     if (rw.exp > 0) list.push({ kind: 'generalExp', amount: mul(Math.round(rw.exp * factor), 'reward') });
     list.push({ kind: 'fame', amount: mul(Math.max(1, Math.round(rw.fame * factor)), 'reward') });
     return list;
@@ -153,7 +154,7 @@ function rewardEffects(rw, factor) {
 /** 大失敗的損失：軍事與遠征折兵，內政虧銀（金額取難度表的 riskLoss）。 */
 function lossEffects(balance, wall, diff, scale) {
     const loss = Math.round(balance.difficulties[diff].riskLoss * scale);
-    return [{ kind: 'resource', res: wall === 'Domestic' ? 'silver' : 'troops', amount: mul(-loss, 'risk') }];
+    return [{ kind: 'resource', res: wall === 'Domestic' ? 'gold' : 'troops', amount: mul(-loss, 'risk') }];
 }
 
 /**

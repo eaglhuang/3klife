@@ -1,6 +1,6 @@
 /**
  * NewPlayerJourneyE2E.test.ts — 新玩家完整旅程整合流程（PROG-2-0696）
- * 新局 → 開場（中途存讀檔接回幕）→ 首戰 → 紅顏趕路倒數 → 隔日登入領入學令，全程多次存讀檔。
+ * 新局 → 開場（中途存讀檔接回幕）→ 首戰 → 紅顏趕路倒數 → 隔日登入（入學令已改只走季發，登入不發），全程多次存讀檔。
  */
 import { assert, TestSuite } from './TestRunner';
 import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
@@ -28,12 +28,12 @@ function build(adapter: MemoryStorageAdapter): GameSession {
 export function createNewPlayerJourneyE2ESuite(): TestSuite {
     const suite = new TestSuite('NewPlayerJourneyE2E (新玩家完整旅程 PROG-2-0696)');
 
-    suite.test('開場中途存讀檔接回幕 → 首戰 → 紅顏趕路倒數 → 隔日領入學令', async () => {
+    suite.test('開場中途存讀檔接回幕 → 首戰 → 紅顏趕路倒數 → 隔日登入不發入學令（PROG-2-9206）', async () => {
         services().initialize();
         sys.localStorage.removeItem('CLIENT_DEVICE_ID');
         const adapter = new MemoryStorageAdapter();
 
-        // 1. 新局，進入第一幕，登入領入學令
+        // 1. 新局，進入第一幕，登入（入學令只走季發，登入不發）
         const a = build(adapter);
         a.startNewGame(3);
         const flowA = createNewPlayerOpeningFlow();
@@ -41,7 +41,7 @@ export function createNewPlayerJourneyE2ESuite(): TestSuite {
         await a.setOpeningPhase(flowA.current()!.id);
         a.recordLoginAt(DAY1);
         const tokenDay1 = a.itemCount(ITEM_ADMISSION_TOKEN);
-        assert.isTrue(tokenDay1 >= 1, '首登發入學令');
+        assert.equals(0, tokenDay1, '首登不發入學令');
         flowA.advance({ type: OPENING_INTRO_DONE });
         flowA.advance({ type: SHOWCASE_DONE_EVENT });
         await a.setOpeningPhase(flowA.current()!.id);
@@ -77,14 +77,14 @@ export function createNewPlayerJourneyE2ESuite(): TestSuite {
         assert.equals(shownAt + 3 * HOUR, c.countdown!.finishTimestamp);
         await c.save();
 
-        // 4. 隔日重開：倒數仍依絕對時間；入學令再發一次；開場與紅顏不重播
+        // 4. 隔日重開：倒數仍依絕對時間；入學令不發；開場與紅顏不重播
         const d = build(adapter);
         assert.isTrue(await d.load());
         assert.equals(shownAt + 3 * HOUR, d.countdown!.finishTimestamp, '倒數存讀檔保留');
         assert.equals(null, d.openingPhase);
         assert.isFalse(d.shouldShowOpeningRedFace);
         d.recordLoginAt(DAY1 + 24 * HOUR);
-        assert.isTrue(d.itemCount(ITEM_ADMISSION_TOKEN) > tokenDay1, '隔日再發入學令');
+        assert.equals(tokenDay1, d.itemCount(ITEM_ADMISSION_TOKEN), '隔日登入也不發入學令');
         // 5. 新遊戲覆蓋：舊倒數、開場進度、紅顏旗標全部清掉
         d.startNewGame(3);
         assert.equals(null, d.countdown, '新局清倒數');

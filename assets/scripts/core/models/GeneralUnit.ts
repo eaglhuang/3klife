@@ -369,6 +369,10 @@ export interface GeneralConfig {
   vitality?: number;
   maxVitality?: number;
   role?: string;
+  /** 哺乳方式（PROG-2-9485）；缺值＝母乳。母親產後與玩家改方式時使用 */
+  /** 哺乳登記被占用擋下，下一季季結重試（PROG-2-9581） */
+  nursingPending?: boolean;
+  nursingMethod?: import('../../shared/family/FamilyTypes').NursingMethod;
   status?: string;
   /** 被敵國關押的紀錄（PROG-2-9140）：被哪一國關、從第幾季（totalSeasonsElapsed）開始；沒有欄位 = 沒被囚（舊檔相容） */
   captivity?: { nationId: string; sinceSeason: number };
@@ -417,6 +421,14 @@ export interface GeneralConfig {
   pinkAncestorCounts?: Record<string, number>;
 
   learnedTactics?: string[];
+  /**
+   * 技能持有紀錄（PROG-2-9204 SKL-M）：技能 id → 等級、熟練度與來源；戰法清單仍以 learnedTactics 為準。
+   * 舊存檔沒有此欄位，讀取端補成「等級 1、來源 legacy」。
+   * TODO(第二版)：天賦、職業、家族奧義的持有結構，不用暫時欄位佔位。
+   */
+  skillMeta?: Record<string, { level: number; xp: number; from: string; at: number }>;
+  /** 技能調整值（期中方針 policy:* 等，持續到結業）；缺值視為空（PROG-2-9204） */
+  skillModifiers?: { id: string; source: string; until: 'graduation' | 'manual'; appliedAt: number }[];
   /** 學府結業等途徑習得的特質 id（PROG-2-1909） */
   learnedTraits?: string[];
   inspiredTactics?: string[];
@@ -443,6 +455,8 @@ export interface GeneralConfig {
   earlyAwakenBonusPct?: number;
   /** 佳話聯姻觸發稱號 ID 列表（PROG-2-9181） */
   marriageEpithets?: string[];
+  /** 天下高門求親對象標記：結緣時相性 +2（PROG-2-9193） */
+  fromHighClanProposal?: boolean;
 
   stats?: GeneralStatsConfig;
   pol?: number;

@@ -49,6 +49,7 @@ import { generateVirtualAncestry, toRegistryEntries } from '../systems/VirtualAn
 import type { RandomSource } from '../systems/GeneralAging';
 import { relationEventsForBreeding, RelationEventLedger } from '../systems/RelationEvents';
 import { applyChildBirthBenefit, clanPrestigeBenefitOf, ensurePurpleFactor } from '../systems/MvpLoopController';
+import type { ClanTradition } from '../systems/ClanTradition';
 
 /** 雙親各上溯 3 代，合計 28 祖位 */
 const PROBE_ANCESTOR_GENERATIONS = 3;
@@ -88,6 +89,8 @@ export interface BreedingServiceOptions {
     getParentMood?: (generalId: string) => MindMood;
     /** 結緣成親後通知心智系統寫入雙親記憶（PROG-2-9165） */
     onMarriageConceived?: (ctx: { fatherId: string; motherId: string; childId: string; compatibilityK: number; isHistoricalPair: boolean }) => void;
+    /** Tier 2 以上郡望家風（PROG-2-9193 宗脈常駐保底 1★ 因子） */
+    getClanTradition?: () => ClanTradition | null;
 }
 
 export class BreedingError extends Error {}
@@ -286,6 +289,7 @@ export class BreedingService {
             isHistoricalPair: this._historicalResolver(),
             rosterLookup: this._rosterLookup(roster),
             roster,
+            clanTradition: this._options.getClanTradition?.() ?? null,
             pairRecord: this._pairRecordFor(father, mother),
             motherConceptionMod: femaleSourceConceptionMod(this._options.getFemaleSource?.(mother.id) ?? null),
             historicalConceptionMod: historicalPairs ? conceptionModBetween(historicalPairs, father.id, mother.id) : undefined,

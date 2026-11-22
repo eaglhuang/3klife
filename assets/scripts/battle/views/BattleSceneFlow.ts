@@ -4,7 +4,7 @@ import { playTurnBannerOn } from './TurnBannerPresenter';
 import { Faction } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
 import type { BattleController } from '../controllers/BattleController';
-import { buildOrderLoyalty, buildRosterSortieInput, createGeneral, loadEncounter, loadEnemyScale, playerPowerOfGeneral } from './BattleSceneLoader';
+import { buildOrderLoyalty, resolveBattleSortieInput, createGeneral, loadEncounter, loadEnemyScale, playerPowerOfGeneral } from './BattleSceneLoader';
 import { buildSceneGambitSummary } from './BattleSceneGambitSummary';
 import { BATTLE_TURN_FLOW_TIMING } from './BattlePresentationTiming';
 import type { IBattleEntryParams } from '../../shared/BattleEntryParams';
@@ -18,6 +18,7 @@ import type { BoardRenderer } from './BoardRenderer';
 import { resolveAiDifficulty } from '../../core/systems/AiSpCharge';
 import { openingAiLogLinesOf } from '../../core/systems/AiEntranceLines';
 import { resolveDefenseTurnLimit, siegeDefenderOf } from '../../core/systems/DefenseBattle';
+import { consumeBattleTip } from '../../core/systems/DefeatDiagnosis';
 
 export interface BattleSceneFlowContext {
   getCtrl(): BattleController | null;
@@ -95,12 +96,13 @@ export class BattleSceneFlow {
     // 關卡回合時限（PROG-2-9423）：再戰一次也要重新套用（判定設定在第一次開戰時已讀好）
     const turnLimitRule = resolveDefenseTurnLimit(encounter, ctrl.defenseBattle);
     ctrl.configureEncounterTurnLimit(turnLimitRule.turnLimit, turnLimitRule.timeUpRule);
+    ctrl.applyDefenseFortress();
     // 天氣排程（PROG-2-0401）：入口參數優先，沒有才用 encounter 設定
     const weatherSchedule = battleParams?.weatherSchedule ?? encounter?.weatherSchedule;
     if (weatherSchedule) ctrl.setWeatherSchedule(weatherSchedule);
     // 名冊武將出戰：部署改扣出征軍勢與糧草（PROG-2-0070）
-    const sortieInput = buildRosterSortieInput(pg);
-    if (sortieInput) ctrl.configureSortie({ ...sortieInput, scenePresetId: scenePresetIdOf(encounter?.battleKind) });
+    const sortie = resolveBattleSortieInput(pg, battleParams?.entrySource);
+    if (sortie) ctrl.configureSortie({ ...sortie.input, scenePresetId: scenePresetIdOf(encounter?.battleKind) }, { preview: sortie.preview });
     ctrl.configureOrderLoyalty(buildOrderLoyalty(pg));
 
     const deployRuntime = this.ctx.getDeployRuntime();
@@ -115,6 +117,9 @@ export class BattleSceneFlow {
     hud?.setEnemyGeneralId(egId);
     hud?.setPlayerName(pg.name);
     hud?.setEnemyName(eg.name);
+    // 守城戰我方城寨血條（PROG-2-9430）：再戰一次也照守方顯示
+    hud?.setDefenseFortressBarVisible?.(ctrl.state.siegeDefender === Faction.Player, ctrl.state.playerFortressMaxHp);
+    hud?.setFortressHp(Faction.Player, ctrl.state.playerFortressHp);
     hud?.refresh(
       snap.turn,
       snap.playerFood,
@@ -129,6 +134,12 @@ export class BattleSceneFlow {
     battleLogPanel?.clear();
     battleLogPanel?.append(`重新開始：第 ${snap.turn} 回合，糧草 ${snap.playerFood}`);
     for (const line of openingAiLogLinesOf(egId, eg.name, difficulty)) battleLogPanel?.append(line);
+    // 照軍師建議再戰（PROG-2-9712）：開場把提醒寫進戰報並跳提示
+    const tip = consumeBattleTip();
+    if (tip) {
+      battleLogPanel?.append(tip);
+      deployRuntime?.showToast(tip);
+    }
     this.presentSceneGambitFeedback();
     this.ctx.getBoardRenderer()?.setDeployHintFaction(Faction.Player);
 

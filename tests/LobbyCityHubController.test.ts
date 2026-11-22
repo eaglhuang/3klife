@@ -75,6 +75,9 @@ export function createLobbyCityHubControllerSuite(): TestSuite {
         assert.equals('郡守　主將 魏延', view.texts.lordSub);
         assert.equals('金 248,400', view.texts.resGold);
         assert.equals('兵 6,400', view.texts.resTroops);
+        assert.equals('糧草 600', view.texts.resFood, '糧食統一稱糧草（CUR-1）');
+        assert.equals('銀兩 0', view.texts.resSilver, '沒給銀兩顯示 0');
+        assert.equals('銀兩 1,234', buildLobbyCityHubView(input({ silver: 1234 })).texts.resSilver, '頂欄銀兩格（PROG-2-9593）');
         assert.equals('白身　主將 未定', buildLobbyCityHubView(input({ leadName: null, officerRank: '' })).texts.lordSub);
     });
 

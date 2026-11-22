@@ -12,7 +12,7 @@ import { isSceneGambitTactic } from './HallSceneGambit';
 export const HALL_DIFFICULTIES = ['EASY', 'NORMAL', 'ELITE', 'ADVANCED', 'HELL'] as const;
 export const HALL_TASK_ACTIONS = ['RECON', 'EXECUTE', 'WAIT', 'ASSIGN'] as const;
 export const HALL_DAY_NIGHT_MODES = ['DAY', 'NIGHT'] as const;
-export const HALL_REWARD_TYPES = ['GRAIN', 'SILVER', 'GENERAL_EXP', 'OFFICER_EXP'] as const;
+export const HALL_REWARD_TYPES = ['GRAIN', 'GOLD', 'SILVER', 'GENERAL_EXP', 'OFFICER_EXP'] as const;
 export const HALL_BOARD_KEYS = ['Military', 'Domestic'] as const;
 /** 選填的任務牆：世界沙盤遠征（缺省視為沒有遠征任務）。 */
 export const HALL_OPTIONAL_BOARD_KEYS = ['Expedition'] as const;
@@ -43,7 +43,8 @@ export interface HallTask {
     AI_Assign_Enabled: boolean;
     Available_Actions: HallTaskAction[];
     Rewards: { Base: HallReward[]; Perfect_Bonus: HallReward[] };
-    Costs: { GRAIN: number; TROOPS: number; SILVER: number; TIME_MINUTES: number };
+    /** GOLD＝金（國家公庫）耗費；SILVER＝銀兩（家族）耗費；舊資料沒有 GOLD 欄視為 0 */
+    Costs: { GRAIN: number; TROOPS: number; GOLD?: number; SILVER: number; TIME_MINUTES: number };
 }
 
 export interface HallBoard {
@@ -170,6 +171,7 @@ function checkTask(issues: LobbyHubIssue[], path: string, value: unknown): void 
         for (const key of ['GRAIN', 'TROOPS', 'SILVER', 'TIME_MINUTES']) {
             if (!isInt(value.Costs[key], 0)) issues.push({ path: `${path}.Costs.${key}`, message: '必須為非負整數' });
         }
+        if (value.Costs.GOLD !== undefined && !isInt(value.Costs.GOLD, 0)) issues.push({ path: `${path}.Costs.GOLD`, message: '必須為非負整數' });
     }
 }
 

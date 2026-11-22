@@ -1,0 +1,118 @@
+{
+  "schema": "reward-config.v1",
+  "pools": [],
+  "bundles": [
+    {
+      "id": "BUNDLE_MILESTONE_KILL_100",
+      "kind": "reward",
+      "effects": [{ "kind": "item", "itemId": "ITEM_BATTLE_NOTE", "qty": 1, "itemSource": "TASK" }],
+      "sources": ["milestone"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_MILESTONE_KILL_1000",
+      "kind": "reward",
+      "effects": [{ "kind": "item", "itemId": "ITEM_BATTLE_NOTE", "qty": 3, "itemSource": "TASK" }],
+      "sources": ["milestone"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_ACADEMY_GRAD_S",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "gold", "amount": 20000 }],
+      "sources": ["quest"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_ACADEMY_GRAD_A",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "gold", "amount": 12000 }],
+      "sources": ["quest"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_ACADEMY_GRAD_B",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "gold", "amount": 6000 }],
+      "sources": ["quest"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_ACADEMY_GRAD_C",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "gold", "amount": 2000 }],
+      "sources": ["quest"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_GACHA_DUP_R",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "bronze", "amount": 100 }],
+      "sources": ["gacha"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_GACHA_DUP_SR",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "bronze", "amount": 400 }],
+      "sources": ["gacha"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_GACHA_DUP_SSR",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "gems", "amount": 40 }],
+      "sources": ["gacha"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_SUPPORT_TICKET_GRAD",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "mentorTickets", "amount": 10 }],
+      "sources": ["academy"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_SUPPORT_TICKET_GRAD_S",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "mentorTickets", "amount": 15 }],
+      "sources": ["academy"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_SUPPORT_TICKET_TERM",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "mentorTickets", "amount": 5 }],
+      "sources": ["academy"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_SUPPORT_TICKET_LOGIN7",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "mentorTickets", "amount": 1 }],
+      "sources": ["login"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_QUICK_RESOLVE_WRIT_BOSS",
+      "kind": "reward",
+      "effects": [{ "kind": "item", "itemId": "ITEM_QUICK_RESOLVE_WRIT", "qty": 1, "itemSource": "TASK" }],
+      "sources": ["battle"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_QUICK_RESOLVE_WRIT_DEFENSE",
+      "kind": "reward",
+      "effects": [{ "kind": "item", "itemId": "ITEM_QUICK_RESOLVE_WRIT", "qty": 2, "itemSource": "TASK" }],
+      "sources": ["battle"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_QUICK_RESOLVE_WRIT_SEASON",
+      "kind": "reward",
+      "effects": [{ "kind": "item", "itemId": "ITEM_QUICK_RESOLVE_WRIT", "qty": 1, "itemSource": "TASK" }],
+      "sources": ["battle"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    }
+  ]
+}

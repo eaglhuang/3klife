@@ -8,9 +8,10 @@ import { judgeTimeUp, type TimeUpVerdict, type TimeUpWinner } from '../../core/s
 
 /**
  * 戰鬥怎麼結束的（PROG-2-9414）：結算窗依此挑文案。
- * general＝敗方主將倒下／fortress＝敗方城寨被破／time-up＝回合用盡／camp＝夜襲、埋伏佔領營帳。
+ * general＝敗方主將倒下／fortress＝敗方城寨被破／time-up＝回合用盡／camp＝夜襲、埋伏佔領營帳／
+ * auto＝玩家按「自動」以極速決戰模擬分出勝負（PROG-2-9703）。
  */
-export type BattleEndCause = 'general' | 'fortress' | 'time-up' | 'camp';
+export type BattleEndCause = 'general' | 'fortress' | 'time-up' | 'camp' | 'auto';
 
 export interface BattleEndedPayload {
   result: BattleResult;

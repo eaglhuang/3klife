@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — AI / AgentSkill / Server
 
-> 生成日期: 2026-11-20
+> 生成日期: 2026-11-21
 > 這是 `doc-id-registry.md` 的「AI / AgentSkill / Server」分片。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -39,129 +39,129 @@
 | `doc_ai_0033` | .agents/workflows/ui-verify.md | Context Budget Guard |
 | `doc_ai_0034` | .github/instructions/ucuf-compliance.instructions.md | UCUF CompositePanel 合規指令 |
 | `doc_ai_0035` | docs/agent-briefs/atm-task-template.md | ATM 任務卡模板 |
-| `doc_ai_0036` | .github/instructions/atm-create.instructions.md | ATM Create |
-| `doc_ai_0037` | .github/instructions/atm-evidence.instructions.md | ATM Evidence |
-| `doc_ai_0038` | .github/instructions/atm-governance-router.instructions.md | ATM Governance Router |
-| `doc_ai_0039` | .github/instructions/atm-handoff.instructions.md | ATM Handoff |
-| `doc_ai_0040` | .github/instructions/atm-internal-build-sync.instructions.md | ATM Internal Build Sync |
-| `doc_ai_0041` | .github/instructions/atm-lock.instructions.md | ATM Lock |
-| `doc_ai_0042` | .github/instructions/atm-next.instructions.md | ATM Next |
-| `doc_ai_0043` | .github/instructions/atm-orient.instructions.md | ATM Orient |
-| `doc_ai_0044` | .github/instructions/atm-upgrade-scan.instructions.md | ATM Upgrade Scan |
+| `doc_ai_0036` | .github/instructions/atm-atom-map-refactor.instructions.md | ATM Atom Map Refactor |
+| `doc_ai_0037` | .github/instructions/atm-create.instructions.md | ATM Create |
+| `doc_ai_0038` | .github/instructions/atm-evidence.instructions.md | ATM Evidence |
+| `doc_ai_0039` | .github/instructions/atm-governance-router.instructions.md | ATM Governance Router |
+| `doc_ai_0040` | .github/instructions/atm-handoff.instructions.md | ATM Handoff |
+| `doc_ai_0041` | .github/instructions/atm-internal-build-sync.instructions.md | ATM Internal Build Sync |
+| `doc_ai_0042` | .github/instructions/atm-lock.instructions.md | ATM Lock |
+| `doc_ai_0043` | .github/instructions/atm-next.instructions.md | ATM Next |
+| `doc_ai_0044` | .github/instructions/atm-orient.instructions.md | ATM Orient |
 | `doc_ai_0045` | .github/instructions/atm-task-intent-resolver.instructions.md | ATM Task Intent Resolver |
-| `doc_ai_0046` | docs/agent-briefs/npc-brain-handoff-2026-05-29.md | `npc-brain` 資料演進與交接摘要 |
-| `doc_ai_0047` | .github/instructions/atm-atom-map-refactor.instructions.md | ATM Atom Map Refactor |
+| `doc_ai_0046` | .github/instructions/atm-upgrade-scan.instructions.md | ATM Upgrade Scan |
+| `doc_ai_0047` | docs/agent-briefs/npc-brain-handoff-2026-05-29.md | `npc-brain` 資料演進與交接摘要 |
 
 ## Agent Skill 專用 (`doc_agentskill`)
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
 | `doc_agentskill_0001` | .agents/skills/best-mode/SKILL.md | Best Mode |
-| `doc_agentskill_0002` | .agents/skills/cocos-bug-triage/SKILL.md | Cocos Bug Triage（鏡像索引） |
-| `doc_agentskill_0003` | .agents/skills/cocos-log-reader/SKILL.md | Cocos Log Reader（鏡像索引） |
 | `doc_agentskill_0004` | .agents/skills/cocos-preview-qa/SKILL.md | Cocos Preview QA（Browser Review 自動截圖 + 比對） |
-| `doc_agentskill_0005` | .agents/skills/cocos-screenshot/SKILL.md | Cocos Screenshot（Editor Preview / Editor 視窗截圖） |
 | `doc_agentskill_0006` | .agents/skills/cocos-vfx-browser-qa/SKILL.md | Cocos VFX Browser QA |
 | `doc_agentskill_0007` | .agents/skills/context-budget-guard/SKILL.md | Context Budget Guard |
 | `doc_agentskill_0008` | .agents/skills/encoding-touched-guard/SKILL.md | Encoding Touched Guard |
-| `doc_agentskill_0009` | .github/skills/cocos-bug-triage/SKILL.md | Cocos Bug Triage（鏡像索引） |
-| `doc_agentskill_0010` | .github/skills/cocos-log-reader/SKILL.md | Cocos Log Reader（鏡像索引） |
-| `doc_agentskill_0011` | .github/skills/cocos-preview-qa/SKILL.md | Cocos Preview QA（Browser Review 自動截圖 + 比對） |
-| `doc_agentskill_0012` | .github/skills/cocos-screenshot/SKILL.md | Cocos Screenshot（Editor Preview / Editor 視窗截圖） |
-| `doc_agentskill_0013` | .github/skills/comfyui-sdxl-partial-asset-gen/SKILL.md | ComfyUI SDXL Partial Asset Gen |
-| `doc_agentskill_0014` | .github/skills/dalle3-image-gen/SKILL.md | DALL-E 3 Image Generation |
-| `doc_agentskill_0015` | .github/skills/doc-shard-manager/SKILL.md | Doc Shard Manager SKILL |
-| `doc_agentskill_0016` | .github/skills/encoding-touched-guard/SKILL.md | Encoding Touched Guard |
-| `doc_agentskill_0017` | .github/skills/general-balance-tuner/SKILL.md | General Balance Tuner |
-| `doc_agentskill_0018` | .github/skills/general-data-pipeline/SKILL.md | General Data Pipeline |
-| `doc_agentskill_0019` | .github/skills/general-story-writer/SKILL.md | General Story Writer |
-| `doc_agentskill_0020` | .github/skills/nano-banana-gen/SKILL.md | Nano Banana 圖像生成 |
-| `doc_agentskill_0021` | .github/skills/ui-asset-gen-director/SKILL.md | UI Asset Gen Director |
-| `doc_agentskill_0022` | .github/skills/ui-asset-qc/SKILL.md | UI Asset QC |
-| `doc_agentskill_0023` | .github/skills/ui-asset-slice-pipeline/SKILL.md | UI Asset Slice Pipeline |
-| `doc_agentskill_0024` | .github/skills/ui-brief-generator/SKILL.md | UI Brief Generator |
-| `doc_agentskill_0025` | .github/skills/ui-family-architect/SKILL.md | UI Family Architect |
-| `doc_agentskill_0026` | .github/skills/task-card-opener/SKILL.md | Task Card Opener |
-| `doc_agentskill_0027` | .github/skills/ui-preview-judge/SKILL.md | UI Preview Judge |
-| `doc_agentskill_0028` | .github/skills/ui-reference-decompose/SKILL.md | UI Reference Decompose |
-| `doc_agentskill_0029` | .github/skills/ui-runtime-verify/SKILL.md | UI Runtime Verify |
-| `doc_agentskill_0030` | .github/skills/ui-spec-scaffold/SKILL.md | UI Spec Scaffold |
-| `doc_agentskill_0031` | .github/skills/ui-vibe-pipeline/SKILL.md | UI Vibe Pipeline |
-| `doc_agentskill_0032` | .github/skills/crossref-progress-scanner/SKILL.md | crossref-progress-scanner Skill |
-| `doc_agentskill_0034` | .github/skills/doc-consolidation-flow/SKILL.md | Doc Consolidation Flow |
-| `doc_agentskill_0035` | .github/skills/cocos-vfx-browser-qa/SKILL.md | Cocos VFX Browser QA |
-| `doc_agentskill_0036` | .github/skills/html-to-ucuf/SKILL.md | HTML-to-UCUF Skill |
+| `doc_agentskill_0009` | .agents/skills/cocos-bug-triage/SKILL.md | Cocos Bug Triage（鏡像索引） |
+| `doc_agentskill_0010` | .agents/skills/cocos-log-reader/SKILL.md | Cocos Log Reader（鏡像索引） |
+| `doc_agentskill_0012` | .agents/skills/cocos-screenshot/SKILL.md | Cocos Screenshot（Editor Preview / Editor 視窗截圖） |
+| `doc_agentskill_0013` | .agents/skills/comfyui-sdxl-partial-asset-gen/SKILL.md | ComfyUI SDXL Partial Asset Gen |
+| `doc_agentskill_0014` | .agents/skills/dalle3-image-gen/SKILL.md | DALL-E 3 Image Generation |
+| `doc_agentskill_0015` | .agents/skills/doc-shard-manager/SKILL.md | Doc Shard Manager SKILL |
+| `doc_agentskill_0017` | .agents/skills/general-balance-tuner/SKILL.md | General Balance Tuner |
+| `doc_agentskill_0018` | .agents/skills/general-data-pipeline/SKILL.md | General Data Pipeline |
+| `doc_agentskill_0019` | .agents/skills/general-story-writer/SKILL.md | General Story Writer |
+| `doc_agentskill_0020` | .agents/skills/nano-banana-gen/SKILL.md | Nano Banana 圖像生成 |
+| `doc_agentskill_0021` | .agents/skills/ui-asset-gen-director/SKILL.md | UI Asset Gen Director |
+| `doc_agentskill_0022` | .agents/skills/ui-asset-qc/SKILL.md | UI Asset QC |
+| `doc_agentskill_0023` | .agents/skills/ui-asset-slice-pipeline/SKILL.md | UI Asset Slice Pipeline |
+| `doc_agentskill_0024` | .agents/skills/ui-brief-generator/SKILL.md | UI Brief Generator |
+| `doc_agentskill_0025` | .agents/skills/ui-family-architect/SKILL.md | UI Family Architect |
+| `doc_agentskill_0027` | .agents/skills/ui-preview-judge/SKILL.md | UI Preview Judge |
+| `doc_agentskill_0028` | .agents/skills/ui-reference-decompose/SKILL.md | UI Reference Decompose |
+| `doc_agentskill_0029` | .agents/skills/ui-runtime-verify/SKILL.md | UI Runtime Verify |
+| `doc_agentskill_0030` | .agents/skills/ui-spec-scaffold/SKILL.md | UI Spec Scaffold |
+| `doc_agentskill_0032` | .agents/skills/crossref-progress-scanner/SKILL.md | crossref-progress-scanner Skill |
+| `doc_agentskill_0034` | .agents/skills/doc-consolidation-flow/SKILL.md | Doc Consolidation Flow |
+| `doc_agentskill_0036` | .agents/skills/html-to-ucuf/SKILL.md | HTML-to-UCUF Skill |
 | `doc_agentskill_0038` | .agents/skills/sanguo-rag-resolution-loop/SKILL.md | Sanguo RAG Resolution Loop |
-| `doc_agentskill_0040` | .github/skills/ui-i18n-localize/SKILL.md | UI I18N Localize |
+| `doc_agentskill_0040` | .agents/skills/ui-i18n-localize/SKILL.md | UI I18N Localize |
 | `doc_agentskill_0042` | .agents/skills/sanguo-event-review-loop/SKILL.md | Sanguo Event Review Loop |
 | `doc_agentskill_0043` | .agents/skills/sanguo-knowledge-growth-loop/SKILL.md | Sanguo Knowledge Growth Loop |
-| `doc_agentskill_0044` | .github/skills/gpt-image-2-gen/SKILL.md | GPT Image 2 Image Generation |
-| `doc_agentskill_0060` | .github/skills/compute-gate/SKILL.md | Compute Gate Skill |
+| `doc_agentskill_0044` | .agents/skills/gpt-image-2-gen/SKILL.md | GPT Image 2 Image Generation |
+| `doc_agentskill_0060` | .agents/skills/compute-gate/SKILL.md | Compute Gate Skill |
 | `doc_agentskill_0061` | .agents/skills/general-avatar-crop/SKILL.md | Skill: general-avatar-crop |
 | `doc_agentskill_0062` | .agents/skills/handoff-text-spacing-extractor/SKILL.md | Handoff Text Spacing Extractor |
 | `doc_agentskill_0063` | .agents/skills/task-card-opener/SKILL.md | Task Card Opener |
 | `doc_agentskill_0064` | .agents/skills/ui-vibe-pipeline/SKILL.md | UI Vibe Pipeline |
 | `doc_agentskill_0065` | .agents/skills/task-card-required-adjustment/SKILL.md | 任務卡的必要調整 |
-| `doc_agentskill_0066` | .agents/skills/notes-label-repair/SKILL.md | Notes Label Repair |
-| `doc_agentskill_0067` | .agents/skills/comfyui-sdxl-partial-asset-gen/SKILL.md | ComfyUI SDXL Partial Asset Gen |
-| `doc_agentskill_0068` | .agents/skills/compute-gate/SKILL.md | Compute Gate Skill |
-| `doc_agentskill_0069` | .agents/skills/crossref-progress-scanner/SKILL.md | crossref-progress-scanner Skill |
-| `doc_agentskill_0070` | .agents/skills/dalle3-image-gen/SKILL.md | DALL-E 3 Image Generation |
-| `doc_agentskill_0071` | .agents/skills/doc-consolidation-flow/SKILL.md | Doc Consolidation Flow |
-| `doc_agentskill_0072` | .agents/skills/doc-shard-manager/SKILL.md | Doc Shard Manager SKILL |
-| `doc_agentskill_0073` | .agents/skills/general-balance-tuner/SKILL.md | General Balance Tuner |
-| `doc_agentskill_0074` | .agents/skills/general-data-pipeline/SKILL.md | General Data Pipeline |
-| `doc_agentskill_0075` | .agents/skills/general-story-writer/SKILL.md | General Story Writer |
-| `doc_agentskill_0076` | .agents/skills/gpt-image-2-gen/SKILL.md | GPT Image 2 Image Generation |
-| `doc_agentskill_0077` | .agents/skills/html-to-ucuf/SKILL.md | HTML-to-UCUF Skill |
-| `doc_agentskill_0078` | .agents/skills/nano-banana-gen/SKILL.md | Nano Banana 圖像生成 |
-| `doc_agentskill_0079` | .agents/skills/ui-asset-gen-director/SKILL.md | UI Asset Gen Director |
-| `doc_agentskill_0080` | .agents/skills/ui-asset-qc/SKILL.md | UI Asset QC |
-| `doc_agentskill_0081` | .agents/skills/ui-asset-slice-pipeline/SKILL.md | UI Asset Slice Pipeline |
-| `doc_agentskill_0082` | .agents/skills/ui-brief-generator/SKILL.md | UI Brief Generator |
-| `doc_agentskill_0083` | .agents/skills/ui-family-architect/SKILL.md | UI Family Architect |
-| `doc_agentskill_0084` | .agents/skills/ui-i18n-localize/SKILL.md | UI I18N Localize |
-| `doc_agentskill_0085` | .agents/skills/ui-preview-judge/SKILL.md | UI Preview Judge |
-| `doc_agentskill_0086` | .agents/skills/ui-reference-decompose/SKILL.md | UI Reference Decompose |
-| `doc_agentskill_0087` | .agents/skills/ui-runtime-verify/SKILL.md | UI Runtime Verify |
-| `doc_agentskill_0088` | .agents/skills/ui-spec-scaffold/SKILL.md | UI Spec Scaffold |
-| `doc_agentskill_0089` | .github/skills/best-mode/SKILL.md | Best Mode |
-| `doc_agentskill_0090` | .github/skills/context-budget-guard/SKILL.md | Context Budget Guard |
-| `doc_agentskill_0091` | .github/skills/general-avatar-crop/SKILL.md | Skill: general-avatar-crop |
-| `doc_agentskill_0092` | .github/skills/handoff-text-spacing-extractor/SKILL.md | Handoff Text Spacing Extractor |
-| `doc_agentskill_0093` | .github/skills/notes-label-repair/SKILL.md | Notes Label Repair |
-| `doc_agentskill_0094` | .github/skills/sanguo-event-review-loop/SKILL.md | Sanguo Event Review Loop |
-| `doc_agentskill_0095` | .github/skills/sanguo-knowledge-growth-loop/SKILL.md | Sanguo Knowledge Growth Loop |
-| `doc_agentskill_0096` | .github/skills/sanguo-rag-resolution-loop/SKILL.md | Sanguo RAG Resolution Loop |
-| `doc_agentskill_0097` | .github/skills/task-card-required-adjustment/SKILL.md | 任務卡的必要調整 |
 | `doc_agentskill_0101` | .agents/skills/3kweb-check/SKILL.md | 3kweb-check |
 | `doc_agentskill_0102` | .agents/skills/atm-version-upgrade/SKILL.md | ATM Version Upgrade Skill |
-| `doc_agentskill_0103` | .github/skills/3kweb-check/SKILL.md | 3kweb-check |
+| `doc_agentskill_0103` | .agents/skills/ai-role-router/references/project-captain-mode.md | Project Captain Mode Reference |
 | `doc_agentskill_0104` | .agents/skills/ai-role-router/SKILL.md | AI Role Router |
-| `doc_agentskill_0105` | .agents/skills/atm-create/SKILL.md | ATM Create |
-| `doc_agentskill_0106` | .agents/skills/atm-evidence/SKILL.md | ATM Evidence |
-| `doc_agentskill_0107` | .agents/skills/atm-governance-router/SKILL.md | ATM Governance Router |
-| `doc_agentskill_0108` | .agents/skills/atm-handoff/SKILL.md | ATM Handoff |
-| `doc_agentskill_0109` | .agents/skills/atm-internal-build-sync/SKILL.md | ATM Internal Build Sync |
-| `doc_agentskill_0110` | .agents/skills/atm-lock/SKILL.md | ATM Lock |
-| `doc_agentskill_0111` | .agents/skills/atm-next/SKILL.md | ATM Next |
-| `doc_agentskill_0112` | .agents/skills/atm-orient/SKILL.md | ATM Orient |
-| `doc_agentskill_0113` | .agents/skills/atm-task-intent-resolver/SKILL.md | ATM Task Intent Resolver |
-| `doc_agentskill_0114` | .agents/skills/atm-upgrade-scan/SKILL.md | ATM Upgrade Scan |
-| `doc_agentskill_0115` | .agents/skills/atm-dispatch/SKILL.md | ATM Dispatch Skill — Project Captain 模式 |
-| `doc_agentskill_0116` | .github/skills/atm-dispatch/SKILL.md | ATM Dispatch Skill — Project Captain 模式 |
-| `doc_agentskill_0117` | .agents/skills/ai-role-router/references/project-captain-mode.md | Project Captain Mode Reference |
-| `doc_agentskill_0118` | .agents/skills/article-writing-mode/SKILL.md | Article Writing Mode |
-| `doc_agentskill_0119` | .agents/skills/atm-atom-map-refactor/SKILL.md | ATM Atom Map Refactor |
-| `doc_agentskill_0120` | .agents/skills/atm-captain-dispatch-standard/references/dispatch-template.md | ATM Captain Dispatch Templates (派工單範例模板) |
-| `doc_agentskill_0121` | .agents/skills/atm-captain-dispatch-standard/references/project-captain-mode.md | Project Captain Mode Reference |
-| `doc_agentskill_0122` | .agents/skills/atm-captain-dispatch-standard/SKILL.md | ATM Captain Dispatch Standard (派工規範手冊) |
-| `doc_agentskill_0123` | .github/skills/atm-captain-dispatch-standard/references/dispatch-template.md | ATM Captain Dispatch Templates (派工單範例模板) |
-| `doc_agentskill_0124` | .github/skills/atm-captain-dispatch-standard/SKILL.md | ATM Captain Dispatch Standard (派工規範手冊) |
-| `doc_agentskill_0125` | .agents/skills/general-portrait-style/SKILL.md | 3KLife 武將立繪與頭像校準 |
-| `doc_agentskill_0126` | .agents/skills/chibi-animation-production/SKILL.md | Q 版人物動畫素材自動接續流程 |
-| `doc_agentskill_0127` | .agents/skills/chibi-battle-source-production/SKILL.md | Q 版戰場人物來源與切片流程 |
-| `doc_agentskill_0128` | .github/skills/chibi-animation-production/SKILL.md | Q 版人物動畫素材自動接續流程 |
+| `doc_agentskill_0105` | .agents/skills/article-writing-mode/SKILL.md | Article Writing Mode |
+| `doc_agentskill_0106` | .agents/skills/atm-atom-map-refactor/SKILL.md | ATM Atom Map Refactor |
+| `doc_agentskill_0107` | .agents/skills/atm-captain-dispatch-standard/references/dispatch-template.md | ATM Captain Dispatch Templates (派工單範例模板) |
+| `doc_agentskill_0108` | .agents/skills/atm-captain-dispatch-standard/references/project-captain-mode.md | Project Captain Mode Reference |
+| `doc_agentskill_0109` | .agents/skills/atm-captain-dispatch-standard/SKILL.md | ATM Captain Dispatch Standard (派工規範手冊) |
+| `doc_agentskill_0110` | .agents/skills/atm-create/SKILL.md | ATM Create |
+| `doc_agentskill_0111` | .agents/skills/atm-dispatch/SKILL.md | ATM Dispatch Skill — Project Captain 模式 |
+| `doc_agentskill_0112` | .agents/skills/atm-evidence/SKILL.md | ATM Evidence |
+| `doc_agentskill_0113` | .agents/skills/atm-governance-router/SKILL.md | ATM Governance Router |
+| `doc_agentskill_0114` | .agents/skills/atm-handoff/SKILL.md | ATM Handoff |
+| `doc_agentskill_0115` | .agents/skills/atm-internal-build-sync/SKILL.md | ATM Internal Build Sync |
+| `doc_agentskill_0116` | .agents/skills/atm-lock/SKILL.md | ATM Lock |
+| `doc_agentskill_0117` | .agents/skills/atm-next/SKILL.md | ATM Next |
+| `doc_agentskill_0118` | .agents/skills/atm-orient/SKILL.md | ATM Orient |
+| `doc_agentskill_0119` | .agents/skills/atm-task-intent-resolver/SKILL.md | ATM Task Intent Resolver |
+| `doc_agentskill_0120` | .agents/skills/atm-upgrade-scan/SKILL.md | ATM Upgrade Scan |
+| `doc_agentskill_0121` | .agents/skills/chibi-animation-production/SKILL.md | Q 版人物動畫素材自動接續流程 |
+| `doc_agentskill_0122` | .agents/skills/chibi-battle-source-production/SKILL.md | Q 版戰場人物來源與切片流程 |
+| `doc_agentskill_0123` | .agents/skills/general-portrait-style/SKILL.md | 3KLife 武將立繪與頭像校準 |
+| `doc_agentskill_0124` | .agents/skills/notes-label-repair/SKILL.md | Notes Label Repair |
+| `doc_agentskill_0125` | .github/skills/3kweb-check/SKILL.md | 3kweb-check |
+| `doc_agentskill_0126` | .github/skills/atm-captain-dispatch-standard/references/dispatch-template.md | ATM Captain Dispatch Templates (派工單範例模板) |
+| `doc_agentskill_0127` | .github/skills/atm-captain-dispatch-standard/SKILL.md | ATM Captain Dispatch Standard (派工規範手冊) |
+| `doc_agentskill_0128` | .github/skills/atm-dispatch/SKILL.md | ATM Dispatch Skill — Project Captain 模式 |
+| `doc_agentskill_0129` | .github/skills/best-mode/SKILL.md | Best Mode |
+| `doc_agentskill_0130` | .github/skills/chibi-animation-production/SKILL.md | Q 版人物動畫素材自動接續流程 |
+| `doc_agentskill_0131` | .github/skills/cocos-bug-triage/SKILL.md | Cocos Bug Triage（鏡像索引） |
+| `doc_agentskill_0132` | .github/skills/cocos-log-reader/SKILL.md | Cocos Log Reader（鏡像索引） |
+| `doc_agentskill_0133` | .github/skills/cocos-preview-qa/SKILL.md | Cocos Preview QA（Browser Review 自動截圖 + 比對） |
+| `doc_agentskill_0134` | .github/skills/cocos-screenshot/SKILL.md | Cocos Screenshot（Editor Preview / Editor 視窗截圖） |
+| `doc_agentskill_0135` | .github/skills/cocos-vfx-browser-qa/SKILL.md | Cocos VFX Browser QA |
+| `doc_agentskill_0136` | .github/skills/comfyui-sdxl-partial-asset-gen/SKILL.md | ComfyUI SDXL Partial Asset Gen |
+| `doc_agentskill_0137` | .github/skills/compute-gate/SKILL.md | Compute Gate Skill |
+| `doc_agentskill_0138` | .github/skills/context-budget-guard/SKILL.md | Context Budget Guard |
+| `doc_agentskill_0139` | .github/skills/crossref-progress-scanner/SKILL.md | crossref-progress-scanner Skill |
+| `doc_agentskill_0140` | .github/skills/dalle3-image-gen/SKILL.md | DALL-E 3 Image Generation |
+| `doc_agentskill_0141` | .github/skills/doc-consolidation-flow/SKILL.md | Doc Consolidation Flow |
+| `doc_agentskill_0142` | .github/skills/doc-shard-manager/SKILL.md | Doc Shard Manager SKILL |
+| `doc_agentskill_0143` | .github/skills/encoding-touched-guard/SKILL.md | Encoding Touched Guard |
+| `doc_agentskill_0144` | .github/skills/general-avatar-crop/SKILL.md | Skill: general-avatar-crop |
+| `doc_agentskill_0145` | .github/skills/general-balance-tuner/SKILL.md | General Balance Tuner |
+| `doc_agentskill_0146` | .github/skills/general-data-pipeline/SKILL.md | General Data Pipeline |
+| `doc_agentskill_0147` | .github/skills/general-story-writer/SKILL.md | General Story Writer |
+| `doc_agentskill_0148` | .github/skills/gpt-image-2-gen/SKILL.md | GPT Image 2 Image Generation |
+| `doc_agentskill_0149` | .github/skills/handoff-text-spacing-extractor/SKILL.md | Handoff Text Spacing Extractor |
+| `doc_agentskill_0150` | .github/skills/html-to-ucuf/SKILL.md | HTML-to-UCUF Skill |
+| `doc_agentskill_0151` | .github/skills/nano-banana-gen/SKILL.md | Nano Banana 圖像生成 |
+| `doc_agentskill_0152` | .github/skills/notes-label-repair/SKILL.md | Notes Label Repair |
+| `doc_agentskill_0153` | .github/skills/sanguo-event-review-loop/SKILL.md | Sanguo Event Review Loop |
+| `doc_agentskill_0154` | .github/skills/sanguo-knowledge-growth-loop/SKILL.md | Sanguo Knowledge Growth Loop |
+| `doc_agentskill_0155` | .github/skills/sanguo-rag-resolution-loop/SKILL.md | Sanguo RAG Resolution Loop |
+| `doc_agentskill_0156` | .github/skills/task-card-opener/SKILL.md | Task Card Opener |
+| `doc_agentskill_0157` | .github/skills/task-card-required-adjustment/SKILL.md | 任務卡的必要調整 |
+| `doc_agentskill_0158` | .github/skills/ui-asset-gen-director/SKILL.md | UI Asset Gen Director |
+| `doc_agentskill_0159` | .github/skills/ui-asset-qc/SKILL.md | UI Asset QC |
+| `doc_agentskill_0160` | .github/skills/ui-asset-slice-pipeline/SKILL.md | UI Asset Slice Pipeline |
+| `doc_agentskill_0161` | .github/skills/ui-brief-generator/SKILL.md | UI Brief Generator |
+| `doc_agentskill_0162` | .github/skills/ui-family-architect/SKILL.md | UI Family Architect |
+| `doc_agentskill_0163` | .github/skills/ui-i18n-localize/SKILL.md | UI I18N Localize |
+| `doc_agentskill_0164` | .github/skills/ui-preview-judge/SKILL.md | UI Preview Judge |
+| `doc_agentskill_0165` | .github/skills/ui-reference-decompose/SKILL.md | UI Reference Decompose |
+| `doc_agentskill_0166` | .github/skills/ui-runtime-verify/SKILL.md | UI Runtime Verify |
+| `doc_agentskill_0167` | .github/skills/ui-spec-scaffold/SKILL.md | UI Spec Scaffold |
+| `doc_agentskill_0168` | .github/skills/ui-vibe-pipeline/SKILL.md | UI Vibe Pipeline |
 
 ## Server 文件類 (`doc_server_<subtype>`)
 
@@ -169,4 +169,4 @@
 |--------|--------|------|------|
 | `doc_server_data_0001` | data | docs/RAG_ETL_管線應用分析.md | RAG ETL 管線應用分析 |
 | `doc_server_ops_0003` | ops | server/server_docs_reference.md | Server 文件索引總覽 |
-| `doc_server_other_0010` | other | server/README.dev.md | Server Dev Workflow |
+| `doc_server_other_0001` | other | server/README.dev.md | Server Dev Workflow |

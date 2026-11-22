@@ -16,6 +16,7 @@
  */
 import { Node, Sprite, Label, Button, Font, Color, Vec2, UITransform, Widget, director, view } from 'cc';
 import { LabelCharAtlasBudget, isLetterSpacingVisible } from './LabelCharAtlasBudget';
+import { runWithDeferredLayout } from './LabelLayoutDeferral';
 import { RoundedRectBackground } from '../components/RoundedRectBackground';
 import { SolidBackground } from '../components/SolidBackground';
 import { GradientBackground, GradientColorStop } from '../components/GradientBackground';
@@ -555,7 +556,12 @@ function installCharAtlasGuard(): void {
             configurable: true,
             enumerable: accessor.enumerable,
             get(this: Label) { return get.call(this); },
-            set(this: Label, value: unknown) { set.call(this, value); reserveCharCache(this); },
+            set(this: Label, value: unknown) {
+                // font／cacheMode 的設定器會強制即時排版，固定外框的標籤改成留到幀末刷新一次（PROG-2-9801）
+                if (key === 'font' || key === 'cacheMode') runWithDeferredLayout(this, () => set.call(this, value));
+                else set.call(this, value);
+                reserveCharCache(this);
+            },
         });
     }
     // 估算只能近似引擎的列式擺放：畫完若字元四邊形少於應有字數，表示圖集真的滿了，改回一般模式並停止再開 CHAR
@@ -605,11 +611,40 @@ function findAccessor(proto: object | null, key: string): PropertyDescriptor | u
     return undefined;
 }
 
+/** 範圍表排序合併後的快取（PROG-2-9800）：CJK 字型 unicode-range 有數千段，逐字線性掃描每個粗體字串都要跑一輪 */
+const mergedRangesCache = new WeakMap<Array<[number, number]>, Array<[number, number]>>();
+
+function mergedRanges(ranges: Array<[number, number]>): Array<[number, number]> {
+    let merged = mergedRangesCache.get(ranges);
+    if (merged) return merged;
+    merged = [];
+    for (const [start, end] of ranges.slice().sort((a, b) => a[0] - b[0])) {
+        const last = merged[merged.length - 1];
+        if (last && start <= last[1] + 1) last[1] = Math.max(last[1], end);
+        else merged.push([start, end]);
+    }
+    mergedRangesCache.set(ranges, merged);
+    return merged;
+}
+
+function codeInRanges(code: number, merged: Array<[number, number]>): boolean {
+    let low = 0;
+    let high = merged.length - 1;
+    while (low <= high) {
+        const mid = (low + high) >> 1;
+        const [start, end] = merged[mid];
+        if (code < start) high = mid - 1;
+        else if (code > end) low = mid + 1;
+        else return true;
+    }
+    return false;
+}
+
 function textInRanges(text: string, ranges?: Array<[number, number]>): boolean {
     if (!ranges) return true;
+    const merged = mergedRanges(ranges);
     for (const ch of text || '') {
-        const code = ch.codePointAt(0) as number;
-        if (!ranges.some(([start, end]) => code >= start && code <= end)) return false;
+        if (!codeInRanges(ch.codePointAt(0) as number, merged)) return false;
     }
     return true;
 }

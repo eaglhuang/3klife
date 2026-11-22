@@ -28,6 +28,12 @@ export interface MissionBoardsConfig {
     difficultyWeights: Record<MissionDifficulty, number>;
     themeWeights: Record<string, number>;
     overrides: MissionBoardOverride[];
+    yearOneCommerceGuaranteed?: {
+        maxSeason?: number;
+        targetWall?: string;
+        minCount?: number;
+        commerceDefIds?: readonly string[];
+    };
 }
 
 export interface MissionCatalogEntry { id: string; theme: string; difficulty: MissionDifficulty; wall: string }
@@ -96,7 +102,14 @@ export function refillBoards(
                 return true;
             });
             if (pool.length === 0) break;
-            const weights = pool.map(c => Math.max(0,
+            const g = boards.yearOneCommerceGuaranteed;
+            const isTargetWall = wall === (g?.targetWall ?? 'Domestic');
+            const inSeason = ctx.season <= (g?.maxSeason ?? 4);
+            const currentCommerceCount = next.missions.filter(m => m.status === 'OPEN' && inWall(m) && g?.commerceDefIds?.includes(m.defId)).length;
+            const needCommerce = Boolean(g && isTargetWall && inSeason && currentCommerceCount < (g.minCount ?? 1));
+            const commercePool = needCommerce && g?.commerceDefIds ? pool.filter(c => g.commerceDefIds!.includes(c.id)) : [];
+            const effectivePool = commercePool.length > 0 ? commercePool : pool;
+            const weights = effectivePool.map(c => Math.max(0,
                 rankRelativeWeight(ctx.visibleDifficulties, c.difficulty, boards.rankRelativeWeights)
                 * (boards.difficultyWeights[c.difficulty] ?? 0)
                 * (boards.themeWeights[c.theme] ?? 1)
@@ -105,11 +118,11 @@ export function refillBoards(
             next.rng.serial += 1;
             const id = missionIdOf(next.rng.serial);
             const u = deriveUnit(next.rng.seed, id, `board:${wall}:${ctx.season}`);
-            let pick = pool[pool.length - 1];
+            let pick = effectivePool[effectivePool.length - 1];
             if (total > 0) {
                 let acc = u * total;
-                for (let i = 0; i < pool.length; i += 1) { acc -= weights[i]; if (acc < 0) { pick = pool[i]; break; } }
-            } else pick = pool[Math.min(pool.length - 1, Math.floor(u * pool.length))];
+                for (let i = 0; i < effectivePool.length; i += 1) { acc -= weights[i]; if (acc < 0) { pick = effectivePool[i]; break; } }
+            } else pick = effectivePool[Math.min(effectivePool.length - 1, Math.floor(u * effectivePool.length))];
             const def = defs.get(pick.id) as MissionDefinition;
             const inst = createMissionInstance({
                 def, id, saveSeed: next.rng.seed, season: ctx.season, spawnKey: wall, intelBonus: ctx.intelBonusOf ? ctx.intelBonusOf(def) : 0,
