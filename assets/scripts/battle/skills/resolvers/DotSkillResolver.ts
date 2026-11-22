@@ -1,6 +1,7 @@
 // @spec-source → 戰法系統.md (doc_spec_0038)；PROG-2-1429 依建檔紀錄補標出處
 import { Faction } from '../../../core/config/Constants';
 import type { BattleSkillRequest, SkillExecutionResult } from '../../../shared/SkillRuntimeContract';
+import { POISON_MAX_HP_RATIO } from '../../shared/BuffStackHeal';
 import { resolveBattleSkillProfile } from '../BattleSkillProfiles';
 import type { BattleSkillExecutionContext, BattleSkillResolver } from '../BattleSkillResolver';
 import { BattleSkillTargetSelector } from '../BattleSkillTargetSelector';
@@ -26,7 +27,7 @@ export class DotSkillResolver implements BattleSkillResolver {
       return { requestId, battleSkillId: request.battleSkillId, applied: false, blockedReason: 'no-target', deltas: [], battleLogLines: [] };
     }
 
-    const ratio = profile.dotMaxHpRatio ?? 0.1;
+    const ratio = POISON_MAX_HP_RATIO;
     const turns = profile.statusTurns ?? 2;
     const deltas: SkillExecutionResult['deltas'] = [];
     const battleLogLines: string[] = [];

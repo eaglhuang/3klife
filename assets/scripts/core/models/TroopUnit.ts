@@ -40,6 +40,8 @@ export class TroopUnit {
   /** 攻擊射程；虎符被動（騎射合一）可把它提高到弓兵射程，故不設 readonly */
   public attackRange: number;
   public attackBonus = 0;
+  /** 主將出陣全軍加倍給的攻擊加成量；主將倒下時扣回（PROG-2-9719，使用者 11/22 裁決 Q5=A）。 */
+  public generalSortieAttackBoost = 0;
   public maxHpBonus = 0;
   public moveRangeBonus = 0;
   

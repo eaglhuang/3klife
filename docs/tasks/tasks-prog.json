@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 242,
+    "done": 262,
     "in_progress": 7,
     "open": 85,
-    "total": 334
+    "total": 354
   },
   "tasks": [
     {
@@ -11068,9 +11068,9 @@
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-20",
-      "created_by_agent": "codex-gpt-5.4-mini",
-      "started_at": "",
-      "started_by_agent": "",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T12:00:00+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
       "chain_id": "",
       "chain_step": "",
       "sensor_triggered_by": "",
@@ -14391,6 +14391,1031 @@
         "量測前後數據"
       ],
       "notes": "2026-11-22 | 狀態: in-progress | 驗證: pending | 變更: 開卡；基準 面板 48 次、每卡 12 次 | 阻塞: 無 || 2026-11-22 | 狀態: done | 驗證: 單元測試 9126 過、tsc 0 錯、quick 閘門；實機無頭量測 虎符面板繪製 48→20（每卡 12→5）、整場 164→144；卡面截圖前後一致 | 變更: TigerTallyComposite 填值後把卡上 NONE 文字改 BITMAP 進動態圖集，與底板同批；新增 TallyCardBatching 接線測試 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2947",
+      "id": "PROG-2-9715",
+      "title": "主將出陣改為 Q 版小人衝出出兵口、站格逐格前進（單挑只在規格條件觸發）",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T09:56:24+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者回饋：主將出陣直接變單挑，沒看到主將 Q 版小人衝出去站上格子、跟小兵一樣走。改為主將 Q 版 Spine 從出兵口衝出、站上格子逐格前進，走路動畫、揚塵、腳步聲比照小兵；單挑只在規格條件觸發。",
+      "related": [
+        "PROG-2-9712"
+      ],
+      "depends": [],
+      "acceptance": [
+        "主將 Q 版小人從出兵口衝出並站上格子",
+        "逐格前進有走路動畫、揚塵、腳步聲",
+        "遇敵行為符合規格，單挑只在規格條件觸發",
+        "工作樹建置逐格截圖、playtest 11/11、console error 0",
+        "tsc 0 錯、單元測試、compute-gate standard、CI 全過"
+      ],
+      "deliverables": [
+        "BattleController／TurnFlow 主將出陣流程",
+        "主將單位視圖",
+        "單元測試",
+        "逐格截圖"
+      ],
+      "notes": "2026-11-22 | 狀態: in-progress | 驗證: pending | 變更: 開卡（ClaudeCode_opus-5-5 接手） | 阻塞: 無 || 2026-11-22 | 狀態: done | 驗證: 單元測試 9142 過、tsc 0、quick 4/4；工作樹建置無頭逐格：主將從待命點(-579,-310)衝到出兵口格(-385,-226)約 0.65 秒全程跑步動作，之後第1回合 0→3、第2回合 3→4 逐格走、受擊掉血，第3回合觸發單挑；console error 0；playtest 11/12（唯一失敗 lobby-commerce-silver 為大廳商業任務，與本卡無關） | 變更: UnitRenderer 格上主將腳點改用格子（原本釘在場邊待命點），移動播走路；上場從待命點衝刺到出陣格、等素材載好才起跑、不播從天落下；SpineUnitOverlay.isShown、GeneralPortraitStandee.has；新增 GeneralSortieOnBoard 接線測試 | 阻塞: 單挑觸發、敵兵是否優先打主將、出陣格限制、主將倒下後加倍等規則已交總PM 裁決（Q2～Q6），本卡未改規則",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2948",
+      "id": "PROG-2-9716",
+      "title": "騎兵攻擊音效改馬蹄聲（hoof_gallop，CC-BY 3.0）",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T10:12:32+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "騎兵攻擊音效由 biteskill 改為專屬馬蹄聲 hoof_gallop（OpenGameArt，Alan McKinney，CC-BY 3.0）。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "BattleAudio unitAttackPrimary 使用 hoof_gallop；授權登錄於 _MANIFEST.md；單元測試與 tsc 通過"
+      ],
+      "deliverables": [
+        "assets/bundles/audio/clips/hoof_gallop.wav",
+        "assets/scripts/battle/BattleAudio.ts",
+        "_MANIFEST.md"
+      ],
+      "notes": "2026-11-22 | 狀態: done | 驗證: 單元測試、tsc 0、quick 閘門 | 變更: 騎兵攻擊音效 biteskill→hoof_gallop（OpenGameArt CC-BY 3.0，取一個蹄聲循環 0.58 秒 22050Hz 單聲道）| 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2952",
+      "id": "PROG-2-9717",
+      "title": "第一年敗戰新手保護：損兵上限 30%＋傷兵營 60/40、每季康復 30%",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T11:17:43+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "第 1 年敗戰（含年終守城敗戰）的損兵上限為戰前城市兵源 30%（陣亡＋傷兵總量）；上限內損兵 60% 進傷兵營、40% 陣亡；傷兵營每季康復 30% 回兵源。勝利、平手、第 2 年起照舊。數值放 data/troop-loss-rules.json。傷兵營進存檔，結算與大廳城市資訊顯示。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "1. 第 1 年敗戰損兵不超過戰前兵源 30%；2. 損兵 60% 進傷兵營、40% 陣亡；3. 每季康復 30%；4. 第 2 年與勝利平手不受影響；5. 結算顯示新手保護與傷兵兩行；6. 傷兵營進存檔讀檔保留；7. 單元測試含四連敗曲線"
+      ],
+      "deliverables": [
+        "assets/scripts/core/systems/CommandSortieLoss.ts",
+        "MilitaryReserve.ts",
+        "BattleAftermath.ts",
+        "GameSession.ts",
+        "assets/resources/data/troop-loss-rules.json",
+        "tests/TroopLossProtection.test.ts"
+      ],
+      "notes": "2026-11-22 | 狀態: done | 驗證: tests/run-cli ALL PASS 9151（含 TroopLossProtection 9 項）；tsc -p tsconfig.test.json 0 錯；compute-gate standard 13/14 通過（僅既有 LoginScene→QaTimeController 警告） | 變更: troop-loss-rules.json、CommandSortieLoss 新手保護、MilitaryReserve woundedCamp 與每季康復、GameSession 敗戰套上限並寫傷兵營、結算兩行、大廳守軍列加傷兵營；勝利與平手不寫傷兵營（照舊） | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2951",
+      "id": "PROG-2-9718",
+      "title": "戰場文字套用 LabelLayoutDeferral（徽章、跳字、HUD）減少重排",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T11:18:26+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "PROG-2-9801 新增 LabelLayoutDeferral（固定外框 Label 的強制排版改標髒、幀末統一刷新）。戰場一場約 1000 次 Label 重算，本卡把頭頂徽章、名牌、跳字、HUD 中外框固定（SHRINK/CLAMP）的 Label 套進去；會隨字長改尺寸的 Label 不套。不改 LabelCharAtlasBudget，不改 cacheMode（保持 BITMAP）。",
+      "related": [
+        "PROG-2-9801"
+      ],
+      "depends": [],
+      "acceptance": [
+        "1) 外框固定的戰場 Label 套用 LabelLayoutDeferral；NONE/RESIZE_HEIGHT 不套。2) 附 qaBattle 直進戰場固定 3 回合的改前改後重算次數。3) 接線測試通過、run-cli ALL PASS、tsc 0 錯、compute-gate standard 通過。4) playtest-online 除已知偶發外全過、console error 0、戰場文字無溢出無黑字。"
+      ],
+      "deliverables": [
+        "assets/scripts/ui/core/LabelLayoutDeferral.ts",
+        "assets/scripts/battle/views/UnitRenderer.ts",
+        "tests/BattleLabelDeferralWiring.test.ts"
+      ],
+      "notes": "2026-11-22 | 狀態: done | 驗證: run-cli ALL PASS 9147、tsc 0 錯、compute-gate standard 通過、playtest-online 11/12（僅已知偶發 lobby-commerce-silver）console error 0 | 變更: LabelLayoutDeferral 新增 setCacheModeDeferred（固定外框的 cacheMode 強制重排改標髒）；UnitRenderer 頭頂徽章攻／兵種／兵力／名稱四個文字套用（兵種字與名稱標籤補 shrinkToFit 成 SHRINK 固定外框，名稱過長改縮字不溢出）；新增接線測試 BattleLabelDeferralWiring。量測（qaBattle 直進戰場、固定 3 回合、攔截 Label.updateRenderData 與 assembler 排版）：改前強制重排 98～103 次、實際排版 283～341 次；改後 83～91 次、259～276 次；徽章 Text＋NameLabel 的強制重排 16→0（NameLabel 排版 22→14）。未套用（外框會隨字長改尺寸，依規不套）：跳字 FloatText（NONE）、戰報 LogLabel（RESIZE_HEIGHT，約占強制重排 65～72 次，每則日誌都要立刻讀高度，後續可改批次刷新）、HUD 的 SummaryText 與 BattleHudScreen_div_* 皆 RESIZE_HEIGHT | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2950",
+      "id": "PROG-2-9719",
+      "title": "主將出陣規則依使用者 11/22 裁決：同路相鄰才單挑、小兵優先打武將、只從出兵口出陣、主將倒下加倍消失、正式規格章節",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T11:15:15+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依使用者 11/22 裁決 Q1～Q6：單挑演出移到場邊對站後回格；單挑只在兩將同路相鄰觸發；敵方小兵攻擊範圍內優先打武將（只限小兵對武將目標選擇，擦身不打不變）；出陣只能放出兵口 depth 0；主將倒下全軍攻擊加倍消失、不做撤回；寫成正式規格章節並把 demo_playbook 標為歷史資料。順手把 AudioSystem 50ms 改規格 60ms。",
+      "related": [
+        "PROG-2-9715"
+      ],
+      "depends": [],
+      "acceptance": [
+        "單挑只在同路相鄰觸發",
+        "單挑演出移到場邊對站、結束回格",
+        "敵小兵範圍內優先打武將，小兵擦身不打不變",
+        "出陣只能放 depth 0",
+        "主將倒下全軍加倍消失",
+        "正式規格章節寫明 Q2～Q5 與使用者 11/22 裁決",
+        "逐格截圖：衝出出兵口、逐格走、相鄰觸發單挑、單挑結束回格、小兵打主將",
+        "tsc、單元測試、compute-gate standard、CI 全過"
+      ],
+      "deliverables": [
+        "BattleGeneralDuelFlow／TurnFlowManager／BattleCombatResolver",
+        "UnitRenderer 單挑演出站位",
+        "規格章節",
+        "單元測試",
+        "逐格截圖"
+      ],
+      "notes": "2026-11-22 | 狀態: done | 驗證: run-cli 9148 pass、tsc 0、compute-gate quick 4/4、playtest 11/12（07 lobby-commerce-silver 既有不穩）、逐格截圖 battle-general-rules-9719.jpg | 變更: Q1B 場邊單挑、Q2 維持底線任一路觸發（使用者選 C）、Q3 鎖測試、Q4 出兵口限制、Q5 倒下取消加倍、Q6 正式規格 doc_spec_0314 §6、AudioSystem 60ms | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2953",
+      "id": "PROG-2-9720",
+      "title": "BuffStackHeal 接線：狀態堆疊、治療、中毒結算實際走 doc_spec_0359",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T13:31:16+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "把 BuffStackHeal.ts（PROG-2-2045）接進戰場：BuffSystem 同名狀態堆疊、治療戰法固定量加已損25%並截斷、中毒 5% 最大 HP 與移動 -1。燃燒狀態戰場尚不存在，記為待裁決。",
+      "related": [
+        "PROG-2-2045"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-22 | 狀態: done | 驗證: run-cli 全過、tsc 0 錯、compute-gate standard 通過(僅既有 LoginScene 警告) | 變更: BuffSystem 走 applyBuffStack(層數上限3、回合取max)、治療戰法走 computeHealAmount(固定量+已損25%並截到已損血量)、毒箭走 poisonTickDamage(5%最大HP)＋自動移動 -1；測試 BuffStackHeal/PoisonArrowE2E/DotSkillResolver/MedicalAidHeal | 阻塞: 燃燒狀態戰場不存在，burnTickDamage 未接線，待裁決",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2954",
+      "id": "PROG-2-9721",
+      "title": "傷兵營改全年度適用",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T05:33:08Z",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "傷兵營改全年度適用：敗戰（任何年份）、勝利、平手的損兵一律 60% 進傷兵營、每季康復 30%（規格 doc_spec_0357 §4 全年度規則）；只有「損兵上限＝戰前兵源 30%」限第 1 年敗戰（PROG-2-9717 新手保護）。數值沿用 assets/resources/data/troop-loss-rules.json。結算文字：有傷兵一律顯示傷兵送營行；新手保護減免行只在第 1 年敗戰且真的減免時顯示。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "勝利與平手損兵 60% 進傷兵營，每季康復 30%",
+        "第 2 年起敗戰損兵 60% 進傷兵營，不套 30% 上限",
+        "第 1 年敗戰維持原行為（上限 30%、60/40 分配、新手保護文字）",
+        "結算文字規則照上述，單元測試 tests/TroopLossProtection.test.ts 覆蓋三種情況"
+      ],
+      "deliverables": [
+        "assets/scripts/core/managers/GameSession.ts",
+        "assets/scripts/core/systems/CommandSortieLoss.ts",
+        "assets/scripts/core/systems/BattleAftermath.ts",
+        "tests/TroopLossProtection.test.ts"
+      ],
+      "notes": "2026-11-22 | 狀態: done | 驗證: 單元測試 9162 通過；tsc tsconfig.test 0 錯；compute-gate standard 13/14（餘 LoginScene ui→battle 既有警告）| 變更: GameSession._applySortieCost 傷兵送營改全年度（勝利、平手、第 2 年起 60%），損兵 30% 上限仍只限第 1 年敗戰；ledger 減免行只在真有減免時出現；測試補三情況與 BattleRecordStats 季康復 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      },
+      "completed_at": "",
+      "completed_by_agent": "ClaudeCode_opus-5-5"
+    },
+    {
+      "doc_id": "doc_task_2956",
+      "id": "PROG-2-9722",
+      "title": "守城勝率退步調查與修正",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T14:30:00+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-22 | 狀態: done | 驗證: 守城無頭模擬 100 場、單元測試、tsc、compute-gate | 變更: engineerBombardDamage 15 改 12（JSON＋預設＋測試＋規格）| 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2955",
+      "id": "PROG-2-9723",
+      "title": "AI 奧義精力門檻改比例與委任自動放奧義",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T05:46:06+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "奧義精力門檻改比例（中 IQ 50%、高 IQ 落後 30%，比例放 ai-difficulty.json ultimateRules）；委任代打主將 SP 滿時套用同一套門檻與家族審批自動放奧義。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "中 IQ 精力門檻為最大精力 50%（男女同比例判斷一致）",
+        "高 IQ 落後門檻為最大精力 30%",
+        "比例值來自 JSON 不寫死",
+        "委任代打 SP 滿且符合門檻才放奧義",
+        "規格 doc_spec_0391 §1/§2 已改並註明委任適用"
+      ],
+      "deliverables": [
+        "AiUltimateDecision.ts",
+        "AiDifficultyTable.ts",
+        "DelegateAi.ts",
+        "BattleState.ts",
+        "BattleController.ts",
+        "ai-difficulty.json",
+        "tests/AiUltimateDecision.test.ts",
+        "tests/AiDelegateUltimateFlow.test.ts",
+        "doc_spec_0391"
+      ],
+      "notes": "2026-11-22 | 狀態: done | 驗證: run-cli 9173 通過、tsc 0 錯、compute-gate standard 通過（僅既有 LoginScene 警告）| 變更: 比例門檻＋委任代打放奧義＋規格 doc_spec_0391 §1/§2 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      },
+      "completed_at": "2026-11-22T06:30:00+08:00"
+    },
+    {
+      "doc_id": "doc_task_2958",
+      "id": "PROG-2-9725",
+      "title": "總PM 11/22 裁決落地：毒箭5%、TeamRecover已損25%、SP精力名詞",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "codex-gpt-5.4-mini",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-22 | 狀態: done | 驗證: tsc 0錯、run-cli 全過、standard 閘門通過 | 變更: 毒箭5%(g.md, BattleSkillProfiles註解)；TeamRecover已損25%(teamHealMissingRatio, 四層注入, 4測試)；名詞勘誤移到 PROG-2-9727（先分片再補詞）| 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2957",
+      "id": "PROG-2-9724",
+      "title": "兵種徽章共用繪製函式",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T06:19:25+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "全遊戲兵種徽章共用繪製（騎馬頭／步直劍／盾／弓／槍長槍／工錘／醫葫蘆／水帆船，象牙白剪影＋金圈圓章，缺圖退單字）",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-22 | 狀態: done | 驗證: tsc 0 錯；run-cli 9180 passed；compute-gate standard 通過（僅既有 LoginScene 警告）；Cocos web 建置成功；playtest 12/12 PASS、0 pageErrors/consoleErrors；戰場中段頭頂徽章截圖未取得（playtest 只留結算截圖），圖檔未交件前應顯示單字 | 變更: 新增 ui/shared/TroopTypeBadge（attach／mount）；戰場頭頂與 7 個面板呼叫點改走共用函式；單元測試 TroopTypeBadge.test.ts | 阻塞: 剪影圖交件後需補中段截圖驗收",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2959",
+      "id": "PROG-2-9728",
+      "title": "委任代打奧義門檻下限：至少中 IQ",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T12:00:00+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-22 | 狀態: done | 驗證: run-cli ALL PASS 9186、tsc 0 錯、compute-gate standard 13/14（既有 LoginScene 警告）、PR #2513 squash 合併 | 變更: ai-difficulty.json ultimateRules.delegateMinIq=MEDIUM、BattleController.delegateUltimateIq、raiseIqToFloor、spec doc_spec_0391 補句、單元測試 3 案 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2960",
+      "id": "PROG-2-9726",
+      "title": "燃燒狀態：火格＋火攻戰法",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T21:00:00+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-22 | 狀態: done | 驗證: run-cli 全過、tsc 0 錯、standard 閘門通過、建置截圖（火格、燃燒跳字、頭頂燃圖示）| 變更: 燃燒狀態（battle-burn.json、BurnStatus、BurnIgnite、戰術階段結算、火攻戰法命中、doc_spec_0359 §3 改寫）| 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9727",
+      "title": "名詞定義文件機械分片＋補 SP／精力名詞",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T16:05:00+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "名詞定義文件（doc_spec_0008，37.7KB、未分片）機械分片為 shard group；再依總PM 11/22 核可補入 SP、計謀點、精力修正三條名詞。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "compute-gate standard 通過（文件分片健康檢查）",
+        "check-doc-shard-health 通過",
+        "run-cli 全過",
+        "doc_spec_0008 引用不斷"
+      ],
+      "deliverables": [
+        "名詞定義文件-shards 分片目錄與 .shardrc.json",
+        "名詞定義文件.md thin index",
+        "名詞定義文件 補 SP／計謀點／精力定義"
+      ],
+      "notes": "2026-11-22 | 狀態: done | 驗證: compute-gate standard 通過（文件分片健康檢查 ✅，LoginScene import 警告為既有）；run-cli 9186 passed | 變更: 名詞定義文件機械分片為 名詞定義文件-shards（3 shard＋auto-parts 各 <4KB，內容無增刪、已核對）；補 SP（奧義能量）、計謀點、精力修正（總PM 11/22 核可） | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      },
+      "validation_cmd": "node tools_node/compute-gate.js --profile standard --agent-feedback",
+      "completed_at": "2026-11-22T16:40:00+08:00",
+      "completion": 100
+    },
+    {
+      "doc_id": "doc_task_2963",
+      "id": "PROG-2-9729",
+      "title": "戰鬥音效分層：受擊輕重、分兵種腳步、變調與隨機音量",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T12:00:00+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-22 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9731",
+      "title": "戰場 UI 演出 B2：名牌戰鬥淡出、狀態圖示層數回合、奧義暫代大字與音效、毒上身回饋、治療時序",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T19:16:12+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "名牌戰鬥淡出；狀態圖示層數/回合；奧義暫代分鏡補音效與中央大字；毒箭上身紫綠閃＋毒字；治療光/綠字/血條依序。數值進 JSON。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-22 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9732",
+      "title": "戰鬥音效補件：金屬擊打／肉體悶擊／單拍馬蹄換成 CC0 外部素材（可切回變調版）",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T19:02:36+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "把 9729 變調代用的金屬擊打、肉體悶擊、單拍馬蹄換成 CC0 素材（Kenney Impact Sounds、BigSoundBank），設定檔加開關可切回變調代用版，預設 CC0 版。",
+      "related": [
+        "PROG-2-9729"
+      ],
+      "depends": [],
+      "acceptance": [
+        "三檔 CC0 素材入庫含 .meta 與 LICENSES-cc0.md、_MANIFEST 登記",
+        "battle-audio-layers.json 有 clipSource 開關預設 cc0",
+        "BattleAudioLayers.ts 與單元測試補齊",
+        "變調代用版檔案保留",
+        "實跑時間軸證明三檔有播且切回變調版也正常"
+      ],
+      "deliverables": [
+        "assets/bundles/audio/clips/*",
+        "assets/scripts/battle/shared/BattleAudioLayers.ts",
+        "assets/resources/data/battle-audio-layers.json",
+        "tests/BattleAudioLayers.test.ts"
+      ],
+      "notes": "2026-11-22 | 狀態: done | 驗證: 單元測試全過、tsc 0 錯、compute-gate quick 通過、建置實跑 6 回合 cc0 版 cc0_hit_metal 5／cc0_hit_flesh 1／cc0_hoof_single 46 次，pitched 版 hit_block 5／footstep_hoof 44 次 | 變更: Kenney Impact Sounds 取 impactMetal_medium_000／impactPunch_medium_000（OGG 原檔）、BigSoundBank 馬蹄裁一拍存 WAV；clipSource 開關與 cc0Clips 替換表；LICENSES-cc0.md、_MANIFEST | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9831",
+      "title": "LLM 批次文案工具與大廳武將聊天台詞第一批（API 贈送額度）",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "2026-11-22T20:00:00+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "tools_node/llm-batch：Batch API 工具、Agent SDK 以 API 金鑰執行器；大廳聊天台詞第一批 20 位武將寫入 hall-chat-lines.json",
+      "related": [
+        "PROG-2-2251"
+      ],
+      "depends": [],
+      "acceptance": [
+        "批次工具含 schema 驗證、費用統計、單批上限",
+        "單元測試通過",
+        "20 位武將台詞通過品質檢查並寫入正式資料"
+      ],
+      "deliverables": [
+        "tools_node/llm-batch/*",
+        "assets/resources/data/hall-map/hall-chat-lines.json"
+      ],
+      "notes": "2026-11-22 | 狀態: done | 驗證: 單元測試 6 項過、compute-gate quick 4/4、24 位台詞載入達底線 | 變更: tools_node/llm-batch、hall-chat-lines 補 20 位 | 阻塞: 未跑 web 建置實玩",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9735",
+      "title": "戰場天氣：季節機率抽取、劇情關固定、戰前顯示",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "2026-11-22T21:39:08+08:00",
+      "started_by_agent": "claude-code-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 19 點裁決：劇情關照劇本固定天氣，其餘依季節機率抽、戰前顯示；數值放 JSON。總 PM 11/22 裁決季節權重（晴天每季 50%）。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "規格補天氣代碼表、季節機率、劇情固定、排程、戰前顯示、JSON 格式、驗收標準",
+        "battle-weather-season.json 與抽取函式含單元測試",
+        "LobbyScene 戰前決定天氣且戰場一致",
+        "戰前顯示本場天氣與效果",
+        "playtest 12/12、standard 閘門過"
+      ],
+      "deliverables": [
+        "docs/遊戲規格文件/系統規格書/戰場適性系統-shards/shard-d.md（K–Q）",
+        "assets/resources/data/battle-weather-season.json",
+        "assets/scripts/core/systems/BattleWeatherRoll.ts",
+        "assets/scripts/core/systems/WeatherEffectText.ts",
+        "tests/BattleWeatherRoll.test.ts"
+      ],
+      "notes": "2026-11-22 | 狀態: done | 驗證: 單元測試 9239 通過、tsc 0 錯、standard 閘門過、playtest 12/12、戰前截圖與戰場 BattleState.weather 一致（FOG） | 變更: 季節抽天氣＋劇情固定＋戰前偵查面板顯示天氣；RAIN→RAINY；戰場適性系統新增 shard-d（K–Q）；原卡號 9733 與 #2524 撞號改 9735 | 阻塞: 無；待辦：赤壁關、雷暴機械損毀與士氣效果、天氣適性數值表",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9736",
+      "title": "移除舊 buff 獲得 3D 特效（攻擊／回血）＋吃到 buff 特效依倍率分級",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者要求砍掉舊的攻擊加成 3D 特效（大光劍）以省記憶體；回血獲得池同處重疊一併移除；TileBuffConsumed 帶 factor，吃到特效依 ×3／×5 分級（總PM 同意）。減益池與技能仍用的貼圖保留。",
+      "related": [
+        "PROG-2-9734"
+      ],
+      "depends": [],
+      "acceptance": [
+        "atkGainPool/hpGainPool 移除",
+        "吃到特效依倍率分級",
+        "tsc 0",
+        "單元測試全過"
+      ],
+      "deliverables": [
+        "UnitRenderer.ts",
+        "UnitBuffPickupVfx.ts",
+        "TileBuffVfx.ts",
+        "BattleTileBuffLifecycleManager.ts",
+        "BattleUIBridge.ts",
+        "buff-particle-profiles.json",
+        "tile-buff-vfx.json"
+      ],
+      "notes": "2026-11-22 | 狀態: done | 驗證: tsc 0、單元 9236 通過 | 變更: 程式由 agent-run Haiku 產出（0.05 美元），戰場專家驗收 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",

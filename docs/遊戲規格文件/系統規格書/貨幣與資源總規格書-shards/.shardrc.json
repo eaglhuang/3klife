@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "source": "../貨幣與資源總規格書.md",
+  "indexTitle": "貨幣與資源總規格書（分片索引）",
+  "indexPath": "docs/遊戲規格文件/系統規格書/貨幣與資源總規格書.md",
+  "type": "markdown-h2",
+  "preambleShard": "shard-a",
+  "defaultShard": "shard-b",
+  "shards": [
+    {
+      "name": "shard-a",
+      "title": "1–3 使用者裁決、資源總表、轉移規則",
+      "pattern": "^[1-3]\\. "
+    },
+    {
+      "name": "shard-b",
+      "title": "4–9 糧草改名、持有者、欄位對照、驗收、實作卡、待決，與變更記錄",
+      "pattern": "."
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "source": "../戰場部署系統.md",
+  "indexTitle": "戰場部署系統（分片索引）",
+  "indexPath": "docs/遊戲規格文件/系統規格書/戰場部署系統.md",
+  "type": "markdown-h2",
+  "preambleShard": "shard-a",
+  "defaultShard": "shard-d",
+  "shards": [
+    {
+      "name": "shard-a",
+      "title": "前言、A–E 系統描述、目的、商業套路、TA、功能清單",
+      "pattern": "^[A-E]\\. "
+    },
+    {
+      "name": "shard-b",
+      "title": "F 公式相關",
+      "pattern": "^F\\. "
+    },
+    {
+      "name": "shard-c",
+      "title": "G–K 劇本、字串、Data Schema、名詞定義、特殊戰場環境與格子補充",
+      "pattern": "^[G-K]\\. "
+    },
+    {
+      "name": "shard-d",
+      "title": "MCQ 決策記錄、格子移動連動、最新定案與變更記錄",
+      "pattern": "."
+    }
+  ]
+}

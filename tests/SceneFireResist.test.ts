@@ -27,6 +27,8 @@ function tickFireTiles(battleTactic: BattleTactic, faction: Faction): number {
         battleTactic,
         units: new Map([[unit.id, unit]]),
         unitDots: new Map(),
+        unitBurns: new Map(),
+        tileEffects: new Map(),
         formationZones: new Map(),
         getTileEffect: () => ({ id: 'fire-1-3', lane: 1, depth: 3, state: 'hazard-fire', damagePerTurn: TILE_DAMAGE }),
         getGeneral: () => null,

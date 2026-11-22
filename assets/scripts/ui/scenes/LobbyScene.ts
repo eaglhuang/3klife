@@ -53,7 +53,9 @@ import { services } from '../../core/managers/ServiceLoader';
 import type { IUIManagedController } from '../../shared/interfaces/IUIInterfaces';
 import { SceneName } from '../../core/config/Constants';
 import { IBattleEntryParams, DEFAULT_BATTLE_ENTRY_PARAMS, EncounterConfig, isTutorialBattle } from '../../shared/BattleEntryParams';
-import { normalizeWeather } from '../../shared/CommonEnums';
+import { Weather } from '../../shared/CommonEnums';
+import { createSeededRng, rollBattleWeather, seasonWeatherSeed, validateBattleWeatherSeasonTable, type BattleWeatherSeasonTable } from '../../core/systems/BattleWeatherRoll';
+import { weatherPreBattleLine } from '../../core/systems/WeatherEffectText';
 import { BattleTactic } from '../../core/config/Constants';
 import { GeneralListComposite } from '../components/GeneralListComposite';
 import { GeneralDetailComposite } from '../components/GeneralDetailComposite';
@@ -181,6 +183,10 @@ import { BLOODLINE_VIGNETTE_CELL_COUNT, bloodlineVignetteOpenLabel, bloodlineVig
 import { installOfficerTierTable, type OfficerTierRow } from '../../core/systems/OfficerTierTable';
 import { shouldShowMentorUnlockPrompt } from '../../core/systems/MentorGuidance';
 import { buildPromotionHallGuide, buildRankUnlockPopupView, installOfficerFeatureUnlocks, lobbyActionLock, lockedActionToast, nextRankPreviewLine, PromotionHallGuide } from '../../core/systems/OfficerFeatureUnlocks';
+import { LobbyGuideQueue, type LobbyGuideItem } from '../core/LobbyGuideQueue';
+import { MATCHMAKER_FIRST_VISIT_SPEECH, MATCHMAKER_SPRING_VISIT_SPEECH } from '../../core/systems/MatchmakerGuideManager';
+import { MatchmakerDialogPresenter } from '../family/MatchmakerDialogPresenter';
+import type { MatchmakerOfferNotice } from '../../core/managers/GameSession';
 import { installSageProgressTable } from '../../core/systems/SageFavor';
 import { installSandtableTerritories } from '../../core/systems/SandtableTerritories';
 import { OFFICER_PROMOTION_FREEZE_TIMING, officerPromotionFreezeTitles, officerPromotionNoticeOf, officerPromotionRewardTotal } from '../../core/systems/HallMissionSettlement';
@@ -577,6 +583,9 @@ export class LobbyScene extends Component {
     private _hallBoard: HallBoardPanelController | null = null;
     /** 大廳輪替走動的當班名單狀態（60 秒換一批）與聊天台詞庫（Issue #2135） */
     private _hallWalkerState: WalkerPlanState = INITIAL_WALKER_STATE;
+    /** 大廳通用導流隊列（PROG-2-9613）：晉升、媒人、年終典禮通用引導隊列 */
+    private readonly _guideQueue: LobbyGuideQueue = new LobbyGuideQueue();
+    private _activeMatchmakerPresenter: MatchmakerDialogPresenter | null = null;
     /** 晉升解鎖大廳導流（PROG-2-9610）：晉升完成後若有新機能解鎖，由大廳武將頂金色驚嘆號引導並提供捷徑 */
     private _pendingPromotionGuide: PromotionHallGuide | null = null;
     /** 晉升導流「！」掛在哪位武將頭上；只有點這位才出導流泡泡，標記與泡泡必須同一人 */
@@ -640,6 +649,8 @@ export class LobbyScene extends Component {
     private _scoutPanelHost: UIScreenPreviewHost | null = null;
     private readonly _scoutPanel = new ScoutPanelController();
     private _tacticCounterTags: TacticCounterTagTable | null = null;
+    /** 季節天氣機率表（PROG-2-9735，data/battle-weather-season）；載入前或載入失敗時抽天氣一律退回晴天 */
+    private _weatherSeasonTable: BattleWeatherSeasonTable | null = null;
     private _destinyShopHost: UIScreenPreviewHost | null = null;
     private _destinyShop: DestinyShopController | null = null;
     private _sortieHost: UIScreenPreviewHost | null = null;
@@ -1238,7 +1249,30 @@ export class LobbyScene extends Component {
                 const hallGuide = buildPromotionHallGuide(payload.tiers, (k, ...args) => services().i18n.t(k, ...args));
                 this._pendingPromotionGuide = hallGuide?.primaryFeature.lobbyAction ? hallGuide : null;
                 this._promotionGuideGeneralId = null;
-                if (this._pendingPromotionGuide) {
+                if (this._pendingPromotionGuide && hallGuide) {
+                    const actionId = hallGuide.primaryFeature.lobbyAction as LobbyActionId;
+                    this._guideQueue.enqueue({
+                        id: 'officer-promotion',
+                        priority: 'officer-promotion',
+                        markStyle: PROMOTION_MARK_STYLE,
+                        guideSpeech: hallGuide.guideSpeech,
+                        acceptLabel: hallGuide.acceptLabel,
+                        declineLabel: hallGuide.declineLabel,
+                        actionId,
+                        onAccept: () => {
+                            this._pendingPromotionGuide = null;
+                            this._promotionGuideGeneralId = null;
+                            this._guideQueue.dequeue('officer-promotion');
+                            this._lobbyHall?.refreshStage(Date.now() / 1000);
+                            this._runCityHubAction(actionId);
+                        },
+                        onDecline: () => {
+                            this._pendingPromotionGuide = null;
+                            this._promotionGuideGeneralId = null;
+                            this._guideQueue.dequeue('officer-promotion');
+                            this._lobbyHall?.refreshStage(Date.now() / 1000);
+                        },
+                    });
                     this._lobbyHall?.refreshStage(Date.now() / 1000);
                 }
                 // 升官動畫（官職系統 E-6，PROG-2-1859）：每升一階播一次大字定格
@@ -2006,6 +2040,7 @@ export class LobbyScene extends Component {
             food: session.military.food,
             cityTroops: session.military.cityTroops,
             cityTroopsCap: session.military.cityTroopsCap,
+            woundedCamp: session.military.woundedCamp,
             totalSeasonsElapsed: session.gameTime.totalSeasonsElapsed,
             fame: session.fame,
             population: session.cityPopulation,
@@ -3183,6 +3218,7 @@ export class LobbyScene extends Component {
             this._refreshExtremeTask();
             return;
         }
+        await this._ensureWeatherSeasonTable();
         const params = this._buildBattleEntryParams(undefined, encounter);
         services().scene.switchScene(SceneName.Battle, { ...params, tutorial: false, teachingSpirit: null });
     }
@@ -4545,9 +4581,16 @@ ${spent}`,
         });
         const taskMarks = new Set(plan.volunteerIds);
         const markStyleById = new Map<string, string>();
-        // PROG-2-9610：晉升導流待引導時，挑一位在場走動的武將頭頂掛大金色「！」；
+        // PROG-2-9610 / PROG-2-9613：大廳通用導流（晉升、媒人叩門等），挑一位在場走動的武將頭頂掛大金色「！」；
         // 已選的人還在場就沿用（輪替不換人，玩家看到的標記與點到的泡泡才是同一位）
-        if (this._pendingPromotionGuide && generals.length > 0) {
+        if (this._guideQueue.hasPending && generals.length > 0) {
+            const anchorId = this._guideQueue.bindAnchorGeneral(generals);
+            if (anchorId) {
+                this._promotionGuideGeneralId = anchorId;
+                taskMarks.add(anchorId);
+                markStyleById.set(anchorId, this._guideQueue.peek()?.markStyle ?? PROMOTION_MARK_STYLE);
+            }
+        } else if (this._pendingPromotionGuide && generals.length > 0) {
             const kept = generals.find(g => g.id === this._promotionGuideGeneralId);
             this._promotionGuideGeneralId = (kept ?? generals[0]).id;
             taskMarks.add(this._promotionGuideGeneralId);
@@ -4564,8 +4607,25 @@ ${spent}`,
         const session = services().session;
         const profile = session.hallStageProfile(generalId);
         if (!profile) return null;
-        // 晉升解鎖導流（PROG-2-9610）：若有新解鎖功能，武將優先以口語泡泡提示並提供直達按鈕
-        // 只有頭頂掛著「！」的那位才出導流泡泡；其他人照常聊天（泡泡與標記不同人會讓玩家搞不清誰在說話）
+        // 大廳通用導流隊列（PROG-2-9613）：若有待引導項（晉升、媒人叩門等），掛標記者優先出導流泡泡
+        const activeGuide = this._guideQueue.peek();
+        if (activeGuide && generalId === (this._guideQueue.anchorGeneralId ?? this._promotionGuideGeneralId)) {
+            return {
+                name: profile.name,
+                text: activeGuide.guideSpeech,
+                volunteer: {
+                    acceptLabel: activeGuide.acceptLabel,
+                    declineLabel: activeGuide.declineLabel,
+                    onAccept: () => {
+                        activeGuide.onAccept?.();
+                    },
+                    onDecline: () => {
+                        activeGuide.onDecline?.();
+                    },
+                },
+            };
+        }
+        // 晉升解鎖導流（PROG-2-9610，相容備援）
         if (this._pendingPromotionGuide && generalId === this._promotionGuideGeneralId) {
             const guide = this._pendingPromotionGuide;
             const text = guide.guideSpeech;
@@ -4965,9 +5025,74 @@ ${spent}`,
                 for (const uid of payload?.mercenaryDepartures ?? []) {
                     services().event.emit('SHOW_TOAST', { message: mercFarewellLine(mercName(uid)), duration: 3 });
                 }
+                if (payload?.matchmakerOfferNotice) {
+                    this._enqueueMatchmakerGuide(payload.matchmakerOfferNotice);
+                }
                 this._refreshMercenaryPanel();
             }),
         );
+    }
+
+    /** 結緣媒人導流排入大廳隊列（PROG-2-9613） */
+    private _enqueueMatchmakerGuide(notice: MatchmakerOfferNotice): void {
+        const isFirst = notice.promptType === 'first-visit';
+        const fallbackSpeech = isFirst ? MATCHMAKER_FIRST_VISIT_SPEECH : MATCHMAKER_SPRING_VISIT_SPEECH;
+        const key = isFirst ? 'MATCHMAKER_FIRST_VISIT_SPEECH' : 'MATCHMAKER_SPRING_VISIT_SPEECH';
+        const speech = services().i18n.t(key, fallbackSpeech);
+        this._guideQueue.enqueue({
+            id: 'matchmaker-guide',
+            priority: 'matchmaker',
+            markStyle: PROMOTION_MARK_STYLE,
+            guideSpeech: speech,
+            acceptLabel: services().i18n.t('MATCHMAKER_ACTION_ACCEPT', '立即相看'),
+            declineLabel: services().i18n.t('MATCHMAKER_ACTION_DECLINE', '稍後再議'),
+            actionId: 'family-matchmaker',
+            payload: notice,
+            onAccept: () => {
+                this._guideQueue.dequeue('matchmaker-guide');
+                this._lobbyHall?.refreshStage(Date.now() / 1000);
+                this._openMatchmakerDialog(notice);
+            },
+            onDecline: () => {
+                this._guideQueue.dequeue('matchmaker-guide');
+                this._lobbyHall?.refreshStage(Date.now() / 1000);
+            },
+        });
+        this._lobbyHall?.refreshStage(Date.now() / 1000);
+    }
+
+    private _openMatchmakerDialog(notice: MatchmakerOfferNotice): void {
+        const session = services().session;
+        const config = session.familyConfig;
+        const price = config?.matchmakerPrice ?? 100;
+        const silver = session.silverLedger.silverBalance();
+        const presenter = new MatchmakerDialogPresenter({
+            promptType: notice.promptType,
+            candidates: notice.candidates,
+            price,
+            silverBalance: silver,
+            remainingOffers: notice.remaining,
+            onEnroll: async (pickIndex) => {
+                const res = session.enrollMatchmakerSpouse(pickIndex);
+                if (res.ok) {
+                    services().event.emit('SHOW_TOAST', {
+                        message: `良緣締結！${res.generalId ? (session.findGeneral(res.generalId)?.name ?? '') : ''}已成為主公家眷。`,
+                        duration: 3,
+                    });
+                    this._refreshWalletPreviewState();
+                } else if (res.reason === 'silver-low') {
+                    services().event.emit('SHOW_TOAST', {
+                        message: '家族銀兩不足，媒婆說她不賒帳',
+                        duration: 3,
+                    });
+                }
+                return res;
+            },
+            onGotoCommerce: () => {
+                this._runCityHubAction('hall');
+            },
+        });
+        this._activeMatchmakerPresenter = presenter;
     }
 
     private _openRivalDiplomacy(): void {
@@ -5385,6 +5510,7 @@ ${spent}`,
         const encounter = this._currentEncounter();
         const host = this._scoutPanelHost;
         if (!encounter || !host) return true;
+        await this._ensureWeatherSeasonTable();
         const enemy = this._generals.find((g) => g.id === encounter.enemyGeneralId);
         const leadId = services().session.resolveLeadGeneralId(encounter.playerGeneralId);
         const lead = services().session.roster.find((g) => g.id === leadId) ?? this._generals.find((g) => g.id === leadId);
@@ -5393,12 +5519,38 @@ ${spent}`,
             enemy ? { name: enemy.name, ...(enemy.title ? { title: enemy.title } : {}) } : null,
             (lead?.tacticSlots ?? []).map((slot) => slot.tacticId),
             await this._loadTacticCounterTags(),
+            weatherPreBattleLine(this._resolveEncounterWeather(encounter)),
         );
         const result = this._scoutPanel.ask(scout);
         host.node.active = true;
         this._bringNodeToFront(host.node);
         if (host.binder) applyFlowView(host.binder, this._scoutPanel.getView());
         return result;
+    }
+
+    /** 載入季節天氣機率表；戰前偵查與開戰前都先等它，兩處才會讀到同一個天氣 */
+    private async _ensureWeatherSeasonTable(): Promise<void> {
+        if (this._weatherSeasonTable) return;
+        try {
+            const data = await services().resource.loadJson<BattleWeatherSeasonTable>('data/battle-weather-season', { tags: ['LobbyScene'] });
+            this._weatherSeasonTable = validateBattleWeatherSeasonTable(data);
+        } catch {
+            this._weatherSeasonTable = null;
+        }
+    }
+
+    /**
+     * 本場天氣（使用者 19 點裁決）：關卡 weather 有值就固定；沒值依本季機率抽。
+     * 種子 = 年-季-關卡，同一季同一關永遠同一種，戰前顯示與戰場必定一致。
+     */
+    private _resolveEncounterWeather(encounter: EncounterConfig): Weather {
+        const time = services().session.gameTime;
+        return rollBattleWeather({
+            season: time.currentSeason,
+            encounter,
+            table: this._weatherSeasonTable,
+            rng: createSeededRng(seasonWeatherSeed(time.currentYear, time.currentSeason, encounter.id)),
+        }).weather;
     }
 
     private async _loadTacticCounterTags(): Promise<TacticCounterTagTable> {
@@ -5988,6 +6140,7 @@ ${spent}`,
             message: `年終將至，${knownInvader ? `${knownInvader.nationName}大軍` : '敵軍'}壓境！全城備戰守城`,
             duration: 3,
         });
+        await this._ensureWeatherSeasonTable();
         const params = this._buildBattleEntryParams(undefined, encounter);
         services().scene.switchScene(SceneName.Battle, {
             ...params,
@@ -8024,11 +8177,14 @@ ${spent}`,
         const selectedGeneral = this._resolveMissionDetailSmokeGeneral(previewVariant, availableGenerals);
         // 環境偵察面板（PROG-2-0405）：用大廳目前關卡的真實地形與天氣
         const encounter = this._currentEncounter();
-        const scout = encounter ? buildEnvScoutLines(buildBattlefieldReconForEncounter(encounter)) : null;
+        await this._ensureWeatherSeasonTable();
+        // 天氣用與開戰相同的抽取結果（PROG-2-9735），預報與天氣行都以它為準
+        const weather = encounter ? this._resolveEncounterWeather(encounter) : null;
+        const scout = encounter && weather ? buildEnvScoutLines(buildBattlefieldReconForEncounter({ ...encounter, weather })) : null;
 
         await services().ui.open(UIID.LobbyMissionDetailDialog, {
             previewVariant,
-            state: scout ? { envScoutTerrainLine: scout.terrainLine, envScoutWeatherLine: scout.weatherLine } : undefined,
+            state: scout && weather ? { envScoutTerrainLine: scout.terrainLine, envScoutWeatherLine: weatherPreBattleLine(weather) } : undefined,
             availableGenerals,
             selectedGeneralId: selectedGeneral?.id,
             selectedGeneralLabel: selectedGeneral?.label,
@@ -8772,6 +8928,7 @@ ${spent}`,
 
     /** 開戰：攻城戰先扣主將的攻城壽命（存檔後才切場景），其餘直接切場景 */
     private async _enterBattle(battleTactic?: BattleTactic): Promise<void> {
+        await this._ensureWeatherSeasonTable();
         if (!(await this._askScoutBeforeSortie())) return;
         const params = this._buildBattleEntryParams(battleTactic ?? await this._resolveSceneGambit());
         const siege = lifespanCommandForBattleKind(this._currentEncounter()?.battleKind);
@@ -8835,7 +8992,7 @@ ${spent}`,
             playerEquipment: [...(encounter.playerEquipment ?? [])],
             enemyEquipment: [...(encounter.enemyEquipment ?? [])],
             selectedCardIds: services().session.deck,
-            weather: normalizeWeather(encounter.weather) ?? DEFAULT_BATTLE_ENTRY_PARAMS.weather,
+            weather: this._resolveEncounterWeather(encounter),
             battleTactic: battleTactic ?? encounter.battleTactic ?? DEFAULT_BATTLE_ENTRY_PARAMS.battleTactic,
             backgroundId: battleTactic === BattleTactic.FloodAttack ? undefined : encounter.backgroundId,
             campaignStageId: services().session.resolveCampaignStage(encounter.campaignStage).id,

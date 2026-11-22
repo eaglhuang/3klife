@@ -83,14 +83,14 @@ export function createMedicalAidHealSuite(): TestSuite {
         assert.equals(100, ally.currentHp);
     });
 
-    suite.test('既有仁德號召固定比例路徑不變：仍依施放者最大 HP 的 18%（下限 30）', () => {
+    suite.test('既有仁德號召固定比例路徑不變：固定量仍依施放者最大 HP 的 18%（下限 30），再加已損 25%，並截到已損血量（PROG-2-9720）', () => {
         const ally = makeAlly('ally-e', 100, 10);
         const context = makeContext([ally]);
         context.getCasterGeneral = () => ({ maxHp: 1000 }) as never;
         const request = { ownerUid: Faction.Player, battleSkillId: 'liu-bei-rally', targetUnitUid: 'ally-e' } as never;
         const result = new HealSkillResolver().execute(request, context);
         assert.isTrue(result.applied);
-        assert.equals(180, result.deltas[0].deltaHp);
+        assert.equals(90, result.deltas[0].deltaHp, '固定量 180 + 已損 90×25% 超過已損 90 → 截到 90，不再回報溢出量');
     });
 
     return suite;

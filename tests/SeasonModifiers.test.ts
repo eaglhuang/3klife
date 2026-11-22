@@ -18,7 +18,7 @@ import { FOOD_PER_SEASON, regenMilitaryOneSeason, type MilitaryReserve } from '.
 const CONFIG_PATH = path.join('assets', 'resources', 'data', 'season-modifiers.json');
 
 function reserve(overrides: Partial<MilitaryReserve> = {}): MilitaryReserve {
-    return { cityTroops: 100, cityTroopsCap: 200, recruitRegen: 10, food: 100, foodCap: 1000, ...overrides };
+    return { cityTroops: 100, cityTroopsCap: 200, recruitRegen: 10, food: 100, foodCap: 1000, woundedCamp: 0, ...overrides };
 }
 
 export function createSeasonModifiersSuite(): TestSuite {

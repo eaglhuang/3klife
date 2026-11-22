@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-11-21
+> 生成日期: 2026-11-22
 > 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 5/15 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -78,7 +78,7 @@
 | `doc_spec_1244` | docs/遊戲規格文件/系統規格書/家族子嗣與血統總規格書-shards/shard-c.md | 家族子嗣與血統總規格書（分片索引） — 10 共用框架對應、11 建議 JSON 欄位表、12 既有規格修訂清單、13 驗收、14 待決、15 實作卡切分 |
 | `doc_spec_1245` | docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計-shards/shard-h.md | 學府修業畫面與接線設計（分片索引） — 13 學府新版規則：人源與子嗣節奏、入學加分、修業變化、失敗與結業影響（依 11/21 裁決） |
 | `doc_spec_1246` | docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計-shards/shard-i.md | 學府修業畫面與接線設計（分片索引） — 14 教官就是武將（舊教官卡退場；14.11 支援卡接線）、共用框架對應、建議 JSON、驗收、實作卡切分 |
-| `doc_spec_1247` | docs/遊戲規格文件/系統規格書/貨幣與資源總規格書.md | 貨幣與資源總規格書 |
+| `doc_spec_1247` | docs/遊戲規格文件/系統規格書/貨幣與資源總規格書.md | 貨幣與資源總規格書（分片索引） |
 | `doc_spec_1248` | docs/遊戲規格文件/系統規格書/人員占用系統Base框架規格書.md | 人員占用系統Base框架規格書（分片索引） |
 | `doc_spec_1249` | docs/遊戲規格文件/系統規格書/人員占用系統Base框架規格書-shards/shard-a.md | 人員占用系統Base框架規格書（分片索引） — 1–3 目的、核心概念、共用資料結構（種類、互斥矩陣） |
 | `doc_spec_1250` | docs/遊戲規格文件/系統規格書/人員占用系統Base框架規格書-shards/shard-b.md | 人員占用系統Base框架規格書（分片索引） — 4–10 共用 API、包裝接入、依賴、存檔、盤點、驗收、裁決紀錄 |
@@ -122,6 +122,34 @@
 | `doc_spec_1292` | docs/遊戲規格文件/企劃走查/第一年體驗走查-shards/shard-a.md | 第一年體驗走查 — 一、走查背景與第一年四季節奏對帳（應做 vs 實做） |
 | `doc_spec_1293` | docs/遊戲規格文件/企劃走查/第一年體驗走查-shards/shard-b.md | 第一年體驗走查 — 二、四大核心體驗痛點與卡點深度分析 |
 | `doc_spec_1294` | docs/遊戲規格文件/企劃走查/第一年體驗走查-shards/shard-c.md | 第一年體驗走查 — 三、企劃修正建議、規格對應與拆卡派工清單 |
+| `doc_spec_1295` | docs/遊戲規格文件/系統規格書/兵種（虎符）系統-shards/shard-a.md | 兵種（虎符）系統（分片索引） — 前言（含兵種符號視覺規範）、A–E 系統描述、目的、商業套路、TA、功能清單 |
+| `doc_spec_1296` | docs/遊戲規格文件/系統規格書/兵種（虎符）系統-shards/shard-b.md | 兵種（虎符）系統（分片索引） — F 公式相關 |
+| `doc_spec_1297` | docs/遊戲規格文件/系統規格書/兵種（虎符）系統-shards/shard-c.md | 兵種（虎符）系統（分片索引） — G–J 劇本、字串、Data Schema、名詞定義 |
+| `doc_spec_1298` | docs/遊戲規格文件/系統規格書/兵種（虎符）系統-shards/shard-d.md | 兵種（虎符）系統（分片索引） — MCQ 決策記錄與變更記錄 |
+| `doc_spec_1299` | docs/遊戲規格文件/系統規格書/戰場部署系統-shards/shard-a.md | 戰場部署系統（分片索引） — 前言、A–E 系統描述、目的、商業套路、TA、功能清單 |
+| `doc_spec_1300` | docs/遊戲規格文件/系統規格書/戰場部署系統-shards/shard-b.md | 戰場部署系統（分片索引） — F 公式相關 |
+| `doc_spec_1301` | docs/遊戲規格文件/系統規格書/戰場部署系統-shards/shard-c.md | 戰場部署系統（分片索引） — G–K 劇本、字串、Data Schema、名詞定義、特殊戰場環境與格子補充 |
+| `doc_spec_1302` | docs/遊戲規格文件/系統規格書/戰場部署系統-shards/shard-d.md | 戰場部署系統（分片索引） — MCQ 決策記錄、格子移動連動、最新定案與變更記錄 |
+| `doc_spec_1303` | docs/遊戲規格文件/系統規格書/戰場適性系統-shards/shard-a.md | 戰場適性系統（分片索引） — A–E 系統描述、目的、商業套路、TA、功能清單 |
+| `doc_spec_1304` | docs/遊戲規格文件/系統規格書/戰場適性系統-shards/shard-b.md | 戰場適性系統（分片索引） — F 公式相關（含天氣來源與戰前顯示） |
+| `doc_spec_1305` | docs/遊戲規格文件/系統規格書/戰場適性系統-shards/shard-c.md | 戰場適性系統（分片索引） — G–J 劇本、字串、Data Schema、名詞定義、MCQ 與變更記錄 |
+| `doc_spec_1306` | docs/遊戲規格文件/系統規格書/貨幣與資源總規格書-shards/shard-a.md | 貨幣與資源總規格書（分片索引） — 1–3 使用者裁決、資源總表、轉移規則 |
+| `doc_spec_1307` | docs/遊戲規格文件/系統規格書/貨幣與資源總規格書-shards/shard-b.md | 貨幣與資源總規格書（分片索引） — 4–9 糧草改名、持有者、欄位對照、驗收、實作卡、待決，與變更記錄 |
+| `doc_spec_1308` | docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-a.md | 名詞定義文件（分片索引） — 前言覆寫裁定與命名規則 |
+| `doc_spec_1309` | docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-a/shard-a-part-1.md | 名詞定義文件（分片索引） — 前言覆寫裁定與命名規則 |
+| `doc_spec_1310` | docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-a/shard-a-part-2.md | 命名統一規則 |
+| `doc_spec_1311` | docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-a/shard-a-part-3.md | shard-a-part-3 |
+| `doc_spec_1312` | docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-b.md | 名詞定義文件（分片索引） — 全系統名詞總表 |
+| `doc_spec_1313` | docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-b/shard-b-part-1.md | 名詞定義文件（分片索引） — 全系統名詞總表 |
+| `doc_spec_1314` | docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-b/shard-b-part-2.md | 英靈世家系統 |
+| `doc_spec_1315` | docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-b/shard-b-part-3.md | 因子爆發系統 |
+| `doc_spec_1316` | docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-b/shard-b-part-4.md | 武將日誌與離線互動系統 |
+| `doc_spec_1317` | docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-b/shard-b-part-5.md | 大廳系統 |
+| `doc_spec_1318` | docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-b/shard-b-part-6.md | 資源循環系統 |
+| `doc_spec_1319` | docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-b/shard-b-part-7.md | 血統正規化 |
+| `doc_spec_1320` | docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-c.md | 名詞定義文件（分片索引） — MCQ 決策記錄（Q61–Q65） |
+| `doc_spec_1321` | docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-c/shard-c-part-1.md | 名詞定義文件（分片索引） — MCQ 決策記錄（Q61–Q65） |
+| `doc_spec_1322` | docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-c/shard-c-part-2.md | 🗳 MCQ 決策記錄（Q65） |
 
 ## 索引類 (`doc_index`)
 

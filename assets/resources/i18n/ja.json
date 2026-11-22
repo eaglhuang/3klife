@@ -913,5 +913,14 @@
   "ui.mission.block.nursing": "授乳期間中",
   "ui.mission.block.mentor": "教官を務めている",
   "ui.mission.block.on-sortie": "出征中",
-  "ui.mission.block.occupied": "修業または別任務中"
+  "ui.mission.block.occupied": "修業または別任務中",
+  "MATCHMAKER_FIRST_VISIT_TITLE": "仲人の訪問・良縁成就",
+  "MATCHMAKER_SPRING_VISIT_TITLE": "新春の縁談・良縁締結",
+  "MATCHMAKER_FIRST_VISIT_SPEECH": "仲人がお祝いに参りました。殿のために良家のご令嬢をお連れしましたが、お会いになりますか？",
+  "MATCHMAKER_SPRING_VISIT_SPEECH": "新春の吉日に、仲人が近隣の令嬢名簿を持参いたしました。ご覧になりますか？",
+  "MATCHMAKER_ACTION_ACCEPT": "対面する",
+  "MATCHMAKER_ACTION_DECLINE": "後ほど",
+  "MATCHMAKER_SILVER_LOW_WARNING": "家中の銀両が不足しています。仲人は掛け売りを認めません。",
+  "MATCHMAKER_GOTO_COMMERCE": "銀両を調達する",
+  "MATCHMAKER_ENROLL_BUTTON": "配偶者に迎える（結納金 %{cost} 銀両）"
 }

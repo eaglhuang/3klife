@@ -76,29 +76,6 @@ export function tileBuffDeltaText(attackDelta: number, hpDelta: number): string 
   ].filter(Boolean).join(' ');
 }
 
-/** 格子上圖示的「呼吸」：慢慢上下浮 + 輕微縮放；稀有格浮得多一點。t 為秒。 */
-export const TILE_BUFF_IDLE = {
-  periodSec: 1.4,
-  bobPx: 4,
-  rareBobPx: 6,
-  scaleAmp: 0.05,
-  /** 地面光板透明度在這兩個值之間來回 */
-  plateAlphaMin: 70,
-  plateAlphaMax: 130,
-} as const;
-
-export function sampleTileBuffIdle(t: number, rare: boolean): { dy: number; scale: number; plateAlpha: number } {
-  const T = TILE_BUFF_IDLE;
-  const phase = Number.isFinite(t) ? (t / T.periodSec) * Math.PI * 2 : 0;
-  const s = Math.sin(phase);
-  const k = (s + 1) / 2;
-  return {
-    dy: s * (rare ? T.rareBobPx : T.bobPx),
-    scale: 1 + s * T.scaleAmp,
-    plateAlpha: Math.round(T.plateAlphaMin + (T.plateAlphaMax - T.plateAlphaMin) * k),
-  };
-}
-
 /** 拾取飛入：從格子飛到單位頭頂的時間，以及途中的弧線高度（UI 像素） */
 export const TILE_BUFF_PICKUP = {
   flySec: 0.32,

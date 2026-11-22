@@ -1,9 +1,12 @@
 // @spec-source → 見 docs/cross-reference-index.md
 import { StatusEffect } from "../config/Constants";
+import { applyBuffStack } from "../../battle/shared/BuffStackHeal";
 
 interface BuffEntry {
   effect: StatusEffect;
   remainingTurns: number;
+  /** 層數（doc_spec_0359 §1，PROG-2-9720）：同名狀態最多 3 層；目前只記錄，數值效果仍是單層 */
+  stacks: number;
 }
 
 /**
@@ -20,7 +23,7 @@ export class BuffSystem {
 
   /**
    * 對指定單位施加狀態效果。
-   * 若同一效果已存在，取持續時間較長的那個（刷新不疊加）。
+   * 同名效果再次施加：層數 +1（上限 3 層）、持續回合取 max 不相加（doc_spec_0359 §1，走 applyBuffStack）。
    */
   public applyBuff(unitId: string, effect: StatusEffect, turns: number): void {
     if (!this.buffs.has(unitId)) {
@@ -30,11 +33,18 @@ export class BuffSystem {
     const list = this.buffs.get(unitId)!;
     const existing = list.find(b => b.effect === effect);
 
+    const next = applyBuffStack(existing ?? null, turns);
     if (existing) {
-      existing.remainingTurns = Math.max(existing.remainingTurns, turns);
+      existing.stacks = next.stacks;
+      existing.remainingTurns = next.remainingTurns;
     } else {
-      list.push({ effect, remainingTurns: turns });
+      list.push({ effect, remainingTurns: next.remainingTurns, stacks: next.stacks });
     }
+  }
+
+  /** 查詢同名狀態目前層數；沒有該狀態回傳 0 */
+  public getStacks(unitId: string, effect: StatusEffect): number {
+    return this.buffs.get(unitId)?.find(b => b.effect === effect)?.stacks ?? 0;
   }
 
   /**

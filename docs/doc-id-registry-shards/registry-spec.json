@@ -44,7 +44,7 @@
   {
     "id": "doc_spec_0008",
     "path": "docs/遊戲規格文件/系統規格書/名詞定義文件.md",
-    "title": "名詞定義文件（全系統匯總）",
+    "title": "名詞定義文件（分片索引）",
     "category": "spec"
   },
   {
@@ -68,7 +68,7 @@
   {
     "id": "doc_spec_0012",
     "path": "docs/遊戲規格文件/系統規格書/兵種（虎符）系統.md",
-    "title": "兵種（虎符）系統規格書",
+    "title": "兵種（虎符）系統（分片索引）",
     "category": "spec"
   },
   {
@@ -236,13 +236,13 @@
   {
     "id": "doc_spec_0040",
     "path": "docs/遊戲規格文件/系統規格書/戰場部署系統.md",
-    "title": "戰場部署系統規格書",
+    "title": "戰場部署系統（分片索引）",
     "category": "spec"
   },
   {
     "id": "doc_spec_0041",
     "path": "docs/遊戲規格文件/系統規格書/戰場適性系統.md",
-    "title": "戰場適性系統規格書",
+    "title": "戰場適性系統（分片索引）",
     "category": "spec"
   },
   {
@@ -7310,7 +7310,7 @@
   {
     "id": "doc_spec_1247",
     "path": "docs/遊戲規格文件/系統規格書/貨幣與資源總規格書.md",
-    "title": "貨幣與資源總規格書",
+    "title": "貨幣與資源總規格書（分片索引）",
     "category": "spec"
   },
   {
@@ -7569,6 +7569,174 @@
     "id": "doc_spec_1294",
     "path": "docs/遊戲規格文件/企劃走查/第一年體驗走查-shards/shard-c.md",
     "title": "第一年體驗走查 — 三、企劃修正建議、規格對應與拆卡派工清單",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1295",
+    "path": "docs/遊戲規格文件/系統規格書/兵種（虎符）系統-shards/shard-a.md",
+    "title": "兵種（虎符）系統（分片索引） — 前言（含兵種符號視覺規範）、A–E 系統描述、目的、商業套路、TA、功能清單",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1296",
+    "path": "docs/遊戲規格文件/系統規格書/兵種（虎符）系統-shards/shard-b.md",
+    "title": "兵種（虎符）系統（分片索引） — F 公式相關",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1297",
+    "path": "docs/遊戲規格文件/系統規格書/兵種（虎符）系統-shards/shard-c.md",
+    "title": "兵種（虎符）系統（分片索引） — G–J 劇本、字串、Data Schema、名詞定義",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1298",
+    "path": "docs/遊戲規格文件/系統規格書/兵種（虎符）系統-shards/shard-d.md",
+    "title": "兵種（虎符）系統（分片索引） — MCQ 決策記錄與變更記錄",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1299",
+    "path": "docs/遊戲規格文件/系統規格書/戰場部署系統-shards/shard-a.md",
+    "title": "戰場部署系統（分片索引） — 前言、A–E 系統描述、目的、商業套路、TA、功能清單",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1300",
+    "path": "docs/遊戲規格文件/系統規格書/戰場部署系統-shards/shard-b.md",
+    "title": "戰場部署系統（分片索引） — F 公式相關",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1301",
+    "path": "docs/遊戲規格文件/系統規格書/戰場部署系統-shards/shard-c.md",
+    "title": "戰場部署系統（分片索引） — G–K 劇本、字串、Data Schema、名詞定義、特殊戰場環境與格子補充",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1302",
+    "path": "docs/遊戲規格文件/系統規格書/戰場部署系統-shards/shard-d.md",
+    "title": "戰場部署系統（分片索引） — MCQ 決策記錄、格子移動連動、最新定案與變更記錄",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1303",
+    "path": "docs/遊戲規格文件/系統規格書/戰場適性系統-shards/shard-a.md",
+    "title": "戰場適性系統（分片索引） — A–E 系統描述、目的、商業套路、TA、功能清單",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1304",
+    "path": "docs/遊戲規格文件/系統規格書/戰場適性系統-shards/shard-b.md",
+    "title": "戰場適性系統（分片索引） — F 公式相關（含天氣來源與戰前顯示）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1305",
+    "path": "docs/遊戲規格文件/系統規格書/戰場適性系統-shards/shard-c.md",
+    "title": "戰場適性系統（分片索引） — G–J 劇本、字串、Data Schema、名詞定義、MCQ 與變更記錄",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1306",
+    "path": "docs/遊戲規格文件/系統規格書/貨幣與資源總規格書-shards/shard-a.md",
+    "title": "貨幣與資源總規格書（分片索引） — 1–3 使用者裁決、資源總表、轉移規則",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1307",
+    "path": "docs/遊戲規格文件/系統規格書/貨幣與資源總規格書-shards/shard-b.md",
+    "title": "貨幣與資源總規格書（分片索引） — 4–9 糧草改名、持有者、欄位對照、驗收、實作卡、待決，與變更記錄",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1308",
+    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-a.md",
+    "title": "名詞定義文件（分片索引） — 前言覆寫裁定與命名規則",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1309",
+    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-a/shard-a-part-1.md",
+    "title": "名詞定義文件（分片索引） — 前言覆寫裁定與命名規則",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1310",
+    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-a/shard-a-part-2.md",
+    "title": "命名統一規則",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1311",
+    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-a/shard-a-part-3.md",
+    "title": "shard-a-part-3",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1312",
+    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-b.md",
+    "title": "名詞定義文件（分片索引） — 全系統名詞總表",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1313",
+    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-b/shard-b-part-1.md",
+    "title": "名詞定義文件（分片索引） — 全系統名詞總表",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1314",
+    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-b/shard-b-part-2.md",
+    "title": "英靈世家系統",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1315",
+    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-b/shard-b-part-3.md",
+    "title": "因子爆發系統",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1316",
+    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-b/shard-b-part-4.md",
+    "title": "武將日誌與離線互動系統",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1317",
+    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-b/shard-b-part-5.md",
+    "title": "大廳系統",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1318",
+    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-b/shard-b-part-6.md",
+    "title": "資源循環系統",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1319",
+    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-b/shard-b-part-7.md",
+    "title": "血統正規化",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1320",
+    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-c.md",
+    "title": "名詞定義文件（分片索引） — MCQ 決策記錄（Q61–Q65）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1321",
+    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-c/shard-c-part-1.md",
+    "title": "名詞定義文件（分片索引） — MCQ 決策記錄（Q61–Q65）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1322",
+    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-c/shard-c-part-2.md",
+    "title": "🗳 MCQ 決策記錄（Q65）",
     "category": "spec"
   }
 ]

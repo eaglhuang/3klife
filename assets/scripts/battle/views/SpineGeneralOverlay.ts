@@ -7,6 +7,9 @@ import { DeployLandingSample, deployLandingTotalSec, landingCrossed, memberDeplo
 import { UnitSpineConfig } from '../shared/UnitPresentationConfig';
 import { AttackStyle, pickAttackClip } from '../shared/AttackStyle';
 import { DuelExchange, DuelPresentationCore } from '../shared/DuelPresentationCore';
+
+/** 場邊單挑雙方各離中心的距離（overlay 像素，PROG-2-9719）。 */
+const DUEL_SIDELINE_GAP = 70;
 import { getHitFlashCurve, hitFeedbackTotalSec, hitFlashStrength, parseHitFlashCurve, sampleHitRecoil, sampleHitShake, setHitFlashCurve } from './BattlePresentationTiming';
 
 interface Entry {
@@ -251,23 +254,30 @@ export class SpineUnitOverlay {
     if (entry && sec > 0) entry.freeze = Math.max(entry.freeze, sec);
   }
   public exists(id: string): boolean { return this.entries.has(id); }
+  /** 這個單位的 Spine 節點是否已載好、畫得出來（PROG-2-9715：主將出陣衝刺要等載好才起跑） */
+  public isShown(id: string): boolean { return !!this.entries.get(id)?.node?.isValid; }
   public revive(id: string): void {
     const entry = this.entries.get(id);
     if (entry && !this.duel?.ids.includes(id) && entry.core.snapshot().action === 'fall') entry.core.play('idle');
   }
 
   /** 回傳是否真的播了交鋒動畫；任一方沒有 Spine 動畫時回 false，呼叫端要自己補演出 */
-  public async playDuel(a: string, b: string, winner: 0 | 1 | null, fallen: boolean, exchanges: readonly DuelExchange[]): Promise<boolean> {
+  /**
+   * arenaCenter：有給就到這個點（場邊）對站，左方 a、右方 b；沒給沿用雙方腳點中點（PROG-2-9719 Q1=B）。
+   * 演完雙方各自走回出發時的腳點（主將回格子、場邊待命者回待命點）。
+   */
+  public async playDuel(a: string, b: string, winner: 0 | 1 | null, fallen: boolean, exchanges: readonly DuelExchange[], arenaCenter?: { x: number; y: number } | null): Promise<boolean> {
     if (this.duel) return false;
     const loaded = await Promise.all([this.waitForEntry(a), this.waitForEntry(b)]);
     if (!loaded.every(Boolean) || this.duel) return false;
     const first = this.entries.get(a), second = this.entries.get(b);
     if (!first?.node?.isValid || !second?.node?.isValid) return false;
     const left = first.core.snapshot().foot, right = second.core.snapshot().foot;
-    const midpoint = { x: (left.x + right.x) / 2, y: (left.y + right.y) / 2 };
     const dx = right.x - left.x, dy = right.y - left.y, distance = Math.hypot(dx, dy);
-    const direction = distance > 0.001 ? { x: dx / distance, y: dy / distance } : { x: 1, y: 0 };
-    const gap = Math.min(90, Math.max(40, distance / 4));
+    const midpoint = arenaCenter ? { x: arenaCenter.x, y: arenaCenter.y } : { x: (left.x + right.x) / 2, y: (left.y + right.y) / 2 };
+    // 場邊對站一律左右排開（玩家在左）；沒指定場邊時沿雙方連線方向
+    const direction = arenaCenter ? { x: 1, y: 0 } : distance > 0.001 ? { x: dx / distance, y: dy / distance } : { x: 1, y: 0 };
+    const gap = arenaCenter ? DUEL_SIDELINE_GAP : Math.min(90, Math.max(40, distance / 4));
     const core = new DuelPresentationCore(
       { unit: first.core, sideline: left, arena: { x: midpoint.x - direction.x * gap, y: midpoint.y - direction.y * gap } },
       { unit: second.core, sideline: right, arena: { x: midpoint.x + direction.x * gap, y: midpoint.y + direction.y * gap } }, winner, fallen, exchanges,

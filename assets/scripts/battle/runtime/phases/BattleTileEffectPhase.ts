@@ -9,7 +9,9 @@ import { tickSelfBurst } from '../../shared/SelfBurstWindow';
 import { tickTeamAura } from '../../shared/TeamAura';
 import { massDebuffDotDamage, tickEnemyMassDebuff } from '../../shared/EnemyMassDebuff';
 import { advanceMoraleOf } from '../../shared/Morale';
-import { advanceUnitDot, dotTickAmount } from '../../shared/UnitDot';
+import { advanceUnitDot, poisonDotTick } from '../../shared/UnitDot';
+import { advanceUnitBurn, burnDamageOf } from '../../shared/BurnStatus';
+import { igniteUnit } from '../BurnIgnite';
 import { tileStateRuleOf } from '../../shared/TileStateRules';
 import { AMBUSH_TRAP_ROOT_TURNS, AMBUSH_TRAP_TILE_NOTE, ROCK_DEBRIS_TILE_NOTE, sceneFireDamageTakenOf } from '../../shared/BattleTacticBehavior';
 import { applyTallyDefection, applyTallyTeamMoraleAura } from '../../shared/TallyPassive';
@@ -109,6 +111,34 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
   breakRockSlideTiles(context, svc);
   captureFloodgates(context, svc);
 
+  // 燃燒（PROG-2-9726，使用者 11/22 裁決）：所屬陣營的燃燒單位在本階段扣最大 HP 的比例；不蔓延。
+  // 先結算既有燃燒、再讓踩火格的單位新燃燒，所以剛燒起來的單位要到下一回合才扣。
+  for (const [unitId, burn] of Array.from(context.state.unitBurns)) {
+    const unit = context.state.units.get(unitId);
+    if (!unit || unit.isDead()) {
+      context.state.unitBurns.delete(unitId);
+      continue;
+    }
+    if (unit.faction !== context.actingFaction) continue;
+    context.applyUnitDamage(unit, burnDamageOf(unit.maxHp, burn.stacks), null, {
+      attackerId: null,
+      attackerLane: null,
+      attackerDepth: null,
+      damageSource: 'burn',
+      allowDamageLink: false,
+    });
+    if (!advanceUnitBurn(burn)) {
+      context.state.unitBurns.delete(unitId);
+    }
+    if (unit.isDead()) {
+      context.state.unitBurns.delete(unitId);
+      if (!killedIds.has(unit.id)) {
+        killedIds.add(unit.id);
+        killed.push(unit);
+      }
+    }
+  }
+
   for (const [, unit] of context.state.units) {
     if (unit.faction !== context.actingFaction) {
       continue;
@@ -135,6 +165,8 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
       damageSource: effect.state,
       allowDamageLink: true,
     });
+    // 踩到火格燃燒（PROG-2-9726）
+    if (effect.state === 'hazard-fire' && !unit.isDead()) igniteUnit(context.state, unit);
     // 陷阱一次性：傷害後定身並移除，計入已觸發數
     if (isAmbushTrap) {
       if (!unit.isDead()) svc.buff.applyBuff(unit.id, StatusEffect.Rooted, AMBUSH_TRAP_ROOT_TURNS);
@@ -145,6 +177,15 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
     if (unit.isDead() && !killedIds.has(unit.id)) {
       killedIds.add(unit.id);
       killed.push(unit);
+    }
+  }
+
+  // 戰法火格的存在回合（PROG-2-9726）：每輪（玩家戰術階段）-1，歸零移除；沒有 remainingTurns 的是地圖原生火格，永久
+  if (context.actingFaction === Faction.Player) {
+    for (const effect of Array.from(context.state.tileEffects.values())) {
+      if (effect.remainingTurns === undefined) continue;
+      effect.remainingTurns -= 1;
+      if (effect.remainingTurns <= 0) context.state.removeTileEffect(effect.lane, effect.depth);
     }
   }
 
@@ -161,7 +202,7 @@ export function executeBattleTileEffectPhase(context: BattleTileEffectPhaseConte
       context.state.unitDots.delete(unitId);
       continue;
     }
-    context.applyUnitDamage(unit, dotTickAmount(unit.maxHp, dot.ratio), null, {
+    context.applyUnitDamage(unit, poisonDotTick(unit.maxHp), null, {
       attackerId: null,
       attackerLane: null,
       attackerDepth: null,

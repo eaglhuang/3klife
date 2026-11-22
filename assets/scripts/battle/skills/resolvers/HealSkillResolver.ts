@@ -1,5 +1,6 @@
 // @spec-source → 戰法系統.md (doc_spec_0038)；PROG-2-1429 依建檔紀錄補標出處
 import { Faction } from '../../../core/config/Constants';
+import { computeHealAmount } from '../../shared/BuffStackHeal';
 import { FormulaSystem } from '../../../core/systems/FormulaSystem';
 import type { BattleSkillRequest, SkillExecutionResult } from '../../../shared/SkillRuntimeContract';
 import { resolveBattleSkillProfile } from '../BattleSkillProfiles';
@@ -68,7 +69,7 @@ export class HealSkillResolver implements BattleSkillResolver {
         continue;
       }
       const healAmount = profile.healMissingRatio === undefined
-        ? fixedHealAmount
+        ? computeHealAmount({ baseHeal: fixedHealAmount, currentHp: unit.currentHp, maxHp: unit.getEffectiveMaxHp() })
         : Math.floor((unit.getEffectiveMaxHp() - unit.currentHp) * profile.healMissingRatio);
       if (healAmount <= 0) {
         continue;

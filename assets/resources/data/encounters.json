@@ -107,7 +107,7 @@
       "playerGeneralId": "guan-yu",
       "enemyGeneralId": "yu-jin",
       "backgroundId": "bg_water",
-      "weather": "RAIN",
+      "weather": "RAINY",
       "battleTactic": "flood-attack",
       "playerEquipment": [],
       "enemyEquipment": [],
