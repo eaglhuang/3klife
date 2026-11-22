@@ -1,0 +1,283 @@
+{
+  "version": 1,
+  "enabled": true,
+  "_comment": "戰場攻擊特效試作（零貼圖、單一 Graphics 節點）。引擎中立：數值、顏色、節奏全在這裡，Unity 端可原樣讀入。座標單位=畫面像素（單位高約 180px），線寬至少 2px。時間單位=秒。",
+  "budget": {
+    "_comment": "全場上限：同時存在的特效筆數與粒子（火花／光點／速度線／尾跡段）總數。超過就縮減粒子或略過該筆，不新增節點。",
+    "maxEffects": 10,
+    "maxParticles": 48,
+    "minLinePx": 2
+  },
+  "troops": {
+    "slash": {
+      "kind": "arcSlash",
+      "_note": "步兵：弧形刀光，由上往下劈，刀光頭亮尾淡，命中處迸火花",
+      "delaySec": 0.28,
+      "durationSec": 0.2,
+      "radiusPx": 95,
+      "thickPx": 38,
+      "sweepDeg": 130,
+      "trailDeg": 95,
+      "centerBack": 0.35,
+      "headFrac": 0.62,
+      "fadeStart": 0.6,
+      "trailSegments": 5,
+      "sparkCount": 4,
+      "sparkLenPx": 34,
+      "sparkWidthPx": 3.5,
+      "ringPx": 30,
+      "palette": {
+        "main": "#FFE9B0",
+        "glow": "#FFB347",
+        "core": "#FFFFFF",
+        "accent": "#FFD27A"
+      }
+    },
+    "thrust": {
+      "kind": "thrustLine",
+      "_note": "長槍兵：一道細長的突刺線往前竄，帶兩條平行速度線，槍尖到點迸星芒",
+      "delaySec": 0.25,
+      "durationSec": 0.22,
+      "lengthPx": 230,
+      "widthPx": 16,
+      "reachFrac": 0.86,
+      "startOffPx": 30,
+      "headFrac": 0.55,
+      "speedLines": 2,
+      "speedLineGapPx": 18,
+      "speedLineScale": 0.6,
+      "sparkCount": 5,
+      "sparkLenPx": 34,
+      "sparkWidthPx": 3.5,
+      "ringPx": 30,
+      "palette": {
+        "main": "#DFF3FF",
+        "glow": "#6EC6FF",
+        "core": "#FFFFFF",
+        "accent": "#B8E4FF"
+      }
+    },
+    "bow": {
+      "kind": "arrowTrail",
+      "_note": "弓兵：箭矢身後拖一條漸細的尾跡＋幾點閃光，與既有箭矢 Sprite 同路徑同時間（flightSec 要一致）",
+      "delaySec": 0,
+      "durationSec": 0.5,
+      "flightSec": 0.35,
+      "trailLenPx": 170,
+      "trailSegments": 6,
+      "trailWidthPx": 8,
+      "glints": 4,
+      "glintSizePx": 4,
+      "sparkCount": 4,
+      "sparkLenPx": 28,
+      "sparkWidthPx": 3.5,
+      "ringPx": 34,
+      "palette": {
+        "main": "#FFF4C2",
+        "glow": "#9BE37A",
+        "core": "#FFFFFF",
+        "accent": "#D8FF9A"
+      }
+    }
+  },
+  "generalTemplates": {
+    "_comment": "武器模板：kind 決定畫法，其餘覆蓋同名參數。名將套模板後只換 palette／signature。",
+    "blade": {
+      "kind": "arcSlash",
+      "delaySec": 0.12,
+      "durationSec": 0.34,
+      "radiusPx": 150,
+      "thickPx": 40,
+      "sweepDeg": 165,
+      "trailDeg": 120,
+      "centerBack": 0.5,
+      "headFrac": 0.6,
+      "fadeStart": 0.55,
+      "trailSegments": 6,
+      "sparkCount": 8,
+      "sparkLenPx": 40,
+      "sparkWidthPx": 3,
+      "ringPx": 46,
+      "hitDistPx": 200
+    },
+    "spear": {
+      "kind": "thrustLine",
+      "delaySec": 0.12,
+      "durationSec": 0.3,
+      "lengthPx": 280,
+      "widthPx": 16,
+      "reachFrac": 0.9,
+      "startOffPx": 30,
+      "headFrac": 0.5,
+      "speedLines": 3,
+      "speedLineGapPx": 18,
+      "speedLineScale": 0.7,
+      "sparkCount": 8,
+      "sparkLenPx": 36,
+      "sparkWidthPx": 3,
+      "ringPx": 42,
+      "maxReachPx": 340
+    },
+    "sword": {
+      "kind": "arcSlash",
+      "delaySec": 0.1,
+      "durationSec": 0.26,
+      "radiusPx": 120,
+      "thickPx": 22,
+      "sweepDeg": 130,
+      "trailDeg": 90,
+      "centerBack": 0.5,
+      "headFrac": 0.55,
+      "fadeStart": 0.5,
+      "trailSegments": 5,
+      "sparkCount": 6,
+      "sparkLenPx": 30,
+      "sparkWidthPx": 2.5,
+      "ringPx": 34,
+      "hitDistPx": 170
+    },
+    "bow": {
+      "kind": "arrowTrail",
+      "delaySec": 0.05,
+      "durationSec": 0.6,
+      "flightSec": 0.3,
+      "trailLenPx": 190,
+      "trailSegments": 6,
+      "trailWidthPx": 8,
+      "glints": 5,
+      "glintSizePx": 4,
+      "sparkCount": 6,
+      "sparkLenPx": 28,
+      "sparkWidthPx": 3,
+      "ringPx": 40
+    },
+    "cast": {
+      "kind": "castOrb",
+      "_note": "施法（扇／杖）：腳下法陣升起 → 氣旋球帶螺旋尾跡飛向目標 → 目標處炸出光圈與光芒",
+      "delaySec": 0,
+      "durationSec": 0.95,
+      "ringRxPx": 96,
+      "ringRyPx": 38,
+      "ringRiseSec": 0.28,
+      "ringTicks": 12,
+      "ringSpinDegPerSec": 140,
+      "orbStartSec": 0.22,
+      "orbFlightSec": 0.28,
+      "orbRadiusPx": 16,
+      "spiralArms": 3,
+      "spiralRadiusPx": 28,
+      "spiralTurns": 1.6,
+      "trailLenFrac": 0.35,
+      "burstSec": 0.34,
+      "burstRingPx": 90,
+      "burstRays": 8,
+      "burstRayLenPx": 70,
+      "sparkWidthPx": 4,
+      "ringDropPx": 95
+    }
+  },
+  "signatures": {
+    "_comment": "名將獨特細節：疊在模板之上。數值只是這個細節自己的參數。",
+    "moonBlade": {
+      "_note": "青龍偃月：第二道較細的外圈月牙慢半拍跟著劈，加上幾片青綠碎光往上飄",
+      "kind": "arcSlash+",
+      "echoRadiusScale": 1.22,
+      "echoThickScale": 0.32,
+      "echoLagSec": 0.05,
+      "echoAlpha": 0.7,
+      "motes": 6,
+      "moteSizePx": 6,
+      "moteRisePx": 70,
+      "moteSwayPx": 12,
+      "moteLifeFrac": 0.9
+    },
+    "bagua": {
+      "_note": "八卦陣：法陣外圈多一圈八卦爻（三爻，斷／連依卦象），隨法陣緩轉；爆點多三筆羽扇弧",
+      "kind": "castOrb+",
+      "trigramRadiusScale": 1.28,
+      "barLenPx": 18,
+      "barGapPx": 7,
+      "barWidthPx": 3.5,
+      "featherArcs": 3,
+      "featherLenPx": 100,
+      "featherWidthPx": 4
+    }
+  },
+  "generalProfiles": {
+    "_comment": "武器類型與代表色。generals.json 沒有武器欄位也沒有代表色，這裡先填試作值（待企劃確認）；沒列到的武將走 fallback。",
+    "guan-yu": {
+      "weapon": "blade",
+      "signature": "moonBlade",
+      "palette": {
+        "main": "#4FE3A8",
+        "glow": "#0E9E6E",
+        "core": "#F2FFF8",
+        "accent": "#A8FFD9"
+      }
+    },
+    "zhuge-liang": {
+      "weapon": "cast",
+      "signature": "bagua",
+      "palette": {
+        "main": "#9FE8FF",
+        "glow": "#3C8FD8",
+        "core": "#FFFFFF",
+        "accent": "#FFE9A8"
+      }
+    },
+    "lu-bu": {
+      "weapon": "spear",
+      "palette": {
+        "main": "#E04B7A",
+        "glow": "#6A1B9A",
+        "core": "#FFE6EE",
+        "accent": "#FF9DBB"
+      }
+    }
+  },
+  "fallback": {
+    "weaponByRole": {
+      "Combat": "blade",
+      "Support": "cast"
+    },
+    "defaultWeapon": "blade",
+    "elementPalettes": {
+      "fire": {
+        "main": "#FFB347",
+        "glow": "#D8431A",
+        "core": "#FFF3D6",
+        "accent": "#FFD27A"
+      },
+      "water": {
+        "main": "#7FD4FF",
+        "glow": "#1E6FD0",
+        "core": "#F0FBFF",
+        "accent": "#B8ECFF"
+      },
+      "wood": {
+        "main": "#8FE36A",
+        "glow": "#2E8B3A",
+        "core": "#F4FFE8",
+        "accent": "#CFFF9E"
+      },
+      "earth": {
+        "main": "#E8C46A",
+        "glow": "#9A6B1E",
+        "core": "#FFF8E0",
+        "accent": "#FFE29A"
+      },
+      "metal": {
+        "main": "#E6EDF5",
+        "glow": "#7A8CA3",
+        "core": "#FFFFFF",
+        "accent": "#C9D6E6"
+      }
+    },
+    "defaultPalette": {
+      "main": "#FFE9B0",
+      "glow": "#FFB347",
+      "core": "#FFFFFF",
+      "accent": "#FFD27A"
+    }
+  }
+}

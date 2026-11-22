@@ -52,6 +52,7 @@ import { isUnitVisibleToPlayer } from "../shared/BattleVision";
 import { BoardRenderer } from "./BoardRenderer";
 import { ArrowShotView } from "./ArrowShotView";
 import { SlashShotView } from "./SlashShotView";
+import { AttackVfxPlayer } from "./AttackVfxPlayer";
 import { attackVfxFor } from "../shared/AttackVfxMapping";
 import { attackStyleFor } from "../shared/AttackStyle";
 import { createMoveSfxThrottleState, moveBeatFor, tryAcquireMoveSfx } from "../shared/MoveFeedback";
@@ -291,6 +292,8 @@ export class UnitRenderer extends Component {
   private readonly attackSurgeRedColor = new Color(ATTACK_SURGE_RED.r, ATTACK_SURGE_RED.g, ATTACK_SURGE_RED.b, ATTACK_SURGE_RED.a);
   private readonly arrowShots = new ArrowShotView(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   private readonly slashShots = new SlashShotView(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
+  /** 攻擊特效試作（零貼圖單一 Graphics，JSON 驅動；?atkVfx=old 可退回舊特效） */
+  private readonly attackVfx = new AttackVfxPlayer(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   /** PROG-2-9407：落腳揚塵粒子，畫在 2D 疊層、單位後面（粒子池有上限，見 MoveDustEmitter） */
   private readonly moveSfxThrottle = createMoveSfxThrottleState();
   private readonly moveDust = new MoveDustEmitter(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
@@ -1196,6 +1199,7 @@ export class UnitRenderer extends Component {
     this.moveDust.update(dt);
     this.arrowShots.update(dt);
     this.slashShots.update(dt);
+    this.attackVfx.update(dt);
     perfEnd('fxShots', t); t = perfBegin();
 
     this.tileBuffMarkers.update(dt);
@@ -1482,20 +1486,42 @@ export class UnitRenderer extends Component {
     // PROG-2-9353：沒有目標位置，朝對方武將方向在自身前方播刀光；任何一方不在場就略過
     const self = this.generalViews.get(faction)?.worldNode;
     const foe = this.generalViews.get(faction === Faction.Player ? Faction.Enemy : Faction.Player)?.worldNode;
-    if (self && foe) this.playAttackVfx(self, 'general', foe.worldPosition, 0.2);
+    if (self && foe) this.playAttackVfx(self, 'general', foe.worldPosition, 0.2, this.generalVfxInfo(faction));
+  }
+
+  /** 攻擊特效試作掛鉤：武將走武器模板、小兵依風格；沒就緒或開關關閉回 false，呼叫端沿用舊特效 */
+  private tryAttackVfx(troopType: string, general: { id: string; role?: string; element?: string } | undefined, ax: number, ay: number, tx: number, ty: number, ratio: number, isArrow: boolean): boolean {
+    const style = attackStyleFor(troopType);
+    const hit = troopType === 'general' && general ? this.attackVfx.playGeneral(general, ax, ay, tx, ty)
+      : this.attackVfx.playTroop(style === 'thrust' || style === 'slash' || style === 'bow' ? style : '', ax, ay, tx, ty, ratio);
+    if (hit && isArrow) this.arrowShots.shoot(ax, ay, tx, ty);
+    return hit;
+  }
+
+  private generalVfxInfo(faction: Faction): { id: string; role?: string; element?: string } | undefined {
+    const g = this.latestState?.getGeneral(faction) as unknown as { id: string; role?: string; element?: string } | undefined;
+    return g ? { id: g.id, role: g.role, element: g.element } : undefined;
+  }
+
+  /** 試作／QA：以指定武將 id 在場上兩位武將之間播一次攻擊（施法）特效，不動戰鬥狀態 */
+  public previewGeneralAttackVfx(generalId: string, faction: Faction, role?: string): void {
+    const self = this.generalViews.get(faction)?.worldNode;
+    const foe = this.generalViews.get(faction === Faction.Player ? Faction.Enemy : Faction.Player)?.worldNode;
+    if (self && foe) this.playAttackVfx(self, 'general', foe.worldPosition, 0.2, { id: generalId, role });
   }
 
   /**
    * PROG-2-9353：攻擊特效。近戰播刀光（走 EffectSystem.playBlock，與受擊特效同一池）；弓兵飛箭（畫面層 Sprite 池）。
    * 一次攻擊最多一個特效；演出失敗不可影響戰鬥流程。
    */
-  private playAttackVfx(attackerNode: Node, troopType: string, targetPos: Vec3 | null, ratio = 0.67): void {
+  private playAttackVfx(attackerNode: Node, troopType: string, targetPos: Vec3 | null, ratio = 0.67, general?: { id: string; role?: string; element?: string }): void {
     if (!targetPos) return;
     try {
       const vfx = attackVfxFor(troopType);
       const from = attackerNode.worldPosition;
       const a = this.overlayPoint(from); const ax = a?.x ?? 0; const ay = a?.y ?? 0;
       const target = this.overlayPoint(targetPos);
+      if (a && target && this.tryAttackVfx(troopType, general, ax, ay, target.x, target.y, ratio, vfx.kind === 'arrow')) return;
       if (vfx.kind === 'arrow') {
         if (a && target) {
           this.arrowShots.shoot(ax, ay, target.x, target.y);
@@ -1564,7 +1590,7 @@ export class UnitRenderer extends Component {
     this.spineUnits.abortDuel();
   }
 
-  onDestroy(): void { this.unsubVitality?.(); this.unsubVitality = null; this.spineUnits.clear(); this.generalStandees.clear(); this.moveDust.destroy(); services().floatText?.setAvoidProvider(null); }
+  onDestroy(): void { this.unsubVitality?.(); this.unsubVitality = null; this.spineUnits.clear(); this.generalStandees.clear(); this.moveDust.destroy(); this.attackVfx.destroy(); services().floatText?.setAvoidProvider(null); }
 
   private createGeneralView(faction: Faction): GeneralView {
     this.ensureRoots();
