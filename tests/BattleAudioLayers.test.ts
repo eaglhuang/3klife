@@ -12,6 +12,7 @@ import {
     jitterFootstepVolume,
     parseBattleAudioLayersConfig,
     pickHitSfx,
+    resolveClipName,
     resolveHitTier,
     shouldPlayCritBoom,
     tryAcquireFootstep,
@@ -20,6 +21,7 @@ import { BATTLE_VISUAL_TIMING } from '../assets/scripts/battle/views/BattlePrese
 import { ATTACK_IMPACT_SEC } from '../assets/scripts/battle/shared/AttackShotStyle';
 import { TestSuite, assert } from './TestRunner';
 
+const PITCHED = { ...CFG, clipSource: 'pitched' as const };
 const base = { damage: 5, maxHp: 100, isCrit: false, lethal: false, blocked: false, defenderType: TroopType.Infantry };
 
 export function createBattleAudioLayersSuite(): TestSuite {
@@ -42,6 +44,36 @@ export function createBattleAudioLayersSuite(): TestSuite {
         assert.isTrue(pickHitSfx('light', CFG, () => 0).clip !== pickHitSfx('light', CFG, () => 0.99).clip);
     });
 
+    suite.test('clipSource 開關：預設 cc0；cc0 把金屬擊打／肉體悶擊／單拍馬蹄換成 CC0 檔，pitched 回到變調代用版', () => {
+        assert.equals('cc0', CFG.clipSource);
+        assert.equals('cc0_hit_metal', pickHitSfx('block', CFG, () => 0).clip);
+        assert.equals('cc0_hit_flesh', pickHitSfx('heavy', CFG, () => 0).clip);
+        assert.equals('cc0_hoof_single', footstepClipFor(TroopType.Cavalry, CFG));
+        assert.equals('hit_block', pickHitSfx('block', PITCHED, () => 0).clip);
+        assert.equals('hit_heavy', pickHitSfx('heavy', PITCHED, () => 0).clip);
+        assert.equals('footstep_hoof', footstepClipFor(TroopType.Cavalry, PITCHED));
+        // 沒有對應的 clip 兩版都原樣（輕擊、致命、步兵腳步不受影響）
+        for (const cfg of [CFG, PITCHED]) {
+            assert.equals('hit_lethal', pickHitSfx('lethal', cfg, () => 0).clip);
+            assert.equals('footstep', footstepClipFor(TroopType.Infantry, cfg));
+            assert.equals('footstep_light', footstepClipFor(TroopType.Archer, cfg));
+        }
+        assert.equals('hit_light', resolveClipName('hit_light', CFG));
+        assert.equals('cc0_hit_metal', resolveClipName('hit_block', CFG));
+        assert.equals('hit_block', resolveClipName('hit_block', PITCHED));
+    });
+
+    suite.test('clipSource 設定解析：pitched 生效、亂值退回預設、替換表可覆寫、變調版檔案仍在', () => {
+        assert.equals('pitched', parseBattleAudioLayersConfig({ clipSource: 'pitched' }).clipSource);
+        assert.equals('cc0', parseBattleAudioLayersConfig({ clipSource: 'nope' }).clipSource);
+        assert.equals('cc0', parseBattleAudioLayersConfig(null).clipSource);
+        const o = parseBattleAudioLayersConfig({ cc0Clips: { hit_block: 'x_metal', bad: 3 } });
+        assert.equals('x_metal', pickHitSfx('block', o, () => 0).clip);
+        assert.equals('cc0_hoof_single', o.cc0Clips.footstep_hoof);
+        const dir = path.resolve(__dirname, '..', 'assets/bundles/audio/clips');
+        for (const n of ['hit_block.wav', 'hit_heavy.wav', 'footstep_hoof.wav', 'LICENSES-cc0.md']) assert.isTrue(fs.existsSync(path.join(dir, n)), n);
+    });
+
     suite.test('受擊音量落在各層範圍內，且隨機值不同', () => {
         for (const t of ['light', 'heavy', 'block', 'lethal'] as const) {
             const [lo, hi] = CFG.hit.tiers[t].volume;
@@ -62,9 +94,11 @@ export function createBattleAudioLayersSuite(): TestSuite {
         const names = new Set<string>();
         Object.values(parsed.hit.tiers).forEach(s => s.clips.forEach(c => names.add(c)));
         Object.values(parsed.footstep.clips).forEach(c => names.add(c));
+        // PROG-2-9731：CC0 版的替換檔也必須存在（兩版檔案都在，才能切換對照）
+        Object.values(parsed.cc0Clips).forEach(c => names.add(c));
         const dir = path.join(root, 'assets/bundles/audio/clips');
         for (const n of names) {
-            const ok = ['.mp3', '.wav'].some(ext => fs.existsSync(path.join(dir, n + ext)));
+            const ok = ['.mp3', '.wav', '.ogg'].some(ext => fs.existsSync(path.join(dir, n + ext)));
             assert.isTrue(ok, `缺音檔 ${n}`);
         }
     });
@@ -77,7 +111,8 @@ export function createBattleAudioLayersSuite(): TestSuite {
     });
 
     suite.test('腳步分兵種：騎兵馬蹄、盾兵重步、弓兵輕步、步兵原音、水軍無對應', () => {
-        assert.equals('footstep_hoof', footstepClipFor(TroopType.Cavalry));
+        assert.equals('cc0_hoof_single', footstepClipFor(TroopType.Cavalry));
+        assert.equals('footstep_hoof', footstepClipFor(TroopType.Cavalry, PITCHED));
         assert.equals('footstep_heavy', footstepClipFor(TroopType.Shield));
         assert.equals('footstep_light', footstepClipFor(TroopType.Archer));
         assert.equals('footstep', footstepClipFor(TroopType.Infantry));

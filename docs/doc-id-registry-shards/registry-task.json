@@ -16636,5 +16636,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9729.md",
     "title": "[PROG-2-9729] 戰鬥音效分層：受擊輕重、分兵種腳步、變調與隨機音量",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2966",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9731.md",
+    "title": "[PROG-2-9731] 戰鬥音效補件：金屬擊打／肉體悶擊／單拍馬蹄換成 CC0 外部素材（可切回變調版）",
+    "category": "task"
   }
 ]

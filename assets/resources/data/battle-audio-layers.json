@@ -1,5 +1,7 @@
 {
-  "_comment": "PROG-2-9729：戰鬥音效分層。clip 名稱＝assets/bundles/audio/clips 內檔名（無副檔名），hit_*／footstep_* 是 tools_node/gen-audio-variants.js 預先產生的變調版本（引擎 AudioSource 不支援 pitch）。volume 為 [最小,最大] 隨機範圍。讀不到本檔時用 BattleAudioLayers.ts 的預設值。",
+  "_comment": "PROG-2-9729：戰鬥音效分層。PROG-2-9731：clipSource 切換音檔來源，cc0（預設）＝CC0 外部素材（cc0Clips 把 hit_block→金屬擊打、hit_heavy→肉體悶擊、footstep_hoof→單拍馬蹄），pitched＝變調代用版（兩版檔案都在，改這個值即可對照聽）。clip 名稱＝assets/bundles/audio/clips 內檔名（無副檔名），hit_*／footstep_* 是 tools_node/gen-audio-variants.js 預先產生的變調版本（引擎 AudioSource 不支援 pitch）。volume 為 [最小,最大] 隨機範圍。讀不到本檔時用 BattleAudioLayers.ts 的預設值。",
+  "clipSource": "cc0",
+  "cc0Clips": { "hit_block": "cc0_hit_metal", "hit_heavy": "cc0_hit_flesh", "footstep_hoof": "cc0_hoof_single" },
   "hit": {
     "heavyMaxHpRatio": 0.2,
     "critIsHeavy": true,
