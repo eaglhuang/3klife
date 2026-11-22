@@ -16636,5 +16636,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9729.md",
     "title": "[PROG-2-9729] 戰鬥音效分層：受擊輕重、分兵種腳步、變調與隨機音量",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2964",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9730.md",
+    "title": "[PROG-2-9730] 無頭試玩第 07 步 lobby-commerce-silver 仍偶發失敗（點擊瞬間被官職晉升彈窗蓋住）",
+    "category": "task"
   }
 ]
