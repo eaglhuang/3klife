@@ -11,6 +11,7 @@
  */
 import { DEFAULT_CITY_TROOPS, DEFAULT_RECRUIT_REGEN, DEFAULT_SORTIE_FOOD, type SortieSummary } from './SortieDeploy';
 import { BASE_RESOURCE_CAPS } from './ResourceCap';
+import { troopLossRules } from './CommandSortieLoss';
 
 export interface MilitaryReserve {
     cityTroops: number;
@@ -18,6 +19,8 @@ export interface MilitaryReserve {
     recruitRegen: number;
     food: number;
     foodCap: number;
+    /** 傷兵營人數（PROG-2-9717）：敗戰損兵的一部分暫存於此，每季按比例康復回城市兵源；舊存檔沒有時為 0 */
+    woundedCamp: number;
 }
 
 /** 每季糧草補給與上限（暫定：治理產出尚未接入前的固定值） */
@@ -32,6 +35,7 @@ export const STARTER_MILITARY: Readonly<MilitaryReserve> = {
     recruitRegen: DEFAULT_RECRUIT_REGEN,
     food: DEFAULT_SORTIE_FOOD,
     foodCap: DEFAULT_FOOD_CAP,
+    woundedCamp: 0,
 };
 
 function intOr(value: unknown, fallback: number): number {
@@ -51,6 +55,7 @@ export function normalizeMilitaryReserve(raw: unknown): MilitaryReserve {
         recruitRegen: intOr(r.recruitRegen, STARTER_MILITARY.recruitRegen),
         foodCap,
         food: Math.min(foodCap, intOr(r.food, STARTER_MILITARY.food)),
+        woundedCamp: intOr(r.woundedCamp, 0),
     };
 }
 
@@ -67,9 +72,20 @@ export function applySortieResult(reserve: MilitaryReserve, summary: Pick<Sortie
 export function regenMilitaryOneSeason(reserve: MilitaryReserve, seasons = 1, foodMultiplier = 1): MilitaryReserve {
     const n = Math.max(0, Math.floor(seasons));
     const food = Math.floor(FOOD_PER_SEASON * n * Math.max(0, foodMultiplier));
+    // 傷兵營每季康復（PROG-2-9717）：先康復再補兵，每季取整；康復回來的兵一樣受城市兵源上限限制，超出的留在營內
+    let woundedCamp = reserve.woundedCamp ?? 0;
+    let cityTroops = reserve.cityTroops;
+    for (let i = 0; i < n; i += 1) {
+        const room = Math.max(0, reserve.cityTroopsCap - cityTroops);
+        const healed = Math.min(room, Math.floor(woundedCamp * troopLossRules().recoveryRatio));
+        woundedCamp -= healed;
+        cityTroops += healed;
+        cityTroops = Math.min(reserve.cityTroopsCap, cityTroops + reserve.recruitRegen);
+    }
     return {
         ...reserve,
-        cityTroops: Math.min(reserve.cityTroopsCap, reserve.cityTroops + reserve.recruitRegen * n),
+        cityTroops,
+        woundedCamp,
         food: Math.min(reserve.foodCap, reserve.food + food),
     };
 }

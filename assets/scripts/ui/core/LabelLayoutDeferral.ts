@@ -66,6 +66,16 @@ export function runWithDeferredLayout(label: Label, fn: () => void): void {
     }
 }
 
+/**
+ * 設定快取模式（NONE／BITMAP／CHAR）。引擎的 cacheMode 設定器會立刻強制重排，
+ * 固定外框的標籤改成標髒、留到幀末刷新一次；NONE／RESIZE_HEIGHT 標籤照舊即時（PROG-2-9718）。
+ * 前提：呼叫前外框模式（overflow）已設好，否則會被當成非固定外框而即時排版。
+ */
+export function setCacheModeDeferred(label: Label, mode: number): void {
+    if (label.cacheMode === mode) return;
+    runWithDeferredLayout(label, () => { label.cacheMode = mode; });
+}
+
 /** CompositePanel 掛載後的刷新：固定外框標籤只標髒；其餘照舊強制即時。回傳是否已處理 */
 export function refreshLabelLazily(component: unknown): boolean {
     if (!(component instanceof Label) || !hasFixedBox(component)) return false;

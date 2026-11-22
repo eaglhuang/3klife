@@ -16548,6 +16548,18 @@
     "category": "task"
   },
   {
+    "id": "doc_task_2951",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9718.md",
+    "title": "[PROG-2-9718] 戰場文字套用 LabelLayoutDeferral（徽章、跳字、HUD）減少重排",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2952",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9717.md",
+    "title": "[PROG-2-9717] 第一年敗戰新手保護：損兵上限 30%＋傷兵營 60/40、每季康復 30%",
+    "category": "task"
+  },
+  {
     "id": "doc_task_2949",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9612.md",
     "title": "[PROG-2-9612] 無頭試玩 lobby-commerce-silver 偶發失敗修正（報酬列受情報分層遮蔽）",

@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 243,
+    "done": 246,
     "in_progress": 7,
     "open": 85,
-    "total": 335
+    "total": 338
   },
   "tasks": [
     {
@@ -14498,6 +14498,111 @@
         "_MANIFEST.md"
       ],
       "notes": "2026-11-22 | 狀態: done | 驗證: 單元測試、tsc 0、quick 閘門 | 變更: 騎兵攻擊音效 biteskill→hoof_gallop（OpenGameArt CC-BY 3.0，取一個蹄聲循環 0.58 秒 22050Hz 單聲道）| 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2952",
+      "id": "PROG-2-9717",
+      "title": "第一年敗戰新手保護：損兵上限 30%＋傷兵營 60/40、每季康復 30%",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T11:17:43+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "第 1 年敗戰（含年終守城敗戰）的損兵上限為戰前城市兵源 30%（陣亡＋傷兵總量）；上限內損兵 60% 進傷兵營、40% 陣亡；傷兵營每季康復 30% 回兵源。勝利、平手、第 2 年起照舊。數值放 data/troop-loss-rules.json。傷兵營進存檔，結算與大廳城市資訊顯示。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "1. 第 1 年敗戰損兵不超過戰前兵源 30%；2. 損兵 60% 進傷兵營、40% 陣亡；3. 每季康復 30%；4. 第 2 年與勝利平手不受影響；5. 結算顯示新手保護與傷兵兩行；6. 傷兵營進存檔讀檔保留；7. 單元測試含四連敗曲線"
+      ],
+      "deliverables": [
+        "assets/scripts/core/systems/CommandSortieLoss.ts",
+        "MilitaryReserve.ts",
+        "BattleAftermath.ts",
+        "GameSession.ts",
+        "assets/resources/data/troop-loss-rules.json",
+        "tests/TroopLossProtection.test.ts"
+      ],
+      "notes": "2026-11-22 | 狀態: done | 驗證: tests/run-cli ALL PASS 9151（含 TroopLossProtection 9 項）；tsc -p tsconfig.test.json 0 錯；compute-gate standard 13/14 通過（僅既有 LoginScene→QaTimeController 警告） | 變更: troop-loss-rules.json、CommandSortieLoss 新手保護、MilitaryReserve woundedCamp 與每季康復、GameSession 敗戰套上限並寫傷兵營、結算兩行、大廳守軍列加傷兵營；勝利與平手不寫傷兵營（照舊） | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2951",
+      "id": "PROG-2-9718",
+      "title": "戰場文字套用 LabelLayoutDeferral（徽章、跳字、HUD）減少重排",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T11:18:26+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "PROG-2-9801 新增 LabelLayoutDeferral（固定外框 Label 的強制排版改標髒、幀末統一刷新）。戰場一場約 1000 次 Label 重算，本卡把頭頂徽章、名牌、跳字、HUD 中外框固定（SHRINK/CLAMP）的 Label 套進去；會隨字長改尺寸的 Label 不套。不改 LabelCharAtlasBudget，不改 cacheMode（保持 BITMAP）。",
+      "related": [
+        "PROG-2-9801"
+      ],
+      "depends": [],
+      "acceptance": [
+        "1) 外框固定的戰場 Label 套用 LabelLayoutDeferral；NONE/RESIZE_HEIGHT 不套。2) 附 qaBattle 直進戰場固定 3 回合的改前改後重算次數。3) 接線測試通過、run-cli ALL PASS、tsc 0 錯、compute-gate standard 通過。4) playtest-online 除已知偶發外全過、console error 0、戰場文字無溢出無黑字。"
+      ],
+      "deliverables": [
+        "assets/scripts/ui/core/LabelLayoutDeferral.ts",
+        "assets/scripts/battle/views/UnitRenderer.ts",
+        "tests/BattleLabelDeferralWiring.test.ts"
+      ],
+      "notes": "2026-11-22 | 狀態: done | 驗證: run-cli ALL PASS 9147、tsc 0 錯、compute-gate standard 通過、playtest-online 11/12（僅已知偶發 lobby-commerce-silver）console error 0 | 變更: LabelLayoutDeferral 新增 setCacheModeDeferred（固定外框的 cacheMode 強制重排改標髒）；UnitRenderer 頭頂徽章攻／兵種／兵力／名稱四個文字套用（兵種字與名稱標籤補 shrinkToFit 成 SHRINK 固定外框，名稱過長改縮字不溢出）；新增接線測試 BattleLabelDeferralWiring。量測（qaBattle 直進戰場、固定 3 回合、攔截 Label.updateRenderData 與 assembler 排版）：改前強制重排 98～103 次、實際排版 283～341 次；改後 83～91 次、259～276 次；徽章 Text＋NameLabel 的強制重排 16→0（NameLabel 排版 22→14）。未套用（外框會隨字長改尺寸，依規不套）：跳字 FloatText（NONE）、戰報 LogLabel（RESIZE_HEIGHT，約占強制重排 65～72 次，每則日誌都要立刻讀高度，後續可改批次刷新）、HUD 的 SummaryText 與 BattleHudScreen_div_* 皆 RESIZE_HEIGHT | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
