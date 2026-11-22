@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 260,
-    "in_progress": 7,
-    "open": 86,
-    "total": 353
+    "done": 261,
+    "in_progress": 8,
+    "open": 85,
+    "total": 354
   },
   "tasks": [
     {
@@ -15357,6 +15357,64 @@
         "tests/BattleWeatherRoll.test.ts"
       ],
       "notes": "2026-11-22 | 狀態: done | 驗證: 單元測試 9239 通過、tsc 0 錯、standard 閘門過、playtest 12/12、戰前截圖與戰場 BattleState.weather 一致（FOG） | 變更: 季節抽天氣＋劇情固定＋戰前偵查面板顯示天氣；RAIN→RAINY；戰場適性系統新增 shard-d（K–Q）；原卡號 9733 與 #2524 撞號改 9735 | 阻塞: 無；待辦：赤壁關、雷暴機械損毀與士氣效果、天氣適性數值表",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9841",
+      "title": "技分頁戰法／奧義點擊開啟通用詳情子視窗",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-22T22:27:24+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "武將詳情『技』分頁內，戰法與奧義點擊後開啟通用詳情子視窗（DetailSubWindow），共用 SkillDetailView 與 SkillDefinitionCache。尚未實機截圖驗證。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "技分頁點戰法開啟通用詳情子視窗",
+        "技分頁點奧義開啟通用詳情子視窗",
+        "DetailSubWindow 為通用元件",
+        "tests/SkillDetailView.test.ts 通過",
+        "tsc 0",
+        "尚未實機截圖驗證（待補）"
+      ],
+      "deliverables": [
+        "assets/scripts/core/systems/SkillDetailView.ts",
+        "assets/scripts/ui/core/DetailSubWindow.ts",
+        "assets/scripts/ui/general-detail/SkillDefinitionCache.ts",
+        "assets/scripts/ui/character-ds3/CharacterDs3TacticsChild.ts",
+        "assets/scripts/ui/general-detail/GeneralDetailSkillsChild.ts",
+        "tests/SkillDetailView.test.ts"
+      ],
+      "notes": "2026-11-22 | 狀態: in-progress | 驗證: compute-gate standard 13/14 通過（1 警告）、尚未實機截圖 | 變更: 補開卡與 lock，分支 claude/tactic-detail-popup 既有 commit d50159e56（技分頁戰法／奧義點擊開啟通用詳情子視窗） | 阻塞: 模組邊界警告 CharacterDs3TacticsChild.ts:18 ui→battle/skills/BattleSkillProfiles（shared 目前無對應介面，未改，待另卡把 resolveBattleSkillProfile 收進 shared 適配層）",
       "brief": {
         "style": "classic",
         "label": "",
