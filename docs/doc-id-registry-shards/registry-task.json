@@ -16576,5 +16576,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9720.md",
     "title": "[PROG-2-9720] BuffStackHeal 接線：狀態堆疊、治療、中毒結算實際走 doc_spec_0359",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2956",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9722.md",
+    "title": "[PROG-2-9722] 守城勝率退步調查與修正",
+    "category": "task"
   }
 ]

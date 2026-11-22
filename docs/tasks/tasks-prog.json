@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 248,
-    "in_progress": 7,
-    "open": 85,
-    "total": 340
+    "done": 249,
+    "in_progress": 6,
+    "open": 86,
+    "total": 341
   },
   "tasks": [
     {
@@ -14710,6 +14710,50 @@
       "acceptance": [],
       "deliverables": [],
       "notes": "2026-11-22 | 狀態: done | 驗證: run-cli 全過、tsc 0 錯、compute-gate standard 通過(僅既有 LoginScene 警告) | 變更: BuffSystem 走 applyBuffStack(層數上限3、回合取max)、治療戰法走 computeHealAmount(固定量+已損25%並截到已損血量)、毒箭走 poisonTickDamage(5%最大HP)＋自動移動 -1；測試 BuffStackHeal/PoisonArrowE2E/DotSkillResolver/MedicalAidHeal | 阻塞: 燃燒狀態戰場不存在，burnTickDamage 未接線，待裁決",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2956",
+      "id": "PROG-2-9722",
+      "title": "守城勝率退步調查與修正",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T14:30:00+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-22 | 狀態: done | 驗證: 守城無頭模擬 100 場、單元測試、tsc、compute-gate | 變更: engineerBombardDamage 15 改 12（JSON＋預設＋測試＋規格）| 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
