@@ -24,8 +24,8 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 250,
-    "in_progress": 7,
+    "done": 251,
+    "in_progress": 6,
     "open": 76,
     "total": 344
   },
@@ -14899,7 +14899,7 @@
       "title": "兵種徽章共用繪製函式",
       "owner": "ClaudeCode_opus-5-5",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-22",
@@ -14914,7 +14914,7 @@
       "depends": [],
       "acceptance": [],
       "deliverables": [],
-      "notes": "2026-11-22 | 狀態: in-progress | 驗證: pending | 變更: 鎖卡接手 | 阻塞: 無",
+      "notes": "2026-11-22 | 狀態: done | 驗證: tsc 0 錯；run-cli 9180 passed；compute-gate standard 通過（僅既有 LoginScene 警告）；Cocos web 建置成功；playtest 12/12 PASS、0 pageErrors/consoleErrors；戰場中段頭頂徽章截圖未取得（playtest 只留結算截圖），圖檔未交件前應顯示單字 | 變更: 新增 ui/shared/TroopTypeBadge（attach／mount）；戰場頭頂與 7 個面板呼叫點改走共用函式；單元測試 TroopTypeBadge.test.ts | 阻塞: 剪影圖交件後需補中段截圖驗收",
       "brief": {
         "style": "classic",
         "label": "",
