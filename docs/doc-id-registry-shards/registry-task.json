@@ -16546,5 +16546,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9716.md",
     "title": "[PROG-2-9716] 騎兵攻擊音效改馬蹄聲（hoof_gallop，CC-BY 3.0）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2951",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9718.md",
+    "title": "[PROG-2-9718] 戰場文字套用 LabelLayoutDeferral（徽章、跳字、HUD）減少重排",
+    "category": "task"
   }
 ]
