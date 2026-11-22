@@ -10481,26 +10481,52 @@
       "uid": "diao-chan",
       "name": "貂蟬",
       "standing": {
-        "status": "integrated",
+        "status": "review-pending",
         "history": [
           {
             "version": "0002",
             "file": "standing/diao_chan__貂蟬__standing_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "standing/diao_chan__貂蟬__standing_0003.png",
+            "status": "review-pending",
+            "sha256": "60129d4b0aeeb13aba0ee6339bec23106c3263e62fadc6695e1a45e7010474ff",
+            "canvas": "1024x1536 RGBA",
+            "palette": "mulberry-plum, warm ivory, antique gold, jade",
+            "weapon": "embroidered dance fan",
+            "note": "v2 女性品質基準候選；待逐項目視驗收，不代表已核准。"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "avatar": {
-        "status": "integrated",
+        "status": "review-pending",
         "history": [
           {
             "version": "0002",
             "file": "avatars/diao_chan__貂蟬__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/diao_chan__貂蟬__avatar_0003.png",
+            "status": "review-pending",
+            "sha256": "44c850ef4e52db21f1471bce13389c32158c47c85091fd4e70f18ec050f23dad",
+            "canvas": "720x720 RGBA",
+            "sourceBustFile": "busts/diao_chan__貂蟬__bust_0001.png",
+            "method": "crop-only; uniform resize; no redraw",
+            "cropBox": {
+              "width": 800,
+              "height": 800,
+              "x": 58,
+              "y": 0
+            },
+            "note": "由半身像等比裁出；待確認臉部置中與肩胸取景。"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "smallAvatar": {
         "activeVersion": "0003",
@@ -10534,7 +10560,7 @@
         ]
       },
       "battle": {
-        "activeVersion": "0003",
+        "activeVersion": "0004",
         "status": "review-pending",
         "displayStatus": "not-yet-verified",
         "history": [
@@ -10571,6 +10597,38 @@
             "weaponClass": "jian sword (creative game design; not asserted as historical)",
             "sourceStanding": "standing/diao_chan__貂蟬__standing_0002.png",
             "note": "依正式站姿保留貂蟬紅棕長髮、花飾與紫白配色；成人女性、優雅戰鬥動作。透明全身候選，未核准、未接入 runtime."
+          },
+          {
+            "version": "0004",
+            "file": "battle/diao_chan__貂蟬__battle_0004.png",
+            "status": "review-pending",
+            "sha256": "dee7708a5b6c13a325aa946783f7af40840782837ba87e430db1ccbf7956b0da",
+            "canvas": "1024x1536 RGBA",
+            "sourceStandingFile": "standing/diao_chan__貂蟬__standing_0003.png",
+            "poseSelection": "持扇迴身格擋的斜向舞步",
+            "weaponClass": "embroidered dance fan",
+            "note": "沿用靜態造型的戰鬥候選；待逐項目視驗收。"
+          }
+        ]
+      },
+      "bust": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "busts/diao_chan__貂蟬__bust_0001.png",
+            "status": "review-pending",
+            "sha256": "583bb7962f19d61290e30d85a5037169e7700039dd65c44b8aed14801fc90bd5",
+            "canvas": "900x1000 RGBA",
+            "sourceStandingFile": "standing/diao_chan__貂蟬__standing_0003.png",
+            "method": "crop-only; no redraw, rotation or retouch",
+            "cropBox": {
+              "width": 900,
+              "height": 1000,
+              "x": 62,
+              "y": 0
+            }
           }
         ]
       }
