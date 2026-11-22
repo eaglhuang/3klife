@@ -10012,26 +10012,49 @@
       "uid": "xin-xian-ying",
       "name": "辛憲英",
       "standing": {
-        "status": "integrated",
+        "status": "review-pending",
         "history": [
           {
             "version": "0002",
             "file": "standing/xin_xian_ying__辛憲英__standing_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "standing/xin_xian_ying__辛憲英__standing_0003.png",
+            "status": "review-pending",
+            "sha256": "e5d0b461c9dc5103024a0c655dfbede1a7a7b34dc24d93b4081f18921893f43a",
+            "canvas": "1024x1536 RGBA",
+            "note": "v5重建候選：翡翠、玉白、古金與石榴紅策士造型；保留盤髮側辮與卷軸識別，待審。"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "avatar": {
-        "status": "integrated",
+        "status": "review-pending",
         "history": [
           {
             "version": "0002",
             "file": "avatars/xin_xian_ying__辛憲英__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/xin_xian_ying__辛憲英__avatar_0003.png",
+            "status": "review-pending",
+            "sha256": "513ddad1f10f89abcab069c5fc2366a07ff9f45946cf7386fdca4bb36c6a47d2",
+            "canvas": "256x256 RGBA",
+            "sourceBust": "busts/xin_xian_ying__辛憲英__bust_0001.png",
+            "cropBox": [
+              0,
+              0,
+              700,
+              700
+            ],
+            "resampling": "Lanczos proportional resize to 256x256"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "smallAvatar": {
         "activeVersion": "0002",
@@ -10060,7 +10083,7 @@
         ]
       },
       "battle": {
-        "activeVersion": "0003",
+        "activeVersion": "0004",
         "status": "review-pending",
         "history": [
           {
@@ -10070,6 +10093,38 @@
             "sha256": "02da20c878740eafb59019fba0a20b372906cd5ee8744ec22c62085842ba5a8f",
             "canvas": "1024x1536 RGBA",
             "note": "Existing remote artwork discovered without a catalog record; kept as review candidate, not asserted as runtime-integrated."
+          },
+          {
+            "version": "0004",
+            "file": "battle/xin_xian_ying__辛憲英__battle_0004.png",
+            "status": "review-pending",
+            "sha256": "8c06267884ac3b0a45d26865d395d0742d50e8db7363c22c01f1be146bdce87e",
+            "canvas": "1024x1536 RGBA",
+            "poseLabel": "跨步展策、抬手前指",
+            "gaze": "toward-off-frame-action",
+            "sourceStanding": "standing/xin_xian_ying__辛憲英__standing_0003.png",
+            "note": "沿用靜態造型，以跨步展策和抬手指揮呈現臨戰施策，待審。"
+          }
+        ]
+      },
+      "bust": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "busts/xin_xian_ying__辛憲英__bust_0001.png",
+            "status": "review-pending",
+            "sha256": "ff78fe8ac5cab228e4014e2cc5726fac8fc95b036f1bdecf36b87d3426f7ce5c",
+            "canvas": "700x800 RGBA",
+            "sourceStanding": "standing/xin_xian_ying__辛憲英__standing_0003.png",
+            "cropBox": [
+              162,
+              80,
+              700,
+              800
+            ],
+            "note": "由靜態立繪等比裁切，保留頭肩與胸部。"
           }
         ]
       }
