@@ -16546,5 +16546,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9716.md",
     "title": "[PROG-2-9716] 騎兵攻擊音效改馬蹄聲（hoof_gallop，CC-BY 3.0）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2949",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9612.md",
+    "title": "[PROG-2-9612] 無頭試玩 lobby-commerce-silver 偶發失敗修正（報酬列受情報分層遮蔽）",
+    "category": "task"
   }
 ]
