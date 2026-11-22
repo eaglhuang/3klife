@@ -5209,6 +5209,33 @@
             "note": "延續核定荀攸暗青灰文士服；收斂構圖的前進施策瞬間，一手展開軍略圖、一手指向陣線，候選待審。"
           }
         ]
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/xun_you__荀攸__small_avatar_0001.png",
+            "status": "integrated",
+            "sha256": "c1cd6978e9995e490ad5c4866a99a4baf2827dd6e6d5047de63d1289dc858a88",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/xun_you__荀攸__avatar_0002.png",
+            "method": "crop-only; uniform resize; face-centered; no rotation",
+            "cropBox": {
+              "x": 62.83,
+              "y": 13.77,
+              "width": 161.33,
+              "height": 161.33
+            },
+            "headHeightRatio": 0.75,
+            "faceHeightRatio": 0.397,
+            "faceWidthRatio": 0.378,
+            "centerlineErrorPx": 0.5,
+            "note": "頭高75%、臉高39.7%、臉寬37.8%；臉框中線誤差0.5px；完整保留髮型、冠飾、髮簪、臉與鬍鬚；自然三分之四角度。250px核可基準對照通過，雙肩下緣部分可見。臉部尺寸達硬性下限，受完整冠飾限制未能放大至44%理想值。僅等比例裁切縮放，未旋轉或修臉。"
+          }
+        ]
       }
     },
     {
