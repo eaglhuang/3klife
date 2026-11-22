@@ -79,6 +79,7 @@ export const SYNC_PATCH_ROOT_KEYS: readonly string[] = [
     'sandtableUnlockHistory',
     'startingTalisman',
     'familySystemUnlocked',
+    'matchmakerFirstVisitDone',
     'openingPhase',
     'enrollGrantDay',
     'itemAcquisitionLog',

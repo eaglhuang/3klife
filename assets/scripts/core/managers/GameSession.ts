@@ -170,7 +170,8 @@ import type { SilverLedger } from '../api/localserver/SilverWalletPort';
 import { MARRIAGE_RELATION_GAIN, MATCHMAKER_CLOSED_LABEL, bondAffinityMet, diplomaticSlot, matchmakerCandidates, matchmakerSlot, matchmakerYearOf, relationAllowsAlliance, spouseHomeNationOf, type MatchmakerCandidate } from '../systems/SpouseSources';
 import { OccupancyService } from '../../shared/occupancy/OccupancyService';
 import { parseOccupancyMatrix, type OccupancyMatrixV1 } from '../../shared/occupancy/OccupancyMatrix';
-import { parseFamilyConfig, type FamilyConfigV1 } from '../../shared/family/FamilyConfig';
+import { parseFamilyConfig, spouseCapFor, type FamilyConfigV1 } from '../../shared/family/FamilyConfig';
+import { checkMatchmakerTrigger, type MatchmakerPromptType } from '../systems/MatchmakerGuideManager';
 import { FamilyService } from '../../shared/family/FamilyService';
 import { isEmptyFamilyState, type NursingMethod } from '../../shared/family/FamilyTypes';
 import type { OccupancyKind, OccupancyRecord } from '../../shared/occupancy/OccupancyTypes';
@@ -559,8 +560,18 @@ export interface HallMissionSeasonReport {
     gains: { grain: number; gold: number; silver: number; generalExp: number };
 }
 
+export interface MatchmakerOfferNotice {
+    promptType: MatchmakerPromptType;
+    remaining: number;
+    speechTextKey: string;
+    titleKey: string;
+    candidates: MatchmakerCandidate[];
+}
+
 export interface SeasonAdvancedPayload {
     advance: SeasonAdvanceResult;
+    /** 本季媒人說親導流通知（紅娘叩門／春季說親，PROG-2-9613）；沒有時省略 */
+    matchmakerOfferNotice?: MatchmakerOfferNotice;
     /** 本季到期結算的大廳任務回報（PROG-2-9130）；沒有任務結算時省略 */
     hallMissionReport?: HallMissionSeasonReport;
     /** 本季滿 65 歲被系統強制轉教官卡的武將 id（SPI-01 退役雙軌，PROG-2-1994）；沒有時省略 */
@@ -970,6 +981,8 @@ export class GameSession implements AcademyRecordPort {
     private _breedingBirthRecords: BreedingBirthRecord[] = [];
     /** 世家系統解鎖旗標（PM 暫定）：第一位子嗣誕生時寫入；舊檔以出生紀錄推導。 */
     private _familySystemUnlockedFlag = false;
+    /** 結緣媒人首次紅娘叩門完成旗標（PROG-2-9613）：開場教學後首次換季完成後寫入，讀檔不重複 */
+    private _matchmakerFirstVisitDone = false;
     /** 新玩家開場進行中的幕 id（PROG-2-1371）；開場結束為 null */
     private _postLoadHook: (() => void | Promise<void>) | null = null;
     private _openingPhase: string | null = null;
@@ -2571,6 +2584,15 @@ export class GameSession implements AcademyRecordPort {
         return this._familySystemUnlockedFlag || this._breedingBirthRecords.length > 0;
     }
 
+    /** 結緣媒人首次紅娘叩門是否已完成（PROG-2-9613） */
+    public get matchmakerFirstVisitDone(): boolean {
+        return this._matchmakerFirstVisitDone;
+    }
+
+    public setMatchmakerFirstVisitDone(done: boolean): void {
+        this._matchmakerFirstVisitDone = done;
+    }
+
     /** 本局已記下的結緣子嗣紀錄（回傳複本，外部改動不影響內部） */
     public breedingBirthRecords(): BreedingBirthRecord[] {
         return normalizeBreedingBirthRecords(this._breedingBirthRecords);
@@ -2949,6 +2971,7 @@ export class GameSession implements AcademyRecordPort {
         this._storyMeta = emptyStoryMeta();
         this._breedingBirthRecords = [];
         this._familySystemUnlockedFlag = false;
+        this._matchmakerFirstVisitDone = false;
         this._openingPhase = null;
         this._openingOffers = { ...FRESH_OPENING_OFFER_STATE };
         this._enrollGrantDay = null;
@@ -6195,10 +6218,32 @@ export class GameSession implements AcademyRecordPort {
             this._familySynergy = finalizeAdultChildren(this._familySynergy, this._roster.getAll());
             this._marriageProposal = rollMarriageProposal(this._roster.getAll(), this._clanTier, `suitor-${governanceSeason}`, remarkRandomOf(`marriage|${governanceSeason}|${this._seeded.snapshot().state}`), this._familySynergy);
         }
+        // 結緣媒人導流判定（PROG-2-9613）：開場教學後首次換季（紅娘叩門）與春季常規求親導流
+        let matchmakerOfferNotice: MatchmakerOfferNotice | undefined;
+        const offer = this.matchmakerOffer();
+        const spouseCap = this._familyConfig ? spouseCapFor(this._familyConfig, this.territoryLevel) : 2;
+        const mmTrigger = checkMatchmakerTrigger({
+            totalSeasonsElapsed: advance.current.totalSeasonsElapsed,
+            currentSeason: advance.current.currentSeason,
+            isOpeningDone: this._openingPhase === null,
+            firstVisitDone: this._matchmakerFirstVisitDone,
+            spouseCount: this._family.spouseCount(),
+            spouseCap,
+            remainingOffers: offer.remaining,
+        });
+        if (mmTrigger && offer.open) {
+            if (mmTrigger.promptType === 'first-visit') {
+                this._matchmakerFirstVisitDone = true;
+            }
+            matchmakerOfferNotice = {
+                ...mmTrigger,
+                candidates: offer.candidates,
+            };
+        }
         const seasonReportSections = this._buildSeasonReportSections(governanceSeason, economyBase, hallMissionReport);
         this._seasonActivity = emptySeasonActivity();
         this._seasonEconomyBase = { ...this._cityEconomy };
-        const payload: SeasonAdvancedPayload = { seasonReportSections, ...(nursingLines.length > 0 ? { nursingLines } : {}), ...(clanStipendLine ? { clanStipendLine } : {}), ...(forcedRetirements.length > 0 ? { forcedRetirements, forcedRetirementNames: forcedRetirements.map((id) => rosterBeforeLifecycle.find((general) => general.id === id)?.name ?? id) } : {}), ...(yuedanLines.length > 0 ? { yuedanLines } : {}), ...(omenLines.length > 0 ? { omenLines } : {}), ...(this._tallyFoodDiscountArmed ? { foodLowLine: FOOD_LOW_LINE } : {}), ...(treasures.length > 0 ? { prisonTreasureLines: treasures.map((entry) => prisonTreasureLine(entry.targetName, ITEM_DISPLAY_NAMES[ITEM_TREASURE])) } : {}), ...(governanceReport ? { governanceReport } : {}), ...(eventNotice ? { governanceEventLine: eventNotice } : {}), advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(hallMissionReport ? { hallMissionReport } : {}), ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids } : {}), ...(mercenaryDay.dayThreeUids.length > 0 ? { mercenaryDayThree: mercenaryDay.dayThreeUids } : {}), ...(mercenaryDay.trustUids.length > 0 ? { mercenaryTrust: mercenaryDay.trustUids } : {}) };
+        const payload: SeasonAdvancedPayload = { seasonReportSections, ...(matchmakerOfferNotice ? { matchmakerOfferNotice } : {}), ...(nursingLines.length > 0 ? { nursingLines } : {}), ...(clanStipendLine ? { clanStipendLine } : {}), ...(forcedRetirements.length > 0 ? { forcedRetirements, forcedRetirementNames: forcedRetirements.map((id) => rosterBeforeLifecycle.find((general) => general.id === id)?.name ?? id) } : {}), ...(yuedanLines.length > 0 ? { yuedanLines } : {}), ...(omenLines.length > 0 ? { omenLines } : {}), ...(this._tallyFoodDiscountArmed ? { foodLowLine: FOOD_LOW_LINE } : {}), ...(treasures.length > 0 ? { prisonTreasureLines: treasures.map((entry) => prisonTreasureLine(entry.targetName, ITEM_DISPLAY_NAMES[ITEM_TREASURE])) } : {}), ...(governanceReport ? { governanceReport } : {}), ...(eventNotice ? { governanceEventLine: eventNotice } : {}), advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(hallMissionReport ? { hallMissionReport } : {}), ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids } : {}), ...(mercenaryDay.dayThreeUids.length > 0 ? { mercenaryDayThree: mercenaryDay.dayThreeUids } : {}), ...(mercenaryDay.trustUids.length > 0 ? { mercenaryTrust: mercenaryDay.trustUids } : {}) };
         if (this._autoSave && this._save) {
             await this.save();
         }
@@ -7389,8 +7434,8 @@ export class GameSession implements AcademyRecordPort {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'cityEconomy' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'officerTrial' | 'paidFeatureQuota' | 'openingOffers' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay' | 'quickResolve' | 'seasonPass'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'cityEconomy' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'officerTrial' | 'paidFeatureQuota' | 'openingOffers' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay' | 'quickResolve' | 'seasonPass'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'cityEconomy' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'officerTrial' | 'paidFeatureQuota' | 'openingOffers' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'matchmakerFirstVisitDone' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay' | 'quickResolve' | 'seasonPass'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'cityEconomy' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'officerTrial' | 'paidFeatureQuota' | 'openingOffers' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'matchmakerFirstVisitDone' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay' | 'quickResolve' | 'seasonPass'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
         fields.cityEconomy = { ...this._cityEconomy };
@@ -7422,6 +7467,7 @@ export class GameSession implements AcademyRecordPort {
         if (this._sandtableUnlockHistory.length > 0) fields.sandtableUnlockHistory = [...this._sandtableUnlockHistory];
         if (this._startingTalisman !== null) fields.startingTalisman = this.startingTalisman!;
         if (this._familySystemUnlockedFlag) fields.familySystemUnlocked = true;
+        if (this._matchmakerFirstVisitDone) fields.matchmakerFirstVisitDone = true;
         if (this._openingPhase !== null) fields.openingPhase = this._openingPhase;
         if (this._openingOffers.declined.length > 0 || this._openingOffers.purchased.length > 0) {
             fields.openingOffers = { declined: [...this._openingOffers.declined], purchased: [...this._openingOffers.purchased] };
@@ -7467,6 +7513,7 @@ export class GameSession implements AcademyRecordPort {
         this._offlineInteractionLog = normalizeOfflineInteractionLog(snapshot.offlineInteractionLog);
         this._sandtableUnlockHistory = normalizeUnlockHistory(snapshot.sandtableUnlockHistory);
         this._familySystemUnlockedFlag = snapshot.familySystemUnlocked === true;
+        this._matchmakerFirstVisitDone = snapshot.matchmakerFirstVisitDone === true;
         this._recordSandtableUnlockReached();
         this._startingTalisman = normalizeStartingTalisman(snapshot.startingTalisman);
         this._openingPhase = normalizeOpeningPhaseId(snapshot.openingPhase);
