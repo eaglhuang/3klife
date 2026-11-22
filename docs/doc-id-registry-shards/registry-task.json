@@ -16534,5 +16534,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9714.md",
     "title": "[PROG-2-9714] 虎符卡面板繪製次數優化（文字改 BITMAP 進動態圖集合批）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2948",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9716.md",
+    "title": "[PROG-2-9716] 騎兵攻擊音效改馬蹄聲（hoof_gallop，CC-BY 3.0）",
+    "category": "task"
   }
 ]
