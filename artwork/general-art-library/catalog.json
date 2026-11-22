@@ -2710,9 +2710,17 @@
             "version": "0002",
             "file": "avatars/zhang_he__張郃__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/zhang_he__張郃__avatar_0003.png",
+            "status": "integrated",
+            "sha256": "4d931647d7ca7eb3cc95798dab45675172a7eff50eee68d6d04c9b22a5a1ab24",
+            "canvas": "1254x1254 RGBA",
+            "note": "依核定立繪設計的新頭肩來源圖；保留張郃三分之四臉、銀羽冠、深藍銀甲與金色細節，作為完整頭部小頭像裁切來源。"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "battle": {
         "status": "review-pending",
@@ -2727,6 +2735,26 @@
             "weaponClass": "spear",
             "poseLabel": "斜向突進",
             "note": "依核定站姿製作的全身戰鬥候選；長槍保持直線，眼神朝向鏡頭；待使用者檢視。"
+          }
+        ]
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/zhang_he__張郃__small_avatar_0001.png",
+            "status": "integrated",
+            "sha256": "886c1a4ec3de9544f8ff3d2d3e74e3ab99ae5ca55685a8ed5fa79cfcc5313af4",
+            "canvas": "256x256 RGBA",
+            "source": "avatars/zhang_he__張郃__avatar_0003.png",
+            "cropBox": "padded-source x=130,y=7.1,side=1180; 56px transparent right padding only",
+            "headHeightRatio": 0.75,
+            "faceHeightRatio": 0.436,
+            "faceWidthRatio": 0.303,
+            "centerlineErrorPx": 0.5,
+            "note": "完整頭部與銀羽冠；自然三分之四臉；頭高75%、臉高43.6%、臉寬30.3%、中線偏差0.5px；雙肩甲可見。僅等比例裁切並補透明邊，未旋轉或扭曲人物。"
           }
         ]
       }
