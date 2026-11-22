@@ -46,18 +46,28 @@
   - 變數：$\text{Kills}_b \in [0, 50000]$（擊殺兵數）；$W_{\text{enemy}}$ 夾制 `[0.6, 2.5]`（以戰力 1000 為基準）；$B_{\text{duel}} \in \{0, 150, 300, 600\}$（單挑斬將／擊破強將）；$M_{\text{lead}} \in \{1.0, 1.15\}$（主將 1.15x）。單場上限 3000。
 - **算例**：(1) 新手打 2 場賊寇各殺 1200、敵戰力 700(0.7x)、主將 → $(12\times 0.7)\times 1.15 \times 2 \approx 19$ 分；(2) 中期 5 場各殺 4500、敵 1500(1.5x)、副將＋1 次斬將(300) → $337.5 + 300 = 638$ 分；(3) 極端 8 場各殺 12000、敵 2800(夾制 2.5x)、主將＋3 次斬將 → $8\times 345 + 900 = 3660$ 分。
 
-### 3.2 治理貢獻排行榜（`boardId: "governance"`）
-- **統計**：玩家太守府任務、家業經營與 AI 季結 `aiGovernanceTick`（`RivalGovernance.ts`）真實產出。
+### 3.2 治理貢獻排行榜（`boardId: "governance"`，依 11/22 總 PM 裁決核可）
+- **統計**：玩家太守府政務公務、家業掌櫃/主事兼任產出與 AI 季結 `aiGovernanceTick`（`RivalGovernance.ts`）真實產出。
 - **公式**：
-  $$\text{GovScore} = \min\left(3200,\; \sum_{s=1}^{4} \min\left(800,\; \sum_{t \in \text{Tasks}_s} \text{Output}_{s,t} \times W_{\text{task}, t} \times M_{\text{eff}} \times M_{\text{vol}}\right)\right)$$
-  - 變數：$W_{\text{task}} \in \{1.0, 1.6\}$（糧/金/兵 `1.0`，外交/情報 `1.6`）；$M_{\text{eff}} \in [0.6, 1.3]$（性格與專長效率）；$M_{\text{vol}} \in \{1.0, 1.2\}$（自告奮勇成功）。單季上限 800，全年上限 3200。
-- **算例**：(1) 新手 POL 55 農耕 2 季：$(100+110)\times 1.0 \times 2 = 420$ 分；(2) 中期 INT 85/CHA 80 外交 4 季：$(20+85+80)\times 1.6 \times 1.3 \times 4 = 1539$ 分；(3) 極端 CHA 100 商業 4 季含 1 季自告奮勇：$350\times 1.3\times (3 + 1.2) \approx 1911$ 分（含家業加給約 2180 分）。
+  $$\text{GovScore} = \min\left(3200,\; \sum_{s=1}^{4} \min\left(800,\; \sum_{t \in \text{Tasks}_s} \text{TaskScore}_{s,t} + \text{EstateScore}_s\right)\right)$$
+  - **任務計分**：$\text{TaskScore} = \text{BaseYield} \times W_{\text{type}} \times M_{\text{stat}} \times M_{\text{volunteer}}$
+  - **變數與權重（全部由 `annual-ranking-config.json` 配置，嚴禁程式硬編碼）**：
+    - 任務類別權重 $W_{\text{type}}$：常規農耕/治水/兵源 `1.0`；商稅統籌 `1.2`；外交情報/策反 `1.6`。
+    - 能力效率加成 $M_{\text{stat}} = \text{clamp}(0.6 + \frac{\text{POL} + \text{INT}}{200},\; 0.6,\; 1.6)$。
+    - 自告奮勇加成 $M_{\text{volunteer}} = 1.2$（一般指派為 `1.0`）。
+    - 家業加給 $\text{EstateScore}_s = \min(200,\; \frac{\text{EstateSilverQuarter}}{500} \times 10)$（單季上限 200）。
+    - 單季防爆上限 `800`，全年封頂 `3200`。
+- **算例**：(1) 新手文官 POL 74/INT 70 農耕 4 季未自告奮勇：$100\times 1.0\times 1.32\times 1.0\times 4 = 528$ 分；(2) 中期名臣 POL 92/INT 90 外交 4 季自告奮勇＋兼掌錢莊：$(200\times 1.6\times 1.51\times 1.2 + 60)\times 4 = 2560$ 分；(3) 極限名臣 POL 98/INT 95 單季公務 930 分＋家業 120 分，觸發單季防爆 clamp 至 800 分，全年四季滿分 3200 分。
 
-### 3.3 紅顏表演魅力榜（`boardId: "charm"`，雙軌熱度＋全國武將分群投票）
-- **公式**：
-  1. 熱度 $\text{Hype} = \sum (\text{TheaterPrestige} \times \text{PlayHeat} \times \text{RepeatDecay}) + \sum \text{BanquetAndDiplo}$，其中 $\text{RepeatDecay} \in [0.6, 1.0]$（對齊 `doc_spec_1181` §6.3 連演衰減）。
-  2. 全國存活武將 $v$ 對候選 $c$ 投票權重：$\text{Vote}(v, c) = \text{clamp}(\frac{\text{Hype}_c}{50} \times (1 + \frac{\text{CHA}_c}{100}) \times \text{Match}(v_{\text{persona}}, c_{\text{act}}), 0, 50)$；總票數 $\sum_v \text{round}(\text{Vote})$ 封頂 `9999` 票。
-- **算例**：(1) 新手無歌劇廳，CHA 72 出席宴會＋出征 Hype 40，18 位武將平均投 2 票 → `36` 票；(2) 中期 Lv4 歌劇廳演名劇＋堂會 Hype 260、CHA 88，65 人平均投 6 票 → `390` 票；(3) 極端 Lv5 換檔 4 齣名劇＋兩次大國堂會 Hype 620、CHA 98，110 人共振 → `2680` 票。
+### 3.3 紅顏表演魅力榜（`boardId: "charm"`，依 11/22 總 PM 裁決核可）
+- **定位**：年度紅顏魅力女冠，決定次年年終盛典雙主持之女司儀人選。
+- **公式（全部權重、上限、衰減係數由 `annual-ranking-config.json` 配置，嚴禁程式硬編碼）**：
+  1. 演出熱度：$\text{Hype} = \sum_{p \in \text{Plays}} (\text{TheaterPrestige} \times \text{PlayHeat}_p \times \text{RepeatDecay}_p) + \text{BanquetBonus}$
+     - 連演衰減率 $\text{RepeatDecay}_p = \max(0.6,\; 1.0 - (\text{consecutiveSeasons}_p - 1) \times 0.2)$（第 1 季 `1.0`、第 2 季 `0.8`、第 3 季及以上下限夾制 `0.6`，防斷崖歸零並保留新人競爭空間）。
+  2. 全國存活武將 $v$ 對候選 $c$ 投票：$\text{Vote}(v, c) = \text{clamp}\left(\frac{\text{Hype}_c}{50} \times (1 + \frac{\text{CHA}_c}{100}) \times \text{PersonaMatch}(v, c),\; 0,\; 50\right)$
+     - 單人投票上限 `50` 票；總榜總票數封頂 `9999` 票。
+     - 個性契合度 $\text{PersonaMatch}$：儒將風雅 $1.3$、豪勇熱烈 $1.2$、家族親緣 $1.25$、一般 $1.0$。
+- **算例**：(1) 新手卞夫人 CHA 72 出席宴會 Hype 40，18 位武將各投 1 票 → `18` 票；(2) 中期貂蟬 CHA 94 Lv3 歌劇廳名劇 Hype 260，40 位名將綜合投票 → 約 `480` 票；(3) 連演第 3 季大喬 CHA 92 觸發 0.6x 衰減，鐵粉孫策投 17 票，全國綜合投票 → 約 `1620` 票。
 
 ### 3.4 教官樹人成就榜（`boardId: "mentor"`，純年度實績）
 - **公式**：
