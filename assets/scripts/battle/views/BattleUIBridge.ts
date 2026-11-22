@@ -93,6 +93,9 @@ import {
 import {
   BATTLE_AUDIO_CUE,
   playBattleAudio,
+  playBattleClip,
+  battleAudioLayers,
+  ensureAudioLayersConfig,
   SKILL_CAST_SFX,
   resolveBattleGeneralAttackSfxKey,
   resolveBattleGeneralHitSfxKey,
@@ -100,6 +103,7 @@ import {
   resolveBattleUnitHitSfxKey,
   type BattleAudioCue,
 } from '../shared/BattleAudio';
+import { attackSfxDelaySec, pickHitSfx, resolveHitTier, shouldPlayCritBoom, type HitTier } from '../shared/BattleAudioLayers';
 
 // ── 型別補充 ─────────────────────────────────────────────────────────────────
 // boardRenderer / unitRenderer 使用 any 以解耦 3D 渲染模組（可後續換強型別）
@@ -511,11 +515,13 @@ export class BattleUIBridge {
    * 受擊音效＋受擊特效。delaySec 預設沿用 recoilStartDelaySec（舊路徑：等攻擊方撞過來）；
    * PROG-2-9412 命中路徑已經等到命中瞬間才呼叫，傳 0 不再多等。
    */
-  private _scheduleBattleUnitHitFeedback(lane: number, depth: number, damageSource?: string, delaySec: number = BATTLE_VISUAL_TIMING.recoilStartDelaySec): Promise<void> {
+  private _scheduleBattleUnitHitFeedback(lane: number, depth: number, damageSource?: string, delaySec: number = BATTLE_VISUAL_TIMING.recoilStartDelaySec, hitTier?: HitTier): Promise<void> {
     const hitAudioKey = resolveBattleUnitHitSfxKey(damageSource);
+    // PROG-2-9729：夜襲先機打擊維持雷聲；其餘依輕／重／擋下／致命分層挑變調 clip 與隨機音量
+    const layered = hitTier && hitAudioKey === BATTLE_AUDIO_CUE.unitHitCommon ? pickHitSfx(hitTier, battleAudioLayers) : null;
     const hitEffectKey = resolveBattleUnitHitEffectKey(damageSource);
     const play = () => {
-      playBattleAudio(hitAudioKey);
+      if (layered) playBattleClip(layered.clip, layered.volume); else playBattleAudio(hitAudioKey);
       playBattleFlowEffectAtCell(services().effect, this.ctx.boardRenderer, hitEffectKey, lane, depth, 0.9, 0.12);
     };
 
@@ -664,8 +670,11 @@ export class BattleUIBridge {
         // 揮刀聲維持在出手當下。沒有攻擊動作（河流邊界扣血等）就立刻播。
         const attackPlayed = !!data.attackerId && data.defenderLane !== null && data.defenderDepth !== null && !isRiverBoundaryDamage;
         const impactSec = attackPlayed && attackerUnit ? ATTACK_IMPACT_SEC[attackStyleFor(attackerUnit.type)] : 0;
+        // PROG-2-9729：出手音改在揮動中段響（距命中不超過 maxGapToImpactSec），只動音效排程、不動畫
+        ensureAudioLayersConfig();
+        const attackSfxDelay = attackPlayed && attackerUnit ? attackSfxDelaySec(impactSec, attackStyleFor(attackerUnit.type), battleAudioLayers) : 0;
         const attackAudioPromise = data.attackerId && attackerUnit && !isRiverBoundaryDamage
-          ? this._scheduleBattleAudio(resolveBattleUnitAttackSfxKey(attackerUnit.type))
+          ? this._scheduleBattleAudio(resolveBattleUnitAttackSfxKey(attackerUnit.type), attackSfxDelay)
           : Promise.resolve();
         const heavy = isHeavyHit(shieldFb.hpLoss, unit.getEffectiveMaxHp(), data.isCrit ?? false);
         const impactPromise = (async () => {
@@ -680,13 +689,16 @@ export class BattleUIBridge {
 
           const hitLane = data.defenderLane ?? unit.lane;
           const hitDepth = data.defenderDepth ?? unit.depth;
+          const lethal = data.hp <= 0;
+          const hitTier = resolveHitTier({ damage: shieldFb.hpLoss, maxHp: unit.getEffectiveMaxHp(), isCrit: data.isCrit ?? false, lethal, blocked: shieldFb.blocked, defenderType: unit.type }, battleAudioLayers);
           if (shieldFb.blocked) {
-            playBattleAudio(BATTLE_AUDIO_CUE.shieldBlock);
+            // 擋下的聲音由受擊分層的 block 層負責（原本另播 shield 再疊 hurt）
             c.unitRenderer?.playBuffConsumeValue(hitLane, hitDepth, BLOCK_FLOAT_TEXT.shield);
           }
-          const hitFeedbackPromise = this._scheduleBattleUnitHitFeedback(hitLane, hitDepth, data.damageSource, impactSec > 0 ? 0 : undefined);
+          const hitFeedbackPromise = this._scheduleBattleUnitHitFeedback(hitLane, hitDepth, data.damageSource, impactSec > 0 ? 0 : undefined, hitTier);
           // 暴擊命中額外播 boom（與既有攻擊／受擊音效疊加）
-          const critAudioPromise = data.isCrit
+          // 致命暴擊不再疊 boom（已有 hit_lethal＋die）；其餘 boom 與 die 由 playBattleAudio 錯開 80ms
+          const critAudioPromise = data.isCrit && shouldPlayCritBoom(lethal, battleAudioLayers)
             ? this._scheduleBattleAudio(BATTLE_AUDIO_CUE.critHit)
             : Promise.resolve();
           await Promise.all([hitPromise, valuePromise, hitFeedbackPromise, critAudioPromise]);
