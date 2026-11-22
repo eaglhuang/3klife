@@ -24,7 +24,7 @@ export function missionRowStatusText(card: Readonly<MissionCardView>, season: nu
 }
 
 /** 一張任務卡 → 牆面使用的 HallTask（耗費由 detail 提供；情報度用服務的情報度） */
-export function missionCardToTask(card: Readonly<MissionCardView>, cost: { grain: number; troops: number; silver: number }, durationSeasons: number): HallTask {
+export function missionCardToTask(card: Readonly<MissionCardView>, cost: { grain: number; troops: number; gold: number; silver: number }, durationSeasons: number): HallTask {
     return {
         Task_ID: card.id,
         Task_Title: card.title,
@@ -40,7 +40,7 @@ export function missionCardToTask(card: Readonly<MissionCardView>, cost: { grain
         AI_Assign_Enabled: true,
         Available_Actions: ['RECON', 'EXECUTE', 'WAIT', 'ASSIGN'],
         Rewards: { Base: [], Perfect_Bonus: [] },
-        Costs: { GRAIN: cost.grain, TROOPS: cost.troops, SILVER: cost.silver, TIME_MINUTES: durationSeasons },
+        Costs: { GRAIN: cost.grain, TROOPS: cost.troops, GOLD: cost.gold, SILVER: cost.silver, TIME_MINUTES: durationSeasons },
     };
 }
 
@@ -52,7 +52,7 @@ export function boardToHub(base: Readonly<LobbyHub>, service: IMissionService, w
     if (board.ok) {
         for (const card of board.value.missions) {
             const detail = service.getDetail(card.id);
-            const cost = detail.ok ? detail.value.cost : { grain: 0, troops: 0, silver: 0 };
+            const cost = detail.ok ? detail.value.cost : { grain: 0, troops: 0, gold: 0, silver: 0 };
             const duration = detail.ok ? detail.value.durationSeasons : 1;
             boards[wallOfTheme(card.theme)].Tasks.push(missionCardToTask(card, cost, duration));
         }

@@ -15,7 +15,7 @@ import {
     type HallKeyStat, type HallMission, type HallMissionAmounts, type HallMissionBalance,
 } from './HallMissionData';
 
-export type HallGeneralBlock = 'dead' | 'retired' | 'not-graduated' | 'nurturing' | 'traveling' | 'on-mission' | 'offline-dispatch' | 'low-energy' | 'captive';
+export type HallGeneralBlock = 'dead' | 'retired' | 'not-graduated' | 'nurturing' | 'traveling' | 'on-mission' | 'offline-dispatch' | 'low-energy' | 'captive' | 'nursing' | 'mentor' | 'sortie';
 
 export const HALL_BLOCK_TEXT: Readonly<Record<HallGeneralBlock, string>> = Object.freeze({
     dead: '已陣亡',
@@ -27,6 +27,9 @@ export const HALL_BLOCK_TEXT: Readonly<Record<HallGeneralBlock, string>> = Objec
     'offline-dispatch': '離線派遣中',
     'low-energy': '精力不足',
     captive: '被囚中',
+    nursing: '哺乳期中',
+    mentor: '擔任教官中',
+    sortie: '出征作戰中',
 });
 
 /** 一位武將在這個判定當下的事實（由 GameSession 從名冊與各系統狀態彙整） */
@@ -112,7 +115,8 @@ export function pickDelegateGeneral(mission: Readonly<HallMission>, generals: re
 
 export interface HallShortage { resource: 'grain' | 'silver' | 'troops'; need: number; have: number }
 
-export const HALL_RESOURCE_NAME: Readonly<Record<HallShortage['resource'], string>> = Object.freeze({ grain: '糧草', silver: '黃金', troops: '城市兵源' });
+/** 舊制（hallMissions 遷移用）的 silver 欄位實際是入國家公庫的金，所以顯示「金」；新制任務走 mission/ 的 gold／silver 分流 */
+export const HALL_RESOURCE_NAME: Readonly<Record<HallShortage['resource'], string>> = Object.freeze({ grain: '糧草', silver: '金', troops: '城市兵源' });
 
 /** 耗費檢查：回傳所有不足的資源（§5、§6：付不起時要標出缺什麼） */
 export function hallShortagesOf(costs: Readonly<HallMissionAmounts>, stock: Readonly<HallMissionAmounts>): HallShortage[] {

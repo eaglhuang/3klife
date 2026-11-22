@@ -568,9 +568,11 @@
                               {
                                 "type": "label",
                                 "name": "SilverNameLabel",
+                                "id": "costFundNameLabel",
+                                "bind": "costFundNameLabel",
                                 "width": 84,
                                 "height": 18,
-                                "text": "黃金",
+                                "text": "金",
                                 "styleSlot": "mission.dialog.label.cost"
                               },
                               {
@@ -582,11 +584,11 @@
                               {
                                 "type": "label",
                                 "name": "SilverValueLabel",
-                                "id": "costSilverValueLabel",
+                                "id": "costFundValueLabel",
                                 "width": 96,
                                 "height": 18,
                                 "styleSlot": "mission.dialog.label.metric",
-                                "bind": "costSilverValueLabel"
+                                "bind": "costFundValueLabel"
                               }
                             ]
                           },
@@ -600,13 +602,13 @@
                               {
                                 "type": "panel",
                                 "name": "SilverBarFill",
-                                "id": "costSilverRatio",
+                                "id": "costFundRatio",
                                 "widget": { "top": 0, "left": 0, "bottom": 0 },
                                 "width": "100%",
                                 "height": 10,
                                 "skinSlot": "mission.dialog.bar.fill.silver",
-                                "bind": "costSilverRatio",
-                                "_doc": "TS 依 costSilverRatio 調整填充寬度或 clip。"
+                                "bind": "costFundRatio",
+                                "_doc": "TS 依 costFundRatio 調整填充寬度或 clip。"
                               }
                             ]
                           }

@@ -22,7 +22,8 @@ export type MissionIntelBand = 'blind' | 'vague' | 'clear' | 'full';
  */
 export type MissionAmount = number | { base: number; mulKey: 'reward' | 'risk' | 'none' };
 
-export type MissionResourceKey = 'grain' | 'troops' | 'silver';
+/** 資源幣別：gold＝金（國家公庫，軍務／政務／外交）、silver＝銀兩（家族，商業／民生）；兩者獨立入帳，不互相折算 */
+export type MissionResourceKey = 'grain' | 'troops' | 'gold' | 'silver';
 export type MissionGeneralStateKind = 'injured' | 'captured' | 'exhausted';
 
 /** 效果種類（parser 驗證用；新增種類才需要寫宿主 handler） */
@@ -151,7 +152,7 @@ export interface MissionDefinition {
         roleAnyOf?: string[];
     };
     timing: { durationSeasons: number; expireSeasons: number };
-    cost?: { grain?: number; troops?: number; silver?: number };
+    cost?: { grain?: number; troops?: number; gold?: number; silver?: number };
     energy?: number;
     variants: { id: string; weight: number }[];
     intel: {
@@ -166,7 +167,7 @@ export interface MissionDefinition {
 
 export const MISSION_BLOCKS = [
     'dead', 'retired', 'not-graduated', 'nurturing', 'captive', 'injured',
-    'on-sortie', 'traveling', 'on-mission', 'offline-dispatch', 'low-energy', 'occupied',
+    'on-sortie', 'traveling', 'on-mission', 'offline-dispatch', 'low-energy', 'occupied', 'nursing', 'mentor',
 ] as const;
 export type MissionBlock = (typeof MISSION_BLOCKS)[number];
 
@@ -177,7 +178,7 @@ export const MISSION_BLOCK_TEXT: Record<MissionBlock, string> = {
     dead: '已亡故', retired: '已退役', 'not-graduated': '尚未畢業', nurturing: '培育中', captive: '被囚',
     injured: '受傷休養中', 'on-sortie': '出征中', traveling: '遠行中', 'on-mission': '出任務中',
     'offline-dispatch': '離線派遣中', 'low-energy': '精力不足',
-    occupied: '修業或指派中',
+    occupied: '修業或指派中', nursing: '哺乳期中', mentor: '擔任教官中',
 };
 
 /** 引擎看到的武將事實（宿主依真實名冊組出，引擎不讀名冊） */
@@ -229,7 +230,7 @@ export interface MissionLegacyFlat {
     title: string;
     wall: string;
     difficulty: MissionDifficulty;
-    rewards: { grain: number; silver: number; generalExp: number };
+    rewards: { grain: number; gold: number; silver: number; generalExp: number };
     fame: number;
 }
 export const LEGACY_FLAT_BRANCH_ID = 'legacy-flat';
@@ -351,7 +352,7 @@ export interface MissionDetailView {
     /** 隱藏獎勵／額外分支：只在最高情報度顯示 */
     hiddenRewards: string[];
     /** 耗費、精力、時限一律明牌 */
-    cost: { grain: number; troops: number; silver: number; energy: number };
+    cost: { grain: number; troops: number; gold: number; silver: number; energy: number };
     durationSeasons: number;
     expireSeason: number;
     status: 'OPEN' | 'ACTIVE';

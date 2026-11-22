@@ -16,7 +16,7 @@ export type MissionErrorCode =
     | 'NO_MISSION' | 'NOT_OPEN' | 'BLOCKED' | 'SHORT_RESOURCE' | 'ALREADY_WAITED' | 'INTEL_FULL'
     | 'REVISION_CONFLICT' | 'DUP_REQUEST' | 'NO_EXECUTOR';
 
-export interface MissionShortage { resource: 'grain' | 'troops' | 'silver' | 'energy'; need: number; have: number }
+export interface MissionShortage { resource: 'grain' | 'troops' | 'gold' | 'silver' | 'energy'; need: number; have: number }
 
 export type MissionEventKind = 'recon' | 'wait' | 'dispatch' | 'settled' | 'spawned' | 'expired';
 export interface MissionEvent { kind: MissionEventKind; missionId: string; text: string }
@@ -80,7 +80,7 @@ export interface DispatchResult {
     generalIds: string[];
     delegated: boolean;
     returnSeason: number;
-    cost: { grain: number; troops: number; silver: number; energy: number };
+    cost: { grain: number; troops: number; gold: number; silver: number; energy: number };
 }
 
 export interface AdvanceSeasonCommand extends MissionCommandBase { }

@@ -7,7 +7,7 @@
 import type { MissionDifficulty } from '../MissionBalance';
 import type { MissionDefinition, MissionGeneralFacts, MissionLedgerEntry, MissionTier } from '../MissionTypes';
 
-export interface MissionStock { grain: number; silver: number; troops: number }
+export interface MissionStock { grain: number; gold: number; silver: number; troops: number }
 
 export interface MissionSettlementInfo {
     missionId: string;

@@ -899,5 +899,19 @@
   "ui.academy.flow.lobby.resume_toast": "An academy term is in progress. Please continue it.",
   "ui.academy.flow.lobby.frozen_toast": "Academy in progress: the outside world is paused.",
   "ui.academy.flow.lobby.menu": "Academy",
-  "ui.academy.flow.lobby.menu_resume": "Academy (in progress)"
+  "ui.academy.flow.lobby.menu_resume": "Academy (in progress)",
+  "ui.resource.grain": "Grain",
+  "ui.resource.troops": "Troops",
+  "ui.resource.silver": "Silver",
+  "ui.resource.gold": "Gold",
+  "ui.mission.reward.silver": "Silver +{0}",
+  "ui.mission.reward.gold": "Gold +{0}",
+  "ui.mission.cost.silver": "Silver -{0}",
+  "ui.mission.cost.gold": "Gold -{0}",
+  "ui.mission.shortage.silver": "Insufficient Silver (Need {0}, Have {1})",
+  "ui.mission.shortage.gold": "Insufficient Gold (Need {0}, Have {1})",
+  "ui.mission.block.nursing": "Nursing",
+  "ui.mission.block.mentor": "Serving as instructor",
+  "ui.mission.block.on-sortie": "On campaign",
+  "ui.mission.block.occupied": "Studying or assigned elsewhere"
 }

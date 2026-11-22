@@ -74,6 +74,8 @@ export function createMissionSaveSuite(): TestSuite {
         assert.equals(LEGACY_FLAT_BRANCH_ID, active.dispatch!.branchId);
         assert.equals(true, active.dispatch!.delegated);
         assert.equals(250, active.legacy!.rewards.grain, '200 × 1.25（完美加成已算進去）');
+        assert.equals(125, active.legacy!.rewards.gold, "舊制 silver 欄位原本就是入金庫的金，遷移後記為 gold（完美加成 ×1.25）");
+        assert.equals(0, active.legacy!.rewards.silver, "舊制不含家族銀兩");
         const open = r.save.missions.find(m => m.id === 'HM-0001')!;
         assert.equals(70, open.intel, '情報取舊任務與 hallIntel 較大者');
         assert.equals(true, open.waited);

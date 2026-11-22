@@ -132,7 +132,7 @@
                   "effects": [
                     {
                       "kind": "resource",
-                      "res": "silver",
+                      "res": "gold",
                       "amount": 80
                     },
                     {
@@ -153,7 +153,7 @@
               "effects": [
                 {
                   "kind": "resource",
-                  "res": "silver",
+                  "res": "gold",
                   "amount": 120
                 },
                 {
@@ -179,7 +179,7 @@
                   "effects": [
                     {
                       "kind": "resource",
-                      "res": "silver",
+                      "res": "gold",
                       "amount": 90
                     },
                     {
@@ -215,7 +215,7 @@
                   "effects": [
                     {
                       "kind": "resource",
-                      "res": "silver",
+                      "res": "gold",
                       "amount": 40
                     },
                     {
@@ -258,7 +258,7 @@
                   "effects": [
                     {
                       "kind": "resource",
-                      "res": "silver",
+                      "res": "gold",
                       "amount": -90
                     },
                     {
@@ -286,7 +286,7 @@
                   "effects": [
                     {
                       "kind": "resource",
-                      "res": "silver",
+                      "res": "gold",
                       "amount": -60
                     },
                     {
@@ -313,7 +313,7 @@
               "effects": [
                 {
                   "kind": "resource",
-                  "res": "silver",
+                  "res": "gold",
                   "amount": -40
                 },
                 {
@@ -377,7 +377,7 @@
                   "effects": [
                     {
                       "kind": "resource",
-                      "res": "silver",
+                      "res": "gold",
                       "amount": 110
                     },
                     {
@@ -403,7 +403,7 @@
               "effects": [
                 {
                   "kind": "resource",
-                  "res": "silver",
+                  "res": "gold",
                   "amount": 130
                 },
                 {
@@ -429,7 +429,7 @@
                   "effects": [
                     {
                       "kind": "resource",
-                      "res": "silver",
+                      "res": "gold",
                       "amount": 40
                     },
                     {
@@ -455,7 +455,7 @@
               "effects": [
                 {
                   "kind": "resource",
-                  "res": "silver",
+                  "res": "gold",
                   "amount": 100
                 },
                 {
@@ -489,7 +489,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": -50
               },
               {
@@ -545,7 +545,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": 100
               },
               {
@@ -574,7 +574,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": 90
               },
               {
@@ -608,7 +608,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": -40
               },
               {
@@ -666,7 +666,7 @@
                 "effects": [
                   {
                     "kind": "resource",
-                    "res": "silver",
+                    "res": "gold",
                     "amount": 180
                   },
                   {
@@ -702,7 +702,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": 140
               },
               {
@@ -721,7 +721,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": 80
               },
               {
@@ -736,7 +736,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": -20
               },
               {
@@ -789,7 +789,7 @@
                 "effects": [
                   {
                     "kind": "resource",
-                    "res": "silver",
+                    "res": "gold",
                     "amount": 200
                   },
                   {
@@ -826,7 +826,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": 140
               },
               {
@@ -864,7 +864,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": -30
               },
               {
@@ -922,7 +922,7 @@
                 "effects": [
                   {
                     "kind": "resource",
-                    "res": "silver",
+                    "res": "gold",
                     "amount": 260
                   },
                   {
@@ -959,7 +959,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": 190
               },
               {
@@ -983,7 +983,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": 70
               },
               {
@@ -998,7 +998,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": -30
               },
               {

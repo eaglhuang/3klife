@@ -60,7 +60,10 @@ function normalizeInstance(raw: unknown): MissionInstance | null {
     if (isObj(lg) && isStr(lg.title) && isDifficulty(lg.difficulty) && isObj(lg.rewards)) {
         inst.legacy = {
             title: lg.title, wall: isStr(lg.wall) ? lg.wall : 'Military', difficulty: lg.difficulty,
-            rewards: { grain: Number(lg.rewards.grain) || 0, silver: Number(lg.rewards.silver) || 0, generalExp: Number(lg.rewards.generalExp) || 0 },
+            // 舊存檔（無 gold 欄）的 silver 原本就是入金庫的金，讀入時改記為 gold；已入帳的數值不回溯
+            rewards: lg.rewards.gold === undefined
+                ? { grain: Number(lg.rewards.grain) || 0, gold: Number(lg.rewards.silver) || 0, silver: 0, generalExp: Number(lg.rewards.generalExp) || 0 }
+                : { grain: Number(lg.rewards.grain) || 0, gold: Number(lg.rewards.gold) || 0, silver: Number(lg.rewards.silver) || 0, generalExp: Number(lg.rewards.generalExp) || 0 },
             fame: isNum(lg.fame) ? lg.fame : 0,
         };
     }
@@ -179,7 +182,7 @@ export function migrateLegacyHallMissions(input: LegacyMigrationInput): LegacyMi
                     legacy: {
                         title: isStr(raw.title) ? raw.title : '任務', wall, difficulty,
                         rewards: {
-                            grain: Math.round((Number(rw.grain) || 0) * mult), silver: Math.round((Number(rw.silver) || 0) * mult),
+                            grain: Math.round((Number(rw.grain) || 0) * mult), gold: Math.round((Number(rw.silver) || 0) * mult), silver: 0,
                             generalExp: Math.round((Number(rw.generalExp) || 0) * mult),
                         },
                         fame: 0,

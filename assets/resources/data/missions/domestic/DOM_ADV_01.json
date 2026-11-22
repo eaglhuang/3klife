@@ -102,7 +102,7 @@
                   },
                   {
                     "kind": "resource",
-                    "res": "silver",
+                    "res": "gold",
                     "amount": {
                       "base": 630,
                       "mulKey": "reward"
@@ -154,7 +154,7 @@
               },
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": {
                   "base": 420,
                   "mulKey": "reward"
@@ -192,7 +192,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": {
                   "base": -200,
                   "mulKey": "risk"
@@ -249,7 +249,7 @@
                   },
                   {
                     "kind": "resource",
-                    "res": "silver",
+                    "res": "gold",
                     "amount": {
                       "base": 630,
                       "mulKey": "reward"
@@ -301,7 +301,7 @@
               },
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": {
                   "base": 420,
                   "mulKey": "reward"
@@ -335,7 +335,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": {
                   "base": -120,
                   "mulKey": "risk"
@@ -391,7 +391,7 @@
                   },
                   {
                     "kind": "resource",
-                    "res": "silver",
+                    "res": "gold",
                     "amount": {
                       "base": 630,
                       "mulKey": "reward"
@@ -443,7 +443,7 @@
               },
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": {
                   "base": 420,
                   "mulKey": "reward"
@@ -477,7 +477,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": {
                   "base": -60,
                   "mulKey": "risk"

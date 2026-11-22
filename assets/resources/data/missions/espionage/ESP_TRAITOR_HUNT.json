@@ -133,7 +133,7 @@
                   "effects": [
                     {
                       "kind": "resource",
-                      "res": "silver",
+                      "res": "gold",
                       "amount": 80
                     },
                     {
@@ -366,7 +366,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": 100
               },
               {
@@ -400,7 +400,7 @@
                     },
                     {
                       "kind": "resource",
-                      "res": "silver",
+                      "res": "gold",
                       "amount": 60
                     },
                     {
@@ -610,7 +610,7 @@
                 "effects": [
                   {
                     "kind": "resource",
-                    "res": "silver",
+                    "res": "gold",
                     "amount": 140
                   },
                   {
@@ -654,7 +654,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": 90
               },
               {
@@ -742,7 +742,7 @@
                 "effects": [
                   {
                     "kind": "resource",
-                    "res": "silver",
+                    "res": "gold",
                     "amount": 200
                   },
                   {
@@ -805,7 +805,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": 120
               },
               {
@@ -907,7 +907,7 @@
                 "effects": [
                   {
                     "kind": "resource",
-                    "res": "silver",
+                    "res": "gold",
                     "amount": 180
                   },
                   {
@@ -950,7 +950,7 @@
             "effects": [
               {
                 "kind": "resource",
-                "res": "silver",
+                "res": "gold",
                 "amount": 110
               },
               {

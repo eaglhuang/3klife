@@ -175,7 +175,7 @@ export function buildLobbyCityHubView(input: LobbyCityHubInput): LobbyCityHubFlo
         lordFaction: PLAYER_HOME_CITY.faction,
         lordSub: `${input.officerRank || '白身'}　主將 ${input.leadName ?? '未定'}`,
         resGold: `金 ${num(input.gold)}`,
-        resSilver: `銀 ${num(input.silver ?? 0)}`,
+        resSilver: `銀兩 ${num(input.silver ?? 0)}`,
         resGem: `玉 ${num(input.gems)}`,
         resFood: `糧草 ${num(input.food)}`,
         resTroops: `兵 ${num(input.cityTroops)}`,

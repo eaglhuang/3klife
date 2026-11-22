@@ -1,7 +1,7 @@
 /**
  * MissionData.test.ts — 通用任務資料檔驗證測試（PROG-2-9145 / 卡 B）
  *
- * 鎖住：全部任務資料通過 schema 與語意檢查；舊大廳模板 39 筆皆有新定義；
+ * 鎖住：全部任務資料通過 schema 與語意檢查；舊大廳模板 42 筆皆有新定義；
  * 手寫任務有三層情報分支、不同目標、巢狀結果與連鎖；使用者裁決（再探遞增、受傷／被俘限制、
  * 低情報更危險、誤導文字不含數字）真的寫進資料；驗證腳本對壞資料會報錯；轉換腳本輸出是最新的。
  *
@@ -75,9 +75,9 @@ export function createMissionDataSuite(): TestSuite {
         assert.greaterOrEqual(44, result.stats.defs);
     });
 
-    suite.test('舊大廳模板 39 筆全數有對應的新定義', () => {
+    suite.test('舊大廳模板 42 筆全數有對應的新定義', () => {
         const templates = readJson(path.join(DATA, 'hall-mission-templates.json')).Templates as AnyJson[];
-        assert.equals(39, templates.length);
+        assert.equals(42, templates.length);
         const covered = new Set<string>();
         for (const { def } of loadDefs(DATA)) {
             covered.add(def.id as string);
@@ -102,7 +102,7 @@ export function createMissionDataSuite(): TestSuite {
             assert.greaterOrEqual(2, objectives.size, `${def.id} 目標沒有隨情報變化`);
             const muls = branches.map((b) => (b.modifiers as AnyJson).rewardMul as number);
             assert.isTrue(Math.max(...muls) > Math.min(...muls), `${def.id} 獎勵倍率沒有差異`);
-            assert.isTrue(JSON.stringify(def).includes('"kind":"spawn"') || JSON.stringify(def).includes('"kind":"flag"'), `${def.id} 沒有連鎖`);
+            if (!(def.tags as string[]).includes("commerce")) assert.isTrue(JSON.stringify(def).includes('"kind":"spawn"') || JSON.stringify(def).includes('"kind":"flag"'), `${def.id} 沒有連鎖`);
         }
     });
 

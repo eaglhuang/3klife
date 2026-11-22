@@ -24,7 +24,7 @@ const node = (name: string, ucufId?: string, children: FakeNode[] = [], active =
     return n;
 };
 
-/** 依 lobby-hall-screen 實際結構縮小：頂列 金玉糧兵＋返回、底列 dock */
+/** 依 lobby-hall-screen 實際結構縮小：頂列 金銀兩玉糧兵＋返回、底列 dock */
 const buildHall = (active = true): FakeNode => node('LobbyHallScreen', undefined, [
     node('topbar', 'lobby-hall-screen.topbar', [
         node('res', undefined, [node('gold'), node('jade'), node('grain'), node('troops'), node('back', 'lobby-hall-screen.back')]),
@@ -94,7 +94,7 @@ export function createOnboardingTargetResolverSuite(): TestSuite {
         for (const spec of Object.values(ONBOARDING_HALL_TARGETS)) assert.isTrue(!!find(layout.root, spec.anchor), spec.anchor);
         const back = find(layout.root, ONBOARDING_HALL_TARGETS.fate.anchor)!;
         const labels = (back.parent?.children ?? []).filter(c => c !== back.hit).map(c => c.children?.[0]?.text ?? '').join('');
-        assert.equals('金玉糧兵', labels);
+        assert.equals('金銀兩玉糧兵', labels);
     });
 
     suite.test('LobbyScene 經由解析器定位，大堂開啟後下一幀再定位一次', () => {

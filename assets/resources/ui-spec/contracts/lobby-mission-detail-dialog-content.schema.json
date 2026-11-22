@@ -107,16 +107,22 @@
       "description": "兵力視覺條比例，0~1。",
       "bindPath": "DialogCard/ScrollView/ScrollContent/ResourcePanel/TroopRow/TroopBarTrack/TroopBarFill"
     },
-    "costSilverValueLabel": {
+    "costFundNameLabel": {
       "type": "string",
       "required": true,
-      "description": "黃金耗費顯示文字。",
+      "description": "耗費幣別名稱：金（國家公庫）或銀兩（家族）；兩種都耗時以「／」並列。",
+      "bindPath": "DialogCard/ScrollView/ScrollContent/ResourcePanel/SilverRow/SilverHeadRow/SilverNameLabel"
+    },
+    "costFundValueLabel": {
+      "type": "string",
+      "required": true,
+      "description": "金／銀兩耗費顯示文字。",
       "bindPath": "DialogCard/ScrollView/ScrollContent/ResourcePanel/SilverRow/SilverHeadRow/SilverValueLabel"
     },
-    "costSilverRatio": {
+    "costFundRatio": {
       "type": "number",
       "required": true,
-      "description": "黃金視覺條比例，0~1。",
+      "description": "金／銀兩視覺條比例，0~1。",
       "bindPath": "DialogCard/ScrollView/ScrollContent/ResourcePanel/SilverRow/SilverBarTrack/SilverBarFill"
     },
     "costTimeValueLabel": {
@@ -182,8 +188,9 @@
     "costFoodRatio",
     "costTroopValueLabel",
     "costTroopRatio",
-    "costSilverValueLabel",
-    "costSilverRatio",
+    "costFundNameLabel",
+    "costFundValueLabel",
+    "costFundRatio",
     "costTimeValueLabel",
     "costTimeRatio",
     "rewardBaseLabel",
