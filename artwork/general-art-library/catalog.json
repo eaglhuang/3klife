@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "updatedAt": "2026-11-21",
+  "updatedAt": "2026-11-23",
   "conventions": {
     "filename": "{uid}__{traditionalName}__{kind}_{version:04}.png",
     "kinds": [
@@ -597,8 +597,8 @@
       "uid": "lu-ling-qi",
       "name": "呂玲綺",
       "standing": {
-        "activeVersion": "0002",
-        "status": "integrated",
+        "activeVersion": "0003",
+        "status": "review-pending",
         "history": [
           {
             "version": "0001",
@@ -609,12 +609,20 @@
             "version": "0002",
             "file": "standing/lu_ling_qi__呂玲綺__standing_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "standing/lu_ling_qi__呂玲綺__standing_0003.png",
+            "status": "review-pending",
+            "sha256": "7f6d75ee193bd3772783f7ea75379367713d52c41a8381355ce48d88f6e74314",
+            "canvas": "1024x1536 RGBA",
+            "note": "v5品質線重建候選：銀白分層輕甲、深梅紫內層與玫瑰金結構飾件；待審。"
           }
         ]
       },
       "battle": {
         "status": "review-pending",
-        "activeVersion": "0002",
+        "activeVersion": "0003",
         "history": [
           {
             "version": "0001",
@@ -634,12 +642,24 @@
             "gaze": "direct-to-camera",
             "sourceStanding": "standing/lu_ling_qi__呂玲綺__standing_0002.png",
             "note": "保持既有紅銀輕甲與戟形武器；長柄筆直、全身與武器完整入框。候選待審，未接入遊戲。"
+          },
+          {
+            "version": "0003",
+            "file": "battle/lu_ling_qi__呂玲綺__battle_0003.png",
+            "status": "review-pending",
+            "sha256": "99b6bf8a398d8ed3726b71823fba97a93307f71766fe3c0258db3074744bd283",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "crescent halberd",
+            "poseLabel": "上挑格擋後跨步反擊",
+            "gaze": "forward-three-quarter",
+            "sourceStanding": "standing/lu_ling_qi__呂玲綺__standing_0003.png",
+            "note": "沿用靜態造型，向上挑架後跨步反擊；全身與戟保持完整，待審。"
           }
         ]
       },
       "avatar": {
-        "activeVersion": "0002",
-        "status": "integrated",
+        "activeVersion": "0003",
+        "status": "review-pending",
         "history": [
           {
             "version": "0001",
@@ -650,6 +670,21 @@
             "version": "0002",
             "file": "avatars/lu_ling_qi__呂玲綺__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/lu_ling_qi__呂玲綺__avatar_0003.png",
+            "status": "review-pending",
+            "sha256": "38d9c943ee50e509cf9634586e22763d07098fed61644fcd56ffbf7fe01ef987",
+            "canvas": "256x256 RGBA",
+            "sourceBust": "busts/lu_ling_qi__呂玲綺__bust_0001.png",
+            "cropBox": [
+              0,
+              0,
+              700,
+              700
+            ],
+            "resampling": "Lanczos proportional resize to 256x256"
           }
         ]
       },
@@ -673,6 +708,27 @@
             "method": "uniform resize with alpha premultiplication; no crop or redraw",
             "qc": "保留原核准來源的完整構圖與透明邊界，只作等比例縮放至256x256；未裁切、旋轉或重畫。",
             "createdAt": "2026-11-21"
+          }
+        ]
+      },
+      "bust": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "busts/lu_ling_qi__呂玲綺__bust_0001.png",
+            "status": "review-pending",
+            "sha256": "c489ed9a2db7c9aa00ea1c3e159860a2aa69914b5d984f90044b6f7f8124be50",
+            "canvas": "700x800 RGBA",
+            "sourceStanding": "standing/lu_ling_qi__呂玲綺__standing_0003.png",
+            "cropBox": [
+              162,
+              115,
+              700,
+              800
+            ],
+            "note": "僅由靜態立繪等比例裁切；半身含肩與胸部。"
           }
         ]
       }
@@ -4118,7 +4174,7 @@
         "activeVersion": "0002"
       }
     },
-{
+    {
       "uid": "liu-zhang",
       "name": "劉璋",
       "standing": {
@@ -4194,7 +4250,7 @@
         "activeVersion": "0002"
       }
     },
-{
+    {
       "uid": "han-sui",
       "name": "韓遂",
       "standing": {
@@ -7788,7 +7844,7 @@
         ]
       }
     },
-{
+    {
       "uid": "mao-jie",
       "name": "毛玠",
       "standing": {
