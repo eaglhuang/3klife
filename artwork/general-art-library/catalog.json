@@ -3378,6 +3378,54 @@
             "qc": "125px preview: full figure, face, hands, boots and blade readable; alpha silhouette fits central 75% width; clean transparent background; review candidate."
           }
         ]
+      },
+      "smallAvatar": {
+        "status": "integrated",
+        "activeVersion": "0002",
+        "history": [
+          {
+            "version": "0002",
+            "file": "small_avatars/deng_ai__鄧艾__small_avatar_0002.png",
+            "status": "integrated",
+            "sha256": "59ce9e5a5ba397682acf690dd85f889476c6fbf6a4d30b64eea4058fc249870e",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/deng_ai__鄧艾__avatar_0002.png",
+            "sourceSha256": "ac9f896e0ed18ae87921295f356cb678ba8524eb9cd7d8673bc31457934ecf90",
+            "cropBox": {
+              "x": 46.33,
+              "y": 8.2,
+              "width": 193.33,
+              "height": 193.33
+            },
+            "faceBox": [
+              106,
+              72,
+              180,
+              162
+            ],
+            "headwearExtent": [
+              54,
+              14,
+              192,
+              167
+            ],
+            "shoulderAnchors": [
+              24,
+              217,
+              228,
+              217
+            ],
+            "method": "crop-only; uniform resize; no redraw",
+            "headHeightPercent": 75,
+            "faceHeightPercent": 46.6,
+            "faceWidthPercent": 38.3,
+            "faceCenterXPercent": 50,
+            "centerAxisDifferencePx": 0.5,
+            "qc": "與七張核可基準並排檢視通過；頭盔、頭部與下巴完整，保留自然三分之四角度，臉框中線偏差0.5px。雙肩上緣可辨識，肩點在框外列警示；頭部比例優先。",
+            "createdAt": "2026-11-22"
+          }
+        ]
       }
     },
     {
@@ -3554,6 +3602,54 @@
             "weaponClass": "poleaxe-dao",
             "poseLabel": "低身轉腰斧鉞橫斬",
             "note": "以核定站姿延續甘寧赤黑鎧甲與斧鉞、短刀；低身轉腰斧鉞橫斬，候選待審。"
+          }
+        ]
+      },
+      "smallAvatar": {
+        "status": "integrated",
+        "activeVersion": "0002",
+        "history": [
+          {
+            "version": "0002",
+            "file": "small_avatars/gan_ning__甘寧__small_avatar_0002.png",
+            "status": "integrated",
+            "sha256": "2e7cb9b033e2dd034061401342e901d1e77aa031fd3fc841c22f6d232b89b8af",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/gan_ning__甘寧__avatar_0002.png",
+            "sourceSha256": "4f6d6ef48a061e1812b9349296ce8339b25dbecfacd7a63ee08b4fa8e1bd5ee7",
+            "cropBox": {
+              "x": 44.67,
+              "y": 2.87,
+              "width": 206.67,
+              "height": 206.67
+            },
+            "faceBox": [
+              108,
+              80,
+              188,
+              164
+            ],
+            "headwearExtent": [
+              46,
+              5,
+              206,
+              182
+            ],
+            "shoulderAnchors": [
+              14,
+              235,
+              238,
+              235
+            ],
+            "method": "crop-only; uniform resize; no redraw",
+            "headHeightPercent": 75,
+            "faceHeightPercent": 40.6,
+            "faceWidthPercent": 38.7,
+            "faceCenterXPercent": 50,
+            "centerAxisDifferencePx": 0.5,
+            "qc": "使用者核可此裁切版本；原髮型與三分之四臉部角度完整保留。工具頭高75%、臉高40.6%、臉寬38.7%、臉框中線偏差0.5px；肩點可見度列警示。",
+            "createdAt": "2026-11-22"
           }
         ]
       }
