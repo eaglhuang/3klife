@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 248,
+    "done": 251,
     "in_progress": 6,
-    "open": 76,
-    "total": 341
+    "open": 86,
+    "total": 343
   },
   "tasks": [
     {
@@ -14810,6 +14810,50 @@
       "acceptance": [],
       "deliverables": [],
       "notes": "2026-11-22 | 狀態: done | 驗證: 守城無頭模擬 100 場、單元測試、tsc、compute-gate | 變更: engineerBombardDamage 15 改 12（JSON＋預設＋測試＋規格）| 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2957",
+      "id": "PROG-2-9724",
+      "title": "兵種徽章共用繪製函式",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T06:19:25+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "全遊戲兵種徽章共用繪製（騎馬頭／步直劍／盾／弓／槍長槍／工錘／醫葫蘆／水帆船，象牙白剪影＋金圈圓章，缺圖退單字）",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-22 | 狀態: in-progress | 驗證: pending | 變更: 鎖卡接手 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
