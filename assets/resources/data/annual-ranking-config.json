@@ -106,5 +106,16 @@
         "charmVotes": 0.8
       }
     }
-  ]
+  ],
+  "clanPrestige": {
+    "enabled": true,
+    "baseContribution": 50,
+    "maxPerGeneral": 500,
+    "multipliers": {
+      "rank1": 5.0,
+      "rankTop3": 3.0,
+      "rankTop10": 2.0,
+      "rankTop100": 1.0
+    }
+  }
 }
