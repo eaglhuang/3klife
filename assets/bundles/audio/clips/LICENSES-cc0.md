@@ -1,4 +1,4 @@
-# CC0 外部音效授權清單（PROG-2-9731）
+# CC0 外部音效授權清單（PROG-2-9732）
 
 三檔皆為 CC0（公眾領域貢獻），可商用、不強制署名。下載日期 2026-11-22，下載時未註冊、未登入。
 變調代用版（hit_block／hit_heavy／footstep_hoof 等）仍保留，由 `data/battle-audio-layers.json` 的 `clipSource` 切換。

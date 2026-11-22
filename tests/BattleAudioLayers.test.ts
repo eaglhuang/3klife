@@ -94,7 +94,7 @@ export function createBattleAudioLayersSuite(): TestSuite {
         const names = new Set<string>();
         Object.values(parsed.hit.tiers).forEach(s => s.clips.forEach(c => names.add(c)));
         Object.values(parsed.footstep.clips).forEach(c => names.add(c));
-        // PROG-2-9731：CC0 版的替換檔也必須存在（兩版檔案都在，才能切換對照）
+        // PROG-2-9732：CC0 版的替換檔也必須存在（兩版檔案都在，才能切換對照）
         Object.values(parsed.cc0Clips).forEach(c => names.add(c));
         const dir = path.join(root, 'assets/bundles/audio/clips');
         for (const n of names) {
