@@ -2,7 +2,8 @@
 'use strict';
 /**
  * 大廳武將聊天台詞：建任務檔 / 品質檢查並合併回 hall-chat-lines.json。
- *   node tools_node/llm-batch/hall-chat.js build  <out-task.json> [--count 20] [--model claude-haiku-5-5] [--limit N]
+ *   node tools_node/llm-batch/hall-chat.js build  <out-task.json> [--count 20] [--model claude-haiku-5-5] [--limit N] [--all]
+ *     --all：改為 generals.json 中「hall-chat-lines.json 還沒有台詞」的全部武將（不用 TRIAL_IDS）。
  *   node tools_node/llm-batch/hall-chat.js merge  <result.jsonl> [--write]
  * 接點：assets/resources/data/hall-map/hall-chat-lines.json（HallChatLines.ts 讀取）。
  */
@@ -61,9 +62,16 @@ function profileOf(g) {
 
 const THINKING = { 'claude-haiku-5-5': { type: 'disabled' }, 'claude-sonnet-5-5': { type: 'between_tools' } };
 
-function build(outFile, model, limit) {
+/** 尚無台詞（鍵不存在或為空陣列）的武將 id，依 generals.json 順序。 */
+function pendingIds(gens, book) {
+  const have = (book && book.generals) || {};
+  return gens.map((g) => g.id).filter((id) => !(have[id] && have[id].length));
+}
+
+function build(outFile, model, limit, all) {
   const gens = JSON.parse(fs.readFileSync(GENERALS, 'utf8'));
-  const rows = (limit ? TRIAL_IDS.slice(0, limit) : TRIAL_IDS).map((id) => {
+  const base = all ? pendingIds(gens, JSON.parse(fs.readFileSync(LINES, 'utf8'))) : TRIAL_IDS;
+  const rows = (limit ? base.slice(0, limit) : base).map((id) => {
     const g = gens.find((x) => x.id === id);
     if (!g) throw new Error('找不到武將 ' + id);
     return { id, name: g.name, profile: profileOf(g), anecdote: String(g.historicalAnecdote || '').replace(/\s+/g, ' ').slice(0, 260) };
@@ -127,8 +135,8 @@ function merge(jsonlFile, write) {
 if (require.main === module) {
   const [cmd, file, ...rest] = process.argv.slice(2);
   const opt = (n, d) => { const i = rest.indexOf(n); return i >= 0 ? rest[i + 1] : d; };
-  if (cmd === 'build') build(file, opt('--model', 'claude-haiku-5-5'), Number(opt('--limit', 0)) || 0);
+  if (cmd === 'build') build(file, opt('--model', 'claude-haiku-5-5'), Number(opt('--limit', 0)) || 0, rest.includes('--all'));
   else if (cmd === 'merge') { const { samples } = merge(file, rest.includes('--write')); console.log(JSON.stringify(samples.slice(0, 8), null, 1)); }
   else { console.error('用法：hall-chat.js build|merge <file>'); process.exit(1); }
 }
-module.exports = { checkLine, profileOf, SCHEMA };
+module.exports = { checkLine, profileOf, pendingIds, SCHEMA };
