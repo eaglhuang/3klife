@@ -1543,6 +1543,7 @@
                           "top": 3
                         },
                         "text": "再議",
+                        "textKey": "ui.hall.btn.defer",
                         "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_51",
                         "width": 34,
                         "height": 25
@@ -1879,6 +1880,7 @@
                         "width": 114,
                         "height": 26,
                         "text": "空位",
+                        "textKey": "ui.hall.slot.empty",
                         "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_b_9"
                       },
                       {
@@ -1990,6 +1992,7 @@
                       "top": 0
                     },
                     "text": "出征",
+                    "textKey": "ui.hall.btn.expedition",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_62",
                     "width": 196,
                     "height": 76
@@ -2012,6 +2015,7 @@
                       "top": 0
                     },
                     "text": "武將",
+                    "textKey": "ui.hall.btn.generals",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_63",
                     "width": 196,
                     "height": 76
@@ -2034,6 +2038,7 @@
                       "top": 0
                     },
                     "text": "內政",
+                    "textKey": "ui.hall.btn.domestic",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_64",
                     "width": 196,
                     "height": 76

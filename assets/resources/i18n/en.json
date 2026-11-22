@@ -922,5 +922,21 @@
   "MATCHMAKER_ACTION_DECLINE": "Later",
   "MATCHMAKER_SILVER_LOW_WARNING": "Insufficient clan silver; the matchmaker offers no credit.",
   "MATCHMAKER_GOTO_COMMERCE": "Earn Silver",
-  "MATCHMAKER_ENROLL_BUTTON": "Take as Spouse (Gift: %{cost} Silver)"
+  "MATCHMAKER_ENROLL_BUTTON": "Take as Spouse (Gift: %{cost} Silver)",
+  "ui.hall.btn.expedition": "Expedition",
+  "ui.hall.btn.generals": "Generals",
+  "ui.hall.btn.domestic": "Domestic",
+  "ui.hall.btn.domestic_network": "Domestic / Network",
+  "ui.hall.map.title": "Realm Map",
+  "ui.hall.clan.overview": "Clan Overview",
+  "ui.hall.slot.empty": "Empty",
+  "ui.hall.status.claimable": "Claimable",
+  "ui.hall.btn.accept_task": "Leave it to you",
+  "ui.hall.btn.defer": "Later",
+  "ui.theme.name.default": "Default",
+  "ui.theme.name.spring": "Spring",
+  "ui.theme.name.summer": "Summer",
+  "ui.theme.name.autumn": "Autumn",
+  "ui.theme.name.winter": "Winter",
+  "ui.theme.name.lunar-new-year": "Lunar New Year"
 }

@@ -922,5 +922,21 @@
   "MATCHMAKER_ACTION_DECLINE": "稍后再议",
   "MATCHMAKER_SILVER_LOW_WARNING": "家族银两不足，媒婆说她不赊账",
   "MATCHMAKER_GOTO_COMMERCE": "前往筹措银两",
-  "MATCHMAKER_ENROLL_BUTTON": "纳为配偶（需礼金 %{cost} 银两）"
+  "MATCHMAKER_ENROLL_BUTTON": "纳为配偶（需礼金 %{cost} 银两）",
+  "ui.hall.btn.expedition": "出征",
+  "ui.hall.btn.generals": "武将",
+  "ui.hall.btn.domestic": "内政",
+  "ui.hall.btn.domestic_network": "内政 / 人脉",
+  "ui.hall.map.title": "天下势力图",
+  "ui.hall.clan.overview": "世家总览",
+  "ui.hall.slot.empty": "空位",
+  "ui.hall.status.claimable": "可领取",
+  "ui.hall.btn.accept_task": "交给你",
+  "ui.hall.btn.defer": "再议",
+  "ui.theme.name.default": "默认",
+  "ui.theme.name.spring": "春季",
+  "ui.theme.name.summer": "夏季",
+  "ui.theme.name.autumn": "秋季",
+  "ui.theme.name.winter": "冬季",
+  "ui.theme.name.lunar-new-year": "农历新年"
 }

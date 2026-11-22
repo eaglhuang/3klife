@@ -922,5 +922,21 @@
   "MATCHMAKER_ACTION_DECLINE": "後ほど",
   "MATCHMAKER_SILVER_LOW_WARNING": "家中の銀両が不足しています。仲人は掛け売りを認めません。",
   "MATCHMAKER_GOTO_COMMERCE": "銀両を調達する",
-  "MATCHMAKER_ENROLL_BUTTON": "配偶者に迎える（結納金 %{cost} 銀両）"
+  "MATCHMAKER_ENROLL_BUTTON": "配偶者に迎える（結納金 %{cost} 銀両）",
+  "ui.hall.btn.expedition": "出陣",
+  "ui.hall.btn.generals": "武将",
+  "ui.hall.btn.domestic": "内政",
+  "ui.hall.btn.domestic_network": "内政 / 人脈",
+  "ui.hall.map.title": "天下勢力図",
+  "ui.hall.clan.overview": "名門一覧",
+  "ui.hall.slot.empty": "空き",
+  "ui.hall.status.claimable": "受取可",
+  "ui.hall.btn.accept_task": "任せた",
+  "ui.hall.btn.defer": "後で",
+  "ui.theme.name.default": "標準",
+  "ui.theme.name.spring": "春",
+  "ui.theme.name.summer": "夏",
+  "ui.theme.name.autumn": "秋",
+  "ui.theme.name.winter": "冬",
+  "ui.theme.name.lunar-new-year": "旧正月"
 }

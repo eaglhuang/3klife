@@ -1,0 +1,151 @@
+{
+  "id": "ui-theme-registry",
+  "version": 1,
+  "$note": "UI 主題登錄表：default 提供全部語意 token，其餘主題只寫差異並疊加在 default 之上。新增節慶主題步驟見規格「UI 共用框架：主題系統與語系」。",
+  "defaultTheme": "default",
+  "layerOrder": [
+    "season",
+    "festival",
+    "event"
+  ],
+  "styleBinding": {
+    "appliesToSkins": [
+      "lobby-hall-screen.skin"
+    ],
+    "fillRoles": {
+      "secondary": "buttonSecondary",
+      "primary": "buttonAccent",
+      "stdButtonPrimary": "buttonAccent",
+      "#A8322A": "buttonAccent"
+    }
+  },
+  "themes": {
+    "default": {
+      "nameKey": "ui.theme.name.default",
+      "tokens": {
+        "text.font": "fonts/notoserif_tc/notoserif_tc",
+        "text.title.minSize": 26,
+        "panel.bg": "#140F0C",
+        "panel.alpha": 118,
+        "panel.cornerRadius": 4,
+        "panel.borderWidth": 1,
+        "panel.border": "#E8C88CA0",
+        "button.secondary.bg": "#FFF0D7",
+        "button.secondary.alpha": 20,
+        "button.secondary.cornerRadius": 2,
+        "button.secondary.borderWidth": 1,
+        "button.secondary.border": "#E8C88C70",
+        "button.primary.bg": "#A8322A",
+        "button.primary.alpha": 190,
+        "button.primary.cornerRadius": 2,
+        "button.primary.borderWidth": 1,
+        "button.primary.border": "#F0B48C99",
+        "divider.color": "#E8C88C",
+        "divider.alpha": 110,
+        "text.title": "#F6E7C3",
+        "text.section": "#C4A05C",
+        "text.section.letterSpacing": 8,
+        "text.body": "#D9C9A6",
+        "text.button": "#F1E5CC"
+      }
+    },
+    "spring": {
+      "nameKey": "ui.theme.name.spring",
+      "tokens": {
+        "panel.border": "#B8D8A0A0",
+        "text.section": "#A8C888"
+      }
+    },
+    "summer": {
+      "nameKey": "ui.theme.name.summer",
+      "tokens": {
+        "panel.border": "#8CD0E8A0",
+        "text.section": "#7CBCD8"
+      }
+    },
+    "autumn": {
+      "nameKey": "ui.theme.name.autumn",
+      "tokens": {
+        "panel.border": "#E8A860A0",
+        "text.section": "#D09048"
+      }
+    },
+    "winter": {
+      "nameKey": "ui.theme.name.winter",
+      "tokens": {
+        "panel.border": "#C8DCF0A0",
+        "text.section": "#A8C0DC",
+        "text.title": "#F4F8FF"
+      }
+    },
+    "lunar-new-year": {
+      "nameKey": "ui.theme.name.lunar-new-year",
+      "$note": "節慶範例：只覆寫差異；素材層格式 assets:{\"hall.festival.decor\":{\"path\":\"...\",\"bundle\":\"可選\"}}，待美術交付後補上。季節背景圖仍由 data/hall-map/hall-theme.json 管。",
+      "tokens": {
+        "button.primary.bg": "#C8281E",
+        "button.primary.alpha": 220,
+        "button.primary.border": "#FFD878CC",
+        "panel.border": "#FFD878B0",
+        "text.title": "#FFE9A8",
+        "text.section": "#FFC850"
+      }
+    }
+  },
+  "rules": [
+    {
+      "id": "season-spring",
+      "layer": "season",
+      "theme": "spring",
+      "when": {
+        "seasonIndex": 1
+      }
+    },
+    {
+      "id": "season-summer",
+      "layer": "season",
+      "theme": "summer",
+      "when": {
+        "seasonIndex": 2
+      }
+    },
+    {
+      "id": "season-autumn",
+      "layer": "season",
+      "theme": "autumn",
+      "when": {
+        "seasonIndex": 3
+      }
+    },
+    {
+      "id": "season-winter",
+      "layer": "season",
+      "theme": "winter",
+      "when": {
+        "seasonIndex": 4
+      }
+    },
+    {
+      "id": "festival-lunar-new-year-flag",
+      "layer": "festival",
+      "theme": "lunar-new-year",
+      "priority": 10,
+      "when": {
+        "festivalIds": [
+          "lunar-new-year"
+        ]
+      }
+    },
+    {
+      "id": "festival-lunar-new-year-date",
+      "layer": "festival",
+      "theme": "lunar-new-year",
+      "priority": 1,
+      "when": {
+        "dateRange": {
+          "from": "01-20",
+          "to": "02-20"
+        }
+      }
+    }
+  ]
+}
