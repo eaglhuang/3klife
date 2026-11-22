@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 252,
+    "done": 254,
     "in_progress": 6,
-    "open": 76,
-    "total": 345
+    "open": 86,
+    "total": 346
   },
   "tasks": [
     {
@@ -14959,6 +14959,50 @@
       "acceptance": [],
       "deliverables": [],
       "notes": "2026-11-22 | 狀態: done | 驗證: tsc 0 錯；run-cli 9180 passed；compute-gate standard 通過（僅既有 LoginScene 警告）；Cocos web 建置成功；playtest 12/12 PASS、0 pageErrors/consoleErrors；戰場中段頭頂徽章截圖未取得（playtest 只留結算截圖），圖檔未交件前應顯示單字 | 變更: 新增 ui/shared/TroopTypeBadge（attach／mount）；戰場頭頂與 7 個面板呼叫點改走共用函式；單元測試 TroopTypeBadge.test.ts | 阻塞: 剪影圖交件後需補中段截圖驗收",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2960",
+      "id": "PROG-2-9726",
+      "title": "燃燒狀態：火格＋火攻戰法",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T21:00:00+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-22 | 狀態: done | 驗證: run-cli 全過、tsc 0 錯、standard 閘門通過、建置截圖（火格、燃燒跳字、頭頂燃圖示）| 變更: 燃燒狀態（battle-burn.json、BurnStatus、BurnIgnite、戰術階段結算、火攻戰法命中、doc_spec_0359 §3 改寫）| 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",

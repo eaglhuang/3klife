@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "burn": {
+    "maxHpRatioPerTurn": 0.04,
+    "durationTurns": 2,
+    "stackCap": 3,
+    "damageScalesWithStacks": true,
+    "spreads": false
+  },
+  "fireTile": {
+    "durationTurns": 2
+  },
+  "fireSkillTag": "fire"
+}

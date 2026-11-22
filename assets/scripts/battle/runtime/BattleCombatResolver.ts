@@ -45,7 +45,8 @@ import {
 import { clearMorale } from '../shared/Morale';
 import { critDamageOf, critRateOf, rollCrit } from '../../core/systems/CombatCrit';
 import { tacticTriggerRate } from '../../core/systems/TacticTriggerRate';
-import { isFixedTileState, tileStateRuleOf } from '../shared/TileStateRules';
+import { tileStateRuleOf } from '../shared/TileStateRules';
+import { BURN_CONFIG } from '../shared/BurnStatus';
 import { FIRE_HAZARD_DAMAGE_PER_TURN } from '../skills/SkillEffectFormulas';
 import {
   canNavalCombinedAttack,
@@ -531,16 +532,7 @@ export class BattleCombatResolver {
   private resolveTallyIgnite(attacker: TroopUnit, defender: TroopUnit): void {
     const state = this.context.state;
     for (const cell of tallyIgniteCellsOf(attacker, defender)) {
-      const existing = state.getTileEffect(cell.lane, cell.depth);
-      if (existing && isFixedTileState(existing.state)) continue;
-      state.setTileEffect({
-        id: `tally-fire-${cell.lane}-${cell.depth}`,
-        lane: cell.lane,
-        depth: cell.depth,
-        state: 'hazard-fire',
-        damagePerTurn: FIRE_HAZARD_DAMAGE_PER_TURN,
-        notes: 'tally:du-du-fu',
-      });
+      state.placeFireTile(cell.lane, cell.depth, FIRE_HAZARD_DAMAGE_PER_TURN, BURN_CONFIG.fireTile.durationTurns, `tally-fire-${cell.lane}-${cell.depth}`, 'tally:du-du-fu');
     }
   }
 
