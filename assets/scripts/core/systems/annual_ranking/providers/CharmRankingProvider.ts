@@ -21,9 +21,9 @@ export class CharmRankingProvider implements IRankingBoardProvider {
     context: RankingContext,
     config: BoardConfig
   ): number {
-    const maxTotalVotes = config.maxTotalVotes || 9999;
-    const hypeDivisor = config.hypeDivisor || 50;
-    const maxSingleGeneralVotes = config.maxSingleGeneralVotes || 50;
+    const maxTotalVotes = config.maxTotalVotes;
+    const hypeDivisor = config.hypeDivisor;
+    const maxSingleGeneralVotes = config.maxSingleGeneralVotes;
     const voterMin = config.voterMin ?? 10;
     const voterMax = config.voterMax ?? 150;
     const mwBase = config.matchWeightBase ?? 0.8;
