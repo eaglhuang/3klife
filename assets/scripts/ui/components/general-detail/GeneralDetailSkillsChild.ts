@@ -23,36 +23,14 @@ import {
 } from './GeneralDetailFormatters';
 import { services } from '../../../core/managers/ServiceLoader';
 import { UCUFLogger, LogCategory } from '../../../core/utils/UCUFLogger';
-import { buildIdMap } from '../../../shared/SkillRuntimeContract';
 import { tacticLoadoutCapacity } from '../../../core/systems/TacticLoadout';
 import { buildTacticsTabView, type TacticDefinitionView } from '../../../core/systems/TacticsTabView';
 import { getTacticTpCost } from '../../../core/systems/SortieDeploy';
 import type {
-    JsonListEnvelope,
     CanonicalTacticDefinition,
     CanonicalUltimateDefinition,
 } from '../../../shared/SkillRuntimeContract';
-
-let tacticDefinitionMapPromise: Promise<Map<string, CanonicalTacticDefinition>> | null = null;
-let ultimateDefinitionMapPromise: Promise<Map<string, CanonicalUltimateDefinition>> | null = null;
-
-async function loadTacticDefinitionMap(): Promise<Map<string, CanonicalTacticDefinition>> {
-    if (!tacticDefinitionMapPromise) {
-        tacticDefinitionMapPromise = services().resource
-            .loadJson<JsonListEnvelope<CanonicalTacticDefinition>>('data/master/tactic-library', { tags: ['ui', 'general-detail'] })
-            .then((json) => buildIdMap(json.data));
-    }
-    return tacticDefinitionMapPromise;
-}
-
-async function loadUltimateDefinitionMap(): Promise<Map<string, CanonicalUltimateDefinition>> {
-    if (!ultimateDefinitionMapPromise) {
-        ultimateDefinitionMapPromise = services().resource
-            .loadJson<JsonListEnvelope<CanonicalUltimateDefinition>>('data/master/ultimate-definitions', { tags: ['ui', 'general-detail'] })
-            .then((json) => buildIdMap(json.data));
-    }
-    return ultimateDefinitionMapPromise;
-}
+import { loadTacticDefinitionMap, loadUltimateDefinitionMap } from './SkillDefinitionCache';
 
 export class GeneralDetailSkillsChild extends ChildPanelBase {
     override dataSource = 'config';
