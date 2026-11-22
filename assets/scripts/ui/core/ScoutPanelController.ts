@@ -28,6 +28,8 @@ export interface LobbyScout {
     intel: ScoutPanelIntel;
     /** 關卡有填必備或高建議對策；沒填時推薦檢核顯示「未指定」 */
     hasRecommendation: boolean;
+    /** 本場天氣一行（PROG-2-9733，例「天氣：大霧（遠程命中 -30%、火計禁用）」）；與戰場讀到的是同一個結果 */
+    weatherLine?: string;
 }
 
 /** 面板文案；確認框一句取自規格 §2，其餘為暫定 */
@@ -58,6 +60,7 @@ export function buildLobbyScout(
     enemy: ScoutEnemyLeader | null,
     tacticIds: readonly string[],
     tagTable: TacticCounterTagTable,
+    weatherLine?: string,
 ): LobbyScout {
     const required = encounter.requiredLoadout ?? [];
     const recommended = encounter.highlyRecommendedLoadout ?? [];
@@ -68,12 +71,18 @@ export function buildLobbyScout(
         { ...encounter, enemyLeader: enemy, coreMechanics: [...(mechanic ? [mechanic] : []), ...stageThemeMechanicNotes(encounter.stageThemeId)], riskTags: encounter.riskTags ?? [] },
         { state: check.state, gaps: check.gaps },
     );
-    return { intel, hasRecommendation: required.length + recommended.length > 0 };
+    return { intel, hasRecommendation: required.length + recommended.length > 0, ...(weatherLine ? { weatherLine } : {}) };
 }
 
 function enemyText(leader: ScoutEnemyLeader | null): string {
     if (!leader) return SCOUT_PANEL_TEXTS.noIntel;
     return [leader.name, leader.title, leader.powerGrade, leader.troopType].filter((part) => !!part).join('・');
+}
+
+/** 核心機制區文字：機制與本場天氣並列（沿用既有欄位，不動版面）；兩者都沒有時顯示「尚未偵查」 */
+function mechanicBodyText(mechanics: readonly string[], weatherLine: string | undefined): string {
+    const parts = [mechanics.length > 0 ? mechanics.join('、') : '', weatherLine ?? ''].filter((part) => part.length > 0);
+    return parts.length > 0 ? parts.join('　｜　') : SCOUT_PANEL_TEXTS.noIntel;
 }
 
 export class ScoutPanelController {
@@ -135,7 +144,7 @@ export class ScoutPanelController {
                 scoutEnemyHeading: t.enemyHeading,
                 scoutEnemyBody: enemyText(intel?.enemyLeader ?? null),
                 scoutMechanicHeading: t.mechanicHeading,
-                scoutMechanicBody: intel && intel.coreMechanics.length > 0 ? intel.coreMechanics.join('、') : t.noIntel,
+                scoutMechanicBody: mechanicBodyText(intel?.coreMechanics ?? [], scout?.weatherLine),
                 scoutRiskHeading: t.riskHeading,
                 scoutRiskBody: intel && intel.riskTags.length > 0 ? intel.riskTags.map((tag) => `【${tag}】`).join(' ') : t.noIntel,
                 scoutLoadoutHeading: t.loadoutHeading,

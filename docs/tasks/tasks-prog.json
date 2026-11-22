@@ -25,9 +25,9 @@
   "generated": "2026-04-06",
   "summary": {
     "done": 259,
-    "in_progress": 7,
+    "in_progress": 8,
     "open": 85,
-    "total": 351
+    "total": 352
   },
   "tasks": [
     {
@@ -15248,6 +15248,61 @@
         "tests/BattleAudioLayers.test.ts"
       ],
       "notes": "2026-11-22 | 狀態: done | 驗證: 單元測試全過、tsc 0 錯、compute-gate quick 通過、建置實跑 6 回合 cc0 版 cc0_hit_metal 5／cc0_hit_flesh 1／cc0_hoof_single 46 次，pitched 版 hit_block 5／footstep_hoof 44 次 | 變更: Kenney Impact Sounds 取 impactMetal_medium_000／impactPunch_medium_000（OGG 原檔）、BigSoundBank 馬蹄裁一拍存 WAV；clipSource 開關與 cc0Clips 替換表；LICENSES-cc0.md、_MANIFEST | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9733",
+      "title": "戰場天氣：季節機率抽取、劇情關固定、戰前顯示",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "2026-11-22T20:05:48+08:00",
+      "started_by_agent": "claude-code-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 19 點裁決：劇情關照劇本固定天氣，其餘依季節機率抽、戰前顯示；數值放 JSON。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "規格補天氣代碼表、季節機率、劇情固定、排程、戰前顯示、JSON 格式、驗收標準",
+        "battle-weather-season.json 與抽取函式含單元測試",
+        "LobbyScene 戰前決定天氣且戰場一致",
+        "戰前顯示本場天氣與效果",
+        "playtest 12/12、standard 閘門過"
+      ],
+      "deliverables": [
+        "docs/遊戲規格文件/系統規格書/戰場適性系統.md",
+        "assets/resources/data/battle-weather-season.json",
+        "assets/scripts/core/systems/BattleWeatherRoll.ts",
+        "tests/BattleWeatherRoll.test.ts"
+      ],
+      "notes": "2026-11-22 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
