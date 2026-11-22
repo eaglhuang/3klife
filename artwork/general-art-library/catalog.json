@@ -332,8 +332,8 @@
         ]
       },
       "smallAvatar": {
-        "activeVersion": "0003",
-        "status": "review-pending",
+        "activeVersion": "0004",
+        "status": "integrated",
         "history": [
           {
             "version": "0001",
@@ -359,7 +359,7 @@
           {
             "version": "0003",
             "file": "small_avatars/bu_lian_shi__步練師__small_avatar_0003.png",
-            "status": "review-pending",
+            "status": "superseded",
             "sha256": "345a9a41af0666aaae498e6cea562add724f6445236456d75b38d6e31caa65cf",
             "canvas": "1254x1254 RGBA",
             "cropBox": {
@@ -375,6 +375,53 @@
             "qc": "核定站姿原圖直接裁切；輸出尺寸與透明邊界已確認，縮圖已檢視；候選維持 review-pending。",
             "note": "依使用者要求重做小頭像，未重畫人物。",
             "createdAt": "2026-11-18"
+          },
+          {
+            "version": "0004",
+            "file": "small_avatars/bu_lian_shi__步練師__small_avatar_0004.png",
+            "status": "integrated",
+            "sha256": "65bfc1866a1a58ad517f3a55b610033b787c6ca3fa7adc68e8c6f17a129846b8",
+            "canvas": "256x256 RGBA",
+            "sourceStandingFile": "standing/bu_lian_shi__步練師__standing_0002.png",
+            "sourceSha256": "00b7d30fd3d655859fcc908246db32c6dd116381ef657a8d7ca439ad654e6283",
+            "cropBox": {
+              "x": 357.17,
+              "y": 12.57,
+              "width": 286.67,
+              "height": 286.67
+            },
+            "headBox": [
+              388,
+              31,
+              180,
+              215
+            ],
+            "faceBox": [
+              446,
+              103,
+              109,
+              143
+            ],
+            "headwearExtent": [
+              371,
+              14,
+              207,
+              242
+            ],
+            "shoulderAnchors": [
+              408,
+              286,
+              584,
+              275
+            ],
+            "method": "crop-only; uniform resize; no redraw",
+            "headHeightPercent": 75,
+            "faceHeightPercent": 49.9,
+            "faceWidthPercent": 38,
+            "faceCenterXPercent": 50,
+            "centerAxisDifferencePx": 0.5,
+            "qc": "使用正式全身立繪裁切；與七張核可基準並排檢視，頭高75%、臉高49.9%、臉寬38%、臉框中心線偏差0.5px。主要髮型、髮飾及耳飾完整，肩線可見，未帶入胸甲正面。",
+            "createdAt": "2026-11-22"
           }
         ]
       }
@@ -447,8 +494,8 @@
         ]
       },
       "smallAvatar": {
-        "activeVersion": "0002",
-        "status": "review-pending",
+        "activeVersion": "0004",
+        "status": "integrated",
         "history": [
           {
             "version": "0001",
@@ -461,10 +508,25 @@
           {
             "version": "0002",
             "file": "small_avatars/zhen_ji__甄姬__small_avatar_0002.png",
-            "status": "review-pending",
+            "status": "superseded",
             "sha256": "f756d5671272cd1b20802b595313671a6010484b30f28cb61ec897784f8787f9",
             "canvas": "1254x1254 RGBA",
             "qc": "Transparent 1254x1254 portrait; complete head and ornaments, centered three-quarter face, cool serene expression; shoulder-line crop with no visible bust or chest front."
+          },
+          {
+            "version": "0004",
+            "file": "small_avatars/zhen_ji__甄姬__small_avatar_0004.png",
+            "status": "integrated",
+            "sha256": "4f829609e2dc0109ef4b2cc11b4620ba3780f44705efe31a88696f979a38d5d6",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0003",
+            "sourceAvatarFile": "avatars/zhen_ji__甄姬__avatar_0003.png",
+            "method": "crop-only; uniform resize; face-centered; no rotation or redraw",
+            "headHeightRatio": 0.769,
+            "faceHeightRatio": 0.402,
+            "faceWidthRatio": 0.304,
+            "centerlineErrorPx": 0.5,
+            "note": "保留完整頭髮與頭飾及自然側轉；頭高76.9%、臉高40.2%、臉寬30.4%，臉框中線誤差0.5px；雙肩錨點通過並與七張核可基準同尺度複核。"
           }
         ]
       }
