@@ -34,7 +34,7 @@ export interface ResultDetailSection {
     rows: ResultDetailRow[];
 }
 
-const BATTLE_PREFIX = /^(時限到|本場戰績|敵軍久攻|雙方|戰況)/;
+const BATTLE_PREFIX = /^(軍師診斷|時限到|本場戰績|敵軍久攻|雙方|戰況)/;
 const TROOP_PREFIX = /^(出征軍勢|城市兵源|兵源|補兵|傷兵)/;
 const REWARD_PREFIX = /^(戰後獎賞|戰利品|獎勵|獲得|掉落|首勝|額外獎勵)/;
 /** 欄名最長幾個字：超過就當成敘述句，不拆欄 */

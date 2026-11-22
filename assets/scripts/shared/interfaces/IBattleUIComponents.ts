@@ -64,6 +64,8 @@ export interface IResultPopupLike {
     appendDetails?(lines: readonly string[]): void;
     /** 下一次結算窗要不要顯示「再戰一次」（年終守城不可重打，PROG-2-9426） */
     setReplayAllowed?(allowed: boolean): void;
+    /** 下一次結算窗的「下一步建議」按鈕文字；null＝不顯示（戰敗敗因診斷，PROG-2-9712） */
+    setDefeatAdvice?(label: string | null): void;
     /** 勝敗停頓期間先載主將頭像，結算窗開出來不先閃剪影（PROG-2-9427） */
     preloadAvatar?(generalId?: string): void;
     /** 戰場覺醒定格演出（PROG-2-1702） */

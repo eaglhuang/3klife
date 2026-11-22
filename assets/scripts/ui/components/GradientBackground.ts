@@ -1,5 +1,6 @@
 // @spec-source: docs/cross-reference-index.md
 import { _decorator, Color, Component, Node, Rect, Sprite, SpriteFrame, Texture2D, UITransform } from 'cc';
+import { rasterizeNativeGradient } from './GradientNativeRaster';
 
 const { ccclass, executeInEditMode, requireComponent } = _decorator;
 
@@ -44,6 +45,11 @@ interface GradientCacheEntry {
 const GRADIENT_CACHE_IDLE_BYTES = 48 * 1024 * 1024;
 const gradientCache = new Map<string, GradientCacheEntry>();
 let gradientCacheClock = 0;
+
+/** 單元測試用：清空共用貼圖快取，讓同參數能重新算圖 */
+export function clearGradientCacheForTest(): void {
+    gradientCache.clear();
+}
 
 function releaseGradientEntry(key: string | null): void {
     if (!key) return;
@@ -323,17 +329,52 @@ export class GradientBackground extends Component {
         const raster = this._buildRaster(width, height);
         const px = this._px;
         const radial = this._gradientType === 'radial';
+        // 底色改由瀏覽器原生 canvas 漸層填好（PROG-2-9802）；重複漸層、沒有 canvas 的環境（單元測試）取得 null，走下面逐像素迴圈
+        const native = this._repeating ? null : rasterizeNativeGradient({
+            type: this._gradientType,
+            width, height, textureWidth, textureHeight,
+            angle: this._angle, minProjection, maxProjection,
+            centerX: this._radialCenterX, centerY: this._radialCenterY,
+            radiusX: this._radialRadiusX, radiusY: this._radialRadiusY,
+            stops: this._stops.map(stop => ({ r: stop.color.r, g: stop.color.g, b: stop.color.b, a: stop.color.a, offset: stop.offset })),
+        }, (t, out) => this._sampleColorInto(t, out));
+        if (native) this._restoreTransparentRgb(native);
         for (let pixelY = 0; pixelY < textureHeight; pixelY++) {
             const normalizedY = (pixelY + 0.5) / textureHeight;
             const uiY = normalizedY * height - height * 0.5;
+            let spanStart = textureWidth;
+            let spanEnd = -1;
+            if (native) {
+                // 深內部整段直接複製原生結果（覆蓋率必為 1），只有圓角與邊框附近的像素才逐點算覆蓋率
+                [spanStart, spanEnd] = this._deepSpan(uiY, textureWidth, raster);
+            }
             for (let pixelX = 0; pixelX < textureWidth; pixelX++) {
+                const index = (pixelY * textureWidth + pixelX) * 4;
+                if (pixelX === spanStart && spanEnd >= spanStart) {
+                    const from = index;
+                    const to = (pixelY * textureWidth + spanEnd + 1) * 4;
+                    if (tintAlpha === 1) {
+                        data.set(native!.subarray(from, to), from);
+                    } else {
+                        for (let i = from; i < to; i += 4) {
+                            data[i] = native![i];
+                            data[i + 1] = native![i + 1];
+                            data[i + 2] = native![i + 2];
+                            data[i + 3] = Math.round(native![i + 3] * tintAlpha);
+                        }
+                    }
+                    pixelX = spanEnd;
+                    continue;
+                }
                 const normalizedX = (pixelX + 0.5) / textureWidth;
                 const uiX = normalizedX * width - width * 0.5;
-                const t = radial
-                    ? this._sampleRadialT(normalizedX, normalizedY)
-                    : this._sampleLinearT(uiX * dirX + uiY * dirY, minProjection, maxProjection);
-                this._shadePixel(t, uiX, uiY, raster, px);
-                const index = (pixelY * textureWidth + pixelX) * 4;
+                let t = 0;
+                if (!native) {
+                    t = radial
+                        ? this._sampleRadialT(normalizedX, normalizedY)
+                        : this._sampleLinearT(uiX * dirX + uiY * dirY, minProjection, maxProjection);
+                }
+                this._shadePixel(t, uiX, uiY, raster, px, native, index);
                 data[index] = px[0];
                 data[index + 1] = px[1];
                 data[index + 2] = px[2];
@@ -436,13 +477,13 @@ export class GradientBackground extends Component {
     }
 
     /** 算單一像素顏色寫進 out[r,g,b,a]（不配置物件） */
-    private _shadePixel(t: number, uiX: number, uiY: number, raster: PixelRaster, out: number[]): void {
+    private _shadePixel(t: number, uiX: number, uiY: number, raster: PixelRaster, out: number[], native: Uint8ClampedArray | null, index: number): void {
         // 深內部：離外緣與邊框內緣都至少 1 像素的像素覆蓋率必為 1，只需取漸層色（結果與完整計算逐位元相同）
         const absX = uiX < 0 ? -uiX : uiX;
         const absY = uiY < 0 ? -uiY : uiY;
         if (absX <= raster.deepX && absY <= raster.deepY) {
             if (!raster.hasBorder) {
-                this._sampleColorInto(t, out);
+                this._baseColorInto(t, out, native, index);
                 return;
             }
             // 邊框內緣中心可能偏移（四邊寬度不同）；內緣半寬為 0 時距離為無限大，不走快速通道
@@ -450,7 +491,7 @@ export class GradientBackground extends Component {
             const inY = uiY - raster.innerCenterY;
             if (raster.innerHalfWidth > 0 && raster.innerHalfHeight > 0
                 && (inX < 0 ? -inX : inX) <= raster.innerDeepX && (inY < 0 ? -inY : inY) <= raster.innerDeepY) {
-                this._sampleColorInto(t, out);
+                this._baseColorInto(t, out, native, index);
                 return;
             }
         }
@@ -461,7 +502,7 @@ export class GradientBackground extends Component {
             return;
         }
 
-        this._sampleColorInto(t, out);
+        this._baseColorInto(t, out, native, index);
         if (raster.hasBorder) {
             const innerDistance = this._roundedRectDistance(
                 uiX, uiY, raster.innerCenterX, raster.innerCenterY,
@@ -512,6 +553,48 @@ export class GradientBackground extends Component {
         out[1] = Math.round((outer.g * wo + out[1] * wi) / a);
         out[2] = Math.round((outer.b * wo + out[2] * wi) / a);
         out[3] = Math.round(a);
+    }
+
+    /**
+     * canvas 以預乘格式儲存，完全透明的像素讀回 RGB 為 0；線性過濾時這些黑色會滲進鄰近半透明像素。
+     * 補回「全透明色標」的 RGB（_normalizeStops 已讓它們借用相鄰不透明色標的 RGB）。
+     */
+    private _restoreTransparentRgb(native: Uint8ClampedArray): void {
+        const clear = this._stops.find(stop => stop.color.a === 0);
+        if (!clear) return;
+        const { r, g, b } = clear.color;
+        for (let i = 0; i < native.length; i += 4) {
+            if (native[i + 3] === 0) { native[i] = r; native[i + 1] = g; native[i + 2] = b; }
+        }
+    }
+
+    /** 這一列的深內部像素範圍（含頭尾）；沒有則回傳 [width, -1]。條件與 _shadePixel 的快速通道相同 */
+    private _deepSpan(uiY: number, textureWidth: number, raster: PixelRaster): [number, number] {
+        const none: [number, number] = [textureWidth, -1];
+        if ((uiY < 0 ? -uiY : uiY) > raster.deepY || raster.deepX < 0) return none;
+        let lo = -raster.deepX;
+        let hi = raster.deepX;
+        if (raster.hasBorder) {
+            if (!(raster.innerHalfWidth > 0 && raster.innerHalfHeight > 0)) return none;
+            const inY = uiY - raster.innerCenterY;
+            if ((inY < 0 ? -inY : inY) > raster.innerDeepY || raster.innerDeepX < 0) return none;
+            lo = Math.max(lo, raster.innerCenterX - raster.innerDeepX);
+            hi = Math.min(hi, raster.innerCenterX + raster.innerDeepX);
+        }
+        // uiX = (px + 0.5) / textureWidth * width - width / 2，反解像素範圍並內縮一格保險
+        const toPixel = (ui: number) => ((ui + raster.width * 0.5) / raster.width) * textureWidth - 0.5;
+        const start = Math.ceil(toPixel(lo)) + 1;
+        const end = Math.floor(toPixel(hi)) - 1;
+        return start <= end ? [Math.max(0, start), Math.min(textureWidth - 1, end)] : none;
+    }
+
+    /** 底色：有原生 canvas 結果就直接取，否則依漸層參數 t 內插 */
+    private _baseColorInto(t: number, out: number[], native: Uint8ClampedArray | null, index: number): void {
+        if (native) {
+            out[0] = native[index]; out[1] = native[index + 1]; out[2] = native[index + 2]; out[3] = native[index + 3];
+            return;
+        }
+        this._sampleColorInto(t, out);
     }
 
     private _sampleColorInto(t: number, out: number[]): void {

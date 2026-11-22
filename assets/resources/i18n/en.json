@@ -188,6 +188,7 @@
   "ui.result.reward": "Reward",
   "ui.result.back_to_lobby": "Back to Lobby",
   "ui.result.retry": "Retry",
+  "ui.result.advice": "Next Step",
   "ui.result.section.battle": "Battle",
   "ui.result.section.troops": "Troops",
   "ui.result.section.rewards": "Rewards",

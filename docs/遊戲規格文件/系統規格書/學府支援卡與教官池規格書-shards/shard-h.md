@@ -10,7 +10,7 @@
 | 三國名將池 | `POOL_GENERAL_MAIN` | 男性武將本人 | 銅錢、靈玉 | SSR 軟 50／硬 90；SR 以上 軟 6／硬 10 | 轉經驗（doc_spec_0467） | 既有，不變 |
 | 紅顏天香池 | `POOL_HEROINE` | 女將本人 | 靈玉 | SSR 軟 30／硬 50；SR 以上 軟 3／硬 5 | 轉經驗 | 既有，**仍只抽女將本人** |
 | 宿命池 | `POOL_DESTINY` | 開場六大名將＋九位 | 免費 | 無 | 不重複抽樣 | 既有 |
-| **教官池** | `POOL_SUPPORT` | 25 張連線卡（三類同池） | **連線券、靈玉**（**不收銀兩**） | SSR 軟 50／硬 80；SR 以上 軟 6／硬 10 | 傳承 +1；滿了轉學分（第 18 章） | 新增 |
+| **教官池** | `POOL_SUPPORT` | 25 張連線卡（三類同池） | **連線券、靈玉**（**不收銀兩**） | SSR 軟 50／硬 90（與名將池完全一致，使用者 11/22 裁決）；SR 以上 軟 6／硬 10 | 傳承 +1；滿了轉學分（第 18 章） | 新增 |
 
 - 四池全部是 `reward-pool.v1`，`disclosure.public=true`，每池一顆「機率說明」鈕（1186 §12.4）。
 - **銀兩不可購買、不可抽取、不可兌換連線券**；金銀與轉蛋貨幣互不兌換（doc_spec_1247 §2）。`supportTicket`（連線券）是帳號級代幣，與求籤令、免費銅錢符同級，由 doc_spec_0464 補列；來源與價格見下。
@@ -35,7 +35,7 @@
 
 | 階梯 | 基礎機率 `p0` | 軟保底起點 `S` | 曲線 `γ` | 硬保底 `H` | 平均幾抽出 | 逐點 |
 | --- | --- | --- | --- | --- | --- | --- |
-| SSR | 3% | 50 | 2 | 80 | 約 28.2 抽 | 第 60 抽 15.2%、70 抽 47.5%、79 抽 93.8%、80 抽 100% |
+| SSR | 3% | 50 | 2 | 90 | 約 28.5 抽 | 第 60 抽 10%、70 抽 28.4%、80 抽 58.5%、89 抽 95.3%、90 抽 100% |
 | SR 以上 | 20% | 6 | 1 | 10 | 約 4.0 抽 | 第 6 抽 36.0%、9 抽 84.0%、10 抽 100% |
 
 - 計數存 `rewardMeta.pity[gacha.support.ssr／gacha.support.sr]`；抽到更高階就同時歸零較低階的階梯（1186 §12.3）。
@@ -211,7 +211,7 @@
       ],
       "pity": [
         { "counterKey": "gacha.support.sr",  "tier": "SR",  "soft": { "startAt": 6,  "curveExp": 1 }, "hard": { "count": 10, "guaranteeTier": "SR" } },
-        { "counterKey": "gacha.support.ssr", "tier": "SSR", "soft": { "startAt": 50, "curveExp": 2 }, "hard": { "count": 80, "guaranteeTier": "SSR" } }
+        { "counterKey": "gacha.support.ssr", "tier": "SSR", "soft": { "startAt": 50, "curveExp": 2 }, "hard": { "count": 90, "guaranteeTier": "SSR" } }
       ],
       "rules": ["support.duplicate.limitBreak", "support.creditOverflow"],
       "sources": ["shop", "bundle"],

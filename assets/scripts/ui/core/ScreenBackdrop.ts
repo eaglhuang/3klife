@@ -23,12 +23,15 @@ export interface ScreenBackdropEntry {
     sprite: string;
     /** 覆蓋畫面比例達此值的容器，其不透明底色改由背景圖取代；預設 0.5。 */
     replaceFillCoverRatio?: number;
+    /** 背景圖蓋滿畫面，畫面啟用期間是否停用它底下的兄弟畫面（省 draw call、避免透出）；預設 true，設 false 可保留底層。 */
+    occludeUnderlay?: boolean;
 }
 
 export interface ResolvedScreenBackdrop {
     id: string;
     sprite: string;
     replaceFillCoverRatio: number;
+    occludeUnderlay: boolean;
 }
 
 export const SCREEN_BACKDROP_TABLE_PATH = 'data/ui-screen-backdrops';
@@ -51,6 +54,7 @@ export function resolveScreenBackdrop(
         id,
         sprite: entry.sprite,
         replaceFillCoverRatio: typeof ratio === 'number' && ratio > 0 ? ratio : DEFAULT_REPLACE_FILL_COVER_RATIO,
+        occludeUnderlay: entry.occludeUnderlay !== false,
     };
 }
 

@@ -423,7 +423,7 @@
         ]
       },
       "avatar": {
-        "activeVersion": "0002",
+        "activeVersion": "0003",
         "status": "integrated",
         "history": [
           {
@@ -435,6 +435,14 @@
             "version": "0002",
             "file": "avatars/zhen_ji__甄姬__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/zhen_ji__甄姬__avatar_0003.png",
+            "status": "integrated",
+            "sha256": "d2a6c4d200bb984fd27f76fe39ed26f9d4a953207991018b7fc56aee89dfeee8",
+            "canvas": "1254x1254 RGBA",
+            "note": "使用者核可的半身像；保留完整髮飾、自然三分之四臉部角度、雙肩與上胸，正式收錄。"
           }
         ]
       },
@@ -2702,9 +2710,17 @@
             "version": "0002",
             "file": "avatars/zhang_he__張郃__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/zhang_he__張郃__avatar_0003.png",
+            "status": "integrated",
+            "sha256": "4d931647d7ca7eb3cc95798dab45675172a7eff50eee68d6d04c9b22a5a1ab24",
+            "canvas": "1254x1254 RGBA",
+            "note": "依核定立繪設計的新頭肩來源圖；保留張郃三分之四臉、銀羽冠、深藍銀甲與金色細節，作為完整頭部小頭像裁切來源。"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "battle": {
         "status": "review-pending",
@@ -2719,6 +2735,26 @@
             "weaponClass": "spear",
             "poseLabel": "斜向突進",
             "note": "依核定站姿製作的全身戰鬥候選；長槍保持直線，眼神朝向鏡頭；待使用者檢視。"
+          }
+        ]
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/zhang_he__張郃__small_avatar_0001.png",
+            "status": "integrated",
+            "sha256": "886c1a4ec3de9544f8ff3d2d3e74e3ab99ae5ca55685a8ed5fa79cfcc5313af4",
+            "canvas": "256x256 RGBA",
+            "source": "avatars/zhang_he__張郃__avatar_0003.png",
+            "cropBox": "padded-source x=130,y=7.1,side=1180; 56px transparent right padding only",
+            "headHeightRatio": 0.75,
+            "faceHeightRatio": 0.436,
+            "faceWidthRatio": 0.303,
+            "centerlineErrorPx": 0.5,
+            "note": "完整頭部與銀羽冠；自然三分之四臉；頭高75%、臉高43.6%、臉寬30.3%、中線偏差0.5px；雙肩甲可見。僅等比例裁切並補透明邊，未旋轉或扭曲人物。"
           }
         ]
       }
@@ -9899,9 +9935,17 @@
             "version": "0002",
             "file": "avatars/cao_hua__曹華__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/cao_hua__曹華__avatar_0003.png",
+            "status": "integrated",
+            "sha256": "1d2415198382cd2daea249da346b6a6e32f918751b8d13fa49f23d57b2a603c1",
+            "canvas": "1254x1254 RGBA",
+            "note": "依角色既有色系製作的半身來源圖；自然輕三分之四臉，完整髮型與雙肩，供小頭像裁切。"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "battle": {
         "status": "review-pending",
@@ -9917,6 +9961,26 @@
             "poseLabel": "回身舉令盤指向前方",
             "sourceStanding": "standing/cao_hua__曹華__standing_0002.png",
             "note": "以曹華核定站姿為唯一角色造型參考；依宮廷身份以儀令圓盤與手勢傳達軍令，呈現回身調度動作。透明全身候選，待使用者檢視。"
+          }
+        ]
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/cao_hua__曹華__small_avatar_0001.png",
+            "status": "integrated",
+            "sha256": "5b3627561babd22e279f5e3c9ebde3b76371e931f02b18ae83119d67cbfa3094",
+            "canvas": "256x256 RGBA",
+            "source": "avatars/cao_hua__曹華__avatar_0003.png",
+            "cropBox": "padded-source x=154.67,y=6.75,side=1162.67; 10px transparent top and 70px transparent right padding only",
+            "headHeightRatio": 0.75,
+            "faceHeightRatio": 0.466,
+            "faceWidthRatio": 0.354,
+            "centerlineErrorPx": 0.5,
+            "note": "完整髮型與髮飾；自然輕三分之四角度；頭高75%、臉高46.6%、臉寬35.4%、中線偏差0.5px；雙肩可見。只等比例裁切及透明補邊，未旋轉或扭曲人物。"
           }
         ]
       }
@@ -9942,9 +10006,17 @@
             "version": "0002",
             "file": "avatars/cao_xian__曹憲__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/cao_xian__曹憲__avatar_0003.png",
+            "status": "integrated",
+            "sha256": "5360923ce4120e4ae12c317b6cd908e1792b86c43474097bb6122d4bae3d8c8b",
+            "canvas": "1254x1254 RGBA",
+            "note": "為小頭像補作的正式半身來源圖；保留曹憲既有深色髮型與金色花飾，採自然三分之四角度，供裁切使用。"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "battle": {
         "status": "review-pending",
@@ -9960,6 +10032,27 @@
             "poseLabel": "側身傳令展卷",
             "sourceStanding": "standing/cao_xian__曹憲__standing_0002.png",
             "note": "以核定站姿為身份與服裝參考；全身傳令動作，手持密封軍令卷並作引導手勢，已等比例縮放置中留出畫布安全邊距。透明 PNG，候選待審。"
+          }
+        ]
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/cao_xian__曹憲__small_avatar_0001.png",
+            "status": "integrated",
+            "sha256": "24b6c5c6405689ac2c2dbfb83054e65c0a662b3ef2d4c81ab5fbf0d634312db9",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0003",
+            "sourceAvatarFile": "avatars/cao_xian__曹憲__avatar_0003.png",
+            "method": "crop-only; uniform resize; face-centered; no rotation or redraw",
+            "headHeightRatio": 0.75,
+            "faceHeightRatio": 0.43,
+            "faceWidthRatio": 0.367,
+            "centerlineErrorPx": 0,
+            "note": "完整保留頭髮、髮飾、臉與下巴；頭高75%、臉高43%、臉寬36.7%；臉框中心線與畫布中線重合；左右肩可辨。以250px同尺度基準比較確認。"
           }
         ]
       }
