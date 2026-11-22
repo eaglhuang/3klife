@@ -17,7 +17,7 @@ import {
 import { GeneralUnit } from "../../core/models/GeneralUnit";
 import type { AiDifficulty } from "../../core/systems/AiSpCharge";
 import type { AiDifficultyEntry, AiIqLevel } from "../../core/systems/AiDifficultyTable";
-import { aiShouldUseUltimate, type AiUltimateRules } from '../../core/systems/AiUltimateDecision';
+import { aiShouldUseUltimate, raiseIqToFloor, type AiUltimateRules } from '../../core/systems/AiUltimateDecision';
 import { aiUltimateFamilyPermits } from '../../core/systems/AiUltimateFamilyRule';
 import { isUltimateSlotUnlocked } from '../../core/systems/UltimateSlotUnlock';
 import { TroopUnit } from "../../core/models/TroopUnit";
@@ -600,7 +600,7 @@ export class BattleController {
       const shouldCast = !!ultimate && !!this.delegateQuality && this.shouldFactionCastUltimate(
         Faction.Player,
         general,
-        delegateAiIqOf(this.delegateQuality),
+        this.delegateUltimateIq(this.delegateQuality),
         this.state.aiUltimateRules,
         ultimate?.ultimateId ?? '',
       );
@@ -1097,6 +1097,13 @@ export class BattleController {
       allyHpRatio: this.hpRatioOf(faction),
       isLosing,
     });
+  }
+
+  /** 委任代打奧義判斷用 IQ：委任品質對應的 IQ 不低於 ultimateRules.delegateMinIq（PROG-2-9728）；敵方不經過這裡 */
+  private delegateUltimateIq(quality: DelegateQuality): AiIqLevel {
+    const iq = delegateAiIqOf(quality);
+    const floor = this.state.aiUltimateRules?.delegateMinIq ?? iq;
+    return raiseIqToFloor(iq, floor);
   }
 
   /** 敵方施放奧義：生效後才清空精力並發事件（與玩家奧義同一套 SP 規則） */

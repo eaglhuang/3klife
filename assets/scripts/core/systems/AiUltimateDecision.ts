@@ -20,12 +20,17 @@
  */
 import type { AiIqLevel } from './AiDifficultyTable';
 
+/** IQ 由低到高的順序（與 AiIqLevel 對應；不 import AiDifficultyTable 以免循環引用） */
+const IQ_ORDER: readonly AiIqLevel[] = ['LOW', 'MEDIUM', 'HIGH', 'EXTREME', 'PERFECT'];
+
 /** 奧義精力門檻比例（ai-difficulty.json ultimateRules）；值域 0~1 */
 export interface AiUltimateRules {
     /** 中 IQ：精力需大於最大精力的這個比例 */
     mediumVitalityRatio: number;
     /** 高 IQ 落後時：精力需大於最大精力的這個比例 */
     highLosingVitalityRatio: number;
+    /** 委任代打的 IQ 下限（PROG-2-9728，總PM 11/22 裁決）：委任 IQ 低於此值時照此值判斷；敵方 AI 不套用 */
+    delegateMinIq: AiIqLevel;
 }
 
 export interface AiUltimateDecisionInput {
@@ -55,7 +60,17 @@ export function parseAiUltimateRules(raw: unknown): AiUltimateRules | null {
     if (!rules) return null;
     const inUnit = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 1;
     if (!inUnit(rules.mediumVitalityRatio) || !inUnit(rules.highLosingVitalityRatio)) return null;
-    return { mediumVitalityRatio: rules.mediumVitalityRatio, highLosingVitalityRatio: rules.highLosingVitalityRatio };
+    if (!rules.delegateMinIq || !IQ_ORDER.includes(rules.delegateMinIq)) return null;
+    return {
+        mediumVitalityRatio: rules.mediumVitalityRatio,
+        highLosingVitalityRatio: rules.highLosingVitalityRatio,
+        delegateMinIq: rules.delegateMinIq,
+    };
+}
+
+/** 委任代打 IQ 下限（PROG-2-9728）：取較高者；例如 LOW 配下限 MEDIUM 得 MEDIUM */
+export function raiseIqToFloor(iq: AiIqLevel, floor: AiIqLevel): AiIqLevel {
+    return IQ_ORDER.indexOf(iq) >= IQ_ORDER.indexOf(floor) ? iq : floor;
 }
 
 export function aiShouldUseUltimate(input: AiUltimateDecisionInput): boolean {
