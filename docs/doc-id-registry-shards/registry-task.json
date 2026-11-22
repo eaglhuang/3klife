@@ -16546,5 +16546,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9716.md",
     "title": "[PROG-2-9716] 騎兵攻擊音效改馬蹄聲（hoof_gallop，CC-BY 3.0）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2952",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9717.md",
+    "title": "[PROG-2-9717] 第一年敗戰新手保護：損兵上限 30%＋傷兵營 60/40、每季康復 30%",
+    "category": "task"
   }
 ]
