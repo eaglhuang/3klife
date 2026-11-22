@@ -949,7 +949,7 @@
         "displayStatus": "not-yet-verified"
       },
       "avatar": {
-        "activeVersion": "0005",
+        "activeVersion": "0006",
         "status": "asset-imported",
         "history": [
           {
@@ -981,7 +981,7 @@
           {
             "version": "0005",
             "file": "avatars/cai_wenji__蔡文姬__avatar_0005.png",
-            "status": "asset-imported",
+            "status": "superseded",
             "sha256": "6f7652b59cc9db31a26f5f0a92cab86db5fd23d656dbebcda6f99abaf0f62025",
             "canvas": "720x720 RGBA",
             "sourceBustFile": "busts/cai_wenji__蔡文姬__bust_0001.png",
@@ -993,6 +993,23 @@
               "height": 400
             },
             "createdAt": "2026-11-23"
+          },
+          {
+            "version": "0006",
+            "file": "avatars/cai_wenji__蔡文姬__avatar_0006.png",
+            "status": "asset-imported",
+            "sha256": "e4f94071c7a8f8dfe864bfdf217997fce08e0a898651c18ab5255b371a24e38f",
+            "canvas": "720x720 RGBA",
+            "sourceBustFile": "busts/cai_wenji__蔡文姬__bust_0001.png",
+            "method": "crop-only; uniform crop and resize; no redraw, rotation or retouch",
+            "cropBox": {
+              "x": 138,
+              "y": 0,
+              "width": 600,
+              "height": 600
+            },
+            "createdAt": "2026-11-23",
+            "note": "替代較緊的前版裁切；加寬取景以保留更多肩線，臉部中心不變。"
           }
         ]
       },
@@ -1753,18 +1770,26 @@
       "uid": "guan-yu",
       "name": "關羽",
       "standing": {
-        "status": "integrated",
+        "status": "asset-imported",
         "history": [
           {
             "version": "0002",
             "file": "standing/guan_yu__關羽__standing_0002.png",
-            "status": "integrated"
+            "status": "superseded"
+          },
+          {
+            "version": "0003",
+            "file": "standing/guan_yu__關羽__standing_0003.png",
+            "status": "asset-imported",
+            "sha256": "1020c215ee004fe4d4ec5d89989d26e2da5074eff017de2023afed9773d3851d",
+            "canvas": "1024x1536 RGBA",
+            "note": "依重建男性品質基準重製；青綠、深灰、銀金甲冑、長髯與偃月刀維持關羽識別。"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "battle": {
-        "status": "review-pending",
+        "status": "asset-imported",
         "history": [
           {
             "version": "0002",
@@ -1778,20 +1803,48 @@
             "sha256": "D121C9B54866383F51D0569C87D47E68C85E34FAB43C713AEBD562B5F33DE667",
             "canvas": "1024x1536 RGBA",
             "note": "New combat candidate based on approved standing portrait; transparent background verified. Kept for review."
+          },
+          {
+            "version": "0007",
+            "file": "battle/guan_yu__關羽__battle_0007.png",
+            "status": "asset-imported",
+            "sha256": "ddebc2aab24aa701a0ab8a83c23be4a6c2c03da8cd8a705e11f1881fe59d392b",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "guandao",
+            "sourceStanding": "standing/guan_yu__關羽__standing_0003.png",
+            "poseLabel": "低角度三分之四踏步斜斬",
+            "note": "同款服裝與偃月刀設計的戰鬥姿勢；遊戲內顯示未驗證。"
           }
         ],
-        "activeVersion": "0006"
+        "activeVersion": "0007",
+        "displayStatus": "not-yet-verified"
       },
       "avatar": {
-        "status": "integrated",
+        "status": "asset-imported",
         "history": [
           {
             "version": "0002",
             "file": "avatars/guan_yu__關羽__avatar_0002.png",
-            "status": "integrated"
+            "status": "superseded"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/guan_yu__關羽__avatar_0003.png",
+            "status": "asset-imported",
+            "sha256": "33849bbcdfe6e1d3e5f84566249620fa5ce211eeebcc741d061cb1f268d63186",
+            "canvas": "720x720 RGBA",
+            "sourceBustFile": "busts/guan_yu__關羽__bust_0001.png",
+            "method": "crop-only; uniform crop and resize; no redraw, rotation or retouch",
+            "cropBox": {
+              "x": 198,
+              "y": 0,
+              "width": 440,
+              "height": 440
+            },
+            "createdAt": "2026-11-23"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "smallAvatar": {
         "activeVersion": "0001",
@@ -1804,6 +1857,27 @@
             "sha256": "81f448b7db74160a4c2e312b21c6962f23b7edce97e4b6c992569fc917b2d8d5",
             "canvas": "1254x1254 RGBA",
             "note": "Existing remote small-avatar file discovered without a catalog record; crop provenance remains to be confirmed before approval."
+          }
+        ]
+      },
+      "bust": {
+        "activeVersion": "0001",
+        "status": "asset-imported",
+        "history": [
+          {
+            "version": "0001",
+            "file": "busts/guan_yu__關羽__bust_0001.png",
+            "status": "asset-imported",
+            "sha256": "ed45c1212ad582c69a57695e02381ea03d59ab861dfd1ace542f74fb381aac02",
+            "canvas": "900x1000 RGBA",
+            "sourceStandingFile": "standing/guan_yu__關羽__standing_0003.png",
+            "method": "crop-only; no redraw, rotation or retouch",
+            "cropBox": {
+              "x": 62,
+              "y": 0,
+              "width": 900,
+              "height": 1000
+            }
           }
         ]
       }
