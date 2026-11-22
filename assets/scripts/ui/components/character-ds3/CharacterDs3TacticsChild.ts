@@ -56,14 +56,28 @@ function glyphOf(name: string): string {
     return [...name][0] ?? '';
 }
 
-/** 把武將戰法資料轉成技分頁列；列數受片段槽位上限限制。 */
-export function buildDs3TacticRows(cfg: Partial<GeneralConfig> | null | undefined): Ds3TacticRows {
+/**
+ * 把武將戰法資料轉成技分頁列；列數受片段槽位上限限制。
+ * 已習得列以 tacticSlots（帶 tacticId，與戰場、技頁同一來源）為準，用 tacticNameOf 轉成定義名稱；
+ * 沒有 tacticSlots 的舊資料才退回 learnedTactics 名稱。
+ */
+export function buildDs3TacticRows(
+    cfg: Partial<GeneralConfig> | null | undefined,
+    tacticNameOf?: (tacticId: string) => string | undefined,
+): Ds3TacticRows {
     const clean = (list: unknown): string[] => (Array.isArray(list) ? list : [])
         .filter((v): v is string => typeof v === 'string')
         .map((v) => v.replace(LOCK_PREFIX, '').trim())
         .filter((v) => v.length > 0);
 
-    const learned = clean(cfg?.learnedTactics).slice(0, LEARNED_SLOT_COUNT)
+    const slots = Array.isArray(cfg?.tacticSlots) ? cfg.tacticSlots : [];
+    const learnedNames = slots.length > 0
+        ? slots
+            .map((slot) => (typeof slot?.tacticId === 'string' ? slot.tacticId.trim() : ''))
+            .filter((id) => id.length > 0)
+            .map((id) => tacticNameOf?.(id) ?? id)
+        : clean(cfg?.learnedTactics);
+    const learned = learnedNames.slice(0, LEARNED_SLOT_COUNT)
         .map((name) => ({ glyph: glyphOf(name), name }));
     const inspired = clean(cfg?.inspiredTactics).slice(0, INSPIRED_SLOT_COUNT)
         .map((name) => ({ glyph: glyphOf(name), name, hint: '未啟發' }));
@@ -97,6 +111,43 @@ function canvasNodeOf(start: Node): Node | null {
         current = current.parent;
     }
     return null;
+}
+
+type BattleProfile = ReturnType<typeof resolveBattleSkillProfile>;
+
+/** 戰法定義 + 戰場效果檔 → 詳情子視窗來源（數值只從資料來，不寫死）。 */
+export function tacticDetailSource(tactic: CanonicalTacticDefinition, profile: BattleProfile): SkillDetailSource {
+    return {
+        kind: 'tactic',
+        name: tactic.displayName,
+        category: tactic.category ? formatTacticCategory(tactic.category) : null,
+        tpCost: getTacticTpCost(tactic.id),
+        effectKind: profile?.effectKind ?? null,
+        coefficient: profile?.coefficient ?? null,
+        scalingStat: profile?.scalingStat ?? null,
+        targetMode: profile?.targetMode ?? tactic.targetMode ?? null,
+        timing: tactic.timing ?? null,
+        maxTargets: profile?.maxTargets ?? null,
+        pendingEffect: profile?.pendingEffect ?? null,
+    };
+}
+
+/** 奧義定義 + 戰場效果檔 → 詳情子視窗來源。 */
+export function ultimateDetailSource(ultimate: CanonicalUltimateDefinition, profile: BattleProfile): SkillDetailSource {
+    return {
+        kind: 'ultimate',
+        name: ultimate.name,
+        description: ultimate.description ?? null,
+        vitalityCostPct: ultimate.vitalityCostPct ?? null,
+        unlockReincarnation: ultimate.unlockReincarnation ?? null,
+        effectKind: profile?.effectKind ?? null,
+        coefficient: profile?.coefficient ?? null,
+        scalingStat: profile?.scalingStat ?? null,
+        targetMode: profile?.targetMode ?? ultimate.targetMode ?? null,
+        timing: ultimate.timing ?? null,
+        maxTargets: profile?.maxTargets ?? null,
+        pendingEffect: profile?.pendingEffect ?? null,
+    };
 }
 
 function indexByName<T>(items: Iterable<T>, nameOf: (item: T) => string | undefined): Map<string, T> {
@@ -136,6 +187,8 @@ export class CharacterDs3TacticsChild extends ChildPanelBase {
                 error: error instanceof Error ? error.message : String(error),
             });
         }
+        // 定義表是非同步載入：先前若已套過資料（名稱暫以 id 顯示），載完後重畫一次
+        if (this._ds3Data) this.onDataUpdate(this._ds3Data);
     }
 
     public override onDataUpdate(data: unknown): void {
@@ -143,7 +196,7 @@ export class CharacterDs3TacticsChild extends ChildPanelBase {
             return;
         }
         this._ds3Data = data as GeneralConfig;
-        const rows = buildDs3TacticRows(this._ds3Data);
+        const rows = buildDs3TacticRows(this._ds3Data, (tacticId) => this._tacticsById.get(tacticId)?.displayName);
         this._rememberSlots(rows);
         TACTIC_DEMO_NODES.forEach((name) => this._setActive(name, false));
 
@@ -236,40 +289,9 @@ export class CharacterDs3TacticsChild extends ChildPanelBase {
     /** 依名稱（或 id）從戰法庫／奧義庫取資料；效果數值走同一份 BattleSkillProfile。查無定義時只有名稱。 */
     private _sourceOf(name: string): SkillDetailSource {
         const tactic = this._tacticsById.get(name) ?? this._tacticsByName.get(name);
-        if (tactic) {
-            const profile = tactic.battleSkillId ? resolveBattleSkillProfile(tactic.battleSkillId) : null;
-            return {
-                kind: 'tactic',
-                name: tactic.displayName,
-                category: tactic.category ? formatTacticCategory(tactic.category) : null,
-                tpCost: getTacticTpCost(tactic.id),
-                effectKind: profile?.effectKind ?? null,
-                coefficient: profile?.coefficient ?? null,
-                scalingStat: profile?.scalingStat ?? null,
-                targetMode: profile?.targetMode ?? tactic.targetMode ?? null,
-                timing: tactic.timing ?? null,
-                maxTargets: profile?.maxTargets ?? null,
-                pendingEffect: profile?.pendingEffect ?? null,
-            };
-        }
+        if (tactic) return tacticDetailSource(tactic, resolveBattleSkillProfile(tactic.battleSkillId ?? ''));
         const ultimate = this._ultimatesById.get(name) ?? this._ultimatesByName.get(name);
-        if (ultimate) {
-            const profile = ultimate.battleSkillId ? resolveBattleSkillProfile(ultimate.battleSkillId) : null;
-            return {
-                kind: 'ultimate',
-                name: ultimate.name,
-                description: ultimate.description ?? null,
-                vitalityCostPct: ultimate.vitalityCostPct ?? null,
-                unlockReincarnation: ultimate.unlockReincarnation ?? null,
-                effectKind: profile?.effectKind ?? null,
-                coefficient: profile?.coefficient ?? null,
-                scalingStat: profile?.scalingStat ?? null,
-                targetMode: profile?.targetMode ?? ultimate.targetMode ?? null,
-                timing: ultimate.timing ?? null,
-                maxTargets: profile?.maxTargets ?? null,
-                pendingEffect: profile?.pendingEffect ?? null,
-            };
-        }
+        if (ultimate) return ultimateDetailSource(ultimate, resolveBattleSkillProfile(ultimate.battleSkillId ?? ''));
         return { kind: 'tactic', name };
     }
 

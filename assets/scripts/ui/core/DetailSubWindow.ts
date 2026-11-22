@@ -91,7 +91,8 @@ export class DetailSubWindow {
         // 關閉鈕：用觸控事件而非 Button，免依賴 Sprite 轉場
         const close = this._newNode('DetailClose', panel, CLOSE_SIZE, CLOSE_SIZE);
         close.setPosition(halfW - PADDING - CLOSE_SIZE / 2, halfH - PADDING - CLOSE_SIZE / 2, 0);
-        this._addLabel(close, 'DetailCloseLabel', CLOSE_SIZE, CLOSE_SIZE, 40, TITLE_COLOR, 'center', 0, 0);
+        // Cocos 新建 Label 預設文字是 "label"，這裡必須明確設成關閉符號
+        this._addLabel(close, 'DetailCloseLabel', CLOSE_SIZE, CLOSE_SIZE, 40, TITLE_COLOR, 'center', 0, 0).string = '×';
         close.on(Node.EventType.TOUCH_END, () => this.close(), this);
 
         root.active = false;
