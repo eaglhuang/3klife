@@ -178,3 +178,29 @@
 | `doc_task_2934` | docs/agent-briefs/tasks/PROG/PROG-2-9801.md | [PROG-2-9801] 網頁版卡頓優化第二輪（人物介紹頁／開場 Label 縮放） |
 | `doc_task_2937` | docs/agent-briefs/tasks/PROG/PROG-2-9611.md | 任務卡：PROG-2-9611 任務大廳金／銀兩口徑一致化與第一年商業任務銀兩產出 |
 | `doc_task_2939` | docs/agent-briefs/tasks/PROG/PROG-2-9820.md | [PROG-2-9820] 晉升導流「！」加大加亮，且泡泡必須出在掛「！」的武將身上 |
+| `doc_task_2941` | docs/agent-briefs/tasks/PROG/PROG-2-9802.md | [PROG-2-9802] 網頁版卡頓第三輪（漸層底板原生 canvas、全螢幕畫面遮蔽底層） |
+| `doc_task_2944` | docs/agent-briefs/tasks/PROG/PROG-2-9830.md | [PROG-2-9830] 教官池 SSR 保底改為軟 50／硬 90（與名將池完全一致） |
+| `doc_task_2945` | docs/agent-briefs/tasks/PROG/PROG-2-9714.md | [PROG-2-9714] 虎符卡面板繪製次數優化（文字改 BITMAP 進動態圖集合批） |
+| `doc_task_2947` | docs/agent-briefs/tasks/PROG/PROG-2-9715.md | [PROG-2-9715] 主將出陣改為 Q 版小人衝出出兵口、站格逐格前進（單挑只在規格條件觸發） |
+| `doc_task_2948` | docs/agent-briefs/tasks/PROG/PROG-2-9716.md | [PROG-2-9716] 騎兵攻擊音效改馬蹄聲（hoof_gallop，CC-BY 3.0） |
+| `doc_task_2949` | docs/agent-briefs/tasks/PROG/PROG-2-9612.md | [PROG-2-9612] 無頭試玩 lobby-commerce-silver 偶發失敗修正（報酬列受情報分層遮蔽） |
+| `doc_task_2950` | docs/agent-briefs/tasks/PROG/PROG-2-9719.md | [PROG-2-9719] 主將出陣規則依使用者 11/22 裁決：同路相鄰才單挑、小兵優先打武將、只從出兵口出陣、主將倒下加倍消失、正式規格章節 |
+| `doc_task_2951` | docs/agent-briefs/tasks/PROG/PROG-2-9718.md | [PROG-2-9718] 戰場文字套用 LabelLayoutDeferral（徽章、跳字、HUD）減少重排 |
+| `doc_task_2952` | docs/agent-briefs/tasks/PROG/PROG-2-9717.md | [PROG-2-9717] 第一年敗戰新手保護：損兵上限 30%＋傷兵營 60/40、每季康復 30% |
+| `doc_task_2953` | docs/agent-briefs/tasks/PROG/PROG-2-9720.md | [PROG-2-9720] BuffStackHeal 接線：狀態堆疊、治療、中毒結算實際走 doc_spec_0359 |
+| `doc_task_2954` | docs/agent-briefs/tasks/PROG/PROG-2-9721.md | [PROG-2-9721] 傷兵營改全年度適用 |
+| `doc_task_2955` | docs/agent-briefs/tasks/PROG/PROG-2-9723.md | [PROG-2-9723] AI 奧義精力門檻改比例與委任自動放奧義 |
+| `doc_task_2956` | docs/agent-briefs/tasks/PROG/PROG-2-9722.md | [PROG-2-9722] 守城勝率退步調查與修正 |
+| `doc_task_2957` | docs/agent-briefs/tasks/PROG/PROG-2-9724.md | [PROG-2-9724] 兵種徽章共用繪製函式 |
+| `doc_task_2958` | docs/agent-briefs/tasks/PROG/PROG-2-9725.md | [PROG-2-9725] 總PM 11/22 裁決落地：毒箭5%、TeamRecover已損25%、SP精力名詞 |
+| `doc_task_2959` | docs/agent-briefs/tasks/PROG/PROG-2-9728.md | [PROG-2-9728] 委任代打奧義門檻下限：至少中 IQ |
+| `doc_task_2960` | docs/agent-briefs/tasks/PROG/PROG-2-9726.md | [PROG-2-9726] 燃燒狀態：火格＋火攻戰法 |
+| `doc_task_2961` | docs/agent-briefs/tasks/PROG/PROG-2-9727.md | [PROG-2-9727] 名詞定義文件機械分片＋補 SP／精力名詞 |
+| `doc_task_2962` | docs/agent-briefs/tasks/PROG/PROG-2-9613.md | [PROG-2-9613] 結緣媒人導流（開場教學後首次換季紅娘叩門與春季常規求親導流） |
+| `doc_task_2963` | docs/agent-briefs/tasks/PROG/PROG-2-9729.md | [PROG-2-9729] 戰鬥音效分層：受擊輕重、分兵種腳步、變調與隨機音量 |
+| `doc_task_2964` | docs/agent-briefs/tasks/PROG/PROG-2-9730.md | [PROG-2-9730] 無頭試玩第 07 步 lobby-commerce-silver 仍偶發失敗（點擊瞬間被官職晉升彈窗蓋住） |
+| `doc_task_2965` | docs/agent-briefs/tasks/PROG/PROG-2-9601.md | [PROG-2-9601] 史境天下風雲榜計分核心與平時即時看板（W1a） |
+| `doc_task_2966` | docs/agent-briefs/tasks/PROG/PROG-2-9732.md | [PROG-2-9732] 戰鬥音效補件：金屬擊打／肉體悶擊／單拍馬蹄換成 CC0 外部素材（可切回變調版） |
+| `doc_task_2967` | docs/agent-briefs/tasks/PROG/PROG-2-9731.md | [PROG-2-9731] 戰場 UI 演出 B2：名牌戰鬥淡出、狀態圖示層數回合、奧義暫代大字與音效、毒上身回饋、治療時序 |
+| `doc_task_2971` | docs/agent-briefs/tasks/PROG/PROG-2-9733.md | [PROG-2-9733] 規格回寫：使用者 2026-11-22 八項裁決（天氣、金銀轉移、官職分批解鎖、格子 buff、兵種符號、年終典禮、重複卡彈窗、燃燒） |
+| `doc_task_2972` | docs/agent-briefs/tasks/PROG/PROG-2-9831.md | [PROG-2-9831] LLM 批次文案工具與大廳武將聊天台詞第一批（API 贈送額度） |
