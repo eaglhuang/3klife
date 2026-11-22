@@ -4,6 +4,10 @@ import { TroopType } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
 import { attackSfxFor } from './AttackSfxMapping';
 import { SfxThrottle, parseSfxThrottleConfig } from './SfxThrottle';
+import {
+  BattleAudioLayersConfig, DEFAULT_BATTLE_AUDIO_LAYERS, DieBoomStagger, FootstepCapState,
+  createFootstepCapState, footstepClipFor, footstepDelayMs, jitterFootstepVolume, parseBattleAudioLayersConfig, tryAcquireFootstep,
+} from './BattleAudioLayers';
 
 
 /**
@@ -116,12 +120,54 @@ export function playBattleAudio(cue: BattleAudioCue, volume = 1.0): void {
     return;
   }
 
+  // PROG-2-9729：倒地聲與暴擊聲不同幀疊播，後到的延後 staggerMs
+  if (cue === BATTLE_AUDIO_CUE.unitDie || cue === BATTLE_AUDIO_CUE.critHit) {
+    ensureAudioLayersConfig();
+    const wait = dieBoomStagger.delayFor(cue === BATTLE_AUDIO_CUE.unitDie ? 'die' : 'boom', nowMs());
+    if (wait > 0) { setTimeout(() => playBattleClip(clipName, volume), wait); return; }
+  }
+  playBattleClip(clipName, volume);
+}
+
+/** 直接用 clip 名稱播（受擊分層、腳步變調版本用）；閘門與靜音規則同 playBattleAudio。 */
+export function playBattleClip(clipName: string, volume = 1.0): void {
   // PROG-2-9439／9481：節流改在 AudioSystem 的統一閘門做，這裡只確保閘門已裝上，不再自己判斷（避免算兩次）
   // 音效系統未就緒或缺檔都靜音略過，不可丟例外（PROG-2-9357）
   try {
     installBattleSfxGate();
     services().audio.playSfx(clipName, volume);
   } catch { /* 靜音 */ }
+}
+
+/** 戰鬥音效分層設定（PROG-2-9729）；data/battle-audio-layers.json，讀到之前用預設。 */
+export let battleAudioLayers: BattleAudioLayersConfig = DEFAULT_BATTLE_AUDIO_LAYERS;
+const dieBoomStagger = new DieBoomStagger();
+const footstepCap: FootstepCapState = createFootstepCapState();
+let layersConfigRequested = false;
+
+export function ensureAudioLayersConfig(): void {
+  if (layersConfigRequested) return;
+  layersConfigRequested = true;
+  try {
+    services().resource.loadJson<unknown>('data/battle-audio-layers', { tags: ['battle'] })
+      .then(raw => { battleAudioLayers = parseBattleAudioLayersConfig(raw); dieBoomStagger.setStaggerMs(battleAudioLayers.dieBoom.staggerMs); })
+      .catch(() => { /* 讀不到用預設 */ });
+  } catch { /* 資源系統未就緒：用預設 */ }
+}
+
+/**
+ * 播一拍腳步（PROG-2-9729）：依兵種挑變調 clip、音量隨機、整體總量上限（所有兵種合計）。
+ * 沒有兵種對應（水軍）就退回原本的 cue。回傳 true 表示有播（或已排程）。
+ */
+export function playBattleFootstep(troopType: string, fallbackCue: BattleAudioCue, baseVolume: number, nowMsValue: number = nowMs()): boolean {
+  ensureAudioLayersConfig();
+  if (!tryAcquireFootstep(footstepCap, nowMsValue, battleAudioLayers)) return false;
+  const clip = footstepClipFor(troopType, battleAudioLayers);
+  const volume = jitterFootstepVolume(baseVolume, battleAudioLayers);
+  const delay = footstepDelayMs(battleAudioLayers);
+  const play = (): void => { if (clip) playBattleClip(clip, volume); else playBattleAudio(fallbackCue, volume); };
+  if (delay <= 1) play(); else setTimeout(play, delay);
+  return true;
 }
 
 /**
@@ -149,6 +195,7 @@ export function uninstallBattleSfxGate(): void {
     if (typeof audio?.getSfxGate === 'function' && audio.getSfxGate() === battleSfxGate) audio.setSfxGate(null);
   } catch { /* 音效系統未就緒 */ }
   battleSfxThrottle.reset();
+  dieBoomStagger.reset();
 }
 
 /** 戰鬥音效節流（PROG-2-9439）；數值在 data/battle-audio.json，讀到之前用預設值。 */

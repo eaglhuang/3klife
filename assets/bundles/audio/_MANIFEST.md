@@ -20,6 +20,8 @@
 | fireball.mp3 | `"fireball"` | 火球 | 🚧 WIP | — |
 | footstep.mp3 | `"footstep"` | 腳步聲 | 🚧 WIP | — |
 | hoof_gallop.wav | `"hoof_gallop"` | 騎兵攻擊馬蹄聲（22.05kHz 單聲道、約 0.58 秒；署名見文末「第三方音效授權」） | ✅ 使用中 | `BattleAudio.ts` `unitAttackPrimary`（PROG-2-9580） |
+| hit_light.wav / hit_heavy.wav / hit_block.wav / hit_lethal.wav | `"hit_light"` 等 | 受擊分層變調版本（PROG-2-9729）：由 hurt／shield／bite 重取樣（22.05kHz 單聲道），規則見 `data/battle-audio-layers.json` | ✅ 使用中 | `BattleAudioLayers.ts`；產生腳本 `tools_node/gen-audio-variants.js` |
+| footstep_light.wav / footstep_heavy.wav / footstep_hoof.wav | `"footstep_light"` 等 | 分兵種腳步變調版本（PROG-2-9729）：由 footstep／hoof_gallop 重取樣；馬蹄沿用 hoof_gallop 的 CC-BY 署名（見文末） | ✅ 使用中 | `BattleAudio.ts` `playBattleFootstep` |
 | heal.mp3 | `"heal"` | 治療 | 🚧 WIP | — |
 | hurt.mp3 | `"hurt"` | 受擊 | 🚧 WIP | — |
 | laser.mp3 | `"laser"` | 雷射 | 🚧 WIP | — |

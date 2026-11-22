@@ -56,7 +56,7 @@ import { attackVfxFor } from "../shared/AttackVfxMapping";
 import { attackStyleFor } from "../shared/AttackStyle";
 import { createMoveSfxThrottleState, moveBeatFor, tryAcquireMoveSfx } from "../shared/MoveFeedback";
 import { DEPLOY_LANDING_PUFFS, deployLandingDust, deployLandingThud } from "../shared/DeployLanding";
-import { playBattleAudio } from "../shared/BattleAudio";
+import { playBattleAudio, playBattleFootstep } from "../shared/BattleAudio";
 import { MoveDustEmitter } from "./MoveDustEmitter";
 import { SpineUnitOverlay } from "./SpineGeneralOverlay";
 import { GeneralPortraitStandee, STANDEE_HEIGHT_PX, needsStandeeFallback } from "./GeneralPortraitStandee";
@@ -518,7 +518,8 @@ export class UnitRenderer extends Component {
     if (!isLeader) return;
     const { footstep } = beat;
     for (let i = 0; i < footstep.beats; i++) {
-      const play = (): void => { if (this.canPlayDeferredMoveSfx() && tryAcquireMoveSfx(this.moveSfxThrottle, Date.now())) playBattleAudio(footstep.cue, footstep.volume); };
+      // PROG-2-9729：分兵種變調 clip、隨機音量與延遲、總量上限都在 playBattleFootstep 內處理
+      const play = (): void => { if (this.canPlayDeferredMoveSfx()) playBattleFootstep(unit.type, footstep.cue, footstep.volume); };
       if (i === 0) play(); else setTimeout(play, i * footstep.intervalMs);
     }
   }
