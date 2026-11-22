@@ -41,6 +41,16 @@ export function countPullResultRarities(tiers: readonly (string | null | undefin
 }
 
 /**
+ * 統計列每格（容器）是否顯示：有文字才顯示，沒用到的格整格隱藏（連同格內綠點一起收起）。
+ * cellNames 與 slots 一一對應。
+ */
+export function raritySummaryCellActives(slots: readonly string[], cellNames: readonly string[]): Record<string, boolean> {
+    const actives: Record<string, boolean> = {};
+    cellNames.forEach((name, index) => { actives[name] = (slots[index] ?? '').length > 0; });
+    return actives;
+}
+
+/**
  * 把統計條目分配到固定數量的統計列節點：前幾個各佔一格，最後一格收容剩下的（用全形空格接起來）。
  * 空格填空字串，不會留下殘字。
  */

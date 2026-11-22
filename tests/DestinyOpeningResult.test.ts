@@ -2,7 +2,7 @@ import { assert, TestSuite } from './TestRunner';
 import { buildDestinyOpeningResults } from '../assets/scripts/ui/core/DestinyOpeningResult';
 import {
     countPullResultRarities, coverCropRect, fitContain, pickTopGachaResult, pullResultRarityLabel,
-    raritySummarySlots, renderedBoxAspect,
+    raritySummaryCellActives, raritySummarySlots, renderedBoxAspect,
 } from '../assets/scripts/ui/core/GachaResultRanking';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 
@@ -65,6 +65,15 @@ export function createDestinyOpeningResultSuite(): TestSuite {
         assert.equals('SR ×2', four[1]);
         assert.equals('R ×6　N ×1', four[2]);
         assert.equals('||', raritySummarySlots([], 3).join('|'));
+    });
+    suite.test('統計列沒用到的格整格隱藏（含綠點），用到的格保留顯示', () => {
+        const cells = ['div_1', 'div_3', 'div_5'];
+        const twoUsed = raritySummaryCellActives(['SSR ×1', 'R ×7', ''], cells);
+        assert.equals('true,true,false', cells.map((c) => String(twoUsed[c])).join(','));
+        const oneUsed = raritySummaryCellActives(['R ×10', '', ''], cells);
+        assert.equals('true,false,false', cells.map((c) => String(oneUsed[c])).join(','));
+        const allUsed = raritySummaryCellActives(raritySummarySlots(['SSR ×1', 'SR ×2', 'R ×6', 'N ×1'], 3), cells);
+        assert.equals('true,true,true', cells.map((c) => String(allUsed[c])).join(','));
     });
     suite.test('頭像裁切比例：父層非等比縮放時用世界縮放補正，不壓扁', () => {
         // 本地 188×248，父層 X 縮 0.5、Y 不縮：世界框 94×248，比例 94/248

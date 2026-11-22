@@ -19,7 +19,7 @@ import type { GachaCurrencyId } from '../../core/gacha/GachaApi';
 import type { RewardGachaPort, RewardGachaPullOutcome } from '../../core/gacha/RewardGachaPull';
 import {
     countPullResultRarities, coverCropRect, fitContain, pickTopGachaResult, pullResultRarityLabel,
-    raritySummarySlots, renderedBoxAspect,
+    raritySummaryCellActives, raritySummarySlots, renderedBoxAspect,
 } from './GachaResultRanking';
 import { buildHeroSlotAliases, buildResultSlotAliases, gachaCardStars, toGachaCardTier } from './GachaResultCardTheme';
 import { formatResultBalance } from '../../core/gacha/GachaButtonRules';
@@ -46,7 +46,9 @@ function cropFrameToAspect(frame: SpriteFrame, aspect: number): SpriteFrame {
 }
 
 const GACHA_PULL_RESULT_CARDS = Array.from({ length: 10 }, (_, i) => `GachaPullResult_card_${i}`);
-const GACHA_PULL_RESULT_CARD_NODE_MAP = GACHA_PULL_RESULT_CARDS.map((card) => ({ rarityId: `${card}_tag`, nameId: `${card}_name`, starsId: `${card}_stars` }));
+/** 統計列三格容器（每格內含文字與綠點），與 raritySummarySlots 的三格一一對應 */
+const GACHA_PULL_RESULT_SUMMARY_CELLS = ['GachaPullResult_div_1', 'GachaPullResult_div_3', 'GachaPullResult_div_5'];
+const GACHA_PULL_RESULT_CARD_NODE_MAP =GACHA_PULL_RESULT_CARDS.map((card) => ({ rarityId: `${card}_tag`, nameId: `${card}_name`, starsId: `${card}_stars` }));
 
 export interface GachaFlowCoordinatorOptions {
     gachaService: LocalGachaService;
@@ -293,6 +295,8 @@ export class GachaFlowCoordinator {
         const cardActives: Record<string, boolean> = {};
         cards.forEach((name, index) => { cardActives[name] = index < results.length; });
         cardActives.GachaPullResult_repull = repull !== null;
+        // 統計列沒用到的格整格隱藏（否則綠點會留著）
+        Object.assign(cardActives, raritySummaryCellActives(raritySlots, GACHA_PULL_RESULT_SUMMARY_CELLS));
         binder.setActives(cardActives);
 
         const opening = repull === null;
