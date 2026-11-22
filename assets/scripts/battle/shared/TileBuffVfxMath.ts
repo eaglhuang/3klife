@@ -1,4 +1,4 @@
-// @spec-source → docs/agent-briefs/tasks/PROG/PROG-2-9731.md（buff 格靜態光圈＋部隊吃到 buff 腳下特效）
+// @spec-source → docs/agent-briefs/tasks/PROG/PROG-2-9733.md（buff 格靜態光圈＋部隊吃到 buff 腳下特效）
 /**
  * TileBuffVfxMath — buff 格特效的純計算（不碰 cc，單元測試可直接跑）。
  *

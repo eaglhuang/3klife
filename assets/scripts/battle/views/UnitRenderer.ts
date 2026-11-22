@@ -316,7 +316,7 @@ export class UnitRenderer extends Component {
       if (pos) this.projectWorldPoint(pos, node);
     },
   );
-  /** 部隊吃到 buff 當下腳下的 2.5 秒大特效（PROG-2-9731） */
+  /** 部隊吃到 buff 當下腳下的 2.5 秒大特效（PROG-2-9733） */
   private readonly unitBuffPickupVfx = new UnitBuffPickupVfx(
     () => this.uiRoot,
     () => this.tileBuffMarkers.groundNode(),
