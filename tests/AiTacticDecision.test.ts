@@ -30,6 +30,7 @@ function difficulty(aiIq: AiIqLevel, canUseTactics = true): AiDifficultyEntry {
     return {
         difficultyId: 'normal', statScale: 1, aiIq, difficultyBonus: 0, canUseTactics,
         canUseUltimate: false, spGainModifier: 1, duelAcceptThreshold: 0.58,
+        ultimateRules: { mediumVitalityRatio: 0.5, highLosingVitalityRatio: 0.3 },
     };
 }
 

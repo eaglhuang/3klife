@@ -1,6 +1,7 @@
 // @spec-source → 見 docs/cross-reference-index.md
 import type { AiDifficulty } from '../../core/systems/AiSpCharge';
 import type { AiIqLevel } from '../../core/systems/AiDifficultyTable';
+import type { AiUltimateRules } from '../../core/systems/AiUltimateDecision';
 import { Faction, GAME_CONFIG, Weather, BattleTactic } from "../../core/config/Constants";
 import { TerrainType, TerrainGrid } from "../../shared/CommonEnums";
 export type { TerrainGrid };
@@ -165,6 +166,8 @@ export class BattleState {
   public aiDifficultyBonus = 0;
   /** AI 智力等級（ai-difficulty.json aiIq）：敵方奧義施放決策用（AIS-07） */
   public aiIq: AiIqLevel = 'LOW';
+  /** 奧義精力門檻比例（ai-difficulty.json ultimateRules）；null 表示未設定難度表，敵方與委任代打都不放奧義（PROG-2-9723） */
+  public aiUltimateRules: AiUltimateRules | null = null;
   /** AI 是否可施放奧義（ai-difficulty.json canUseUltimate）；預設 false，未設定難度表時敵方不放奧義（AIS-07） */
   public aiCanUseUltimate = false;
   /** AI 戰法用的智力等級（PROG-2-1466）；null = 未套難度表，沿用情境打分 */

@@ -16590,6 +16590,12 @@
     "category": "task"
   },
   {
+    "id": "doc_task_2955",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9723.md",
+    "title": "[PROG-2-9723] AI 奧義精力門檻改比例與委任自動放奧義",
+    "category": "task"
+  },
+  {
     "id": "doc_task_2957",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9724.md",
     "title": "[PROG-2-9724] 兵種徽章共用繪製函式",
