@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 254,
+    "done": 255,
     "in_progress": 6,
     "open": 86,
-    "total": 346
+    "total": 347
   },
   "tasks": [
     {
@@ -15024,6 +15024,60 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9727",
+      "title": "名詞定義文件機械分片＋補 SP／精力名詞",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T16:05:00+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "名詞定義文件（doc_spec_0008，37.7KB、未分片）機械分片為 shard group；再依總PM 11/22 核可補入 SP、計謀點、精力修正三條名詞。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "compute-gate standard 通過（文件分片健康檢查）",
+        "check-doc-shard-health 通過",
+        "run-cli 全過",
+        "doc_spec_0008 引用不斷"
+      ],
+      "deliverables": [
+        "名詞定義文件-shards 分片目錄與 .shardrc.json",
+        "名詞定義文件.md thin index",
+        "名詞定義文件 補 SP／計謀點／精力定義"
+      ],
+      "notes": "2026-11-22 | 狀態: in-progress | 驗證: pending | 變更: 開卡＋上鎖；第一 commit 機械分片名詞定義文件，第二 commit 補 SP／計謀點／精力定義（總PM 11/22 核可） | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      },
+      "validation_cmd": "node tools_node/compute-gate.js --profile standard --agent-feedback"
     }
   ],
   "updated": "2026-11-22"

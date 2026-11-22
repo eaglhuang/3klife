@@ -16612,5 +16612,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9728.md",
     "title": "[PROG-2-9728] 委任代打奧義門檻下限：至少中 IQ",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2961",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9727.md",
+    "title": "[PROG-2-9727] 名詞定義文件機械分片＋補 SP／精力名詞",
+    "category": "task"
   }
 ]
