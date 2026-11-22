@@ -1,11 +1,11 @@
 {
   "version": 2,
   "_note": "棋盤 buff 格靜態淡光圈（tile）與部隊吃到 buff 腳下特效（pickup）。顏色與火星／光點參數共用 attack／hp／debuff。",
-  "tile": { "rx": 52, "ry": 19, "alpha": 0.55 },
+  "tile": { "rx": 54, "ry": 20, "alpha": 1.0 },
   "icon": { "radius": 16, "y": 38 },
   "stackTiers": [
-    { "minFactor": 0, "rings": 1, "particles": 5, "ticks": 8,  "glow": 0.6 },
-    { "minFactor": 3, "rings": 2, "particles": 8, "ticks": 12, "glow": 0.8 },
+    { "minFactor": 0, "rings": 1, "particles": 5, "ticks": 8,  "glow": 0.62 },
+    { "minFactor": 3, "rings": 2, "particles": 8, "ticks": 12, "glow": 0.82 },
     { "minFactor": 5, "rings": 3, "particles": 11, "ticks": 18, "glow": 1.0 }
   ],
   "pickup": {

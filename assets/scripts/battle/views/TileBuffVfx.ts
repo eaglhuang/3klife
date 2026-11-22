@@ -127,25 +127,25 @@ export function drawTileStatic(
   let prims = 0;
   g.clear();
   // 地面底板：很淡的暗色，讓環在任何地形上讀得出來
-  g.fillColor = col(pal.base, 95 * k);
+  g.fillColor = col(pal.base, 150 * k);
   g.ellipse(0, 0, rx, ry); g.fill(); prims++;
-  g.fillColor = col(pal.inner, 40 * k);
+  g.fillColor = col(pal.inner, 80 * k);
   g.ellipse(0, 0, rx * 0.62, ry * 0.62); g.fill(); prims++;
   // 外圈
   g.lineWidth = 2.4;
-  g.strokeColor = col(kind === 'attack' && !isDebuff ? cfg.metal.gold : pal.rim, 230 * k);
+  g.strokeColor = col(kind === 'attack' && !isDebuff ? cfg.metal.gold : pal.rim, 255 * k);
   g.ellipse(0, 0, rx, ry); g.stroke(); prims++;
   // 層數圈：每多一級多一圈內縮細環（最多 3 圈）
   for (let r = 0; r < tier.rings; r++) {
     const s = 0.78 - r * 0.2;
     g.lineWidth = r === 0 ? 1.8 : 1.4;
-    g.strokeColor = col(pal.inner, 210 * k);
+    g.strokeColor = col(pal.inner, 255 * k);
     g.ellipse(0, 0, rx * s, ry * s); g.stroke(); prims++;
   }
   if (kind === 'attack') {
     // 刻度：外圈與第一圈之間的短刻度，層數越高越密
     g.lineWidth = 1.6;
-    g.strokeColor = col(pal.rim, 200 * k);
+    g.strokeColor = col(pal.rim, 255 * k);
     for (let i = 0; i < tier.ticks; i++) {
       const a = (i / tier.ticks) * Math.PI * 2;
       ellipsePoint(rx, ry, a, 0.82, pt); g.moveTo(pt.x, pt.y);
@@ -165,7 +165,7 @@ export function drawTileStatic(
   } else {
     // 外緣小菱形（玉符）：數量隨層數
     const gems = tier.ticks / 2;
-    g.fillColor = col(pal.rim, 215 * k);
+    g.fillColor = col(pal.rim, 255 * k);
     for (let i = 0; i < gems; i++) {
       ellipsePoint(rx, ry, (i / gems) * Math.PI * 2, 0.96, pt);
       diamond(g, pt.x, pt.y, 2.6, 3.4); prims++;
