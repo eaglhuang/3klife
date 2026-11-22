@@ -343,7 +343,8 @@
       "timing": "active-cast",
       "manualTargeting": false,
       "autoAimMode": "all-allies",
-      "family": "team-heal"
+      "family": "team-heal",
+      "teamHealMissingRatio": 0.25
     },
     {
       "id": "ult-liu-bei-4",

@@ -133,6 +133,8 @@ export interface CanonicalUltimateDefinition {
     ultimateFamily?: UltimateEffectFamily | null;
     /** 資料檔實際使用的鍵（與 ultimateFamily 同值）；演出設定解析用（PROG-2-1320） */
     family?: UltimateEffectFamily | null;
+    /** 團隊回復的已損 HP 比例（PM 11/22 統一：固定量 + 已損 HP × 比例，截到最大 HP）；未填視為 0 */
+    teamHealMissingRatio?: number;
     /** 明寫的演出設定檔 id；資料目前沒有，缺省退回家族預設（PROG-2-1320） */
     cinematicProfile?: string | null;
     /** USPECIAL 特殊規則；缺省代表此奧義不走特殊規則（PROG-2-1978） */

@@ -4,11 +4,11 @@
  * 用 BattleController 真實的「玩家階段 → 敵方階段 → 收尾」跑回合，並監聽 GeneralSkillUsed，
  * 確認奧義來源（SkillSourceType.Ultimate）的施放次數：
  * - EASY（canUseUltimate=false）：條件成立也不施放。
- * - NORMAL（MEDIUM）：精力滿、玩家存活 4 支 > 3 時施放一次。
+ * - NORMAL（MEDIUM）：SP 滿、玩家存活 4 支 > 3 時施放一次。
  * - NORMAL：玩家存活 3 支（邊界不成立）不施放。
  * - NORMAL：奧義槽未解鎖時不施放。
  *
- * 注意：敵方精力滿時，既有的戰法選技會照常觸發並把精力歸零，所以精力數值不能當成「有沒有放奧義」的依據。
+ * 注意：敵方 SP 滿時，既有的戰法選技會照常觸發並把 SP 歸零，所以 SP 數值不能當成「有沒有放奧義」的依據。
  *
  * Unity 對照：像 PlayMode 跑完一整個回合，數 AI 的 Ability 實際 Cast 了幾次，而不是只測條件函式。
  */
@@ -53,7 +53,7 @@ function playerTroop(lane: number): TroopUnit {
     return unit;
 }
 
-/** 建立戰場：敵方帶奧義、精力滿；玩家兵取 PLAYER_TROOP_LANES 前 playerTroopCount 格 */
+/** 建立戰場：敵方帶奧義、SP 滿；玩家兵取 PLAYER_TROOP_LANES 前 playerTroopCount 格 */
 function enemyTroop(lane: number): TroopUnit {
     const unit = new TroopUnit(`e-troop-${lane}`, TroopType.Infantry, Faction.Enemy, {
         hp: 100000, attack: 1, defense: 1, moveRange: 0, attackRange: 0,
@@ -99,7 +99,7 @@ export function createAiEnemyUltimateFlowSuite(): TestSuite {
         assert.equals(0, runTurnCountingEnemyUltimates(ctrl));
     });
 
-    suite.test('NORMAL（MEDIUM）：精力滿、玩家存活 4 支 > 3，敵方階段施放一次奧義', () => {
+    suite.test('NORMAL（MEDIUM）：SP 滿、玩家存活 4 支 > 3，敵方階段施放一次奧義', () => {
         const { ctrl } = battle(tableEntry('normal'), 4);
         assert.isTrue(ctrl.chooseEnemyUltimate() !== null);
         assert.equals(1, runTurnCountingEnemyUltimates(ctrl));

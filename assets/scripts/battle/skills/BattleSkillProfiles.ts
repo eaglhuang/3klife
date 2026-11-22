@@ -48,7 +48,7 @@ export interface BattleSkillProfile {
   firstTurnDamageMultiplier?: number;
   /** 擊殺目標後重置施放者行動（PROG-2-0773 威震華夏） */
   resetSelfOnKill?: boolean;
-  /** 毒箭：每回合扣目標最大 HP 的比例（規格 10%） */
+  /** 毒箭：每回合扣目標最大 HP 的比例（規格 5%，PM 11/22 統一） */
   dotMaxHpRatio?: number;
   /** 緩速：移動範圍減少的格數（規格 1） */
   slowAmount?: number;
@@ -243,7 +243,7 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     pushSteps: 1,
     battleLogKey: 'skill.tally_wushuang.push',
   },
-  // 毒箭（PROG-2-0766）：目標中毒 2 回合，每回合扣最大 HP 10%
+  // 毒箭（PROG-2-0766）：目標中毒 2 回合，每回合扣最大 HP 5%（PM 11/22 統一）
   'tally-poison-arrow': {
     battleSkillId: 'tally-poison-arrow',
     targetMode: BattleSkillTargetMode.EnemySingle,

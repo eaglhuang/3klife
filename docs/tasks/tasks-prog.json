@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 251,
+    "done": 252,
     "in_progress": 6,
     "open": 76,
-    "total": 344
+    "total": 345
   },
   "tasks": [
     {
@@ -11068,9 +11068,9 @@
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-20",
-      "created_by_agent": "codex-gpt-5.4-mini",
-      "started_at": "",
-      "started_by_agent": "",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T12:00:00+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
       "chain_id": "",
       "chain_step": "",
       "sensor_triggered_by": "",
@@ -14892,6 +14892,50 @@
         "metrics_summary": []
       },
       "completed_at": "2026-11-22T06:30:00+08:00"
+    },
+    {
+      "doc_id": "doc_task_2958",
+      "id": "PROG-2-9725",
+      "title": "總PM 11/22 裁決落地：毒箭5%、TeamRecover已損25%、SP精力名詞",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "codex-gpt-5.4-mini",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-22 | 狀態: done | 驗證: tsc 0錯、run-cli 全過、standard 閘門通過 | 變更: 毒箭5%(g.md, BattleSkillProfiles註解)；TeamRecover已損25%(teamHealMissingRatio, 四層注入, 4測試)；名詞勘誤移到 PROG-2-9727（先分片再補詞）| 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     },
     {
       "doc_id": "doc_task_2957",
