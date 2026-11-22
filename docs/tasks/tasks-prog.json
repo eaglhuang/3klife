@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 261,
+    "done": 262,
     "in_progress": 8,
     "open": 85,
-    "total": 354
+    "total": 355
   },
   "tasks": [
     {
@@ -15357,6 +15357,65 @@
         "tests/BattleWeatherRoll.test.ts"
       ],
       "notes": "2026-11-22 | 狀態: done | 驗證: 單元測試 9239 通過、tsc 0 錯、standard 閘門過、playtest 12/12、戰前截圖與戰場 BattleState.weather 一致（FOG） | 變更: 季節抽天氣＋劇情固定＋戰前偵查面板顯示天氣；RAIN→RAINY；戰場適性系統新增 shard-d（K–Q）；原卡號 9733 與 #2524 撞號改 9735 | 阻塞: 無；待辦：赤壁關、雷暴機械損毀與士氣效果、天氣適性數值表",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9736",
+      "title": "移除舊 buff 獲得 3D 特效（攻擊／回血）＋吃到 buff 特效依倍率分級",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者要求砍掉舊的攻擊加成 3D 特效（大光劍）以省記憶體；回血獲得池同處重疊一併移除；TileBuffConsumed 帶 factor，吃到特效依 ×3／×5 分級（總PM 同意）。減益池與技能仍用的貼圖保留。",
+      "related": [
+        "PROG-2-9734"
+      ],
+      "depends": [],
+      "acceptance": [
+        "atkGainPool/hpGainPool 移除",
+        "吃到特效依倍率分級",
+        "tsc 0",
+        "單元測試全過"
+      ],
+      "deliverables": [
+        "UnitRenderer.ts",
+        "UnitBuffPickupVfx.ts",
+        "TileBuffVfx.ts",
+        "BattleTileBuffLifecycleManager.ts",
+        "BattleUIBridge.ts",
+        "buff-particle-profiles.json",
+        "tile-buff-vfx.json"
+      ],
+      "notes": "2026-11-22 | 狀態: done | 驗證: tsc 0、單元 9236 通過 | 變更: 程式由 agent-run Haiku 產出（0.05 美元），戰場專家驗收 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",

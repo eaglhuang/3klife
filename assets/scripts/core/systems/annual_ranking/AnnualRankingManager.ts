@@ -21,6 +21,12 @@ import { GovernanceRankingProvider } from './providers/GovernanceRankingProvider
 import { CharmRankingProvider } from './providers/CharmRankingProvider';
 import { RookieRankingProvider } from './providers/RookieRankingProvider';
 
+/** 風雲榜存檔形狀（PlayerSaveService.annualRanking 用） */
+export interface AnnualRankingSaveData {
+  ledger: LedgerSerializedData;
+  previousYearRanks: Record<string, Record<string, number>>;
+}
+
 export class AnnualRankingManager {
   private static _instance: AnnualRankingManager | null = null;
   private _config: AnnualRankingConfig | null = null;
@@ -35,6 +41,9 @@ export class AnnualRankingManager {
       this._config = config;
     }
     this.registerDefaultProviders();
+    if (!AnnualRankingManager._instance) {
+      AnnualRankingManager._instance = this;
+    }
   }
 
   public static getInstance(config?: AnnualRankingConfig): AnnualRankingManager {
@@ -185,10 +194,7 @@ export class AnnualRankingManager {
   /**
    * 存檔序列化
    */
-  public serialize(): {
-    ledger: LedgerSerializedData;
-    previousYearRanks: Record<string, Record<string, number>>;
-  } {
+  public serialize(): AnnualRankingSaveData {
     return {
       ledger: this._ledger.serialize(),
       previousYearRanks: this._previousYearRanks
@@ -198,10 +204,16 @@ export class AnnualRankingManager {
   /**
    * 存檔反序列化
    */
-  public deserialize(data: {
-    ledger: LedgerSerializedData;
-    previousYearRanks?: Record<string, Record<string, number>>;
-  }): void {
+  /**
+   * 讀檔／開新局時換成該存檔的風雲榜狀態；沒有資料時清空（不影響已載入的榜單設定）
+   */
+  public restoreSaveData(data?: AnnualRankingSaveData | null): void {
+    this._ledger = new AnnualGeneralLedger(1);
+    this._previousYearRanks = {};
+    if (data) this.deserialize(data);
+  }
+
+  public deserialize(data: Partial<AnnualRankingSaveData>): void {
     if (!data) return;
     if (data.ledger) {
       this._ledger.deserialize(data.ledger);

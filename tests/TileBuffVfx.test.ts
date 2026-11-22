@@ -19,6 +19,16 @@ export function createTileBuffVfxSuite(): TestSuite {
         assert.isTrue(tileBuffTierIndex(cfg.stackTiers, NaN) === 0);
     });
 
+    suite.test('腳下特效依倍率分級：×2、×3、×5 各選不同層級（不再固定用同一級）', () => {
+        const idx = (f: number) => tileBuffTierIndex(cfg.stackTiers, f);
+        assert.isTrue(idx(2) === 0, '×2 → 最低級');
+        assert.isTrue(idx(3) === 1, '×3 → 中級');
+        assert.isTrue(idx(5) === 2, '×5 → 最高級');
+        assert.isTrue(cfg.pickup.tierIndex === undefined, 'pickup 不再有固定 tierIndex');
+        const rings = [2, 3, 5].map(f => cfg.stackTiers[idx(f)].rings);
+        assert.isTrue(rings[0] < rings[1] && rings[1] < rings[2], `${rings}`);
+    });
+
     suite.test('倍數文字解析：×3、÷5、×2.3，壞字串回 1', () => {
         assert.isTrue(tileBuffFactorFromText('×3') === 3);
         assert.isTrue(tileBuffFactorFromText('÷5') === 5);

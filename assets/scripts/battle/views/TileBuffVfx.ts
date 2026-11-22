@@ -30,7 +30,7 @@ export interface TileBuffVfxConfig {
   tile: { rx: number; ry: number; alpha: number };
   icon: { radius: number; y: number };
   stackTiers: TileBuffVfxTier[];
-  pickup: { durationSec: number; fadeInSec: number; fadeOutSec: number; poolMax: number; tierIndex: number; rx: number; ry: number; tickSpeed: number; baseAlpha: number };
+  pickup: { durationSec: number; fadeInSec: number; fadeOutSec: number; poolMax: number; rx: number; ry: number; tickSpeed: number; baseAlpha: number };
   attack: Palette & { sparkLifeSec: number; sparkRisePx: number; sparkLenPx: number; sparkWidthPx: number; bladeCount: number };
   hp: Palette & { ringPeriodSec: number; breathPeriodSec: number; moteLifeSec: number; moteRisePx: number; moteSwayPx: number; moteSizePx: number };
   debuff: Palette;
@@ -200,7 +200,7 @@ export function drawTileStatic(
  * 座標原點為部隊腳下。t 為開始後經過的秒數；超過 pickup.durationSec 時兩個 Graphics 都清空。
  */
 export function drawPickupFrame(
-  g: Graphics, sparks: Graphics, cfg: TileBuffVfxConfig, kind: TileBuffVfxKind, isDebuff: boolean, t: number,
+  g: Graphics, sparks: Graphics, cfg: TileBuffVfxConfig, kind: TileBuffVfxKind, isDebuff: boolean, tierIndex: number, t: number,
 ): void {
   g.clear();
   sparks.clear();
@@ -208,7 +208,8 @@ export function drawPickupFrame(
   const env = pickupEnvelope(t, P.durationSec, P.fadeInSec, P.fadeOutSec);
   if (env <= 0) return;
   const pal = paletteOf(cfg, kind, isDebuff);
-  const tier = cfg.stackTiers[Math.min(P.tierIndex, cfg.stackTiers.length - 1)];
+  // 層級由吃到時的倍率決定（×2 最低級、×3 中級、×5 最高級），與格子平常的光圈同一套分級
+  const tier = cfg.stackTiers[Math.min(Math.max(0, tierIndex), cfg.stackTiers.length - 1)];
   const { rx, ry } = P;
   const glow = tier.glow * env;
   const dir = isDebuff ? -1 : 1;

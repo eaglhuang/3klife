@@ -336,6 +336,8 @@ import { DynamicRelationBook, battleComradePairs, type DynamicRelationResult } f
 import { claimAllSeasonPass, createSeasonPassState, isDefaultSeasonPassState, mockSeasonPassLevelUp, normalizeSeasonPassState, type SeasonPassReward, type SeasonPassState } from '../systems/SeasonPass';
 import { normalizePendingSceneGambit, pendingSceneGambitOfTask, resolveSceneGambit, type PendingSceneGambit, type SceneGambitOutcome } from '../systems/HallSceneGambit';
 import { quickResolveWritClaimsFor } from '../systems/QuickResolveWritSources';
+import { AnnualRankingHook } from '../systems/annual_ranking/AnnualRankingHook';
+import { AnnualRankingManager } from '../systems/annual_ranking/AnnualRankingManager';
 import { checkQuickResolve, emptyQuickResolveState, isDefaultQuickResolveState, normalizeQuickResolveSave, quickResolveConfig, quickResolveSaveOf, rollQuickResolveDaily, spendQuickResolve, type QuickResolveCheck, type QuickResolveStage, type QuickResolveState } from '../systems/QuickResolveGate';
 import { ITEM_EXTREME_CHALLENGE_ORDER, createExtremeTaskState, extremeFreeAttemptsLeft, extremeStageOfWeek, extremeWeekIndexOf, isExtremeStage, normalizeExtremeTaskState, startExtremeTask, type ExtremeTaskState } from '../systems/ExtremeTaskBoard';
 import { rollExtremeTaskDrop, type ExtremeTaskDrop } from '../systems/ExtremeTaskDrop';
@@ -2964,6 +2966,7 @@ export class GameSession implements AcademyRecordPort {
         this._gachaRevision += 1;
         this._legacyCount = 0;
         this._legendaryMentoringUsedIds = [];
+        AnnualRankingManager.getInstance().restoreSaveData(null);
         this._itemMeta = emptyItemMeta();
         this._rewardMeta = emptyRewardMeta();
         this._questState = emptyQuestState();
@@ -6060,6 +6063,22 @@ export class GameSession implements AcademyRecordPort {
         });
     }
 
+    /** 風雲榜治理記帳（PROG-2-9601）：上季內政入帳（lastGrant）歸給當時指派該任務的武將 */
+    private _recordAnnualGovernance(previousSeason: number, quarter: number): void {
+        const log = this._domesticLog;
+        const grant = log.lastSeason === previousSeason ? log.lastGrant : undefined;
+        if (!grant || !log.lastTask) return;
+        for (const assignment of this._governance) {
+            if (assignment.task !== log.lastTask) continue;
+            AnnualRankingHook.recordGovernance({
+                generalId: assignment.generalUid,
+                quarter,
+                taskType: assignment.task,
+                output: grant.amount,
+            });
+        }
+    }
+
     /** 季度治理報告（領地治理 §G）：上一季內政入帳加上季結算增加的糧草與城市兵源 */
     private _buildGovernanceReport(before: MilitaryReserve, previousSeason: number): string | null {
         const gains: Partial<Record<'food' | 'gold' | 'fame' | 'cityTroops', number>> = {
@@ -6151,6 +6170,7 @@ export class GameSession implements AcademyRecordPort {
         this._prison = { ...this._prison, intel: this._prison.intel + prisonYield.intel };
         this._military = { ...this._military, food: Math.min(this._military.foodCap, this._military.food + prisonYield.resource) };
         const governanceReport = this._buildGovernanceReport(reserveBeforeSettle, advance.previous.totalSeasonsElapsed);
+        this._recordAnnualGovernance(advance.previous.totalSeasonsElapsed, advance.previous.currentSeason);
         // 大廳任務：到期結算 → 過期 → 補新（PROG-2-9130，§9）；頂欄資源在這裡就已更新，彈窗關閉前即可見
         const hallMissionReport = await this._runMissionSeason();
         this._settleCityEconomySeason(advance.previous.totalSeasonsElapsed, this._tallyFoodDiscountArmed);
@@ -6866,6 +6886,15 @@ export class GameSession implements AcademyRecordPort {
             this._lastBattleSnapshots = settlement.entries.map((entry) =>
                 buildBattleSnapshot(battleId, entry.generalId, entry.performance ?? EMPTY_PERFORMANCE, entry.outcome === 'win', battleDate));
         }
+        // 風雲榜戰鬥記帳（PROG-2-9601）：手動、極速決戰（offBoard）、委託代打都經過這裡，口徑一致
+        for (const entry of settlement.entries) {
+            AnnualRankingHook.recordBattle({
+                generalId: entry.generalId,
+                kills: entry.performance?.kills ?? 0,
+                enemyPower: 0,
+                battleMode: options.offBoard ? 'speed' : 'manual',
+            });
+        }
         await this._claimMilestoneNotes(settlement.entries);
         await this._claimQuickResolveWrits(result, options);
         if (settlement.entries.length === 0) {
@@ -7353,6 +7382,7 @@ export class GameSession implements AcademyRecordPort {
         return {
             ...this._createBaseSnapshot(now),
             ...(this._legendaryMentoringUsedIds.length > 0 ? { legendaryMentoringUsedIds: [...this._legendaryMentoringUsedIds] } : {}),
+            annualRanking: AnnualRankingManager.getInstance().serialize(),
             ...(isEmptyRewardMeta(this._rewardMeta) ? {} : { rewardMeta: normalizeRewardMeta(this._rewardMeta) }),
             ...(isEmptyQuestState(this._questState) ? {} : { questState: normalizeQuestState(this._questState) }),
             ...(isEmptyFamilyState(this._family.snapshot()) ? {} : { familyState: this._family.snapshot() }),
@@ -7680,6 +7710,7 @@ export class GameSession implements AcademyRecordPort {
         this._discoveryExp = progress.exp;
         this._setInventory(normalizeInventory(snapshot.inventory));
         this._legendaryMentoringUsedIds = (snapshot.legendaryMentoringUsedIds ?? []).filter((id) => typeof id === 'string');
+        AnnualRankingManager.getInstance().restoreSaveData(snapshot.annualRanking);
         this._itemMeta = normalizeItemMeta(snapshot.itemMeta);
         this._rewardMeta = normalizeRewardMeta(snapshot.rewardMeta);
         this._storyMeta = normalizeStoryMeta(snapshot.storyMeta);
