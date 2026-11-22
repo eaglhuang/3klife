@@ -940,5 +940,12 @@
   "ui.theme.name.summer": "夏季",
   "ui.theme.name.autumn": "秋季",
   "ui.theme.name.winter": "冬季",
-  "ui.theme.name.lunar-new-year": "農曆新年"
+  "ui.theme.name.lunar-new-year": "農曆新年",
+  "ui.annual_ranking.lobby.preview_title": "史境風雲榜・即時風向",
+  "ui.annual_ranking.lobby.top3_rank": "第 {0} 位・{1}",
+  "ui.annual_ranking.lobby.my_rank": "我的席位：第 {0} 名（{1} 分）",
+  "ui.annual_ranking.lobby.btn_ceremony": "年終頒獎典禮",
+  "ui.annual_ranking.lobby.ceremony_ready": "【歲末盛典】諸侯齊聚，大宴揭幕！",
+  "ui.annual_ranking.lobby.btn_history": "歷年風雲史冊",
+  "ui.hall.btn.annual_ranking": "天下風雲榜"
 }

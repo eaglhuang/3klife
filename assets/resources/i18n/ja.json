@@ -938,5 +938,12 @@
   "ui.theme.name.summer": "夏",
   "ui.theme.name.autumn": "秋",
   "ui.theme.name.winter": "冬",
-  "ui.theme.name.lunar-new-year": "旧正月"
+  "ui.theme.name.lunar-new-year": "旧正月",
+  "ui.annual_ranking.lobby.preview_title": "天下風雲録・最新順位",
+  "ui.annual_ranking.lobby.top3_rank": "第 {0} 位：{1}",
+  "ui.annual_ranking.lobby.my_rank": "我が順位：第 {0} 位（{1} 点）",
+  "ui.annual_ranking.lobby.btn_ceremony": "年間授賞式典",
+  "ui.annual_ranking.lobby.ceremony_ready": "【年末式典】群雄集結、大宴開幕！",
+  "ui.annual_ranking.lobby.btn_history": "歴代風雲史冊",
+  "ui.hall.btn.annual_ranking": "天下風雲録"
 }

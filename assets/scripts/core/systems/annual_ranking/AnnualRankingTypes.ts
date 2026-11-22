@@ -27,6 +27,19 @@ export interface LobbyTextTable {
   trendNew: string;
 }
 
+export interface ClanPrestigeConfig {
+  enabled: boolean;
+  baseContribution: number;
+  maxPerGeneral: number;
+  multipliers: {
+    rank1: number;
+    rankTop3: number;
+    rankTop10: number;
+    rankTop100: number;
+    [key: string]: number;
+  };
+}
+
 export interface AnnualRankingConfig {
   version: string;
   comment: string;
@@ -35,6 +48,7 @@ export interface AnnualRankingConfig {
   historyMaxRanksTracked: number;
   lobbyTexts: LobbyTextTable;
   boards: BoardConfig[];
+  clanPrestige?: ClanPrestigeConfig;
 }
 
 export interface MetricHighlight {

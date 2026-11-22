@@ -938,5 +938,12 @@
   "ui.theme.name.summer": "Summer",
   "ui.theme.name.autumn": "Autumn",
   "ui.theme.name.winter": "Winter",
-  "ui.theme.name.lunar-new-year": "Lunar New Year"
+  "ui.theme.name.lunar-new-year": "Lunar New Year",
+  "ui.annual_ranking.lobby.preview_title": "World Ranking: Live Standings",
+  "ui.annual_ranking.lobby.top3_rank": "No. {0}: {1}",
+  "ui.annual_ranking.lobby.my_rank": "My Rank: No. {0} ({1} pts)",
+  "ui.annual_ranking.lobby.btn_ceremony": "Annual Gala & Awards",
+  "ui.annual_ranking.lobby.ceremony_ready": "Grand Gala Begins!",
+  "ui.annual_ranking.lobby.btn_history": "Hall of Fame Chronicles",
+  "ui.hall.btn.annual_ranking": "Rankings"
 }
