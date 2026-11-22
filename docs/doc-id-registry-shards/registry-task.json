@@ -16516,5 +16516,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9802.md",
     "title": "[PROG-2-9802] 網頁版卡頓第三輪（漸層底板原生 canvas、全螢幕畫面遮蔽底層）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2944",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9830.md",
+    "title": "[PROG-2-9830] 教官池 SSR 保底改為軟 50／硬 90（與名將池完全一致）",
+    "category": "task"
   }
 ]
