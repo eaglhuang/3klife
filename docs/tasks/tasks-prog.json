@@ -15494,6 +15494,42 @@
     },
     {
       "doc_id": "",
+      "id": "PROG-2-9843",
+      "title": "戰法詳情子視窗補招式描述文字",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-23",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-23T07:14:38+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "戰法詳情子視窗（技分頁）補招式描述文字：tactic-library 加 descKey、四語系字典、SkillDetailView 名稱下方顯示。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "有 descKey 的戰法四語系字典都查得到文字",
+        "SkillDetailView／TacticFlavorData 單元測試通過",
+        "tsc 0",
+        "tests/run-cli.ts 全過",
+        "compute-gate standard 無阻擋"
+      ],
+      "deliverables": [
+        "assets/resources/data/master/tactic-library.json",
+        "assets/scripts/core/systems/SkillDetailView.ts",
+        "assets/scripts/ui/components/character-ds3/CharacterDs3TacticsChild.ts",
+        "tests/SkillDetailView.test.ts",
+        "tests/TacticFlavorData.test.ts"
+      ],
+      "notes": "2026-11-23 | 狀態: done | 驗證: tsc test 0 錯；run-cli ALL PASS 9294；compute-gate standard 13/14（1 警告為既有 ui→battle import，非本卡） | 變更: tactic-library 28 戰法加 descKey；四語系字典 tactic.desc.*（28 則，API 產出，非 zh-TW 為複本＋_todo 待翻）；SkillDetailView 描述置於內文最前；新增 TacticFlavorData 與 SkillDetailView 測試 | 阻塞: none；奧義 70 項已有效果說明，本卡未加招式描述",
+      "completed_at": "2026-11-23T08:00:00+08:00"
+    },
+    {
+      "doc_id": "",
       "id": "PROG-2-9841",
       "title": "技分頁戰法／奧義點擊開啟通用詳情子視窗",
       "owner": "ClaudeCode_claude-opus-5-5",
