@@ -39,7 +39,13 @@ export class AnnualGeneralLedger {
   /**
    * 累加單項年度指標（可自訂 key，完全解耦）
    */
-  public addMetric(generalId: string, metricKey: string, delta: number, meta?: Record<string, any>): void {
+  public addMetric(
+    generalId: string,
+    metricKey: string,
+    delta: number,
+    meta?: Record<string, any>,
+    gameTick?: number
+  ): void {
     if (!this._metrics.has(generalId)) {
       this._metrics.set(generalId, new Map());
     }
@@ -56,7 +62,7 @@ export class AnnualGeneralLedger {
         key: metricKey,
         value: delta,
         meta,
-        timestamp: Date.now()
+        timestamp: gameTick !== undefined ? gameTick : this._currentYear * 1000
       });
     }
   }
