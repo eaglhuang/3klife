@@ -79,12 +79,6 @@ function enemyText(leader: ScoutEnemyLeader | null): string {
     return [leader.name, leader.title, leader.powerGrade, leader.troopType].filter((part) => !!part).join('・');
 }
 
-/** 核心機制區文字：機制與本場天氣並列（沿用既有欄位，不動版面）；兩者都沒有時顯示「尚未偵查」 */
-function mechanicBodyText(mechanics: readonly string[], weatherLine: string | undefined): string {
-    const parts = [mechanics.length > 0 ? mechanics.join('、') : '', weatherLine ?? ''].filter((part) => part.length > 0);
-    return parts.length > 0 ? parts.join('　｜　') : SCOUT_PANEL_TEXTS.noIntel;
-}
-
 export class ScoutPanelController {
     private _scout: LobbyScout | null = null;
     private _confirming = false;
@@ -143,8 +137,9 @@ export class ScoutPanelController {
                 scoutTitle: t.title,
                 scoutEnemyHeading: t.enemyHeading,
                 scoutEnemyBody: enemyText(intel?.enemyLeader ?? null),
-                scoutMechanicHeading: t.mechanicHeading,
-                scoutMechanicBody: mechanicBodyText(intel?.coreMechanics ?? [], scout?.weatherLine),
+                // 本場天氣接在標題後同一行（沿用既有欄位，不動版面；機制內文已經很長，放內文會被縮到看不清）
+                scoutMechanicHeading: scout?.weatherLine ? `${t.mechanicHeading}　${scout.weatherLine}` : t.mechanicHeading,
+                scoutMechanicBody: intel && intel.coreMechanics.length > 0 ? intel.coreMechanics.join('、') : t.noIntel,
                 scoutRiskHeading: t.riskHeading,
                 scoutRiskBody: intel && intel.riskTags.length > 0 ? intel.riskTags.map((tag) => `【${tag}】`).join(' ') : t.noIntel,
                 scoutLoadoutHeading: t.loadoutHeading,
