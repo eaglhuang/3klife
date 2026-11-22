@@ -31,6 +31,15 @@ export function createAnnualRankingCoreSuite(): TestSuite {
     lobbyDisplayLimit: 3,
     ceremonyDisplayLimit: 10,
     historyMaxRanksTracked: 100,
+    lobbyTexts: {
+      rankLabel: '第 {rank} 名',
+      scoreLabel: '{score} 分',
+      yearEndHidden: '年終揭曉',
+      trendUp: '▲+{n}',
+      trendDown: '▼-{n}',
+      trendEqual: '—',
+      trendNew: 'NEW',
+    },
     boards: [
       {
         boardId: 'kills',

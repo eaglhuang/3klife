@@ -7,6 +7,7 @@
  */
 
 import { AnnualRankingManager } from './AnnualRankingManager';
+import type { AnnualGeneralLedger } from './AnnualGeneralLedger';
 
 export interface BattleRecordPayload {
   generalId: string;
@@ -39,7 +40,7 @@ export class AnnualRankingHook {
   /**
    * 戰鬥結算記帳（保證手動、極速決戰、委託代打口徑 100% 一致）
    */
-  public static recordBattle(payload: BattleRecordPayload, customLedger?: any): void {
+  public static recordBattle(payload: BattleRecordPayload, customLedger?: AnnualGeneralLedger): void {
     if (!payload.generalId) return;
     const ledger = customLedger || AnnualRankingManager.getInstance().ledger;
     ledger.recordBattlePerformance(
@@ -55,7 +56,7 @@ export class AnnualRankingHook {
   /**
    * 治理季結產出記帳
    */
-  public static recordGovernance(payload: GovernanceRecordPayload, customLedger?: any): void {
+  public static recordGovernance(payload: GovernanceRecordPayload, customLedger?: AnnualGeneralLedger): void {
     if (!payload.generalId) return;
     const ledger = customLedger || AnnualRankingManager.getInstance().ledger;
     ledger.recordGovernanceOutput(
@@ -71,12 +72,12 @@ export class AnnualRankingHook {
   /**
    * 演藝與宴席熱度記帳
    */
-  public static recordCharm(payload: CharmRecordPayload, customLedger?: any): void {
+  public static recordCharm(payload: CharmRecordPayload, customLedger?: AnnualGeneralLedger): void {
     if (!payload.generalId) return;
     const ledger = customLedger || AnnualRankingManager.getInstance().ledger;
     ledger.recordCharmPerformance(
       payload.generalId,
-      payload.playTitle || '未知劇目',
+      payload.playTitle ?? '',
       Math.max(0, payload.theaterPrestige || 0),
       Math.max(0, payload.playHeat || 0),
       Math.max(0, payload.repeatCount || 0),

@@ -10,6 +10,7 @@ import { normalizeFamilySynergy, type FamilySynergyLedger } from '../systems/Fam
 import { normalizePedigreeProbes } from '../systems/PedigreeProbe';
 import { isSandtableTerritory } from '../systems/SandtableTerritories';
 import type { BreedingBirthRecord } from '../systems/BreedingBirthRecord';
+import type { AnnualRankingSaveData } from '../systems/annual_ranking/AnnualRankingManager';
 import { normalizeBreedingBirthRecords } from '../systems/BreedingBirthRecordSave';
 import { normalizeTravelCountdown, type TravelCountdown } from '../systems/TravelCountdown';
 import { readCardStarState } from '../systems/TigerTallyStar';
@@ -390,7 +391,7 @@ export interface PlayerSaveSnapshot {
     /** 出生紀錄（PROG-2-1146）：child.UID 去重；舊檔缺省為空，不回填歷史資料。 */
     breedingBirthRecords?: BreedingBirthRecord[];
     /** 史境天下風雲榜年度指標與歷年排名（PROG-2-9601 PR2） */
-    annualRanking?: any;
+    annualRanking?: AnnualRankingSaveData;
 }
 
 /** 讀回編制預設：只保留格式正確的條目；缺欄位、非物件一律丟棄（舊存檔視為空） */

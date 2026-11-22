@@ -307,6 +307,8 @@ import { SUITABILITY_BADGE_LABEL, suitabilityBadgeText } from '../../core/system
 import { DS3_BLOODLINE_TREE_NODE_NAME, ensureDs3BloodlineTree } from '../components/character-ds3/Ds3BloodlineTree';
 import { BLOODLINE_TREE_OPEN_LINE } from '../../core/systems/BloodlineTreeSlots';
 import { delegateSchedule } from '../../core/systems/AutoNurture';
+import { AnnualRankingManager } from '../../core/systems/annual_ranking/AnnualRankingManager';
+import type { AnnualRankingConfig } from '../../core/systems/annual_ranking/AnnualRankingTypes';
 /** 限定池 id（gacha-config／limited-pool-schedule 對應，PROG-2-9024） */
 const LIMITED_POOL_ID = 'limited-pool';
 
@@ -951,6 +953,7 @@ export class LobbyScene extends Component {
             if (openingFirst) this._keepOpeningOnTop();
         }
         if (!this.node?.isValid) return;
+        await this._ensureAnnualRankingConfig();
         this._registerUIControllers();
         await services().ui.open(UIID.LobbyMain);
         if (!this.node?.isValid) return; // PROG-2-9196: scene already destroyed (switched away), stop quietly
@@ -5526,6 +5529,17 @@ ${spent}`,
         this._bringNodeToFront(host.node);
         if (host.binder) applyFlowView(host.binder, this._scoutPanel.getView());
         return result;
+    }
+
+    /** 載入史境天下風雲榜配置（PROG-2-9601）；失敗時榜單沒有啟用項目，看板不顯示任何數字 */
+    private async _ensureAnnualRankingConfig(): Promise<void> {
+        if (AnnualRankingManager.getInstance().getConfig()) return;
+        try {
+            const data = await services().resource.loadJson<AnnualRankingConfig>('data/annual-ranking-config', { tags: ['LobbyScene'] });
+            AnnualRankingManager.getInstance().setConfig(data);
+        } catch {
+            // 配置缺失：風雲榜以停用狀態運作，不影響大廳
+        }
     }
 
     /** 載入季節天氣機率表；戰前偵查與開戰前都先等它，兩處才會讀到同一個天氣 */
