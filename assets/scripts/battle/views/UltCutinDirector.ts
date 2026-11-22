@@ -24,6 +24,7 @@ import { setBattlePaused } from './BattleTimeScale';
 import { services } from '../../core/managers/ServiceLoader';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { awaitWithTimeout } from '../../core/utils/AwaitGuard';
+import { getBattleUiFeedback } from '../shared/BattleUiFeedback';
 
 /** 播放時的額外資訊：暫代圖要用的武將名與奧義名（專屬 cut-in 用自己的設定檔，不看這個） */
 export interface UltCutinPlayOptions {
@@ -171,10 +172,13 @@ export class UltCutinDirector {
       config: buildPlaceholderCutinConfig(generalId, name, opts.skillName),
       mode,
       frames: (key) => (key === PLACEHOLDER_CUTIN_IMAGE_KEY ? frame : null),
-      playCue: () => undefined,
+      // PROG-2-9731：暫代分鏡以前傳 () => undefined，整段 1.6 秒無聲（9435 補的 whoosh／roar 設定從沒被播出來）。
+      // 改走與專屬分鏡相同的播放器：切入風聲＋命中吼聲（缺檔由 AudioSystem 記一行 log，畫面照播）
+      playCue,
       onPauseRequest: () => setPaused(true),
       onResumeRequest: () => setPaused(false),
       placeholder: true,
+      placeholderStyle: getBattleUiFeedback().ultPlaceholder,
     });
   }
 

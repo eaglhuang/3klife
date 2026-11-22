@@ -16650,6 +16650,12 @@
     "category": "task"
   },
   {
+    "id": "doc_task_2967",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9731.md",
+    "title": "[PROG-2-9731] 戰場 UI 演出 B2：名牌戰鬥淡出、狀態圖示層數回合、奧義暫代大字與音效、毒上身回饋、治療時序",
+    "category": "task"
+  },
+  {
     "id": "doc_task_2965",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9601.md",
     "title": "[PROG-2-9601] 史境天下風雲榜計分核心與平時即時看板（W1a）",

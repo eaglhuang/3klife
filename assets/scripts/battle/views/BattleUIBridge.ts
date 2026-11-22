@@ -18,7 +18,9 @@ import { aptitudeToastPayload } from '../../core/systems/AptitudeDialogue';
 import { setBattlePaused, setBattleTimeScale, setEnemyTurnPlayback } from './BattleTimeScale';
 import { UltCutinDirector } from './UltCutinDirector';
 import { isUltCutinPlaying } from '../../ui/core/UltCutinOverlay';
-import { statusEffectFloatText } from '../shared/StatusEffectLabel';
+import { statusEffectFloatText, POISON_STATUS_ID } from '../shared/StatusEffectLabel';
+import { ensureBattleUiFeedbackLoaded, getBattleUiFeedback, isPlateFadeTask, planHealSteps, statusFloatWithStacks } from '../shared/BattleUiFeedback';
+import { overrideFloatTextStyle } from '../../core/systems/FloatTextStyle';
 import { BLOCK_FLOAT_TEXT, shieldHitFeedback, type DamageBlockReason } from '../shared/BlockFeedback';
 import { StatusCueThrottle, statusMakesTargetFlinch, statusPolarityOf, statusWaveDelaySec } from '../shared/StatusApplyFeedback';
 import { salvageSummaryLines } from '../../core/systems/StageSalvageSettlement';
@@ -354,6 +356,16 @@ export class BattleUIBridge {
       node.on(eventName, handler, this.scene);
       this.unsubs.push(() => node.off(eventName, handler, this.scene));
     };
+
+    // PROG-2-9731：戰場 UI 演出調校表（名牌淡出、角標、奧義暫代大字、毒、治療時序）；毒字樣式一併套用
+    ensureBattleUiFeedbackLoaded(() => svc.resource.loadJson<unknown>('data/battle-ui-feedback', { tags: ['battle'] }), (cfg) => {
+      const f = cfg.poisonHit.float;
+      overrideFloatTextStyle('poison', {
+        color: { r: f.color[0], g: f.color[1], b: f.color[2], a: f.color[3] },
+        outlineColor: { r: f.outlineColor[0], g: f.outlineColor[1], b: f.outlineColor[2], a: f.outlineColor[3] },
+        fontSize: f.fontSize, durationMs: f.durationMs,
+      });
+    });
 
     this.unsubs.push(
       svc.event.on(EVENT_NAMES.TurnPhaseChanged,        this._onTurnPhaseChanged.bind(this)),
@@ -815,10 +827,25 @@ export class BattleUIBridge {
     if (unit) {
       const side = unit.faction === Faction.Player ? '我方' : '敵方';
       this.appendLog(`${side}${unit.name} 回復 ${data.amount}，目前 HP ${Math.max(0, data.hp)}`);
-      c.unitRenderer?.playValueChange(unit, data.amount, 'heal');
     }
-    playBattleAudio(BATTLE_AUDIO_CUE.unitHeal);
-    this.refreshBattleViews();
+    // PROG-2-9731：治療三步依序——治療光 → 綠字（＋治療聲）→ 血條增加。
+    // 以前事件一到就同時跳字、播聲、刷新血條，比蓄力中的出招還早 0.4 秒；現在排進戰鬥動畫佇列，
+    // 出招特效之後才開始。每個目標只佔佇列 queueStaggerSec，多目標治療的三步互相重疊、不會拖長回合。
+    c.unitRenderer?.holdHealHp?.(data.unitId, Math.max(0, data.hp - data.amount));
+    this._enqueueCombatVisual(`unit-heal:${data.unitId}`, () => {
+      const cfg = getBattleUiFeedback().heal;
+      const plan = planHealSteps(cfg);
+      const live = c.ctrl?.state.units.get(data.unitId);
+      c.unitRenderer?.releaseNameplateFade?.(); // 血條在名牌上，治療時先讓名牌回來
+      if (live) c.unitRenderer?.playHealLight?.(live.id);
+      this.scene.scheduleOnce(() => {
+        const u = c.ctrl?.state.units.get(data.unitId);
+        if (u) c.unitRenderer?.playHealFloat?.(u, data.amount);
+        playBattleAudio(BATTLE_AUDIO_CUE.unitHeal);
+      }, plan.floatAtSec);
+      this.scene.scheduleOnce(() => { c.unitRenderer?.releaseHealHp?.(data.unitId); this.refreshBattleViews(); }, plan.hpBarAtSec);
+      return new Promise<void>((resolve) => this.scene.scheduleOnce(() => resolve(), cfg.queueStaggerSec));
+    });
   }
 
   private _onUnitMoved(data: {
@@ -1548,7 +1575,7 @@ export class BattleUIBridge {
    * 奧義的 BuffApplied 比漫畫分鏡早到，以前飄字整段被分鏡蓋住；排隊後會在分鏡與出招特效之後才播。
    * 控制／減益：目標縮一下＋減益聲；增益：增益聲。多個目標依遠近錯開，像震波掃過去。
    */
-  private _onBuffApplied(data: { unitId: string; effect: string; turns: number }): void {
+  private _onBuffApplied(data: { unitId: string; effect: string; turns: number; stacks?: number }): void {
     if (!data) return;
     const polarity = statusPolarityOf(data.effect);
     this._enqueueCombatVisual(`status-apply:${data.unitId}:${data.effect}`, () => {
@@ -1561,7 +1588,13 @@ export class BattleUIBridge {
         const cue = polarity === 'buff' ? BATTLE_AUDIO_CUE.buffGained : BATTLE_AUDIO_CUE.debuffGained;
         if (this.statusCueThrottle.shouldPlay(cue, Date.now())) playBattleAudio(cue);
         if (statusMakesTargetFlinch(polarity)) this.ctx.unitRenderer?.playHitAnimation(live.id, null);
-        const text = statusEffectFloatText(data.effect);
+        if (data.effect === POISON_STATUS_ID) {
+          // PROG-2-9731：毒箭命中要有上身回饋——紫綠光罩住受擊者＋紫綠「中毒」字（使用者選「毒紫綠」）
+          this.ctx.unitRenderer?.playPoisonHit?.(live.id);
+          this.ctx.unitRenderer?.playPoisonFloat?.(live.lane, live.depth, getBattleUiFeedback().poisonHit.floatText);
+          return;
+        }
+        const text = statusFloatWithStacks(statusEffectFloatText(data.effect), data.stacks, getBattleUiFeedback().statusBadge.stackFloatSuffix);
         if (text) this.ctx.unitRenderer?.playBuffConsumeValue(live.lane, live.depth, text);
       };
       if (delay > 0) this.scene.scheduleOnce(show, delay);
@@ -1639,17 +1672,23 @@ export class BattleUIBridge {
       }
 
       UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] action-start id=${task.id} label=${task.label}`);
+      // PROG-2-9731：攻擊、受擊演出期間名牌淡出（不擋打擊畫面），演出結束由 UnitRenderer 等一小段再淡回
+      const fadesPlate = isPlateFadeTask(task.label);
+      if (fadesPlate) c.unitRenderer?.beginCombatPresentation?.();
       try {
         // new Promise 讓 task.run 同步執行（維持原本時序），同步丟錯也會被接住
         await awaitWithTimeout(new Promise<void>((resolve) => resolve(task.run())), BATTLE_VISUAL_TIMING.combatVisualTaskMaxMs, undefined,
           { label: `combat-visual:${task.label}` });
       } catch (error) {
         UCUFLogger.error(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] action-failed id=${task.id} label=${task.label}`, error);
+      } finally {
+        if (fadesPlate) c.unitRenderer?.endCombatPresentation?.();
       }
       UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] action-end id=${task.id} label=${task.label} remaining=${c.combatVisualQueue.length}`);
     }
 
     c.isDrainingCombatVisual = false;
+    c.unitRenderer?.releaseNameplateFade?.(); // 保底：任何一個演出沒成對結束，名牌也會淡回
     // 佇列已清空：不會再有排隊中的奧義 cut-in。任務逾時被略過時它的 finally 可能沒跑，旗標在這裡保底放掉。
     c.isUltCutinActive = false;
     UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] drain-end`);
