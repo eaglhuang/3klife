@@ -9937,30 +9937,53 @@
         ]
       }
     },
-    {
+        {
       "uid": "zhang-chun-hua",
       "name": "張春華",
       "standing": {
-        "status": "integrated",
+        "status": "review-pending",
         "history": [
           {
             "version": "0002",
             "file": "standing/zhang_chun_hua__張春華__standing_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "standing/zhang_chun_hua__張春華__standing_0003.png",
+            "status": "review-pending",
+            "sha256": "BA57F8CB82A77EAE201BEDEEAC6EB00186F0F4024A7AD97284E87FDE77102912",
+            "canvas": "1024x1536 RGBA",
+            "note": "v6 重建候選：成熟半寫實、酒紫石榴紅與古金配色；三分之四前後步、立體胸腰剪裁及全身刺繡工藝。"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "avatar": {
-        "status": "integrated",
+        "status": "review-pending",
         "history": [
           {
             "version": "0002",
             "file": "avatars/zhang_chun_hua__張春華__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/zhang_chun_hua__張春華__avatar_0003.png",
+            "status": "review-pending",
+            "sha256": "27042B31CEDE447F267F643F84EBD660014D445639AA869DCF365CC7D9859538",
+            "canvas": "256x256 RGBA",
+            "sourceBust": "busts/zhang_chun_hua__張春華__bust_0001.png",
+            "cropBox": {
+              "x": 150,
+              "y": 0,
+              "width": 600,
+              "height": 600
+            },
+            "note": "由半身候選裁出，保留完整髮型、臉部自然側角、肩線與上胸；未重畫。"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "smallAvatar": {
         "activeVersion": "0002",
@@ -9989,9 +10012,9 @@
         ]
       },
       "battle": {
-        "activeVersion": "0001",
+        "activeVersion": "0002",
         "status": "review-pending",
-        "poseLabel": "低身側步，斜劍護身",
+        "poseLabel": "前踏斜刺，轉肩發力",
         "weaponClass": "sword",
         "poseSelection": "AI-selected distinct pose",
         "history": [
@@ -10004,6 +10027,37 @@
             "sha256": "9a21f2d5d816a45301accacbd56ecdab907d9f28da52a4160c24aa31abed5ba2",
             "canvas": "1024x1536 RGBA",
             "qc": "Full-body three-quarter combat stance; eyes to camera; straight sword; crop/scale adjusted to x=128..896 safe width."
+          },
+          {
+            "version": "0002",
+            "file": "battle/zhang_chun_hua__張春華__battle_0002.png",
+            "status": "review-pending",
+            "poseLabel": "前踏斜刺，轉肩發力",
+            "weaponClass": "sword",
+            "sha256": "B7E4D7FB777F13C433D90E86BD80E60C04E8332FFDE4A0540585F602A903FCD1",
+            "canvas": "1024x1536 RGBA",
+            "qc": "v6 combat candidate keeps the v6 static identity and costume; distinct forward diagonal thrust; full figure and weapon within transparent margins."
+          }
+        ]
+      },
+      "bust": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "busts/zhang_chun_hua__張春華__bust_0001.png",
+            "status": "review-pending",
+            "sha256": "275F93D08452424D7F1F57D7F1BF50018D75FB549FE0584FC57B6BA6F81E3EF0",
+            "canvas": "900x1000 RGBA",
+            "sourceStanding": "standing/zhang_chun_hua__張春華__standing_0003.png",
+            "cropBox": {
+              "x": 62,
+              "y": 0,
+              "width": 900,
+              "height": 1000
+            },
+            "note": "依照靜態→半身→大頭順序，從 v6 靜態候選直接裁切，未重畫。"
           }
         ]
       }
