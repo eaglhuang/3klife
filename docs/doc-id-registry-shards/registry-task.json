@@ -16600,5 +16600,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9725.md",
     "title": "[PROG-2-9725] 總PM 11/22 裁決落地：毒箭5%、TeamRecover已損25%、SP精力名詞",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2957",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9724.md",
+    "title": "[PROG-2-9724] 兵種徽章共用繪製函式",
+    "category": "task"
   }
 ]
