@@ -913,5 +913,14 @@
   "ui.mission.block.nursing": "哺乳期中",
   "ui.mission.block.mentor": "担任教官中",
   "ui.mission.block.on-sortie": "出征中",
-  "ui.mission.block.occupied": "修业或指派中"
+  "ui.mission.block.occupied": "修业或指派中",
+  "MATCHMAKER_FIRST_VISIT_TITLE": "红娘叩门・喜结良缘",
+  "MATCHMAKER_SPRING_VISIT_TITLE": "新春说亲・良缘缔结",
+  "MATCHMAKER_FIRST_VISIT_SPEECH": "城外红娘特来叩门道喜，为主公挑选了几位良家女子，主公可愿一见？",
+  "MATCHMAKER_SPRING_VISIT_SPEECH": "开春吉时，媒婆带着十里八乡的名册前来求见，主公要不要挑挑看？",
+  "MATCHMAKER_ACTION_ACCEPT": "立即相看",
+  "MATCHMAKER_ACTION_DECLINE": "稍后再议",
+  "MATCHMAKER_SILVER_LOW_WARNING": "家族银两不足，媒婆说她不赊账",
+  "MATCHMAKER_GOTO_COMMERCE": "前往筹措银两",
+  "MATCHMAKER_ENROLL_BUTTON": "纳为配偶（需礼金 %{cost} 银两）"
 }
