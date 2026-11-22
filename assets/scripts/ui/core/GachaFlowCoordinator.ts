@@ -17,7 +17,10 @@ import { gachaPoolHeader, gachaPoolTitle } from '../../core/systems/GachaPoolPre
 import { DESTINY_POOL_ID } from '../../core/systems/DestinyPool';
 import type { GachaCurrencyId } from '../../core/gacha/GachaApi';
 import type { RewardGachaPort, RewardGachaPullOutcome } from '../../core/gacha/RewardGachaPull';
-import { coverCropRect, fitContain, pickTopGachaResult } from './GachaResultRanking';
+import {
+    countPullResultRarities, coverCropRect, fitContain, pickTopGachaResult, pullResultRarityLabel,
+    raritySummarySlots, renderedBoxAspect,
+} from './GachaResultRanking';
 import { buildHeroSlotAliases, buildResultSlotAliases, gachaCardStars, toGachaCardTier } from './GachaResultCardTheme';
 import { formatResultBalance } from '../../core/gacha/GachaButtonRules';
 import { loadGeneralAvatar, loadGeneralPortrait } from './GeneralAvatarLoader';
@@ -271,7 +274,9 @@ export class GachaFlowCoordinator {
 
         // 抽完還剩多少：玩家要決定「再抽」前看得到（PROG-2-9117）
         const balanceText = flow.showBalance === false ? '' : `　｜　剩餘 ${formatResultBalance(currency, this._options.gachaService.getWalletSnapshot())}`;
-        const rarityStats = this._buildPullResultRarityStats(results);
+        // 統計列依這一輪實際稀有度動態排列（含 N），固定三格放不下時最後一格收容剩下的
+        const raritySlots = raritySummarySlots(
+            countPullResultRarities(results.map((entry) => entry.rarityTier)).map(({ label, count }) => `${label} ×${count}`), 3);
         // 本次主角登場台詞（PROG-2-2244）：所有池共用；沒有台詞退回原本描述
         const lineTable = await awaitWithTimeout<GachaLineTable>(loadGachaLines(), GACHA_LOAD_MAX_MS, {}, { label: 'gacha:load-lines' });
         const heroLine = topResult ? formatGachaLine(lineTable, topResult.general.id) : null;
@@ -301,9 +306,9 @@ export class GachaFlowCoordinator {
             GachaPullResult_span_1: backText,
             GachaPullResult_repull: repullText,
             GachaPullResult_span_2: repullText,
-            GachaPullResult_sum_high: `SSR ×${rarityStats.high}`,
-            GachaPullResult_sum_mid: `SR ×${rarityStats.mid}`,
-            GachaPullResult_sum_low: `R ×${rarityStats.low}`,
+            GachaPullResult_sum_high: raritySlots[0],
+            GachaPullResult_sum_mid: raritySlots[1],
+            GachaPullResult_sum_low: raritySlots[2],
             GachaPullResult_hero_rarity: topResult ? `✦ ${this._toPullResultRarityLabel(topResult.rarityTier)} · 絕世登場 ✦` : '✦ 絕世名將 ✦',
             GachaPullResult_hero_name: topResult ? `${topResult.general.name}${topResult.general.courtesyName ? ` · ${topResult.general.courtesyName}` : ''}` : '絕世名將',
             GachaPullResult_hero_desc: heroLine ?? (topResult ? (topResult.general.description || '義薄雲天 · 威震華夏 · 萬世流芳') : '名揚四海 · 天下歸心'),
@@ -436,33 +441,7 @@ export class GachaFlowCoordinator {
     }
 
     private _toPullResultRarityLabel(rarityTier: string | null | undefined): string {
-        switch ((rarityTier || '').toLowerCase()) {
-            case 'mythic': return 'UR';
-            case 'legendary': return 'SSR';
-            case 'epic': return 'SR';
-            case 'rare': return 'R';
-            case 'common': return 'N';
-            default: return (rarityTier || 'R').toUpperCase();
-        }
-    }
-
-    private _buildPullResultRarityStats(results: LocalGachaResultEntry[]): { high: number; mid: number; low: number } {
-        let high = 0;
-        let mid = 0;
-        let low = 0;
-
-        for (const entry of results) {
-            const rarity = this._toPullResultRarityLabel(entry.rarityTier);
-            if (rarity === 'SSR' || rarity === 'UR' || rarity === 'LR') {
-                high += 1;
-            } else if (rarity === 'SR') {
-                mid += 1;
-            } else {
-                low += 1;
-            }
-        }
-
-        return { high, mid, low };
+        return pullResultRarityLabel(rarityTier);
     }
 
     private _onResultBack(): void {
@@ -573,7 +552,9 @@ export class GachaFlowCoordinator {
                 if (seq !== this._cardPortraitSeq || !sprite.isValid || !frame) return;
                 sprite.sizeMode = Sprite.SizeMode.CUSTOM;
                 sprite.trim = false;
-                sprite.spriteFrame = cropFrameToAspect(frame, width / height);
+                // 裁切比例用節點的世界縮放算，父層非等比縮放時立繪才不會被壓扁
+            const worldScale = portraitNode.getWorldScale();
+            sprite.spriteFrame = cropFrameToAspect(frame, renderedBoxAspect(width, height, worldScale.x, worldScale.y));
                 sprite.enabled = true;
             }).catch((error) => {
                 UCUFLogger.warn(LogCategory.LIFECYCLE, '[GachaFlowCoordinator] card portrait load failed', error);
