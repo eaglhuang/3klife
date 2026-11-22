@@ -4,7 +4,8 @@ import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { perfBegin, perfEnd, perfFrame } from "./BattlePerfProbe";
 import { BadgeBatchLayers } from "./BadgeBatchLayers";
 import { setCacheModeDeferred } from "../../ui/core/LabelLayoutDeferral";
-import { BADGE_ATLAS_SCALE, TroopTypeBadge, loadBadgeAtlasFrames, troopTypeGlyph } from "../../ui/shared/TroopTypeBadge";
+import { BADGE_ATLAS_SCALE, TroopTypeBadge, loadBadgeAtlasFrames } from "../../ui/shared/TroopTypeBadge";
+import { troopTypeGlyph } from "../../shared/TallyCardContract";
 import { awaitWithTimeout } from "../../core/utils/AwaitGuard";
 import {
   _decorator,
