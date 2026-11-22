@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 248,
-    "in_progress": 7,
-    "open": 85,
-    "total": 340
+    "done": 249,
+    "in_progress": 6,
+    "open": 86,
+    "total": 341
   },
   "tasks": [
     {
@@ -14710,6 +14710,66 @@
       "acceptance": [],
       "deliverables": [],
       "notes": "2026-11-22 | 狀態: done | 驗證: run-cli 全過、tsc 0 錯、compute-gate standard 通過(僅既有 LoginScene 警告) | 變更: BuffSystem 走 applyBuffStack(層數上限3、回合取max)、治療戰法走 computeHealAmount(固定量+已損25%並截到已損血量)、毒箭走 poisonTickDamage(5%最大HP)＋自動移動 -1；測試 BuffStackHeal/PoisonArrowE2E/DotSkillResolver/MedicalAidHeal | 阻塞: 燃燒狀態戰場不存在，burnTickDamage 未接線，待裁決",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2955",
+      "id": "PROG-2-9723",
+      "title": "AI 奧義精力門檻改比例與委任自動放奧義",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T05:46:06+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "奧義精力門檻改比例（中 IQ 50%、高 IQ 落後 30%，比例放 ai-difficulty.json ultimateRules）；委任代打主將 SP 滿時套用同一套門檻與家族審批自動放奧義。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "中 IQ 精力門檻為最大精力 50%（男女同比例判斷一致）",
+        "高 IQ 落後門檻為最大精力 30%",
+        "比例值來自 JSON 不寫死",
+        "委任代打 SP 滿且符合門檻才放奧義",
+        "規格 doc_spec_0391 §1/§2 已改並註明委任適用"
+      ],
+      "deliverables": [
+        "AiUltimateDecision.ts",
+        "AiDifficultyTable.ts",
+        "DelegateAi.ts",
+        "BattleState.ts",
+        "BattleController.ts",
+        "ai-difficulty.json",
+        "tests/AiUltimateDecision.test.ts",
+        "tests/AiDelegateUltimateFlow.test.ts",
+        "doc_spec_0391"
+      ],
+      "notes": "2026-11-22 | 狀態: in-progress | 驗證: run-cli 9173 通過、tsc 0 錯 | 變更: 比例門檻＋委任代打放奧義＋規格 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
