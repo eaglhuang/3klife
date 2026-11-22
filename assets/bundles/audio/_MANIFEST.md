@@ -19,6 +19,7 @@
 | feijian.mp3 | `"feijian"` | 飛劍 | 🚧 WIP | — |
 | fireball.mp3 | `"fireball"` | 火球 | 🚧 WIP | — |
 | footstep.mp3 | `"footstep"` | 腳步聲 | 🚧 WIP | — |
+| hoof_gallop.wav | `"hoof_gallop"` | 騎兵攻擊馬蹄聲（22.05kHz 單聲道、約 0.58 秒；署名見文末「第三方音效授權」） | ✅ 使用中 | `BattleAudio.ts` `unitAttackPrimary`（PROG-2-9580） |
 | heal.mp3 | `"heal"` | 治療 | 🚧 WIP | — |
 | hurt.mp3 | `"hurt"` | 受擊 | 🚧 WIP | — |
 | laser.mp3 | `"laser"` | 雷射 | 🚧 WIP | — |
@@ -65,3 +66,11 @@ services().audio.registerClip("hurt", clip);
 services().audio.playSfx("hurt");           // 50ms 防重複播放
 services().audio.playSfxWithCooldown("footstep", 1.0, 300); // 300ms 冷卻
 ```
+
+---
+
+## 第三方音效授權（署名）
+
+| 檔名 | 來源 | 作者 | 授權 | 備註 |
+|------|------|------|------|------|
+| hoof_gallop.wav | https://opengameart.org/node/132682 （Horse Gallop Loop，原檔 gallop_01.ogg，freesound.org/s/403026） | Alan McKinney (alanmcki)；OpenGameArt 上傳者 AntumDeluge | CC-BY 3.0（https://creativecommons.org/licenses/by/3.0/）需署名 | 已改編：取其中一段蹄聲循環、轉單聲道、重取樣 22050Hz、尾端 30ms 淡出 |

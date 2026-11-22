@@ -2,6 +2,7 @@
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { _decorator, Button, Color, ImageAsset, Label, Node, Rect, ScrollView, Sprite, SpriteFrame, Texture2D } from 'cc';
 import { services } from '../../core/managers/ServiceLoader';
+import { TroopTypeBadge } from '../shared/TroopTypeBadge';
 import { CompositePanel } from '../core/CompositePanel';
 import type { UITemplateBinder } from '../core/UITemplateBinder';
 
@@ -11,7 +12,6 @@ const SCREEN_ID = 'elite-troop-codex-screen';
 const CONTENT_PATH = 'ui-spec/content/elite-troop-codex-v1';
 const CONTENT_TAG = 'EliteTroopCodex';
 const CARD_ART_FALLBACK_PATH = 'ui/tiger-tally/card-art/troops/spriteFrame';
-const TYPE_ICON_FALLBACK_PATH = 'sprites/battle/battle_unit_type_underlay';
 const WHITE = new Color(255, 255, 255, 255);
 
 type CodexQuality = 'R' | 'SR' | 'SSR' | 'UR' | 'LR';
@@ -242,17 +242,15 @@ export class EliteTroopCodexComposite extends CompositePanel {
         this._setRowSelection(row, index === this._selectedIndex);
 
         await this._assignRowSprite(row, 'CardArtShell/CardArt', entry.cardArtResource, CARD_ART_FALLBACK_PATH, true);
-        await this._assignRowSprite(row, 'CardArtShell/CardTypeIcon', this._buildTypeIconPath(entry.typeKey), TYPE_ICON_FALLBACK_PATH, false);
+        this._assignRowTypeBadge(row, 'CardArtShell/CardTypeIcon', entry.typeKey);
     }
 
     private async _preloadEntrySprites(entries: EliteTroopCodexEntry[]): Promise<void> {
         const paths = new Set<string>();
         for (const entry of entries) {
             paths.add(entry.cardArtResource);
-            paths.add(this._buildTypeIconPath(entry.typeKey));
         }
         paths.add(CARD_ART_FALLBACK_PATH);
-        paths.add(TYPE_ICON_FALLBACK_PATH);
 
         await Promise.all(Array.from(paths).map(async (path) => {
             if (this._isCodexArtPath(path)) {
@@ -361,12 +359,7 @@ export class EliteTroopCodexComposite extends CompositePanel {
             CARD_ART_FALLBACK_PATH,
             true,
         );
-        await this._applySelectedArt(
-            'RightDetailPanel/DetailContent/SelectedTroopCrestShell/SelectedTroopCrestArt',
-            this._buildTypeIconPath(entry.typeKey),
-            TYPE_ICON_FALLBACK_PATH,
-            false,
-        );
+        this._applySelectedTypeBadge('RightDetailPanel/DetailContent/SelectedTroopCrestShell/SelectedTroopCrestArt', entry.typeKey);
     }
 
     private async _loadSpriteFrame(path: string, preferTextureFallback = false): Promise<SpriteFrame | null> {
@@ -558,8 +551,19 @@ export class EliteTroopCodexComposite extends CompositePanel {
         return row.getChildByPath(path)?.getComponent(Sprite) ?? null;
     }
 
-    private _buildTypeIconPath(typeKey: string): string {
-        return `sprites/battle/battle_unit_type_icon_${this._normalizeKey(typeKey)}`;
+    /** 精兵圖鑑列表的兵種徽章：列節點重用，每列只掛一次（PROG-2-9724） */
+    private _assignRowTypeBadge(row: Node, path: string, typeKey: string): void {
+        const node = row.getChildByPath(path);
+        if (!node) {
+            UCUFLogger.warn(LogCategory.UI, `[EliteTroopCodexComposite] type badge node missing: row="${row.name}" path="${path}"`);
+            return;
+        }
+        TroopTypeBadge.mount(node).setType(typeKey);
+    }
+
+    /** 精兵圖鑑右側大圖的兵種徽章（PROG-2-9724） */
+    private _applySelectedTypeBadge(path: string, typeKey: string): void {
+        TroopTypeBadge.mount(this._requireNodeByPath(path)).setType(typeKey);
     }
 
     private _resolveGroupShortLabel(groupKey: CodexGroupKey): string {

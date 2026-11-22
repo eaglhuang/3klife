@@ -8,6 +8,7 @@
  * Unity 對照：AI 的 Decision 模組，輸入目前戰況，輸出要不要出手與理由。
  */
 import { checkDeploy, type DeployRequest, type SortieState } from './SortieDeploy';
+import type { AiIqLevel } from './AiDifficultyTable';
 
 export type DelegateQuality = 'LOW' | 'MEDIUM' | 'HIGH' | 'EXPERT';
 
@@ -34,6 +35,19 @@ export function delegateQualityOf(int: number): DelegateQuality {
     if (int >= 70) return 'HIGH';
     if (int >= 50) return 'MEDIUM';
     return 'LOW';
+}
+
+/**
+ * 委任代打的奧義判斷用智力等級（PROG-2-9723，PM 暫定）：與部署品質一一對應，EXPERT 對到 EXTREME（規則同 HIGH）。
+ * 讓委任代打與敵方共用 AiUltimateDecision，智力越高越會等劣勢或擊殺才放。
+ */
+export function delegateAiIqOf(quality: DelegateQuality): AiIqLevel {
+    switch (quality) {
+        case 'EXPERT': return 'EXTREME';
+        case 'HIGH': return 'HIGH';
+        case 'MEDIUM': return 'MEDIUM';
+        default: return 'LOW';
+    }
 }
 
 export type DelegateDeployReason =

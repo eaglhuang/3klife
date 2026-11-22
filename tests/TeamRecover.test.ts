@@ -9,6 +9,7 @@ import {
     TEAM_RECOVER_PARAMS,
     cleansePick,
     recoverOrder,
+    calcTeamRecoverHeal,
     resolveTeamRecover,
     teamRecoverNoticeText,
     type RecoverTarget,
@@ -26,6 +27,30 @@ export function createTeamRecoverSuite(): TestSuite {
         assert.equals('a,b', out.map((o) => o.id).join(','));
         assert.equals(200, out[0].healed);
         assert.equals(50, out[1].healed);
+    });
+
+    suite.test('已損 HP 25%：固定量 + 已損 × 0.25，且不超過已損 HP', () => {
+        // 1000 最大、500 現有：固定 200 + 已損 500 × 0.25 = 125，合計 325（未超過已損 500）
+        assert.equals(325, calcTeamRecoverHeal(1000, 500, 0.2, 0.25));
+        // 950 現有：固定 200 + 12 = 212，截到已損 50
+        assert.equals(50, calcTeamRecoverHeal(1000, 950, 0.2, 0.25));
+        const out = resolveTeamRecover('ult-liu-bei-3', [t('a', 500)], 0.25);
+        assert.equals(325, out[0].healed);
+    });
+
+    suite.test('未傳已損比例時維持舊行為（只有固定量）；JSON 昭烈仁政標記 0.25', () => {
+        assert.equals(200, resolveTeamRecover('ult-liu-bei-3', [t('a', 500)])[0].healed);
+        const raw = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../assets/resources/data/master/ultimate-definitions.json'), 'utf8'));
+        const list: Array<{ id: string; teamHealMissingRatio?: number }> = raw.data ?? raw;
+        assert.equals(0.25, list.find((u) => u.id === 'ult-liu-bei-3')?.teamHealMissingRatio as number);
+    });
+
+    suite.test('醫護兵常態治療不經團隊回復公式，維持固定量（PM 11/22 不動）', () => {
+        const src = fs.readFileSync(path.resolve(__dirname, '../assets/scripts/battle/runtime/phases/BattleSpecialResolvePhase.ts'), 'utf8');
+        const start = src.indexOf('function resolveMedic');
+        const body = src.slice(start, src.indexOf('function resolveEngineer'));
+        assert.equals(true, body.includes('svc.formula.calculateHeal('));
+        assert.equals(false, body.includes('calcTeamRecoverHeal'));
     });
 
     suite.test('瀕死優先：血量比例低者先處理，同比例依 id', () => {

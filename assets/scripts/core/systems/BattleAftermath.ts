@@ -87,6 +87,12 @@ export interface BattleAftermathLedger {
     lostTroops: number;
     /** 守城大敗流失的人口（PROG-2-9425，由呼叫端填入）；沒有時不顯示 */
     populationLost?: number;
+    /** 新手保護（第 1 年敗戰，PROG-2-9717）減免的損兵數；沒有減免時不填 */
+    noviceProtectionReduced?: number;
+    /** 送入傷兵營的人數（全年度適用）；沒有傷兵時不填 */
+    woundedSent?: number;
+    /** 傷兵營每季康復百分比（來自 data/troop-loss-rules.json），給結算文字用 */
+    woundedRecoveryPercent?: number;
 }
 
 /** 戰場結果換成帳本用的勝敗；ongoing 回 null（不結算） */
@@ -152,6 +158,8 @@ export function formatAftermathLines(ledger: Readonly<BattleAftermathLedger>): s
     if (ledger.goldTruncated > 0) truncated.push(`黃金 ${ledger.goldTruncated}`);
     if (truncated.length > 0) lines.push(`（倉庫已滿，截掉 ${truncated.join('、')}）`);
     if (ledger.lostTroops > 0) lines.push(`兵源回扣：城市兵源 -${ledger.lostTroops}（戰損）`);
+    if (ledger.noviceProtectionReduced !== undefined) lines.push(`新手保護：損兵減免 ${ledger.noviceProtectionReduced}`);
+    if (ledger.woundedSent !== undefined) lines.push(`傷兵 ${ledger.woundedSent} 人送入傷兵營，每季康復 ${ledger.woundedRecoveryPercent ?? 30}%`);
     if (ledger.loot.length > 0) {
         lines.push(`戰利品：${ledger.loot.map((d) => `${ITEM_DISPLAY_NAMES[d.itemId] ?? d.itemId} ×${d.quantity}`).join('、')}`);
     }

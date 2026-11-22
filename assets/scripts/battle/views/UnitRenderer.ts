@@ -3,6 +3,9 @@
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { perfBegin, perfEnd, perfFrame } from "./BattlePerfProbe";
 import { BadgeBatchLayers } from "./BadgeBatchLayers";
+import { setCacheModeDeferred } from "../../ui/core/LabelLayoutDeferral";
+import { BADGE_ATLAS_SCALE, TroopTypeBadge, loadBadgeAtlasFrames } from "../../ui/shared/TroopTypeBadge";
+import { troopTypeGlyph } from "../../shared/TallyCardContract";
 import { awaitWithTimeout } from "../../core/utils/AwaitGuard";
 import {
   _decorator,
@@ -95,14 +98,6 @@ import {
 } from "../../core/config/UnitAssetCatalog";
 
 const { ccclass, property } = _decorator;
-const TROOP_TYPE_ICON_PREFIX = 'sprites/battle/battle_unit_type_icon_';
-/** 部隊徽章底圖（2 倍解析度；左 80x80 九宮格底框、右 80x80 兵種圓章），由 tools_node/gen-battle-badge-atlas.py 產生（PROG-2-9713） */
-const BADGE_ATLAS_PATH = 'sprites/battle/battle_badge_atlas';
-const BADGE_ATLAS_CELL = 80;
-const BADGE_ATLAS_INSET = 30;
-/** 底圖 2 倍解析度，節點縮 0.5 還原 */
-const BADGE_ATLAS_SCALE = 0.5;
-
 interface UnitView {
   worldNode: Node;   // 世界空間根節點，負責移動 tween（Unity: Root Transform）
   visualNode: Node;  // 本地空間效果層，負責 bump / recoil / charge（Unity: Visual Child Transform）
@@ -174,6 +169,12 @@ interface BadgeView {
 
 /** 掠奪飄字每行間隔（秒） */
 const LOOT_TEXT_STAGGER_SEC = 0.5;
+/** PROG-2-9715：主將出陣從待命點衝到出陣格的秒數（約一格半距離，比小兵前進稍快，表現「衝出去」） */
+const GENERAL_DASH_SEC = 0.55;
+/** 主將素材載入最多等幾秒才起跑；超過就直接站格，不讓主將卡在待命點 */
+const GENERAL_DASH_WAIT_SEC = 3;
+/** 單挑場邊位置離最外側那路的距離（以路寬計，PROG-2-9719）。 */
+const DUEL_SIDELINE_LANES = 1.1;
 
 /** 頭頂血條尺寸（名牌座標，名牌本身縮 0.7；PROG-2-1874） */
 const HP_BAR_WIDTH = 150;
@@ -253,7 +254,6 @@ export class UnitRenderer extends Component {
   private uiRoot: Node | null = null;
   /** 部隊徽章分層合批（PROG-2-9713） */
   private badgeLayers: BadgeBatchLayers | null = null;
-  private badgeAtlasLoad: Promise<{ bg: SpriteFrame; disc: SpriteFrame } | null> | null = null;
   private cubeMesh: Mesh | null = null;
   private discMesh: Mesh | null = null;  // 圓形陰影 mesh，對照 Unity: blob shadow disc
   private ringMesh: Mesh | null = null;  // Faction Ring mesh
@@ -264,6 +264,11 @@ export class UnitRenderer extends Component {
   private hpLossPool:  BuffGainEffectPool | null = null;
   private readonly unitViews = new Map<string, UnitView>();
   private readonly movingUnits = new Set<string>();
+  /**
+   * PROG-2-9715：主將出陣衝刺。上場那一刻 Spine 從己方底線外的待命點跑到出陣格，之後跟小兵一樣站格、逐格走。
+   * key＝格上主將單位 id；from＝待命點腳點，t＝已跑秒數。Unity 對照：一次性的 DOTween 位移，跑完即刪。
+   */
+  private readonly generalDashes = new Map<string, { from: { x: number; y: number }; t: number; wait: number }>();
   private readonly dyingUnits = new Set<string>();
   private readonly uiProjectionBuffer = new Vec3();
   private readonly screenProjectionBuffer = new Vec3();
@@ -306,7 +311,6 @@ export class UnitRenderer extends Component {
   private readonly tileBuffFlyTo = new Vec3();
   private readonly troopPrefabLoads = new Map<string, Promise<Prefab | null>>();
   private readonly heroPrefabLoads = new Map<string, Promise<Prefab | null>>();
-  private readonly troopTypeIconLoads = new Map<string, Promise<SpriteFrame | null>>();
   // MatCap 貼圖快取（所有英雄共用同一張，載入一次後復用）
   private heroMatcapTex: Texture2D | null = null;
   private matcapLoadPromise: Promise<Texture2D | null> | null = null;
@@ -381,6 +385,7 @@ export class UnitRenderer extends Component {
         this.spineUnits.remove(unitId);
         this.generalStandees.remove(unitId);
         this.unitViews.delete(unitId);
+        this.generalDashes.delete(unitId);
       }
     });
 
@@ -450,7 +455,8 @@ export class UnitRenderer extends Component {
 
     // PROG-2-9409：Spine 小隊由疊層演從上方落下（spineUnits.deploy）。3D 節點只縮放登場、不再從地下升起，
     // 否則名牌與 Spine 腳點會跟著往上滑，和下落方向相反；沒有 Spine 的單位照舊靠 3D 縮放登場。
-    this.spineUnits.deploy(unit.id);
+    // PROG-2-9715：主將不從天上落下，改由 lateUpdate 從待命點衝到出陣格
+    if (!this.isGeneralAvatarUnit(unit)) this.spineUnits.deploy(unit.id);
     const targetScale = view.worldNode.scale.clone();
     view.worldNode.setScale(new Vec3(targetScale.x * 0.01, targetScale.y * 0.01, targetScale.z * 0.01));
     this.updateFloodRaft(view, unit);
@@ -636,6 +642,7 @@ export class UnitRenderer extends Component {
         view.worldNode.destroy();
         view.labelNode.destroy();
         this.unitViews.delete(unitId);
+        this.generalDashes.delete(unitId);
         this.dyingUnits.delete(unitId);
       })
       .start();
@@ -1146,16 +1153,18 @@ export class UnitRenderer extends Component {
         // 主將沒有 Spine（或素材載不起來）：改畫立繪站牌，站位與 Spine 主將相同；站牌也載不到才留 3D 棋子（issue #2238）
         if (isGeneral && general && needsStandeeFallback(config?.path, path => this.spineUnits.hasFailed(path))) {
           this.spineUnits.remove(unitId);
-          const side = this.generalSidelineFoot(unit.faction);
+          const side = this.boardGeneralFoot(unitId, unit.faction, view, dt);
           const shownStandee = this.generalStandees.sync(unitId, general.id, side?.x ?? view.labelNode.position.x,
             side?.y ?? view.labelNode.position.y - STANDEE_HEIGHT_PX, view.labelNode.active);
           view.visualNode.active = !shownStandee;
         } else if (config) {
           this.generalStandees.remove(unitId);
           const p = view.labelNode.position;
-          const foot = isGeneral ? this.generalSidelineFoot(unit.faction) : this.unitGroundFoot(view);
+          // PROG-2-9715：格上主將跟小兵一樣站在自己的格子上（以前釘在場邊待命點，玩家看不到主將出陣走格）
+          const foot = isGeneral ? this.boardGeneralFoot(unitId, unit.faction, view, dt) : this.unitGroundFoot(view);
+          const moving = this.movingUnits.has(unitId) || (isGeneral && this.generalDashes.has(unitId));
           const shown = this.spineUnits.sync(unitId, config, foot?.x ?? p.x, foot?.y ?? p.y - config.labelToFoot,
-            unit.faction === Faction.Enemy ? -1 : 1, !isGeneral && this.movingUnits.has(unitId), dt, view.labelNode.active,
+            unit.faction === Faction.Enemy ? -1 : 1, moving, dt, view.labelNode.active,
             isGeneral ? 1 : squadMemberCount(unit.currentHp, unit.getEffectiveMaxHp()));
           view.visualNode.active = !shown;
         } else { this.spineUnits.remove(unitId); view.visualNode.active = true; }
@@ -1525,7 +1534,28 @@ export class UnitRenderer extends Component {
   }
 
   public playDuelPresentation(winner: 0 | 1 | null, fallen: boolean, exchanges: readonly DuelExchange[]): Promise<boolean> {
-    return this.spineUnits.playDuel(this.ensureGeneralSpineId(Faction.Player), this.ensureGeneralSpineId(Faction.Enemy), winner, fallen, exchanges);
+    return this.spineUnits.playDuel(this.ensureGeneralSpineId(Faction.Player), this.ensureGeneralSpineId(Faction.Enemy), winner, fallen, exchanges, this.duelSidelineArena());
+  }
+
+  /**
+   * PROG-2-9719（使用者 11/22 裁決 Q1=B）：單挑移到場邊演出，不在格子上打。
+   * 取棋盤中段（兩軍中線）往棋盤外側延伸 DUEL_SIDELINE_LANES 路的點；兩側取畫面上方（遠側）那邊，避開下方手牌與按鈕。
+   */
+  private duelSidelineArena(): { x: number; y: number } | null {
+    const lanes = GAME_CONFIG.GRID_LANES, depth = GAME_CONFIG.GRID_DEPTH;
+    const dA = Math.floor((depth - 1) / 2), dB = Math.ceil((depth - 1) / 2);
+    const mid = (lane: number): Vec3 | null => {
+      const a = this.getUnitWorldPosition(lane, dA, 0), b = this.getUnitWorldPosition(lane, dB, 0);
+      return a && b ? a.clone().add(b).multiplyScalar(0.5) : null;
+    };
+    const first = mid(0), second = mid(1), last = mid(lanes - 1), beforeLast = mid(lanes - 2);
+    if (!first || !second || !last || !beforeLast) return null;
+    const outFirst = first.clone().subtract(second.clone().subtract(first).multiplyScalar(DUEL_SIDELINE_LANES));
+    const outLast = last.clone().add(last.clone().subtract(beforeLast).multiplyScalar(DUEL_SIDELINE_LANES));
+    const pFirst = this.overlayPoint(outFirst), pLast = this.overlayPoint(outLast);
+    if (!pFirst || !pLast) return pFirst ?? pLast ?? null;
+    const top = pFirst.y >= pLast.y ? pFirst : pLast;
+    return { x: top.x, y: top.y };
   }
 
   /** 單挑演出逾時保底（PROG-2-9404）：強制收掉進行中的交鋒動畫，讓雙方回到正常跟隨 */
@@ -1899,7 +1929,7 @@ export class UnitRenderer extends Component {
     // 主戰場UI規格書 §3.1：Buff 帶來的數值變化顯示成「35 (+10)」（PROG-2-1870）
     const isGeneral = this.isGeneralAvatarUnit(unit);
     view.attackLabel.string = statWithBonusText(unit.getEffectiveAttack(), attackBonus, isGeneral ? "攻 " : "");
-    view.typeLabel.string = isGeneral ? "將" : this.toTroopShortName(unit.type);
+    view.typeLabel.string = isGeneral ? "將" : troopTypeGlyph(unit.type);
     view.hpLabel.string = statWithBonusText(Math.max(0, unit.currentHp), hpBonus, isGeneral ? "命 " : "");
     // PROG-2-9422（Q-C1 選 A）：攻擊疊到 2 倍以上變金、4 倍以上變紅加脈動光環，敵我都適用
     const surgeTier = attackSurgeTier(unit.getEffectiveAttack(), unit.attack, this.attackSurgeConfig);
@@ -2100,46 +2130,18 @@ export class UnitRenderer extends Component {
     return this.badgeLayers;
   }
 
-  /** 徽章底圖切成底框（九宮格）與兵種圓章兩個 SpriteFrame；共用同一張貼圖才能合批 */
-  private loadBadgeAtlas(): Promise<{ bg: SpriteFrame; disc: SpriteFrame } | null> {
-    if (!this.badgeAtlasLoad) {
-      this.badgeAtlasLoad = services().resource.loadSpriteFrame(BADGE_ATLAS_PATH, { tags: ["battle"] })
-        .then((base) => {
-          const cut = (x: number): SpriteFrame => {
-            const f = new SpriteFrame();
-            f.packable = false;
-            f.texture = base.texture;
-            f.rect = new Rect(x, 0, BADGE_ATLAS_CELL, BADGE_ATLAS_CELL);
-            return f;
-          };
-          const bg = cut(0);
-          bg.insetLeft = BADGE_ATLAS_INSET;
-          bg.insetRight = BADGE_ATLAS_INSET;
-          bg.insetTop = BADGE_ATLAS_INSET;
-          bg.insetBottom = BADGE_ATLAS_INSET;
-          return { bg, disc: cut(BADGE_ATLAS_CELL) };
-        })
-        .catch((err: unknown) => {
-          UCUFLogger.warn(LogCategory.LIFECYCLE, `[UnitRenderer] 徽章底圖載入失敗: ${String(err)}`);
-          return null;
-        });
-    }
-    return this.badgeAtlasLoad;
-  }
-
-  /** 在 parent 下建一個底圖精靈（2 倍解析度，縮 0.5）；底圖載好才指定 SpriteFrame */
-  private addBadgeAtlasSprite(parent: Node, name: string, part: "bg" | "disc", w: number, h: number, x = 0, y = 0): void {
-    const node = new Node(name);
+  /** 底框精靈（九宮格，2 倍解析度縮 0.5）；底圖載好才指定 SpriteFrame；圓章改由 TroopTypeBadge 繪製（PROG-2-9724） */
+  private addBadgeBgSprite(parent: Node, w: number, h: number): void {
+    const node = new Node("Bg");
     node.layer = parent.layer;
     parent.addChild(node);
-    node.setPosition(x, y, 0);
     node.setScale(BADGE_ATLAS_SCALE, BADGE_ATLAS_SCALE, 1);
     node.addComponent(UITransform).setContentSize(w / BADGE_ATLAS_SCALE, h / BADGE_ATLAS_SCALE);
     const sprite = node.addComponent(Sprite);
     sprite.sizeMode = Sprite.SizeMode.CUSTOM;
-    sprite.type = part === "bg" ? Sprite.Type.SLICED : Sprite.Type.SIMPLE;
-    void this.loadBadgeAtlas().then((frames) => {
-      if (frames && sprite.isValid) sprite.spriteFrame = frames[part];
+    sprite.type = Sprite.Type.SLICED;
+    void loadBadgeAtlasFrames().then((frames) => {
+      if (frames && sprite.isValid) sprite.spriteFrame = frames.bg;
     });
   }
 
@@ -2163,7 +2165,7 @@ export class UnitRenderer extends Component {
     const bh = height * 2 + 10;
     if (layers) {
       // 底框：與 Graphics 版同色同尺寸；外框描邊外擴 1.5，所以精靈比框大 3
-      this.addBadgeAtlasSprite(bgParent, "Bg", "bg", bw + 3, bh + 3);
+      this.addBadgeBgSprite(bgParent, bw + 3, bh + 3);
     } else {
       // 背景底板：提升頭頂資訊可讀性
       const bgNode = new Node("Bg");
@@ -2222,12 +2224,29 @@ export class UnitRenderer extends Component {
       18,
     );
     typeLabel.node.parent!.setPosition(0, topRowY, 0);
-    // 兵種圓章：跟格子 buff 圖示同款的金圈深底圓（畫在兵種字／圖示後面）
+    // 兵種圓章：金圈深底圓（畫在兵種剪影／單字後面），由 TroopTypeBadge 統一繪製（PROG-2-9724）
     const discR = segmentHeight / 2 + 1;
-    if (layers) {
-      // 底圖圓章半徑 36（2 倍）＝部隊徽章 discR 18；外框描邊 2.5 外擴 1.25
-      const discSize = BADGE_ATLAS_CELL * BADGE_ATLAS_SCALE * (discR / 18);
-      this.addBadgeAtlasSprite(bgParent, "TypeDisc", "disc", discSize, discSize, 0, topRowY);
+    if (troopType) {
+      // 底圖圓章直徑 40 ＝部隊徽章 discR 18 的 2 倍解析度換算
+      const discSize = (discR / 18) * 40;
+      const iconParent = layers ? layers.proxyFor(rootNode, "icon") : typeLabel.node.parent!;
+      const iconNode = new Node("TypeIcon");
+      iconNode.layer = iconParent.layer;
+      iconParent.addChild(iconNode);
+
+      const iconTf = iconNode.addComponent(UITransform);
+      const iconSize = Math.max(18, Math.min(segmentHeight - 6, centerWidth - 8));
+      iconTf.setContentSize(iconSize, iconSize);
+      iconNode.setPosition(0, layers ? topRowY : 0, 0);
+
+      const icon = iconNode.addComponent(Sprite);
+      icon.type = Sprite.Type.SIMPLE;
+      icon.sizeMode = Sprite.SizeMode.CUSTOM;
+      icon.color = new Color(255, 255, 255, 255);
+
+      // 剪影載入前先顯示單字；剪影到了才換圖（同一顆圓章）
+      const badge = TroopTypeBadge.attach(icon, { size: discSize, discParent: layers ? bgParent : undefined, glyph: typeLabel });
+      badge.setType(troopType);
     } else {
       const discNode = new Node("TypeDisc");
       discNode.layer = rootNode.layer;
@@ -2244,28 +2263,6 @@ export class UnitRenderer extends Component {
       disc.stroke();
     }
 
-    if (troopType) {
-      typeLabel.string = this.toTroopShortName(troopType);
-
-      const iconParent = layers ? layers.proxyFor(rootNode, "icon") : typeLabel.node.parent!;
-      const iconNode = new Node("TypeIcon");
-      iconNode.layer = iconParent.layer;
-      iconParent.addChild(iconNode);
-
-      const iconTf = iconNode.addComponent(UITransform);
-      const iconSize = Math.max(18, Math.min(segmentHeight - 6, centerWidth - 8));
-      iconTf.setContentSize(iconSize, iconSize);
-      iconNode.setPosition(0, layers ? topRowY : 0, 0);
-      iconNode.active = false;
-
-      const icon = iconNode.addComponent(Sprite);
-      icon.type = Sprite.Type.SIMPLE;
-      icon.sizeMode = Sprite.SizeMode.CUSTOM;
-      icon.color = new Color(255, 255, 255, 255);
-
-      void this.applyTroopTypeIcon(icon, typeLabel, troopType);
-    }
-
     const hpLabel = this.createBadgeSegment(
       textParent,
       "HpBadge",
@@ -2280,7 +2277,10 @@ export class UnitRenderer extends Component {
     this.shrinkToFit(hpLabel);
     // 點陣快取（PROG-2-9713）：打包進動態圖集，徽章文字共用貼圖可合批；不用 CHAR 的原因見下方名稱標籤。
     // 必須在 SHRINK 設好之後才切：切換快取模式會立刻重排，若當下還是 NONE＋空字串，節點會被自動縮成寬 6，之後縮字就看不見
-    for (const l of [attackLabel, typeLabel, hpLabel]) l.cacheMode = Label.CacheMode.BITMAP;
+    // 兵種字只有一兩個字、徽章分段尺寸固定：也設成 SHRINK 固定外框，下面三個才能一起延後重排（PROG-2-9718）
+    this.shrinkToFit(typeLabel);
+    // 三個都是 SHRINK 固定外框：切快取模式的強制重排改標髒、幀末一次刷新（PROG-2-9718）
+    for (const l of [attackLabel, typeLabel, hpLabel]) setCacheModeDeferred(l, Label.CacheMode.BITMAP);
 
     // 下排：完整兵種名稱（由 updateUnitView 動態更新）
     const nameLabelNode = new Node("NameLabel");
@@ -2301,7 +2301,9 @@ export class UnitRenderer extends Component {
     nameStrLabel.outlineWidth = BADGE_TEXT_OUTLINE_WIDTH;
     // 點陣快取（PROG-2-9713）：畫好的字打包進動態圖集，所有徽章文字共用貼圖可合批。
     // 不用 CHAR：字元圖集是全專案共用的稀缺預算（見 UIPreviewStyleBuilder 的 charAtlasGuard），預算不足會被退回且數字會畫壞。
-    nameStrLabel.cacheMode = Label.CacheMode.BITMAP;
+    // 外框固定（寬 width、高 segmentHeight）：過長的名稱縮字塞進徽章；SHRINK 先設好，切快取的重排才能延後（PROG-2-9718）
+    this.shrinkToFit(nameStrLabel);
+    setCacheModeDeferred(nameStrLabel, Label.CacheMode.BITMAP);
 
     // 以擴充屬性保存引用，供 updateUnitView 快速更新
     (rootNode as any)._bottomNameLabel = nameStrLabel;
@@ -2379,38 +2381,6 @@ export class UnitRenderer extends Component {
     return label;
   }
 
-  private async applyTroopTypeIcon(icon: Sprite, fallbackLabel: Label, troopType: TroopType): Promise<void> {
-    const spriteFrame = await this.loadTroopTypeIconFrame(troopType);
-    if (!spriteFrame || !icon.node.isValid || !fallbackLabel.node.isValid) {
-      return;
-    }
-
-    icon.spriteFrame = spriteFrame;
-    icon.node.active = true;
-    fallbackLabel.node.active = false;
-  }
-
-  private async loadTroopTypeIconFrame(troopType: TroopType): Promise<SpriteFrame | null> {
-    const resourceKey = this.normalizeTroopTypeKey(troopType);
-    const cacheKey = resourceKey.length > 0 ? resourceKey : troopType;
-    const cached = this.troopTypeIconLoads.get(cacheKey);
-    if (cached) {
-      return cached;
-    }
-
-    const pending = services().resource.loadSpriteFrame(`${TROOP_TYPE_ICON_PREFIX}${resourceKey}`).catch(() => null);
-    this.troopTypeIconLoads.set(cacheKey, pending);
-    return pending;
-  }
-
-  private normalizeTroopTypeKey(type: TroopType): string {
-    return `${type}`
-      .trim()
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '_')
-      .replace(/^_+|_+$/g, '');
-  }
-
   private resolveCombatNode(id: string | null): Node | null {
     if (!id) return null;
     // unitViews 包含一般小兵及武將化身（ID 格式："player-general-N" / "enemy-general-N"）
@@ -2473,6 +2443,33 @@ export class UnitRenderer extends Component {
     if (!world) return null;
     const p = this.overlayPoint(world);
     return p ? { x: p.x, y: p.y } : null;
+  }
+
+  /**
+   * PROG-2-9715：格上主將的腳點。第一次出現時從待命點衝到格子（GENERAL_DASH_SEC 秒、先快後慢），之後就是格子腳點。
+   * 衝刺期間 moving=true，疊層會播跑步、揚塵與腳步聲，跟小兵前進同一套。
+   */
+  private boardGeneralFoot(unitId: string, faction: Faction, view: UnitView, dt: number): { x: number; y: number } | null {
+    const ground = this.unitGroundFoot(view);
+    if (!ground) return null;
+    let dash = this.generalDashes.get(unitId);
+    if (!dash && !this.spineUnits.exists(unitId) && !this.generalStandees.has(unitId)) {
+      const from = this.generalSidelineFoot(faction);
+      if (from) { dash = { from, t: 0, wait: 0 }; this.generalDashes.set(unitId, dash); }
+    }
+    if (!dash) return ground;
+    // 素材還在載入：先停在待命點，載好才起跑，玩家才看得到衝出去；載太久（GENERAL_DASH_WAIT_SEC）就放棄衝刺直接站格
+    if (!this.spineUnits.isShown(unitId) && !this.generalStandees.has(unitId)) {
+      dash.wait += Math.max(0, dt);
+      if (dash.wait < GENERAL_DASH_WAIT_SEC) return dash.from;
+      this.generalDashes.delete(unitId);
+      return ground;
+    }
+    dash.t += Math.max(0, dt);
+    const k = Math.min(1, dash.t / GENERAL_DASH_SEC);
+    if (k >= 1) { this.generalDashes.delete(unitId); return ground; }
+    const e = 1 - (1 - k) * (1 - k);
+    return { x: dash.from.x + (ground.x - dash.from.x) * e, y: dash.from.y + (ground.y - dash.from.y) * e };
   }
 
   private unitGroundFoot(view: UnitView): { x: number; y: number } | null {
@@ -3257,17 +3254,6 @@ export class UnitRenderer extends Component {
     if (type === TroopType.Engineer) return "工兵";
     if (type === TroopType.Medic) return "醫護兵";
     return "水軍";
-  }
-
-  private toTroopShortName(type: TroopType): string {
-    if (type === TroopType.Cavalry) return "騎";
-    if (type === TroopType.Infantry) return "步";
-    if (type === TroopType.Shield) return "盾";
-    if (type === TroopType.Archer) return "弓";
-    if (type === TroopType.Pikeman) return "槍";
-    if (type === TroopType.Engineer) return "工";
-    if (type === TroopType.Medic) return "醫";
-    return "水";
   }
 
   private playCavalryChargeAnimation(node: Node, targetWorldPos: Vec3): void {

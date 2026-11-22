@@ -16534,5 +16534,95 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9714.md",
     "title": "[PROG-2-9714] 虎符卡面板繪製次數優化（文字改 BITMAP 進動態圖集合批）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2947",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9715.md",
+    "title": "[PROG-2-9715] 主將出陣改為 Q 版小人衝出出兵口、站格逐格前進（單挑只在規格條件觸發）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2948",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9716.md",
+    "title": "[PROG-2-9716] 騎兵攻擊音效改馬蹄聲（hoof_gallop，CC-BY 3.0）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2949",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9612.md",
+    "title": "[PROG-2-9612] 無頭試玩 lobby-commerce-silver 偶發失敗修正（報酬列受情報分層遮蔽）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2950",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9719.md",
+    "title": "[PROG-2-9719] 主將出陣規則依使用者 11/22 裁決：同路相鄰才單挑、小兵優先打武將、只從出兵口出陣、主將倒下加倍消失、正式規格章節",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2951",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9718.md",
+    "title": "[PROG-2-9718] 戰場文字套用 LabelLayoutDeferral（徽章、跳字、HUD）減少重排",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2952",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9717.md",
+    "title": "[PROG-2-9717] 第一年敗戰新手保護：損兵上限 30%＋傷兵營 60/40、每季康復 30%",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2953",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9720.md",
+    "title": "[PROG-2-9720] BuffStackHeal 接線：狀態堆疊、治療、中毒結算實際走 doc_spec_0359",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2954",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9721.md",
+    "title": "[PROG-2-9721] 傷兵營改全年度適用",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2955",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9723.md",
+    "title": "[PROG-2-9723] AI 奧義精力門檻改比例與委任自動放奧義",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2956",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9722.md",
+    "title": "[PROG-2-9722] 守城勝率退步調查與修正",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2957",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9724.md",
+    "title": "[PROG-2-9724] 兵種徽章共用繪製函式",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2958",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9725.md",
+    "title": "[PROG-2-9725] 總PM 11/22 裁決落地：毒箭5%、TeamRecover已損25%、SP精力名詞",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2959",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9728.md",
+    "title": "[PROG-2-9728] 委任代打奧義門檻下限：至少中 IQ",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2960",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9726.md",
+    "title": "[PROG-2-9726] 燃燒狀態：火格＋火攻戰法",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2961",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9727.md",
+    "title": "[PROG-2-9727] 名詞定義文件機械分片＋補 SP／精力名詞",
+    "category": "task"
   }
 ]

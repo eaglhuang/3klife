@@ -11,6 +11,7 @@
  * Unity 對照：像一張 Difficulty ScriptableObject 表，載入時跑 OnValidate 檢查每一列欄位是否在合理範圍。
  */
 import type { AiDifficulty } from './AiSpCharge';
+import { parseAiUltimateRules, type AiUltimateRules } from './AiUltimateDecision';
 
 export const AI_DIFFICULTY_IDS: readonly AiDifficulty[] = ['easy', 'normal', 'hard', 'nightmare', 'hell'];
 
@@ -30,6 +31,8 @@ export interface AiDifficultyEntry {
     spGainModifier: number;
     /** 單挑接受閾值，規格範圍 0.45 ~ 0.58 */
     duelAcceptThreshold: number;
+    /** 奧義精力門檻比例（ai-difficulty.json 頂層 ultimateRules，每列共用；PROG-2-9723） */
+    ultimateRules: AiUltimateRules;
 }
 
 export type AiDifficultyTable = Readonly<Record<AiDifficulty, AiDifficultyEntry>>;
@@ -54,6 +57,8 @@ export function parseAiDifficultyTable(raw: unknown): AiDifficultyParseResult {
     const errors: string[] = [];
     const list = (raw as { difficulties?: unknown } | null)?.difficulties;
     if (!Array.isArray(list)) return { table: null, errors: ['缺少 difficulties 陣列'] };
+    const ultimateRules = parseAiUltimateRules(raw);
+    if (!ultimateRules) errors.push('缺少或不合法的 ultimateRules（比例需在 0~1）');
 
     const found = new Map<string, AiDifficultyEntry>();
     for (const item of list as Partial<AiDifficultyEntry>[]) {
@@ -69,7 +74,7 @@ export function parseAiDifficultyTable(raw: unknown): AiDifficultyParseResult {
         if (!item.aiIq || !(AI_IQ_LEVELS as readonly string[]).includes(item.aiIq)) errors.push(`${id}: aiIq 不合法`);
         if (typeof item.difficultyBonus !== 'number' || item.difficultyBonus < 0) errors.push(`${id}: difficultyBonus 不合法`);
         if (typeof item.canUseTactics !== 'boolean' || typeof item.canUseUltimate !== 'boolean') errors.push(`${id}: 戰法／奧義旗標缺漏`);
-        found.set(id, item as AiDifficultyEntry);
+        found.set(id, { ...item, ultimateRules } as AiDifficultyEntry);
     }
     for (const id of AI_DIFFICULTY_IDS) {
         if (!found.has(id)) errors.push(`${id}: 缺少難度列`);

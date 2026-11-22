@@ -14,7 +14,7 @@ export function createDotSkillResolverSuite(): TestSuite {
     timing: BattleSkillTiming.ActiveCast,
   };
 
-  suite.test('單體敵軍中毒：比例 0.1、2 回合', () => {
+  suite.test('單體敵軍中毒：比例 5%（doc_spec_0359）、2 回合', () => {
     const target = createTestUnit('enemy', Faction.Enemy, 2, 3, { hp: 1000 });
     const bundle = createBattleSkillTestContext({
       playerGeneral: createTestGeneral('archer', Faction.Player),
@@ -30,7 +30,7 @@ export function createDotSkillResolverSuite(): TestSuite {
     assert.isTrue(result.applied);
     assert.equals(1, dots.length);
     assert.equals('enemy', dots[0].id);
-    assert.equals(0.1, dots[0].ratio);
+    assert.equals(0.05, dots[0].ratio);
     assert.equals(2, dots[0].turns);
   });
 

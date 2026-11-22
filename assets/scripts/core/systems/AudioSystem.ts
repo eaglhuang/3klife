@@ -7,7 +7,7 @@ import { AUDIO_PREFS_KEY, parseAudioPrefs, type AudioPrefs } from "./BattleSetti
  * 音效系統
  *
  * 負責 BGM、單次音效、循環音效的統一管理。
- * 核心特性：50ms 防重複播放，避免同一音效在連擊時爆音。
+ * 核心特性：60ms 防重複播放，避免同一音效在連擊時爆音。
  *
  * Unity 對照：
  *   - bgmSource   ≈ AudioSource 上的 PlayLoop
@@ -44,11 +44,11 @@ export class AudioSystem {
     private clipCache = new Map<string, AudioClip>();
 
     /** 防重複播放的最小間隔（ms） */
-    private static readonly DEBOUNCE_MS = 50;
+    private static readonly DEBOUNCE_MS = 60; // 規格同名音效 60ms 防重複（PROG-2-9719）
 
     /**
      * 統一音效節流閘門（PROG-2-9481）。所有 SFX 都從 playSfx／playSfxWithCooldown 出去，
-     * 由這一個閘門決定播不播；戰場裝上共用 SfxThrottle（同檔合併＋每秒上限），沒裝時用內建 50ms 防重複。
+     * 由這一個閘門決定播不播；戰場裝上共用 SfxThrottle（同檔合併＋每秒上限），沒裝時用內建 60ms 防重複。
      * 閘門自帶時鐘，回傳 false 就不播。
      */
     private sfxGate: SfxGate | null = null;
@@ -241,7 +241,7 @@ to.clip = clip;
     // ─────────────────────────────────────────
 
     /**
-     * 播放單次音效，50ms 內同名音效不重複觸發。
+     * 播放單次音效，60ms 內同名音效不重複觸發。
      *
      * Unity 對照：AudioSource.PlayOneShot(clip, volume)
      *
@@ -269,7 +269,7 @@ to.clip = clip;
 
     public getSfxGate(): SfxGate | null { return this.sfxGate; }
 
-    /** 閘門判斷：有裝閘門就交給它，否則同名音效 50ms 內不重複（連擊音爆保護）。 */
+    /** 閘門判斷：有裝閘門就交給它，否則同名音效 60ms 內不重複（連擊音爆保護）。 */
     private _passSfxGate(name: string): boolean {
         if (this.sfxGate) return this.sfxGate(name);
         const now = Date.now();

@@ -2036,6 +2036,7 @@ export class LobbyScene extends Component {
             food: session.military.food,
             cityTroops: session.military.cityTroops,
             cityTroopsCap: session.military.cityTroopsCap,
+            woundedCamp: session.military.woundedCamp,
             totalSeasonsElapsed: session.gameTime.totalSeasonsElapsed,
             fame: session.fame,
             population: session.cityPopulation,

@@ -12,6 +12,8 @@ export interface BattleSkillProfile {
   battleSkillId: string;
   /** 戰法標籤（PROG-2-0406）：例如 fire 火計，供天氣強約束判定 */
   tags?: readonly string[];
+  /** 命中即燃燒（PROG-2-9726）：不帶 fire 標籤（避開天氣限制）但仍算火攻類，例如火神狩獵 */
+  burnOnHit?: boolean;
   /** 殼：效果尚未實作（TRP-15 殼 profile），不可施放，UI 應灰掉且不扣 SP／TP */
   pendingEffect?: boolean;
   targetMode: BattleSkillTargetMode;
@@ -48,7 +50,7 @@ export interface BattleSkillProfile {
   firstTurnDamageMultiplier?: number;
   /** 擊殺目標後重置施放者行動（PROG-2-0773 威震華夏） */
   resetSelfOnKill?: boolean;
-  /** 毒箭：每回合扣目標最大 HP 的比例（規格 10%） */
+  /** 毒箭：每回合扣目標最大 HP 的比例（規格 5%，PM 11/22 統一） */
   dotMaxHpRatio?: number;
   /** 緩速：移動範圍減少的格數（規格 1） */
   slowAmount?: number;
@@ -243,7 +245,7 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     pushSteps: 1,
     battleLogKey: 'skill.tally_wushuang.push',
   },
-  // 毒箭（PROG-2-0766）：目標中毒 2 回合，每回合扣最大 HP 10%
+  // 毒箭（PROG-2-0766）：目標中毒 2 回合，每回合扣最大 HP 5%（PM 11/22 統一）
   'tally-poison-arrow': {
     battleSkillId: 'tally-poison-arrow',
     targetMode: BattleSkillTargetMode.EnemySingle,
@@ -385,6 +387,7 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
   // 火神狩獵（PROG-2-0771）：單體敵軍擊退 1 格，並將其原本所在格設為火場（規格 戰法系統 火神狩獵）
   'tally-fire-god-hunt': {
     battleSkillId: 'tally-fire-god-hunt',
+    burnOnHit: true,
     targetMode: BattleSkillTargetMode.EnemySingle,
     manualTargeting: false,
     autoAimMode: 'frontmost-enemy',

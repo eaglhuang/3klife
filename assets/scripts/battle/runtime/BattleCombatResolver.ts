@@ -18,6 +18,7 @@ import { lastSpurtAdjustedDamage } from '../../core/systems/LastSpurt';
 import { battleAptitudeProfileOf, hitRateOf, resolveAptitude, rollHit, type ResolvedAptitude } from '../../core/systems/BattleAptitude';
 import { getTerrainTroopEffect, terrainAttackRangeCapOf, terrainEvasionBonusOf } from '../../core/systems/TerrainTroopRules';
 import { zoneDefenseMultiplier } from '../shared/FormationZone';
+import { clearGeneralSortieBoost } from '../shared/GeneralSortieBoost';
 import { massDebuffAccuracyDelta, massDebuffAttackMultiplier, massDebuffCritDelta, massDebuffDamageTakenMultiplier } from '../shared/EnemyMassDebuff';
 import { TEAM_AURA_DEBUFF_EFFECTS, applyTeamAuraToDamage, teamAuraAccuracyDelta, teamAuraAttackMultiplier, teamAuraCounterRate, teamAuraDefenseMultiplier, teamAuraVsDebuffedMultiplier } from '../shared/TeamAura';
 import { consumeSelfBurstExtraAction, selfBurstAttackMultiplier, selfBurstBlocksEffect, selfBurstCritBonus } from '../shared/SelfBurstWindow';
@@ -44,7 +45,8 @@ import {
 import { clearMorale } from '../shared/Morale';
 import { critDamageOf, critRateOf, rollCrit } from '../../core/systems/CombatCrit';
 import { tacticTriggerRate } from '../../core/systems/TacticTriggerRate';
-import { isFixedTileState, tileStateRuleOf } from '../shared/TileStateRules';
+import { tileStateRuleOf } from '../shared/TileStateRules';
+import { BURN_CONFIG } from '../shared/BurnStatus';
 import { FIRE_HAZARD_DAMAGE_PER_TURN } from '../skills/SkillEffectFormulas';
 import {
   canNavalCombinedAttack,
@@ -530,16 +532,7 @@ export class BattleCombatResolver {
   private resolveTallyIgnite(attacker: TroopUnit, defender: TroopUnit): void {
     const state = this.context.state;
     for (const cell of tallyIgniteCellsOf(attacker, defender)) {
-      const existing = state.getTileEffect(cell.lane, cell.depth);
-      if (existing && isFixedTileState(existing.state)) continue;
-      state.setTileEffect({
-        id: `tally-fire-${cell.lane}-${cell.depth}`,
-        lane: cell.lane,
-        depth: cell.depth,
-        state: 'hazard-fire',
-        damagePerTurn: FIRE_HAZARD_DAMAGE_PER_TURN,
-        notes: 'tally:du-du-fu',
-      });
+      state.placeFireTile(cell.lane, cell.depth, FIRE_HAZARD_DAMAGE_PER_TURN, BURN_CONFIG.fireTile.durationTurns, `tally-fire-${cell.lane}-${cell.depth}`, 'tally:du-du-fu');
     }
   }
 
@@ -828,6 +821,8 @@ export class BattleCombatResolver {
     } else {
       this.context.setEnemyGeneralUnitId(null);
     }
+    // Q5=A（使用者 11/22 裁決）：主將倒下時全軍加倍消失，不做撤回
+    clearGeneralSortieBoost(this.context.state.units.values(), faction);
   }
 
   public onUnitKilled(

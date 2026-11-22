@@ -90,6 +90,11 @@ export function findUltimateSpecialRule(ultimateId: string): UltimateSpecialRule
   return ultimateDefinitionMap.get(ultimateId)?.specialRule;
 }
 
+/** 團隊回復的已損 HP 比例（ultimate-definitions.teamHealMissingRatio）；未填或查不到為 undefined */
+export function findUltimateTeamHealMissingRatio(ultimateId: string): number | undefined {
+  return ultimateDefinitionMap.get(ultimateId)?.teamHealMissingRatio;
+}
+
 /** 奧義 base_power 表（NumericalConfig.Ult_Base_Power）；尚未載入時回傳 undefined（PROG-2-0927） */
 export function findUltBasePowerTable(): Readonly<Record<string, number>> | undefined {
   return ultBasePowerTable;

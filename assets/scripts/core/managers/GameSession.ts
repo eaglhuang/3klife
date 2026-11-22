@@ -291,6 +291,7 @@ import { services } from './ServiceLoader';
 import { type CampaignStageDef, enabledCampaignStages, getCampaignStage, isCampaignStagePlayable } from '../config/CampaignStages';
 import { phaseFactorColors, phaseForLevel, type UnlockPhase } from '../systems/UnlockPhase';
 import { protectedAfterLoss, CELLAR_PROTECTION } from '../systems/CellarProtection';
+import { applyNoviceLossProtection, splitLostTroops, troopLossRules } from '../systems/CommandSortieLoss';
 import { applySortieResult, FOOD_PER_SEASON, MilitaryReserve, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../systems/MilitaryReserve';
 import { buildGovernorSnapshot, type GovernorSnapshot } from '../systems/GovernorHallView';
 import { defenseOutcomeOf } from '../systems/DefenseBattle';
@@ -6874,12 +6875,12 @@ export class GameSession implements AcademyRecordPort {
             if (firstClear) this._emit(GAME_SESSION_EVENTS.FirstBattleCleared, undefined);
             // 沒有可結算的出戰武將（名冊裡找不到主將）時，戰損與戰後獎懲仍要入帳（PROG-2-9149）
             const early = this._applySortieCost(result, options);
-            const earlyAftermath = early.outcomeKind && !options.teachingSpirit ? this._applyBattleAftermath(early.outcomeKind, early.lostTroopsApplied, options.defense) : undefined;
+            const earlyAftermath = early.outcomeKind && !options.teachingSpirit ? this._applyBattleAftermath(early.outcomeKind, early.lostTroopsApplied, options.defense, early.sortieLoss) : undefined;
             if ((earlyAftermath || early.sortieCost) && this._autoSave && this._save) await this.save();
             return { ...settlement, awakenings: [], captureNotices: [], aftermath: earlyAftermath, aftermathLines: earlyAftermath ? formatAftermathLines(earlyAftermath) : [], ...(early.sortieCost ? { military: this.military } : {}) };
         }
         // 戰損一律回扣城市兵源（領地治理系統 2026-04-26 裁定第 2 點）：戰場有出征帳本用帳本，極速決戰用常數表推估
-        const { outcomeKind, sortieCost, lostTroopsApplied } = this._applySortieCost(result, options);
+        const { outcomeKind, sortieCost, lostTroopsApplied, sortieLoss } = this._applySortieCost(result, options);
 
         // 戰場撿拾戰後入帳（關卡設計 §I-2，PROG-2-1571）：補給轉糧草、其餘轉背包材料，戰敗不入帳
         if (options.stageSalvage) {
@@ -6892,7 +6893,7 @@ export class GameSession implements AcademyRecordPort {
         }
 
         // 戰後獎懲（PROG-2-9149）：糧草、黃金、戰利品入帳，失敗扣民心；教學戰不結算
-        const aftermath = outcomeKind && !options.teachingSpirit ? this._applyBattleAftermath(outcomeKind, lostTroopsApplied, options.defense) : undefined;
+        const aftermath = outcomeKind && !options.teachingSpirit ? this._applyBattleAftermath(outcomeKind, lostTroopsApplied, options.defense, sortieLoss) : undefined;
 
         const source = battleExpSource(result);
         const discovery = source ? this._applyDiscoveryExp(source) : undefined;
@@ -6982,13 +6983,22 @@ export class GameSession implements AcademyRecordPort {
     }
 
     /** 戰損回扣城市兵源（極速決戰用常數表推估）；地窖保護只在戰敗時生效。回傳本次實際扣掉的兵數 */
-    private _applySortieCost(result: BattleResult, options: RecordBattleOptions): { outcomeKind: ReturnType<typeof aftermathOutcomeOf>; sortieCost: Pick<SortieSummary, 'lostTroops' | 'foodSpent'> | null; lostTroopsApplied: number } {
+    private _applySortieCost(result: BattleResult, options: RecordBattleOptions): { outcomeKind: ReturnType<typeof aftermathOutcomeOf>; sortieCost: Pick<SortieSummary, 'lostTroops' | 'foodSpent'> | null; lostTroopsApplied: number; sortieLoss: { reduced: number; woundedSent: number } | null } {
         const outcomeKind = aftermathOutcomeOf(result);
-        const sortieCost = options.sortie ?? (options.offBoard && outcomeKind ? quickSortieCost(outcomeKind, this._military.cityTroops) : null);
+        const rawCost = options.sortie ?? (options.offBoard && outcomeKind ? quickSortieCost(outcomeKind, this._military.cityTroops) : null);
+        // 新手保護（PROG-2-9717）：第 1 年敗戰才套損兵上限（陣亡＋傷兵）＝戰前城市兵源 30%；傷兵送營 60% 全年度適用
+        const protection = rawCost && outcomeKind
+            ? applyNoviceLossProtection(Math.min(this._military.cityTroops, Math.max(0, Math.floor(rawCost.lostTroops))), this._military.cityTroops, this._clock.state.currentYear, outcomeKind)
+            : null;
+        const sortieCost = rawCost && protection?.applies ? { ...rawCost, lostTroops: protection.lostTroops } : rawCost;
         const lostTroopsApplied = sortieCost ? Math.min(this._military.cityTroops, Math.max(0, Math.floor(sortieCost.lostTroops))) : 0;
+        let sortieLoss: { reduced: number; woundedSent: number } | null = null;
         if (sortieCost) {
             const foodBefore = this._military.food;
             this._military = applySortieResult(this._military, sortieCost);
+            const woundedSent = splitLostTroops(lostTroopsApplied).wounded;
+            if (woundedSent > 0) this._military = { ...this._military, woundedCamp: (this._military.woundedCamp ?? 0) + woundedSent };
+            sortieLoss = { reduced: protection?.applies ? protection.reduced : 0, woundedSent };
             // 地窖保護（ECO-06，PROG-2-1341）：戰敗時糧草不扣到 min(戰前, 保底) 以下
             this._lastCellarProtectedFood = 0;
             if (result === 'enemy-win' && CELLAR_PROTECTION.triggerAfterFailedDefense) {
@@ -6997,14 +7007,14 @@ export class GameSession implements AcademyRecordPort {
                 this._lastCellarProtectedFood = kept.saved;
             }
         }
-        return { outcomeKind, sortieCost, lostTroopsApplied };
+        return { outcomeKind, sortieCost, lostTroopsApplied, sortieLoss };
     }
 
     /**
      * 戰後獎懲入帳（PROG-2-9149）：糧草（不超過軍備上限）、黃金（走錢包、不超過太守府等級上限）、
      * 戰利品進背包、失敗扣民心；回傳帳本給結算畫面。錢包尚未綁定（沒進過大廳）時黃金不入帳也不提示。
      */
-    private _applyBattleAftermath(outcome: 'win' | 'draw' | 'loss', lostTroops: number, defense?: RecordBattleOptions['defense']): BattleAftermathLedger {
+    private _applyBattleAftermath(outcome: 'win' | 'draw' | 'loss', lostTroops: number, defense?: RecordBattleOptions['defense'], sortieLoss?: { reduced: number; woundedSent: number } | null): BattleAftermathLedger {
         const wallet = this._missionWallet;
         const ledger = planBattleAftermath(outcome, {
             food: this._military.food,
@@ -7015,6 +7025,11 @@ export class GameSession implements AcademyRecordPort {
         });
         if (!wallet) { ledger.gold = 0; ledger.goldTruncated = 0; }
         ledger.lostTroops = lostTroops;
+        if (sortieLoss && sortieLoss.reduced > 0) ledger.noviceProtectionReduced = sortieLoss.reduced;
+        if (sortieLoss && sortieLoss.woundedSent > 0) {
+            ledger.woundedSent = sortieLoss.woundedSent;
+            ledger.woundedRecoveryPercent = Math.round(troopLossRules().recoveryRatio * 100);
+        }
         if (ledger.food > 0) this._military = { ...this._military, food: this._military.food + ledger.food };
         if (ledger.gold > 0) wallet?.grant(ledger.gold);
         // 守城戰（PROG-2-9425）：失敗改走守城戰敗（民心 −3，全滅再扣人口），不疊一般戰敗民心；勝利另加民心

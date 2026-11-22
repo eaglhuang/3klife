@@ -9,6 +9,7 @@ import { type BattleResult, BATTLE_FRONT_DEPTH } from "../BattleTypes";
 import { DUEL_FLEE_HP, DUEL_FLEE_SQUAD_LOSS_RATIO, DUEL_WINNER_BUFF_TURNS, DUEL_WINNER_CRIT_BONUS } from "../shared/DuelOutcome";
 import { duelVictoryBuffTurns } from "../shared/DuelVictoryBuff";
 import { maximizeMorale } from "../shared/Morale";
+import { applyGeneralSortieBoost, clearGeneralSortieBoost } from "../shared/GeneralSortieBoost";
 import { resolveTimeUpWinner } from "./BattleVictoryResolver";
 import { duelEscapeFailedLine, duelFleeImmuneLine, duelSlainCapturedLine } from "../../core/systems/NumericalScriptLines";
 import { rollDuelEscape, type GeneralCaptureCause, type GeneralCaptureRecord } from "../../shared/GeneralCaptureContract";
@@ -182,7 +183,7 @@ export class BattleGeneralDuelFlow {
 
     this.context.state.units.forEach(u => {
       if (u.faction === Faction.Player && u.id !== id) {
-        u.attackBonus += u.attack;
+        applyGeneralSortieBoost(u);
       }
     });
 
@@ -332,6 +333,8 @@ export class BattleGeneralDuelFlow {
     } else {
       this.enemyGeneralUnitId = null;
     }
+    // Q5=A：主將倒下時全軍加倍消失
+    clearGeneralSortieBoost(this.context.state.units.values(), faction);
   }
 
   private resolveAcceptedGeneralDuel(

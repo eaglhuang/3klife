@@ -1,0 +1,7 @@
+{
+  "_comment": "PROG-2-9717（總PM 11/22 核准）：第 1 年敗戰新手保護。損兵（陣亡＋傷兵）上限＝戰前城市兵源 × noviceLossCapRatio，只限 ≤ noviceProtectionMaxYear 年的敗戰（含年終守城敗戰），勝利、平手、之後年份照舊。上限內損兵 woundedRatio 進傷兵營、其餘陣亡；傷兵營每季康復 recoveryRatio 回城市兵源（規格書 doc_spec_0357 §4 既有 60%／30%）。",
+  "woundedRatio": 0.6,
+  "recoveryRatio": 0.3,
+  "noviceProtectionMaxYear": 1,
+  "noviceLossCapRatio": 0.3
+}
