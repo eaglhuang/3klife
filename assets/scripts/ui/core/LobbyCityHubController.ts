@@ -96,6 +96,8 @@ export interface LobbyCityHubInput {
     readonly food: number;
     readonly cityTroops: number;
     readonly cityTroopsCap: number;
+    /** 傷兵營人數（PROG-2-9717）；大於 0 時接在守軍後面顯示 */
+    readonly woundedCamp?: number;
     readonly totalSeasonsElapsed: number;
     readonly fame: number;
     /** 實際人口與民心（GameSession，PROG-2-9138）；沒給時退回暫定推算值 */
@@ -183,7 +185,7 @@ export function buildLobbyCityHubView(input: LobbyCityHubInput): LobbyCityHubFlo
         cityRegion: `${PLAYER_HOME_CITY.region}・主城　領地 ${input.territoryCount}`,
         cityPopulation: `人口 ${populationText(input.population ?? cityPopulation(input.totalSeasonsElapsed))}`,
         cityMorale: `民心 ${input.morale ?? cityMorale(input.fame)}`,
-        cityGarrison: `守軍 ${num(input.cityTroops)} / ${num(input.cityTroopsCap)}`,
+        cityGarrison: `守軍 ${num(input.cityTroops)} / ${num(input.cityTroopsCap)}${(input.woundedCamp ?? 0) > 0 ? `　傷兵營 ${num(input.woundedCamp ?? 0)}` : ''}`,
         cityFaction: `陣營　${PLAYER_HOME_CITY.faction}`,
         cityRivals: rivalSummaryText(input.rivals),
     };

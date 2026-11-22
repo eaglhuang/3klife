@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 243,
+    "done": 245,
     "in_progress": 7,
     "open": 85,
-    "total": 335
+    "total": 337
   },
   "tasks": [
     {
@@ -14498,6 +14498,59 @@
         "_MANIFEST.md"
       ],
       "notes": "2026-11-22 | 狀態: done | 驗證: 單元測試、tsc 0、quick 閘門 | 變更: 騎兵攻擊音效 biteskill→hoof_gallop（OpenGameArt CC-BY 3.0，取一個蹄聲循環 0.58 秒 22050Hz 單聲道）| 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2952",
+      "id": "PROG-2-9717",
+      "title": "第一年敗戰新手保護：損兵上限 30%＋傷兵營 60/40、每季康復 30%",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T11:17:43+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "第 1 年敗戰（含年終守城敗戰）的損兵上限為戰前城市兵源 30%（陣亡＋傷兵總量）；上限內損兵 60% 進傷兵營、40% 陣亡；傷兵營每季康復 30% 回兵源。勝利、平手、第 2 年起照舊。數值放 data/troop-loss-rules.json。傷兵營進存檔，結算與大廳城市資訊顯示。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "1. 第 1 年敗戰損兵不超過戰前兵源 30%；2. 損兵 60% 進傷兵營、40% 陣亡；3. 每季康復 30%；4. 第 2 年與勝利平手不受影響；5. 結算顯示新手保護與傷兵兩行；6. 傷兵營進存檔讀檔保留；7. 單元測試含四連敗曲線"
+      ],
+      "deliverables": [
+        "assets/scripts/core/systems/CommandSortieLoss.ts",
+        "MilitaryReserve.ts",
+        "BattleAftermath.ts",
+        "GameSession.ts",
+        "assets/resources/data/troop-loss-rules.json",
+        "tests/TroopLossProtection.test.ts"
+      ],
+      "notes": "2026-11-22 | 狀態: done | 驗證: tests/run-cli ALL PASS 9151（含 TroopLossProtection 9 項）；tsc -p tsconfig.test.json 0 錯；compute-gate standard 13/14 通過（僅既有 LoginScene→QaTimeController 警告） | 變更: troop-loss-rules.json、CommandSortieLoss 新手保護、MilitaryReserve woundedCamp 與每季康復、GameSession 敗戰套上限並寫傷兵營、結算兩行、大廳守軍列加傷兵營；勝利與平手不寫傷兵營（照舊） | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
