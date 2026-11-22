@@ -48,6 +48,8 @@ export interface HallStagePlacement {
     height: number;
     flip: boolean;
     hasTaskMark: boolean;
+    /** 標記樣式名（對應 hall-stage-decor.json 的 markStyles）；null 走預設的小「!」 */
+    markStyle: string | null;
     spriteCandidates: string[];
 }
 
@@ -64,6 +66,7 @@ export function planHallStage(
     generals: readonly HallStageGeneral[],
     layout: Readonly<HallStageLayout>,
     taskMarkIds: ReadonlySet<string> = new Set(),
+    markStyleById: ReadonlyMap<string, string> = new Map(),
 ): HallStagePlacement[] {
     const spotById = new Map(layout.spots.map(s => [s.id, s] as const));
     const order = layout.fillOrder.filter(id => spotById.has(id));
@@ -90,6 +93,7 @@ export function planHallStage(
             height: spot.height,
             flip: spot.footX > layout.faceCenterX,
             hasTaskMark: taskMarkIds.has(general.id),
+            markStyle: markStyleById.get(general.id) ?? null,
             spriteCandidates: layout.spriteCandidates.map(t => t.split('{snake}').join(snake)),
         });
     }

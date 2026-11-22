@@ -20,6 +20,16 @@ const cast = (generals = TWO, marks: string[] = []) => ({ generals, taskMarkIds:
 export function createHallStageDirectorSuite(): TestSuite {
     const suite = new TestSuite('HallStageDirector');
 
+    suite.test('標記樣式只套給指定武將，樣式變動會重新回傳站位（PROG-2-9820）', () => {
+        const director = new HallStageDirector(LAYOUT);
+        const styled = director.update({ generals: TWO, taskMarkIds: new Set(['guan-yu']), markStyleById: new Map([['guan-yu', 'promotion']]) });
+        const byId = new Map(styled!.map(p => [p.generalId, p] as const));
+        assert.equals(byId.get('guan-yu')!.markStyle, 'promotion', '關羽用晉升樣式');
+        assert.equals(byId.get('liu-bei')!.markStyle, null, '劉備無樣式');
+        assert.equals(director.update({ generals: TWO, taskMarkIds: new Set(['guan-yu']), markStyleById: new Map([['guan-yu', 'promotion']]) }), null, '同樣式不重發');
+        assert.isTrue(director.update(cast(TWO, ['guan-yu'])) !== null, '改回預設樣式要重發');
+    });
+
     suite.test('第一次必回傳站位，同一份名單再丟回傳 null', () => {
         const director = new HallStageDirector(LAYOUT);
         const first = director.update(cast());

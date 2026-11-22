@@ -13,10 +13,10 @@
  *
  * Unity 對照：像一個 Spawner＋Despawner，依「目標名單」與「現場名單」的差異生成與回收。
  */
-import { _decorator, Color, Component, Label, Node, resources, Sprite, SpriteFrame, sp, Tween, tween, UITransform, Vec3 } from 'cc';
+import { _decorator, Color, Component, Label, LabelOutline, Node, resources, Sprite, SpriteFrame, sp, Tween, tween, UITransform, Vec3 } from 'cc';
 import { services } from '../../core/managers/ServiceLoader';
 import type { HallStagePlacement } from '../../core/systems/HallStagePlanner';
-import { HallStageDecor, hallStageCrowdPose } from '../../core/systems/HallStageCrowdPose';
+import { HallMarkStyle, HallStageDecor, hallStageCrowdPose } from '../../core/systems/HallStageCrowdPose';
 import type { HallCrowdReaction } from '../../core/systems/HallCrowdReaction';
 import { HallWander, WANDER_ANIMS, type WanderActorState } from '../../shared/lobby/wanderCore';
 import {
@@ -250,7 +250,7 @@ export class HallStageCrowd extends Component {
 
         // 名牌等小人載完、站位算好才建立（#2107-3）：先建會停在原點，載入慢時幾張名牌疊在畫面中間
         const tag = this._makeLabel(`tag-${placement.generalId}`, this._tagText(placement), 16, TAG_COLOR);
-        const mark = placement.hasTaskMark ? this._makeLabel(`mark-${placement.generalId}`, '!', 30, MARK_COLOR) : null;
+        const mark = placement.hasTaskMark ? this._makeMark(placement, decor) : null;
         const pose = hallStageCrowdPose(placement, placement.height, decor, index);
         const data = this._wanderData;
         // 啟用走動時沒有骨架的武將也走（通用步態）：輪替進場的從場外走進來，位置與晃動由走動模擬每幀決定
@@ -262,13 +262,13 @@ export class HallStageCrowd extends Component {
         body.setScale(pose.body.scaleX, pose.body.scaleY, 1);
         tag.setPosition(at.x, at.y - decor.tagBelowFootPx, 0);
         tag.active = this._tagsVisible;
-        const headY = at.y + placement.height + decor.markAboveHeadPx;
+        const headY = at.y + placement.height + this._markRise(placement, decor);
         if (mark) mark.setPosition(at.x, headY, 0);
         this._headPositions.set(placement.generalId, new Vec3(at.x, headY, 0));
 
         if (!walks) {
             this._playIdle(body, pose.body.scaleX, pose.body.scaleY, pose.idleDelaySec, decor);
-            if (mark) this._playBob(mark, decor);
+            if (mark) this._playMark(mark, placement, decor, false);
         }
         const actor: CrowdActor = {
             id: placement.generalId, placement, node: body, skeleton: null, tag, mark,
@@ -316,12 +316,12 @@ export class HallStageCrowd extends Component {
         this.node.addChild(body);
 
         const tag = this._makeLabel(`tag-${placement.generalId}`, this._tagText(placement), 16, TAG_COLOR);
-        const mark = placement.hasTaskMark ? this._makeLabel(`mark-${placement.generalId}`, '!', 30, MARK_COLOR) : null;
+        const mark = placement.hasTaskMark ? this._makeMark(placement, decor) : null;
         // 輪替進場的人先放在場外，走動模擬接手後自己走進來；第一批直接站在站位上
         const at = arrive
             ? wanderToStage(wanderEntryPoint(data, placement.stageX, placement.stageY, this._canvas), this._canvas)
             : { x: placement.stageX, y: placement.stageY };
-        const headY = at.y + placement.height + decor.markAboveHeadPx;
+        const headY = at.y + placement.height + this._markRise(placement, decor);
         body.setScale(data.generalScale, data.generalScale, 1);
         body.setPosition(at.x, at.y, 0);
         tag.setPosition(at.x, at.y - decor.tagBelowFootPx, 0);
@@ -380,14 +380,20 @@ export class HallStageCrowd extends Component {
     /** 本來就在場上的人：只同步頭上的「!」標記，位置與走動照舊 */
     private _refresh(actor: CrowdActor, placement: HallStagePlacement): void {
         const decor = this._decor;
+        if (!decor) { actor.placement = placement; return; }
+        // 標記樣式換了（例如晉升導流上線／消費）：拆掉重建
+        if (actor.mark && placement.hasTaskMark && actor.placement.markStyle !== placement.markStyle) {
+            Tween.stopAllByTarget(actor.mark);
+            if (actor.mark.isValid) actor.mark.destroy();
+            actor.mark = null;
+        }
         actor.placement = placement;
-        if (!decor) return;
         if (placement.hasTaskMark && !actor.mark) {
             const head = this._headPositions.get(actor.id);
-            actor.mark = this._makeLabel(`mark-${actor.id}`, '!', 30, MARK_COLOR);
+            actor.mark = this._makeMark(placement, decor);
             if (head) actor.mark.setPosition(head.x, head.y, 0);
             // 靜態小人走動時標記由走動模擬每幀定位，不能再疊上下彈的動畫
-            if (!actor.skeleton && !this._wanderData) this._playBob(actor.mark, decor);
+            this._playMark(actor.mark, placement, decor, !actor.skeleton && !this._wanderData);
         } else if (!placement.hasTaskMark && actor.mark) {
             Tween.stopAllByTarget(actor.mark);
             if (actor.mark.isValid) actor.mark.destroy();
@@ -419,7 +425,7 @@ export class HallStageCrowd extends Component {
         actor.node.setPosition(stage.x, stage.y + lift, 0);
         actor.node.setScale(actor.baseScaleX * state.facing, actor.baseScaleY * stretch, 1);
         actor.node.setSiblingIndex(order);
-        const headY = stage.y + actor.placement.height + decor.markAboveHeadPx;
+        const headY = stage.y + actor.placement.height + this._markRise(actor.placement, decor);
         actor.tag.setPosition(stage.x, stage.y - decor.tagBelowFootPx, 0);
         actor.mark?.setPosition(stage.x, headY, 0);
         this._headPositions.set(state.id, new Vec3(stage.x, headY, 0));
@@ -435,7 +441,7 @@ export class HallStageCrowd extends Component {
         }
         if (!decor) return;
         const stage = wanderToStage({ x: state.x, y: state.y }, this._canvas);
-        const headY = stage.y + actor.placement.height + decor.markAboveHeadPx;
+        const headY = stage.y + actor.placement.height + this._markRise(actor.placement, decor);
         actor.state = state;
         actor.node.setPosition(stage.x, stage.y, 0);
         // 往哪邊走就翻哪邊：scaleX 正負，不另做鏡像動畫
@@ -530,6 +536,44 @@ export class HallStageCrowd extends Component {
                     .start();
             })
             .start();
+    }
+
+    /** 取這位武將的標記樣式；沒指定或資料沒有該名稱就回 null（走預設小「!」） */
+    private _markStyleOf(placement: HallStagePlacement, decor: HallStageDecor): HallMarkStyle | null {
+        return (placement.markStyle && decor.markStyles?.[placement.markStyle]) || null;
+    }
+
+    /** 標記中心離頭頂的距離：具名樣式字較大，多抬一些才不蓋住臉 */
+    private _markRise(placement: HallStagePlacement, decor: HallStageDecor): number {
+        return decor.markAboveHeadPx + (this._markStyleOf(placement, decor)?.extraRisePx ?? 0);
+    }
+
+    /** 建立頭上標記：預設是小「!」；具名樣式（如晉升導流）依 hall-stage-decor.json 的字級、顏色、描邊 */
+    private _makeMark(placement: HallStagePlacement, decor: HallStageDecor): Node {
+        const style = this._markStyleOf(placement, decor);
+        const name = `mark-${placement.generalId}`;
+        if (!style) return this._makeLabel(name, '!', 30, MARK_COLOR);
+        const node = this._makeLabel(name, '!', style.fontSize, Color.fromHEX(new Color(), style.color));
+        const outline = node.addComponent(LabelOutline);
+        outline.color = Color.fromHEX(new Color(), style.outlineColor);
+        outline.width = style.outlineWidth;
+        return node;
+    }
+
+    /** 標記動畫：具名樣式走呼吸縮放（任何狀態都適用）；預設小「!」只在靜止站位時上下彈 */
+    private _playMark(mark: Node, placement: HallStagePlacement, decor: HallStageDecor, bobWhenStatic: boolean): void {
+        const style = this._markStyleOf(placement, decor);
+        if (style) {
+            const half = style.pulse.periodSec / 2;
+            tween(mark)
+                .to(half, { scale: new Vec3(style.pulse.scale, style.pulse.scale, 1) }, { easing: 'sineInOut' })
+                .to(half, { scale: new Vec3(1, 1, 1) }, { easing: 'sineInOut' })
+                .union()
+                .repeatForever()
+                .start();
+            return;
+        }
+        if (bobWhenStatic) this._playBob(mark, decor);
     }
 
     private _playBob(mark: Node, decor: HallStageDecor): void {

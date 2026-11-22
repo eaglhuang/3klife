@@ -16506,7 +16506,13 @@
     "category": "task"
   },
   {
-    "id": "doc_task_2940",
+    "id": "doc_task_2939",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9820.md",
+    "title": "[PROG-2-9820] 晉升導流「！」加大加亮，且泡泡必須出在掛「！」的武將身上",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2941",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9802.md",
     "title": "[PROG-2-9802] 網頁版卡頓第三輪（漸層底板原生 canvas、全螢幕畫面遮蔽底層）",
     "category": "task"
