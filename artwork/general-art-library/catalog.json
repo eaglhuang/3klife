@@ -1368,10 +1368,12 @@
           {
             "version": "0001",
             "file": "small_avatars/cao_cao__曹操__small_avatar_0001.png",
-            "status": "review-pending",
+            "status": "rejected",
             "sha256": "c1ff883e7839ef75d307620e1a6a4e5a9998922ca38b7358b6509e33682b68fe",
             "canvas": "1254x1254 RGBA",
-            "qc": "125px preview: face centered; head/crown within target scale; full face and crown visible; only neck and shoulder edges at lower crop."
+            "qc": "125px preview: face centered; head/crown within target scale; full face and crown visible; only neck and shoulder edges at lower crop.",
+            "removedFromLibrary": true,
+            "note": "Head height was approximately 70%, below the current 75% minimum; old file was removed and was not restored."
           },
           {
             "version": "0002",
