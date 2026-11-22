@@ -824,8 +824,8 @@
         ]
       },
       "battle": {
-        "activeVersion": "0003",
-        "status": "review-pending",
+        "activeVersion": "0004",
+        "status": "asset-imported",
         "history": [
           {
             "version": "0001",
@@ -858,8 +858,20 @@
             "poseSelection": "側身踏步低勢，雙手掃弦施展音攻",
             "gaze": "目光看向鏡頭",
             "qc": "候選版；琴與完整琴架、人物手足均在畫面內；移除外圍光暈後確認透明邊界留白；待使用者審核。"
+          },
+          {
+            "version": "0004",
+            "file": "battle/cai_wenji__蔡文姬__battle_0004.png",
+            "status": "asset-imported",
+            "sha256": "b98840dc6f7a659c756010c0517041771a6f54056927f32210875ca0f9ee4f18",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "pipa",
+            "poseSelection": "斜角鏡頭下的琵琶舞姿，前後步展開，衣袖裙擺隨旋身揚起",
+            "gaze": "側身回望鏡頭",
+            "qc": "使用者核可收入戰鬥目錄；已確認透明角落與直式全身構圖，尚未驗證遊戲內顯示。"
           }
-        ]
+        ],
+        "displayStatus": "not-yet-verified"
       },
       "avatar": {
         "activeVersion": "0004",
