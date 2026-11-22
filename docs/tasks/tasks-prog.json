@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 262,
+    "done": 263,
     "in_progress": 7,
     "open": 85,
-    "total": 354
+    "total": 355
   },
   "tasks": [
     {
@@ -15420,6 +15420,62 @@
         "style": "classic",
         "label": "",
         "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9832",
+      "title": "幕府大廳套用大廳・內政統一風格（第一階段：共用 token＋主畫面）",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-22T21:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "幕府大廳主畫面套用大廳・內政風格：新增共用 hall-style-tokens、UISpecLoader 掛勾純樣式替換；不改功能與文字",
+      "related": [
+        "PROG-2-9398"
+      ],
+      "depends": [],
+      "acceptance": [
+        "token 與內政 skin 數值一致（測試比對）",
+        "只改樣式欄位，節點 id 與尺寸不變",
+        "tsc 0 錯；run-cli 全過"
+      ],
+      "deliverables": [
+        "assets/resources/ui-spec/hall-style/hall-style-tokens.json",
+        "assets/scripts/ui/core/HallStyleTokens.ts",
+        "assets/scripts/ui/core/UISpecLoader.ts",
+        "tests/HallStyleTokens.test.ts",
+        "docs/agent-briefs/tasks/PROG/PROG-2-9832.md"
+      ],
+      "notes": "2026-11-22 | 狀態: done（第一階段） | 驗證: tsc 0 錯；run-cli 9255 passed 3 skipped（含 HallStyleTokens 9 項） | 變更: hall-style-tokens.json、HallStyleTokens.ts、UISpecLoader 掛勾、HallStyleTokens.test.ts | 阻塞: 未做實機截圖比對；分節標題小字距與細金線留第二階段",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "幕府大廳主畫面套用大廳・內政玻璃風格（第一階段）",
         "position": "",
         "prereq": ""
       },
