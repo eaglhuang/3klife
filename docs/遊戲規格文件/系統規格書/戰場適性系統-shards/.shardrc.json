@@ -18,6 +18,11 @@
       "pattern": "^F\\. "
     },
     {
+      "name": "shard-d",
+      "title": "K–Q 天氣代碼、季節機率、劇情固定、排程、戰前顯示、JSON、驗收（PROG-2-9735）",
+      "pattern": "^[K-Q]\\. "
+    },
+    {
       "name": "shard-c",
       "title": "G–J 劇本、字串、Data Schema、名詞定義、MCQ 與變更記錄",
       "pattern": "."

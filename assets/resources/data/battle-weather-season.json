@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "doc": "戰場適性系統.md (doc_spec_0041) 季節天氣機率表；PROG-2-9735。總 PM 2026-11-22 裁決：晴天每季至少 50%，冬天沒有雪、以霧代替；權重為相對值（目前每季加總 100），由 core/systems/BattleWeatherRoll.ts 讀取。",
+  "defaultWeather": "SUNNY",
+  "randomExcluded": ["NIGHT"],
+  "drawRule": {
+    "fixedFirst": true,
+    "seedMode": "year-season-encounter",
+    "note": "關卡 weather 欄位有值就固定；沒值才依季節權重抽；整場天氣固定，不中途切換"
+  },
+  "seasons": {
+    "1": { "label": "春", "weights": { "SUNNY": 50, "RAINY": 25, "FOG": 15, "WINDY": 10 } },
+    "2": { "label": "夏", "weights": { "SUNNY": 50, "RAINY": 30, "THUNDER": 15, "WINDY": 5 } },
+    "3": { "label": "秋", "weights": { "SUNNY": 50, "WINDY": 30, "FOG": 10, "RAINY": 10 } },
+    "4": { "label": "冬", "weights": { "SUNNY": 50, "FOG": 30, "WINDY": 15, "RAINY": 5 } }
+  }
+}

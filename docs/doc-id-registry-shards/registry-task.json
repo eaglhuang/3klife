@@ -16678,5 +16678,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9734.md",
     "title": "[PROG-2-9734] 戰場 buff 格靜態淡光圈＋部隊吃到 buff 腳下 2.5 秒特效（正式版，刪舊格子特效）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2974",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9735.md",
+    "title": "[PROG-2-9735] 戰場天氣：季節機率抽取、劇情關固定、戰前顯示",
+    "category": "task"
   }
 ]
