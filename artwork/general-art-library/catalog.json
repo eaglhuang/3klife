@@ -760,7 +760,7 @@
         ]
       },
       "avatar": {
-        "activeVersion": "0002",
+        "activeVersion": "0003",
         "status": "integrated",
         "history": [
           {
@@ -771,20 +771,67 @@
           {
             "version": "0002",
             "file": "avatars/xiao_qiao__小喬__avatar_0002.png",
-            "status": "integrated"
+            "status": "superseded"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/xiao_qiao__小喬__avatar_0003.png",
+            "status": "integrated",
+            "sha256": "325e3c6c3f968c9f8406da8bb3dbdadebccd2567fe3eaded2e07d42f6f3abb46",
+            "canvas": "1254x1254 RGBA",
+            "method": "new shoulder portrait source guided by official standing and avatar references",
+            "sourceStandingFile": "standing/xiao_qiao__小喬__standing_0002.png",
+            "sourceAvatarFile": "avatars/xiao_qiao__小喬__avatar_0002.png",
+            "createdAt": "2026-11-21"
           }
         ]
       },
       "smallAvatar": {
-        "activeVersion": "0001",
+        "activeVersion": "0003",
         "status": "review-pending",
         "history": [
           {
             "version": "0001",
             "file": "small_avatars/xiao_qiao__小喬__small_avatar_0001.png",
-            "status": "review-pending",
+            "status": "superseded",
             "sha256": "f6a8b436b73dfc410ef3c4c61a9413fa0d426eaa7a141de4053f79a421ac4ac5",
             "canvas": "1254x1254 RGBA"
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/xiao_qiao__小喬__small_avatar_0002.png",
+            "status": "integrated",
+            "sha256": "4f9d1c6230998efffa4ce1ca51b39d1f7f74f163c7a28caf0563c8825f9a1381",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0003",
+            "sourceAvatarFile": "avatars/xiao_qiao__小喬__avatar_0003.png",
+            "method": "crop-only; uniform resize; no rotation or retouch",
+            "cropBox": {
+              "x": 104.1,
+              "y": 12.56,
+              "width": 1071.79,
+              "height": 1071.79
+            },
+            "qc": "頭高76.5%；臉高42%、臉寬39%；臉框中線偏差0.5px；完整保留雙髻、花飾、藍色髮帶與長辮。與七張核可基準於125px及250px同尺度並排檢視通過；雙肩可見但屬最後優先。來源為依正式站姿及頭像參考重繪的肩上母圖。",
+            "createdAt": "2026-11-21"
+          },
+          {
+            "version": "0003",
+            "file": "small_avatars/xiao_qiao__小喬__small_avatar_0003.png",
+            "status": "review-pending",
+            "sha256": "fd487659cf6ad2c28845be33b7e90c43096a154ba8964ab608c53f13260e217f",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0003",
+            "sourceAvatarFile": "avatars/xiao_qiao__小喬__avatar_0003.png",
+            "method": "crop-only; uniform resize; no rotation or retouch",
+            "cropBox": {
+              "x": 128.38,
+              "y": 11.88,
+              "width": 1023.23,
+              "height": 1023.23
+            },
+            "qc": "頭高79.7%；臉高46.9%、臉寬38.6%；臉框中線偏差0.5px；雙髻、花飾、藍色髮帶與長辮完整。與五張核可女性小頭像同尺度比較；肩線僅作次要警示。",
+            "createdAt": "2026-11-22"
           }
         ]
       }
