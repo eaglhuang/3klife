@@ -4637,6 +4637,33 @@
           }
         ],
         "activeVersion": "0002"
+      },
+      "smallAvatar": {
+        "activeVersion": "0001",
+        "status": "integrated",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/fa_zheng__法正__small_avatar_0001.png",
+            "status": "integrated",
+            "sha256": "f6d1230ebe04f0cdde1f88d69d238c56acfcc1878606079477eab1e764107881",
+            "canvas": "256x256 RGBA",
+            "sourceAvatarVersion": "0002",
+            "sourceAvatarFile": "avatars/fa_zheng__法正__avatar_0002.png",
+            "method": "crop-only; uniform resize; face-centered; no rotation",
+            "cropBox": {
+              "x": 48.83,
+              "y": 4.13,
+              "width": 193.33,
+              "height": 193.33
+            },
+            "headHeightRatio": 0.75,
+            "faceHeightRatio": 0.466,
+            "faceWidthRatio": 0.357,
+            "centerlineErrorPx": 0.5,
+            "note": "頭高75%、臉高46.6%、臉寬35.7%；臉框中線誤差0.5px；完整保留冠飾、髮簪、髮型、臉與鬍鬚；自然三分之四角度。250px核可基準比較通過；肩部畫素錨點有警示，肩線僅少量入鏡，頭部比例優先。僅等比例裁切縮放，未旋轉或修臉。"
+          }
+        ]
       }
     },
     {
