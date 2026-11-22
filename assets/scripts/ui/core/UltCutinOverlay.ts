@@ -35,9 +35,24 @@ export interface UltCutinPlayArgs {
   onPauseRequest?: () => void;
   /** 播放結束（含跳過、被銷毀）時要求恢復戰場 */
   onResumeRequest?: () => void;
-  /** 這是暫代圖演出（該武將還沒有專屬分鏡圖）：畫面中央疊「暫代圖 待替換」警示字樣 */
+  /** 這是暫代圖演出（該武將還沒有專屬分鏡圖）：畫面中央疊招式名大字，下方小字標「暫代圖 待替換」 */
   placeholder?: boolean;
+  /** 暫代圖的字級與顏色（PROG-2-9731，來源 data/battle-ui-feedback.json）；不給用內建值 */
+  placeholderStyle?: PlaceholderStyle;
 }
+
+/** 暫代圖中央大字（招式名）與下方小字（暫代標記）的樣式；字級以畫面高度的比例表示 */
+export interface PlaceholderStyle {
+  skillFontRatio: number;
+  skillColor: readonly [number, number, number, number];
+  skillOutlineColor: readonly [number, number, number, number];
+  tagFontRatio: number;
+  tagColor: readonly [number, number, number, number];
+}
+const DEFAULT_PLACEHOLDER_STYLE: PlaceholderStyle = {
+  skillFontRatio: 0.17, skillColor: [255, 236, 160, 255], skillOutlineColor: [60, 20, 90, 255],
+  tagFontRatio: 0.035, tagColor: [214, 200, 240, 255],
+};
 
 export type UltCutinOutcome = 'played' | 'skipped' | 'unplayable';
 
@@ -296,7 +311,7 @@ export class UltCutinDriver extends Component {
   }
 }
 
-function buildParts(parent: Node, config: CutinConfig, viewW: number, viewH: number, placeholder: boolean): OverlayParts {
+function buildParts(parent: Node, config: CutinConfig, viewW: number, viewH: number, placeholder: boolean, style: PlaceholderStyle = DEFAULT_PLACEHOLDER_STYLE): OverlayParts {
   const layer = parent.layer;
   const root = makeNode(ULT_CUTIN_NODE, layer, viewW, viewH);
   // 全螢幕攔截：底下的戰場與按鈕收不到這次點擊
@@ -351,16 +366,35 @@ function buildParts(parent: Node, config: CutinConfig, viewW: number, viewH: num
   // 暫代圖警示字樣：畫面中央一行大字，淡入淡出跟著分鏡圖
   let placeholderParts: OverlayParts['placeholder'] = null;
   if (placeholder) {
-    const size = Math.round(viewH * 0.11);
-    const node = makeNode(`${ULT_CUTIN_NODE}Placeholder`, layer, viewW, Math.round(size * 1.5));
-    const label = node.addComponent(Label);
-    label.string = PLACEHOLDER_CUTIN_TEXT;
+    // PROG-2-9731：中央改放招式名大字（以前是「暫代圖 待替換」警示，玩家看不出放的是什麼招），
+    // 「暫代圖 待替換」降成下方小字標記；暫代清單與 console 警告照舊，補專屬分鏡後整個節點就不會再出現。
+    const size = Math.round(viewH * style.skillFontRatio);
+    const tagSize = Math.max(12, Math.round(viewH * style.tagFontRatio));
+    const node = makeNode(`${ULT_CUTIN_NODE}Placeholder`, layer, viewW, Math.round(size * 1.5 + tagSize * 1.6));
+    const skillNode = makeNode(`${ULT_CUTIN_NODE}PlaceholderSkill`, layer, viewW, Math.round(size * 1.5));
+    node.addChild(skillNode);
+    skillNode.setPosition(0, Math.round(tagSize * 0.8), 0);
+    const label = skillNode.addComponent(Label);
+    label.string = config.skillName || '奧義';
     label.fontSize = size;
     label.lineHeight = Math.round(size * 1.3);
     label.isBold = true;
     label.horizontalAlign = Label.HorizontalAlign.CENTER;
     label.overflow = Label.Overflow.SHRINK;
-    label.color = new Color(255, 214, 72, 255);
+    label.color = new Color(style.skillColor[0], style.skillColor[1], style.skillColor[2], style.skillColor[3]);
+    label.enableOutline = true;
+    label.outlineColor = new Color(style.skillOutlineColor[0], style.skillOutlineColor[1], style.skillOutlineColor[2], style.skillOutlineColor[3]);
+    label.outlineWidth = Math.max(3, Math.round(size * 0.05));
+    const tagNode = makeNode(`${ULT_CUTIN_NODE}PlaceholderTag`, layer, viewW, Math.round(tagSize * 1.5));
+    node.addChild(tagNode);
+    tagNode.setPosition(0, -Math.round(size * 0.65), 0);
+    const tag = tagNode.addComponent(Label);
+    tag.string = PLACEHOLDER_CUTIN_TEXT;
+    tag.fontSize = tagSize;
+    tag.lineHeight = Math.round(tagSize * 1.3);
+    tag.horizontalAlign = Label.HorizontalAlign.CENTER;
+    tag.overflow = Label.Overflow.SHRINK;
+    tag.color = new Color(style.tagColor[0], style.tagColor[1], style.tagColor[2], style.tagColor[3]);
     const opacity = node.addComponent(UIOpacity);
     opacity.opacity = 0;
     placeholderParts = { node, opacity };
@@ -417,7 +451,7 @@ export function playUltCutin(args: UltCutinPlayArgs): Promise<UltCutinOutcome> {
     const visible = view.getVisibleSize();
     const viewW = host?.width || visible.width || 1920;
     const viewH = host?.height || visible.height || 1080;
-    const parts = buildParts(args.parent, args.config, viewW, viewH, !!args.placeholder);
+    const parts = buildParts(args.parent, args.config, viewW, viewH, !!args.placeholder, args.placeholderStyle);
     args.parent.addChild(parts.root);
     parts.root.setPosition(new Vec3(0, 0, 0));
 

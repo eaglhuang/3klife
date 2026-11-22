@@ -77,6 +77,8 @@ import {
 import { hpChipOnChange, stepHpChip, unitHpBarState, type HpChipState, type UnitHpBarState } from "../shared/UnitHpBar";
 import { unitValueFloatType } from "../shared/DamageFloatType";
 import { UnitStatusIconBar, StatusHaloPool, STATUS_ICON_SIZE } from "./UnitStatusIconBar";
+import { UnitFeedbackGlowPool } from "./UnitFeedbackGlow";
+import { NameplateCombatFade, getBattleUiFeedback } from "../shared/BattleUiFeedback";
 import { TileBuffMarkers } from "./TileBuffMarkers";
 import type { TileBuffBadge } from "../shared/TileBuffBadge";
 import { BADGE_HIT_PRIORITY_SEC, badgeRectFromExtent, easePlateOffset, stackBadgeOffsets, unionExtent, type LabelRect, type LocalExtent, type StackBadgeEntry } from "../shared/GeneralPlateAvoidance";
@@ -285,6 +287,11 @@ export class UnitRenderer extends Component {
   private unsubVitality: (() => void) | null = null;
   /** 腳下光環節點池（PROG-2-9399），第一次需要時才建立 */
   private statusHalos: StatusHaloPool | null = null;
+  /** 毒箭上身與治療用的色光節點池（PROG-2-9731），第一次需要時才建立 */
+  private feedbackGlows: UnitFeedbackGlowPool | null = null;
+  /** 名牌戰鬥淡出（PROG-2-9731）：攻擊、受擊演出期間淡出，結束後淡回 */
+  private readonly plateFade = new NameplateCombatFade();
+  private plateFadeApplied = false;
   /** 高倍率攻擊提示門檻（PROG-2-9422）；載入 data/attack-surge-highlight 前先用預設 */
   private attackSurgeConfig: AttackSurgeConfig = { ...DEFAULT_ATTACK_SURGE_CONFIG };
   private readonly attackSurgeGoldColor = new Color(ATTACK_SURGE_GOLD.r, ATTACK_SURGE_GOLD.g, ATTACK_SURGE_GOLD.b, ATTACK_SURGE_GOLD.a);
@@ -1187,6 +1194,7 @@ export class UnitRenderer extends Component {
       } else { this.spineUnits.remove(`general:${faction}`); if (view.usingHeroModel) view.modelRoot.active = true; }
     });
     perfEnd('generalViews', t); t = perfBegin();
+    this.applyNameplateFade(dt);
     this.avoidGeneralPlates(dt);
     perfEnd('avoidPlates', t); t = perfBegin();
     this.spineUnits.update(dt);
@@ -1959,6 +1967,76 @@ export class UnitRenderer extends Component {
     // formationRoot 不再負責旋轉，各 soldier 以 0° local rotation 繼承 worldNode 方向
     this.alignNodeToFactionFacing(view.worldNode, unit.faction);
     this.projectWorldLabel(view.worldNode, view.labelNode, this.labelHeight);
+  }
+
+  // ── PROG-2-9731 戰場 UI 演出（名牌戰鬥淡出、毒上身、治療光）──────────────
+
+  /** 攻擊／受擊演出開始：名牌淡出（可重入，與 endCombatPresentation 成對） */
+  public beginCombatPresentation(): void { this.plateFade.begin(); }
+  public endCombatPresentation(): void { this.plateFade.end(); }
+  /** 佇列清空或治療要讓玩家看血條時：放掉所有淡出計數，名牌馬上開始淡回 */
+  public releaseNameplateFade(): void { this.plateFade.releaseNow(); }
+  /** QA 用：目前名牌不透明度比例（0~1） */
+  public debugNameplateAlpha(): number { return this.plateFade.alpha; }
+
+  /** 每幀把淡出比例套到所有名牌；已陣亡淡出中的名牌與倒地隱藏（opacity 0）的主將名牌不動 */
+  private applyNameplateFade(dt: number): void {
+    const a = this.plateFade.step(dt);
+    const faded = a < 0.999;
+    if (!faded && !this.plateFadeApplied) return;
+    const v = faded ? Math.round(a * 255) : 255;
+    this.unitViews.forEach((view, id) => {
+      if (this.dyingUnits.has(id) || !isValid(view.labelOpacity)) return;
+      view.labelOpacity.opacity = v;
+    });
+    this.generalViews.forEach((view) => {
+      if (!isValid(view.labelOpacity) || view.labelOpacity.opacity === 0) return;
+      view.labelOpacity.opacity = v;
+    });
+    this.plateFadeApplied = faded;
+  }
+
+  private glowPool(): UnitFeedbackGlowPool {
+    if (!this.feedbackGlows) this.feedbackGlows = new UnitFeedbackGlowPool(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
+    return this.feedbackGlows;
+  }
+
+  /** QA 用：色光累計播放次數 */
+  public debugGlowPlayCount(): number { return this.feedbackGlows?.playCount ?? 0; }
+
+  /** 毒箭上身：受擊者身上罩一團紫綠光（顏色、大小、秒數見 battle-ui-feedback.json poisonHit） */
+  public playPoisonHit(unitId: string): void {
+    const view = this.unitViews.get(unitId);
+    if (!view) return;
+    const foot = this.unitGroundFoot(view);
+    if (!foot) return;
+    const c = getBattleUiFeedback().poisonHit;
+    this.glowPool().play(foot.x, foot.y, { fill: c.flashFillColor, edge: c.flashEdgeColor, peakAlpha: c.flashPeakAlpha, sec: c.flashSec, radiusX: c.flashRadiusX, radiusY: c.flashRadiusY, rise: c.flashRise });
+  }
+
+  /** 治療光：綠白光暈由下往上升（治療三步的第一步） */
+  public playHealLight(unitId: string): void {
+    const view = this.unitViews.get(unitId);
+    if (!view) return;
+    const foot = this.unitGroundFoot(view);
+    if (!foot) return;
+    const c = getBattleUiFeedback().heal;
+    this.glowPool().play(foot.x, foot.y, { fill: c.lightFillColor, edge: c.lightEdgeColor, peakAlpha: c.lightPeakAlpha, sec: c.lightSec, radiusX: c.lightRadiusX, radiusY: c.lightRadiusY, rise: c.lightRise });
+  }
+
+  /** 治療綠字（第二步）；與 playValueChange 的 heal 一樣走 'heal' 類型，但不帶受擊小跳 */
+  public playHealFloat(unit: TroopUnit | null, amount: number): void {
+    if (!unit) return;
+    const worldPos = this.getUnitWorldPosition(unit.lane, unit.depth);
+    if (!worldPos) return;
+    this.spawnFloatText(`+${amount}`, 'heal', worldPos, unit.id);
+  }
+
+  /** 狀態字用毒紫綠類型（毒箭上身） */
+  public playPoisonFloat(lane: number, depth: number, text: string): void {
+    const worldPos = this.getUnitWorldPosition(lane, depth);
+    if (!worldPos) return;
+    this.spawnFloatText(text, 'poison', worldPos);
   }
 
   /**

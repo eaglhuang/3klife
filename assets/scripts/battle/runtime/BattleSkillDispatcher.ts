@@ -1,5 +1,6 @@
 // @spec-source → 戰法系統.md (doc_spec_0038)、戰場部署系統.md (doc_spec_0040)；PROG-2-1429 依建檔紀錄補標出處
 import { BURN_CONFIG } from '../shared/BurnStatus';
+import { POISON_STATUS_ID } from '../shared/StatusEffectLabel';
 import { igniteUnit } from './BurnIgnite';
 import {
   EVENT_NAMES,
@@ -617,6 +618,8 @@ export class BattleSkillDispatcher {
       reviveFallenFriendly: (casterFaction: Faction, hpRatio: number) => state.reviveFallenUnit(casterFaction, hpRatio),
       addUnitDot: (unit: TroopUnit, ratio: number, turns: number) => {
         state.unitDots.set(unit.id, { unitId: unit.id, ratio, remainingTurns: turns });
+        // PROG-2-9731：毒箭上身也送 BuffApplied（以前只寫狀態表，玩家看不到命中回饋）；由 BattleUIBridge 排進戰鬥動畫佇列
+        services().event.emit(EVENT_NAMES.BuffApplied, { unitId: unit.id, effect: POISON_STATUS_ID, turns });
       },
       setTileHazard: (cell: { lane: number; depth: number }, damagePerTurn: number) => {
         // 固定地形格（掩體、營帳）不被火場覆蓋；暫時性格子狀態則以新的覆蓋舊的

@@ -16642,5 +16642,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9730.md",
     "title": "[PROG-2-9730] 無頭試玩第 07 步 lobby-commerce-silver 仍偶發失敗（點擊瞬間被官職晉升彈窗蓋住）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2967",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9731.md",
+    "title": "[PROG-2-9731] 戰場 UI 演出 B2：名牌戰鬥淡出、狀態圖示層數回合、奧義暫代大字與音效、毒上身回饋、治療時序",
+    "category": "task"
   }
 ]
