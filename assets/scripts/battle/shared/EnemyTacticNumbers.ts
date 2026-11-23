@@ -11,7 +11,7 @@ import { pickTacticByAiRule, type TacticAiCandidate, type TacticAiSituation } fr
 
 export type TacticMetrics = Partial<Pick<
     TacticAiCandidate,
-    'estimatedDamage' | 'effectValue' | 'hasChokePoint' | 'denseArea' | 'weatherCompatible'
+    'estimatedDamage' | 'hitCount' | 'effectValue' | 'hasChokePoint' | 'denseArea' | 'weatherCompatible'
 >>;
 
 /** 依 metrics[tacticId] 把數值填進候選；回傳新陣列，不改原物件 */

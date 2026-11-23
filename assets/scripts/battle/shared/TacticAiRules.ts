@@ -15,6 +15,8 @@ export interface TacticAiCandidate {
     category: TacticAiCategory;
     /** single-damage：預估傷害 */
     estimatedDamage?: number;
+    /** single-damage：預估同時打到幾個我方單位（群傷；預設 1），總分 = 單目標傷害 × 命中數 */
+    hitCount?: number;
     /** buff-heal：預估效果值（回血量或增益量） */
     effectValue?: number;
     /** tile-scene：是否有 choke point */
@@ -52,7 +54,7 @@ export function scoreTacticCandidate(candidate: TacticAiCandidate, situation: Ta
             const damage = candidate.estimatedDamage ?? 0;
             if (damage <= 0) return 0;
             const killable = situation.enemyHp.some(hp => hp > 0 && hp <= damage);
-            return damage + (killable ? TACTIC_AI_KILL_BONUS : 0);
+            return damage * Math.max(1, Math.floor(candidate.hitCount ?? 1)) + (killable ? TACTIC_AI_KILL_BONUS : 0);
         }
         case 'buff-heal': {
             const value = candidate.effectValue ?? 0;
