@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 287,
+    "done": 288,
     "in_progress": 0,
     "open": 87,
-    "total": 374
+    "total": 375
   },
   "tasks": [
     {
@@ -16463,42 +16463,57 @@
       }
     },
     {
-      "doc_id": "doc_task_2997",
-      "id": "PROG-2-9615",
-      "title": "首年引導接進畫面與實機視角驗收",
-      "owner": "Antigravity",
-      "priority": "P1",
-      "status": "in-progress",
+      "doc_id": "",
+      "id": "PROG-2-9862",
+      "title": "戰場回饋：DOT tick 命中音與毒箭回饋",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P2",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-23",
-      "created_by_agent": "Antigravity",
-      "started_at": "2026-11-23T17:35:00+08:00",
-      "started_by_agent": "Antigravity",
+      "created_by_agent": "codex-gpt-5.4-mini",
+      "started_at": "2026-11-23T18:00:00+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
       "chain_id": "",
       "chain_step": "",
       "sensor_triggered_by": "",
-      "description": "大廳學府按鈕點擊接入學府空轉防呆（詼諧告示與媒人導流），晉升彈窗升級深色玻璃面板風格",
-      "related": [
-        "PROG-2-9614",
-        "PROG-2-9613"
-      ],
-      "depends": [
-        "PROG-2-9614"
-      ],
+      "description": "",
+      "related": [],
+      "depends": [],
       "acceptance": [
-        "學府無滿15歲子嗣點擊出詼諧告示並導向媒人",
-        "官職晉升解鎖彈窗採用深色玻璃面板 token",
-        "單元測試 100% 通過"
+        "DOT tick（燃燒／火格／中毒／群體減益）不再走一般受擊音",
+        "同一單位同回合只響一次",
+        "tsc 0 錯、run-cli ALL PASS"
       ],
       "deliverables": [
-        "assets/scripts/ui/scenes/LobbyScene.ts",
-        "assets/resources/ui-spec/skins/rank-unlock-popup-screen.skin.json",
-        "tests/Year1GuidanceScreens.test.ts",
-        "artifacts/ui-qa/academy_empty_guard_verified.png",
-        "artifacts/ui-qa/rank_unlock_popup_verified.png"
+        "assets/scripts/battle/shared/BattleAudio.ts",
+        "assets/scripts/battle/views/BattleUIBridge.ts",
+        "tests/BattleDotTickSfx.test.ts"
       ],
-      "notes": "2026-11-23 | 狀態: in-progress | 驗證: Year1GuidanceScreens.test.ts 通過 | 變更: 接線學府空轉與晉升彈窗樣式 | 阻塞: 無"
+      "notes": "2026-11-23 | 狀態: done | 驗證: tsc 0 錯、單測通過（未做聽感實測） | 變更: DOT tick 專屬 cue（燃燒 fireball／中毒 hurt 輕量版）、同單位節流 1 秒、新增 tests/BattleDotTickSfx.test.ts | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      },
+      "completed_at": "2026-11-23"
     }
   ],
   "updated": "2026-11-22"

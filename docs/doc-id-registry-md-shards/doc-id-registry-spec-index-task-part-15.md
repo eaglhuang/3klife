@@ -230,4 +230,5 @@
 | `doc_task_2996` | docs/agent-briefs/tasks/PROG/PROG-2-9861.md | [PROG-2-9861] 太守府數字標示釐清：每季產出 vs 現有存量、黃金 0 提示、左欄留白 |
 | `doc_task_2997` | docs/agent-briefs/tasks/PROG/PROG-2-9857.md | [PROG-2-9857] 戰場回饋：狀態飄字依增益／減益／控制分色 |
 | `doc_task_2998` | docs/agent-briefs/tasks/PROG/PROG-2-9859.md | [PROG-2-9859] 戰場回饋：奧義暫代分鏡中段補音效（1.3 秒空白） |
-| `doc_task_2999` | docs/agent-briefs/tasks/PROG/PROG-2-9615.md | [PROG-2-9615] 首年引導接進畫面與實機視角驗收 |
+| `doc_task_2999` | docs/agent-briefs/tasks/PROG/PROG-2-9862.md | [PROG-2-9862] 戰場回饋：DOT tick 命中音與毒箭回饋 |
+| `doc_task_3000` | docs/agent-briefs/tasks/PROG/PROG-2-9615.md | [PROG-2-9615] 首年引導接進畫面與實機視角驗收 |

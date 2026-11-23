@@ -47,6 +47,10 @@ export const BATTLE_AUDIO_CUE = {
   turnEnemyStart: 'turn-enemy-start',
   battleVictory: 'battle-victory',
   battleDefeat: 'battle-defeat',
+  /** 燃燒回合扣血 tick（PROG-2-9862）：火格與燃燒共用 */
+  dotBurnTick: 'dot-burn-tick',
+  /** 中毒回合扣血 tick（PROG-2-9862） */
+  dotPoisonTick: 'dot-poison-tick',
 } as const;
 
 export type BattleAudioCue = typeof BATTLE_AUDIO_CUE[keyof typeof BATTLE_AUDIO_CUE];
@@ -87,7 +91,48 @@ export const BATTLE_AUDIO_CLIP_MAP: Record<BattleAudioCue, string> = {
   [BATTLE_AUDIO_CUE.turnEnemyStart]: 'thunder',
   [BATTLE_AUDIO_CUE.battleVictory]: 'skill0',
   [BATTLE_AUDIO_CUE.battleDefeat]: 'die',
+  // PROG-2-9862：回合扣血 tick 借既有 clip（火類用 fireball、毒用 hurt 輕量版），未實機聽過，不合適只改這兩行
+  [BATTLE_AUDIO_CUE.dotBurnTick]: 'fireball',
+  [BATTLE_AUDIO_CUE.dotPoisonTick]: 'hurt',
 };
+
+/** 回合扣血 tick 音量（PROG-2-9862）：比命中音輕，免得每回合疊成噪音。 */
+export const DOT_TICK_SFX = {
+  burn: { cue: BATTLE_AUDIO_CUE.dotBurnTick, volume: 0.4 },
+  poison: { cue: BATTLE_AUDIO_CUE.dotPoisonTick, volume: 0.3 },
+} as const;
+
+export interface DotTickSfx { cue: BattleAudioCue; volume: number }
+
+/**
+ * 回合扣血 tick 的專屬音（PROG-2-9862）：燃燒、火格、中毒、群體減益的持續傷害。
+ * 不是 DOT 來源回傳 null，照舊走一般受擊音。
+ */
+export function resolveBattleDotTickSfx(damageSource?: string): DotTickSfx | null {
+  if (damageSource === 'burn' || damageSource === 'hazard-fire') return DOT_TICK_SFX.burn;
+  if (damageSource === 'poison' || damageSource === 'mass-debuff-dot') return DOT_TICK_SFX.poison;
+  return null;
+}
+
+/**
+ * 同一單位在視窗內只響一次 DOT tick（PROG-2-9862）：同一回合火格＋中毒同時扣血時不疊兩聲。
+ * 呼叫端在事件到達的當下傳入時間（毫秒）。
+ */
+export class DotTickSfxThrottle {
+  private readonly lastPlayedMs = new Map<string, number>();
+  constructor(private readonly windowMs = 1000) {}
+
+  shouldPlay(unitId: string, nowMs: number): boolean {
+    const last = this.lastPlayedMs.get(unitId);
+    if (last !== undefined && nowMs - last < this.windowMs) return false;
+    this.lastPlayedMs.set(unitId, nowMs);
+    return true;
+  }
+
+  reset(): void {
+    this.lastPlayedMs.clear();
+  }
+}
 
 /** 放招音效音量（PROG-2-9438）：蓄力壓低一點，出手重音略大，都不蓋過命中聲。 */
 export const SKILL_CAST_SFX = {
