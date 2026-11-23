@@ -120,7 +120,18 @@ assert.equal(troopSpineConfig('medic', true).path, 'spine/soldiers/soldier_medic
 const cavalry = troopSpineConfig('cavalry');
 assert.equal(cavalry.path, 'spine/soldiers/soldier_cavalry_blue/soldier_cavalry_blue');
 assert.equal(cavalry.clips.move.name, 'gallop');
-assert.equal(cavalry.clips.attack.name, 'thrust');
+assert.equal(cavalry.clips.attack.name, 'attack_spear');
+assert.equal(cavalry.clips.attack.fallback, 'thrust');
+assert.equal(cavalry.clips.dodge.name, 'dodge');
+assert.equal(cavalry.clips.fall.name, 'fall');
+assert.equal(cavalry.clips.retreat.name, 'retreat');
+// 騎馬武將（PROG-2-9738）：ridingTier > 0 才騎馬；缺素材退回步行版；沒有騎馬骨架的武將不受影響
+assert.equal(generalSpineConfig('zhao-yun')?.path, 'spine/generals/zhao_yun/zhao_v2');
+const mountedZhao = generalSpineConfig('zhao-yun', null, 1);
+assert.equal(mountedZhao?.path, 'spine/generals/zhao_yun_mounted/zhao_mounted');
+assert.equal(mountedZhao?.clips.move.name, 'gallop');
+assert.equal(generalSpineConfig('zhao-yun', null, 2, p => p.includes('zhao_yun_mounted'))?.path, 'spine/generals/zhao_yun/zhao_v2');
+assert.equal(generalSpineConfig('guan-yu', null, 3)?.path, generalSpineConfig('guan-yu')?.path);
 assert.equal(cavalry.bobPx, 0);
 assert.ok(Math.abs((cavalry.footfallIntervalSec ?? 0) - cavalry.clips.move.duration / 2) < 1e-6);
 assert.ok(cavalry.displayScale > 0 && cavalry.displayScale < troopSpineConfig('infantry').displayScale); // 合成骨架騎手已放大 1.54 倍

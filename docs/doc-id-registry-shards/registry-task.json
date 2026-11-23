@@ -16732,5 +16732,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9845.md",
     "title": "[PROG-2-9845] 騎術系統與馬廄規格（ridingTier 三級、名駒、馬廄與配種）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2982",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9738.md",
+    "title": "[PROG-2-9738] 騎兵／騎馬武將套用 spine-trial 全套騎乘動作（攻擊／閃避／倒下／後退）",
+    "category": "task"
   }
 ]
