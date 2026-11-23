@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 293,
+    "done": 294,
     "in_progress": 1,
-    "open": 86,
-    "total": 380
+    "open": 89,
+    "total": 384
   },
   "tasks": [
     {
@@ -16725,6 +16725,228 @@
         "side-session-notes/cavalry-scale-compare.jpg"
       ],
       "notes": "2026-11-24 | 狀態: done | 驗證: 實機 web-desktop 量測（sp runtime attachment 頂點 AABB，idle 姿勢）：騎兵 mount_horse_bay 0.10 時約 52 設計像素高，步兵藍 0.18 約 37、敵紅槍 0.18 約 37，比值 1.41 ≥ 1.2，符合規則，故 displayScale 維持 0.10 未改；動畫名（idle/gallop/trot/retreat/attack_spear/hit/dodge/fall）已與 soldier_cavalry_blue__mount_horse_bay.json 逐一核對一致；tsc 0 錯、run-cli 9386 pass／3 skip、compute-gate quick 4/4 | 變更: 開卡＋上鎖＋量測，無程式變更；對比圖 side-session-notes/cavalry-scale-compare.jpg | 阻塞: 無；原卡「騎兵偏小」判斷與量測不一致，需使用者以遊戲內觀感再裁決是否加大",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9910",
+      "title": "戰前推薦編制純邏輯（卡 A）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-24T00:49:57+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "戰前一鍵推薦編制的純邏輯模組（無 UI、無 cc 依賴）：輸入主將候選、4 張虎符卡組候選、參謀官／後勤官（副將）候選與屬性，輸出推薦編制與理由 i18n key；權重放 JSON；提供 recommendForEncounter 首戰預填入口。不接 UI（卡 B、C）。依賴順序 A→B→C→D。盤點依據：side-session-notes/prebattle-deploy-survey-1124.md。",
+      "related": [
+        "PROG-2-0070",
+        "PROG-2-0083"
+      ],
+      "depends": [],
+      "acceptance": [
+        "推薦規則決定論（同輸入同輸出、tie-break 固定）",
+        "空候選與候選不足有明確降級行為",
+        "權重資料放 assets/resources/data JSON",
+        "recommendForEncounter(encounter-001) 可預填",
+        "單元測試覆蓋決定論／空候選／候選不足／tie-break／首戰入口",
+        "tsc test 0 錯、tests/run-cli.ts 全過、compute-gate quick 通過",
+        "不改戰場核心規則"
+      ],
+      "deliverables": [
+        "新純邏輯模組與資料 JSON（路徑於回報寫明）",
+        "i18n 四語系理由 key",
+        "單元測試檔"
+      ],
+      "notes": "2026-11-24 | 狀態: in-progress | 驗證: pending | 變更: ClaudeCode_claude-opus-5-5 開卡並上鎖，開始實作戰前推薦編制純邏輯 | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9911",
+      "title": "戰前編成視窗（卡 B）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "open",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "x",
+      "related": [],
+      "depends": [
+        "PROG-2-9910"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-24 | 狀態: open | 驗證: pending | 變更: 開草稿 | 阻塞: 與 PROG-2-2211 重疊，開工前須與 cursor-grok-bot 協調",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9912",
+      "title": "首戰教學戰接入編成（卡 C）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "open",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "首戰（encounter-001）進入戰前編成視窗並預填推薦（主將 zhang-fei、卡組前 4 張、後勤空），玩家確認後出戰；戰中部署仍手動保留 FirstBattleTutorial 三步教學。依 Q4 裁決 A。",
+      "related": [
+        "PROG-2-9309",
+        "PROG-2-9313",
+        "PROG-2-9324",
+        "PROG-2-9334"
+      ],
+      "depends": [
+        "PROG-2-9910",
+        "PROG-2-9911"
+      ],
+      "acceptance": [
+        "首戰進編成視窗",
+        "預填 recommendForEncounter 結果",
+        "戰中部署仍手動",
+        "FirstBattleTutorial 三步不變"
+      ],
+      "deliverables": [
+        "首戰入口接線與測試"
+      ],
+      "notes": "2026-11-24 | 狀態: open | 驗證: pending | 變更: 開草稿 | 阻塞: 依賴 A、B；依 Q4 裁決採 A（不自動部署）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9913",
+      "title": "戰前編成實機驗收合併（卡 D）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "open",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "併入 PROG-2-0143（儲存預設／套用預設實機驗收）與 PROG-2-0165（委任按鈕實機驗收），對卡 A、B、C 的戰前編成做一次實機驗收。",
+      "related": [
+        "PROG-2-0143",
+        "PROG-2-0165"
+      ],
+      "depends": [
+        "PROG-2-9911",
+        "PROG-2-9912",
+        "PROG-2-0143",
+        "PROG-2-0165"
+      ],
+      "acceptance": [
+        "PROG-2-0143 驗收完成",
+        "PROG-2-0165 驗收完成",
+        "戰前編成推薦、首戰預填、確認出戰實機驗收有截圖證據"
+      ],
+      "deliverables": [
+        "實機驗收紀錄"
+      ],
+      "notes": "2026-11-24 | 狀態: open | 驗證: pending | 變更: 開草稿 | 阻塞: 依賴 B、C 完成，以及 PROG-2-0143、PROG-2-0165 兩張 open 驗收卡",
       "brief": {
         "style": "classic",
         "label": "",
