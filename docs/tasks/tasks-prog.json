@@ -16688,6 +16688,66 @@
         "metrics_summary": []
       },
       "completed_at": "2026-11-23T15:12:41.894Z"
+    },
+{
+      "doc_id": "",
+      "id": "PROG-2-9803",
+      "title": "首戰自動戰 QA 計數修正與教學戰參數調校（60–90 秒目標）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-23",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-23T23:50:48+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "tools_node/playtest-online.js endTurnFallbacks 計數修正與每段演出秒數記錄；Constants.ts 教學戰參數與 encounter-001 數值調校；AI_LVBU Custom_Difficulty_Mod 標註或移除",
+      "related": [
+        "PROG-2-0124"
+      ],
+      "depends": [],
+      "acceptance": [
+        "endTurnFallbacks 只在推進演出結束且確實可操作卻無進展時計數，推進中不計",
+        "報告輸出每回合各段演出實測秒數（BattlePresentationTiming 各段）",
+        "首戰自動戰實測在 60–90 秒內分勝負，且勝利；改前改後數值與理由寫入 notes",
+        "AI_LVBU Custom_Difficulty_Mod 已標註無消費者或移除",
+        "tsc -p tsconfig.test.json 0 錯；tests/run-cli.ts 全過；compute-gate quick 通過",
+        "不縮短推進演出，不改五路對撞等核心規則"
+      ],
+      "deliverables": [
+        "tools_node/playtest-online.js",
+        "assets/scripts/core/config/Constants.ts",
+        "assets/resources/data/encounters.json",
+        "assets/resources/data/ai-general-templates.json",
+        "tests 對應單元測試",
+        "docs/agent-briefs/tasks/PROG/PROG-2-9803.md"
+      ],
+      "notes": "2026-11-23 | 狀態: in-progress | 驗證: 尚未 | 變更: 開卡 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "updated": "2026-11-22"
