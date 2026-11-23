@@ -16843,6 +16843,12 @@
   },
   {
     "id": "doc_task_3001",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9865.md",
+    "title": "[PROG-2-9865] 線上試玩腳本修正：重載等載入遮罩消失、商業任務銀兩檢查依情報度",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3002",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9615.md",
     "title": "[PROG-2-9615] 首年引導接進畫面與實機視角驗收",
     "category": "task"
