@@ -16716,9 +16716,9 @@
     "category": "task"
   },
   {
-    "id": "doc_task_2983",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9842.md",
-    "title": "[PROG-2-9842] 十連結果卡片壓扁＋統計列漏算 N",
+    "id": "doc_task_2979",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9847.md",
+    "title": "[PROG-2-9847] 趙雲騎馬骨架接入戰場（ridingTier 依 riding-tiers.json）",
     "category": "task"
   },
   {
@@ -16740,9 +16740,15 @@
     "category": "task"
   },
   {
-    "id": "doc_task_2979",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9847.md",
-    "title": "[PROG-2-9847] 趙雲騎馬骨架接入戰場（ridingTier 依 riding-tiers.json）",
+    "id": "doc_task_2983",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9842.md",
+    "title": "[PROG-2-9842] 十連結果卡片壓扁＋統計列漏算 N",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2984",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9848.md",
+    "title": "[PROG-2-9848] 敵將戰法全 0 分／無傷害改普攻（不再硬放主技能）",
     "category": "task"
   }
 ]

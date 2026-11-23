@@ -952,6 +952,7 @@ export class BattleController {
    * 沒有可選戰法或戰法庫查不到 battleSkillId 時回 null，呼叫端退回武將主技能。
    */
   public chooseEnemyTactic(): { tacticId: string; battleSkillId: string } | null {
+    this.enemyTacticDeclinedFlag = false;
     const general = this.state.enemyGeneral;
     if (!general) return null;
 
@@ -1006,7 +1007,7 @@ export class BattleController {
       situation,
       () => services().session.randomSource(),
     );
-    if (!tacticId) return null;
+    if (!tacticId) { this.enemyTacticDeclinedFlag = true; return null; }
     const battleSkillId = this.tacticDefinitionMap.get(tacticId)?.battleSkillId;
     return battleSkillId ? { tacticId, battleSkillId } : null;
   }
@@ -1015,6 +1016,12 @@ export class BattleController {
    * 敵方本回合是否不放戰法（PROG-2-1466）：難度表禁用戰法，或低 IQ 沒抽中 30%。
    * 不出手時 SP 保留，下回合再判斷。
    */
+  /** 最近一次 chooseEnemyTactic 是否「有候選但沒有值得放的」（PROG-2-9848）；供回合結算改普攻。 */
+  private enemyTacticDeclinedFlag = false;
+  public enemyTacticDeclined(): boolean {
+    return this.enemyTacticDeclinedFlag;
+  }
+
   public shouldEnemyHoldTactic(): boolean {
     if (!this.state.aiCanUseTactics) return true;
     return aiHoldsTactic(this.state.aiTacticIq, () => services().session.randomSource());
@@ -1617,6 +1624,7 @@ export class BattleController {
           castEnemySeedTactic: (battleSkillId, tacticId) => this.castBattleSkill(Faction.Enemy, { battleSkillId, tacticId }),
           chooseEnemyTactic: () => this.chooseEnemyTactic(),
           shouldEnemyHoldTactic: () => this.shouldEnemyHoldTactic(),
+          enemyTacticDeclined: () => this.enemyTacticDeclined(),
           defenseEngineerBombard: this.state.siegeDefender === Faction.Player ? this.defenseBattleConfig.engineerBombardDamage : 0,
         });
         if (phaseName === 'enemy-special-resolve' && this.state.battleTactic === BattleTactic.FloodAttack) {
