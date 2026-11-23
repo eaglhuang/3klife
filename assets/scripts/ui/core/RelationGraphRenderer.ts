@@ -11,6 +11,7 @@ import { Color, Graphics, Node, Sprite, tween, Tween, UITransform, Vec3 } from '
 import { RECENTER_TWEEN_SEC } from '../../core/systems/RelationGraphStyle';
 import { offsetRelationEdge, relationEdgeOffset, relationEdgeSegments, type RelationPoint } from '../../core/systems/RelationGraphView';
 import { loadGeneralAvatar } from './GeneralAvatarLoader';
+import { bindAvatarTalk } from './AvatarTalkBubble';
 import type { UITemplateBinder } from './UITemplateBinder';
 import { RELATION_GRAPH_SLOTS, type RelationGraphController } from './RelationGraphController';
 
@@ -103,6 +104,7 @@ export class RelationGraphRenderer {
             const sprite = this._binder.getSprite(spriteId);
             if (!sprite) return;
             sprite.spriteFrame = null;
+            bindAvatarTalk(sprite.node, generalId);
             void loadGeneralAvatar(generalId).then((frame) => {
                 if (!frame || seq !== this._avatarSeq || !sprite.isValid) return;
                 sprite.trim = false;

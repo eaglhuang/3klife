@@ -119,6 +119,7 @@ import { FAST_FORWARD_MAX_SEASONS, FAST_FORWARD_REASON_TEXT, fastForwardSeasons 
 import { BREEDING_MIN_AGE } from '../../core/systems/BreedingSystem';
 import { RECRUIT_ROWS_PER_PAGE, RecruitHallController } from '../core/RecruitHallController';
 import { loadGeneralAvatar, loadGeneralPortrait } from '../core/GeneralAvatarLoader';
+import { bindAvatarTalk, setAvatarTalkProvider } from '../core/AvatarTalkBubble';
 import { applyGeneralNameTags, loadGeneralNameTagStyle } from '../components/GeneralNameTag';
 import { setPlaceholderBackdropVisible } from '../core/PlaceholderBackdrop';
 import { RELATION_GRAPH_SLOTS, RelationGraphController } from '../core/RelationGraphController';
@@ -255,7 +256,8 @@ import { buildLobbyScout, ScoutPanelController } from '../core/ScoutPanelControl
 import type { TacticCounterTagTable } from '../../core/systems/LoadoutCheck';
 import { spiritSlotViewOf } from '../../core/systems/SpiritSlotState';
 import { DestinyShopController } from '../core/DestinyShopController';
-import { SortieSetupController, type SortieRole } from '../core/SortieSetupController';
+import { SortieSetupController, type SortieDeckCardInfo, type SortieRole } from '../core/SortieSetupController';
+import { parsePreBattleWeights, type PreBattleWeights } from '../../core/systems/PreBattleRecommend';
 import type { PowDecision } from '../../core/systems/PrisonerOfWar';
 import { OracleCouple, SageOracleController } from '../core/SageOracleController';
 import { buildRetireReviewTexts, RETIRE_REVIEW_OPEN_EVENT, withRetireReviewFallback, type RetireReviewOpenPayload } from '../core/RetireReviewController';
@@ -2134,6 +2136,7 @@ export class LobbyScene extends Component {
             const sprite = binder.getSprite('lordAvatar');
             if (holder && sprite) {
                 if (!holder.getComponent(Mask)) holder.addComponent(Mask).type = Mask.Type.GRAPHICS_ELLIPSE;
+                bindAvatarTalk(holder, leadId);
                 void loadGeneralAvatar(leadId).then((frame) => {
                     if (frame && leadId === this._cityHubAvatarId && sprite.isValid) {
                         sprite.spriteFrame = frame;
@@ -4546,6 +4549,8 @@ ${spent}`,
         this._hallDialogue = createLobbyDialogueProvider(chatRaw, chatStore, {
             fetcher: createHttpChatBookFetcher(parseCloudDialogueConfig(chatRaw).endpoint),
         });
+        // 全遊戲頭像點擊說話共用同一個台詞接口（PROG-2-9885）
+        setAvatarTalkProvider(this._hallDialogue);
         const host = await this._mountPreviewScreenHost('LobbyHallHost', 'lobby-hall-screen');
         this._lobbyHallHost = host;
         // 大廳底欄與城池底欄同一套分類：點了展開城池子選單（轉蛋等入口都在裡面），不再各自直達單一功能
@@ -4948,6 +4953,7 @@ ${spent}`,
             const sprite = binder.getSprite(portraitId);
             if (!holder || !sprite) return;
             if (!holder.getComponent(Mask)) holder.addComponent(Mask).type = Mask.Type.GRAPHICS_RECT;
+            bindAvatarTalk(holder, key.replace(/_portrait$/, '').replace(/_/g, '-'));
             // 換成另一位：新圖載完前不顯示上一位或版面預設的剪影（issue #2086：孫策甘寧同圖、張飛「?」）
             const slot = `${prefix}:${i}`;
             if (this._portraitSwap.begin(slot, key)) {
@@ -4991,6 +4997,7 @@ ${spent}`,
             const sprite = binder.getSprite(`${prefix}Avatar${i}`);
             if (!holder || !sprite) return;
             if (!holder.getComponent(Mask)) holder.addComponent(Mask).type = Mask.Type.GRAPHICS_ELLIPSE;
+            bindAvatarTalk(holder, id);
             void loadGeneralAvatar(id).then((frame) => {
                 if (frame && seq === this._avatarSeq.get(prefix) && sprite.isValid) {
                     sprite.spriteFrame = frame;
@@ -5286,6 +5293,7 @@ ${spent}`,
             const sprite = binder.getSprite(spriteId);
             if (!holder || !sprite || !id) continue;
             if (!holder.getComponent(Mask)) holder.addComponent(Mask).type = Mask.Type.GRAPHICS_ELLIPSE;
+            bindAvatarTalk(holder, id);
             void loadGeneralAvatar(id).then((frame) => {
                 if (!frame || seq !== this._avatarSeq.get('bonding') || !sprite.isValid) return;
                 sprite.sizeMode = Sprite.SizeMode.CUSTOM;
@@ -5992,7 +6000,7 @@ ${spent}`,
             mountHost: (bindings) => this._mountPreviewScreenHost('DeckSelectHost', 'lobby-deck-select-screen', bindings),
             deck: () => services().session.deck,
             cards: () => getTallyCardSummaries(),
-            toggle: (cardId, catalogIds) => services().session.toggleDeckCard(cardId, catalogIds),
+            toggle: (cardId, catalogIds) => { this._sortie?.clearRecommendation(); return services().session.toggleDeckCard(cardId, catalogIds); },
             toast: (message, duration) => services().event.emit('SHOW_TOAST', { message, duration }),
             warn: (message, error) => UCUFLogger.warn(LogCategory.DATA, message, error),
         });
@@ -6015,7 +6023,7 @@ ${spent}`,
             mountHost: (bindings) => this._mountPreviewScreenHost('LeadSelectHost', 'lobby-lead-select-screen', bindings),
             deployable: () => services().session.getDeployableGenerals(),
             leadId: () => services().session.leadGeneralId,
-            setLead: (id) => services().session.setLeadGeneral(id),
+            setLead: (id) => { this._sortie?.clearRecommendation(); return services().session.setLeadGeneral(id); },
             openSortie: () => this._openSortieSetup(),
             toast: (message, duration) => services().event.emit('SHOW_TOAST', { message, duration }),
             warn: (message, error) => UCUFLogger.warn(LogCategory.DATA, message, error),
@@ -6037,6 +6045,13 @@ ${spent}`,
      * 候選與加成都在 SortieSetupController（純邏輯），這裡只綁按鈕、套 view。
      */
     private async _mountSortieSetup(): Promise<void> {
+        const weights = await this._loadPreBattleWeights();
+        const tallyCards: SortieDeckCardInfo[] = Array.from(buildTallyCardCatalog().entries()).map(([cardId, card]) => ({
+            cardId,
+            name: card.unitName,
+            unitType: card.unitType,
+            rarity: card.rarity,
+        }));
         // 守方 = 大廳開戰用的當前關卡敵將（與開戰時取的 _currentEncounter() 同一來源）
         const sortie = new SortieSetupController({
             session: services().session,
@@ -6049,11 +6064,23 @@ ${spent}`,
                 get: () => services().session.sortiePresets,
                 set: (store) => { void services().session.setSortiePresets(store); },
             },
+            lookup: (key: string, ...args: string[]) => services().i18n.t(key, ...args),
+            // 一鍵推薦（PROG-2-9911）：權重載入失敗時推薦鈕停用，其餘編制照常
+            prebattle: {
+                weights,
+                encounters: () => this._encounters,
+                currentEncounterId: () => this._currentEncounter()?.id ?? null,
+                cards: () => tallyCards,
+            },
         });
         this._sortie = sortie;
         const step = (role: SortieRole, delta: number): void => { sortie.cycle(role, delta); this._refreshSortieSetup(); };
         this._sortieHost = await this._mountPreviewScreenHost('SortieSetupHost', 'sortie-setup-screen', [
             { buttonId: 'btnCloseSortie', handler: () => { this._closeSortieSetup(); } },
+            { buttonId: 'btnPickLead', handler: () => { this._openHostFromSortie(this._leadSelect); } },
+            { buttonId: 'btnPickDeck', handler: () => { this._openHostFromSortie(this._deckSelect); } },
+            { buttonId: 'btnRecommend', handler: () => { void sortie.recommend().then(() => { this._refreshSortieSetup(); }); } },
+            { buttonId: 'btnConfirmSortie', handler: () => { this._closeSortieSetup(); this.onClickEnterBattle(); } },
             { buttonId: 'btnPrevStrategist', handler: () => { step('strategist', -1); } },
             { buttonId: 'btnNextStrategist', handler: () => { step('strategist', 1); } },
             { buttonId: 'btnClearStrategist', handler: () => { sortie.clear('strategist'); this._refreshSortieSetup(); } },
@@ -6070,8 +6097,30 @@ ${spent}`,
             event.on(GAME_SESSION_EVENTS.LeadGeneralChanged, refresh),
             event.on(GAME_SESSION_EVENTS.RosterChanged, refresh),
             event.on(GAME_SESSION_EVENTS.BattleSettled, refresh),
+            event.on(GAME_SESSION_EVENTS.DeckChanged, refresh),
             event.on(GAME_SESSION_EVENTS.Loaded, refresh),
         );
+    }
+
+    /** 戰前推薦權重（PROG-2-9910 的 JSON）；讀取或驗證失敗回傳 null，編制視窗的推薦鈕會停用 */
+    private async _loadPreBattleWeights(): Promise<PreBattleWeights | null> {
+        try {
+            return parsePreBattleWeights(await services().resource.loadJson<unknown>('data/prebattle-recommend-weights'));
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 戰前推薦權重載入失敗', error);
+            return null;
+        }
+    }
+
+    /** 從出征編制開啟主將／卡組選擇畫面（既有畫面，不另開一套）；畫面關閉後仍停在編制視窗之下 */
+    private _openHostFromSortie(picker: { host: UIScreenPreviewHost | null; refresh(): void } | null): void {
+        const host = picker?.host;
+        if (!host) {
+            return;
+        }
+        picker?.refresh();
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
     }
 
     private _openSortieSetup(): void {
@@ -6458,6 +6507,7 @@ ${spent}`,
         const root = binder.getNode('LobbyMainScreen_div_21');
         const portrait = root?.getChildByName('skinLayer_LobbyMainScreen_div_21_LobbyMainScreen_img_2');
         const sprite = portrait?.getComponent(Sprite);
+        bindAvatarTalk(portrait, id);
         void presentLobbyLead(general ?? null, {
             setTexts: texts => binder.setTexts(texts),
             setFrame: frame => { if (sprite) sprite.spriteFrame = frame; },
@@ -6617,7 +6667,8 @@ ${spent}`,
 
         this._ensureWidget(hostNode);
         // 彈窗／全螢幕 host 必須吃掉點擊，避免點空白或按鈕邊緣穿透到底層大廳與武將
-        const nonBlockingHosts = new Set(['LobbyHallHost', 'LobbyMainHost', 'SeasonHudHost']);
+        // 選主將／選卡組是大廳底層的小卡，不是彈窗：整頁透明 host 若吃點擊，會蓋住左上主將頭像等底下可點的東西（頭像點擊說話 PROG-2-9885）
+        const nonBlockingHosts = new Set(['LobbyHallHost', 'LobbyMainHost', 'SeasonHudHost', 'LeadSelectHost', 'DeckSelectHost']);
         if (BlockInputEvents && !nonBlockingHosts.has(hostName) && !hostNode.getComponent(BlockInputEvents)) {
             hostNode.addComponent(BlockInputEvents);
         }

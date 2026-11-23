@@ -39,7 +39,7 @@
           "vCenter": true
         },
         "width": 1000,
-        "height": 600,
+        "height": 960,
         "skinSlot": "sortie.card.bg",
         "children": [
           {
@@ -113,19 +113,190 @@
                 "widget": {
                   "top": 0,
                   "left": 8,
-                  "right": 8
+                  "right": 260
                 },
                 "height": 38,
                 "text": "主將：－",
                 "styleSlot": "sortie.label.name"
               },
               {
+                "type": "label",
+                "name": "DeckTitleLabel",
+                "id": "deckTitleLabel",
+                "widget": {
+                  "top": 56,
+                  "left": 8,
+                  "right": 260
+                },
+                "height": 40,
+                "text": "出戰卡組",
+                "styleSlot": "sortie.label.name"
+              },
+              {
+                "type": "button",
+                "name": "BtnPickDeck",
+                "id": "btnPickDeck",
+                "widget": {
+                  "top": 56,
+                  "right": 8
+                },
+                "height": 40,
+                "width": 240,
+                "skinSlot": "sortie.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnPickDeckLabel",
+                    "id": "pickDeckLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 32,
+                    "text": "更換卡組",
+                    "styleSlot": "sortie.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnPickLead",
+                "id": "btnPickLead",
+                "widget": {
+                  "top": 0,
+                  "right": 8
+                },
+                "height": 40,
+                "width": 240,
+                "skinSlot": "sortie.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnPickLeadLabel",
+                    "id": "pickLeadLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 32,
+                    "text": "更換主將",
+                    "styleSlot": "sortie.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "DeckSlot0",
+                "widget": {
+                  "top": 104,
+                  "left": 8
+                },
+                "width": 228,
+                "height": 56,
+                "skinSlot": "sortie.slot.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "DeckSlotLabel0",
+                    "id": "deckSlotLabel0",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 10,
+                      "right": 10
+                    },
+                    "height": 40,
+                    "text": "空位",
+                    "styleSlot": "sortie.label.body"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "DeckSlot1",
+                "widget": {
+                  "top": 104,
+                  "left": 244
+                },
+                "width": 228,
+                "height": 56,
+                "skinSlot": "sortie.slot.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "DeckSlotLabel1",
+                    "id": "deckSlotLabel1",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 10,
+                      "right": 10
+                    },
+                    "height": 40,
+                    "text": "空位",
+                    "styleSlot": "sortie.label.body"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "DeckSlot2",
+                "widget": {
+                  "top": 104,
+                  "left": 480
+                },
+                "width": 228,
+                "height": 56,
+                "skinSlot": "sortie.slot.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "DeckSlotLabel2",
+                    "id": "deckSlotLabel2",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 10,
+                      "right": 10
+                    },
+                    "height": 40,
+                    "text": "空位",
+                    "styleSlot": "sortie.label.body"
+                  }
+                ]
+              },
+              {
+                "type": "panel",
+                "name": "DeckSlot3",
+                "widget": {
+                  "top": 104,
+                  "left": 716
+                },
+                "width": 228,
+                "height": 56,
+                "skinSlot": "sortie.slot.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "DeckSlotLabel3",
+                    "id": "deckSlotLabel3",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 10,
+                      "right": 10
+                    },
+                    "height": 40,
+                    "text": "空位",
+                    "styleSlot": "sortie.label.body"
+                  }
+                ]
+              },
+              {
                 "type": "button",
                 "name": "BtnToggleSceneGambit",
                 "id": "btnToggleSceneGambit",
                 "widget": {
-                  "top": 0,
-                  "right": 8
+                  "top": 586,
+                  "left": 8
                 },
                 "height": 40,
                 "width": 460,
@@ -150,7 +321,7 @@
                 "type": "panel",
                 "name": "StrategistColumn",
                 "widget": {
-                  "top": 52,
+                  "top": 176,
                   "left": 8,
                   "right": 484
                 },
@@ -283,7 +454,7 @@
                 "type": "panel",
                 "name": "DeputyColumn",
                 "widget": {
-                  "top": 52,
+                  "top": 176,
                   "left": 484,
                   "right": 8
                 },
@@ -417,11 +588,11 @@
                 "name": "SortieSummary",
                 "id": "sortieSummary",
                 "widget": {
-                  "top": 368,
+                  "top": 490,
                   "left": 8,
                   "right": 8
                 },
-                "height": 30,
+                "height": 60,
                 "text": "",
                 "styleSlot": "sortie.label.stats"
               },
@@ -430,8 +601,8 @@
                 "name": "SortiePredict",
                 "id": "sortiePredict",
                 "widget": {
-                  "top": 472,
-                  "left": 368,
+                  "top": 552,
+                  "left": 8,
                   "right": 8
                 },
                 "height": 30,
@@ -443,11 +614,11 @@
                 "name": "SortieNotice",
                 "id": "sortieNotice",
                 "widget": {
-                  "top": 408,
+                  "top": 632,
                   "left": 8,
                   "right": 8
                 },
-                "height": 60,
+                "height": 32,
                 "text": "",
                 "styleSlot": "sortie.label.body"
               },
@@ -456,10 +627,10 @@
                 "name": "BtnSavePreset",
                 "id": "btnSavePreset",
                 "widget": {
-                  "top": 476,
-                  "left": 8
+                  "top": 800,
+                  "left": 244
                 },
-                "height": 44,
+                "height": 48,
                 "width": 168,
                 "skinSlot": "sortie.button.bg",
                 "children": [
@@ -483,10 +654,10 @@
                 "name": "BtnApplyPreset",
                 "id": "btnApplyPreset",
                 "widget": {
-                  "top": 476,
-                  "left": 184
+                  "top": 800,
+                  "left": 420
                 },
-                "height": 44,
+                "height": 48,
                 "width": 168,
                 "skinSlot": "sortie.button.bg",
                 "children": [
@@ -501,6 +672,73 @@
                     },
                     "height": 36,
                     "text": "套用預設",
+                    "styleSlot": "sortie.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "RecommendReasonLabel",
+                "id": "recommendReasonLabel",
+                "widget": {
+                  "top": 672,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 116,
+                "text": "",
+                "styleSlot": "sortie.label.body"
+              },
+              {
+                "type": "button",
+                "name": "BtnRecommend",
+                "id": "btnRecommend",
+                "widget": {
+                  "top": 800,
+                  "left": 8
+                },
+                "height": 48,
+                "width": 220,
+                "skinSlot": "sortie.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnRecommendLabel",
+                    "id": "recommendLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "一鍵推薦編制",
+                    "styleSlot": "sortie.label.button"
+                  }
+                ]
+              },
+              {
+                "type": "button",
+                "name": "BtnConfirmSortie",
+                "id": "btnConfirmSortie",
+                "widget": {
+                  "top": 800,
+                  "right": 8
+                },
+                "height": 48,
+                "width": 220,
+                "skinSlot": "sortie.button.confirm.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnConfirmSortieLabel",
+                    "id": "confirmSortieLabel",
+                    "widget": {
+                      "vCenter": true,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "height": 40,
+                    "text": "確認出戰",
                     "styleSlot": "sortie.label.button"
                   }
                 ]

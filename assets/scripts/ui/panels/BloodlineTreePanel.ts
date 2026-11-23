@@ -5,6 +5,7 @@ import { resolveFactorColor, type FactorColor } from '../../core/systems/FactorI
 import { services } from '../../core/managers/ServiceLoader';
 import { ancestorAvatarId, ancestorCardText, buildBloodlineTreeSlots, BloodlineTreeSlot, TREE_CARD_AVATAR, UNKNOWN_ANCESTOR_CARD_TEXT, sharedAncestorUids, TREE_CARD_KIN_FRAME } from '../../core/systems/BloodlineTreeSlots';
 import { loadGeneralAvatar, loadSharedAncestorIcon } from '../core/GeneralAvatarLoader';
+import { bindAvatarTalk } from '../core/AvatarTalkBubble';
 import { treeAvatarSource } from '../../core/systems/BloodlineTreeAvatarBudget';
 import { treeCardNodeName } from '../../core/systems/BloodlineTreeBinding';
 import { buildNodeCards } from '../../core/systems/BloodlineNodeCards';
@@ -207,6 +208,7 @@ export class BloodlineTreePanel extends Component {
         const sprite = holder.getComponentInChildren(Sprite);
         if (!id || !sprite) return;
         sprite.spriteFrame = null;
+        bindAvatarTalk(holder, id);
         const seq = this._avatarSeq;
         const load = treeAvatarSource(row, person) === 'REAL' ? loadGeneralAvatar(id) : loadSharedAncestorIcon(id);
         void load.then((frame) => {

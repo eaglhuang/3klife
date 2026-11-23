@@ -1338,6 +1338,31 @@ async function main() {
         };
         if (args.mind) await step('lobby-mind-mailbox', (rec) => mindMailbox(rec, 'lobby'), { skipIfFailed: true });
 
+        // ── 5z. 頭像點擊說話（--avatar-talk，PROG-2-9885）：大廳主將頭像、招賢館卡、名冊列頭像，真滑鼠點後驗泡泡位置與是否壓到按鈕 ──
+        const avatarTalk = args['avatar-talk'] ? require('./playtest-avatar-talk') : null;
+        const avatarProbe = async (rec, label, spec, tag) => {
+            const r = await avatarTalk.tapAvatarAndProbe({ page, rm, spec, waitMs: 600, shotTo: async () => { await shot(rec, tag); } });
+            (rec.detail.avatarTalk = rec.detail.avatarTalk || {})[label] = r;
+            return r;
+        };
+        if (avatarTalk) await step('avatar-talk-lobby', async (rec) => {
+            await backToLobbyBar();
+            await delay(800);
+            await avatarProbe(rec, 'lordAvatar', { name: '^(LordAvatarMask|LordAvatar|LordAvatarSprite)$' }, 'avatar-talk-lord');
+            await delay(3800);
+            await clickButton('^BtnCatShop$'); await delay(600); // 收掉上一步留下的子選單
+            if ((await openSub('BtnCatDomestic', '^招賢館')) || (await openSub('BtnCatDomestic', '^招賢館'))) {
+                await delay(2500);
+                await avatarProbe(rec, 'recruitHall', { name: '^Frame2Mask$' }, 'avatar-talk-recruit');
+                await delay(3800);
+                await backToLobbyBar();
+            } else {
+                rec.detail.recruitHall = '找不到招賢館入口';
+                rec.detail.subTexts = (await page.evaluate(() => window.__pt.buttonTexts('^BtnSub'))).map((t) => t.text);
+            }
+            return rec.detail;
+        }, { skipIfFailed: true });
+
         await step('character-intro-tabs', async (rec) => {
             // 關掉轉蛋等面板回到大廳主畫面，再開武將名冊
             await backToLobbyBar();
@@ -1348,6 +1373,7 @@ async function main() {
             rec.detail.buttonsAfterOpen = await listButtons();
             const firstCard = await waitUntil(() => page.evaluate(() => window.__pt.listButtons()).then((list) => list.find((n) => n === 'Row') || list.find((n) => /^(BtnGeneral\d*|BtnGeneralCard\d*|GeneralCard\d*|BtnCard0|BtnHero0)$/i.test(n)) || null), 30000, '名冊中找不到第一位武將');
             rec.detail.firstCard = firstCard;
+            if (avatarTalk) { await avatarProbe(rec, 'rosterRowAvatar', { name: '^(RowAvatar|Avatar|AvatarSprite)$', under: '^Row$' }, 'avatar-talk-roster'); await delay(200); }
             await clickButton(`^${firstCard}$`);
             await waitUntil(() => page.evaluate(() => window.__pt.scenePresence('CharacterDs3|character-ds3')), 30000, '人物介紹畫面未出現');
             await delay(1200);
@@ -1662,6 +1688,7 @@ async function main() {
                 await delay(1500);
                 (rec.detail.rounds = rec.detail.rounds || []).push({ texts: (await rm.allTexts()).filter((t) => /^(N|R|SR|SSR|UR)$/.test(String(t).trim())) });
                 await shot(rec, `gacha-result-cards-${round + 1}`);
+                if (args['avatar-talk']) { const at = require('./playtest-avatar-talk'); rec.detail.avatarTalkGacha = await at.tapAvatarAndProbe({ page, rm, spec: { name: '^CardPortrait$' }, waitMs: 600, shotTo: async () => { await shot(rec, 'avatar-talk-gacha'); } }); }
                 for (let i = 0; i < 6; i++) {
                     if (await clickButton('^GachaPullResult_(close|back)$')) { await delay(1200); }
                     if (!(await page.evaluate(() => window.__pt.scenePresence('^GachaPullResult_stage$')))) break;
