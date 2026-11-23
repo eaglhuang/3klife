@@ -696,7 +696,7 @@ export class BattleUIBridge {
             : (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] defender-hit unit=${data.unitId}`), c.unitRenderer?.playHitAnimationAsync(data.unitId, data.attackerId, { heavy: heavy, lethal: data.hp <= 0 }) ?? Promise.resolve());
 
           const valuePromise = shieldFb.hpLoss > 0
-            ? (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] damage-float unit=${data.unitId} hp=${data.hp}`), c.unitRenderer?.playValueChangeAsync(unit, shieldFb.hpLoss, 'damage', data.isCrit ?? false, heavy) ?? Promise.resolve())
+            ? (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] damage-float unit=${data.unitId} hp=${data.hp}`), c.unitRenderer?.playValueChangeAsync(unit, shieldFb.hpLoss, 'damage', data.isCrit ?? false, heavy, data.damageSource) ?? Promise.resolve())
             : Promise.resolve();
 
           const hitLane = data.defenderLane ?? unit.lane;

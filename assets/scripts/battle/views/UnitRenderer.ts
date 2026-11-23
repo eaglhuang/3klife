@@ -964,7 +964,7 @@ export class UnitRenderer extends Component {
     await this.waitSeconds(BATTLE_VISUAL_TIMING.generalValueAwaitSec);
   }
 
-  public playValueChange(unit: TroopUnit | null, value: number, kind: "damage" | "heal", isCrit = false, heavy = false): void {
+  public playValueChange(unit: TroopUnit | null, value: number, kind: "damage" | "heal", isCrit = false, heavy = false, damageSource?: string): void {
     if (!unit || !this.uiRoot || !this.worldCamera || !this.canvasNode) return;
 
     let worldPos = this.getUnitWorldPosition(unit.lane, unit.depth);
@@ -987,7 +987,7 @@ export class UnitRenderer extends Component {
     setTimeout(() => {
       const sign = kind === "heal" ? "+" : "-";
       // 主戰場UI規格書 §3.2：暴擊用橘金放大字（PROG-2-1875）
-      const dmgType: FloatTextType = unitValueFloatType(kind, unit.faction === Faction.Player, isCrit, heavy);
+      const dmgType: FloatTextType = unitValueFloatType(kind, unit.faction === Faction.Player, isCrit, heavy, damageSource);
       this.spawnFloatText(`${sign}${value}`, dmgType, worldPos!, unit.id);
 
       const currentView = this.unitViews.get(unit.id);
@@ -1015,8 +1015,8 @@ export class UnitRenderer extends Component {
     }, BATTLE_VISUAL_TIMING.valuePopupDelayMs);
   }
 
-  public async playValueChangeAsync(unit: TroopUnit | null, value: number, kind: "damage" | "heal", isCrit = false, heavy = false): Promise<void> {
-    this.playValueChange(unit, value, kind, isCrit, heavy);
+  public async playValueChangeAsync(unit: TroopUnit | null, value: number, kind: "damage" | "heal", isCrit = false, heavy = false, damageSource?: string): Promise<void> {
+    this.playValueChange(unit, value, kind, isCrit, heavy, damageSource);
     await this.waitSeconds(BATTLE_VISUAL_TIMING.unitValueAwaitSec);
   }
 
