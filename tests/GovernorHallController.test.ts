@@ -32,13 +32,28 @@ export function createGovernorHallControllerSuite(): TestSuite {
 
     suite.test('四條流向各有文字與 active 標記，節點 id 與 key 對應', () => {
         const flow = new GovernorHallController({ snapshot: () => snapshot() }).getFlowView();
-        assert.equals('黃金　115', flow.texts.govFlowGold);
-        assert.equals('糧草　90', flow.texts.govFlowFood);
+        assert.equals('本季黃金產出　115', flow.texts.govFlowGold);
+        assert.equals('本季糧草產出　90', flow.texts.govFlowFood);
         assert.equals('城市兵源上限　8000', flow.texts.govFlowCityTroopCap);
         assert.equals('補兵速度　300', flow.texts.govFlowRecruitRegen);
         for (const id of ['govFlowGold', 'govFlowFood', 'govFlowCityTroopCap', 'govFlowRecruitRegen']) {
             assert.isTrue(flow.actives[id]);
         }
+    });
+
+    suite.test('現有存量與每季產出分開標示：有傳 owned 才顯示存量列（PROG-2-9861）', () => {
+        const territory = (owned?: { food: number; gold: number }) => () => ({
+            level: 1, maxSlots: 2, pendingLevel: null,
+            plan: { ok: false, reason: 'insufficient-food' as const, targetLevel: 2, cost: { gold: 0, food: 1000 } },
+            owned,
+        });
+        const withOwned = new GovernorHallController({ snapshot: () => snapshot(), territory: territory({ food: 300, gold: 1000 }) }).getFlowView();
+        assert.equals('現有存量　金 1000　糧草 300', withOwned.texts.govStock);
+        assert.isTrue(withOwned.actives.govStock);
+        assert.equals('糧草不足（需 1000，現有 300）', withOwned.texts.btnUpgradeLabel);
+        const without = new GovernorHallController({ snapshot: () => snapshot(), territory: territory() }).getFlowView();
+        assert.equals('', without.texts.govStock);
+        assert.isFalse(without.actives.govStock);
     });
 
     suite.test('補兵為 0 時距離回滿顯示無法回滿，不會除以零', () => {

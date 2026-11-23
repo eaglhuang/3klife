@@ -16804,5 +16804,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9860.md",
     "title": "[PROG-2-9860] 測試工具：解鎖分頁（debug.setRank／debug.unlockAll）＋DEV 圓鈕醒目化",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2996",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9861.md",
+    "title": "[PROG-2-9861] 太守府數字標示釐清：每季產出 vs 現有存量、黃金 0 提示、左欄留白",
+    "category": "task"
   }
 ]

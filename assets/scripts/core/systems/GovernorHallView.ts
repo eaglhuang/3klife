@@ -4,6 +4,7 @@
  *
  * - 中央儀表盤顯示人口與民心，四條流向：黃金、糧草、城市兵源上限、補兵速度。
  * - 產出卡拆成 基礎值 / 人口紅利 / 政策修正 / 總計；城市兵源卡顯示 目前 / 上限、每季補兵、距離回滿。
+ * - 左欄流向與產出卡是「每季產出」，不是現有存量；現有存量（與大廳頂欄同源）由 Controller 另列一行。
  * - 產出公式見 CityEconomy：黃金基礎值＝本季商業內政任務實際產出（沒選商業顯示 0）；人口紅利＝基礎值 × 紅利率；政策修正固定 +0。
  * - 沒傳經濟資料（人口、民心、黃金基礎值）時，對應欄位以 null 表示並顯示「—」，不用 0 假裝有值。
  *
@@ -77,6 +78,8 @@ function outputTotal(breakdown: OutputBreakdown | null): number | null {
 
 /** 黃金：商業任務選定當下入帳；人口紅利於換季入帳。 */
 const GOLD_BASE_NOTE = '（已入帳）';
+/** 黃金基礎值為 0＝本季沒選商業任務（有選至少 Base 50），明講原因免得玩家以為壞掉。 */
+const GOLD_BASE_NONE_NOTE = '（本季未選商業任務）';
 const GOLD_BONUS_NOTE = '（換季入帳）';
 
 /** baseNote／bonusNote：該列後綴（例如黃金基礎值「（已入帳）」），糧草不加。 */
@@ -151,13 +154,13 @@ export function buildGovernorHallView(snapshot: Readonly<GovernorSnapshot>): Gov
         populationText: `人口 ${textOrNoData(snapshot.population)}`,
         moraleText: `民心 ${textOrNoData(snapshot.morale)}`,
         flows: [
-            { key: 'gold', label: '黃金', valueText: textOrNoData(outputTotal(gold)) },
-            { key: 'food', label: '糧草', valueText: textOrNoData(outputTotal(food)) },
+            { key: 'gold', label: '本季黃金產出', valueText: textOrNoData(outputTotal(gold)) },
+            { key: 'food', label: '本季糧草產出', valueText: textOrNoData(outputTotal(food)) },
             { key: 'cityTroopCap', label: '城市兵源上限', valueText: `${snapshot.cityTroops.cap}` },
             { key: 'recruitRegen', label: '補兵速度', valueText: `${snapshot.cityTroops.recruitPerTurn}` },
         ],
-        goldCard: outputCard('黃金', gold, GOLD_BASE_NOTE, GOLD_BONUS_NOTE),
-        foodCard: outputCard('糧草', food),
+        goldCard: outputCard('黃金產出', gold, gold !== null && gold.base === 0 ? GOLD_BASE_NONE_NOTE : GOLD_BASE_NOTE, GOLD_BONUS_NOTE),
+        foodCard: outputCard('糧草產出', food),
         cityTroopCard: cityTroopCard(snapshot.cityTroops),
     };
 }
