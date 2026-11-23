@@ -991,6 +991,7 @@
   "ui.hall.board.btn.detail": "Details",
   "ui.hall.board.btn.accept": "Accept",
   "ui.governor.title": "Governor Hall",
+  "ui.governor.goldHint": "Treasury looking empty? Pick a Commerce task on the Domestic wall and the gold rolls right in!",
   "ui.recruit.title": "Recruit Hall",
   "ui.recruit.btn.rescue": "Seek Commoners",
   "ui.academy.empty_guard.btn_go_nurture": "Return to Nurture",
