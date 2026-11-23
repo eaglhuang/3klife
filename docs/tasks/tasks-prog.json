@@ -16893,7 +16893,7 @@
         "tests/PreBattleRecommend.test.ts",
         "assets/resources/i18n/{zh-TW,zh-CN,en,ja}.json（prebattle.* key）"
       ],
-      "notes": "2026-11-24 | 狀態: done | 驗證: tsc tests 0 錯；tests/run-cli.ts 9401 pass／3 skip（含新增 PreBattleRecommend 15 項）；compute-gate quick 4/4 | 變更: 新增純邏輯 assets/scripts/core/systems/PreBattleRecommend.ts（recommendPreBattleLoadout／recommendForEncounter／parsePreBattleWeights）；權重 assets/resources/data/prebattle-recommend-weights.json；四語系新增 prebattle.* 文案 key（後勤官（副將）為 prebattle.role.deputy）；測試 tests/PreBattleRecommend.test.ts | 阻塞: 無；UI 接線與「副將」顯示字樣統一留給卡 B（SortieSetupController 文案未動）",
+      "notes": "2026-11-24 | 狀態: done | 驗證: tsc tests 0 錯；tests/run-cli.ts 9401 pass／3 skip（含新增 PreBattleRecommend 15 項）；compute-gate quick 4/4 | 變更: 新增純邏輯 assets/scripts/core/systems/PreBattleRecommend.ts（recommendPreBattleLoadout／recommendForEncounter／parsePreBattleWeights）；權重 assets/resources/data/prebattle-recommend-weights.json；四語系新增 prebattle.* 文案 key（後勤官（副將）為 prebattle.role.deputy）；測試 tests/PreBattleRecommend.test.ts | 阻塞: 無；首次 CI 因新資源缺 .meta 失敗，已補 .meta 並重新推送；UI 接線與「副將」顯示字樣統一留給卡 B（SortieSetupController 文案未動）",
       "brief": {
         "style": "classic",
         "label": "",
