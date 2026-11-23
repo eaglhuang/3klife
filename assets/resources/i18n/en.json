@@ -1,5 +1,8 @@
 {
   "ui.back": "Back",
+  "ui.insight.unlock": "Hit a nerve! {0} likes you a bit more",
+  "ui.insight.achievement": "Achievement unlocked: Moved by It · {0}  Title: {0} Connoisseur",
+  "ui.insight.step": "{0} got you again, affinity +2",
   "ui.item.expire": "{0} has expired and was reclaimed",
   "ui.confirm": "Confirm",
   "ui.cancel": "Cancel",

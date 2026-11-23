@@ -226,3 +226,16 @@ PM 設計的保底數值（基礎機率沿用現行規格，不改）：
 | 重複卡 | 規則 `support.duplicate.limitBreak`：傳承 +1，傳承滿 4 次轉學分（`reward-bundle`） |
 | 保底 | SSR 軟 50／硬 90；SR 以上 軟 6／硬 10（本章 12.3 表已列） |
 | 資料 | `gacha-reward-pools.json` 新增 `POOL_SUPPORT`；完整 JSON 與逐卡機率見 1264 第 17、22.4 節 |
+
+## 13. 台詞成就「有感而發」（PROG-2-9864）
+
+> 接入點：玩家在武將台詞面板觸發台詞中台（AI 生成）並取得非降級台詞時。大廳小人的本地台詞（LobbyDialogueProvider）不屬於中台，不觸發本成就。
+
+- 新台詞判定：台詞經正規化（NFKC、小寫、去空白與標點）後取 SHA-256 作為指紋；指紋不在該武將已見清單即為新台詞。已見清單記在權威端 `rewardMeta.insight.seen`，每位武將最多保留 200 筆（舊的淘汰，淘汰後再出現視為新台詞）。
+- 首次新台詞（該武將尚未解鎖）：解鎖成就「有感而發·<武將名>」，獎勵稱號「<武將名>知音」與徽章 `badge_insight_<generalId>`（圖示先用通用徽章佔位），友誼 +10。入帳走 `reward.claim`，套件 `BUNDLE_INSIGHT_FIRST`。
+- 之後每句新台詞：友誼 +2，套件 `BUNDLE_INSIGHT_STEP`；每位武將每日上限 3 次（只計 +2 次數；日界為本機日期 YYYY-MM-DD）。超過上限不加友誼，台詞照常顯示，仍計入已見清單。
+- 非新台詞（指紋已見）：不加友誼、不發獎，台詞照常顯示。
+- 數值來源：`assets/resources/data/reward-config.json`。友誼量寫在兩個 bundle 的效果 `friendship` 欄位（10／2）；每日上限、已見上限與 bundle id 寫在頂層 `insight` 區段（3／200）。程式只保留缺省值，不寫死數值。
+- 來源與入帳：`reward.claim` 的 `source` 為 `{ "kind": "insight", "ref": "<generalId>" }`；宿主效果種類 `insight` 讀 `source.ref` 取得武將，經友誼框架 `FriendshipService` 加減友誼（失敗時反向撤銷）。
+- 存檔：`rewardMeta.insight`（`seen`、`daily`、`achieved`）隨獎勵框架權威端保存；入帳失敗時還原到入帳前的狀態。
+- 文案（三語）：`ui.insight.unlock`（例：「被你戳到心坎了！<武將名>對你多了點好感」）、`ui.insight.achievement`、`ui.insight.step`。

@@ -113,6 +113,26 @@
       "effects": [{ "kind": "item", "itemId": "ITEM_QUICK_RESOLVE_WRIT", "qty": 1, "itemSource": "TASK" }],
       "sources": ["battle"],
       "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_INSIGHT_FIRST",
+      "kind": "reward",
+      "effects": [{ "kind": "insight", "tier": "first", "friendship": 10 }],
+      "sources": ["insight"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_INSIGHT_STEP",
+      "kind": "reward",
+      "effects": [{ "kind": "insight", "tier": "step", "friendship": 2 }],
+      "sources": ["insight"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
     }
-  ]
+  ],
+  "insight": {
+    "dailyCap": 3,
+    "seenLimit": 200,
+    "firstBundle": "BUNDLE_INSIGHT_FIRST",
+    "stepBundle": "BUNDLE_INSIGHT_STEP"
+  }
 }

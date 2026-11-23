@@ -1,5 +1,8 @@
 {
   "ui.back": "返回",
+  "ui.insight.unlock": "被你戳到心坎了！{0}对你多了点好感",
+  "ui.insight.achievement": "成就解锁：有感而发·{0}　称号：{0}知音",
+  "ui.insight.step": "{0}又被你说中了，好感 +2",
   "ui.item.expire": "{0} 已过期并回收",
   "ui.confirm": "確認",
   "ui.cancel": "取消",
