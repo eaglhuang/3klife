@@ -28,6 +28,8 @@ export interface LobbyScout {
     intel: ScoutPanelIntel;
     /** 關卡有填必備或高建議對策；沒填時推薦檢核顯示「未指定」 */
     hasRecommendation: boolean;
+    /** 本場天氣一行（PROG-2-9735，例「天氣：大霧（遠程命中 -30%、火計禁用）」）；與戰場讀到的是同一個結果 */
+    weatherLine?: string;
 }
 
 /** 面板文案；確認框一句取自規格 §2，其餘為暫定 */
@@ -58,6 +60,7 @@ export function buildLobbyScout(
     enemy: ScoutEnemyLeader | null,
     tacticIds: readonly string[],
     tagTable: TacticCounterTagTable,
+    weatherLine?: string,
 ): LobbyScout {
     const required = encounter.requiredLoadout ?? [];
     const recommended = encounter.highlyRecommendedLoadout ?? [];
@@ -68,7 +71,7 @@ export function buildLobbyScout(
         { ...encounter, enemyLeader: enemy, coreMechanics: [...(mechanic ? [mechanic] : []), ...stageThemeMechanicNotes(encounter.stageThemeId)], riskTags: encounter.riskTags ?? [] },
         { state: check.state, gaps: check.gaps },
     );
-    return { intel, hasRecommendation: required.length + recommended.length > 0 };
+    return { intel, hasRecommendation: required.length + recommended.length > 0, ...(weatherLine ? { weatherLine } : {}) };
 }
 
 function enemyText(leader: ScoutEnemyLeader | null): string {
@@ -134,7 +137,8 @@ export class ScoutPanelController {
                 scoutTitle: t.title,
                 scoutEnemyHeading: t.enemyHeading,
                 scoutEnemyBody: enemyText(intel?.enemyLeader ?? null),
-                scoutMechanicHeading: t.mechanicHeading,
+                // 本場天氣接在標題後同一行（沿用既有欄位，不動版面；機制內文已經很長，放內文會被縮到看不清）
+                scoutMechanicHeading: scout?.weatherLine ? `${t.mechanicHeading}　${scout.weatherLine}` : t.mechanicHeading,
                 scoutMechanicBody: intel && intel.coreMechanics.length > 0 ? intel.coreMechanics.join('、') : t.noIntel,
                 scoutRiskHeading: t.riskHeading,
                 scoutRiskBody: intel && intel.riskTags.length > 0 ? intel.riskTags.map((tag) => `【${tag}】`).join(' ') : t.noIntel,

@@ -13,5 +13,5 @@ import { BURN_CONFIG, BURN_STATUS_ID, applyUnitBurn } from '../shared/BurnStatus
 export function igniteUnit(state: BattleState, unit: TroopUnit): void {
   if (unit.isDead()) return;
   const burn = applyUnitBurn(state.unitBurns, unit.id, BURN_CONFIG);
-  services().event.emit(EVENT_NAMES.BuffApplied, { unitId: unit.id, effect: BURN_STATUS_ID, turns: burn.remainingTurns });
+  services().event.emit(EVENT_NAMES.BuffApplied, { unitId: unit.id, effect: BURN_STATUS_ID, turns: burn.remainingTurns, stacks: burn.stacks });
 }

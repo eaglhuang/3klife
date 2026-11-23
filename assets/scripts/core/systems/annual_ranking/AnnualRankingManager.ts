@@ -10,16 +10,20 @@
 import { AnnualGeneralLedger, LedgerSerializedData } from './AnnualGeneralLedger';
 import {
   AnnualRankingConfig,
+  AnnualRankingSaveData,
   BoardConfig,
   BoardRankResult,
   LobbyBoardPreview,
   RankingContext
 } from './AnnualRankingTypes';
+export type { AnnualRankingSaveData } from './AnnualRankingTypes';
 import { RankingBoardRegistry } from './RankingBoardRegistry';
 import { KillsRankingProvider } from './providers/KillsRankingProvider';
 import { GovernanceRankingProvider } from './providers/GovernanceRankingProvider';
 import { CharmRankingProvider } from './providers/CharmRankingProvider';
 import { RookieRankingProvider } from './providers/RookieRankingProvider';
+
+
 
 export class AnnualRankingManager {
   private static _instance: AnnualRankingManager | null = null;
@@ -35,6 +39,9 @@ export class AnnualRankingManager {
       this._config = config;
     }
     this.registerDefaultProviders();
+    if (!AnnualRankingManager._instance) {
+      AnnualRankingManager._instance = this;
+    }
   }
 
   public static getInstance(config?: AnnualRankingConfig): AnnualRankingManager {
@@ -185,10 +192,7 @@ export class AnnualRankingManager {
   /**
    * 存檔序列化
    */
-  public serialize(): {
-    ledger: LedgerSerializedData;
-    previousYearRanks: Record<string, Record<string, number>>;
-  } {
+  public serialize(): AnnualRankingSaveData {
     return {
       ledger: this._ledger.serialize(),
       previousYearRanks: this._previousYearRanks
@@ -198,10 +202,16 @@ export class AnnualRankingManager {
   /**
    * 存檔反序列化
    */
-  public deserialize(data: {
-    ledger: LedgerSerializedData;
-    previousYearRanks?: Record<string, Record<string, number>>;
-  }): void {
+  /**
+   * 讀檔／開新局時換成該存檔的風雲榜狀態；沒有資料時清空（不影響已載入的榜單設定）
+   */
+  public restoreSaveData(data?: AnnualRankingSaveData | null): void {
+    this._ledger = new AnnualGeneralLedger(1);
+    this._previousYearRanks = {};
+    if (data) this.deserialize(data);
+  }
+
+  public deserialize(data: Partial<AnnualRankingSaveData>): void {
     if (!data) return;
     if (data.ledger) {
       this._ledger.deserialize(data.ledger);
@@ -209,5 +219,33 @@ export class AnnualRankingManager {
     if (data.previousYearRanks) {
       this._previousYearRanks = data.previousYearRanks;
     }
+  }
+
+  /**
+   * 計算武將上榜對世家聲望的貢獻點數（依 clanPrestige 配置）
+   * @param ranks 該武將在各個榜單取得的名次陣列
+   */
+  public calculateClanPrestigeContribution(ranks: number[]): number {
+    const cfg = this._config?.clanPrestige;
+    if (!cfg || !cfg.enabled) return 0;
+
+    let total = 0;
+    const base = cfg.baseContribution || 50;
+    const max = cfg.maxPerGeneral || 500;
+
+    for (const rank of ranks) {
+      if (rank <= 0 || rank > 100) continue;
+      let mul = cfg.multipliers.rankTop100 || 1.0;
+      if (rank === 1) {
+        mul = cfg.multipliers.rank1 || 5.0;
+      } else if (rank <= 3) {
+        mul = cfg.multipliers.rankTop3 || 3.0;
+      } else if (rank <= 10) {
+        mul = cfg.multipliers.rankTop10 || 2.0;
+      }
+      total += Math.round(base * mul);
+    }
+
+    return Math.min(max, total);
   }
 }

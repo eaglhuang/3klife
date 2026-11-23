@@ -138,6 +138,8 @@ export const SYNC_PATCH_ROOT_KEYS: readonly string[] = [
     'countdown',
     'sortiePresets',
     'breedingBirthRecords',
+    'annualRanking',
+    'friendships',
 ];
 
 const ROOT_KEY_SET = new Set(SYNC_PATCH_ROOT_KEYS);

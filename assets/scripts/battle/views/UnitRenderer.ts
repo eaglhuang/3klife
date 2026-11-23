@@ -78,7 +78,10 @@ import {
 import { hpChipOnChange, stepHpChip, unitHpBarState, type HpChipState, type UnitHpBarState } from "../shared/UnitHpBar";
 import { unitValueFloatType } from "../shared/DamageFloatType";
 import { UnitStatusIconBar, StatusHaloPool, STATUS_ICON_SIZE } from "./UnitStatusIconBar";
+import { UnitFeedbackGlowPool } from "./UnitFeedbackGlow";
+import { NameplateCombatFade, getBattleUiFeedback } from "../shared/BattleUiFeedback";
 import { TileBuffMarkers } from "./TileBuffMarkers";
+import { UnitBuffPickupVfx } from "./UnitBuffPickupVfx";
 import type { TileBuffBadge } from "../shared/TileBuffBadge";
 import { BADGE_HIT_PRIORITY_SEC, badgeRectFromExtent, easePlateOffset, stackBadgeOffsets, unionExtent, type LabelRect, type LocalExtent, type StackBadgeEntry } from "../shared/GeneralPlateAvoidance";
 import { buildUnitStatusContext, computeUnitStatusIcons, gainedTones, newlyGainedKinds, type StatusIconKind } from "../shared/UnitStatusIcons";
@@ -259,9 +262,7 @@ export class UnitRenderer extends Component {
   private discMesh: Mesh | null = null;  // 圓形陰影 mesh，對照 Unity: blob shadow disc
   private ringMesh: Mesh | null = null;  // Faction Ring mesh
   private raftMaterial: Material | null = null;
-  private atkGainPool: BuffGainEffectPool | null = null;
   private atkLossPool: BuffGainEffectPool | null = null;
-  private hpGainPool:  BuffGainEffectPool | null = null;
   private hpLossPool:  BuffGainEffectPool | null = null;
   private readonly unitViews = new Map<string, UnitView>();
   private readonly movingUnits = new Set<string>();
@@ -286,6 +287,12 @@ export class UnitRenderer extends Component {
   private unsubVitality: (() => void) | null = null;
   /** 腳下光環節點池（PROG-2-9399），第一次需要時才建立 */
   private statusHalos: StatusHaloPool | null = null;
+  /** 毒箭上身與治療用的色光節點池（PROG-2-9731），第一次需要時才建立 */
+  private feedbackGlows: UnitFeedbackGlowPool | null = null;
+  /** 名牌戰鬥淡出（PROG-2-9731）：攻擊、受擊演出期間淡出，結束後淡回 */
+  private readonly plateFade = new NameplateCombatFade();
+  private readonly healHolds = new Map<string, number>();
+  private plateFadeApplied = false;
   /** 高倍率攻擊提示門檻（PROG-2-9422）；載入 data/attack-surge-highlight 前先用預設 */
   private attackSurgeConfig: AttackSurgeConfig = { ...DEFAULT_ATTACK_SURGE_CONFIG };
   private readonly attackSurgeGoldColor = new Color(ATTACK_SURGE_GOLD.r, ATTACK_SURGE_GOLD.g, ATTACK_SURGE_GOLD.b, ATTACK_SURGE_GOLD.a);
@@ -309,6 +316,12 @@ export class UnitRenderer extends Component {
       const pos = this.boardRenderer?.getCellWorldPosition(cell.lane, cell.depth, 0);
       if (pos) this.projectWorldPoint(pos, node);
     },
+  );
+  /** 部隊吃到 buff 當下腳下的 2.5 秒大特效（PROG-2-9734） */
+  private readonly unitBuffPickupVfx = new UnitBuffPickupVfx(
+    () => this.uiRoot,
+    () => this.tileBuffMarkers.groundNode(),
+    () => this.canvasNode?.layer ?? Layers.Enum.UI_2D,
   );
   private readonly tileBuffFlyFrom = new Vec3();
   private readonly tileBuffFlyTo = new Vec3();
@@ -1190,6 +1203,7 @@ export class UnitRenderer extends Component {
       } else { this.spineUnits.remove(`general:${faction}`); if (view.usingHeroModel) view.modelRoot.active = true; }
     });
     perfEnd('generalViews', t); t = perfBegin();
+    this.applyNameplateFade(dt);
     this.avoidGeneralPlates(dt);
     perfEnd('avoidPlates', t); t = perfBegin();
     this.spineUnits.update(dt);
@@ -1203,6 +1217,7 @@ export class UnitRenderer extends Component {
     perfEnd('fxShots', t); t = perfBegin();
 
     this.tileBuffMarkers.update(dt);
+    this.unitBuffPickupVfx.update(dt);
     perfEnd('tileBuff', t); t = perfBegin();
     // 徽章代理節點跟上本幀最終位置（投影、避讓都做完之後；PROG-2-9713）
     this.badgeLayers?.sync();
@@ -1329,13 +1344,12 @@ export class UnitRenderer extends Component {
     const worldPos = this.getUnitWorldPosition(lane, depth, 0.02);
     if (!worldPos) return;
     UCUFLogger.info(LogCategory.BATTLE, `[UnitRenderer] playBuffEffect unit=${unitId} lane=${lane} depth=${depth} atk=${attackDelta} hp=${hpDelta}`);
-    if (attackDelta > 0) this.atkGainPool?.play(worldPos);
+    // 增益（ATK+／HP+）已改由 UnitBuffPickupVfx 的腳下特效負責，這裡只剩減益
     if (attackDelta < 0) this.atkLossPool?.play(worldPos);
-    if (hpDelta > 0)     this.hpGainPool?.play(worldPos);
     if (hpDelta < 0)     this.hpLossPool?.play(worldPos);
   }
 
-  /** 建立 4 個 BuffGainEffectPool：ATK±、HP± 各自獨立，使用對應貼圖與顏色風格 */
+  /** 建立 2 個 BuffGainEffectPool：ATK−、HP−（增益已改由腳下特效負責，PROG-2-9734） */
   private async setupAllEffectPools(): Promise<void> {
     if (!this.worldRoot) return;
 
@@ -1348,30 +1362,18 @@ export class UnitRenderer extends Component {
       return pool;
     };
 
-    const atkBuffRing = new Color(255, 212, 132, 255);
-    const atkBuffMain = new Color(255, 244, 214, 255);
-    const atkBuffArrow = new Color(255, 191, 96, 255);
-
-    const healBuffRing = new Color(110, 255, 196, 255);
-    const healBuffMain = new Color(210, 255, 236, 255);
-    const healBuffArrow = new Color(144, 255, 206, 255);
-
     const debuffRing = new Color(96, 28, 28, 220);
     const debuffMain = new Color(190, 72, 72, 236);
     const debuffArrow = new Color(128, 42, 42, 220);
 
-    this.atkGainPool = makePool("Pool_AtkGain");
     this.atkLossPool = makePool("Pool_AtkLoss");
-    this.hpGainPool  = makePool("Pool_HpGain");
     this.hpLossPool  = makePool("Pool_HpLoss");
 
     await Promise.all([
-      this.atkGainPool.initialize({ variant: "AtkGain", prefabPath: "fx/buff/buff_gain_3d", ringTexturePath: "vfx_core:textures/rings/tex_ring_addatk",  mainTexturePath: "vfx_core:textures/icons/tex_icon_addatk",  arrowTexturePath: "vfx_core:textures/shapes/tex_shape_arrow_addatk",  sparkTexturePath: "vfx_core:textures/glow/ex_hit_flash",  arrowUp: true,  mainScaleMultiplier: 0.78, ringColor: atkBuffRing, mainColor: atkBuffMain, arrowColor: atkBuffArrow, label: "AtkGain" }),
       this.atkLossPool.initialize({ variant: "AtkLoss", prefabPath: "fx/buff/buff_debuff_3d", ringTexturePath: "vfx_core:textures/rings/tex_ring_addatk",  mainTexturePath: "vfx_core:textures/icons/tex_icon_addatk",  arrowTexturePath: "vfx_core:textures/shapes/tex_shape_arrow_addatk",  sparkTexturePath: "vfx_core:textures/glow/ex_hit_flash",  arrowUp: false, mainScaleMultiplier: 0.78, ringColor: debuffRing, mainColor: debuffMain, arrowColor: debuffArrow, label: "AtkLoss" }),
-      this.hpGainPool.initialize({ variant: "HpGain", prefabPath: "fx/buff/buff_gain_3d", ringTexturePath: "vfx_core:textures/rings/tex_ring_addlife", mainTexturePath: "vfx_core:textures/icons/tex_icon_addlife", arrowTexturePath: "vfx_core:textures/shapes/tex_shape_arrow_addlife", sparkTexturePath: "vfx_core:textures/rings/ex_energy_ring", arrowUp: true,  useDualArrows: true, mainRotationDeg: 90, ringColor: healBuffRing, mainColor: healBuffMain, arrowColor: healBuffArrow, label: "HpGain" }),
       this.hpLossPool.initialize({ variant: "HpLoss", prefabPath: "fx/buff/buff_debuff_3d", ringTexturePath: "vfx_core:textures/rings/tex_ring_addlife", mainTexturePath: "vfx_core:textures/icons/tex_icon_addlife", arrowTexturePath: "vfx_core:textures/shapes/tex_shape_arrow_addlife", sparkTexturePath: "vfx_core:textures/glow/ex_hit_flash", arrowUp: false, useDualArrows: true, mainRotationDeg: 90, ringColor: debuffRing, mainColor: debuffMain, arrowColor: debuffArrow, label: "HpLoss" }),
     ]);
-    UCUFLogger.info(LogCategory.BATTLE, "[UnitRenderer] ✅ 全部特效 Pool 初始化完成 (ATK±, HP±)");
+    UCUFLogger.info(LogCategory.BATTLE, "[UnitRenderer] ✅ 全部特效 Pool 初始化完成 (ATK−, HP−)");
   }
 
   private ensureRoots(): void {
@@ -1957,7 +1959,9 @@ export class UnitRenderer extends Component {
     const isGeneral = this.isGeneralAvatarUnit(unit);
     view.attackLabel.string = statWithBonusText(unit.getEffectiveAttack(), attackBonus, isGeneral ? "攻 " : "");
     view.typeLabel.string = isGeneral ? "將" : troopTypeGlyph(unit.type);
-    view.hpLabel.string = statWithBonusText(Math.max(0, unit.currentHp), hpBonus, isGeneral ? "命 " : "");
+    // PROG-2-9731：治療三步——血條最後才升，期間顯示治療前的血量（別處刷新也不會提早跳）
+    const shownHp = this.healHolds.get(unit.id) ?? unit.currentHp;
+    view.hpLabel.string = statWithBonusText(Math.max(0, shownHp), hpBonus, isGeneral ? "命 " : "");
     // PROG-2-9422（Q-C1 選 A）：攻擊疊到 2 倍以上變金、4 倍以上變紅加脈動光環，敵我都適用
     const surgeTier = attackSurgeTier(unit.getEffectiveAttack(), unit.attack, this.attackSurgeConfig);
     view.attackLabel.color = surgeTier === "none" ? this.statToneColor(statBonusTone(attackBonus)) : this.attackSurgeColor(surgeTier);
@@ -1965,7 +1969,7 @@ export class UnitRenderer extends Component {
     view.hpLabel.color = this.statToneColor(statBonusTone(hpBonus));
     view.troopType = unit.type;
     view.labelOpacity.opacity = 255;
-    const hpState = unitHpBarState(unit.currentHp, unit.getEffectiveMaxHp(), unit.faction === Faction.Player);
+    const hpState = unitHpBarState(shownHp, unit.getEffectiveMaxHp(), unit.faction === Faction.Player);
     if (view.hpState) view.hpChip = hpChipOnChange(view.hpChip ?? null, view.hpState.ratio, hpState.ratio);
     view.hpState = hpState;
     this.drawHpBar(view.hpBar, hpState, view.hpChip?.lag);
@@ -1985,6 +1989,80 @@ export class UnitRenderer extends Component {
     // formationRoot 不再負責旋轉，各 soldier 以 0° local rotation 繼承 worldNode 方向
     this.alignNodeToFactionFacing(view.worldNode, unit.faction);
     this.projectWorldLabel(view.worldNode, view.labelNode, this.labelHeight);
+  }
+
+  // ── PROG-2-9731 戰場 UI 演出（名牌戰鬥淡出、毒上身、治療光）──────────────
+
+  /** 攻擊／受擊演出開始：名牌淡出（可重入，與 endCombatPresentation 成對） */
+  public beginCombatPresentation(): void { this.plateFade.begin(); }
+  public endCombatPresentation(): void { this.plateFade.end(); }
+  /** 佇列清空或治療要讓玩家看血條時：放掉所有淡出計數，名牌馬上開始淡回 */
+  public releaseNameplateFade(): void { this.plateFade.releaseNow(); }
+  /** 治療事件一到先把該單位的顯示血量定在治療前，等血條那一步才放開（只記第一次，連續治療不被覆蓋） */
+  public holdHealHp(unitId: string, hpBefore: number): void { if (!this.healHolds.has(unitId)) this.healHolds.set(unitId, hpBefore); }
+  /** 放開血量定格；不帶 id 放開全部（演出佇列結束的保底，避免血條卡在舊值） */
+  public releaseHealHp(unitId?: string): void { if (unitId === undefined) this.healHolds.clear(); else this.healHolds.delete(unitId); }
+  /** QA 用：目前名牌不透明度比例（0~1） */
+  public debugNameplateAlpha(): number { return this.plateFade.alpha; }
+
+  /** 每幀把淡出比例套到所有名牌；已陣亡淡出中的名牌與倒地隱藏（opacity 0）的主將名牌不動 */
+  private applyNameplateFade(dt: number): void {
+    const a = this.plateFade.step(dt);
+    const faded = a < 0.999;
+    if (!faded && !this.plateFadeApplied) return;
+    const v = faded ? Math.round(a * 255) : 255;
+    this.unitViews.forEach((view, id) => {
+      if (this.dyingUnits.has(id) || !isValid(view.labelOpacity)) return;
+      view.labelOpacity.opacity = v;
+    });
+    this.generalViews.forEach((view) => {
+      if (!isValid(view.labelOpacity) || view.labelOpacity.opacity === 0) return;
+      view.labelOpacity.opacity = v;
+    });
+    this.plateFadeApplied = faded;
+  }
+
+  private glowPool(): UnitFeedbackGlowPool {
+    if (!this.feedbackGlows) this.feedbackGlows = new UnitFeedbackGlowPool(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
+    return this.feedbackGlows;
+  }
+
+  /** QA 用：色光累計播放次數 */
+  public debugGlowPlayCount(): number { return this.feedbackGlows?.playCount ?? 0; }
+
+  /** 毒箭上身：受擊者身上罩一團紫綠光（顏色、大小、秒數見 battle-ui-feedback.json poisonHit） */
+  public playPoisonHit(unitId: string): void {
+    const view = this.unitViews.get(unitId);
+    if (!view) return;
+    const foot = this.unitGroundFoot(view);
+    if (!foot) return;
+    const c = getBattleUiFeedback().poisonHit;
+    this.glowPool().play(foot.x, foot.y, { fill: c.flashFillColor, edge: c.flashEdgeColor, peakAlpha: c.flashPeakAlpha, sec: c.flashSec, radiusX: c.flashRadiusX, radiusY: c.flashRadiusY, rise: c.flashRise });
+  }
+
+  /** 治療光：綠白光暈由下往上升（治療三步的第一步） */
+  public playHealLight(unitId: string): void {
+    const view = this.unitViews.get(unitId);
+    if (!view) return;
+    const foot = this.unitGroundFoot(view);
+    if (!foot) return;
+    const c = getBattleUiFeedback().heal;
+    this.glowPool().play(foot.x, foot.y, { fill: c.lightFillColor, edge: c.lightEdgeColor, peakAlpha: c.lightPeakAlpha, sec: c.lightSec, radiusX: c.lightRadiusX, radiusY: c.lightRadiusY, rise: c.lightRise });
+  }
+
+  /** 治療綠字（第二步）；與 playValueChange 的 heal 一樣走 'heal' 類型，但不帶受擊小跳 */
+  public playHealFloat(unit: TroopUnit | null, amount: number): void {
+    if (!unit) return;
+    const worldPos = this.getUnitWorldPosition(unit.lane, unit.depth);
+    if (!worldPos) return;
+    this.spawnFloatText(`+${amount}`, 'heal', worldPos, unit.id);
+  }
+
+  /** 狀態字用毒紫綠類型（毒箭上身） */
+  public playPoisonFloat(lane: number, depth: number, text: string): void {
+    const worldPos = this.getUnitWorldPosition(lane, depth);
+    if (!worldPos) return;
+    this.spawnFloatText(text, 'poison', worldPos);
   }
 
   /**
@@ -2034,8 +2112,10 @@ export class UnitRenderer extends Component {
    * 吃到 buff 格（PROG-2-9411）：格子上的圖示飛到單位頭頂圖示列，抵達時頭頂整排彈一下、腳下亮光環。
    * 要在刷新畫面（標記被收起）之前呼叫；那格沒有標記或單位已不在畫面上時，退回原本的刷新時補播。
    */
-  public playTileBuffPickup(unitId: string, lane: number, depth: number, badge: TileBuffBadge): void {
+  public playTileBuffPickup(unitId: string, lane: number, depth: number, badge: TileBuffBadge, factor: number): void {
     const view = this.unitViews.get(unitId);
+    // 吃到的當下：部隊腳下播 2.5 秒大特效（跟著部隊走，依倍率分級）；與頭頂圖示飛入互不等待
+    if (view) this.unitBuffPickupVfx.play(unitId, () => (isValid(view.worldNode) ? this.unitGroundFoot(view) : null), badge.kind.startsWith('attack') ? 'attack' : 'hp', badge.isDebuff, factor);
     const from = this.tileBuffMarkers.iconPositionOf({ lane, depth }, this.tileBuffFlyFrom);
     if (!view || !from || !view.labelNode.active) { this.playStatusGain(unitId, badge.isDebuff); return; }
     const target = (): Vec3 | null => {

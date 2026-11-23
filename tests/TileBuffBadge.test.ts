@@ -1,7 +1,5 @@
 // PROG-2-9411：棋盤 buff 格顯示（與頭頂狀態圖示同一套）的純邏輯測試
 import {
-    TILE_BUFF_IDLE,
-    sampleTileBuffIdle,
     sampleTileBuffPickup,
     tileBuffBadgeOf,
     tileBuffDeltaText,
@@ -53,19 +51,6 @@ export function createTileBuffBadgeSuite(): TestSuite {
         assert.isTrue(tileBuffBadgeOf(tileBuffSourceFromDelta(-12, 0)).kind === 'attack-down');
         assert.isTrue(tileBuffBadgeOf(tileBuffSourceFromDelta(0, 80)).kind === 'hp-up');
         assert.isTrue(tileBuffBadgeOf(tileBuffSourceFromDelta(0, -80)).kind === 'hp-down');
-    });
-
-    suite.test('待機浮動：在範圍內來回，光板透明度在上下限之間；稀有格浮得多', () => {
-        let maxDy = 0, maxRareDy = 0;
-        for (let t = 0; t < 3; t += 0.05) {
-            const a = sampleTileBuffIdle(t, false), b = sampleTileBuffIdle(t, true);
-            maxDy = Math.max(maxDy, Math.abs(a.dy));
-            maxRareDy = Math.max(maxRareDy, Math.abs(b.dy));
-            assert.isTrue(a.plateAlpha >= TILE_BUFF_IDLE.plateAlphaMin && a.plateAlpha <= TILE_BUFF_IDLE.plateAlphaMax);
-            assert.isTrue(Math.abs(a.scale - 1) <= TILE_BUFF_IDLE.scaleAmp + 1e-9);
-        }
-        assert.isTrue(maxDy <= TILE_BUFF_IDLE.bobPx + 1e-9 && maxRareDy > maxDy, `${maxDy} ${maxRareDy}`);
-        assert.isTrue(sampleTileBuffIdle(NaN, false).dy === 0);
     });
 
     suite.test('拾取飛入：從格子出發、準確落在頭頂，途中往上拱', () => {

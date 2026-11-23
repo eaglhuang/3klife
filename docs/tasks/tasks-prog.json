@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 257,
-    "in_progress": 6,
-    "open": 86,
-    "total": 349
+    "done": 262,
+    "in_progress": 9,
+    "open": 85,
+    "total": 356
   },
   "tasks": [
     {
@@ -15151,6 +15151,489 @@
         "style": "classic",
         "label": "",
         "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9731",
+      "title": "戰場 UI 演出 B2：名牌戰鬥淡出、狀態圖示層數回合、奧義暫代大字與音效、毒上身回饋、治療時序",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T19:16:12+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "名牌戰鬥淡出；狀態圖示層數/回合；奧義暫代分鏡補音效與中央大字；毒箭上身紫綠閃＋毒字；治療光/綠字/血條依序。數值進 JSON。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-22 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9732",
+      "title": "戰鬥音效補件：金屬擊打／肉體悶擊／單拍馬蹄換成 CC0 外部素材（可切回變調版）",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "2026-11-22T19:02:36+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "把 9729 變調代用的金屬擊打、肉體悶擊、單拍馬蹄換成 CC0 素材（Kenney Impact Sounds、BigSoundBank），設定檔加開關可切回變調代用版，預設 CC0 版。",
+      "related": [
+        "PROG-2-9729"
+      ],
+      "depends": [],
+      "acceptance": [
+        "三檔 CC0 素材入庫含 .meta 與 LICENSES-cc0.md、_MANIFEST 登記",
+        "battle-audio-layers.json 有 clipSource 開關預設 cc0",
+        "BattleAudioLayers.ts 與單元測試補齊",
+        "變調代用版檔案保留",
+        "實跑時間軸證明三檔有播且切回變調版也正常"
+      ],
+      "deliverables": [
+        "assets/bundles/audio/clips/*",
+        "assets/scripts/battle/shared/BattleAudioLayers.ts",
+        "assets/resources/data/battle-audio-layers.json",
+        "tests/BattleAudioLayers.test.ts"
+      ],
+      "notes": "2026-11-22 | 狀態: done | 驗證: 單元測試全過、tsc 0 錯、compute-gate quick 通過、建置實跑 6 回合 cc0 版 cc0_hit_metal 5／cc0_hit_flesh 1／cc0_hoof_single 46 次，pitched 版 hit_block 5／footstep_hoof 44 次 | 變更: Kenney Impact Sounds 取 impactMetal_medium_000／impactPunch_medium_000（OGG 原檔）、BigSoundBank 馬蹄裁一拍存 WAV；clipSource 開關與 cc0Clips 替換表；LICENSES-cc0.md、_MANIFEST | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9831",
+      "title": "LLM 批次文案工具與大廳武將聊天台詞第一批（API 贈送額度）",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "2026-11-22T20:00:00+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "tools_node/llm-batch：Batch API 工具、Agent SDK 以 API 金鑰執行器；大廳聊天台詞第一批 20 位武將寫入 hall-chat-lines.json",
+      "related": [
+        "PROG-2-2251"
+      ],
+      "depends": [],
+      "acceptance": [
+        "批次工具含 schema 驗證、費用統計、單批上限",
+        "單元測試通過",
+        "20 位武將台詞通過品質檢查並寫入正式資料"
+      ],
+      "deliverables": [
+        "tools_node/llm-batch/*",
+        "assets/resources/data/hall-map/hall-chat-lines.json"
+      ],
+      "notes": "2026-11-22 | 狀態: done | 驗證: 單元測試 6 項過、compute-gate quick 4/4、24 位台詞載入達底線 | 變更: tools_node/llm-batch、hall-chat-lines 補 20 位 | 阻塞: 未跑 web 建置實玩",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9735",
+      "title": "戰場天氣：季節機率抽取、劇情關固定、戰前顯示",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "claude-code-opus-5-5",
+      "started_at": "2026-11-22T21:39:08+08:00",
+      "started_by_agent": "claude-code-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 19 點裁決：劇情關照劇本固定天氣，其餘依季節機率抽、戰前顯示；數值放 JSON。總 PM 11/22 裁決季節權重（晴天每季 50%）。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "規格補天氣代碼表、季節機率、劇情固定、排程、戰前顯示、JSON 格式、驗收標準",
+        "battle-weather-season.json 與抽取函式含單元測試",
+        "LobbyScene 戰前決定天氣且戰場一致",
+        "戰前顯示本場天氣與效果",
+        "playtest 12/12、standard 閘門過"
+      ],
+      "deliverables": [
+        "docs/遊戲規格文件/系統規格書/戰場適性系統-shards/shard-d.md（K–Q）",
+        "assets/resources/data/battle-weather-season.json",
+        "assets/scripts/core/systems/BattleWeatherRoll.ts",
+        "assets/scripts/core/systems/WeatherEffectText.ts",
+        "tests/BattleWeatherRoll.test.ts"
+      ],
+      "notes": "2026-11-22 | 狀態: done | 驗證: 單元測試 9239 通過、tsc 0 錯、standard 閘門過、playtest 12/12、戰前截圖與戰場 BattleState.weather 一致（FOG） | 變更: 季節抽天氣＋劇情固定＋戰前偵查面板顯示天氣；RAIN→RAINY；戰場適性系統新增 shard-d（K–Q）；原卡號 9733 與 #2524 撞號改 9735 | 阻塞: 無；待辦：赤壁關、雷暴機械損毀與士氣效果、天氣適性數值表",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9736",
+      "title": "移除舊 buff 獲得 3D 特效（攻擊／回血）＋吃到 buff 特效依倍率分級",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者要求砍掉舊的攻擊加成 3D 特效（大光劍）以省記憶體；回血獲得池同處重疊一併移除；TileBuffConsumed 帶 factor，吃到特效依 ×3／×5 分級（總PM 同意）。減益池與技能仍用的貼圖保留。",
+      "related": [
+        "PROG-2-9734"
+      ],
+      "depends": [],
+      "acceptance": [
+        "atkGainPool/hpGainPool 移除",
+        "吃到特效依倍率分級",
+        "tsc 0",
+        "單元測試全過"
+      ],
+      "deliverables": [
+        "UnitRenderer.ts",
+        "UnitBuffPickupVfx.ts",
+        "TileBuffVfx.ts",
+        "BattleTileBuffLifecycleManager.ts",
+        "BattleUIBridge.ts",
+        "buff-particle-profiles.json",
+        "tile-buff-vfx.json"
+      ],
+      "notes": "2026-11-22 | 狀態: done | 驗證: tsc 0、單元 9236 通過 | 變更: 程式由 agent-run Haiku 產出（0.05 美元），戰場專家驗收 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9842",
+      "title": "十連結果卡片壓扁＋統計列漏算 N",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-22T22:29:55+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "十連抽結果卡：立繪依世界縮放補正裁切比例，修正卡片被壓扁；統計列改為動態列出各類別並包含 N（原本漏算）。尚未實機截圖驗證。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "十連結果卡立繪比例不再被壓扁",
+        "統計列動態列出含 N",
+        "tests/DestinyOpeningResult.test.ts 通過",
+        "tsc 0",
+        "尚未實機截圖驗證（待補）"
+      ],
+      "deliverables": [
+        "assets/scripts/ui/core/GachaFlowCoordinator.ts",
+        "assets/scripts/ui/core/GachaResultRanking.ts",
+        "tests/DestinyOpeningResult.test.ts"
+      ],
+      "notes": "2026-11-22 | 狀態: in-progress | 驗證: compute-gate standard 13/14 通過（1 警告）、尚未實機截圖 | 變更: 補開卡與 lock，分支 claude/gacha-ten-card-aspect 既有 commit 7bb9870f5（十連結果卡立繪依世界縮放補正裁切比例、統計列動態列出含 N） | 阻塞: 無；既有警告 LoginScene.ts:10 ui→battle/views/QaTimeController 非本卡改動，留待另卡",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9843",
+      "title": "戰法詳情子視窗補招式描述文字",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-23",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-23T07:14:38+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "戰法詳情子視窗（技分頁）補招式描述文字：tactic-library 加 descKey、四語系字典、SkillDetailView 名稱下方顯示。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "有 descKey 的戰法四語系字典都查得到文字",
+        "SkillDetailView／TacticFlavorData 單元測試通過",
+        "tsc 0",
+        "tests/run-cli.ts 全過",
+        "compute-gate standard 無阻擋"
+      ],
+      "deliverables": [
+        "assets/resources/data/master/tactic-library.json",
+        "assets/scripts/core/systems/SkillDetailView.ts",
+        "assets/scripts/ui/components/character-ds3/CharacterDs3TacticsChild.ts",
+        "tests/SkillDetailView.test.ts",
+        "tests/TacticFlavorData.test.ts"
+      ],
+      "notes": "2026-11-23 | 狀態: done | 驗證: tsc test 0 錯；run-cli ALL PASS 9294；compute-gate standard 13/14（1 警告為既有 ui→battle import，非本卡） | 變更: tactic-library 28 戰法加 descKey；四語系字典 tactic.desc.*（28 則，API 產出，非 zh-TW 為複本＋_todo 待翻）；SkillDetailView 描述置於內文最前；新增 TacticFlavorData 與 SkillDetailView 測試 | 阻塞: none；奧義 70 項已有效果說明，本卡未加招式描述",
+      "completed_at": "2026-11-23T08:00:00+08:00"
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9841",
+      "title": "技分頁戰法／奧義點擊開啟通用詳情子視窗",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-22T22:27:24+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "武將詳情『技』分頁內，戰法與奧義點擊後開啟通用詳情子視窗（DetailSubWindow），共用 SkillDetailView 與 SkillDefinitionCache。尚未實機截圖驗證。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "技分頁點戰法開啟通用詳情子視窗",
+        "技分頁點奧義開啟通用詳情子視窗",
+        "DetailSubWindow 為通用元件",
+        "tests/SkillDetailView.test.ts 通過",
+        "tsc 0",
+        "尚未實機截圖驗證（待補）"
+      ],
+      "deliverables": [
+        "assets/scripts/core/systems/SkillDetailView.ts",
+        "assets/scripts/ui/core/DetailSubWindow.ts",
+        "assets/scripts/ui/general-detail/SkillDefinitionCache.ts",
+        "assets/scripts/ui/character-ds3/CharacterDs3TacticsChild.ts",
+        "assets/scripts/ui/general-detail/GeneralDetailSkillsChild.ts",
+        "tests/SkillDetailView.test.ts"
+      ],
+      "notes": "2026-11-22 | 狀態: in-progress | 驗證: compute-gate standard 13/14 通過（1 警告）、尚未實機截圖 | 變更: 補開卡與 lock，分支 claude/tactic-detail-popup 既有 commit d50159e56（技分頁戰法／奧義點擊開啟通用詳情子視窗） | 阻塞: 模組邊界警告 CharacterDs3TacticsChild.ts:18 ui→battle/skills/BattleSkillProfiles（shared 目前無對應介面，未改，待另卡把 resolveBattleSkillProfile 收進 shared 適配層）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9832",
+      "title": "幕府大廳套用大廳・內政統一風格（第一階段：共用 token＋主畫面）",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-22",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-22T21:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "幕府大廳主畫面套用大廳・內政風格：新增共用 hall-style-tokens、UISpecLoader 掛勾純樣式替換；不改功能與文字",
+      "related": [
+        "PROG-2-9398"
+      ],
+      "depends": [],
+      "acceptance": [
+        "token 與內政 skin 數值一致（測試比對）",
+        "只改樣式欄位，節點 id 與尺寸不變",
+        "tsc 0 錯；run-cli 全過"
+      ],
+      "deliverables": [
+        "assets/resources/ui-spec/themes/theme-registry.json",
+        "assets/scripts/ui/core/UIThemeResolver.ts",
+        "assets/scripts/ui/core/ThemeService.ts",
+        "assets/scripts/ui/core/ThemeSkinRestyle.ts",
+        "assets/scripts/ui/core/UISpecLoader.ts",
+        "tests/ThemeSystem.test.ts",
+        "assets/resources/i18n/zh-TW.json",
+        "assets/resources/i18n/zh-CN.json",
+        "assets/resources/i18n/en.json",
+        "assets/resources/i18n/ja.json",
+        "assets/resources/ui-spec/layouts/lobby-hall-screen.json",
+        "assets/resources/ui-spec/layouts/lobby-hall-screen.layout.json",
+        "docs/遊戲規格文件/系統規格書/共用框架總綱規格書-shards/shard-f.md",
+        "docs/遊戲規格文件/系統規格書/共用框架總綱規格書.md",
+        "docs/agent-briefs/tasks/PROG/PROG-2-9832.md"
+      ],
+      "notes": "2026-11-22 | 狀態: done（第一階段） | 驗證: tsc 0 錯；run-cli 9255 passed 3 skipped（含 HallStyleTokens 9 項） | 變更: hall-style-tokens.json、HallStyleTokens.ts、UISpecLoader 掛勾、HallStyleTokens.test.ts | 阻塞: 未做實機截圖比對；分節標題小字距與細金線留第二階段",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "幕府大廳主畫面套用大廳・內政玻璃風格（第一階段）",
         "position": "",
         "prereq": ""
       },

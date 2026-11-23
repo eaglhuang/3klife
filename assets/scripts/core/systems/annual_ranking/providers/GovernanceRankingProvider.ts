@@ -21,19 +21,13 @@ export class GovernanceRankingProvider implements IRankingBoardProvider {
     context: RankingContext,
     config: BoardConfig
   ): number {
-    const maxQuarterScore = config.maxQuarterScore || 800;
-    const maxAnnualScore = config.maxAnnualScore || 3200;
-    const taskWeights: Record<string, number> = config.taskWeights || {
-      agriculture: 1.0,
-      commerce: 1.0,
-      recruitment: 1.0,
-      diplomacy: 1.6,
-      espionage: 1.6
-    };
-    const defaultTaskWeight = config.defaultTaskWeight || 1.0;
-    const effClampMin = config.effClampMin !== undefined ? config.effClampMin : 0.6;
-    const effClampMax = config.effClampMax !== undefined ? config.effClampMax : 1.3;
-    const volunteeredMultiplier = config.volunteeredMultiplier || 1.2;
+    const maxQuarterScore = config.maxQuarterScore;
+    const maxAnnualScore = config.maxAnnualScore;
+    const taskWeights: Record<string, number> = config.taskWeights;
+    const defaultTaskWeight = config.defaultTaskWeight;
+    const effClampMin = config.effClampMin;
+    const effClampMax = config.effClampMax;
+    const volunteeredMultiplier = config.volunteeredMultiplier;
 
     const highlights = ledger.getHighlights(generalId);
     const quarterTotals: Record<number, number> = { 1: 0, 2: 0, 3: 0, 4: 0 };

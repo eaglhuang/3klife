@@ -50,10 +50,13 @@ import type { HallStageCast } from '../../core/systems/HallStageDirector';
 import { UIID, LayerType } from '../../core/config/UIConfig';
 import type { GeneralConfig, GeneralDetailDefaultTab } from '../../core/models/GeneralUnit';
 import { services } from '../../core/managers/ServiceLoader';
+import { FriendshipService } from '../../core/services/FriendshipService';
 import type { IUIManagedController } from '../../shared/interfaces/IUIInterfaces';
 import { SceneName } from '../../core/config/Constants';
 import { IBattleEntryParams, DEFAULT_BATTLE_ENTRY_PARAMS, EncounterConfig, isTutorialBattle } from '../../shared/BattleEntryParams';
-import { normalizeWeather } from '../../shared/CommonEnums';
+import { Weather } from '../../shared/CommonEnums';
+import { createSeededRng, rollBattleWeather, seasonWeatherSeed, validateBattleWeatherSeasonTable, type BattleWeatherSeasonTable } from '../../core/systems/BattleWeatherRoll';
+import { weatherPreBattleLine } from '../../core/systems/WeatherEffectText';
 import { BattleTactic } from '../../core/config/Constants';
 import { GeneralListComposite } from '../components/GeneralListComposite';
 import { GeneralDetailComposite } from '../components/GeneralDetailComposite';
@@ -305,6 +308,8 @@ import { SUITABILITY_BADGE_LABEL, suitabilityBadgeText } from '../../core/system
 import { DS3_BLOODLINE_TREE_NODE_NAME, ensureDs3BloodlineTree } from '../components/character-ds3/Ds3BloodlineTree';
 import { BLOODLINE_TREE_OPEN_LINE } from '../../core/systems/BloodlineTreeSlots';
 import { delegateSchedule } from '../../core/systems/AutoNurture';
+import { AnnualRankingManager } from '../../core/systems/annual_ranking/AnnualRankingManager';
+import type { AnnualRankingConfig } from '../../core/systems/annual_ranking/AnnualRankingTypes';
 /** 限定池 id（gacha-config／limited-pool-schedule 對應，PROG-2-9024） */
 const LIMITED_POOL_ID = 'limited-pool';
 
@@ -647,6 +652,8 @@ export class LobbyScene extends Component {
     private _scoutPanelHost: UIScreenPreviewHost | null = null;
     private readonly _scoutPanel = new ScoutPanelController();
     private _tacticCounterTags: TacticCounterTagTable | null = null;
+    /** 季節天氣機率表（PROG-2-9735，data/battle-weather-season）；載入前或載入失敗時抽天氣一律退回晴天 */
+    private _weatherSeasonTable: BattleWeatherSeasonTable | null = null;
     private _destinyShopHost: UIScreenPreviewHost | null = null;
     private _destinyShop: DestinyShopController | null = null;
     private _sortieHost: UIScreenPreviewHost | null = null;
@@ -947,6 +954,7 @@ export class LobbyScene extends Component {
             if (openingFirst) this._keepOpeningOnTop();
         }
         if (!this.node?.isValid) return;
+        await this._ensureAnnualRankingConfig();
         this._registerUIControllers();
         await services().ui.open(UIID.LobbyMain);
         if (!this.node?.isValid) return; // PROG-2-9196: scene already destroyed (switched away), stop quietly
@@ -3214,6 +3222,7 @@ export class LobbyScene extends Component {
             this._refreshExtremeTask();
             return;
         }
+        await this._ensureWeatherSeasonTable();
         const params = this._buildBattleEntryParams(undefined, encounter);
         services().scene.switchScene(SceneName.Battle, { ...params, tutorial: false, teachingSpirit: null });
     }
@@ -4679,9 +4688,9 @@ ${spent}`,
         return line.text.replace(/\{(\w+)\}/g, (whole, name: string) => vars[name] ?? whole);
     }
 
-    /** 武將友誼值：友誼系統尚未建立，暫一律 0（只會說一開始就解鎖的台詞）；日後改接真正的友誼資料 */
-    private _hallFriendshipOf(_generalId: string): number {
-        return 0;
+    /** 武將友誼值（PROG-2-9601 PR3 接通真實第8框架友誼服務） */
+    private _hallFriendshipOf(generalId: string): number {
+        return FriendshipService.getInstance().get(generalId);
     }
 
     /**
@@ -5505,6 +5514,7 @@ ${spent}`,
         const encounter = this._currentEncounter();
         const host = this._scoutPanelHost;
         if (!encounter || !host) return true;
+        await this._ensureWeatherSeasonTable();
         const enemy = this._generals.find((g) => g.id === encounter.enemyGeneralId);
         const leadId = services().session.resolveLeadGeneralId(encounter.playerGeneralId);
         const lead = services().session.roster.find((g) => g.id === leadId) ?? this._generals.find((g) => g.id === leadId);
@@ -5513,12 +5523,49 @@ ${spent}`,
             enemy ? { name: enemy.name, ...(enemy.title ? { title: enemy.title } : {}) } : null,
             (lead?.tacticSlots ?? []).map((slot) => slot.tacticId),
             await this._loadTacticCounterTags(),
+            weatherPreBattleLine(this._resolveEncounterWeather(encounter)),
         );
         const result = this._scoutPanel.ask(scout);
         host.node.active = true;
         this._bringNodeToFront(host.node);
         if (host.binder) applyFlowView(host.binder, this._scoutPanel.getView());
         return result;
+    }
+
+    /** 載入史境天下風雲榜配置（PROG-2-9601）；失敗時榜單沒有啟用項目，看板不顯示任何數字 */
+    private async _ensureAnnualRankingConfig(): Promise<void> {
+        if (AnnualRankingManager.getInstance().getConfig()) return;
+        try {
+            const data = await services().resource.loadJson<AnnualRankingConfig>('data/annual-ranking-config', { tags: ['LobbyScene'] });
+            AnnualRankingManager.getInstance().setConfig(data);
+        } catch {
+            // 配置缺失：風雲榜以停用狀態運作，不影響大廳
+        }
+    }
+
+    /** 載入季節天氣機率表；戰前偵查與開戰前都先等它，兩處才會讀到同一個天氣 */
+    private async _ensureWeatherSeasonTable(): Promise<void> {
+        if (this._weatherSeasonTable) return;
+        try {
+            const data = await services().resource.loadJson<BattleWeatherSeasonTable>('data/battle-weather-season', { tags: ['LobbyScene'] });
+            this._weatherSeasonTable = validateBattleWeatherSeasonTable(data);
+        } catch {
+            this._weatherSeasonTable = null;
+        }
+    }
+
+    /**
+     * 本場天氣（使用者 19 點裁決）：關卡 weather 有值就固定；沒值依本季機率抽。
+     * 種子 = 年-季-關卡，同一季同一關永遠同一種，戰前顯示與戰場必定一致。
+     */
+    private _resolveEncounterWeather(encounter: EncounterConfig): Weather {
+        const time = services().session.gameTime;
+        return rollBattleWeather({
+            season: time.currentSeason,
+            encounter,
+            table: this._weatherSeasonTable,
+            rng: createSeededRng(seasonWeatherSeed(time.currentYear, time.currentSeason, encounter.id)),
+        }).weather;
     }
 
     private async _loadTacticCounterTags(): Promise<TacticCounterTagTable> {
@@ -6108,6 +6155,7 @@ ${spent}`,
             message: `年終將至，${knownInvader ? `${knownInvader.nationName}大軍` : '敵軍'}壓境！全城備戰守城`,
             duration: 3,
         });
+        await this._ensureWeatherSeasonTable();
         const params = this._buildBattleEntryParams(undefined, encounter);
         services().scene.switchScene(SceneName.Battle, {
             ...params,
@@ -8144,11 +8192,14 @@ ${spent}`,
         const selectedGeneral = this._resolveMissionDetailSmokeGeneral(previewVariant, availableGenerals);
         // 環境偵察面板（PROG-2-0405）：用大廳目前關卡的真實地形與天氣
         const encounter = this._currentEncounter();
-        const scout = encounter ? buildEnvScoutLines(buildBattlefieldReconForEncounter(encounter)) : null;
+        await this._ensureWeatherSeasonTable();
+        // 天氣用與開戰相同的抽取結果（PROG-2-9735），預報與天氣行都以它為準
+        const weather = encounter ? this._resolveEncounterWeather(encounter) : null;
+        const scout = encounter && weather ? buildEnvScoutLines(buildBattlefieldReconForEncounter({ ...encounter, weather })) : null;
 
         await services().ui.open(UIID.LobbyMissionDetailDialog, {
             previewVariant,
-            state: scout ? { envScoutTerrainLine: scout.terrainLine, envScoutWeatherLine: scout.weatherLine } : undefined,
+            state: scout && weather ? { envScoutTerrainLine: scout.terrainLine, envScoutWeatherLine: weatherPreBattleLine(weather) } : undefined,
             availableGenerals,
             selectedGeneralId: selectedGeneral?.id,
             selectedGeneralLabel: selectedGeneral?.label,
@@ -8892,6 +8943,7 @@ ${spent}`,
 
     /** 開戰：攻城戰先扣主將的攻城壽命（存檔後才切場景），其餘直接切場景 */
     private async _enterBattle(battleTactic?: BattleTactic): Promise<void> {
+        await this._ensureWeatherSeasonTable();
         if (!(await this._askScoutBeforeSortie())) return;
         const params = this._buildBattleEntryParams(battleTactic ?? await this._resolveSceneGambit());
         const siege = lifespanCommandForBattleKind(this._currentEncounter()?.battleKind);
@@ -8955,7 +9007,7 @@ ${spent}`,
             playerEquipment: [...(encounter.playerEquipment ?? [])],
             enemyEquipment: [...(encounter.enemyEquipment ?? [])],
             selectedCardIds: services().session.deck,
-            weather: normalizeWeather(encounter.weather) ?? DEFAULT_BATTLE_ENTRY_PARAMS.weather,
+            weather: this._resolveEncounterWeather(encounter),
             battleTactic: battleTactic ?? encounter.battleTactic ?? DEFAULT_BATTLE_ENTRY_PARAMS.battleTactic,
             backgroundId: battleTactic === BattleTactic.FloodAttack ? undefined : encounter.backgroundId,
             campaignStageId: services().session.resolveCampaignStage(encounter.campaignStage).id,

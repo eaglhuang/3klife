@@ -3,6 +3,8 @@
  * 遵循 doc_spec_1284 與四層可插拔獨立架構
  */
 
+import type { LedgerSerializedData } from './AnnualGeneralLedger';
+
 export interface BoardConfig {
   boardId: string;
   evaluatorKey: string;
@@ -14,13 +16,39 @@ export interface BoardConfig {
   [key: string]: any;
 }
 
+/** 大廳看板文字表（全部來自 annual-ranking-config.json 的 lobbyTexts；{rank}、{score}、{n} 為佔位符） */
+export interface LobbyTextTable {
+  rankLabel: string;
+  scoreLabel: string;
+  yearEndHidden: string;
+  trendUp: string;
+  trendDown: string;
+  trendEqual: string;
+  trendNew: string;
+}
+
+export interface ClanPrestigeConfig {
+  enabled: boolean;
+  baseContribution: number;
+  maxPerGeneral: number;
+  multipliers: {
+    rank1: number;
+    rankTop3: number;
+    rankTop10: number;
+    rankTop100: number;
+    [key: string]: number;
+  };
+}
+
 export interface AnnualRankingConfig {
   version: string;
   comment: string;
   lobbyDisplayLimit: number;
   ceremonyDisplayLimit: number;
   historyMaxRanksTracked: number;
+  lobbyTexts: LobbyTextTable;
   boards: BoardConfig[];
+  clanPrestige?: ClanPrestigeConfig;
 }
 
 export interface MetricHighlight {
@@ -102,3 +130,11 @@ export interface RankingContext {
   playerFactionId?: string;
   previousYearRanks?: Record<string, Record<string, number>>; // boardId -> generalId -> rank
 }
+
+export interface AnnualRankingSaveData {
+  ledger?: LedgerSerializedData;
+  previousYearRanks?: Record<string, Record<string, number>>;
+  congratulatedByYear?: Record<number, string[]>;
+  ceremonyArchives?: Record<number, any>;
+}
+

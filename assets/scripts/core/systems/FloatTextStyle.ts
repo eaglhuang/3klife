@@ -23,7 +23,8 @@ export type FloatTextType =
     | 'dmg_heavy'   // 重擊（非暴擊但一下打掉大量兵力；橘色中大字，PROG-2-9412）
     | 'dmg_miss'    // 閃避（灰）
     | 'heal'        // 治療量（綠）
-    | 'status'      // 狀態效果（中毒/暈眩/Buff，水藍）
+    | 'status'      // 狀態效果（暈眩/Buff，水藍）
+    | 'poison'      // 毒箭上身（紫綠，PROG-2-9731；數值由 data/battle-ui-feedback.json 覆蓋）
     | 'hint'        // 場景提示 / Debug 用（半透明白）
     | 'loot';       // 掠奪資源（金色，戰法系統 §H-3）
 
@@ -90,11 +91,20 @@ export const FLOAT_TEXT_STYLES: Readonly<Record<FloatTextType, FloatTextStyle>> 
     status: { color: { r: 100, g: 220, b: 255, a: 255 }, fontSize: 42, isBold: true, durationMs: 1500, risePixels: 85,
         startScale: 0.7, peakScale: 1.25, popInSec: 0.07, settleSec: 0.10, maxConcurrent: 10, randomOffsetX: 20,
         outlineColor: OUTLINE_DARK, outlineWidth: 3 },
+    // 毒箭上身（PROG-2-9731，使用者選「毒紫綠」）：亮綠字配紫黑描邊；顏色與大小以 battle-ui-feedback.json 為準
+    poison: { color: { r: 170, g: 255, b: 110, a: 255 }, fontSize: 46, isBold: true, durationMs: 1300, risePixels: 85,
+        startScale: 0.7, peakScale: 1.3, popInSec: 0.07, settleSec: 0.10, maxConcurrent: 8, randomOffsetX: 16,
+        outlineColor: { r: 70, g: 20, b: 100, a: 255 }, outlineWidth: 3 },
     loot: { color: { r: 255, g: 215, b: 0, a: 255 }, fontSize: 32, isBold: true, durationMs: 1400, risePixels: 100,
         ...legacyPop(1.2), maxConcurrent: 10, randomOffsetX: 12, outlineColor: OUTLINE_DARK, outlineWidth: 2 },
     hint: { color: { r: 255, g: 255, b: 200, a: 150 }, fontSize: 22, isBold: false, durationMs: 2000, risePixels: 40,
         ...legacyPop(1.0), maxConcurrent: 6, randomOffsetX: 0, outlineColor: { r: 20, g: 20, b: 30, a: 150 }, outlineWidth: 1 },
 };
+
+/** 以資料檔覆蓋某個飄字類型的外觀（只覆蓋有給的欄位）；PROG-2-9731 毒字從 JSON 讀色與大小 */
+export function overrideFloatTextStyle(type: FloatTextType, patch: Partial<Pick<FloatTextStyle, 'color' | 'outlineColor' | 'fontSize' | 'durationMs'>>): void {
+    Object.assign(FLOAT_TEXT_STYLES[type], patch);
+}
 
 /** 閃避飄字文案。miss 的 BMFont 只有小寫 i/m/s 三個字，裝不下中文，所以閃避改走系統字型（見 BattleSceneLoader）。 */
 export const FLOAT_MISS_TEXT = '閃避';

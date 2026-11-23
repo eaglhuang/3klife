@@ -100,6 +100,8 @@ export type TacticConditionLike =
 export interface CanonicalTacticDefinition {
     id: string;
     displayName: string;
+    /** 招式文字描述的 i18n key（例如 tactic.desc.xxx）；缺就不顯示描述 */
+    descKey?: string;
     category?: string;
     battleSkillId?: string | null;
     sourceType?: SkillSourceType;

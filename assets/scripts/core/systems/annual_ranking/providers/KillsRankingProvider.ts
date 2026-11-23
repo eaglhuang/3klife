@@ -23,13 +23,13 @@ export class KillsRankingProvider implements IRankingBoardProvider {
     config: BoardConfig
   ): number {
     const highlights = ledger.getHighlights(generalId);
-    const maxSingleBattleScore = config.maxSingleBattleScore || 3000;
-    const killsDivisor = config.killsDivisor || 100;
-    const baseEnemyPowerRef = config.baseEnemyPowerRef || 1000;
-    const powerClampMin = config.powerClampMin !== undefined ? config.powerClampMin : 0.6;
-    const powerClampMax = config.powerClampMax !== undefined ? config.powerClampMax : 2.5;
-    const leadMultiplier = config.leadMultiplier || 1.15;
-    const duelBonuses = config.duelBonuses || { none: 0, officer: 150, elite: 300, legend: 600 };
+    const maxSingleBattleScore = config.maxSingleBattleScore;
+    const killsDivisor = config.killsDivisor;
+    const baseEnemyPowerRef = config.baseEnemyPowerRef;
+    const powerClampMin = config.powerClampMin;
+    const powerClampMax = config.powerClampMax;
+    const leadMultiplier = config.leadMultiplier;
+    const duelBonuses = config.duelBonuses;
 
     let totalScore = 0;
 
