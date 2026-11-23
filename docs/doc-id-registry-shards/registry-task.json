@@ -16762,5 +16762,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9852.md",
     "title": "[PROG-2-9852] 敵將戰法群傷評分（單目標傷害×預估命中數）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2988",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9853.md",
+    "title": "[PROG-2-9853] 敵將戰法自動索敵（最低血量／補最低友軍／範圍錨點）",
+    "category": "task"
   }
 ]

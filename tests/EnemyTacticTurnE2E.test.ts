@@ -146,6 +146,19 @@ export function createEnemyTacticTurnE2ESuite(): TestSuite {
         assert.isTrue(ctrl.enemyTacticDeclined(), '付不起要記成放棄放招');
     });
 
+    suite.test('PROG-2-9853：單體戰法自動索敵挑我方血量比例最低的單位', () => {
+        const ctrl = battle([{ slotId: 's1', tacticId: TEST_TACTIC_ID, source: 'bloodline' }]);
+        const weak = new TroopUnit('player-weak', TroopType.Infantry, Faction.Player, {
+            hp: 100, attack: 30, defense: 10, moveRange: 1, attackRange: 1,
+        });
+        weak.moveTo(3, 5);
+        weak.currentHp = 20;
+        ctrl.state.addUnit(weak);
+        const picked = ctrl.chooseEnemyTactic();
+        assert.isDefined(picked);
+        assert.equals('player-weak', picked!.targetUnitUid);
+    });
+
     suite.test('PROG-2-9848：沒有戰法槽時不算「放棄放招」（仍用武將主技能）', () => {
         const ctrl = battle([]);
         assert.equals(null, ctrl.chooseEnemyTactic());
