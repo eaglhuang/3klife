@@ -24,11 +24,48 @@ export function createFriendshipServiceSuite(): TestSuite {
         assert.equals(v3, 100, '超過上限應夾制於 100');
     });
 
-    suite.test('減少友誼值下限夾制於 0', () => {
+    suite.test('扣分可以扣到負值（-100～100 範圍），且不會低於 -100', () => {
         const service = new FriendshipService();
         service.add('general_zhang_fei', 10, 'initial');
         const v = service.add('general_zhang_fei', -25, 'scolded');
-        assert.equals(v, 0, '低於下限應夾制於 0');
+        assert.equals(v, -15, '10 扣 25 應為 -15（負值為敵意區間）');
+        assert.isTrue(service.hasInteracted('general_zhang_fei'), '負值仍算互動');
+
+        const v2 = service.add('general_zhang_fei', -200, 'captured_ally');
+        assert.equals(v2, -100, '低於下限應夾制於 -100');
+        assert.equals(service.add('general_zhang_fei', -5, 'x'), -100, '已在下限再扣仍為 -100');
+    });
+
+    suite.test('負值變更事件的 delta 為實際變動量（夾制後）', () => {
+        const service = new FriendshipService();
+        service.add('gen_neg', -90, 'init');
+        const logs: any[] = [];
+        service.onFriendshipChanged((ev) => logs.push(ev));
+        service.add('gen_neg', -30, 'drop');
+        assert.equals(logs[0].oldValue, -90);
+        assert.equals(logs[0].newValue, -100);
+        assert.equals(logs[0].delta, -10, '實際只扣 10');
+    });
+
+    suite.test('舊存檔相容：全 ≥0 的舊快照原樣載入；新存檔的負值可還原', () => {
+        const legacy = new FriendshipService();
+        legacy.loadSnapshot({ gen_a: 0, gen_b: 45, gen_c: 100 });
+        assert.equals(legacy.get('gen_a'), 0);
+        assert.equals(legacy.get('gen_b'), 45);
+        assert.equals(legacy.get('gen_c'), 100);
+
+        const fresh = new FriendshipService();
+        fresh.loadSnapshot({ gen_d: -60, gen_e: -100 });
+        assert.equals(fresh.get('gen_d'), -60, '負值存檔應還原');
+        assert.equals(fresh.get('gen_e'), -100);
+    });
+
+    suite.test('載入快照的越界值夾制於 [-100, 100]，非數字略過', () => {
+        const service = new FriendshipService();
+        service.loadSnapshot({ hi: 500, lo: -500, bad: NaN as unknown as number });
+        assert.equals(service.get('hi'), 100);
+        assert.equals(service.get('lo'), -100);
+        assert.isFalse(service.hasInteracted('bad'), 'NaN 不寫入');
     });
 
     suite.test('友誼變更事件正常派發且可解除註冊', () => {

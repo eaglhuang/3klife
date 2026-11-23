@@ -3,7 +3,7 @@
  * 遵循 PROG-2-9601 PR3 總 PM 裁決：
  * 1. 通用介面：get、add、hasInteracted、getAllInteracted、onFriendshipChanged 事件
  * 2. 稀疏儲存：只有與玩家產生互動／祝賀之武將才寫入存檔
- * 3. 數值上限與保護：預設 [0, 100]，單次增減由呼叫端傳入 reason
+ * 3. 數值上限與保護：預設 [-100, 100]（與私塾規格 7.6 一致，負值為敵意區間），單次增減由呼叫端傳入 reason
  * 4. 平台與框架中立：純 TS 無狀態／可序列化，供大廳、私塾、學府、戰場通用接入
  */
 
@@ -33,7 +33,7 @@ export class FriendshipService implements IFriendshipService {
     private _friendships: Map<string, number> = new Map();
     private _listeners: Set<FriendshipChangeListener> = new Set();
     private _maxCap: number = 100;
-    private _minCap: number = 0;
+    private _minCap: number = -100;
 
     constructor(initialData?: Record<string, number>, maxCap: number = 100) {
         this._maxCap = maxCap;
@@ -62,7 +62,7 @@ export class FriendshipService implements IFriendshipService {
     }
 
     /**
-     * 增加或減少武將友誼值（自動夾制於 [0, 100]）
+     * 增加或減少武將友誼值（自動夾制於 [-100, 100]）
      */
     public add(generalId: string, delta: number, reason: string): number {
         if (!generalId || !Number.isFinite(delta) || delta === 0) {
