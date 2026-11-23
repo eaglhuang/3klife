@@ -16662,6 +16662,12 @@
     "category": "task"
   },
   {
+    "id": "doc_task_2970",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9840.md",
+    "title": "[PROG-2-9840] 寬螢幕兩側灰邊：皮膚整面背景層跟著父容器伸縮、清除色改深色",
+    "category": "task"
+  },
+  {
     "id": "doc_task_2971",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9733.md",
     "title": "[PROG-2-9733] 規格回寫：使用者 2026-11-22 八項裁決（天氣、金銀轉移、官職分批解鎖、格子 buff、兵種符號、年終典禮、重複卡彈窗、燃燒）",
@@ -16699,8 +16705,44 @@
   },
   {
     "id": "doc_task_2977",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9832.md",
+    "title": "[PROG-2-9832] 幕府大廳套用大廳・內政統一風格（第一階段：共用 token＋主畫面）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2978",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9841.md",
+    "title": "[PROG-2-9841] 技分頁戰法／奧義點擊開啟通用詳情子視窗",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2983",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9842.md",
+    "title": "[PROG-2-9842] 十連結果卡片壓扁＋統計列漏算 N",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2980",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9843.md",
+    "title": "[PROG-2-9843] 戰法詳情子視窗補招式描述文字",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2981",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9845.md",
+    "title": "[PROG-2-9845] 騎術系統與馬廄規格（ridingTier 三級、名駒、馬廄與配種）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2982",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9738.md",
     "title": "[PROG-2-9738] 騎兵／騎馬武將套用 spine-trial 全套騎乘動作（攻擊／閃避／倒下／後退）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2979",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9847.md",
+    "title": "[PROG-2-9847] 趙雲騎馬骨架接入戰場（ridingTier 依 riding-tiers.json）",
     "category": "task"
   }
 ]

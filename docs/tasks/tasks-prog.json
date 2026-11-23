@@ -27,7 +27,7 @@
     "done": 264,
     "in_progress": 11,
     "open": 85,
-    "total": 360
+    "total": 363
   },
   "tasks": [
     {
@@ -15808,6 +15808,81 @@
         "style": "classic",
         "label": "",
         "summary": "任務牆／太守府／招賢館套用統一主題＋分節標題小字距與金線",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9845",
+      "title": "騎術系統與馬廄規格（ridingTier 三級、名駒、馬廄與配種）",
+      "owner": "ClaudeCode_claude-sonnet-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "spec",
+      "phase": "M0",
+      "created": "2026-11-23",
+      "created_by_agent": "ClaudeCode_claude-sonnet-5-5",
+      "started_at": "2026-11-23T12:48:30+08:00",
+      "started_by_agent": "ClaudeCode_claude-sonnet-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "新增 doc_spec_1328 騎術系統與馬廄規格書與 riding-tiers.json 暫定數值；只寫文件與資料。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "規格書含三級、取得、名駒、馬廄、配種、共用框架對應",
+        "riding-tiers.json 可解析",
+        "compute-gate standard 無阻擋"
+      ],
+      "deliverables": [
+        "docs/遊戲規格文件/系統規格書/騎術系統與馬廄規格書.md",
+        "assets/resources/data/riding-tiers.json"
+      ],
+      "notes": "2026-11-23 | 狀態: done | 驗證: compute-gate standard | 變更: 新增規格書與暫定數值 | 阻塞: none",
+      "completed_at": "2026-11-23T04:48:30.846Z"
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9847",
+      "title": "趙雲騎馬骨架接入戰場（ridingTier 依 riding-tiers.json）",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-23",
+      "created_by_agent": "codex-gpt-5.4-mini",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-23 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
         "position": "",
         "prereq": ""
       },

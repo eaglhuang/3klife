@@ -1,0 +1,472 @@
+{
+  "$note": "騎術系統暫定數值（PROG-2-9845，數值由 PM 設計，平衡先不管）。規格 doc_spec 騎術系統與馬廄規格書。武將資料欄位 ridingTier：0=步行、1=騎術、2=精騎、3=神駒；程式不得寫死此檔數值。",
+  "schemaVersion": 1,
+  "ridingTierField": "ridingTier",
+  "tiers": [
+    {
+      "tier": 0,
+      "id": "none",
+      "nameKey": "riding.tier.0",
+      "mountLook": "none"
+    },
+    {
+      "tier": 1,
+      "id": "riding",
+      "nameKey": "riding.tier.1",
+      "name": "騎術",
+      "mountLook": "warhorse",
+      "badge": "bronze",
+      "personal": {
+        "moveSpeedMul": 1.1,
+        "chargeFirstHitDamageMul": 1.2,
+        "dodgeChance": 0
+      },
+      "cavalrySquad": {
+        "atkMul": 1.05,
+        "chargeFirstHitDamageMul": 1.1
+      },
+      "skill": {
+        "id": "riding_charge",
+        "name": "突騎",
+        "cooldownSec": 20,
+        "dashTiles": 2.5,
+        "damageMulOfGeneralAtk": 1.5
+      },
+      "deployDrop": {
+        "durationSec": 0.6,
+        "fx": "dust_ring",
+        "sfx": "horse_snort"
+      }
+    },
+    {
+      "tier": 2,
+      "id": "elite",
+      "nameKey": "riding.tier.2",
+      "name": "精騎",
+      "mountLook": "armored_horse",
+      "badge": "silver",
+      "personal": {
+        "moveSpeedMul": 1.15,
+        "chargeFirstHitDamageMul": 1.3,
+        "dodgeChance": 0.12
+      },
+      "cavalrySquad": {
+        "atkMul": 1.1,
+        "chargeFirstHitDamageMul": 1.2,
+        "dodgeChance": 0.05
+      },
+      "skill": {
+        "id": "riding_counter",
+        "name": "回馬槍",
+        "cooldownSec": 25,
+        "triggerWindowSec": 1.5,
+        "damageMulOfGeneralAtk": 1.8,
+        "triggerOn": [
+          "dodge",
+          "hit_taken"
+        ]
+      },
+      "deployDrop": {
+        "durationSec": 0.8,
+        "fx": "armor_spark",
+        "sfx": "horse_neigh"
+      }
+    },
+    {
+      "tier": 3,
+      "id": "divine",
+      "nameKey": "riding.tier.3",
+      "name": "神駒",
+      "mountLook": "famous_mount",
+      "badge": "gold",
+      "personal": {
+        "moveSpeedMul": 1.2,
+        "chargeFirstHitDamageMul": 1.4,
+        "dodgeChance": 0.18
+      },
+      "cavalrySquad": {
+        "atkMul": 1.15,
+        "chargeFirstHitDamageMul": 1.3,
+        "dodgeChance": 0.08,
+        "moraleBonus": 10
+      },
+      "skill": {
+        "id": "riding_famous_ultimate",
+        "name": "名駒奧義",
+        "note": "專屬奧義演出依名駒而定，見 famousMounts",
+        "cooldownSec": 0
+      },
+      "deployDrop": {
+        "durationSec": 1.2,
+        "fx": "golden_aura_gallop",
+        "sfx": "horse_roar"
+      }
+    }
+  ],
+  "caps": {
+    "totalMoveSpeedMulMax": 1.45,
+    "totalDodgeChanceMax": 0.3
+  },
+  "acquire": {
+    "rankGrant": [
+      {
+        "minRank": 4,
+        "grantTier": 1,
+        "note": "將階 4 偏將（約校尉）晉升時授馬，自動取得騎術"
+      },
+      {
+        "minRank": 6,
+        "grantTier": 2,
+        "requires": "innateTier>=2 或 已修習精騎",
+        "note": "雜號將軍以上才可晉精騎，仍須有來源"
+      }
+    ],
+    "tier3": {
+      "minRank": 7,
+      "requiresTier": 2,
+      "requiresFamousMount": true,
+      "note": "只能由事件／任務取得名駒後晉神駒，不放轉蛋、不可修習"
+    },
+    "academy": {
+      "minAge": 15,
+      "termsToTier1": 1,
+      "termsToTier2": 2,
+      "teacherMinTierOffset": 0,
+      "teacherNote": "教官騎術等級須不低於目標等級；神駒不可教",
+      "passChance": 0.8
+    },
+    "tutoring": {
+      "sessionsPerTerm": 6,
+      "termsToTier1": 1,
+      "termsToTier2": 2,
+      "tuitionSilver": {
+        "tier1": 150,
+        "tier2": 400
+      },
+      "teacherMinTier": "不低於目標等級，且需為在世武將"
+    },
+    "innate": {
+      "zhao-yun": 2,
+      "lu-bu": 2,
+      "ma-chao": 2,
+      "ma-dai": 1,
+      "pang-de": 1,
+      "zhang-liao": 1,
+      "xiahou-yuan": 1,
+      "guan-yu": 1
+    }
+  },
+  "nonCavalryRule": "有 ridingTier>0 的武將帶任何兵種都視為騎乘；只有 troop=cavalry 時才套用 cavalrySquad 整隊加成，其他兵種只吃 personal。",
+  "famousMounts": [
+    {
+      "id": "mount_chitu",
+      "name": "赤兔",
+      "bonus": {
+        "moveSpeedMul": 0.15
+      },
+      "ultimate": "chitu_gallop",
+      "obtain": [
+        "event"
+      ],
+      "note": "呂布／關羽相關事件，專屬奧義演出",
+      "historicalRiders": [
+        "lu-bu",
+        "guan-yu"
+      ]
+    },
+    {
+      "id": "mount_dilu",
+      "name": "的盧",
+      "bonus": {
+        "surviveLethalOncePerBattle": true,
+        "invulnSecAfterSurvive": 2
+      },
+      "ultimate": "dilu_leap",
+      "obtain": [
+        "event"
+      ],
+      "note": "保命一次，躍檀溪典故",
+      "historicalRiders": [
+        "liu-bei"
+      ]
+    },
+    {
+      "id": "mount_jueying",
+      "name": "絕影",
+      "bonus": {
+        "dodgeChance": 0.08
+      },
+      "ultimate": "jueying_shadow",
+      "obtain": [
+        "event"
+      ],
+      "historicalRiders": [
+        "cao-cao"
+      ]
+    },
+    {
+      "id": "mount_zhuahuang",
+      "name": "爪黃飛電",
+      "bonus": {
+        "chargeFirstHitDamageMul": 0.15
+      },
+      "ultimate": "zhuahuang_flash",
+      "obtain": [
+        "event"
+      ],
+      "historicalRiders": [
+        "cao-cao"
+      ]
+    },
+    {
+      "id": "mount_bailong",
+      "name": "白龍駒",
+      "bonus": {
+        "counterDamageMul": 0.2
+      },
+      "ultimate": "bailong_return",
+      "obtain": [
+        "event"
+      ],
+      "note": "趙雲系事件",
+      "historicalRiders": [
+        "zhao-yun"
+      ]
+    },
+    {
+      "id": "mount_susuang",
+      "name": "驌驦",
+      "bonus": {
+        "moveSpeedMul": 0.08,
+        "dodgeChance": 0.04
+      },
+      "ultimate": "susuang_west",
+      "obtain": [
+        "event"
+      ],
+      "note": "馬超系事件",
+      "historicalRiders": [
+        "ma-chao"
+      ]
+    }
+  ],
+  "famousMountRules": {
+    "obtainChannels": [
+      "event",
+      "quest"
+    ],
+    "gachaAllowed": false,
+    "breedable": true,
+    "tradable": false,
+    "stableDomain": "名駒掛在馬廄下，同為馬匹實體，不另建坐騎系統",
+    "acquire": {
+      "mode": "capture",
+      "examples": [
+        {
+          "event": "defeat_lu_bu",
+          "mount": "mount_chitu",
+          "captureChance": 0.35,
+          "note": "擊敗呂布有機率收服赤兔，事件任務限定"
+        }
+      ],
+      "captureChanceDefault": 0.3,
+      "pityEvery": 3,
+      "note": "收服失敗累計達 pityEvery 次，下次必收服（暫定）"
+    },
+    "growth": {
+      "sharedWithNormalMount": true,
+      "note": "餵養、升級、突破換甲與一般馬同流程同數值（stable.*），名駒另有天生加成不隨等級改變"
+    },
+    "onGeneralRetireOrDeath": "名駒回庫房（庫存框架），可再指派給其他騎術 2 級以上武將；羈絆值依武將分別保留",
+    "requiresRiderTierMin": 2,
+    "breedingRule": "名駒不能配出名駒；與名駒配種只產出帶 famous_line 血統的良駒（stable.breeding.famousLine）",
+    "breedableNote": "名駒可當種馬，但子代不能是名駒"
+  },
+  "stable": {
+    "levels": [
+      {
+        "level": 1,
+        "capacity": 4,
+        "upgradeSilver": 0
+      },
+      {
+        "level": 2,
+        "capacity": 8,
+        "upgradeSilver": 300
+      },
+      {
+        "level": 3,
+        "capacity": 12,
+        "upgradeSilver": 800
+      }
+    ],
+    "mountLevelCap": 10,
+    "breakthroughCap": 15,
+    "expToNext": {
+      "formula": "100 * level"
+    },
+    "gain": {
+      "perBattleSortie": 30,
+      "perBattleWinBonus": 10,
+      "feedFodder": {
+        "item": "fodder",
+        "exp": 20,
+        "costSilverIfBought": 10
+      },
+      "feedFineFeed": {
+        "item": "fine_feed",
+        "exp": 80,
+        "costSilverIfBought": 50
+      },
+      "feedLimitPerMountPerSeason": 6
+    },
+    "perLevel": {
+      "moveSpeedMul": 0.01,
+      "staminaFlat": 8
+    },
+    "baseStamina": 100,
+    "staminaUse": {
+      "chargeCost": 25,
+      "regenPerSec": 5,
+      "note": "突騎與衝鋒首擊消耗耐力，耐力不足時無法衝鋒"
+    },
+    "totalMountMoveSpeedMulCapAdd": 0.15,
+    "lifespan": {
+      "unit": "season",
+      "ageStartsAt": "馬匹實體建立（配種出生、將階授馬、收服）時歸零",
+      "normal": { "lifespanSeasons": 20 },
+      "famous": { "lifespanSeasons": 32 },
+      "oldAgeFraction": 0.25,
+      "oldAgeNote": "老年起始年齡 = 壽命 ×(1 − 0.25)：一般馬第 15 季、名駒第 24 季",
+      "oldAgeRules": {
+        "canSortie": false,
+        "canBreed": true,
+        "canFeed": true
+      },
+      "oldAgeDecay": {
+        "perSeasonMul": 0.96,
+        "floorMul": 0.6,
+        "applyTo": ["moveSpeedBonus", "stamina", "famousBonus"],
+        "note": "每老年季乘算遞減，下限 0.6；不影響騎者個人加成與整隊加成"
+      },
+      "sortieMinAgeSeasons": 4,
+      "sortieMinAgeNote": "小馬 4 季成駒前不可出征（與 breeding.foalGrowSeasons 同值）",
+      "soul": {
+        "triggerOn": "death",
+        "bonusPlusOneChance": {
+          "normal": 0.05,
+          "famous": 0.08
+        },
+        "bonusFrom0Chance": "同額自潛力浮動 0 檔扣除（對應 breeding.potentialRoll.fluctuation）",
+        "maxFoalsPerSoul": 3,
+        "maxBonusFromParents": 0.1,
+        "note": "馬魂只對壽終馬的前 3 匹子代有效；雙親各有馬魂時加總，合計上限 +10%；不改變名駒不可配出名駒的規則"
+      }
+    },
+    "breakthrough": {
+      "requiresLevel": 10,
+      "cost": {
+        "item": "horse_armor",
+        "count": 1,
+        "silver": 500
+      },
+      "result": "換甲：外觀升為甲馬，等級上限升至 15",
+      "appearanceRule": "坐騎外觀取『騎術等級外觀』與『突破換甲』較高者"
+    },
+    "breeding": {
+      "minLevel": 5,
+      "needOppositeSex": true,
+      "silverCost": 200,
+      "gestationSeasons": 3,
+      "foalGrowSeasons": 4,
+      "mareCooldownSeasons": 4,
+      "studCooldownSeasons": 1,
+      "potentialStatsStars": [
+        "speedPotential",
+        "staminaPotential"
+      ],
+      "starRange": [
+        1,
+        5
+      ],
+      "potentialRoll": {
+        "base": "(sireStar+damStar)/2 四捨五入",
+        "fluctuation": {
+          "0": 0.7,
+          "-1": 0.15,
+          "+1": 0.15
+        },
+        "clampMaxToParentMaxUnlessMutation": true
+      },
+      "mutation": {
+        "id": "dragon_foal",
+        "name": "龍駒胎",
+        "baseChance": 0.03,
+        "parentBothStar4PlusBonus": 0.02,
+        "maxChance": 0.06,
+        "pityEvery": 12,
+        "effect": "一項潛力星 +1（上限 5），可超出雙親上限",
+        "reuse": "沿用家門奇才 rollGenius 介面（家族子嗣與血統總規格書 5.2）",
+        "inbreedingMultiplier": 0.5
+      },
+      "lineageTags": {
+        "maxTags": 3,
+        "inheritFrom": "雙親血統標籤隨機取，名駒血統標籤優先保留一個",
+        "reuse": "沿用血統因子傳承與近親判定（doc_spec_0532、1090）"
+      },
+      "famousLine": {
+        "tag": "famous_line",
+        "effect": "良駒：潛力星下限 3、成駒時速度加成 +0.02",
+        "canProduceFamousMount": false,
+        "note": "暫定：只產出帶名駒血統的良駒，不直接產出名駒"
+      }
+    }
+  },
+  "bond": {
+    "framework": "友誼共用框架（第 8 框架，doc_spec_1280 友誼分數）",
+    "note": "羈絆值對齊友誼框架的『人—馬』關係類型，沿用其分段與推算介面，不另造分數系統；只存與我方出戰者",
+    "range": [
+      0,
+      100
+    ],
+    "gain": {
+      "perBattleTogether": 3,
+      "perWinBonus": 2,
+      "perKillBonus": 0,
+      "feedByRider": 1,
+      "feedPerSeasonCap": 3
+    },
+    "historicalPairGainMul": 1.5,
+    "levels": [
+      {
+        "level": 1,
+        "name": "初識",
+        "minBond": 0,
+        "unlock": "名駒基礎加成"
+      },
+      {
+        "level": 2,
+        "name": "默契",
+        "minBond": 25,
+        "unlock": "加成 ×1.2"
+      },
+      {
+        "level": 3,
+        "name": "人馬一心",
+        "minBond": 60,
+        "unlock": "加成 ×1.5、解鎖專屬奧義演出"
+      },
+      {
+        "level": 4,
+        "name": "生死之交",
+        "minBond": 90,
+        "unlock": "加成 ×1.8、奧義強化版演出；非歷史配對上限鎖在 3 段"
+      }
+    ],
+    "nonHistoricalMaxLevel": 3,
+    "decay": {
+      "perSeasonIdle": 0,
+      "note": "暫定不衰減"
+    }
+  }
+}
