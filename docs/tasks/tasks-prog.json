@@ -16688,6 +16688,36 @@
         "metrics_summary": []
       },
       "completed_at": "2026-11-23T15:12:41.894Z"
+    },
+    {
+      "id": "PROG-2-9950",
+      "priority": "P0",
+      "phase": "M0",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "status": "in-progress",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-23T16:16:49+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "completed_at": "",
+      "completed_by_agent": "",
+      "type": "bugfix",
+      "title": "戰場小兵格子底框壞掉（紫色橢圓底座變扁、鋸齒鑲邊、攻÷2徽章疊底座）",
+      "description": "使用者回報小兵腳下精緻底框被破壞：紫色橢圓底座壓扁、偏灰紫、邊緣鋸齒，上方攻÷2 徽章疊在底座上。找出改壞的提交並修復，徽章保留但獨立節點，不覆蓋底座。",
+      "related": [],
+      "depends": [
+        "PROG-2-9708"
+      ],
+      "acceptance": [
+        "底座恢復原本精緻橢圓底框（不壓扁、不鋸齒、顏色正常）",
+        "攻÷2 徽章仍顯示且位於底座上方獨立節點",
+        "單元測試、tsc、compute-gate quick 通過",
+        "修前後實機截圖已存檔"
+      ],
+      "deliverables": [
+        "assets/scripts/battle/views/TileBuffMarkers.ts"
+      ],
+      "notes": "2026-11-24 | 狀態: in-progress | 驗證: 待做 | 變更: 開卡上鎖 | 阻塞: 無"
     }
   ],
   "updated": "2026-11-22"
