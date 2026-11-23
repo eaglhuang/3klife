@@ -223,3 +223,5 @@
 | `doc_task_2990` | docs/agent-briefs/tasks/PROG/PROG-2-9844.md | [PROG-2-9844] 武將名稱旁顯示縮小頭像（GeneralNameTag） |
 | `doc_task_2991` | docs/agent-briefs/tasks/PROG/PROG-2-9846.md | [PROG-2-9846] 幕府大廳風格統一第二階段：任務牆／太守府／招賢館套用主題＋分節標題小字距與金線 |
 | `doc_task_2992` | docs/agent-briefs/tasks/PROG/PROG-2-9854.md | [PROG-2-9854] 修正幕府大廳任務牆／太守府套用主題後跑版 |
+| `doc_task_2993` | docs/agent-briefs/tasks/PROG/PROG-2-9855.md | [PROG-2-9855] 戰場回饋：燃燒／中毒 DOT 跳字分色 |
+| `doc_task_2994` | docs/agent-briefs/tasks/PROG/PROG-2-9615.md | [PROG-2-9615] 首年引導接進畫面與實機視角驗收 |

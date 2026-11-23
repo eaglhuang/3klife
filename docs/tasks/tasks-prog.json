@@ -16181,6 +16181,44 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_2994",
+      "id": "PROG-2-9615",
+      "title": "首年引導接進畫面與實機視角驗收",
+      "owner": "Antigravity",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-23",
+      "created_by_agent": "Antigravity",
+      "started_at": "2026-11-23T17:35:00+08:00",
+      "started_by_agent": "Antigravity",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "大廳學府按鈕點擊接入學府空轉防呆（詼諧告示與媒人導流），晉升彈窗升級深色玻璃面板風格",
+      "related": [
+        "PROG-2-9614",
+        "PROG-2-9613"
+      ],
+      "depends": [
+        "PROG-2-9614"
+      ],
+      "acceptance": [
+        "學府無滿15歲子嗣點擊出詼諧告示並導向媒人",
+        "官職晉升解鎖彈窗採用深色玻璃面板 token",
+        "單元測試 100% 通過"
+      ],
+      "deliverables": [
+        "assets/scripts/ui/scenes/LobbyScene.ts",
+        "assets/resources/ui-spec/skins/rank-unlock-popup-screen.skin.json",
+        "tests/Year1GuidanceScreens.test.ts",
+        "artifacts/ui-qa/academy_empty_guard_verified.png",
+        "artifacts/ui-qa/rank_unlock_popup_verified.png"
+      ],
+      "notes": "2026-11-23 | 狀態: in-progress | 驗證: Year1GuidanceScreens.test.ts 通過 | 變更: 接線學府空轉與晉升彈窗樣式 | 阻塞: 無"
     }
   ],
   "updated": "2026-11-22"
