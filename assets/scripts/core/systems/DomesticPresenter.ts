@@ -9,6 +9,7 @@ import { DOMESTIC_TASK_IDS, domesticOutputFor, DomesticOutput, DomesticResource,
 
 /** 任務格目前指派的武將（GOV-04）；產出依其屬性計算。 */
 export interface DomesticGovernor {
+    id?: string;
     name: string;
     stats: DomesticStats;
 }
@@ -23,6 +24,8 @@ export interface DomesticTaskRow {
     chosenThisSeason: boolean;
     /** 指派武將名稱；未指派為 null（產出走固定表）。 */
     governorName: string | null;
+    /** 指派武將 id（名稱旁小頭像用）；未指派為 null。 */
+    governorId: string | null;
 }
 
 export const TASK_LABEL: Readonly<Record<DomesticTaskId, string>> = Object.freeze({
@@ -59,6 +62,7 @@ export function buildDomesticRows(
             canChoose: !chosenThisSeason,
             chosenThisSeason: chosenThisSeason && log.lastTask === taskId,
             governorName: governor?.name ?? null,
+            governorId: governor?.id ?? null,
         };
     });
 }

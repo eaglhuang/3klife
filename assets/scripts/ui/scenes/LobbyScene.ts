@@ -119,6 +119,7 @@ import { FAST_FORWARD_MAX_SEASONS, FAST_FORWARD_REASON_TEXT, fastForwardSeasons 
 import { BREEDING_MIN_AGE } from '../../core/systems/BreedingSystem';
 import { RECRUIT_ROWS_PER_PAGE, RecruitHallController } from '../core/RecruitHallController';
 import { loadGeneralAvatar, loadGeneralPortrait } from '../core/GeneralAvatarLoader';
+import { applyGeneralNameTags, loadGeneralNameTagStyle } from '../components/GeneralNameTag';
 import { setPlaceholderBackdropVisible } from '../core/PlaceholderBackdrop';
 import { RELATION_GRAPH_SLOTS, RelationGraphController } from '../core/RelationGraphController';
 import { RelationGraphRenderer } from '../core/RelationGraphRenderer';
@@ -5141,7 +5142,9 @@ ${spent}`,
         if (!binder || !this._domestic) {
             return;
         }
-        applyFlowView(binder, this._domestic.getFlowView());
+        const view = this._domestic.getFlowView();
+        applyFlowView(binder, view);
+        void loadGeneralNameTagStyle().then((style) => applyGeneralNameTags(binder, view.nameTags, style));
     }
 
     private async _onClickDomesticTask(domestic: DomesticPanelController, taskId: DomesticTaskId): Promise<void> {
