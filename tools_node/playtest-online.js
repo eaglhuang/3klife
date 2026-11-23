@@ -1511,8 +1511,16 @@ async function main() {
             const deployRe = '^(BtnSortie|BtnStartBattle|BtnDeploy|BtnConfirmDeploy|BtnConfirmSortie|BtnStart|BtnGo|BtnNextDispatchGeneral|BtnScoutSortie|QuickSortieCommand)$'; // QuickSortieCommand：非首戰出征時多一個「選擇戰鬥模式」對話框，選「親自指揮」
             // 出征面板：依序點可按的出征確認鈕，直到進入 BattleScene（每 2 秒一次，總時限 120 秒）
             let quickClicked = false;
+            let loadoutShot = false;
             await waitUntil(async () => {
                 if ((await scene()) === 'BattleScene') return true;
+                // 新手首戰（PROG-2-9912）：出征前先出現戰前編成視窗，截一張並記錄畫面文字（預填的主將與卡組），等推薦寫入後再按確認
+                if (!loadoutShot && (await page.evaluate(() => window.__pt.hasButton('^BtnConfirmSortie$')))) {
+                    loadoutShot = true;
+                    await delay(1500);
+                    rec.detail.loadoutTexts = (await rm.allTexts()).slice(0, 60);
+                    await shot(rec, 'first-battle-loadout');
+                }
                 // 極速決戰（opts.quick）：不進戰場，點完「極速決戰」就看結果
                 if (opts.quick && (await clickButton('^QuickSortieQuick$'))) { quickClicked = true; return true; }
                 await clickButton(deployRe);

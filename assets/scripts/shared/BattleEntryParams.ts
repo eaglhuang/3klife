@@ -226,3 +226,11 @@ export function formatBattleEntryLog(
 export function isTutorialBattle(clearedStageIds: readonly string[]): boolean {
     return clearedStageIds.length === 0;
 }
+
+/**
+ * 首戰出戰前先開戰前編成視窗（PROG-2-9912）：教學戰且有關卡資料時才要先編成；
+ * 沒有關卡資料時沒有推薦可預填，照舊直接進戰場。
+ */
+export function firstBattleOpensLoadout(clearedStageIds: readonly string[], hasEncounter: boolean): boolean {
+    return hasEncounter && isTutorialBattle(clearedStageIds);
+}
