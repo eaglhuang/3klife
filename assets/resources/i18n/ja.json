@@ -1000,5 +1000,13 @@
     "ui.academy.empty_guard.btn_go_matchmaker":  "仲人を訪ねる",
     "ui.feature_unlock.btn_explore":  "確認する",
     "ui.academy.empty_guard.no_child_desc":  "殿、お待ちを！学府は{minAge}歳以上の子弟のみ受け入れております。まずは仲人を訪ねて良縁を結ばれては？",
-    "ui.academy.empty_guard.too_young_title":  "入学にはまだ幼し"
+    "ui.academy.empty_guard.too_young_title":  "入学にはまだ幼し",
+  "prebattle.role.commander": "主将",
+  "prebattle.role.strategist": "参謀官",
+  "prebattle.role.deputy": "兵站官（副将）",
+  "prebattle.reason.commander.statBlend": "統率と武力の総合が最も高い",
+  "prebattle.reason.commander.encounterFixed": "この戦闘で指定された主将",
+  "prebattle.reason.strategist.intPol": "知力と政治の総合が最も高い",
+  "prebattle.reason.deputy.leaPol": "統率と政治の総合が最も高い",
+  "prebattle.reason.tally.rarityDiversity": "レア度が高く兵種が重複しない"
 }
