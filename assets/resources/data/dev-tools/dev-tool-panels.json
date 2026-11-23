@@ -171,14 +171,32 @@
       "id": "unlock",
       "labelKey": "dev.tab.unlock",
       "label": "解鎖",
-      "skeleton": true,
+      "skeleton": false,
       "groups": [
         {
-          "titleKey": "dev.group.unlock",
-          "title": "解鎖（骨架）",
+          "titleKey": "dev.group.unlock_rank",
+          "title": "官職階位（寫入存檔；階 2 開招賢館、階 3 開太守府等，可往下調回頭測鎖）",
           "items": [
-            { "type": "button", "labelKey": "dev.unlock.all_stages", "label": "解鎖全部關卡", "action": { "kind": "todo", "note": "debug.unlock 尚未實作" } },
-            { "type": "button", "labelKey": "dev.unlock.hall_level", "label": "幕府等級拉滿", "action": { "kind": "todo", "note": "debug.unlock 尚未實作" } }
+            { "type": "button", "labelKey": "dev.unlock.rank1", "label": "階 1 鄉里義士", "action": { "kind": "api", "cmd": "debug.setRank", "args": { "tier": 1 } } },
+            { "type": "button", "labelKey": "dev.unlock.rank2", "label": "階 2（招賢館）", "action": { "kind": "api", "cmd": "debug.setRank", "args": { "tier": 2 } } },
+            { "type": "button", "labelKey": "dev.unlock.rank3", "label": "階 3（太守府）", "action": { "kind": "api", "cmd": "debug.setRank", "args": { "tier": 3 } } },
+            { "type": "button", "labelKey": "dev.unlock.rank4", "label": "階 4", "action": { "kind": "api", "cmd": "debug.setRank", "args": { "tier": 4 } } },
+            { "type": "button", "labelKey": "dev.unlock.rank5", "label": "階 5 最高", "action": { "kind": "api", "cmd": "debug.setRank", "args": { "tier": 5 } } }
+          ]
+        },
+        {
+          "titleKey": "dev.group.unlock_all",
+          "title": "一鍵全開",
+          "items": [
+            { "type": "button", "labelKey": "dev.unlock.all_facilities", "label": "官職拉滿（開放全部大廳設施）", "action": { "kind": "api", "cmd": "debug.unlockAll", "args": {} } }
+          ]
+        },
+        {
+          "titleKey": "dev.group.unlock",
+          "title": "其他解鎖（骨架）",
+          "items": [
+            { "type": "button", "labelKey": "dev.unlock.all_stages", "label": "解鎖全部關卡", "action": { "kind": "todo", "note": "關卡解鎖待接命令" } },
+            { "type": "button", "labelKey": "dev.unlock.hall_level", "label": "幕府等級拉滿", "action": { "kind": "todo", "note": "幕府等級待接命令" } }
           ]
         }
       ]

@@ -1018,7 +1018,7 @@
   "dev.group.save_presets": "测试存档（会覆盖目前存档并重载场景）",
   "dev.group.time_academy": "学府快转（需在大厅；走修业流程）",
   "dev.group.time_advance": "推进时间（走正式季结，一年 4 季）",
-  "dev.group.unlock": "解锁（骨架）",
+  "dev.group.unlock": "其他解锁（骨架）",
   "dev.log.clear": "清除操作纪录",
   "dev.log.copy": "复制操作纪录",
   "dev.log.events": "事件日志视窗",
@@ -1055,6 +1055,14 @@
   "dev.tool.settings.version": "版本",
   "dev.tool.title": "测试工具",
   "dev.tool.todo": "尚未接线",
+  "dev.group.unlock_rank": "官职阶位（写入存档；阶 2 开招贤馆、阶 3 开太守府等，可往下调回头测锁）",
+  "dev.group.unlock_all": "一键全开",
+  "dev.unlock.rank1": "阶 1 乡里义士",
+  "dev.unlock.rank2": "阶 2（招贤馆）",
+  "dev.unlock.rank3": "阶 3（太守府）",
+  "dev.unlock.rank4": "阶 4",
+  "dev.unlock.rank5": "阶 5 最高",
+  "dev.unlock.all_facilities": "官职拉满（开放全部大厅设施）",
   "dev.unlock.all_stages": "解锁全部关卡",
   "dev.unlock.hall_level": "幕府等级拉满"
 }

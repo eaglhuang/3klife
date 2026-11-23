@@ -16800,6 +16800,12 @@
     "category": "task"
   },
   {
+    "id": "doc_task_2994",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9860.md",
+    "title": "[PROG-2-9860] 測試工具：解鎖分頁（debug.setRank／debug.unlockAll）＋DEV 圓鈕醒目化",
+    "category": "task"
+  },
+  {
     "id": "doc_task_2995",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9856.md",
     "title": "[PROG-2-9856] 戰場名牌：主將不顯示開發用「（主將棋子）」",

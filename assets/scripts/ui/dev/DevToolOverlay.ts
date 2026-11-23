@@ -12,7 +12,7 @@
  *
  * Unity 對照：像 DontDestroyOnLoad 的作弊選單 Canvas，每次換場景重新掛一次。
  */
-import { BlockInputEvents, Button, Canvas, Color, Director, director, EventTouch, JsonAsset, Label, Mask, Node, resources, ScrollView, UITransform } from 'cc';
+import { BlockInputEvents, Button, Canvas, Color, Director, director, EventTouch, Graphics, JsonAsset, Label, Mask, Node, resources, ScrollView, UITransform } from 'cc';
 import { services } from '../../core/managers/ServiceLoader';
 import { PlayerRosterService } from '../../core/services/PlayerRosterService';
 import { devToolGate } from '../../core/dev/DevToolGate';
@@ -335,7 +335,15 @@ function buildLauncher(canvas: Node): void {
     const halfW = (size?.width ?? 1920) / 2;
     const halfH = (size?.height ?? 1080) / 2;
     const node = newNode('DevToolLauncher', canvas, LAUNCHER_SIZE, LAUNCHER_SIZE);
-    fill(node, new Color(20, 26, 38, 150));
+    // 半透明深色圓底＋淺色細框：浮在任何畫面上都看得到（PROG-2-9860）
+    const disc = node.addComponent(Graphics);
+    disc.fillColor = new Color(20, 26, 38, 190);
+    disc.circle(0, 0, LAUNCHER_SIZE / 2);
+    disc.fill();
+    disc.lineWidth = 2;
+    disc.strokeColor = new Color(190, 210, 240, 200);
+    disc.circle(0, 0, LAUNCHER_SIZE / 2 - 1);
+    disc.stroke();
     addLabel(node, 'Label', LAUNCHER_SIZE - 6, LAUNCHER_SIZE - 6, 'DEV', 18);
     const pos = state.launcherPos ?? loadSavedPos() ?? { x: halfW - LAUNCHER_SIZE, y: halfH - LAUNCHER_SIZE * 2 };
     const clamp = (p: { x: number; y: number }): { x: number; y: number } => ({

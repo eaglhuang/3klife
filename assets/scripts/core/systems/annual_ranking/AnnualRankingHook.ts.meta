@@ -1,11 +1,11 @@
 {
-  "ver": "2.0.1",
+  "ver": "4.0.24",
   "importer": "typescript",
   "imported": true,
   "uuid": "8b5f3192-2a6d-47be-a931-15c0e7d58f31",
-  "files": [
-    ".ts"
-  ],
+  "files": [],
   "subMetas": {},
-  "userData": {}
+  "userData": {
+    "simulateGlobals": []
+  }
 }
