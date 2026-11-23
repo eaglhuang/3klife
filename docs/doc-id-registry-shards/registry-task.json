@@ -16858,5 +16858,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9867.md",
     "title": "[PROG-2-9867] 友誼值範圍改為 -100～+100",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3004",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9869.md",
+    "title": "[PROG-2-9869] 十連結果卡片加寬（使用者：左右太瘦）",
+    "category": "task"
   }
 ]

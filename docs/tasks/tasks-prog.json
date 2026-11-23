@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 292,
-    "in_progress": 1,
+    "done": 295,
+    "in_progress": 0,
     "open": 86,
-    "total": 379
+    "total": 381
   },
   "tasks": [
     {
@@ -16690,6 +16690,112 @@
       "completed_at": "2026-11-23T15:12:41.894Z"
     },
     {
+      "id": "PROG-2-9880",
+      "title": "藍軍騎兵騎乘版 displayScale 比例校正",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-23",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-23T15:51:40+08:00",
+      "completed_at": "2026-11-23T16:27:44+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "我方藍軍騎兵改載騎乘版 Spine（soldier_cavalry_blue__mount_horse_bay，PR #2573／PROG-2-9868）後，全畫面騎兵偏小、騎乘版比例與舊版不同，displayScale 目前 0.1。以實測像素高度比照步兵與敵方紅槍騎兵，使騎手加馬整體高度不小於步兵約 1.2 倍；並核對動畫名（gallop／attack_spear／受擊）與程式 clip 名一致。",
+      "related": [
+        "PROG-2-9868"
+      ],
+      "depends": [
+        "PROG-2-9868"
+      ],
+      "acceptance": [
+        "我方藍軍騎兵 displayScale 依實測 sprite／骨架高度調整，報告含改前改後數值",
+        "騎手加馬整體高度不小於步兵約 1.2 倍",
+        "soldier_cavalry_blue__mount_horse_bay.json 的 animations 與程式 clip 名逐一比對，結果寫入報告",
+        "單元測試補強，npx tsc -p tsconfig.test.json --noEmit 為 0 錯，tests/run-cli.ts 全過，compute-gate quick 通過",
+        "web-desktop 實機建置後對比圖（騎兵／步兵／敵騎同畫面）已存檔並給出品質判斷"
+      ],
+      "deliverables": [
+        "assets/scripts 內藍軍騎兵 displayScale 設定處",
+        "對應單元測試",
+        "side-session-notes/cavalry-scale-compare.jpg"
+      ],
+      "notes": "2026-11-24 | 狀態: done | 驗證: 實機 web-desktop 量測（sp runtime attachment 頂點 AABB，idle 姿勢）：騎兵 mount_horse_bay 0.10 時約 52 設計像素高，步兵藍 0.18 約 37、敵紅槍 0.18 約 37，比值 1.41 ≥ 1.2，符合規則，故 displayScale 維持 0.10 未改；動畫名（idle/gallop/trot/retreat/attack_spear/hit/dodge/fall）已與 soldier_cavalry_blue__mount_horse_bay.json 逐一核對一致；tsc 0 錯、run-cli 9386 pass／3 skip、compute-gate quick 4/4 | 變更: 開卡＋上鎖＋量測，無程式變更；對比圖 side-session-notes/cavalry-scale-compare.jpg | 阻塞: 無；原卡「騎兵偏小」判斷與量測不一致，需使用者以遊戲內觀感再裁決是否加大",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9869",
+      "title": "十連結果卡片加寬（使用者：左右太瘦）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-23",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "十連結果卡由 200x318 改 216x288（約 3:4），結果面板加寬為 1200、格線同步，立繪左右不再被裁成窄條，2x5 仍放得下",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "卡片寬高比約 3:4"
+      ],
+      "deliverables": [
+        "assets/resources/ui-spec/layouts/gacha-pull-result.json"
+      ],
+      "notes": "2026-11-24 | 狀態: done | 驗證: 實跑十連截圖目視、compute-gate quick 4/4、run-cli 9386 全過 | 變更: gacha-pull-result.json 與 .layout.json 卡片加寬、面板 1200 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
       "doc_id": "",
       "id": "PROG-2-9803",
       "title": "首戰自動戰 QA 計數修正與教學戰參數調校（60–90 秒目標）",
@@ -16751,5 +16857,5 @@
       "completed_at": "2026-11-24T00:00:00+08:00"
     }
   ],
-  "updated": "2026-11-22"
+  "updated": "2026-11-23T16:27:44.175Z"
 }
