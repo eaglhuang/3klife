@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 292,
+    "done": 293,
     "in_progress": 1,
     "open": 86,
-    "total": 379
+    "total": 380
   },
   "tasks": [
     {
@@ -16688,6 +16688,54 @@
         "metrics_summary": []
       },
       "completed_at": "2026-11-23T15:12:41.894Z"
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9869",
+      "title": "十連結果卡片加寬（使用者：左右太瘦）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-23",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-24T00:20:02+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "十連結果卡由 200x318 改 216x288（約 3:4），結果面板加寬為 1200、格線同步，立繪左右不再被裁成窄條，2x5 仍放得下",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "卡片寬高比約 3:4"
+      ],
+      "deliverables": [
+        "assets/resources/ui-spec/layouts/gacha-pull-result.json"
+      ],
+      "notes": "2026-11-23 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "updated": "2026-11-22"
