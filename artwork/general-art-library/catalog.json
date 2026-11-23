@@ -11148,15 +11148,30 @@
         "activeVersion": "0002"
       },
       "avatar": {
-        "status": "integrated",
+        "status": "review-pending",
         "history": [
           {
             "version": "0002",
             "file": "avatars/sun_lu_ban__孫魯班__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/sun_lu_ban__孫魯班__avatar_0003.png",
+            "status": "review-pending",
+            "sha256": "f6c609aa64a98b6b0de0127d9cc7d3c54cb5c34a476a218e795e5d55171dca73",
+            "canvas": "420x420",
+            "sourceBust": "sun_lu_ban__孫魯班__bust_0001.png",
+            "cropBox": [
+              220,
+              0,
+              640,
+              420
+            ],
+            "note": "Direct crop from bust; head and hair silhouette preserved, both shoulders and neckline retained."
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "battle": {
         "status": "review-pending",
@@ -11233,6 +11248,27 @@
             "sourceSha256ForResize": "f367cb48ffb63774e64780caca703224303c00df03d43efa5c4d3d1b7bd057aa"
           }
         ]
+      },
+      "bust": {
+        "history": [
+          {
+            "version": "0001",
+            "file": "bust/sun_lu_ban__孫魯班__bust_0001.png",
+            "status": "review-pending",
+            "sha256": "55eee24a670e130b7af75ab34227a56f9c484e0d1f8c336796ec20e16d58c51a",
+            "canvas": "864x800",
+            "sourceStanding": "standing/sun_lu_ban__孫魯班__standing_0002.png",
+            "cropBox": [
+              80,
+              0,
+              944,
+              800
+            ],
+            "note": "Direct geometric crop from standing portrait; no redraw."
+          }
+        ],
+        "activeVersion": "0001",
+        "status": "review-pending"
       }
     },
     {
