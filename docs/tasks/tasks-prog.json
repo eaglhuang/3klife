@@ -17002,13 +17002,13 @@
       "title": "首戰教學戰接入編成（卡 C）",
       "owner": "ClaudeCode_claude-opus-5-5",
       "priority": "P1",
-      "status": "open",
+      "status": "in-progress",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-24",
       "created_by_agent": "ClaudeCode_claude-opus-5-5",
-      "started_at": "",
-      "started_by_agent": "",
+      "started_at": "2026-11-24T04:23:21+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
       "chain_id": "",
       "chain_step": "",
       "sensor_triggered_by": "",
@@ -17032,7 +17032,7 @@
       "deliverables": [
         "首戰入口接線與測試"
       ],
-      "notes": "2026-11-24 | 狀態: open | 驗證: pending | 變更: 開草稿 | 阻塞: 依賴 A、B；依 Q4 裁決採 A（不自動部署）",
+      "notes": "2026-11-24 | 狀態: in-progress | 驗證: pending | 變更: 上鎖開工（卡 C，首戰接入編成）；沿用既有草稿，依 Q4 裁決 A | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
