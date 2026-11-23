@@ -89,6 +89,8 @@ import {
   finishSortie,
   getTacticTpCost,
   regenTactic,
+  BASE_TACTIC_CAP,
+  TACTIC_REGEN_PER_TURN,
   ensureTacticCapCovers,
   spendTactic,
   retireUnit,
@@ -776,6 +778,9 @@ export class BattleController {
     this.sortie = ensureTacticCapCovers(createSortieState(sortieInput), getTacticTpCost(this.resolveSeedTacticId({})));
     // 教學戰開場計謀點給滿，第一回合就放得出計謀（PROG-2-9326）；要在墊高上限之後補，才補得到墊高後的上限
     if (this._tutorialBattle && GAME_CONFIG.tutorialStartTacticFull) this.sortie = { ...this.sortie, tacticCurrent: this.sortie.tacticMax };
+    // 池子 = 玩家上限 + 保留線，開場滿點：扣掉保留的 20 後可用量與玩家上限相同
+    const enemyTpMax = BASE_TACTIC_CAP + BattleController.ENEMY_TACTIC_TP_RESERVE;
+    this.enemyTacticPoints = { current: enemyTpMax, max: enemyTpMax };
     services().battle.configureFood({ initial: this.sortie.food, max: this.sortie.maxFood, perTurn: 0 });
     return this.sortie;
   }
@@ -957,8 +962,11 @@ export class BattleController {
     if (!general) return null;
 
     const library = Array.from(this.tacticDefinitionMap.values()).map(def => ({ id: def.id, category: def.category }));
-    const candidates = buildEnemyTacticCandidates(general.tacticSlots, library);
-    if (candidates.length === 0) return null;
+    const allCandidates = buildEnemyTacticCandidates(general.tacticSlots, library);
+    if (allCandidates.length === 0) return null;
+    // TP 付不起（扣完低於保留線）的戰法不進候選池；全部付不起就改普攻、點數留著回復
+    const candidates = allCandidates.filter(candidate => this.canEnemyAffordTactic(candidate.tacticId));
+    if (candidates.length === 0) { this.enemyTacticDeclinedFlag = true; return null; }
 
     const playerUnits = this.livingUnitsOf(Faction.Player);
     const enemyUnits = this.livingUnitsOf(Faction.Enemy);
@@ -1016,6 +1024,26 @@ export class BattleController {
    * 敵方本回合是否不放戰法（PROG-2-1466）：難度表禁用戰法，或低 IQ 沒抽中 30%。
    * 不出手時 SP 保留，下回合再判斷。
    */
+  /** 敵將計謀點（裁決 11/23：跟玩家一樣扣點，並保留 20 點作防禦）；沒有出征帳本（demo）時為 null，不限制。 */
+  private enemyTacticPoints: { current: number; max: number } | null = null;
+  public static readonly ENEMY_TACTIC_TP_RESERVE = 20;
+
+  public getEnemyTacticPoints(): { current: number; max: number } | null {
+    return this.enemyTacticPoints ? { ...this.enemyTacticPoints } : null;
+  }
+
+  /** 付完戰法後仍留得住保留點數才算付得起 */
+  private canEnemyAffordTactic(tacticId: string | null): boolean {
+    if (!this.enemyTacticPoints) return true;
+    return this.enemyTacticPoints.current - getTacticTpCost(tacticId) >= BattleController.ENEMY_TACTIC_TP_RESERVE;
+  }
+
+  /** 敵將施放戰法成功後扣點；沒有戰法 id（退回主技能）或沒有點數池時不扣 */
+  public spendEnemyTacticPoints(tacticId: string | null): void {
+    if (!this.enemyTacticPoints || !tacticId) return;
+    this.enemyTacticPoints.current = Math.max(0, this.enemyTacticPoints.current - getTacticTpCost(tacticId));
+  }
+
   /** 最近一次 chooseEnemyTactic 是否「有候選但沒有值得放的」（PROG-2-9848）；供回合結算改普攻。 */
   private enemyTacticDeclinedFlag = false;
   public enemyTacticDeclined(): boolean {
@@ -1625,6 +1653,7 @@ export class BattleController {
           chooseEnemyTactic: () => this.chooseEnemyTactic(),
           shouldEnemyHoldTactic: () => this.shouldEnemyHoldTactic(),
           enemyTacticDeclined: () => this.enemyTacticDeclined(),
+          spendEnemyTacticPoints: (tacticId) => this.spendEnemyTacticPoints(tacticId),
           defenseEngineerBombard: this.state.siegeDefender === Faction.Player ? this.defenseBattleConfig.engineerBombardDamage : 0,
         });
         if (phaseName === 'enemy-special-resolve' && this.state.battleTactic === BattleTactic.FloodAttack) {
@@ -1728,6 +1757,7 @@ export class BattleController {
       });
     }
     if (this.sortie) this.sortie = regenTactic(this.sortie);
+    if (this.enemyTacticPoints) this.enemyTacticPoints.current = Math.min(this.enemyTacticPoints.max, this.enemyTacticPoints.current + TACTIC_REGEN_PER_TURN);
     svc.battle.nextTurn();
     this.state.tickControlledUnits();
     this.updateLastSpurtMode();
