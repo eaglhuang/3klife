@@ -1,6 +1,6 @@
 {
-  "version": "1.0.0",
-  "comment": "史境天下風雲榜與年終頒獎典禮核心配置（PROG-2-9601，數值完全資料驅動，嚴禁程式碼硬編碼）",
+  "version": "1.1.0",
+  "comment": "史境天下風雲榜與年終頒獎典禮核心配置（PROG-2-9601 / PROG-2-9602，數值完全資料驅動，嚴禁程式碼硬編碼）",
   "lobbyDisplayLimit": 3,
   "ceremonyDisplayLimit": 10,
   "historyMaxRanksTracked": 100,
@@ -117,5 +117,25 @@
       "rankTop10": 2.0,
       "rankTop100": 1.0
     }
+  },
+  "salarySystem": {
+    "enabled": true,
+    "officialQuarterlyGold": {
+      "1": 50,
+      "2": 100,
+      "3": 200,
+      "4": 350,
+      "5": 600
+    },
+    "defaultQuarterlyGold": 50,
+    "annualRankingBounties": {
+      "rank1": { "silver": 1000, "fame": 100 },
+      "rankTop3": { "silver": 600, "fame": 60 },
+      "rankTop10": { "silver": 300, "fame": 30 },
+      "rankTop20": { "silver": 150, "fame": 15 },
+      "rankTop100": { "silver": 50, "fame": 5 }
+    },
+    "maxAnnualSilverPerGeneral": 3000,
+    "maxAnnualFamePerGeneral": 300
   }
 }
