@@ -25,6 +25,9 @@
       "tokens": {
         "text.font": "fonts/notoserif_tc/notoserif_tc",
         "text.title.minSize": 26,
+        "nameTag.ringColor": "#E8C88CA0",
+        "nameTag.sealColor": "#A8322A",
+        "nameTag.sealTextColor": "#FFF0D7",
         "panel.bg": "#140F0C",
         "panel.alpha": 118,
         "panel.cornerRadius": 4,
