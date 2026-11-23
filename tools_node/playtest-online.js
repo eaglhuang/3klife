@@ -1626,12 +1626,15 @@ async function main() {
             await delay(Number(args['login-settle'] || 12000));
             await clickLoginStart();
             await waitUntil(async () => (await scene()) === 'LobbyScene', stuckMs, '重開後點開始未進入 LobbyScene');
-            // 以「底欄出現且載入提示消失」為準；載入提示會晚一點才掛上，只看提示消失會誤判
+            // 以「底欄出現且載入提示消失」為準；載入提示會晚一點才掛上，只看提示消失會誤判。
+            // 總等待上限 120 秒（自重整起算）；遮罩沒消失前不找頂欄鈕（PROG-2-9865）
+            const RELOAD_CAP_MS = 120000;
+            const reloadDeadline = t0 + RELOAD_CAP_MS;
             let lastTexts = [];
             const ready = await waitUntil(async () => {
                 lastTexts = await page.evaluate((re) => window.__pt.textsMatching(re), '正在準備|載入中|Loading|啟動遇到問題');
                 return lastTexts.length === 0 && (await page.evaluate(() => window.__pt.hasButton('^BtnCatShop$')));
-            }, stuckMs, '').catch(() => false);
+            }, Math.max(1000, reloadDeadline - Date.now()), async () => `重載後 120 秒內載入遮罩未消失（仍有：${lastTexts.slice(0, 2).join('／') || '底欄未出現'}）`).catch(() => false);
             rec.detail.lastLoadingTexts = lastTexts.slice(0, 4);
             await delay(2000);
             rec.detail.reloadToLobbyMs = Date.now() - t0;
@@ -1645,7 +1648,11 @@ async function main() {
             // PROG-2-9125 補驗：不可再彈「致你的一封信」；頂欄「推進一季」鈕的頁面座標必須在視窗內
             const letterTexts = await rm.texts('致你的一封信');
             rec.detail.openingLetterTexts = letterTexts;
-            const advance = await rm.locate({ ucuf: 'lobby-hall-screen.back' });
+            // 頂欄鈕要等遮罩消失後才找得到可點的位置；在 120 秒上限內輪詢，逾時才算失敗
+            const advance = await waitUntil(async () => {
+                const a = await rm.locate({ ucuf: 'lobby-hall-screen.back' });
+                return a.found && a.ok && a.page ? a : null;
+            }, Math.max(1000, reloadDeadline - Date.now()), '').catch(() => rm.locate({ ucuf: 'lobby-hall-screen.back' }));
             rec.detail.advanceButton = advance.found
                 ? { ok: advance.ok, page: advance.page ? { x: Math.round(advance.page.x), y: Math.round(advance.page.y) } : null, blocker: advance.blocker || null }
                 : { found: false };
