@@ -3,6 +3,7 @@ import { _decorator, Color, Component, Label, Node, UITransform, Widget } from '
 import { services } from '../../core/managers/ServiceLoader';
 import { SceneName } from '../../core/config/Constants';
 import { ensureGlobalDevOverlay } from '../dev/GachaDevOverlay';
+import { showSettingsAbout } from '../dev/SettingsAboutModal';
 import { installAdaptiveResolution } from '../core/AdaptiveResolution';
 import { UIScreenPreviewHost } from '../components/UIScreenPreviewHost';
 import { TitleScreenBinder } from '../core/TitleScreenBinder';
@@ -100,7 +101,7 @@ export class LoginScene extends Component {
         }
         // 標題載入是非同步的；回來時場景可能已被切走，對已銷毀節點綁事件會丟例外（PROG-2-9102）
         if (!this.node?.isValid || !hostNode.isValid) { this._finishWebBoot(); return; }
-        this._title = new TitleScreenBinder(hostNode, Node.EventType.TOUCH_END, { onStart: () => this.onClickStart() });
+        this._title = new TitleScreenBinder(hostNode, Node.EventType.TOUCH_END, { onStart: () => this.onClickStart(), onSide: { settings: () => { showSettingsAbout(this.node); } } });
         hostNode.active = true;
         this._finishWebBoot();
     }

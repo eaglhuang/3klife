@@ -1,6 +1,8 @@
 // @spec-source → 轉蛋系統.md (doc_spec_0042)；PROG-2-1429 依建檔紀錄補標出處
 import { BlockInputEvents, Button, Canvas, Color, Director, director, Label, Layout, Mask, Node, ScrollView, UITransform, Widget } from 'cc';
 import { DEV } from 'cc/env';
+import { isDevToolEnabled } from '../../core/dev/DevToolGate';
+import { installDevToolOverlay, registerDevToolLocalAction, setDevOverlayHidden, setDevToolChangeListener } from './DevToolOverlay';
 import { services } from '../../core/managers/ServiceLoader';
 import { PlayerRosterService } from '../../core/services/PlayerRosterService';
 import type { GachaHistoryRecord } from '../../core/services/ActionLogStore';
@@ -10,23 +12,11 @@ import { SolidBackground } from '../components/SolidBackground';
 import { describeGachaAction } from '../../core/gacha/GachaButtonRules';
 
 interface OverlayState {
-    launcherRoot: Node | null;
-    launcherIconLabel: Label | null;
-    root: Node | null;
-    summaryLabel: Label | null;
-    singlePlayerLabel: Label | null;
-    singlePlayerButton: Node | null;
-    clearRosterButton: Node | null;
-    eventLogButton: Node | null;
-    addGemsButton: Node | null;
-    addGoldButton: Node | null;
-    addTicketsButton: Node | null;
     actionLogPanel: ActionLogDebugPanel | null;
     gachaService: LocalGachaService | null;
     onSinglePlayerToggle: (() => void) | null;
     onClearRoster: (() => void) | null;
     onWalletChanged: (() => void) | null;
-    isPanelVisible: boolean;
 }
 
 interface ModalWindow {
@@ -39,30 +29,17 @@ interface ButtonHandle {
 }
 
 const overlayState: OverlayState = {
-    launcherRoot: null,
-    launcherIconLabel: null,
-    root: null,
-    summaryLabel: null,
-    singlePlayerLabel: null,
-    singlePlayerButton: null,
-    clearRosterButton: null,
-    eventLogButton: null,
-    addGemsButton: null,
-    addGoldButton: null,
-    addTicketsButton: null,
     actionLogPanel: null,
     gachaService: null,
     onSinglePlayerToggle: null,
     onClearRoster: null,
     onWalletChanged: null,
-    isPanelVisible: false,
 };
 
 let gachaResultsWindow: ModalWindow | null = null;
 let gachaHistoryWindow: ModalWindow | null = null;
 let gachaErrorWindow: ModalWindow | null = null;
 let gachaInfoWindow: ModalWindow | null = null;
-let isSceneAutoMountInstalled = false;
 
 function formatTimestamp(timestamp: number): string {
     const date = new Date(timestamp);
@@ -177,10 +154,6 @@ function createButton(
     return { node, label };
 }
 
-function formatWalletValue(value: number): string {
-    return Math.max(0, Math.floor(Number.isFinite(value) ? value : 0)).toLocaleString('zh-TW');
-}
-
 function createListRow(parent: Node, name: string, width: number, title: string, detail: string, accent: Color, height = 88): void {
     const row = new Node(name);
     row.parent = parent;
@@ -261,15 +234,7 @@ function hasOpenDebugWindow(): boolean {
 }
 
 function syncDebugChromeVisibility(): void {
-    const shouldHideChrome = hasOpenDebugWindow();
-
-    if (overlayState.launcherRoot?.isValid) {
-        overlayState.launcherRoot.active = !shouldHideChrome;
-    }
-
-    if (overlayState.root?.isValid) {
-        overlayState.root.active = overlayState.isPanelVisible && !shouldHideChrome;
-    }
+    setDevOverlayHidden(hasOpenDebugWindow());
 }
 
 function buildListModal(
@@ -403,279 +368,6 @@ function buildListModal(
     return { root };
 }
 
-function ensureToolbarRoot(): Node | null {
-    const canvasNode = resolveCanvasNode();
-    if (!canvasNode) {
-        return null;
-    }
-
-    if (overlayState.root && overlayState.root.isValid) {
-        if (overlayState.root.parent !== canvasNode) {
-            overlayState.root.removeFromParent();
-            overlayState.root.parent = canvasNode;
-        }
-        inheritParentLayer(overlayState.root, canvasNode);
-        promoteToFront(overlayState.root, canvasNode);
-        return overlayState.root;
-    }
-
-    const root = new Node('GachaDevOverlayRoot');
-    root.parent = canvasNode;
-    inheritParentLayer(root, canvasNode);
-    const transform = root.getComponent(UITransform) ?? root.addComponent(UITransform);
-    transform.setContentSize(288, 420);
-    const widget = root.getComponent(Widget) ?? root.addComponent(Widget);
-    widget.isAlignTop = true;
-    widget.top = 76;
-    widget.isAlignRight = true;
-    widget.right = 18;
-    const background = root.getComponent(SolidBackground) ?? root.addComponent(SolidBackground);
-    background.color = new Color(12, 18, 28, 236);
-    root.active = overlayState.isPanelVisible;
-
-    const titleLabel = createTextNode(root, 'Title', 252, 24, '🛠 DEV 修改工具', 18);
-    titleLabel.horizontalAlign = Label.HorizontalAlign.CENTER;
-    titleLabel.node.setPosition(0, 168, 0);
-
-    createButton(
-        root,
-        'CloseButton',
-        '×',
-        30,
-        28,
-        new Color(70, 78, 92, 240),
-        () => { toggleDevToolPanel(false); },
-        { pointerFallback: true },
-    ).node.setPosition(122, 168, 0);
-
-    overlayState.summaryLabel = createTextNode(root, 'Summary', 252, 78, 'loading...', 14);
-    overlayState.summaryLabel.horizontalAlign = Label.HorizontalAlign.CENTER;
-    overlayState.summaryLabel.node.setPosition(0, 116, 0);
-
-    overlayState.eventLogButton = createButton(
-        root,
-        'EventLogButton',
-        '事件日誌',
-        220,
-        34,
-        new Color(52, 76, 102, 240),
-        () => { void showActionLogWindow(); },
-    ).node;
-    overlayState.eventLogButton.setPosition(0, 52, 0);
-
-    const singlePlayerButton = createButton(
-        root,
-        'SinglePlayerButton',
-        '單機模式',
-        220,
-        34,
-        new Color(54, 86, 58, 240),
-        () => {
-            if (overlayState.onSinglePlayerToggle) {
-                overlayState.onSinglePlayerToggle();
-            } else {
-                overlayState.gachaService?.toggleSinglePlayerModeEnabled();
-            }
-            refreshCurrencyDisplay();
-        },
-    );
-    overlayState.singlePlayerLabel = singlePlayerButton.label;
-    overlayState.singlePlayerButton = singlePlayerButton.node;
-    overlayState.singlePlayerButton.setPosition(0, 10, 0);
-
-    overlayState.clearRosterButton = createButton(
-        root,
-        'ClearRosterButton',
-        '清除名冊',
-        220,
-        34,
-        new Color(102, 72, 44, 240),
-        () => {
-            if (overlayState.onClearRoster) {
-                overlayState.onClearRoster();
-            } else {
-                PlayerRosterService.clear();
-            }
-            refreshCurrencyDisplay();
-        },
-    ).node;
-    overlayState.clearRosterButton.setPosition(0, -32, 0);
-
-    overlayState.addGemsButton = createButton(
-        root,
-        'AddGemsButton',
-        '+1,000 鑽石',
-        220,
-        34,
-        new Color(72, 62, 120, 240),
-        () => {
-            overlayState.gachaService?.grantCurrency('gems', 1000);
-            refreshCurrencyDisplay();
-        },
-    ).node;
-    overlayState.addGemsButton.setPosition(0, -74, 0);
-
-    overlayState.addGoldButton = createButton(
-        root,
-        'AddGoldButton',
-        '+50,000 黃金',
-        220,
-        34,
-        new Color(128, 98, 42, 240),
-        () => {
-            overlayState.gachaService?.grantCurrency('gold', 50000);
-            refreshCurrencyDisplay();
-        },
-    ).node;
-    overlayState.addGoldButton.setPosition(0, -116, 0);
-
-    overlayState.addTicketsButton = createButton(
-        root,
-        'AddTicketsButton',
-        '+10 召喚券',
-        220,
-        34,
-        new Color(64, 106, 86, 240),
-        () => {
-            overlayState.gachaService?.grantCurrency('tickets', 10);
-            refreshCurrencyDisplay();
-        },
-    ).node;
-    overlayState.addTicketsButton.setPosition(0, -158, 0);
-
-    overlayState.root = root;
-    promoteToFront(root, canvasNode);
-    return root;
-}
-
-function ensureLauncherRoot(): Node | null {
-    const canvasNode = resolveCanvasNode();
-    if (!canvasNode) {
-        return null;
-    }
-
-    if (overlayState.launcherRoot && overlayState.launcherRoot.isValid) {
-        if (overlayState.launcherRoot.parent !== canvasNode) {
-            overlayState.launcherRoot.removeFromParent();
-            overlayState.launcherRoot.parent = canvasNode;
-        }
-        inheritParentLayer(overlayState.launcherRoot, canvasNode);
-        promoteToFront(overlayState.launcherRoot, canvasNode);
-        return overlayState.launcherRoot;
-    }
-
-    const launcherRoot = new Node('GachaDevOverlayLauncher');
-    launcherRoot.parent = canvasNode;
-    inheritParentLayer(launcherRoot, canvasNode);
-    const transform = launcherRoot.getComponent(UITransform) ?? launcherRoot.addComponent(UITransform);
-    transform.setContentSize(48, 48);
-    const widget = launcherRoot.getComponent(Widget) ?? launcherRoot.addComponent(Widget);
-    widget.isAlignTop = true;
-    widget.top = 18;
-    widget.isAlignRight = true;
-    widget.right = 18;
-    const background = launcherRoot.getComponent(SolidBackground) ?? launcherRoot.addComponent(SolidBackground);
-    background.color = new Color(22, 28, 38, 238);
-
-    const button = launcherRoot.getComponent(Button) ?? launcherRoot.addComponent(Button);
-    button.transition = Button.Transition.NONE;
-    button.node.on(Button.EventType.CLICK, () => { toggleDevToolPanel(); }, button);
-
-    overlayState.launcherIconLabel = createTextNode(launcherRoot, 'LauncherLabel', 40, 40, '+', 28);
-    overlayState.launcherIconLabel.horizontalAlign = Label.HorizontalAlign.CENTER;
-    overlayState.launcherIconLabel.verticalAlign = Label.VerticalAlign.CENTER;
-    overlayState.launcherIconLabel.node.setPosition(0, 0, 0);
-    overlayState.launcherRoot = launcherRoot;
-    promoteToFront(launcherRoot, canvasNode);
-    return launcherRoot;
-}
-
-function mountOverlayToActiveScene(): void {
-    if (!DEV) {
-        return;
-    }
-
-    services().initialize(resolveCanvasNode() ?? undefined);
-    ensureLauncherRoot();
-    ensureToolbarRoot();
-    promoteToFront(overlayState.root);
-    promoteToFront(overlayState.launcherRoot);
-    refreshCurrencyDisplay();
-    syncDebugChromeVisibility();
-}
-
-function ensureSceneAutoMount(): void {
-    if (!DEV || isSceneAutoMountInstalled) {
-        return;
-    }
-
-    isSceneAutoMountInstalled = true;
-    director.on(Director.EVENT_AFTER_SCENE_LAUNCH, mountOverlayToActiveScene);
-    mountOverlayToActiveScene();
-}
-
-function toggleDevToolPanel(forceVisible?: boolean): void {
-    ensureToolbarRoot();
-    const nextVisible = typeof forceVisible === 'boolean' ? forceVisible : !overlayState.isPanelVisible;
-    overlayState.isPanelVisible = nextVisible;
-    if (overlayState.root?.isValid) {
-        overlayState.root.active = nextVisible && !hasOpenDebugWindow();
-    }
-    if (nextVisible) {
-        promoteToFront(overlayState.root);
-        promoteToFront(overlayState.launcherRoot);
-    }
-    if (overlayState.launcherIconLabel) {
-        overlayState.launcherIconLabel.string = nextVisible ? '−' : '+';
-    }
-    refreshCurrencyDisplay();
-}
-
-function renderToolbarSummary(): void {
-    if (!overlayState.summaryLabel || !overlayState.summaryLabel.node.isValid) {
-        return;
-    }
-
-    const sync = services().sync;
-    const hasGachaContext = !!overlayState.gachaService;
-    const singlePlayer = overlayState.gachaService?.isSinglePlayerModeEnabled() ?? false;
-    const rosterCount = PlayerRosterService.getCount();
-    const wallet = overlayState.gachaService?.getWalletSnapshot() ?? null;
-
-    overlayState.summaryLabel.string = hasGachaContext
-        ? [
-            `Storage: ${sync.getStorageModeLabel()}`,
-            `Pending: ${sync.getActionRecordCount()} | Roster: ${rosterCount}`,
-            `錢包: ◈ ${formatWalletValue(wallet?.gems ?? 0)} | 金 ${formatWalletValue(wallet?.gold ?? 0)} | 券 ${formatWalletValue(wallet?.tickets ?? 0)}`,
-            `Single Player: ${singlePlayer ? 'ON' : 'OFF'}`,
-        ].join('\n')
-        : [
-            `Storage: ${sync.getStorageModeLabel()}`,
-            `Pending: ${sync.getActionRecordCount()} | Roster: ${rosterCount}`,
-            '事件日誌可跨畫面開啟',
-        ].join('\n');
-
-    if (overlayState.singlePlayerLabel) {
-        overlayState.singlePlayerLabel.string = singlePlayer ? '單機模式：ON' : '單機模式：OFF';
-    }
-
-    if (overlayState.singlePlayerButton) {
-        overlayState.singlePlayerButton.active = hasGachaContext;
-    }
-    if (overlayState.clearRosterButton) {
-        overlayState.clearRosterButton.active = hasGachaContext;
-    }
-    if (overlayState.addGemsButton) {
-        overlayState.addGemsButton.active = hasGachaContext;
-    }
-    if (overlayState.addGoldButton) {
-        overlayState.addGoldButton.active = hasGachaContext;
-    }
-    if (overlayState.addTicketsButton) {
-        overlayState.addTicketsButton.active = hasGachaContext;
-    }
-}
-
 function formatGachaResultTitle(entry: LocalGachaResultEntry): string {
     return entry.displayText;
 }
@@ -685,25 +377,40 @@ function formatGachaResultDetail(entry: LocalGachaResultEntry): string {
 }
 
 
+/**
+ * 把轉蛋場景的資料接到全域測試工具（測試工具 2.0，PROG-2-9852）。
+ * 測試工具本體（圓鈕、分頁面板）在 DevToolOverlay，開關由 DevToolGate 決定（?dev=1 或設定頁連點版本號）；
+ * 這裡只登記「資源變動後刷新畫面」與場景專屬的 local 動作，沒開測試工具時完全不掛。
+ */
+function wireDevTool(
+    gachaService: LocalGachaService | undefined,
+    onSinglePlayerToggle: (() => void) | undefined,
+    onClearRoster: (() => void) | undefined,
+    onWalletChanged: (() => void) | undefined,
+): void {
+    overlayState.gachaService = gachaService ?? null;
+    overlayState.onSinglePlayerToggle = onSinglePlayerToggle ?? null;
+    overlayState.onClearRoster = onClearRoster ?? null;
+    overlayState.onWalletChanged = onWalletChanged ?? null;
+    installDevToolOverlay();
+    setDevToolChangeListener(() => { overlayState.onWalletChanged?.(); });
+    registerDevToolLocalAction('openActionLog', () => { showActionLogWindow(); });
+    registerDevToolLocalAction('toggleSinglePlayer', overlayState.gachaService
+        ? () => {
+            if (overlayState.onSinglePlayerToggle) overlayState.onSinglePlayerToggle();
+            else overlayState.gachaService?.toggleSinglePlayerModeEnabled();
+            return `單機模式 ${overlayState.gachaService?.isSinglePlayerModeEnabled() ? 'ON' : 'OFF'}`;
+        }
+        : null);
+}
+
 export function attachCurrencyCheatPanel(
     gachaService: LocalGachaService,
     onSinglePlayerToggle?: (() => void) | undefined,
     onClearRoster?: (() => void) | undefined,
     onWalletChanged?: (() => void) | undefined,
 ): void {
-    if (!DEV) {
-        return;
-    }
-
-    ensureSceneAutoMount();
-    services().initialize(resolveCanvasNode() ?? undefined);
-    overlayState.gachaService = gachaService;
-    overlayState.onSinglePlayerToggle = onSinglePlayerToggle ?? null;
-    overlayState.onClearRoster = onClearRoster ?? null;
-    overlayState.onWalletChanged = onWalletChanged ?? null;
-    ensureLauncherRoot();
-    ensureToolbarRoot();
-    refreshCurrencyDisplay();
+    wireDevTool(gachaService, onSinglePlayerToggle, onClearRoster, onWalletChanged);
 }
 
 export function ensureGlobalDevOverlay(
@@ -712,27 +419,10 @@ export function ensureGlobalDevOverlay(
     onClearRoster?: (() => void) | undefined,
     onWalletChanged?: (() => void) | undefined,
 ): void {
-    if (!DEV) {
-        return;
-    }
-
-    ensureSceneAutoMount();
-    services().initialize(resolveCanvasNode() ?? undefined);
-    overlayState.gachaService = gachaService ?? null;
-    overlayState.onSinglePlayerToggle = onSinglePlayerToggle ?? null;
-    overlayState.onClearRoster = onClearRoster ?? null;
-    overlayState.onWalletChanged = onWalletChanged ?? null;
-    ensureLauncherRoot();
-    ensureToolbarRoot();
-    refreshCurrencyDisplay();
-    syncDebugChromeVisibility();
+    wireDevTool(gachaService, onSinglePlayerToggle, onClearRoster, onWalletChanged);
 }
 
 export function detachCurrencyCheatPanel(): void {
-    if (!DEV) {
-        return;
-    }
-
     destroyWindow(gachaResultsWindow);
     destroyWindow(gachaHistoryWindow);
     destroyWindow(gachaErrorWindow);
@@ -744,52 +434,28 @@ export function detachCurrencyCheatPanel(): void {
         overlayState.actionLogPanel.node.destroy();
     }
     overlayState.actionLogPanel = null;
-
-    if (overlayState.root?.isValid) {
-        overlayState.root.destroy();
-    }
-    if (overlayState.launcherRoot?.isValid) {
-        overlayState.launcherRoot.destroy();
-    }
-
-    overlayState.launcherRoot = null;
-    overlayState.launcherIconLabel = null;
-    overlayState.root = null;
-    overlayState.summaryLabel = null;
-    overlayState.singlePlayerLabel = null;
-    overlayState.singlePlayerButton = null;
-    overlayState.clearRosterButton = null;
-    overlayState.eventLogButton = null;
-    overlayState.addGemsButton = null;
-    overlayState.addGoldButton = null;
-    overlayState.addTicketsButton = null;
     overlayState.gachaService = null;
     overlayState.onSinglePlayerToggle = null;
     overlayState.onClearRoster = null;
     overlayState.onWalletChanged = null;
-    overlayState.isPanelVisible = false;
+    setDevToolChangeListener(null);
+    registerDevToolLocalAction('toggleSinglePlayer', null);
 }
 
 export function detachRosterClearButton(): void {
     overlayState.onClearRoster = null;
-    refreshCurrencyDisplay();
 }
 
+/** 轉蛋場景自己改了錢包時呼叫：通知場景刷新資源顯示 */
 export function refreshCurrencyDisplay(): void {
-    if (!DEV) {
-        return;
-    }
-
-    renderToolbarSummary();
     overlayState.onWalletChanged?.();
 }
 
 export function showActionLogWindow(limit = 120): void {
-    if (!DEV) {
+    if (!isDevToolEnabled()) {
         return;
     }
 
-    overlayState.isPanelVisible = false;
     destroyWindow(gachaResultsWindow);
     destroyWindow(gachaHistoryWindow);
     destroyWindow(gachaErrorWindow);
@@ -817,7 +483,6 @@ export async function showGachaResults(
     onRetry?: (() => void) | undefined,
 ): Promise<void> {
     // 沒有轉蛋結果畫面可用時的後備清單，正式版也要能看到結果（PROG-2-9117）
-    overlayState.isPanelVisible = false;
 
     destroyWindow(gachaResultsWindow);
     gachaResultsWindow = buildListModal(
@@ -837,7 +502,6 @@ export async function showGachaResults(
 
 /** 轉蛋畫面的「紀錄」鈕：玩家功能，正式版也要開（原本被 DEV 擋掉，點了沒反應，PROG-2-9117） */
 export async function showGachaHistory(data: { total: number; records: GachaHistoryRecord[] }): Promise<void> {
-    overlayState.isPanelVisible = false;
 
     // Expand each record into per-result rows so all drawn generals are visible individually.
     type HistoryItem = { title: string; detail: string; accent?: Color };
@@ -875,7 +539,6 @@ export async function showGachaHistory(data: { total: number; records: GachaHist
 
 /** 轉蛋「詳情 ›」：列出費用、持有、機率、保底（玩家功能，不受 DEV 限制，PROG-2-9117） */
 export function showGachaInfoModal(title: string, summary: string, rows: Array<{ title: string; detail: string }>): void {
-    overlayState.isPanelVisible = false;
     destroyWindow(gachaInfoWindow);
     gachaInfoWindow = buildListModal('GachaInfoWindow', title, summary, rows);
     syncDebugChromeVisibility();
@@ -885,8 +548,6 @@ export function showGachaError(message: string): void {
     if (!DEV) {
         return;
     }
-
-    overlayState.isPanelVisible = false;
 
     destroyWindow(gachaErrorWindow);
     gachaErrorWindow = buildListModal(
@@ -901,4 +562,5 @@ export function showGachaError(message: string): void {
     syncDebugChromeVisibility();
 }
 
-ensureSceneAutoMount();
+// 模組載入時就掛上場景載入監聽：所有場景（含戰場）都會依測試工具開關補掛圓鈕，不必每個場景各自呼叫
+installDevToolOverlay();

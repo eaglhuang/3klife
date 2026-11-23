@@ -95,7 +95,7 @@ export function createLocalApi(store: LocalSaveStore, opts: LocalApiAdapterOptio
     registerStoryCommands(api, () => ({ authority: storyAuthority, config: storyConfig, handlers: storyHandlers, ...storyHooks }));
     registerOccupancyCommands(api, () => occupancyHost);
     registerFamilyCommands(api, () => familyHost);
-    registerDebugCommands(api, () => debugHost);
+    registerDebugCommands(api, () => debugHost, () => wallet);
     registerAcademyHostCommands(api, () => academyHost);
     registerQuestCommands(api, () => ({ authority: questAuthority, config: questConfig, kinds: questKinds, ...questHooks }));
     return {

@@ -30,6 +30,20 @@
         "local-storage"
       ],
       "reason": "clientOwned：大廳閒聊已讀緩存（總綱 5.9 P3）"
+    },
+    {
+      "file": "core/dev/DevToolGate.ts",
+      "rules": [
+        "local-storage"
+      ],
+      "reason": "clientOwned：測試工具開關與面板位置偏好（PROG-2-9852，只存開關，不碰存檔資料）；需總 PM 審核"
+    },
+    {
+      "file": "ui/dev/DevToolOverlay.ts",
+      "rules": [
+        "local-storage"
+      ],
+      "reason": "clientOwned：測試工具開關與面板位置偏好（PROG-2-9852，只存開關，不碰存檔資料）；需總 PM 審核"
     }
   ],
   "perFile": {

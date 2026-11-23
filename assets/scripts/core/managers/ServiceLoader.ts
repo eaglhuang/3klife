@@ -353,6 +353,11 @@ export class ServiceLoader {
         this.localApi?.setDebugHost(host);
     }
 
+    /** 合併偵錯宿主能力（測試工具 2.0；PROG-2-9852）：場景與測試工具各提供不同能力，互不覆蓋；傳 null 清空 */
+    public extendDebugHost(partial: DebugHost | null): void {
+        this.bindDebugHost(partial === null ? null : { ...(this.debugHost ?? {}), ...partial });
+    }
+
     /** 存檔與退役歸檔共用同一個儲存後端（key 不同，不會互蓋）；初始化與切換暫時狀態時呼叫 */
     private bindSaveStorage(): void {
         const storageAdapter = this.createSaveStorageAdapter();

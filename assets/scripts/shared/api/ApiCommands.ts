@@ -68,6 +68,13 @@ export const API_COMMANDS = Object.freeze({
     'family.matchmakerOffer': { kind: 'query', revGuard: false },
     // 偵錯（只有本機 adapter 掛處理器；網路 adapter 一律回 COMMAND_UNKNOWN，避免變成外掛入口）
     'debug.fastForward': { kind: 'cmd', revGuard: false },
+    // 測試工具 2.0（PROG-2-9852）：資源、屬性、時間、存檔匯出入；同樣只有本機 adapter 掛處理器，且要綁定偵錯宿主才生效
+    'debug.grant': { kind: 'cmd', revGuard: false },
+    'debug.setStat': { kind: 'cmd', revGuard: false },
+    'debug.advanceTime': { kind: 'cmd', revGuard: false },
+    'debug.resetGame': { kind: 'cmd', revGuard: false },
+    'debug.exportSave': { kind: 'query', revGuard: false },
+    'debug.importSave': { kind: 'cmd', revGuard: false },
     // 任務（任務 Base 規格 §11；QST-M 最小版，只有 taskKind=academy）
     'task.query': { kind: 'query', revGuard: false },
     'task.accept': { kind: 'cmd', revGuard: false },
@@ -665,6 +672,60 @@ export interface FamilyEnrollSpouseResult {
 }
 
 // ── 偵錯（debug.fastForward；只有本機 adapter 提供）──
+
+/**
+ * debug.grant 可調整的資源（測試工具 2.0；對齊物品庫存框架的貨幣／資源分類）：
+ * wallet＝走 WalletAuthority（含家族銀兩 silver 路由）；military＝城市兵源與糧草儲備；pending＝尚無權威儲存（玉），一律拒絕。
+ */
+export const DEBUG_GRANT_RESOURCES = Object.freeze({
+    gold: { via: 'wallet', key: 'gold' },
+    silver: { via: 'wallet', key: 'silver' },
+    gems: { via: 'wallet', key: 'gems' },
+    tickets: { via: 'wallet', key: 'tickets' },
+    food: { via: 'military', key: 'food' },
+    troops: { via: 'military', key: 'cityTroops' },
+    jade: { via: 'pending', key: 'jade' },
+} as const);
+
+export type DebugGrantResource = keyof typeof DEBUG_GRANT_RESOURCES;
+
+/** 單次調整量上限：避免輸入框多打幾個零把存檔灌爆 */
+export const DEBUG_GRANT_MAX_ABS = 1_000_000_000;
+
+export interface DebugGrantResult {
+    resource: string;
+    /** 實際變動量（負數扣到 0 為止、兵糧加到上限為止，可能小於要求） */
+    applied: number;
+    balance: number;
+}
+
+/** debug.setStat 可直接設定的數值（兵源與糧草的上限是規則不是存檔狀態，不開放） */
+export const DEBUG_STAT_KEYS: readonly string[] = Object.freeze(['recruitRegen', 'woundedCamp', 'discoveryLevel']);
+
+export interface DebugSetStatResult {
+    key: string;
+    value: number;
+}
+
+/** debug.advanceTime：單位與單次上限（一年＝4 季；上限 40 季＝10 年） */
+export type DebugAdvanceUnit = 'season' | 'year';
+export const DEBUG_ADVANCE_MAX_SEASONS = 40;
+
+export interface DebugAdvanceAck {
+    accepted: true;
+    seasons: number;
+}
+
+/** debug.exportSave：整份存檔快照（JSON 字串，方便複製貼上） */
+export interface DebugExportSaveResult {
+    json: string;
+    bytes: number;
+}
+
+export interface DebugImportSaveResult {
+    accepted: true;
+    bytes: number;
+}
 
 /** debug.fastForward 的回應：只表示已啟動（命令佇列串行，不能等快進跑完；結果由宿主公布） */
 export interface DebugFastForwardAck {
