@@ -25,9 +25,9 @@
   "generated": "2026-04-06",
   "summary": {
     "done": 264,
-    "in_progress": 10,
+    "in_progress": 11,
     "open": 85,
-    "total": 359
+    "total": 360
   },
   "tasks": [
     {
@@ -1915,7 +1915,7 @@
       "title": "Scope Guard / dirty tree validator",
       "owner": "ClaudeCode_Haiku",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-05-17",
@@ -2486,7 +2486,7 @@
       "title": "Top50 needs-etl-fill 主幹資料注入：primary-canon / 白名單硬關係 → runtime ready events / relationship edges",
       "owner": "vs-insiders-copilot-agent",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "SceneQuality",
       "created": "2026-05-29",
@@ -4605,7 +4605,7 @@
       "title": "轉蛋系統介面重構與返回路徑統一（方案 B）",
       "owner": "Antigravity",
       "priority": "P0",
-      "status": "in-progress",
+      "status": "done",
       "type": "ui",
       "phase": "M6",
       "created": "2026-11-11",
@@ -5755,7 +5755,7 @@
       "title": "戰場部隊頭頂數值標籤的繪製次數優化",
       "owner": "claude-code-fable-5-2",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-16",
@@ -14091,13 +14091,13 @@
       "id": "PROG-2-9608",
       "doc_id": "doc_task_2801",
       "title": "Base 框架分片 doc_id 修正與索引健全",
-      "status": "in-progress"
+      "status": "done"
     },
     {
       "id": "PROG-2-9607",
       "doc_id": "doc_task_2800",
       "title": "新玩家第一年不卡關體驗走查與修正清單",
-      "status": "in-progress"
+      "status": "done"
     },
     {
       "doc_id": "doc_task_2925",
@@ -15175,7 +15175,7 @@
       "title": "戰場 UI 演出 B2：名牌戰鬥淡出、狀態圖示層數回合、奧義暫代大字與音效、毒上身回饋、治療時序",
       "owner": "ClaudeCode_opus-5-5",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-22",
@@ -15444,7 +15444,7 @@
       "title": "十連結果卡片壓扁＋統計列漏算 N",
       "owner": "ClaudeCode_claude-opus-5-5",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-22",
@@ -15534,7 +15534,7 @@
       "title": "技分頁戰法／奧義點擊開啟通用詳情子視窗",
       "owner": "ClaudeCode_claude-opus-5-5",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-22",
@@ -15658,7 +15658,7 @@
       "title": "攻擊特效正式量產：騎兵／盾兵／法陣縮小降透明度（分兵種倍率）",
       "owner": "ClaudeCode_opus-5-5",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-23",
@@ -15682,6 +15682,59 @@
         "assets/resources/data/attack-vfx.json",
         "assets/scripts/battle/views/AttackVfxPlayer.ts",
         "tests/AttackVfxConfig.test.ts"
+      ],
+      "notes": "2026-11-23 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9738",
+      "title": "騎兵／騎馬武將套用 spine-trial 全套騎乘動作（攻擊／閃避／倒下／後退）",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-23",
+      "created_by_agent": "codex-gpt-5.4-mini",
+      "started_at": "2026-11-23T12:05:00+08:00",
+      "started_by_agent": "codex-gpt-5.4-mini",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "從 spine-trial main 抓最新騎乘合成骨架（50 個動作），替換騎兵小兵素材並補攻擊、閃避、倒下、後退的 clip 對應；趙雲騎馬版套用在武將；戰場 180px 實跑逐項檢查待機／移動／攻擊／受擊／部署落下並列問題清單。素材為私有（gitignored），只進程式與對應表。",
+      "related": [
+        "PROG-2-9408"
+      ],
+      "depends": [],
+      "acceptance": [
+        "騎兵 clip 對應新動作",
+        "單元測試與 tsc 0 錯",
+        "180px 實跑截圖與問題清單"
+      ],
+      "deliverables": [
+        "assets/scripts/battle/shared/UnitPresentationConfig.ts",
+        "tests/UnitPresentationCore.test.ts"
       ],
       "notes": "2026-11-23 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
       "brief": {

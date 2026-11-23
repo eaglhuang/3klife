@@ -1165,7 +1165,7 @@ export class UnitRenderer extends Component {
       if (unit) {
         const isGeneral = this.isGeneralAvatarUnit(unit);
         const general = isGeneral ? this.latestState?.getGeneral(unit.faction) : null;
-        const config = isGeneral ? (general ? generalSpineConfig(general.id, general.templateId) : null)
+        const config = isGeneral ? (general ? this.generalSpine(general, unit.faction) : null)
           : troopSpineConfigWithFallback(unit.type, unit.faction === Faction.Enemy, unit.tallyTemplateId, path => this.spineUnits.hasFailed(path));
         // 主將沒有 Spine（或素材載不起來）：改畫立繪站牌，站位與 Spine 主將相同；站牌也載不到才留 3D 棋子（issue #2238）
         if (isGeneral && general && needsStandeeFallback(config?.path, path => this.spineUnits.hasFailed(path))) {
@@ -1192,7 +1192,7 @@ export class UnitRenderer extends Component {
     this.generalViews.forEach((view, faction) => {
       this.projectClampedGeneralLabel(view);
       const general = this.latestState?.getGeneral(faction);
-      const config = general && generalSpineConfig(general.id, general.templateId);
+      const config = general && this.generalSpine(general, faction);
       if (config) {
         const p = view.labelNode.position;
         const side = this.generalSidelineFoot(faction);
@@ -1467,7 +1467,7 @@ export class UnitRenderer extends Component {
     const label = this.projectClampedGeneralLabel(view);
 
     // Spine 2D 武將站在標籤下方；載入完成後隱藏 3D 模型
-    const config = generalSpineConfig(general.id, general.templateId);
+    const config = this.generalSpine(general, faction);
     this.spineUnits.revive(`general:${faction}`);
     const side = this.generalSidelineFoot(faction);
     const shown = !!config && this.spineUnits.sync(`general:${faction}`, config, side?.x ?? label.x, side?.y ?? label.y - config.labelToFoot,
@@ -1556,7 +1556,7 @@ export class UnitRenderer extends Component {
     const id = this.generalSpineId(faction);
     if (this.spineUnits.exists(id)) return id;
     const general = this.latestState?.getGeneral(faction);
-    const config = general && generalSpineConfig(general.id, general.templateId);
+    const config = general && this.generalSpine(general, faction);
     const foot = this.generalSidelineFoot(faction);
     if (config && foot) this.spineUnits.sync(id, config, foot.x, foot.y, faction === Faction.Enemy ? -1 : 1, false, 0);
     return id;
@@ -2430,6 +2430,10 @@ export class UnitRenderer extends Component {
       }
     }
     return false;
+  }
+
+  private generalSpine(general: { id: string; templateId?: string | null; ridingTier?: number }, _faction: Faction) {
+    return generalSpineConfig(general.id, general.templateId, general.ridingTier ?? 0, path => this.spineUnits.hasFailed(path));
   }
 
   private isGeneralAvatarUnit(unit: TroopUnit): boolean {
