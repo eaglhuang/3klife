@@ -21,6 +21,8 @@ export type FloatTextType =
     | 'dmg_enemy'   // 敵方單位受傷（白）
     | 'dmg_crit'    // 暴擊傷害（金色大字，放大後回彈）
     | 'dmg_heavy'   // 重擊（非暴擊但一下打掉大量兵力；橘色中大字，PROG-2-9412）
+    | 'dmg_burn'    // 燃燒／火格回合扣血（橘紅，讓玩家分得出是燒傷不是被打）
+    | 'dmg_dot_poison' // 中毒／持續減益回合扣血（紫綠）
     | 'dmg_miss'    // 閃避（灰）
     | 'heal'        // 治療量（綠）
     | 'status'      // 狀態效果（暈眩/Buff，水藍）
@@ -79,6 +81,13 @@ export const FLOAT_TEXT_STYLES: Readonly<Record<FloatTextType, FloatTextStyle>> 
     dmg_heavy: { color: { r: 255, g: 150, b: 40, a: 255 }, fontSize: 64, isBold: true, durationMs: 1000, risePixels: 105,
         startScale: 0.55, peakScale: 1.65, popInSec: 0.08, settleSec: 0.13, maxConcurrent: 10, randomOffsetX: 9,
         outlineColor: { r: 95, g: 30, b: 0, a: 255 }, outlineWidth: 4 },
+    // 持續傷害回合扣血（燃燒／中毒）：比一般傷害小一級、不彈出重擊，顏色讓玩家一眼看出是持續傷害
+    dmg_burn: { color: { r: 255, g: 120, b: 40, a: 255 }, fontSize: 54, isBold: true, durationMs: 1000, risePixels: 90,
+        startScale: 0.7, peakScale: 1.2, popInSec: 0.07, settleSec: 0.10, maxConcurrent: 10, randomOffsetX: 10,
+        outlineColor: { r: 110, g: 20, b: 0, a: 255 }, outlineWidth: 3 },
+    dmg_dot_poison: { color: { r: 170, g: 255, b: 110, a: 255 }, fontSize: 54, isBold: true, durationMs: 1000, risePixels: 90,
+        startScale: 0.7, peakScale: 1.2, popInSec: 0.07, settleSec: 0.10, maxConcurrent: 10, randomOffsetX: 10,
+        outlineColor: { r: 70, g: 20, b: 100, a: 255 }, outlineWidth: 3 },
     // 閃避：灰字，不彈出
     dmg_miss: { color: { r: 175, g: 175, b: 175, a: 255 }, fontSize: 40, isBold: false, durationMs: 800, risePixels: 70,
         ...legacyPop(1.0), maxConcurrent: 8, randomOffsetX: 6, outlineColor: OUTLINE_DARK, outlineWidth: 2 },
