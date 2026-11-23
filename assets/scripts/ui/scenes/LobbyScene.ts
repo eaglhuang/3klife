@@ -53,7 +53,7 @@ import { services } from '../../core/managers/ServiceLoader';
 import { FriendshipService } from '../../core/services/FriendshipService';
 import type { IUIManagedController } from '../../shared/interfaces/IUIInterfaces';
 import { SceneName } from '../../core/config/Constants';
-import { IBattleEntryParams, DEFAULT_BATTLE_ENTRY_PARAMS, EncounterConfig, isTutorialBattle } from '../../shared/BattleEntryParams';
+import { IBattleEntryParams, DEFAULT_BATTLE_ENTRY_PARAMS, EncounterConfig, firstBattleOpensLoadout, isTutorialBattle } from '../../shared/BattleEntryParams';
 import { Weather } from '../../shared/CommonEnums';
 import { createSeededRng, rollBattleWeather, seasonWeatherSeed, validateBattleWeatherSeasonTable, type BattleWeatherSeasonTable } from '../../core/systems/BattleWeatherRoll';
 import { weatherPreBattleLine } from '../../core/systems/WeatherEffectText';
@@ -1531,12 +1531,16 @@ export class LobbyScene extends Component {
         void services().loadQuickResolveConfig();
     }
 
-    /** 出戰：新手教學戰或沒有關卡資料時照舊直接進戰場，其餘先彈出模式選擇 */
+    /** 出戰：新手首戰先開戰前編成視窗（PROG-2-9912）；沒有關卡資料時照舊直接進戰場，其餘先彈出模式選擇 */
     private _chooseSortieMode(): void {
         const encounter = this._currentEncounter();
         // 本季關卡都打完、下一關要等下一季（PROG-2-9421）：提示玩家，這次出戰是重打已通關的關卡
         const lockedHint = this._seasonLockedNextHint();
         if (lockedHint) services().event.emit('SHOW_TOAST', { message: `${lockedHint}；本季可重打已通關的關卡`, duration: 3 });
+        if (firstBattleOpensLoadout(services().session.clearedStageIds, !!encounter)) {
+            void this._openFirstBattleLoadout();
+            return;
+        }
         const popup = this._quickSortiePopup;
         if (!encounter || !popup?.host || isTutorialBattle(services().session.clearedStageIds)) {
             void this._enterBattle();
@@ -6080,7 +6084,7 @@ ${spent}`,
             { buttonId: 'btnPickLead', handler: () => { this._openHostFromSortie(this._leadSelect); } },
             { buttonId: 'btnPickDeck', handler: () => { this._openHostFromSortie(this._deckSelect); } },
             { buttonId: 'btnRecommend', handler: () => { void sortie.recommend().then(() => { this._refreshSortieSetup(); }); } },
-            { buttonId: 'btnConfirmSortie', handler: () => { this._closeSortieSetup(); this.onClickEnterBattle(); } },
+            { buttonId: 'btnConfirmSortie', handler: () => { this._confirmSortieSetup(); } },
             { buttonId: 'btnPrevStrategist', handler: () => { step('strategist', -1); } },
             { buttonId: 'btnNextStrategist', handler: () => { step('strategist', 1); } },
             { buttonId: 'btnClearStrategist', handler: () => { sortie.clear('strategist'); this._refreshSortieSetup(); } },
@@ -6132,6 +6136,37 @@ ${spent}`,
         host.node.active = true;
         this._bringNodeToFront(host.node);
         this._refreshSortieSetup();
+    }
+
+    /**
+     * 新手首戰的出戰（PROG-2-9912）：先開戰前編成視窗並預填一鍵推薦，玩家按「確認出戰」後才進戰場。
+     * 編成視窗是背景掛載的面板，_openSortieSetup 會先補建；補建失敗時不擋玩家，直接進戰場。
+     */
+    private async _openFirstBattleLoadout(): Promise<void> {
+        try {
+            await this._openSortieSetup();
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.UI, '[LobbyScene] 首戰編成視窗開啟失敗，改直接進戰場', error);
+            void this._enterBattle();
+            return;
+        }
+        const sortie = this._sortie;
+        if (!this._sortieHost || !sortie) {
+            void this._enterBattle();
+            return;
+        }
+        await sortie.recommend();
+        this._refreshSortieSetup();
+    }
+
+    /** 編成視窗的「確認出戰」（PROG-2-9912）：新手首戰已在編成視窗確認，直接進戰場；其餘照舊走出戰模式選擇 */
+    private _confirmSortieSetup(): void {
+        this._closeSortieSetup();
+        if (firstBattleOpensLoadout(services().session.clearedStageIds, !!this._currentEncounter())) {
+            void this._enterBattle();
+            return;
+        }
+        this.onClickEnterBattle();
     }
 
     private _closeSortieSetup(): void {
