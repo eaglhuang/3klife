@@ -3842,7 +3842,7 @@ export class GameSession implements AcademyRecordPort {
     }
 
     /**
-     * 測試工具 2.0（PROG-2-9852，只由偵錯宿主呼叫）：調整城市兵源或糧草，夾在 0～上限（上限是規則，讀檔會被夾回，所以不能超過）。
+     * 測試工具 2.0（PROG-2-9855，只由偵錯宿主呼叫）：調整城市兵源或糧草，夾在 0～上限（上限是規則，讀檔會被夾回，所以不能超過）。
      * 回傳實際變動量與調整後數值；不寫檔，由呼叫端決定存檔時機。
      */
     public debugAdjustMilitary(field: 'food' | 'cityTroops', delta: number): { applied: number; value: number } {

@@ -214,6 +214,10 @@ export function buildSkinStyle(tokens: TokenMap, binding: Readonly<ThemeStyleBin
         titleMinFontSize: num(tokens, 'text.title.minSize') ?? 26,
         roles: {
             glassPanel: boxRole(tokens, 'panel'),
+            // 子畫面（任務牆、太守府）的主面板：同樣深色玻璃，但不透明，避免後方大廳文字穿透
+            glassPanelSolid: { ...boxRole(tokens, 'panel'), ...defined({ alpha: num(tokens, 'panel.solid.alpha') }) },
+            // 面板內的卡片／列：淡色內嵌＋細金框，疊在不透明主面板上
+            insetPanel: boxRole(tokens, 'panel.inset'),
             buttonSecondary: boxRole(tokens, 'button.secondary'),
             buttonAccent: boxRole(tokens, 'button.primary'),
             divider: defined({ kind: 'color-rect', color: str(tokens, 'divider.color'), alpha: num(tokens, 'divider.alpha') }),

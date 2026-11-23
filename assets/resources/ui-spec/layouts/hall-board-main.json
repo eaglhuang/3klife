@@ -30,7 +30,7 @@
         },
         "width": 1400,
         "height": 900,
-        "skinSlot": "hall.card.bg",
+        "skinSlot": "hall.panel.solid",
         "children": [
           {
             "type": "label",
@@ -275,7 +275,7 @@
                 },
                 "width": 180,
                 "height": 44,
-                "skinSlot": "hall.button.bg",
+                "skinSlot": "hall.button.primary.bg",
                 "children": [
                   {
                     "type": "label",
@@ -384,7 +384,7 @@
                 },
                 "width": 180,
                 "height": 44,
-                "skinSlot": "hall.button.bg",
+                "skinSlot": "hall.button.primary.bg",
                 "children": [
                   {
                     "type": "label",
@@ -493,7 +493,7 @@
                 },
                 "width": 180,
                 "height": 44,
-                "skinSlot": "hall.button.bg",
+                "skinSlot": "hall.button.primary.bg",
                 "children": [
                   {
                     "type": "label",
@@ -602,7 +602,7 @@
                 },
                 "width": 180,
                 "height": 44,
-                "skinSlot": "hall.button.bg",
+                "skinSlot": "hall.button.primary.bg",
                 "children": [
                   {
                     "type": "label",
@@ -711,7 +711,7 @@
                 },
                 "width": 180,
                 "height": 44,
-                "skinSlot": "hall.button.bg",
+                "skinSlot": "hall.button.primary.bg",
                 "children": [
                   {
                     "type": "label",
@@ -820,7 +820,7 @@
                 },
                 "width": 180,
                 "height": 44,
-                "skinSlot": "hall.button.bg",
+                "skinSlot": "hall.button.primary.bg",
                 "children": [
                   {
                     "type": "label",

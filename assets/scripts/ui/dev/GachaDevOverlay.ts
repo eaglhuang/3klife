@@ -378,7 +378,7 @@ function formatGachaResultDetail(entry: LocalGachaResultEntry): string {
 
 
 /**
- * 把轉蛋場景的資料接到全域測試工具（測試工具 2.0，PROG-2-9852）。
+ * 把轉蛋場景的資料接到全域測試工具（測試工具 2.0，PROG-2-9855）。
  * 測試工具本體（圓鈕、分頁面板）在 DevToolOverlay，開關由 DevToolGate 決定（?dev=1 或設定頁連點版本號）；
  * 這裡只登記「資源變動後刷新畫面」與場景專屬的 local 動作，沒開測試工具時完全不掛。
  */

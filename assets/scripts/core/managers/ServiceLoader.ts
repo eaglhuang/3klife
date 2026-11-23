@@ -353,7 +353,7 @@ export class ServiceLoader {
         this.localApi?.setDebugHost(host);
     }
 
-    /** 合併偵錯宿主能力（測試工具 2.0；PROG-2-9852）：場景與測試工具各提供不同能力，互不覆蓋；傳 null 清空 */
+    /** 合併偵錯宿主能力（測試工具 2.0；PROG-2-9855）：場景與測試工具各提供不同能力，互不覆蓋；傳 null 清空 */
     public extendDebugHost(partial: DebugHost | null): void {
         this.bindDebugHost(partial === null ? null : { ...(this.debugHost ?? {}), ...partial });
     }

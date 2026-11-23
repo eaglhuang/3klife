@@ -1,4 +1,4 @@
-// @spec-source → 學府修業畫面與接線設計.md (doc_spec_1179) §9.4 QA 快進入口 debug.fastForward；PROG-2-9192；測試工具 2.0 debug.* 指令 PROG-2-9852
+// @spec-source → 學府修業畫面與接線設計.md (doc_spec_1179) §9.4 QA 快進入口 debug.fastForward；PROG-2-9192；測試工具 2.0 debug.* 指令 PROG-2-9855
 /**
  * DebugCommands — 偵錯命令（debug.*）在本機 adapter 的處理器。
  *

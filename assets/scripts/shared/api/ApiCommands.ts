@@ -68,7 +68,7 @@ export const API_COMMANDS = Object.freeze({
     'family.matchmakerOffer': { kind: 'query', revGuard: false },
     // 偵錯（只有本機 adapter 掛處理器；網路 adapter 一律回 COMMAND_UNKNOWN，避免變成外掛入口）
     'debug.fastForward': { kind: 'cmd', revGuard: false },
-    // 測試工具 2.0（PROG-2-9852）：資源、屬性、時間、存檔匯出入；同樣只有本機 adapter 掛處理器，且要綁定偵錯宿主才生效
+    // 測試工具 2.0（PROG-2-9855）：資源、屬性、時間、存檔匯出入；同樣只有本機 adapter 掛處理器，且要綁定偵錯宿主才生效
     'debug.grant': { kind: 'cmd', revGuard: false },
     'debug.setStat': { kind: 'cmd', revGuard: false },
     'debug.advanceTime': { kind: 'cmd', revGuard: false },

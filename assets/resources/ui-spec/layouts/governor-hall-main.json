@@ -30,7 +30,7 @@
         },
         "width": 1400,
         "height": 900,
-        "skinSlot": "mp.card.bg",
+        "skinSlot": "mp.panel.solid",
         "children": [
           {
             "type": "label",
@@ -213,7 +213,7 @@
                 },
                 "width": 420,
                 "height": 56,
-                "skinSlot": "mp.button.bg",
+                "skinSlot": "mp.button.primary.bg",
                 "children": [
                   {
                     "type": "label",

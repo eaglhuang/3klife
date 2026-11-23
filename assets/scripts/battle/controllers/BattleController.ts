@@ -28,7 +28,7 @@ import type { BattleResult } from "../BattleTypes";
 import { detectWeatherTransition, validateWeatherSchedule, weatherForTurn, type WeatherScheduleEntry } from "../../core/systems/WeatherSchedule";
 import { WEATHER_ITEM_TARGET, weatherItemActiveAt, type WeatherItemId, type WeatherItemOverride } from "../../core/systems/WeatherItem";
 import { EnemyAI, AI_USABLE_TYPES } from "./EnemyAI";
-import { isBattleSkillImplemented, resolveBattleSkillProfile, resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
+import { type BattleSkillProfile, isBattleSkillImplemented, resolveBattleSkillProfile, resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
 import { BattleSkillSourceTranslator } from '../skills/adapters/BattleSkillSourceTranslator';
 import { BattleSkillDispatcher, type GeneralSkillCastOptions } from '../runtime/BattleSkillDispatcher';
 import { buildUltimateSkills, findAncestorSignatureSkillId, findUltBasePowerTable, findUltimateBattleSkillId, findUltimateDamageDef, findUltimateSpecialRule, findUltimateTeamHealMissingRatio, findUltimateFamily, findUltimateVitalityCostPct } from '../views/BattleSceneLoader';
@@ -118,7 +118,8 @@ import { aiShouldInitiateDuel } from '../../core/systems/AiDuelDecision';
 import { lastSpurtReasonOf } from '../../core/systems/LastSpurtJudge';
 import { burnStamina, staminaPool, willOf } from '../../core/systems/StaminaBurn';
 import { advanceWisdomMeter, applyWisdomSurge } from '../shared/WisdomMeter';
-import { estimateTacticDamage } from '../shared/TacticDamageEstimate';
+import { pickLowestHpEnemy, pickSupportLowAlly, pickEnemyCluster, type AimUnit } from '../shared/AiCadenceTargeting';
+import { estimateTacticDamage, estimateTacticHitCount } from '../shared/TacticDamageEstimate';
 import type { TacticAiSituation } from '../shared/TacticAiRules';
 import { estimateHealValue, hasChokePointLane, hasDenseArea } from '../shared/EnemyTacticBoard';
 import { resolveEnemyInitialDeployment, type EnemyInitialDeploymentEntry } from '../shared/EnemyInitialDeployment';
@@ -956,7 +957,7 @@ export class BattleController {
    * 數值暫定：單體傷害以我方血量最低的單位估算，倍率 1、地形平原；效果值與地形不填（分數為 0）。
    * 沒有可選戰法或戰法庫查不到 battleSkillId 時回 null，呼叫端退回武將主技能。
    */
-  public chooseEnemyTactic(): { tacticId: string; battleSkillId: string } | null {
+  public chooseEnemyTactic(): { tacticId: string; battleSkillId: string; targetUnitUid?: string } | null {
     this.enemyTacticDeclinedFlag = false;
     const general = this.state.enemyGeneral;
     if (!general) return null;
@@ -984,9 +985,16 @@ export class BattleController {
     );
     if (weakest) {
       const damage = this.estimateEnemyStrikeDamage(general, weakest);
+      const playerCellsForAoe = playerUnits.map(unit => ({ lane: unit.lane, depth: unit.depth }));
       for (const candidate of candidates) {
         if (candidate.category === 'single-damage') {
-          metrics[candidate.tacticId] = { estimatedDamage: damage };
+          // 群傷（PROG-2-9852）：依戰法設定估算同時打到幾個我方單位
+          const battleSkillId = this.tacticDefinitionMap.get(candidate.tacticId)?.battleSkillId ?? null;
+          const profile = battleSkillId ? resolveBattleSkillProfile(battleSkillId) : null;
+          const hitCount = profile
+            ? estimateTacticHitCount(profile.targetMode, playerCellsForAoe, { maxTargets: profile.maxTargets, areaRadius: profile.areaRadius })
+            : 1;
+          metrics[candidate.tacticId] = { estimatedDamage: damage, hitCount };
         }
       }
     }
@@ -1017,7 +1025,43 @@ export class BattleController {
     );
     if (!tacticId) { this.enemyTacticDeclinedFlag = true; return null; }
     const battleSkillId = this.tacticDefinitionMap.get(tacticId)?.battleSkillId;
-    return battleSkillId ? { tacticId, battleSkillId } : null;
+    if (!battleSkillId) return null;
+    const profile = resolveBattleSkillProfile(battleSkillId);
+    const targetUnitUid = profile ? this.pickEnemyTacticTarget(profile, playerUnits, enemyUnits) : undefined;
+    return targetUnitUid ? { tacticId, battleSkillId, targetUnitUid } : { tacticId, battleSkillId };
+  }
+
+  /**
+   * 敵將戰法自動索敵（PROG-2-9853，規格 doc_spec_0360 §1）：
+   * 單體攻擊取我方血量比例最低者；單體友軍（治療）取血量 <50% 中最低的友軍；範圍戰法取覆蓋我方最多單位的錨點（<2 人退回預設目標）。
+   * 有射程加成的戰法交給選目標器的射程過濾，不指定；找不到時回 undefined 走預設目標。
+   */
+  private pickEnemyTacticTarget(
+    profile: BattleSkillProfile,
+    playerUnits: readonly TroopUnit[],
+    enemyUnits: readonly TroopUnit[],
+  ): string | undefined {
+    if (profile.rangeBonus) return undefined;
+    const toAim = (unit: TroopUnit): AimUnit => ({ unitId: unit.id, hp: unit.currentHp, maxHp: unit.maxHp, x: unit.lane, y: unit.depth });
+    switch (profile.targetMode) {
+      case BattleSkillTargetMode.EnemySingle:
+        return pickLowestHpEnemy(playerUnits.map(toAim))?.unitId;
+      case BattleSkillTargetMode.AllySingle:
+        return pickSupportLowAlly(enemyUnits.map(toAim))?.unitId;
+      case BattleSkillTargetMode.Area: {
+        const radius = Math.max(0, profile.areaRadius ?? 0);
+        const anchors = playerUnits.map(center => ({
+          x: center.lane,
+          y: center.depth,
+          hitCount: playerUnits.filter(u => Math.max(Math.abs(u.lane - center.lane), Math.abs(u.depth - center.depth)) <= radius).length,
+        }));
+        const pick = pickEnemyCluster(anchors, playerUnits.map(toAim), { x: 0, y: 0 });
+        if (pick?.kind !== 'anchor') return undefined;
+        return playerUnits.find(u => u.lane === pick.anchor.x && u.depth === pick.anchor.y)?.id;
+      }
+      default:
+        return undefined;
+    }
   }
 
   /**
@@ -1639,7 +1683,7 @@ export class BattleController {
           state: this.state,
           actingFaction: Faction.Player,
           turnManager: this.turnManager,
-          castEnemySeedTactic: (battleSkillId, tacticId) => this.castBattleSkill(Faction.Enemy, { battleSkillId, tacticId }),
+          castEnemySeedTactic: (battleSkillId, tacticId, targetUnitUid) => this.castBattleSkill(Faction.Enemy, { battleSkillId, tacticId, targetUnitUid: targetUnitUid ?? null }),
         });
         return {};
       case 'enemy-special-resolve':

@@ -16705,8 +16705,8 @@
   },
   {
     "id": "doc_task_2977",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9832.md",
-    "title": "[PROG-2-9832] 幕府大廳套用大廳・內政統一風格（第一階段：共用 token＋主畫面）",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9738.md",
+    "title": "[PROG-2-9738] 騎兵／騎馬武將套用 spine-trial 全套騎乘動作（攻擊／閃避／倒下／後退）",
     "category": "task"
   },
   {
@@ -16734,12 +16734,6 @@
     "category": "task"
   },
   {
-    "id": "doc_task_2982",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9738.md",
-    "title": "[PROG-2-9738] 騎兵／騎馬武將套用 spine-trial 全套騎乘動作（攻擊／閃避／倒下／後退）",
-    "category": "task"
-  },
-  {
     "id": "doc_task_2983",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9842.md",
     "title": "[PROG-2-9842] 十連結果卡片壓扁＋統計列漏算 N",
@@ -16758,9 +16752,45 @@
     "category": "task"
   },
   {
-    "id": "doc_task_2987",
+    "id": "doc_task_2986",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9852.md",
-    "title": "[PROG-2-9852] 測試工具 2.0：全域 dev overlay＋共通 API debug 指令＋分頁面板",
+    "title": "[PROG-2-9852] 敵將戰法群傷評分（單目標傷害×預估命中數）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2987",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9855.md",
+    "title": "[PROG-2-9855] 測試工具 2.0：全域 dev overlay＋共通 API debug 指令＋分頁面板",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2988",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9853.md",
+    "title": "[PROG-2-9853] 敵將戰法自動索敵（最低血量／補最低友軍／範圍錨點）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2989",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9832.md",
+    "title": "[PROG-2-9832] 幕府大廳套用大廳・內政統一風格（第一階段：共用 token＋主畫面）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2990",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9844.md",
+    "title": "[PROG-2-9844] 武將名稱旁顯示縮小頭像（GeneralNameTag）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2991",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9846.md",
+    "title": "[PROG-2-9846] 幕府大廳風格統一第二階段：任務牆／太守府／招賢館套用主題＋分節標題小字距與金線",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2992",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9854.md",
+    "title": "[PROG-2-9854] 修正幕府大廳任務牆／太守府套用主題後跑版",
     "category": "task"
   }
 ]
