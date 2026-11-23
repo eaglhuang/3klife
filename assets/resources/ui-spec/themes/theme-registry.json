@@ -10,7 +10,19 @@
   ],
   "styleBinding": {
     "appliesToSkins": [
-      "lobby-hall-screen.skin"
+      "lobby-hall-screen.skin",
+      "hall-board-screen.skin",
+      "governor-hall-screen.skin",
+      "recruit-hall-screen.skin"
+    ],
+    "slotRoles": {
+      ".card.bg": "glassPanel",
+      ".row.bg": "glassPanel",
+      ".label.section": "labelSection",
+      ".divider.section": "divider"
+    },
+    "skipSlots": [
+      "pg.*"
     ],
     "fillRoles": {
       "secondary": "buttonSecondary",

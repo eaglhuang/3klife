@@ -115,6 +115,77 @@ export function createThemeSystemSuite(): TestSuite {
         assert.equals(copy, JSON.stringify(hall));
     });
 
+    // ── 第二階段：任務牆／太守府／招賢館 ──
+    const SUB_SKINS = ['hall-board', 'governor-hall', 'recruit-hall'];
+    const subSlots = (name: string): Record<string, any> =>
+        readJson<{ slots: Record<string, any> }>(`assets/resources/ui-spec/skins/${name}-screen.skin.json`).slots;
+
+    suite.test('appliesToSkins 由資料決定：三個子畫面都在清單內', () => {
+        for (const name of SUB_SKINS) {
+            assert.isTrue(registry.styleBinding.appliesToSkins.includes(`${name}-screen.skin`), name);
+        }
+    });
+
+    suite.test('子畫面：卡片底與列底換成深色玻璃，主按鈕深紅，字型統一', () => {
+        for (const name of ['hall-board', 'governor-hall']) {
+            const slots = subSlots(name);
+            const out = restyleSkinSlots(slots, tokens);
+            const prefix = name === 'hall-board' ? 'hall' : 'mp';
+            assert.equals(tokens.roles.glassPanel.borderColor, out[`${prefix}.card.bg`].borderColor);
+            assert.equals(tokens.roles.glassPanel.color, out[`${prefix}.row.bg`].color);
+            assert.equals(tokens.roles.buttonAccent.color, out[`${prefix}.button.bg`].color);
+            assert.equals(tokens.font, out[`${prefix}.label.body`].font);
+            assert.equals(Object.keys(slots).length, Object.keys(out).length);
+        }
+    });
+
+    suite.test('分節標題：小字距＋分節色；上方細金線用 divider 角色', () => {
+        for (const [name, prefix] of [['hall-board', 'hall'], ['governor-hall', 'mp']]) {
+            const out = restyleSkinSlots(subSlots(name), tokens);
+            const label = out[`${prefix}.label.section`];
+            assert.equals(tokens.roles.labelSection.letterSpacing, label.letterSpacing);
+            assert.equals(tokens.roles.labelSection.color, label.color);
+            assert.equals(20, label.fontSize);
+            const line = out[`${prefix}.divider.section`];
+            assert.equals(tokens.roles.divider.color, line.color);
+            assert.equals(tokens.roles.divider.alpha, line.alpha);
+        }
+    });
+
+    suite.test('招賢館：pg.* 肖像牆 slot 不套主題（選取框保持透明描邊）', () => {
+        const slots = subSlots('recruit-hall');
+        const out = restyleSkinSlots(slots, tokens);
+        assert.equals(JSON.stringify(slots['pg.sel']), JSON.stringify(out['pg.sel']));
+        assert.equals(JSON.stringify(slots['pg.frame.bg']), JSON.stringify(out['pg.frame.bg']));
+        assert.equals(tokens.roles.glassPanel.color, out['recruit.card.bg'].color);
+    });
+
+    suite.test('季節主題換色：分節標題色跟著主題走', () => {
+        const winter = buildSkinStyle(mergeThemes(registry, ['winter']).tokens, registry.styleBinding);
+        const out = restyleSkinSlots(subSlots('hall-board'), winter);
+        assert.equals(registry.themes.winter.tokens!['text.section'], out['hall.label.section'].color);
+    });
+
+    suite.test('子畫面 layout：分節標題與金線節點存在，靜態文字有 textKey 且四語系齊全', () => {
+        const langs = ['zh-TW', 'en', 'zh-CN', 'ja'].map(l => readJson<Record<string, string>>(`assets/resources/i18n/${l}.json`));
+        const walkLayout = (n: any, visit: (x: any) => void): void => {
+            visit(n);
+            for (const c of n.children ?? []) walkLayout(c, visit);
+        };
+        let sections = 0;
+        let lines = 0;
+        for (const name of SUB_SKINS) {
+            const layout = readJson<any>(`assets/resources/ui-spec/layouts/${name}-main.json`);
+            walkLayout(layout.root, n => {
+                if (typeof n.styleSlot === 'string' && n.styleSlot.endsWith('.label.section')) sections++;
+                if (typeof n.skinSlot === 'string' && n.skinSlot.endsWith('.divider.section')) lines++;
+                if (n.textKey) for (const dict of langs) assert.isTrue(n.textKey in dict, `i18n 缺 ${n.textKey}`);
+            });
+        }
+        assert.equals(4, sections);
+        assert.equals(sections, lines);
+    });
+
     // ── 主題繼承／解析／切換 ──
     const date = (m: number, d: number): Date => new Date(2027, m - 1, d);
     const winterBorder = registry.themes.winter.tokens!['panel.border'];

@@ -982,5 +982,15 @@
   "ui.clan.tier.5": "Pillar Dynasty",
   "ui.annual_ranking.bulletin.title": "[Chronicle Bulletin] Clan Prestige Fame",
   "ui.annual_ranking.bulletin.summary": "Year-end glory concluded! Our clan earned +{0} Clan Prestige!",
-  "ui.annual_ranking.bulletin.btn_confirm": "Honor the Clan"
+  "ui.annual_ranking.bulletin.btn_confirm": "Honor the Clan",
+  "ui.hall.board.title": "Hall Board",
+  "ui.hall.board.spots_header": "Hall Officer Posts",
+  "ui.hall.board.btn.military": "Military",
+  "ui.hall.board.btn.expedition": "World Sandtable",
+  "ui.hall.board.btn.extreme": "Vanguard Trial",
+  "ui.hall.board.btn.detail": "Details",
+  "ui.hall.board.btn.accept": "Accept",
+  "ui.governor.title": "Governor Hall",
+  "ui.recruit.title": "Recruit Hall",
+  "ui.recruit.btn.rescue": "Seek Commoners"
 }

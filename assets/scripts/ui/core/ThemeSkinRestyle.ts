@@ -34,6 +34,10 @@ export interface SkinStyleTokens {
     font: string;
     titleMinFontSize: number;
     fillRoles: Record<string, string>;
+    /** slot id 後綴 → 風格角色（優先於填色／描邊判斷）；用來指定分節標題、分節金線、卡片底 */
+    slotRoles?: Record<string, string>;
+    /** 不套主題的 slot；結尾為 * 表示前綴比對，否則為完整 slot id（例如共用的 pg.* 肖像牆） */
+    skipSlots?: string[];
     roles: Record<string, SkinStyleRole>;
 }
 
@@ -52,18 +56,43 @@ export function restyleSkinSlots<T extends object>(
 ): Record<string, T> {
     const out: Record<string, T> = {};
     for (const key of Object.keys(slots)) {
-        out[key] = restyleSlot(slots[key], tokens) as T;
+        out[key] = isSkipped(key, tokens) ? slots[key] : restyleSlot(slots[key], tokens, key);
     }
     return out;
 }
 
 /** 單一 slot 的套用；無法辨識或不需要換的 slot 原樣回傳。 */
-export function restyleSlot<T extends object>(slot: T, tokens: SkinStyleTokens): T {
+export function restyleSlot<T extends object>(slot: T, tokens: SkinStyleTokens, slotId?: string): T {
     if (!slot || typeof slot !== 'object') return slot;
     const s = slot as unknown as SlotLike;
+    const forced = slotId ? forcedRole(slotId, tokens) : null;
+    if (forced) {
+        if (s.kind === 'label-style') return restyleSectionLabel(s, tokens, forced) as unknown as T;
+        if (typeof s.kind === 'string' && PANEL_KINDS.has(s.kind)) return applyPanelRole(s, forced) as unknown as T;
+    }
     if (s.kind === 'label-style') return restyleLabel(s, tokens) as unknown as T;
     if (typeof s.kind === 'string' && PANEL_KINDS.has(s.kind)) return restylePanel(s, tokens) as unknown as T;
     return slot;
+}
+
+function isSkipped(slotId: string, tokens: SkinStyleTokens): boolean {
+    return (tokens.skipSlots ?? []).some(p => (p.endsWith('*') ? slotId.startsWith(p.slice(0, -1)) : slotId === p));
+}
+
+/** slotRoles 以後綴比對；多個命中取最長的，回傳角色表中的角色，查無則 null。 */
+function forcedRole(slotId: string, tokens: SkinStyleTokens): SkinStyleRole | null {
+    const rules = tokens.slotRoles;
+    if (!rules) return null;
+    let best = '';
+    for (const suffix of Object.keys(rules)) {
+        if (slotId.endsWith(suffix) && suffix.length > best.length) best = suffix;
+    }
+    return best ? tokens.roles[rules[best]] ?? null : null;
+}
+
+/** 分節標題：字型統一，顏色與字距取角色（小字距由主題 token 決定）；字級行高保留。 */
+function restyleSectionLabel(slot: SlotLike, tokens: SkinStyleTokens, role: SkinStyleRole): SlotLike {
+    return { ...slot, font: tokens.font, ...role };
 }
 
 function restyleLabel(slot: SlotLike, tokens: SkinStyleTokens): SlotLike {
@@ -83,7 +112,10 @@ function restylePanel(slot: SlotLike, tokens: SkinStyleTokens): SlotLike {
     if (!roleName) return slot;
     const role = tokens.roles[roleName];
     if (!role) return slot;
+    return applyPanelRole(slot, role);
+}
 
+function applyPanelRole(slot: SlotLike, role: SkinStyleRole): SlotLike {
     const next: Record<string, unknown> = { ...slot };
     for (const key of GRADIENT_KEYS) delete next[key];
     return { ...next, ...role, kind: 'color-rect' } as SlotLike;

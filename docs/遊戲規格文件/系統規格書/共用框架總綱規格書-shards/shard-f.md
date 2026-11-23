@@ -57,6 +57,7 @@ rules         : [ { id, layer, theme, priority?, when{ seasonIndex?, festivalIds
 5. 跑 `tests/ThemeSystem.test.ts`（繼承、規則、四語系檢查會一併驗）。
 
 ### 14.8 未做／後續
-- 第二階段 skin（任務板、太守府、招賢、大廳子面板）加進 `appliesToSkins` 即可，需逐畫面截圖驗收。
+- 任務板、太守府、招賢館已於 PROG-2-9846 加入 `appliesToSkins`；大廳子面板（wall／altar／clan）加進清單即可，需逐畫面截圖驗收。
+- 分節標題與細金線：skin 內用 `*.label.section`、`*.divider.section` 兩個 slot，由 `styleBinding.slotRoles` 以後綴對應到 `labelSection`／`divider` 角色（字距取 `text.section.letterSpacing`）；`skipSlots` 可排除共用 slot（例如 `pg.*`）。
 - 把 `refresh(ctx)` 接到遊戲時鐘／活動系統（季節更替、活動開關）；已開畫面的重套需各畫面訂閱 `onThemeChanged`。
 - 素材層目前只定義格式與釋放，實際節慶素材待美術交付。
