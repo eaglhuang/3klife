@@ -16855,6 +16855,12 @@
   },
   {
     "id": "doc_task_3003",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9867.md",
+    "title": "[PROG-2-9867] 友誼值範圍改為 -100～+100",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3004",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9615.md",
     "title": "[PROG-2-9615] 首年引導接進畫面與實機視角驗收",
     "category": "task"
