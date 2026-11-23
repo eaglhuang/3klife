@@ -26,6 +26,9 @@ export type FloatTextType =
     | 'dmg_miss'    // 閃避（灰）
     | 'heal'        // 治療量（綠）
     | 'status'      // 狀態效果（暈眩/Buff，水藍）
+    | 'status_buff'    // 增益狀態（金綠）
+    | 'status_debuff'  // 減益狀態（橘紅）
+    | 'status_control' // 控制狀態（紫）
     | 'poison'      // 毒箭上身（紫綠，PROG-2-9731；數值由 data/battle-ui-feedback.json 覆蓋）
     | 'hint'        // 場景提示 / Debug 用（半透明白）
     | 'loot';       // 掠奪資源（金色，戰法系統 §H-3）
@@ -100,6 +103,16 @@ export const FLOAT_TEXT_STYLES: Readonly<Record<FloatTextType, FloatTextStyle>> 
     status: { color: { r: 100, g: 220, b: 255, a: 255 }, fontSize: 42, isBold: true, durationMs: 1500, risePixels: 85,
         startScale: 0.7, peakScale: 1.25, popInSec: 0.07, settleSec: 0.10, maxConcurrent: 10, randomOffsetX: 20,
         outlineColor: OUTLINE_DARK, outlineWidth: 3 },
+    // 狀態飄字依極性分色（PROG-2-9857）：增益金綠、減益橘紅、控制紫，玩家一眼分得出好壞
+    status_buff: { color: { r: 190, g: 255, b: 120, a: 255 }, fontSize: 42, isBold: true, durationMs: 1500, risePixels: 85,
+        startScale: 0.7, peakScale: 1.25, popInSec: 0.07, settleSec: 0.10, maxConcurrent: 10, randomOffsetX: 20,
+        outlineColor: { r: 30, g: 90, b: 20, a: 255 }, outlineWidth: 3 },
+    status_debuff: { color: { r: 255, g: 130, b: 70, a: 255 }, fontSize: 42, isBold: true, durationMs: 1500, risePixels: 85,
+        startScale: 0.7, peakScale: 1.25, popInSec: 0.07, settleSec: 0.10, maxConcurrent: 10, randomOffsetX: 20,
+        outlineColor: { r: 110, g: 20, b: 0, a: 255 }, outlineWidth: 3 },
+    status_control: { color: { r: 215, g: 150, b: 255, a: 255 }, fontSize: 42, isBold: true, durationMs: 1500, risePixels: 85,
+        startScale: 0.7, peakScale: 1.25, popInSec: 0.07, settleSec: 0.10, maxConcurrent: 10, randomOffsetX: 20,
+        outlineColor: { r: 60, g: 20, b: 100, a: 255 }, outlineWidth: 3 },
     // 毒箭上身（PROG-2-9731，使用者選「毒紫綠」）：亮綠字配紫黑描邊；顏色與大小以 battle-ui-feedback.json 為準
     poison: { color: { r: 170, g: 255, b: 110, a: 255 }, fontSize: 46, isBold: true, durationMs: 1300, risePixels: 85,
         startScale: 0.7, peakScale: 1.3, popInSec: 0.07, settleSec: 0.10, maxConcurrent: 8, randomOffsetX: 16,

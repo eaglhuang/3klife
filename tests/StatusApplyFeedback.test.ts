@@ -9,7 +9,7 @@
 import { assert, TestSuite } from './TestRunner';
 import { StatusEffect } from '../assets/scripts/shared/CommonEnums';
 import {
-    STATUS_WAVE_MAX_SEC, StatusCueThrottle, statusMakesTargetFlinch, statusPolarityOf, statusWaveDelaySec,
+    STATUS_WAVE_MAX_SEC, StatusCueThrottle, statusFloatTypeOf, statusMakesTargetFlinch, statusPolarityOf, statusWaveDelaySec,
 } from '../assets/scripts/battle/shared/StatusApplyFeedback';
 import { buildPlaceholderCutinConfig, CUTIN_SFX_FALLBACK, resolveCutinSfxClip } from '../assets/scripts/shared/cutin/cutinSupport';
 import { FLOAT_TEXT_STYLES } from '../assets/scripts/core/systems/FloatTextStyle';
@@ -33,6 +33,14 @@ export function createStatusApplyFeedbackSuite(): TestSuite {
         assert.isTrue(statusMakesTargetFlinch('control'));
         assert.isTrue(statusMakesTargetFlinch('debuff'));
         assert.isTrue(!statusMakesTargetFlinch('buff'));
+    });
+
+    suite.test('狀態飄字依極性分色：增益金綠、減益橘紅、控制紫，三種樣式顏色互不相同', () => {
+        assert.equals('status_buff', statusFloatTypeOf('buff'));
+        assert.equals('status_debuff', statusFloatTypeOf('debuff'));
+        assert.equals('status_control', statusFloatTypeOf('control'));
+        const key = (t: 'status_buff' | 'status_debuff' | 'status_control') => JSON.stringify(FLOAT_TEXT_STYLES[t].color);
+        assert.equals(3, new Set([key('status_buff'), key('status_debuff'), key('status_control')]).size);
     });
 
     suite.test('震波：我方奧義暈敵軍，離我方越遠的敵軍越晚', () => {
