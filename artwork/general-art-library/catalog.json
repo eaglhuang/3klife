@@ -11309,15 +11309,30 @@
         "activeVersion": "0002"
       },
       "avatar": {
-        "status": "integrated",
+        "status": "review-pending",
         "history": [
           {
             "version": "0002",
             "file": "avatars/zhao_e__趙娥__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/zhao_e__趙娥__avatar_0003.png",
+            "status": "review-pending",
+            "sha256": "3dafced720eb313687c1511206ecda25722ba6eebc3bc68d3867953875331f05",
+            "canvas": "220x220",
+            "sourceBust": "zhao_e__趙娥__bust_0001.png",
+            "cropBox": [
+              126,
+              0,
+              346,
+              220
+            ],
+            "note": "Direct geometric crop from bust; full face and head shape retained, shoulder line included."
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "smallAvatar": {
         "activeVersion": "0003",
@@ -11376,6 +11391,27 @@
             "note": "依使用者要求改為短刀；手指實握刀柄，刀刃自護手延伸，手腕與前臂自然對齊。保留趙娥赤棕戰衣、深色護甲與原有角色辨識。候選待審。"
           }
         ]
+      },
+      "bust": {
+        "history": [
+          {
+            "version": "0001",
+            "file": "bust/zhao_e__趙娥__bust_0001.png",
+            "status": "review-pending",
+            "sha256": "d77b5d272b93c879ca833e8789cb20c2555fc4c573c8cc7e7aa8477fc67da3d4",
+            "canvas": "464x380",
+            "sourceStanding": "standing/zhao_e__趙娥__standing_0002.png",
+            "cropBox": [
+              24,
+              20,
+              488,
+              400
+            ],
+            "note": "Direct geometric crop from standing portrait; no redraw."
+          }
+        ],
+        "activeVersion": "0001",
+        "status": "review-pending"
       }
     },
     {
