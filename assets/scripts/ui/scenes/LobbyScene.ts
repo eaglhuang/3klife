@@ -215,6 +215,9 @@ import { findSupportCard } from '../../shared/support/SupportCardConfig';
 import { buildRewardPools, legacyPoolIdsOf, type RosterMember } from '../../shared/reward/RewardRoster';
 import { GachaWalletPort } from '../../core/api/localserver/GachaWalletPort';
 import { isApiFail } from '../../shared/api/ApiProtocol';
+import type { ItemListResult } from '../../shared/api/ApiCommands';
+import type { MentorCard } from '../../core/models/MentorCard';
+import { mergeMentorCards, supportRowsAsMentorCards } from '../../core/systems/SupportCardMentorBridge';
 import { ADMISSION_TOKEN_ID } from '../../shared/item/ItemConfig';
 import { gachaCostOf, parseGachaMainPools, pickPullCurrency, type GachaApi, type GachaCurrencyId, type GachaMainPoolConfig } from '../../core/gacha/GachaApi';
 import { gachaApiView, gachaAutoSizeNodes, gachaHeroIdOf, gachaWalletLabelTexts } from '../core/GachaApiTexts';
@@ -1682,7 +1685,7 @@ export class LobbyScene extends Component {
             toast: (message) => { services().event.emit('SHOW_TOAST', { message, duration: 2.5 }); },
             roster: () => session.roster,
             nurtureBlockReasons: (childId) => services().nurture.checkStart(childId).reasons,
-            loadMentorCards: async () => attachSupportToCards((await services().legacy?.getMentorCards()) ?? [], await this._loadSupportCatalog()),
+            loadMentorCards: async () => await this._loadAllMentorCards(),
             lockedMentorIds: () => services().nurture.lockedMentorIds(),
             // 入學令改走物品庫存（PROG-2-9203）：家庭倉庫的 ITEM_ADMISSION_TOKEN；NurtureService.admission 只留給舊培育入口
             tokensLeft: () => session.itemCount(ADMISSION_TOKEN_ID),
@@ -1839,10 +1842,26 @@ export class LobbyScene extends Component {
         await this._mentorBorrow.mount();
     }
 
+    /**
+     * 可用的教官卡全清單（培育、學府、教官卡清單共用，PROG-2-9871）：
+     * 舊存檔的教官卡（退役、舊轉蛋）＋教官池抽到、存在物品庫存的學府支援卡（SUP_*）。庫存是唯一真相，每次重讀重算、不寫回存檔。
+     */
+    private async _loadAllMentorCards(): Promise<MentorCard[]> {
+        const legacy = attachSupportToCards((await services().legacy?.getMentorCards()) ?? [], await this._loadSupportCatalog());
+        try {
+            const res = await services().api.query<ItemListResult>('item.list', {});
+            if (isApiFail(res)) return legacy;
+            return mergeMentorCards(legacy, supportRowsAsMentorCards(services().supportCardsConfig(), res.result.rows));
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 讀庫存支援卡失敗，只列舊教官卡', error);
+            return legacy;
+        }
+    }
+
     private async _mountMentorHoldings(): Promise<void> {
         this._mentorHoldings = new MentorHoldingsController<UIScreenPreviewHost>({
             mountHost: (bindings) => this._mountPreviewScreenHost('MentorHoldingsHost', 'mentor-borrow-screen', bindings),
-            loadCards: async () => attachSupportToCards((await services().legacy?.getMentorCards()) ?? [], await this._loadSupportCatalog()),
+            loadCards: async () => await this._loadAllMentorCards(),
             breedText,
             openDetail: (card, title) => this.openMentorCardDetail(card, title),
             bringToFront: (host) => this._bringNodeToFront(host.node),
@@ -2136,7 +2155,7 @@ export class LobbyScene extends Component {
             unveiling: services().unveiling,
             nurture: services().nurture,
             familyStudy: services().nurture,
-            loadMentorCards: async () => attachSupportToCards((await services().legacy?.getMentorCards()) ?? [], await this._loadSupportCatalog()),
+            loadMentorCards: async () => await this._loadAllMentorCards(),
             text: breedText(),
             persist: async () => {
                 if (services().session.hasSaveService) {
