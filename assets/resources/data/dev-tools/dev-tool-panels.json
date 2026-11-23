@@ -1,0 +1,187 @@
+{
+  "version": 1,
+  "buildEnabled": true,
+  "presets": {
+    "newPlayer": {
+      "labelKey": "dev.preset.new_player",
+      "label": "新玩家（開新局）",
+      "steps": [
+        { "cmd": "debug.resetGame", "args": {} }
+      ]
+    },
+    "year1Mid": {
+      "labelKey": "dev.preset.year1_mid",
+      "label": "第一年中期（新局＋2 季＋資源）",
+      "steps": [
+        { "cmd": "debug.resetGame", "args": {} },
+        { "cmd": "debug.advanceTime", "args": { "unit": "season", "count": 2 } },
+        { "cmd": "debug.grant", "args": { "resource": "gold", "amount": 5000 } },
+        { "cmd": "debug.grant", "args": { "resource": "silver", "amount": 2000 } },
+        { "cmd": "debug.grant", "args": { "resource": "gems", "amount": 300 } },
+        { "cmd": "debug.grant", "args": { "resource": "tickets", "amount": 5 } }
+      ]
+    },
+    "year3": {
+      "labelKey": "dev.preset.year3",
+      "label": "第三年（新局＋2 年＋資源）",
+      "steps": [
+        { "cmd": "debug.resetGame", "args": {} },
+        { "cmd": "debug.advanceTime", "args": { "unit": "year", "count": 2 } },
+        { "cmd": "debug.grant", "args": { "resource": "gold", "amount": 50000 } },
+        { "cmd": "debug.grant", "args": { "resource": "silver", "amount": 20000 } },
+        { "cmd": "debug.grant", "args": { "resource": "gems", "amount": 3000 } },
+        { "cmd": "debug.grant", "args": { "resource": "tickets", "amount": 30 } },
+        { "cmd": "debug.grant", "args": { "resource": "food", "amount": 3000 } },
+        { "cmd": "debug.grant", "args": { "resource": "troops", "amount": 3000 } }
+      ]
+    }
+  },
+  "tabs": [
+    {
+      "id": "resources",
+      "labelKey": "dev.tab.resources",
+      "label": "資源",
+      "skeleton": false,
+      "groups": [
+        {
+          "titleKey": "dev.group.resources",
+          "title": "資源加減（寫入存檔；輸入負數為扣除）",
+          "items": [
+            { "type": "resourceRow", "resource": "gold", "labelKey": "dev.res.gold", "label": "金", "steps": [1, 10, 1000] },
+            { "type": "resourceRow", "resource": "silver", "labelKey": "dev.res.silver", "label": "銀兩", "steps": [1, 10, 1000] },
+            { "type": "resourceRow", "resource": "jade", "labelKey": "dev.res.jade", "label": "玉（尚無儲存）", "steps": [1, 10, 1000] },
+            { "type": "resourceRow", "resource": "food", "labelKey": "dev.res.food", "label": "糧", "steps": [1, 10, 1000] },
+            { "type": "resourceRow", "resource": "troops", "labelKey": "dev.res.troops", "label": "兵", "steps": [1, 10, 1000] },
+            { "type": "resourceRow", "resource": "gems", "labelKey": "dev.res.gems", "label": "鑽石", "steps": [1, 10, 1000] },
+            { "type": "resourceRow", "resource": "tickets", "labelKey": "dev.res.tickets", "label": "召喚券", "steps": [1, 10, 1000] }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "time",
+      "labelKey": "dev.tab.time",
+      "label": "時間",
+      "skeleton": false,
+      "groups": [
+        {
+          "titleKey": "dev.group.time_advance",
+          "title": "推進時間（走正式季結，一年 4 季）",
+          "items": [
+            { "type": "button", "labelKey": "dev.time.season1", "label": "推進 1 季", "action": { "kind": "api", "cmd": "debug.advanceTime", "args": { "unit": "season", "count": 1 } } },
+            { "type": "button", "labelKey": "dev.time.year1", "label": "推進 1 年", "action": { "kind": "api", "cmd": "debug.advanceTime", "args": { "unit": "year", "count": 1 } } }
+          ]
+        },
+        {
+          "titleKey": "dev.group.time_academy",
+          "title": "學府快轉（需在大廳；走修業流程）",
+          "items": [
+            { "type": "numberInput", "labelKey": "dev.time.academy_ff", "label": "快轉到第 N 回合", "cmd": "debug.fastForward", "argKey": "turns", "args": { "target": "academy" }, "defaultValue": 12 }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "save",
+      "labelKey": "dev.tab.save",
+      "label": "存檔",
+      "skeleton": false,
+      "groups": [
+        {
+          "titleKey": "dev.group.save_presets",
+          "title": "測試存檔（會覆蓋目前存檔並重載場景）",
+          "items": [
+            { "type": "button", "labelKey": "dev.preset.new_player", "label": "新玩家（開新局）", "action": { "kind": "preset", "preset": "newPlayer" } },
+            { "type": "button", "labelKey": "dev.preset.year1_mid", "label": "第一年中期", "action": { "kind": "preset", "preset": "year1Mid" } },
+            { "type": "button", "labelKey": "dev.preset.year3", "label": "第三年", "action": { "kind": "preset", "preset": "year3" } }
+          ]
+        },
+        {
+          "titleKey": "dev.group.save_io",
+          "title": "匯出／匯入 JSON",
+          "items": [
+            { "type": "button", "labelKey": "dev.save.export", "label": "匯出存檔（複製到剪貼簿）", "action": { "kind": "local", "id": "exportSave" } },
+            { "type": "textBox", "labelKey": "dev.save.import", "label": "貼上存檔 JSON 後按套用", "cmd": "debug.importSave", "argKey": "json", "args": {} },
+            { "type": "button", "labelKey": "dev.save.reload", "label": "重載目前場景", "action": { "kind": "local", "id": "reloadScene" } }
+          ]
+        },
+        {
+          "titleKey": "dev.group.log",
+          "title": "操作紀錄",
+          "items": [
+            { "type": "button", "labelKey": "dev.log.copy", "label": "複製操作紀錄", "action": { "kind": "local", "id": "copyLog" } },
+            { "type": "button", "labelKey": "dev.log.clear", "label": "清除操作紀錄", "action": { "kind": "local", "id": "clearLog" } },
+            { "type": "button", "labelKey": "dev.log.events", "label": "事件日誌視窗", "action": { "kind": "local", "id": "openActionLog" } },
+            { "type": "button", "labelKey": "dev.tool.disable", "label": "關閉測試工具（清除記號）", "action": { "kind": "local", "id": "disableDevTool" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "generals",
+      "labelKey": "dev.tab.generals",
+      "label": "武將",
+      "skeleton": true,
+      "groups": [
+        {
+          "titleKey": "dev.group.generals",
+          "title": "武將（骨架：按鈕清單已定，命令待接）",
+          "items": [
+            { "type": "button", "labelKey": "dev.generals.grant", "label": "加入指定武將", "action": { "kind": "todo", "note": "debug.grantGeneral 尚未實作" } },
+            { "type": "button", "labelKey": "dev.generals.single_player", "label": "單機模式切換（轉蛋）", "action": { "kind": "local", "id": "toggleSinglePlayer" } },
+            { "type": "button", "labelKey": "dev.generals.clear_roster", "label": "清除名冊", "action": { "kind": "todo", "note": "名冊清除待走命令" } },
+            { "type": "button", "labelKey": "dev.generals.set_age", "label": "調整武將年齡", "action": { "kind": "todo", "note": "debug.setGeneralStat 尚未實作" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "family",
+      "labelKey": "dev.tab.family",
+      "label": "家族",
+      "skeleton": true,
+      "groups": [
+        {
+          "titleKey": "dev.group.family",
+          "title": "家族（骨架）",
+          "items": [
+            { "type": "button", "labelKey": "dev.family.spouse", "label": "納入首子系統配偶", "action": { "kind": "api", "cmd": "family.enrollSpouse", "args": { "source": "first-child" } } },
+            { "type": "button", "labelKey": "dev.family.child", "label": "新增子嗣", "action": { "kind": "todo", "note": "debug.addChild 尚未實作" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "battle",
+      "labelKey": "dev.tab.battle",
+      "label": "戰場",
+      "skeleton": true,
+      "groups": [
+        {
+          "titleKey": "dev.group.battle",
+          "title": "戰場（骨架；戰場功能由戰場專家負責接線）",
+          "items": [
+            { "type": "button", "labelKey": "dev.battle.win", "label": "直接獲勝", "action": { "kind": "todo", "note": "待戰場專家提供 debug.battle*" } },
+            { "type": "button", "labelKey": "dev.battle.tp_full", "label": "TP 補滿", "action": { "kind": "todo", "note": "待戰場專家提供 debug.battle*" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "unlock",
+      "labelKey": "dev.tab.unlock",
+      "label": "解鎖",
+      "skeleton": true,
+      "groups": [
+        {
+          "titleKey": "dev.group.unlock",
+          "title": "解鎖（骨架）",
+          "items": [
+            { "type": "button", "labelKey": "dev.unlock.all_stages", "label": "解鎖全部關卡", "action": { "kind": "todo", "note": "debug.unlock 尚未實作" } },
+            { "type": "button", "labelKey": "dev.unlock.hall_level", "label": "幕府等級拉滿", "action": { "kind": "todo", "note": "debug.unlock 尚未實作" } }
+          ]
+        }
+      ]
+    }
+  ]
+}

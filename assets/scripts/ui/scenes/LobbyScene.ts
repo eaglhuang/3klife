@@ -298,6 +298,7 @@ import { bindGachaActions, GACHA_ACTION_NODES } from '../core/GachaActionBinding
 import { formatGeneralDisplayName } from '../../core/models/GeneralTitle';
 import { buildMissionGeneralOptions } from '../../core/systems/MissionGeneralOptions';
 import { clanPerkVisible, treeGenerationVisible } from '../../core/systems/FamilyMilestone';
+import { isDevToolEnabled } from '../../core/dev/DevToolGate';
 import { attachCurrencyCheatPanel, detachCurrencyCheatPanel, detachRosterClearButton, ensureGlobalDevOverlay, refreshCurrencyDisplay, showGachaInfoModal } from '../dev/GachaDevOverlay';
 import { DailyReportController } from '../core/DailyReportController';
 import { dailySubsidyText, economySubsidyBannerText } from '../core/DailySubsidyNotice';
@@ -1735,10 +1736,11 @@ export class LobbyScene extends Component {
     private _startQaAcademy(): void {
         const flow = this._academyFlow;
         const qa = parseQaAcademyParams((globalThis as { window?: { location?: { search?: string } } }).window?.location?.search);
-        if (!flow || !qa) return;
+        // 測試工具開啟時也綁定（時間分頁的學府快轉），但不自動啟動快進；PROG-2-9858
+        if (!flow || (!qa && !isDevToolEnabled())) return;
         // 結果掛在 window.__qaAcademy，供 QA 腳本與人工在主控台查看（done 帶快進結果，error 帶原因）
         const publish = (value: unknown): void => { (globalThis as { __qaAcademy?: unknown }).__qaAcademy = value; };
-        services().bindDebugHost({
+        services().extendDebugHost({
             fastForwardAcademy: async (turns) => {
                 publish({ state: 'running', turns });
                 try {
@@ -1751,6 +1753,7 @@ export class LobbyScene extends Component {
                 }
             },
         });
+        if (!qa) return;
         // 命令只回「已啟動」（串行佇列不能等快進跑完），失敗時記警告
         void services().api.cmd('debug.fastForward', { target: 'academy', turns: qa.turns }).then((res) => {
             if (isApiFail(res)) {
