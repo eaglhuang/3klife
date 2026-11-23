@@ -16756,5 +16756,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9851.md",
     "title": "[PROG-2-9851] 敵將扣 TP 保留 20／治療健康線 >70%／冷卻規格對齊",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2987",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9852.md",
+    "title": "[PROG-2-9852] 測試工具 2.0：全域 dev overlay＋共通 API debug 指令＋分頁面板",
+    "category": "task"
   }
 ]
