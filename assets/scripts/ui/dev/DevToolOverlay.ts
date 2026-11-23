@@ -100,7 +100,10 @@ export function installDevToolOverlay(): void {
     if (!gate.buildAllowed()) return;
     if (!state.installed) {
         state.installed = true;
-        if (typeof director.on === 'function') director.on(Director.EVENT_AFTER_SCENE_LAUNCH, mountToActiveScene);
+        if (typeof director.on === 'function') {
+            director.on(Director.EVENT_AFTER_SCENE_LAUNCH, mountToActiveScene);
+            director.on(Director.EVENT_AFTER_UPDATE, keepOverlayOnTop);
+        }
         gate.onChange((enabled) => { if (enabled) mountToActiveScene(); else unmount(); });
     }
     if (gate.isEnabled()) mountToActiveScene();
@@ -135,6 +138,17 @@ function mountToActiveScene(): void {
     if (state.panel?.isValid && state.panel.parent !== canvas) { state.panel.removeFromParent(); canvas.addChild(state.panel); }
     state.panel?.setSiblingIndex(canvas.children.length - 1);
     setDevOverlayHidden(state.hidden);
+}
+
+/** 場景稍後才加進來或自行調整層級的節點（大廳面板、彈窗）會蓋住圓鈕與面板；每個畫面更新後檢查一次，被蓋住就拉回最上層 */
+function keepOverlayOnTop(): void {
+    const launcher = state.launcher;
+    const canvas = launcher?.parent;
+    if (!launcher?.isValid || !canvas) return;
+    const top = canvas.children.length - 1;
+    if (launcher.getSiblingIndex() === top) return;
+    if (state.panel?.isValid && state.panel.parent === canvas) state.panel.setSiblingIndex(top);
+    launcher.setSiblingIndex(top);
 }
 
 function unmount(): void {
