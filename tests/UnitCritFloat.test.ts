@@ -26,6 +26,12 @@ export function createUnitCritFloatSuite(): TestSuite {
 
     suite.test('飄字樣式：治療綠、暴擊優先、一般依陣營', () => {
         assert.equals('heal', unitValueFloatType('heal', true, true));
+        // 持續傷害（燃燒／中毒）回合扣血獨立顏色，不吃爆擊／重擊
+        assert.equals('dmg_burn', unitValueFloatType('damage', true, false, false, 'burn'));
+        assert.equals('dmg_burn', unitValueFloatType('damage', false, true, true, 'hazard-fire'));
+        assert.equals('dmg_dot_poison', unitValueFloatType('damage', true, false, false, 'poison'));
+        assert.equals('dmg_dot_poison', unitValueFloatType('damage', true, false, false, 'mass-debuff-dot'));
+        assert.equals('dmg_enemy', unitValueFloatType('damage', false, false, false, 'night-raid-opening-strike'));
         assert.equals('dmg_crit', unitValueFloatType('damage', true, true));
         assert.equals('dmg_crit', unitValueFloatType('damage', false, true));
         assert.equals('dmg_player', unitValueFloatType('damage', true));

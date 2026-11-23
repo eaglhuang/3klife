@@ -16759,8 +16759,8 @@
   },
   {
     "id": "doc_task_2987",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9855.md",
-    "title": "[PROG-2-9855] 測試工具 2.0：全域 dev overlay＋共通 API debug 指令＋分頁面板",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9858.md",
+    "title": "[PROG-2-9858] 測試工具 2.0：全域 dev overlay＋共通 API debug 指令＋分頁面板",
     "category": "task"
   },
   {
@@ -16791,6 +16791,12 @@
     "id": "doc_task_2992",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9854.md",
     "title": "[PROG-2-9854] 修正幕府大廳任務牆／太守府套用主題後跑版",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2993",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9855.md",
+    "title": "[PROG-2-9855] 戰場回饋：燃燒／中毒 DOT 跳字分色",
     "category": "task"
   }
 ]

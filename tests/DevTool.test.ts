@@ -1,5 +1,5 @@
 /**
- * DevTool.test.ts — 測試工具 2.0（PROG-2-9855）
+ * DevTool.test.ts — 測試工具 2.0（PROG-2-9858）
  *
  * 涵蓋：開關判斷（?dev=1／localStorage／正式版旗標／連點 7 次）、面板資料檔驗證、
  * debug.grant／setStat／advanceTime／exportSave／importSave 命令（含 E107 未綁定、參數錯誤、錢包扣到 0 為止）、
@@ -83,7 +83,7 @@ function newBundle(opts: { withHost: boolean; session?: GameSession }) {
 }
 
 export function createDevToolSuite(): TestSuite {
-    const suite = new TestSuite('DevTool 測試工具 2.0 (PROG-2-9855)');
+    const suite = new TestSuite('DevTool 測試工具 2.0 (PROG-2-9858)');
 
     suite.test('開關：預設關；?dev=1 開；localStorage 記號開；?dev=0 清記號；正式版旗標一律關', () => {
         const storage = new FakeStorage();

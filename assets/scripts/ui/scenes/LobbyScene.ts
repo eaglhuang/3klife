@@ -1736,7 +1736,7 @@ export class LobbyScene extends Component {
     private _startQaAcademy(): void {
         const flow = this._academyFlow;
         const qa = parseQaAcademyParams((globalThis as { window?: { location?: { search?: string } } }).window?.location?.search);
-        // 測試工具開啟時也綁定（時間分頁的學府快轉），但不自動啟動快進；PROG-2-9855
+        // 測試工具開啟時也綁定（時間分頁的學府快轉），但不自動啟動快進；PROG-2-9858
         if (!flow || (!qa && !isDevToolEnabled())) return;
         // 結果掛在 window.__qaAcademy，供 QA 腳本與人工在主控台查看（done 帶快進結果，error 帶原因）
         const publish = (value: unknown): void => { (globalThis as { __qaAcademy?: unknown }).__qaAcademy = value; };

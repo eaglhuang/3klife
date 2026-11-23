@@ -1,4 +1,4 @@
-// @spec-source → 測試工具 2.0（使用者 2026-11-23 定案）；PROG-2-9855
+// @spec-source → 測試工具 2.0（使用者 2026-11-23 定案）；PROG-2-9858
 /**
  * DevDebugHost — 測試工具的偵錯宿主：把 debug.* 命令落到 GameSession（純 TS，不依賴 cc）。
  *

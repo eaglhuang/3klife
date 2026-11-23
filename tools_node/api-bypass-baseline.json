@@ -36,14 +36,14 @@
       "rules": [
         "local-storage"
       ],
-      "reason": "clientOwned：測試工具開關與面板位置偏好（PROG-2-9855，只存開關，不碰存檔資料）；需總 PM 審核"
+      "reason": "clientOwned：測試工具開關與面板位置偏好（PROG-2-9858，只存開關，不碰存檔資料）；需總 PM 審核"
     },
     {
       "file": "ui/dev/DevToolOverlay.ts",
       "rules": [
         "local-storage"
       ],
-      "reason": "clientOwned：測試工具開關與面板位置偏好（PROG-2-9855，只存開關，不碰存檔資料）；需總 PM 審核"
+      "reason": "clientOwned：測試工具開關與面板位置偏好（PROG-2-9858，只存開關，不碰存檔資料）；需總 PM 審核"
     }
   ],
   "perFile": {
