@@ -1,5 +1,5 @@
 /**
- * 史境天下風雲榜與年終頒獎典禮核心類型定義（PROG-2-9601）
+ * 史境天下風雲榜與年終頒獎典禮核心類型定義（PROG-2-9601 / PROG-2-9602）
  * 遵循 doc_spec_1284 與四層可插拔獨立架構
  */
 
@@ -40,6 +40,27 @@ export interface ClanPrestigeConfig {
   };
 }
 
+export interface RankingBountyItem {
+  silver: number;
+  fame: number;
+}
+
+export interface SalarySystemConfig {
+  enabled: boolean;
+  officialQuarterlyGold: Record<string, number>;
+  defaultQuarterlyGold: number;
+  annualRankingBounties: {
+    rank1: RankingBountyItem;
+    rankTop3: RankingBountyItem;
+    rankTop10: RankingBountyItem;
+    rankTop20: RankingBountyItem;
+    rankTop100: RankingBountyItem;
+    [key: string]: RankingBountyItem;
+  };
+  maxAnnualSilverPerGeneral: number;
+  maxAnnualFamePerGeneral: number;
+}
+
 export interface AnnualRankingConfig {
   version: string;
   comment: string;
@@ -49,6 +70,7 @@ export interface AnnualRankingConfig {
   lobbyTexts: LobbyTextTable;
   boards: BoardConfig[];
   clanPrestige?: ClanPrestigeConfig;
+  salarySystem?: SalarySystemConfig;
 }
 
 export interface MetricHighlight {
@@ -136,5 +158,6 @@ export interface AnnualRankingSaveData {
   previousYearRanks?: Record<string, Record<string, number>>;
   congratulatedByYear?: Record<number, string[]>;
   ceremonyArchives?: Record<number, any>;
+  salaryClaimedYears?: number[];
+  quarterlySalaryClaims?: Record<string, boolean>; // `${year}_Q${quarter}` -> claimed
 }
-
