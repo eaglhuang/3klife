@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 289,
-    "in_progress": 0,
-    "open": 87,
-    "total": 376
+    "done": 292,
+    "in_progress": 1,
+    "open": 86,
+    "total": 379
   },
   "tasks": [
     {
@@ -16637,6 +16637,56 @@
         "metrics_summary": []
       },
       "completed_at": "2026-11-23"
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9867",
+      "title": "藍軍騎兵改用騎乘版 Spine 骨架（mount_horse_bay）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-23",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-23T22:41:56+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "assets/scripts/battle/shared/UnitPresentationConfig.ts；tests/UnitPresentationCore.test.ts",
+      "related": [
+        "PROG-2-9738"
+      ],
+      "depends": [],
+      "acceptance": [
+        "單元測試與 tsc 0 錯；戰場移動／攻擊／受擊截圖騎在馬上"
+      ],
+      "deliverables": [
+        "騎兵改載 soldier_cavalry_blue__mount_horse_bay、缺圖回退舊骨架"
+      ],
+      "notes": "2026-11-23 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "updated": "2026-11-22"
