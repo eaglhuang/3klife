@@ -16810,5 +16810,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9856.md",
     "title": "[PROG-2-9856] 戰場名牌：主將不顯示開發用「（主將棋子）」",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2997",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9857.md",
+    "title": "[PROG-2-9857] 戰場回饋：狀態飄字依增益／減益／控制分色",
+    "category": "task"
   }
 ]
