@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 285,
+    "done": 286,
     "in_progress": 0,
     "open": 86,
-    "total": 371
+    "total": 372
   },
   "tasks": [
     {
@@ -16258,6 +16258,50 @@
         "tests/DevTool.test.ts"
       ],
       "notes": "2026-11-23 | 狀態: done | 驗證: 單元測試 9363 通過、tsc 0 錯、compute-gate standard 0 阻擋；web-desktop 無頭 Chrome 實開太守府與招賢館 console 0 錯 | 變更: debug.setRank／debug.unlockAll、解鎖分頁接線、DEV 鈕圓底、大廳監聽 OfficerStateChanged 刷新設施鎖 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9856",
+      "title": "戰場名牌：主將不顯示開發用「（主將棋子）」",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-23",
+      "created_by_agent": "codex-gpt-5.4-mini",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-23 | 狀態: done | 驗證: tsc 0 錯、單測 9361 通過 | 變更: UnitRenderer 主將名牌只顯示武將名；測試改斷言不含（主將棋子）；狀態圖示回合／層數角標 #2521 已有 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
