@@ -211,6 +211,6 @@
 | `doc_task_2976` | docs/agent-briefs/tasks/PROG/PROG-2-9737.md | [PROG-2-9737] 攻擊特效正式量產：騎兵／盾兵／法陣縮小降透明度（分兵種倍率） |
 | `doc_task_2977` | docs/agent-briefs/tasks/PROG/PROG-2-9832.md | [PROG-2-9832] 幕府大廳套用大廳・內政統一風格（第一階段：共用 token＋主畫面） |
 | `doc_task_2978` | docs/agent-briefs/tasks/PROG/PROG-2-9841.md | [PROG-2-9841] 技分頁戰法／奧義點擊開啟通用詳情子視窗 |
-| `doc_task_2979` | docs/agent-briefs/tasks/PROG/PROG-2-9842.md | [PROG-2-9842] 十連結果卡片壓扁＋統計列漏算 N |
+| `doc_task_2983` | docs/agent-briefs/tasks/PROG/PROG-2-9842.md | [PROG-2-9842] 十連結果卡片壓扁＋統計列漏算 N |
 | `doc_task_2980` | docs/agent-briefs/tasks/PROG/PROG-2-9843.md | [PROG-2-9843] 戰法詳情子視窗補招式描述文字 |
 | `doc_task_2981` | docs/agent-briefs/tasks/PROG/PROG-2-9845.md | [PROG-2-9845] 騎術系統與馬廄規格（ridingTier 三級、名駒、馬廄與配種） |
