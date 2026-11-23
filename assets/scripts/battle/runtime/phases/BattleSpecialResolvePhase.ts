@@ -19,9 +19,9 @@ export interface BattleSpecialResolvePhaseContext {
   readonly state: BattleState;
   readonly actingFaction: Faction;
   readonly turnManager: BattleTurnManager;
-  castEnemySeedTactic(battleSkillId: string | null, tacticId?: string | null): SkillExecutionResult;
+  castEnemySeedTactic(battleSkillId: string | null, tacticId?: string | null, targetUnitUid?: string | null): SkillExecutionResult;
   /** 敵方選技（PROG-2-0918）：回傳本回合要施放的戰法；null 時退回武將主技能 */
-  chooseEnemyTactic?(): { tacticId: string; battleSkillId: string } | null;
+  chooseEnemyTactic?(): { tacticId: string; battleSkillId: string; targetUnitUid?: string } | null;
   /** 敵方本回合是否不放戰法（PROG-2-1466，低 IQ 或難度表禁用）；true 時 SP 保留 */
   shouldEnemyHoldTactic?(): boolean;
   /**
@@ -68,6 +68,7 @@ export function executeBattleSpecialResolvePhase(context: BattleSpecialResolvePh
     const result = declined ? { applied: false } as SkillExecutionResult : context.castEnemySeedTactic(
       chosen?.battleSkillId ?? enemyGeneral.skillId ?? enemyGeneral.battlePrimarySkillId ?? null,
       chosen?.tacticId ?? null,
+      chosen?.targetUnitUid ?? null,
     );
     if (result.applied) {
       context.spendEnemyTacticPoints?.(chosen?.tacticId ?? null);

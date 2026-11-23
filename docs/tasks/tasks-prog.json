@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 280,
+    "done": 281,
     "in_progress": 0,
     "open": 86,
-    "total": 366
+    "total": 367
   },
   "tasks": [
     {
@@ -15828,7 +15828,7 @@
     },
     {
       "doc_id": "",
-      "id": "PROG-2-9853",
+      "id": "PROG-2-9854",
       "title": "修正幕府大廳任務牆／太守府套用主題後跑版：面板不透明、卡片與次要鈕不再套深紅主按鈕",
       "owner": "claude-code-opus-5-5",
       "priority": "P1",
@@ -16054,6 +16054,50 @@
       "doc_id": "",
       "id": "PROG-2-9852",
       "title": "敵將戰法群傷評分（單目標傷害×預估命中數）",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-23",
+      "created_by_agent": "codex-gpt-5.4-mini",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-23 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9853",
+      "title": "敵將戰法自動索敵（最低血量／補最低友軍／範圍錨點）",
       "owner": "ClaudeCode_opus-5-5",
       "priority": "P1",
       "status": "done",
