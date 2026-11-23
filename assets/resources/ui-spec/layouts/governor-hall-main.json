@@ -254,7 +254,7 @@
               "left": 740
             },
             "width": 600,
-            "height": 230,
+            "height": 274,
             "skinSlot": "mp.row.bg",
             "children": [
               {
@@ -333,6 +333,19 @@
                 "text": "",
                 "styleSlot": "mp.label.body",
                 "width": 560
+              },
+              {
+                "type": "label",
+                "name": "GovGoldHint",
+                "id": "govGoldHint",
+                "widget": {
+                  "top": 232,
+                  "left": 24
+                },
+                "height": 32,
+                "text": "",
+                "styleSlot": "mp.label.body",
+                "width": 560
               }
             ]
           },
@@ -341,7 +354,7 @@
             "name": "GovFoodCard",
             "id": "govFoodCard",
             "widget": {
-              "top": 360,
+              "top": 404,
               "left": 740
             },
             "width": 600,
@@ -432,7 +445,7 @@
             "name": "GovTroopCard",
             "id": "govTroopCard",
             "widget": {
-              "top": 610,
+              "top": 654,
               "left": 740
             },
             "width": 600,
