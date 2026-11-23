@@ -12086,7 +12086,7 @@
               573,
               415
             ],
-            "note": "Superseded by corrected crop version 0007."
+            "note": "Superseded by face-centered crop version 0008."
           },
           {
             "version": "0004",
@@ -12101,7 +12101,7 @@
               594,
               415
             ],
-            "note": "Superseded by corrected crop version 0007."
+            "note": "Superseded by face-centered crop version 0008."
           },
           {
             "version": "0005",
@@ -12116,7 +12116,7 @@
               727,
               415
             ],
-            "note": "Superseded by corrected crop version 0007."
+            "note": "Superseded by face-centered crop version 0008."
           },
           {
             "version": "0006",
@@ -12131,12 +12131,12 @@
               773,
               415
             ],
-            "note": "Superseded by corrected crop version 0007."
+            "note": "Superseded by face-centered crop version 0008."
           },
           {
             "version": "0007",
             "file": "avatars/xu_shi__徐氏__avatar_0007.png",
-            "status": "review-pending",
+            "status": "superseded",
             "sha256": "7fc28f3c86e25135d6b7df3f5ff40fef06d2f04ca6e68a98426203e27d75107a",
             "canvas": "635x415",
             "sourceBust": "xu_shi__徐氏__bust_0001.png",
@@ -12146,10 +12146,25 @@
               901,
               415
             ],
-            "note": "Expanded and right-shifted frame centers face and adds shoulder margin; keeps head ornaments and excludes dagger without distortion."
+            "note": "Superseded by face-centered crop version 0008."
+          },
+          {
+            "version": "0008",
+            "file": "avatars/xu_shi__徐氏__avatar_0008.png",
+            "status": "review-pending",
+            "sha256": "1948875b842ef5d2b9984e09ad869c23fd853df533f361718e3112e600025c63",
+            "canvas": "380x415",
+            "sourceBust": "xu_shi__徐氏__bust_0001.png",
+            "cropBox": [
+              202,
+              0,
+              582,
+              415
+            ],
+            "note": "Face-centered shoulder crop derived from measured face center on the standing source; dagger excluded, both shoulder caps kept, no redesign or distortion."
           }
         ],
-        "activeVersion": "0007"
+        "activeVersion": "0008"
       },
       "battle": {
         "activeVersion": "0001",
