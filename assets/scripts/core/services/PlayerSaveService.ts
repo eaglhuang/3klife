@@ -392,7 +392,7 @@ export interface PlayerSaveSnapshot {
     breedingBirthRecords?: BreedingBirthRecord[];
     /** 史境天下風雲榜年度指標與歷年排名（PROG-2-9601 PR2） */
     annualRanking?: AnnualRankingSaveData;
-    /** 武將友誼值（PROG-2-9601 PR3 第8框架種子，稀疏儲存）：武將 ID → 友誼點數 (0~100) */
+    /** 武將友誼值（PROG-2-9601 PR3 第8框架種子，稀疏儲存）：武將 ID → 友誼點數 (-100~100，負值為敵意區間；舊存檔皆 ≥0 故相容) */
     friendships?: Record<string, number>;
 }
 
