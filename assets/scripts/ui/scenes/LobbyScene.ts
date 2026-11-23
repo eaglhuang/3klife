@@ -6070,6 +6070,14 @@ ${spent}`,
             },
             lookup: (key: string, ...args: string[]) => services().i18n.t(key, ...args),
             // 一鍵推薦（PROG-2-9911）：權重載入失敗時推薦鈕停用，其餘編制照常
+            // 首戰指定主將不在名冊時仍可當主將推薦（PROG-2-9913，總PM 裁決 A）
+            fixedCommander: () => {
+                // 只限新手首戰（非首戰的指定主將不在名冊時行為不變）
+                if (!firstBattleOpensLoadout(services().session.clearedStageIds, true)) return null;
+                const id = this._currentEncounter()?.playerGeneralId;
+                if (!id || services().session.roster.some((g) => g.id === id)) return null;
+                return this._generals.find((g) => g.id === id) ?? null;
+            },
             prebattle: {
                 weights,
                 encounters: () => this._encounters,
