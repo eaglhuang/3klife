@@ -7738,5 +7738,35 @@
     "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-c/shard-c-part-2.md",
     "title": "🗳 MCQ 決策記錄（Q65）",
     "category": "spec"
+  },
+  {
+    "id": "doc_spec_1323",
+    "path": "docs/遊戲規格文件/系統規格書/騎術系統與馬廄規格書.md",
+    "title": "騎術系統與馬廄規格書（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1324",
+    "path": "docs/遊戲規格文件/系統規格書/共用框架總綱規格書-shards/shard-f.md",
+    "title": "共用框架總綱規格書（分片索引） — 14 UI 主題系統與語系（PROG-2-9832）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1325",
+    "path": "docs/遊戲規格文件/系統規格書/戰場適性系統-shards/shard-d.md",
+    "title": "戰場適性系統規格書（分片索引） — K–Q 天氣代碼、季節機率、劇情固定、排程、戰前顯示、JSON、驗收（PROG-2-9735）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1326",
+    "path": "docs/遊戲規格文件/系統規格書/騎術系統與馬廄規格書-shards/shard-a.md",
+    "title": "騎術系統與馬廄規格書（分片索引） — 1–4 定位、三級騎術、取得途徑、名駒（收服養成羈絆）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1327",
+    "path": "docs/遊戲規格文件/系統規格書/騎術系統與馬廄規格書-shards/shard-b.md",
+    "title": "騎術系統與馬廄規格書（分片索引） — 5–8 馬廄與配種、共用框架對應、介面演出、驗收拆卡",
+    "category": "spec"
   }
 ]

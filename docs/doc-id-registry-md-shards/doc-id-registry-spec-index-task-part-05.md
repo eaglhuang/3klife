@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-11-22
+> 生成日期: 2026-11-23
 > 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 5/15 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -150,6 +150,11 @@
 | `doc_spec_1320` | docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-c.md | 名詞定義文件（分片索引） — MCQ 決策記錄（Q61–Q65） |
 | `doc_spec_1321` | docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-c/shard-c-part-1.md | 名詞定義文件（分片索引） — MCQ 決策記錄（Q61–Q65） |
 | `doc_spec_1322` | docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-c/shard-c-part-2.md | 🗳 MCQ 決策記錄（Q65） |
+| `doc_spec_1323` | docs/遊戲規格文件/系統規格書/騎術系統與馬廄規格書.md | 騎術系統與馬廄規格書（分片索引） |
+| `doc_spec_1324` | docs/遊戲規格文件/系統規格書/共用框架總綱規格書-shards/shard-f.md | 共用框架總綱規格書（分片索引） — 14 UI 主題系統與語系（PROG-2-9832） |
+| `doc_spec_1325` | docs/遊戲規格文件/系統規格書/戰場適性系統-shards/shard-d.md | 戰場適性系統規格書（分片索引） — K–Q 天氣代碼、季節機率、劇情固定、排程、戰前顯示、JSON、驗收（PROG-2-9735） |
+| `doc_spec_1326` | docs/遊戲規格文件/系統規格書/騎術系統與馬廄規格書-shards/shard-a.md | 騎術系統與馬廄規格書（分片索引） — 1–4 定位、三級騎術、取得途徑、名駒（收服養成羈絆） |
+| `doc_spec_1327` | docs/遊戲規格文件/系統規格書/騎術系統與馬廄規格書-shards/shard-b.md | 騎術系統與馬廄規格書（分片索引） — 5–8 馬廄與配種、共用框架對應、介面演出、驗收拆卡 |
 
 ## 索引類 (`doc_index`)
 

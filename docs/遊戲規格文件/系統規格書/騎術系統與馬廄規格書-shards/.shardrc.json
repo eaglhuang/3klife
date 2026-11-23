@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "source": "../騎術系統與馬廄規格書.md",
+  "indexTitle": "騎術系統與馬廄規格書（分片索引）",
+  "indexPath": "docs/遊戲規格文件/系統規格書/騎術系統與馬廄規格書.md",
+  "type": "markdown-h2",
+  "preambleShard": "shard-a",
+  "defaultShard": "shard-b",
+  "shards": [
+    { "name": "shard-a", "title": "1–4 定位、三級騎術、取得途徑、名駒（收服養成羈絆）", "pattern": "^[1-4][.] " },
+    { "name": "shard-b", "title": "5–8 馬廄與配種、共用框架對應、介面演出、驗收拆卡", "pattern": "^[5-8][.] " }
+  ]
+}
