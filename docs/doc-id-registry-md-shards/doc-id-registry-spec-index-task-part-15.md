@@ -239,3 +239,4 @@
 | `doc_task_3005` | docs/agent-briefs/tasks/PROG/PROG-2-9615.md | [PROG-2-9615] 首年引導接進畫面與實機視角驗收 |
 | `doc_task_3050` | docs/agent-briefs/tasks/PROG/PROG-2-9803.md | [PROG-2-9803] 首戰自動戰 QA 計數修正與教學戰參數調校（60–90 秒目標） |
 | `doc_task_3051` | docs/agent-briefs/tasks/PROG/PROG-2-9868.md | [PROG-2-9868] 藍軍騎兵改用騎乘版 Spine 骨架（mount_horse_bay） |
+| `doc_task_3052` | docs/agent-briefs/tasks/PROG/PROG-2-9871.md | [PROG-2-9871] 轉蛋抽到的教官支援卡進支援卡清單與培育選卡（物品庫存 → 教官卡橋接） |
