@@ -16571,6 +16571,72 @@
         "metrics_summary": []
       },
       "completed_at": "2026-11-23"
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9864",
+      "title": "台詞成就「有感而發」：AI 新台詞觸發成就、友誼與徽章稱號（獎勵框架＋友誼框架）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-23",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-23T21:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "玩家觸發台詞中台（AI）取得該玩家沒看過的新台詞時，解鎖武將成就「有感而發·<武將名>」，首次獎勵稱號與徽章＋友誼 +10；之後每句新台詞友誼 +2，每日每武將上限 3 次。數值寫 reward-config.json insight 區段。規格：NPC人性化規格書.md §L。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "新台詞以正規化後 SHA-256 指紋判定，已見清單每武將上限 200 筆（隨 rewardMeta.insight 存檔）",
+        "首次新台詞：BUNDLE_INSIGHT_FIRST（友誼 +10、稱號、徽章 badge_insight_<id>）；之後 BUNDLE_INSIGHT_STEP（友誼 +2）",
+        "每武將每日上限 3 次（僅計 +2）；超過不加但台詞照顯示；非新台詞不加不發",
+        "數值與上限由 reward-config.json insight 區段提供，程式不寫死",
+        "三語 i18n（zh-TW、zh-CN、en）含 ui.insight.unlock",
+        "tsc -p tsconfig.test.json 0 錯；tests/run-cli.ts 全過；compute-gate standard 0 阻擋"
+      ],
+      "deliverables": [
+        "docs/遊戲規格文件/系統規格書/獎勵系統Base框架規格書-shards/shard-c.md",
+        "assets/scripts/core/dialogue/NpcDialogueCache.ts",
+        "assets/scripts/shared/reward/RewardRules.ts",
+        "assets/scripts/shared/reward/RewardConfig.ts",
+        "assets/scripts/core/api/localserver/RewardCommands.ts",
+        "assets/resources/data/reward-config.json",
+        "assets/scripts/core/managers/ServiceLoader.ts",
+        "assets/scripts/ui/components/GeneralListComposite.ts",
+        "assets/resources/i18n/zh-TW.json",
+        "assets/resources/i18n/zh-CN.json",
+        "assets/resources/i18n/en.json",
+        "tests/NpcDialogueCache.test.ts",
+        "tests/RewardBase.test.ts"
+      ],
+      "notes": "2026-11-23 | 狀態: done | 接任務: ClaudeCode_claude-opus-5-5（task-lock lock --files）| 接入既有框架: 獎勵 base（reward.claim source.ref=generalId、effect kind insight、rewardMeta.insight）、友誼 FriendshipService.add、台詞中台呼叫點 GeneralListComposite._runNpcDialogueTest（非降級成功後）| 變更: 規格 doc_spec_1186 shard-c §13（NPC 規格改入獎勵框架分片，原規格超過未分片門檻）；reward-config.json 新增 BUNDLE_INSIGHT_FIRST／STEP 與 insight 區段；NpcDialogueCache.ts 指紋與判定；RewardRules／RewardConfig 型別；RewardCommands env.source；ServiceLoader insight 效果與 recordInsightDialogue；三語 ui.insight.*；測試 NpcDialogueCache.test.ts（+4 suite cases）、RewardBase.test.ts（+3） | 驗證: tsc -p tsconfig.test.json 0 錯；run-cli 9307 passed／75 failed，基準 master 同為 75 failed（既有 cc 環境相關，與本卡無關）；compute-gate standard 13/14 通過、0 阻擋（1 警告為既有 CharacterDs3TacticsChild 模組邊界）| 未做: 徽章圖示佔位未換、稱號／徽章 UI 未顯示；大廳小人本地台詞不觸發（僅台詞中台）；未在 Cocos 編輯器實機驗證",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      },
+      "completed_at": "2026-11-23"
     }
   ],
   "updated": "2026-11-22"
