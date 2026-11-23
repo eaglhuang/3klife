@@ -290,5 +290,22 @@ export function createMissionServiceSuite(): TestSuite {
         assert.equals('', memoryHintFromLedger(undefined, 'military', '軍務'));
     });
 
+    suite.test('第一年保底：200 個種子，新局與讀檔後第 1 季 Domestic 牆都至少 1 個商業任務', () => {
+        const COMMERCE = ['DOM_COMMERCE_01', 'DOM_COMMERCE_02', 'DOM_COMMERCE_03'];
+        assert.isTrue(!!realBundle().boards.yearOneCommerceGuaranteed, '資料包載入後必須保留 yearOneCommerceGuaranteed');
+        const failures: string[] = [];
+        for (let seed = 0; seed < 200; seed += 1) {
+            for (const tier of [1, 5]) {
+                const { svc, host } = newService((h) => { h.tier = tier; h.seasonNow = 1; }, seed);
+                const fresh = openCards(svc).filter(c => COMMERCE.includes(c.defId));
+                if (fresh.length < 1) failures.push(`新局 seed=${seed} tier=${tier}`);
+                const reloaded = new OfflineMissionService(realBundle(), host, JSON.parse(JSON.stringify(svc.getSnapshot())), seed);
+                reloaded.ensureBoards();
+                if (openCards(reloaded).filter(c => COMMERCE.includes(c.defId)).length < 1) failures.push(`讀檔 seed=${seed} tier=${tier}`);
+            }
+        }
+        assert.equals(0, failures.length, `商業任務缺漏：${failures.slice(0, 10).join('、')}（共 ${failures.length} 筆）`);
+    });
+
     return suite;
 }
