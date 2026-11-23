@@ -995,10 +995,18 @@
   "ui.recruit.btn.rescue": "民間探訪",
   "ui.academy.empty_guard.btn_go_nurture": "屋敷で育てる",
   "ui.feature_unlock.default_title": "新機能解放",
-  "ui.academy.empty_guard.too_young_desc": "若君は今年まだ{currentAge}歳、入学（{minAge}歳）まであと{yearsRemaining}年もありますぞ！焦らず屋敷でしっかり育てましょう！",
+  "ui.academy.empty_guard.too_young_desc": "若君はまだ{currentAge}歳。入学（{minAge}歳）まであと{yearsRemaining}年あります。焦らず屋敷で育みましょう！",
   "ui.academy.empty_guard.no_child_title": "学府の門番告示",
   "ui.academy.empty_guard.btn_go_matchmaker": "仲人を訪ねる",
   "ui.feature_unlock.btn_explore": "確認する",
-  "ui.academy.empty_guard.no_child_desc": "殿、学府は{minAge}歳以上の子しか入れませんぞ！今のところ……受けられる子がおりませぬ。まずは仲人のところへ寄ってみては？",
-  "ui.academy.empty_guard.too_young_title": "まだ早すぎます"
+  "ui.academy.empty_guard.no_child_desc": "殿、お待ちを！学府は{minAge}歳以上の子弟のみ受け入れております。まずは仲人を訪ねて良縁を結ばれては？",
+  "ui.academy.empty_guard.too_young_title": "入学にはまだ幼し",
+  "prebattle.role.commander": "主将",
+  "prebattle.role.strategist": "参謀官",
+  "prebattle.role.deputy": "兵站官（副将）",
+  "prebattle.reason.commander.statBlend": "統率と武力の総合が最も高い",
+  "prebattle.reason.commander.encounterFixed": "この戦闘で指定された主将",
+  "prebattle.reason.strategist.intPol": "知力と政治の総合が最も高い",
+  "prebattle.reason.deputy.leaPol": "統率と政治の総合が最も高い",
+  "prebattle.reason.tally.rarityDiversity": "レア度が高く兵種が重複しない"
 }

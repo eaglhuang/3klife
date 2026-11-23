@@ -1069,5 +1069,13 @@
   "dev.unlock.all_stages": "解鎖全部關卡",
   "dev.unlock.hall_level": "幕府等級拉滿",
   "dev.tool.input": "輸入…",
-  "dev.generals.single_player": "單機模式切換（轉蛋）"
+  "dev.generals.single_player": "單機模式切換（轉蛋）",
+  "prebattle.role.commander": "主將",
+  "prebattle.role.strategist": "參謀官",
+  "prebattle.role.deputy": "後勤官（副將）",
+  "prebattle.reason.commander.statBlend": "統御與武力綜合最高",
+  "prebattle.reason.commander.encounterFixed": "本關指定主將",
+  "prebattle.reason.strategist.intPol": "智力與政治綜合最高",
+  "prebattle.reason.deputy.leaPol": "統御與政治綜合最高",
+  "prebattle.reason.tally.rarityDiversity": "稀有度高且兵種不重複"
 }

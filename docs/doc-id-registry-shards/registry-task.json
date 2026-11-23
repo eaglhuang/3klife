@@ -16867,6 +16867,30 @@
   },
   {
     "id": "doc_task_3005",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9910.md",
+    "title": "[PROG-2-9910] 戰前推薦編制純邏輯（卡 A）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3006",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9911.md",
+    "title": "[PROG-2-9911] 戰前編成視窗（卡 B）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3007",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9912.md",
+    "title": "[PROG-2-9912] 首戰教學戰接入編成（卡 C）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3008",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9913.md",
+    "title": "[PROG-2-9913] 戰前編成實機驗收合併（卡 D）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3009",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9615.md",
     "title": "[PROG-2-9615] 首年引導接進畫面與實機視角驗收",
     "category": "task"
