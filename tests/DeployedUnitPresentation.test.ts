@@ -30,7 +30,7 @@ export function createDeployedUnitPresentationSuite(): TestSuite {
  suite.test('缺專屬美術使用可辨識棋子與真實姓名，沒有借用其他角色模型', () => {
    const src=readFileSync(join(__dirname,'../assets/scripts/battle/views/UnitRenderer.ts'),'utf8');
    assert.contains(src,"name: 'GeneralPawnHead'");assert.contains(src,'primitives.cylinder(0.16, 0.27, 0.44');
-   assert.contains(src,'（主將棋子）');assert.contains(src,'view.usingGeneralPawn');
+   assert.isTrue(!src.includes('（主將棋子）'), '名牌不可顯示開發用「（主將棋子）」字樣');assert.contains(src,'view.usingGeneralPawn');
  });
  suite.test('小兵一回合連走三格：三個事件同瞬間到達，起點仍是原格、終點是第三格', () => {
    const cellPos = (d:number) => ({x:0,y:0,z:d*2,clone(){return {...this};}});

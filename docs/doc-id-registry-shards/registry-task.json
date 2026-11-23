@@ -16806,6 +16806,12 @@
     "category": "task"
   },
   {
+    "id": "doc_task_2995",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9856.md",
+    "title": "[PROG-2-9856] 戰場名牌：主將不顯示開發用「（主將棋子）」",
+    "category": "task"
+  },
+  {
     "id": "doc_task_2996",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9861.md",
     "title": "[PROG-2-9861] 太守府數字標示釐清：每季產出 vs 現有存量、黃金 0 提示、左欄留白",
