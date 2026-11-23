@@ -130,6 +130,25 @@ export function createEnemyTacticTurnE2ESuite(): TestSuite {
         assert.equals('test-scene-tactic', picked!.tacticId);
     });
 
+    suite.test('PROG-2-9848：沒有戰法槽時不算「放棄放招」（仍用武將主技能）', () => {
+        const ctrl = battle([]);
+        assert.equals(null, ctrl.chooseEnemyTactic());
+        assert.isFalse(ctrl.enemyTacticDeclined());
+    });
+
+    suite.test('PROG-2-9848：有戰法候選但全 0 分（場上沒有可打的我方單位）→ 放棄放招，改普攻', () => {
+        const ctrl = battle([{ slotId: 's1', tacticId: TEST_TACTIC_ID, source: 'bloodline' }]);
+        for (const unit of ctrl.state.units.values()) if (unit.faction === Faction.Player) unit.currentHp = 0;
+        assert.equals(null, ctrl.chooseEnemyTactic());
+        assert.isTrue(ctrl.enemyTacticDeclined(), '候選存在但沒有值得放的，應改普攻而非退回主技能');
+    });
+
+    suite.test('PROG-2-9848：下一次選到戰法後旗標會清除', () => {
+        const ctrl = battle([{ slotId: 's1', tacticId: TEST_TACTIC_ID, source: 'bloodline' }]);
+        assert.isDefined(ctrl.chooseEnemyTactic());
+        assert.isFalse(ctrl.enemyTacticDeclined());
+    });
+
     suite.test('真實回合：玩家施放路徑不受影響（玩家 castBattleSkill 不帶敵方戰法）', () => {
         const ctrl = battle([{ slotId: 's1', tacticId: TEST_TACTIC_ID, source: 'bloodline' }]);
         const playerCalls: Array<Faction> = [];
