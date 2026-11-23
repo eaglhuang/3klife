@@ -1493,7 +1493,7 @@ export class UnitRenderer extends Component {
   private tryAttackVfx(troopType: string, general: { id: string; role?: string; element?: string } | undefined, ax: number, ay: number, tx: number, ty: number, ratio: number, isArrow: boolean): boolean {
     const style = attackStyleFor(troopType);
     const hit = troopType === 'general' && general ? this.attackVfx.playGeneral(general, ax, ay, tx, ty)
-      : this.attackVfx.playTroop(style === 'thrust' || style === 'slash' || style === 'bow' ? style : '', ax, ay, tx, ty, ratio);
+      : this.attackVfx.playTroop(style === 'generic' ? '' : style, ax, ay, tx, ty, ratio); // 槍／步／弓／盾／騎都走新特效，未知兵種退回舊特效
     if (hit && isArrow) this.arrowShots.shoot(ax, ay, tx, ty);
     return hit;
   }

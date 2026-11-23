@@ -1,30 +1,64 @@
 /**
- * AttackVfxPlayer — 戰場攻擊特效（試作，View 層，零貼圖、單一 Graphics 節點、全部數值來自 data/attack-vfx.json）。
+ * AttackVfxPlayer — 戰場攻擊特效（View 層，零貼圖、加色混合的單一 Graphics 節點、全部數值來自 data/attack-vfx.json）。
  *
  * 設計：
- *   步兵 arcSlash   ：由上往下的弧形刀光，頭亮尾淡，命中處迸火花。
+ *   步兵 arcSlash   ：由上往下的弧形刀光，頭亮尾淡，命中處星形閃光＋火花。
  *   長槍兵 thrustLine：一道細長突刺線往前竄＋平行速度線，槍尖到點迸星芒。
- *   弓兵 arrowTrail ：箭矢身後的漸細尾跡＋幾點閃光，命中小光圈（箭矢本體仍是 ArrowShotView 的 Sprite）。
+ *   弓兵 arrowTrail ：箭矢身後的寬亮尾跡＋閃光點，命中星形閃光（箭矢本體仍是 ArrowShotView 的 Sprite）。
+ *   盾兵 shieldWave ：命中時朝攻擊方向向外擴張的衝擊波弧＋碎光。
+ *   騎兵 chargeRush ：衝撞速度線＋腳下前方土黃揚塵扇形（一般混合，另一個 Graphics）＋命中星形閃光。
  *   武將 = 武器模板（blade/spear/sword/bow/cast，同一批畫法放大）＋代表色＋名將獨特細節（signature）：
  *     關羽 moonBlade：青綠月牙刀光外加一道慢半拍的外圈月牙與飄起的青綠碎光；
  *     諸葛亮 bagua：施法法陣外圈八卦爻＋爆點羽扇弧。
  *
- * 效能：整個播放器只有一個 Graphics 節點（一次 drawcall），特效是池內的資料記錄而不是節點；
- * 全場同時特效數與粒子數有上限（JSON budget），超過就縮減粒子或略過，絕不新增節點。沒有特效時不重畫、節點停用。
+ * 亮度：主 Graphics 以 builtin-graphics 材質覆寫成加色混合（SRC_ALPHA, ONE）；每道筆畫三層眩光
+ *   （外層寬低 alpha 的飽和色暈／中層飽和色（往白微提亮）／內層近白核心），不做全螢幕後處理。
+ *   加色下 alpha 已接近 1，所以亮度靠「疊畫」：glow.passes（1~3，預設 2）讓三層每一道各畫 passes 次。
+ *   passes=1 且 glow.lowEnd 有值時套用舊亮度覆寫（低階機降級）。建材質失敗退回一般混合並 warn 一次。
+ *
+ * 效能：加色 Graphics 一個（一次 drawcall），揚塵 Graphics 只在騎兵衝撞時才啟用（多 1 次 drawcall）；
+ * 特效是池內的資料記錄而不是節點；全場同時特效數與粒子數有上限（JSON budget），超過就縮減粒子或略過。
+ * update 內不配置新物件（共用暫存 Color、不建閉包）。沒有特效時不重畫、節點停用。
  *
  * 參考（只借節奏與寫法，沒有複製程式）：00GameDevs https://00gamedevs.com/ 的 flame-surge（火舌掃過＋邊緣碎火星）、
  *   arcane-matrix（符文方陣緩轉）、healing-field（擴散光圈）。
  *   Original code © 2026 00GameDevs (@00vchannel), MIT License。three.js © 2010-2026 three.js authors, MIT License。
  *   以下為依其節奏重新寫成 Cocos Graphics 的版本；依 MIT 條款保留上述版權聲明。
  *
- * Unity 對照：一個以程式繪製的 LineRenderer／Mesh 特效管理器；attack-vfx.json 即 ScriptableObject。
+ * Unity 對照：一個以程式繪製、Additive 材質的 LineRenderer／Mesh 特效管理器；attack-vfx.json 即 ScriptableObject。
  */
-import { Color, Graphics, JsonAsset, Node, resources } from 'cc';
+import { Color, gfx, Graphics, JsonAsset, Material, Node, resources } from 'cc';
 
 export interface AtkPalette { main: string; glow: string; core: string; accent: string }
 type Params = Record<string, number | string | AtkPalette>;
+export interface GlowConfig {
+  /** 外層暈寬 = 核心寬 × 此倍數（約 4~6） */
+  outerWidthMul: number;
+  /** 外層暈 alpha 係數 0~1 */
+  outerAlpha: number;
+  /** 中層飽和色 alpha 係數 0~1 */
+  midAlpha: number;
+  /** 中層顏色往白色混合的比例 0~1（微提亮，保留飽和色相） */
+  midWhiten: number;
+  /** 內層核心寬 = 中層寬 × 此倍數 */
+  coreWidthMul: number;
+  /** 核心顏色往白色混合的比例 0~1 */
+  coreWhiten: number;
+  /** 弧形帶（刀光）外層／核心厚度相對本體的倍數 */
+  stripOuterMul: number;
+  stripCoreMul: number;
+  /** 疊畫次數 1~3：三層每道筆畫各畫幾次（加色下越疊越亮）。1 = 舊亮度（配合 lowEnd） */
+  passes: number;
+  /** passes=1 時覆寫上面欄位（低階機降級用，填舊值） */
+  lowEnd?: Partial<Omit<GlowConfig, 'lowEnd' | 'flash' | 'passes'>> & { flash?: Partial<GlowConfig['flash']> };
+  /** 命中星形閃光（≤0.16 秒） */
+  flash: { rays: number; lenPx: number; widthPx: number; coreRadiusPx: number; sec: number };
+}
 export interface AttackVfxConfig {
   enabled: boolean;
+  /** 是否用加色混合（false 則退回一般混合） */
+  additive?: boolean;
+  glow: GlowConfig;
   budget: { maxEffects: number; maxParticles: number; minLinePx: number };
   troops: Record<string, Params & { kind: string; palette: AtkPalette }>;
   generalTemplates: Record<string, Params & { kind: string }>;
@@ -32,16 +66,37 @@ export interface AttackVfxConfig {
   generalProfiles: Record<string, { weapon: string; signature?: string; palette: AtkPalette }>;
   fallback: { weaponByRole: Record<string, string>; defaultWeapon: string; elementPalettes: Record<string, AtkPalette>; defaultPalette: AtkPalette };
 }
-export type AttackVfxTroop = 'slash' | 'thrust' | 'bow';
+export type AttackVfxTroop = 'slash' | 'thrust' | 'bow' | 'shield' | 'charge';
 export interface GeneralVfxInfo { id: string; role?: string; element?: string }
 
 /** 量測用：效能報告與單元測試讀取（也掛在 globalThis.__ATK_VFX_STATS__） */
-export const attackVfxStats = { activeFx: 0, particles: 0, peakFx: 0, peakParticles: 0, primitives: 0, played: 0, skipped: 0 };
+export const attackVfxStats = { activeFx: 0, particles: 0, peakFx: 0, peakParticles: 0, primitives: 0, drawOps: 0, peakDrawOps: 0, played: 0, skipped: 0 };
 
 interface Fx {
   active: boolean; kind: string; t: number; seed: number;
   ax: number; ay: number; bx: number; by: number; ang: number; dist: number; flip: number;
   p: Params; pal: AtkPalette; sig: Params | null; sigName: string; particles: number; total: number;
+  /** 不透明度倍率（來自 JSON alphaMul，預設 1） */
+  alphaMul: number;
+}
+
+const DEFAULT_GLOW: GlowConfig = {
+  outerWidthMul: 6, outerAlpha: 0.35, midAlpha: 1, midWhiten: 0, coreWidthMul: 0.4, coreWhiten: 0.8, stripOuterMul: 2, stripCoreMul: 0.4,
+  passes: 2,
+  flash: { rays: 5, lenPx: 40, widthPx: 4, coreRadiusPx: 10, sec: 0.11 },
+};
+let GL: GlowConfig = DEFAULT_GLOW;
+/** 疊畫次數（已夾在 1~3）；每道筆畫的三層都重複這麼多次 */
+let PASS = 2;
+let minLine = 2;
+
+const clampPasses = (n: number | undefined): number => Math.max(1, Math.min(3, Math.floor(n ?? 2)));
+/** 解析眩光設定：passes 夾到 1~3；passes=1 且有 lowEnd 時套用舊亮度覆寫 */
+function resolveGlow(g: GlowConfig): GlowConfig {
+  PASS = clampPasses(g.passes);
+  const lo = g.lowEnd;
+  if (PASS > 1 || !lo) return g;
+  return { ...g, ...lo, flash: { ...g.flash, ...lo.flash } };
 }
 
 let loaded: AttackVfxConfig | null = null;
@@ -50,7 +105,12 @@ let loading = false;
 export function getAttackVfxConfig(): AttackVfxConfig | null {
   if (!loaded && !loading) {
     loading = true;
-    resources.load('data/attack-vfx', JsonAsset, (err, asset) => { if (!err && asset) loaded = asset.json as AttackVfxConfig; });
+    resources.load('data/attack-vfx', JsonAsset, (err, asset) => {
+      if (err || !asset) return;
+      const cfg = asset.json as AttackVfxConfig;
+      GL = resolveGlow(cfg.glow ?? DEFAULT_GLOW); minLine = cfg.budget?.minLinePx ?? 2;
+      loaded = cfg;
+    });
   }
   return loaded;
 }
@@ -78,25 +138,62 @@ export function resolveGeneralVfx(cfg: AttackVfxConfig, g: GeneralVfxInfo): { we
 
 const rgbCache = new Map<string, [number, number, number]>();
 const scratch = new Color();
-function col(hex: string, alpha: number): Color {
+function rgb(hex: string): [number, number, number] {
   let c = rgbCache.get(hex);
   if (!c) { const v = parseInt(hex.slice(1), 16); c = [(v >> 16) & 255, (v >> 8) & 255, v & 255]; rgbCache.set(hex, c); }
-  return scratch.set(c[0], c[1], c[2], Math.max(0, Math.min(255, Math.round(alpha))));
+  return c;
+}
+/** 目前繪製中的特效不透明度倍率（每個特效由 attack-vfx.json 的 alphaMul 決定，騎兵／盾兵／法陣用來避免遮住部隊身形） */
+let curAlphaMul = 1;
+const a255 = (alpha: number): number => Math.max(0, Math.min(255, Math.round(alpha * curAlphaMul)));
+function col(hex: string, alpha: number): Color {
+  const c = rgb(hex);
+  return scratch.set(c[0], c[1], c[2], a255(alpha));
+}
+/** 往白色混合 k（0~1）後的顏色，核心高亮用 */
+function colW(hex: string, k: number, alpha: number): Color {
+  const c = rgb(hex);
+  return scratch.set(Math.round(c[0] + (255 - c[0]) * k), Math.round(c[1] + (255 - c[1]) * k), Math.round(c[2] + (255 - c[2]) * k), a255(alpha));
+}
+/** 依 JSON 的 sizeMul 縮放長度類參數（鍵名以 Px 結尾，腳下偏移與命中距離除外）；結果快取，不每次分配 */
+const SIZE_SKIP = /Drop|Forward|hitDist|minLine/;
+const scaledCache = new WeakMap<Params, Params>();
+function scaleParams(p: Params): Params {
+  const m = opt(p, 'sizeMul', 1);
+  if (m === 1) return p;
+  let r = scaledCache.get(p);
+  if (r) return r;
+  r = { ...p };
+  for (const k of Object.keys(p)) {
+    if (k.endsWith('Px') && typeof p[k] === 'number' && !SIZE_SKIP.test(k)) r[k] = (p[k] as number) * m;
+  }
+  if (typeof p.flashScale === 'number') r.flashScale = p.flashScale * m;
+  scaledCache.set(p, r);
+  return r;
 }
 const hash = (n: number): number => { const s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
 const clamp01 = (v: number): number => (v < 0 ? 0 : v > 1 ? 1 : v);
 const easeOut = (u: number): number => 1 - (1 - u) * (1 - u);
 const DEG = Math.PI / 180;
 const num = (p: Params, k: string): number => p[k] as number;
+const opt = (p: Params, k: string, d: number): number => (p[k] as number | undefined) ?? d;
 const TRIGRAMS = [0b111, 0b000, 0b010, 0b101, 0b001, 0b110, 0b011, 0b100]; // 乾坤坎離震巽艮兌
+
+let additiveWarned = false;
 
 export class AttackVfxPlayer {
   private node: Node | null = null;
   private g: Graphics | null = null;
+  /** 揚塵專用（一般混合）；只在騎兵衝撞時啟用 */
+  private dustNode: Node | null = null;
+  private dg: Graphics | null = null;
+  private dustUsed = false;
   private readonly pool: Fx[] = [];
   private seedCounter = 1;
   private flipCounter = 0;
   private dirty = false;
+  /** 本幀實際送出的 stroke／fill 次數（每次 update 重算） */
+  private ops = 0;
 
   constructor(private readonly getParent: () => Node | null, private readonly layer: () => number) { getAttackVfxConfig(); }
 
@@ -136,17 +233,19 @@ export class AttackVfxPlayer {
       let slot: Fx | null = null;
       for (const f of this.pool) { if (f.active) { used += f.particles; activeN++; } else if (!slot) slot = f; }
       if (activeN >= cfg.budget.maxEffects) { attackVfxStats.skipped++; return true; } // 已滿：略過但視為已處理，不退回舊特效疊畫
-      if (!slot) { slot = { active: false, kind: '', t: 0, seed: 0, ax: 0, ay: 0, bx: 0, by: 0, ang: 0, dist: 0, flip: 1, p, pal, sig: null, sigName: '', particles: 0, total: 0 }; this.pool.push(slot); }
+      if (!slot) { slot = { active: false, kind: '', t: 0, seed: 0, ax: 0, ay: 0, bx: 0, by: 0, ang: 0, dist: 0, flip: 1, p, pal, sig: null, sigName: '', particles: 0, total: 0, alphaMul: 1 }; this.pool.push(slot); }
       const want = this.wantParticles(kind, p, sig);
       slot.particles = Math.max(0, Math.min(want, cfg.budget.maxParticles - used));
       slot.total = want;
       const dx = bx - ax, dy = by - ay;
-      slot.kind = kind; slot.p = p; slot.pal = pal; slot.sig = sig; slot.sigName = sigName;
+      slot.alphaMul = opt(p, 'alphaMul', 1);
+      slot.kind = kind; slot.p = scaleParams(p); slot.pal = pal; slot.sig = sig; slot.sigName = sigName;
       slot.t = 0; slot.seed = this.seedCounter++ * 7.31; slot.flip = (this.flipCounter++ & 1) ? -1 : 1;
       slot.ang = Math.atan2(dy, dx); slot.dist = Math.hypot(dx, dy);
       slot.ax = ax; slot.ay = ay;
-      // 刀光中心：目標方向上 ratio 處的命中點；其餘種類 b 就是目標
-      slot.bx = kind === 'arcSlash' ? ax + dx * ratio : bx; slot.by = kind === 'arcSlash' ? ay + dy * ratio : by;
+      // 近戰類（刀光／盾擊／衝撞）的命中點：目標方向上 ratio 處；其餘種類 b 就是目標
+      const near = kind === 'arcSlash' || kind === 'shieldWave' || kind === 'chargeRush';
+      slot.bx = near ? ax + dx * ratio : bx; slot.by = near ? ay + dy * ratio : by;
       slot.active = true;
       this.ensureNode(parent);
       attackVfxStats.played++;
@@ -156,7 +255,7 @@ export class AttackVfxPlayer {
 
   private wantParticles(kind: string, p: Params, sig: Params | null): number {
     let n = (p.sparkCount as number | undefined) ?? 0;
-    if (kind === 'thrustLine') n += num(p, 'speedLines');
+    if (kind === 'thrustLine' || kind === 'chargeRush') n += num(p, 'speedLines');
     if (kind === 'arrowTrail') n += num(p, 'glints');
     if (kind === 'castOrb') n = num(p, 'burstRays') + num(p, 'spiralArms');
     if (sig?.motes) n += num(sig, 'motes');
@@ -170,28 +269,39 @@ export class AttackVfxPlayer {
     let any = false, parts = 0, fxN = 0, prims = 0;
     for (const f of this.pool) if (f.active) { any = true; break; }
     if (!any) {
-      if (this.dirty) { g.clear(); this.dirty = false; this.node.active = false; }
+      if (this.dirty) {
+        g.clear(); this.dg?.clear(); this.dirty = false; this.node.active = false;
+        if (this.dustNode?.isValid) this.dustNode.active = false;
+      }
       return;
     }
     this.node.active = true;
-    g.clear(); this.dirty = true;
+    g.clear(); this.dg?.clear(); this.dirty = true; this.dustUsed = false;
+    this.ops = 0;
     for (const f of this.pool) {
       if (!f.active) continue;
       f.t += dt;
-      const dur = num(f.p, 'delaySec') + num(f.p, 'durationSec');
+      // 命中閃光可能在主動畫結束前後才起跳，生命週期多留一段閃光時間，避免閃光被截斷
+      const dur = num(f.p, 'delaySec') + num(f.p, 'durationSec') + GL.flash.sec;
       if (f.t >= dur) { f.active = false; continue; }
       fxN++; parts += f.particles;
       const t = f.t - num(f.p, 'delaySec');
       if (t < 0) continue;
       const u = clamp01(t / num(f.p, 'durationSec'));
+      curAlphaMul = f.alphaMul;
       switch (f.kind) {
         case 'arcSlash': prims += this.drawArcSlash(g, f, t, u); break;
         case 'thrustLine': prims += this.drawThrust(g, f, t, u); break;
         case 'arrowTrail': prims += this.drawArrow(g, f, t, u); break;
         case 'castOrb': prims += this.drawCast(g, f, t, u); break;
+        case 'shieldWave': prims += this.drawShield(g, f, t, u); break;
+        case 'chargeRush': prims += this.drawCharge(g, f, t, u); break;
       }
     }
+    curAlphaMul = 1;
+    if (this.dustNode?.isValid) this.dustNode.active = this.dustUsed;
     attackVfxStats.activeFx = fxN; attackVfxStats.particles = parts; attackVfxStats.primitives = prims;
+    attackVfxStats.drawOps = this.ops; if (this.ops > attackVfxStats.peakDrawOps) attackVfxStats.peakDrawOps = this.ops;
     if (fxN > attackVfxStats.peakFx) attackVfxStats.peakFx = fxN;
     if (parts > attackVfxStats.peakParticles) attackVfxStats.peakParticles = parts;
     (globalThis as { __ATK_VFX_STATS__?: unknown }).__ATK_VFX_STATS__ = attackVfxStats;
@@ -199,9 +309,11 @@ export class AttackVfxPlayer {
 
   public destroy(): void {
     if (this.node?.isValid) this.node.destroy();
-    this.node = null; this.g = null; this.pool.length = 0;
+    if (this.dustNode?.isValid) this.dustNode.destroy();
+    this.node = null; this.g = null; this.dustNode = null; this.dg = null; this.pool.length = 0;
   }
 
+  private needAdditive = false;
   private ensureNode(parent: Node): void {
     if (!this.node?.isValid) {
       const n = new Node('AttackVfx');
@@ -209,14 +321,80 @@ export class AttackVfxPlayer {
       this.g = n.addComponent(Graphics);
       this.g.lineJoin = Graphics.LineJoin.ROUND;
       this.g.lineCap = Graphics.LineCap.ROUND;
+      this.needAdditive = true;
       this.node = n;
     }
+    if (!this.dustNode?.isValid) {
+      const d = new Node('AttackVfxDust');
+      d.layer = this.layer();
+      this.dg = d.addComponent(Graphics);
+      this.dg.lineJoin = Graphics.LineJoin.ROUND;
+      this.dg.lineCap = Graphics.LineCap.ROUND;
+      d.active = false;
+      this.dustNode = d;
+    }
+    // 揚塵在下、加色光在上
+    if (this.dustNode.parent !== parent) parent.addChild(this.dustNode);
     if (this.node.parent !== parent) parent.addChild(this.node);
+    this.dustNode.setSiblingIndex(parent.children.length - 1);
     this.node.setSiblingIndex(parent.children.length - 1);
     this.node.active = true;
+    if (this.needAdditive && this.g) { this.needAdditive = false; this.applyAdditive(this.g); }
+  }
+
+  /** 對 Graphics 的材質實例覆寫混合狀態為加色（SRC_ALPHA, ONE）。不用 customMaterial（網頁版 Graphics.clear 會因此崩潰）；失敗退回一般混合並 warn 一次 */
+  private applyAdditive(g: Graphics): void {
+    const cfg = loaded;
+    if (cfg && cfg.additive === false) return;
+    try {
+      const mi = g.getMaterialInstance(0);
+      mi?.overridePipelineStates({
+        blendState: { targets: [{
+          blend: true,
+          blendSrc: gfx.BlendFactor.SRC_ALPHA, blendDst: gfx.BlendFactor.ONE,
+          blendSrcAlpha: gfx.BlendFactor.SRC_ALPHA, blendDstAlpha: gfx.BlendFactor.ONE,
+        }] },
+      });
+    } catch (error) {
+      if (!additiveWarned) { additiveWarned = true; console.warn('[AttackVfxPlayer] 加色材質覆寫失敗，退回一般混合', error); }
+    }
   }
 
   // ───────────── 共用畫法 ─────────────
+
+  /** 送出一次描邊／填色並計數（stroke／fill 次數即每幀繪製指令數，供量測與預算） */
+  private stk(g: Graphics): void { g.stroke(); this.ops++; }
+  private fil(g: Graphics): void { g.fill(); this.ops++; }
+
+  /** 設定三層眩光其中一層（0=外暈 1=中層 2=核心）的線寬與顏色。w 為中層寬。 */
+  private layer3(g: Graphics, f: Fx, L: number, w: number, a: number, alt = false): void {
+    if (L === 0) { g.lineWidth = Math.max(minLine, w * GL.coreWidthMul * GL.outerWidthMul); g.strokeColor = col(f.pal.glow, 255 * GL.outerAlpha * a); }
+    else if (L === 1) { g.lineWidth = Math.max(minLine, w); g.strokeColor = colW(alt ? f.pal.accent : f.pal.main, GL.midWhiten, 255 * GL.midAlpha * a); }
+    else { g.lineWidth = Math.max(minLine, w * GL.coreWidthMul); g.strokeColor = colW(f.pal.main, GL.coreWhiten, 255 * a); }
+  }
+
+  /** 三層眩光直線；每層畫 PASS 次（加色疊畫） */
+  private line(g: Graphics, f: Fx, x0: number, y0: number, x1: number, y1: number, w: number, a: number, alt = false): void {
+    for (let L = 0; L < 3; L++) {
+      this.layer3(g, f, L, w, a, alt);
+      for (let k = 0; k < PASS; k++) { g.moveTo(x0, y0); g.lineTo(x1, y1); this.stk(g); }
+    }
+  }
+
+  /** 三層眩光橢圓（圓環）；每層畫 PASS 次 */
+  private ring(g: Graphics, f: Fx, cx: number, cy: number, rx: number, ry: number, w: number, a: number): void {
+    for (let L = 0; L < 3; L++) {
+      this.layer3(g, f, L, w, a);
+      for (let k = 0; k < PASS; k++) { g.ellipse(cx, cy, rx, ry); this.stk(g); }
+    }
+  }
+
+  /** 三層眩光圓點（填色）：外暈圓＋飽和圓＋白核圓；每層畫 PASS 次 */
+  private dot(g: Graphics, f: Fx, x: number, y: number, r: number, a: number): void {
+    for (let k = 0; k < PASS; k++) { g.fillColor = col(f.pal.glow, 255 * GL.outerAlpha * a); g.circle(x, y, r * 2.4); this.fil(g); }
+    for (let k = 0; k < PASS; k++) { g.fillColor = colW(f.pal.main, GL.midWhiten, 255 * a); g.circle(x, y, r); this.fil(g); }
+    for (let k = 0; k < PASS; k++) { g.fillColor = colW(f.pal.main, GL.coreWhiten, 255 * a); g.circle(x, y, r * 0.5); this.fil(g); }
+  }
 
   /** 一段環帶（弧形刀光）：外徑固定，內徑從 in0 線性變到 in1，角度 a0→a1。 */
   private strip(g: Graphics, cx: number, cy: number, rOut: number, in0: number, in1: number, a0: number, a1: number): void {
@@ -230,29 +408,38 @@ export class AttackVfxPlayer {
       const a = a0 + (a1 - a0) * i / S; const r = in0 + (in1 - in0) * i / S;
       g.lineTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r);
     }
-    g.close(); g.fill();
+    g.close(); this.fil(g);
   }
 
-  /** 從 (x,y) 往 ang 方向、由 r0 到 r1 的一條火花線 */
-  private ray(g: Graphics, x: number, y: number, ang: number, r0: number, r1: number, w: number, color: Color): void {
-    g.lineWidth = Math.max(2, w); g.strokeColor = color;
-    g.moveTo(x + Math.cos(ang) * r0, y + Math.sin(ang) * r0);
-    g.lineTo(x + Math.cos(ang) * r1, y + Math.sin(ang) * r1); g.stroke();
+  /** 命中星形閃光：k=0→1 在 flash.sec 內完成。中心亮點＋放射線（長短相間），回傳圖元數 */
+  private flash(g: Graphics, f: Fx, x: number, y: number, k: number, scale: number): number {
+    if (k <= 0 || k >= 1) return 0;
+    const F = GL.flash; const fade = 1 - k * k; const e = easeOut(k);
+    const n = F.rays; const len = F.lenPx * scale * (0.5 + 0.5 * e);
+    const rot = hash(f.seed) * Math.PI;
+    for (let i = 0; i < n; i++) {
+      const a = rot + i * Math.PI * 2 / n;
+      const l = len * (i & 1 ? 0.6 : 1);
+      this.line(g, f, x + Math.cos(a) * len * 0.08, y + Math.sin(a) * len * 0.08, x + Math.cos(a) * l, y + Math.sin(a) * l, F.widthPx * scale * (1 - k * 0.5), fade);
+    }
+    this.dot(g, f, x, y, F.coreRadiusPx * scale * (1.1 - 0.4 * k), fade);
+    return n + 3;
   }
 
-  /** 命中火花＋光圈：從 u0 起 0→1 展開。count 受粒子上限，回傳圖元數 */
+  /** 命中火花＋光圈：k 由 0→1 展開。count 受粒子上限，回傳圖元數 */
   private burst(g: Graphics, f: Fx, x: number, y: number, k: number, count: number, lenPx: number, wPx: number, ringPx: number, baseAng: number, spread: number): number {
     if (k <= 0) return 0;
     let prims = 0; const fade = 1 - k;
     for (let i = 0; i < count; i++) {
       const a = baseAng + (count === 1 ? 0 : (i / (count - 1) - 0.5) * spread) + (hash(f.seed + i) - 0.5) * 0.5;
       const len = lenPx * (0.7 + hash(f.seed + i * 3) * 0.6);
-      this.ray(g, x, y, a, len * 0.25 * easeOut(k), len * easeOut(k), wPx * (1 - k * 0.5), col(i & 1 ? f.pal.accent : f.pal.main, 255 * fade));
+      const ca = Math.cos(a), sa = Math.sin(a);
+      const r0 = len * 0.25 * easeOut(k), r1 = len * easeOut(k);
+      this.line(g, f, x + ca * r0, y + sa * r0, x + ca * r1, y + sa * r1, wPx * (1 - k * 0.5), fade, (i & 1) === 1);
       prims++;
     }
     if (ringPx > 0) {
-      g.lineWidth = 3; g.strokeColor = col(f.pal.glow, 220 * fade);
-      g.circle(x, y, ringPx * 0.3 + ringPx * 0.7 * easeOut(k)); g.stroke(); prims++;
+      this.ring(g, f, x, y, ringPx * 0.3 + ringPx * 0.7 * easeOut(k), ringPx * 0.3 + ringPx * 0.7 * easeOut(k), 4, fade * 0.9); prims++;
     }
     return prims;
   }
@@ -263,11 +450,16 @@ export class AttackVfxPlayer {
     const R = num(p, 'radiusPx'), thick = num(p, 'thickPx'), K = num(p, 'trailSegments');
     const cx = f.bx - Math.cos(f.ang) * R * num(p, 'centerBack');
     const cy = f.by - Math.sin(f.ang) * R * num(p, 'centerBack');
-    prims += this.slashPass(g, f, cx, cy, R, thick, K, u, 1);
+    prims += this.slashPass(g, f, cx, cy, R, thick, K, u, 1, f.flip);
+    // 劍：第二道反向短弧，慢半拍跟上（雙弧）
+    if (p.doubleArc) {
+      const lag = num(p, 'doubleLagFrac');
+      if (u > lag) prims += this.slashPass(g, f, cx, cy, R * 0.9, thick * 0.9, K, clamp01((u - lag) / (1 - lag)), 0.9, -f.flip);
+    }
     const sig = f.sig;
     if (sig && f.sigName === 'moonBlade') {
       const lag = num(sig, 'echoLagSec') / num(p, 'durationSec');
-      if (u > lag) prims += this.slashPass(g, f, cx, cy, R * num(sig, 'echoRadiusScale'), thick * num(sig, 'echoThickScale'), K, u - lag, num(sig, 'echoAlpha'));
+      if (u > lag) prims += this.slashPass(g, f, cx, cy, R * num(sig, 'echoRadiusScale'), thick * num(sig, 'echoThickScale'), K, u - lag, num(sig, 'echoAlpha'), f.flip);
       // 青綠碎光：從刀光弧上冒出，往上飄、左右輕擺
       const life = num(sig, 'moteLifeFrac');
       const n = Math.min(num(sig, 'motes'), f.particles);
@@ -279,37 +471,43 @@ export class AttackVfxPlayer {
         const mx = cx + Math.cos(a) * R + Math.sin(t * 9 + i * 2) * num(sig, 'moteSwayPx') * k;
         const my = cy + Math.sin(a) * R + num(sig, 'moteRisePx') * easeOut(k);
         const sz = num(sig, 'moteSizePx') * (1 - k * 0.5);
-        g.fillColor = col(i & 1 ? f.pal.accent : f.pal.main, 255 * (1 - k * k));
-        g.moveTo(mx, my + sz); g.lineTo(mx + sz * 0.6, my); g.lineTo(mx, my - sz); g.lineTo(mx - sz * 0.6, my); g.close(); g.fill(); prims++;
+        const fa = 1 - k * k;
+        g.fillColor = col(f.pal.glow, 255 * GL.outerAlpha * fa); g.circle(mx, my, sz * 1.9); this.fil(g);
+        g.fillColor = i & 1 ? col(f.pal.accent, 255 * fa) : colW(f.pal.main, GL.midWhiten, 255 * fa);
+        g.moveTo(mx, my + sz); g.lineTo(mx + sz * 0.6, my); g.lineTo(mx, my - sz); g.lineTo(mx - sz * 0.6, my); g.close(); this.fil(g); prims += 2;
       }
     }
-    // 命中火花：刀光掃到底之後
+    // 命中：刀光掃到底之後星形閃光＋火花
+    const tHit = num(p, 'headFrac') * 0.9 * num(p, 'durationSec');
+    prims += this.flash(g, f, f.bx, f.by, (t - tHit) / GL.flash.sec, opt(p, 'flashScale', 1));
     const hk = clamp01((u - num(p, 'headFrac') * 0.9) / (1 - num(p, 'headFrac') * 0.9));
     const nSpark = Math.min(num(p, 'sparkCount'), f.particles);
     prims += this.burst(g, f, f.bx, f.by, hk, nSpark, num(p, 'sparkLenPx'), num(p, 'sparkWidthPx'), num(p, 'ringPx'), f.ang + Math.PI, 2.2);
     return prims;
   }
 
-  /** 一道弧形刀光（halo＋本體＋白芯三層）。 */
-  private slashPass(g: Graphics, f: Fx, cx: number, cy: number, R: number, thick: number, K: number, u: number, alpha: number): number {
+  /** 一道弧形刀光（外暈＋本體＋白芯三層）。flip 決定劈的方向。 */
+  private slashPass(g: Graphics, f: Fx, cx: number, cy: number, R: number, thick: number, K: number, u: number, alpha: number, flip: number): number {
     const p = f.p; let prims = 0;
     const sweep = num(p, 'sweepDeg') * DEG, trail = num(p, 'trailDeg') * DEG;
     const h = clamp01(u / num(p, 'headFrac'));
     const e = easeOut(h);
-    const aStart = f.ang + f.flip * sweep / 2, aEnd = f.ang - f.flip * sweep / 2;
+    const aStart = f.ang + flip * sweep / 2, aEnd = f.ang - flip * sweep / 2;
     const aHead = aStart + (aEnd - aStart) * e;
     const covered = Math.abs(aHead - aStart);
     const aTail = aHead - Math.sign(aEnd - aStart) * Math.min(trail, covered);
     const fs = num(p, 'fadeStart');
     const fade = u > fs ? 1 - (u - fs) / (1 - fs) : 1;
     if (fade <= 0) return 0;
-    const layers: [number, string, number][] = [[1.7, f.pal.glow, 0.38], [1, f.pal.main, 0.95], [0.38, f.pal.core, 1]];
-    for (const [tk, hex, la] of layers) {
+    for (let L = 0; L < 3; L++) {
+      const tk = L === 0 ? GL.stripOuterMul : L === 1 ? 1 : GL.stripCoreMul;
+      const la = L === 0 ? GL.outerAlpha : 1;
       for (let j = 0; j < K; j++) {
         const k0 = j / K, k1 = (j + 1) / K;
         const a0 = aTail + (aHead - aTail) * k0, a1 = aTail + (aHead - aTail) * k1;
-        g.fillColor = col(hex, 255 * la * fade * alpha * Math.pow(k1, 1.4));
-        this.strip(g, cx, cy, R + thick * 0.12 * tk, R + thick * 0.12 * tk - thick * tk * Math.pow(k0, 0.8), R + thick * 0.12 * tk - thick * tk * Math.pow(k1, 0.8), a0, a1);
+        const al = 255 * la * fade * alpha * Math.pow(k1, 1.2);
+        g.fillColor = L === 0 ? col(f.pal.glow, al) : L === 1 ? colW(f.pal.main, GL.midWhiten, al) : colW(f.pal.main, GL.coreWhiten, al);
+        for (let k = 0; k < PASS; k++) this.strip(g, cx, cy, R + thick * 0.12 * tk, R + thick * 0.12 * tk - thick * tk * Math.pow(k0, 0.8), R + thick * 0.12 * tk - thick * tk * Math.pow(k1, 0.8), a0, a1);
         prims++;
       }
     }
@@ -327,33 +525,40 @@ export class AttackVfxPlayer {
     const tail = Math.max(num(p, 'startOffPx') * 0.5, head - L * (0.4 + 0.6 * e));
     const fade = u < 0.5 ? 1 : 1 - (u - 0.5) / 0.5;
     const ca = Math.cos(f.ang), sa = Math.sin(f.ang), nx = -sa, ny = ca;
-    const tri = (t0: number, t1: number, w: number, color: Color, off = 0): void => {
-      g.fillColor = color;
-      g.moveTo(f.ax + ca * t0 + nx * off, f.ay + sa * t0 + ny * off);
-      g.lineTo(f.ax + ca * (t1 - w * 2) + nx * (off + w), f.ay + sa * (t1 - w * 2) + ny * (off + w));
-      g.lineTo(f.ax + ca * t1 + nx * off, f.ay + sa * t1 + ny * off);
-      g.lineTo(f.ax + ca * (t1 - w * 2) + nx * (off - w), f.ay + sa * (t1 - w * 2) + ny * (off - w));
-      g.close(); g.fill(); prims++;
-    };
     if (fade > 0) {
-      tri(tail, head, W * 1.1, col(f.pal.glow, 110 * fade));
-      tri(tail, head, W * 0.62, col(f.pal.main, 245 * fade));
-      tri(tail + (head - tail) * 0.2, head, W * 0.3, col(f.pal.core, 255 * fade));
+      // 三層：外暈寬（核心寬 × outerWidthMul 的一半，因菱形寬度為半寬）、飽和本體、白核
+      this.tri(g, f, tail, head, W * 0.3 * GL.outerWidthMul * 0.5, 0, col(f.pal.glow, 255 * GL.outerAlpha * fade));
+      this.tri(g, f, tail, head, W * 0.62, 0, col(f.pal.main, 255 * GL.midAlpha * fade));
+      this.tri(g, f, tail + (head - tail) * 0.15, head, W * 0.3, 0, colW(f.pal.main, GL.coreWhiten, 255 * fade));
+      prims += 3;
       const n = Math.min(num(p, 'speedLines'), f.particles);
       for (let i = 0; i < n; i++) {
         const side = (i % 2 === 0 ? 1 : -1) * (Math.floor(i / 2) + 1) * num(p, 'speedLineGapPx');
         const sl = (head - tail) * num(p, 'speedLineScale');
-        const s1 = head - (hash(f.seed + i) * 0.25) * L * 0.5, s0 = s1 - sl;
-        g.lineWidth = 2.5; g.strokeColor = col(f.pal.accent, 190 * fade * (1 - i * 0.12));
-        g.moveTo(f.ax + ca * Math.max(0, s0) + nx * side, f.ay + sa * Math.max(0, s0) + ny * side);
-        g.lineTo(f.ax + ca * s1 + nx * side, f.ay + sa * s1 + ny * side); g.stroke(); prims++;
+        const s1 = head - (hash(f.seed + i) * 0.25) * L * 0.5, s0 = Math.max(0, s1 - sl);
+        this.line(g, f, f.ax + ca * s0 + nx * side, f.ay + sa * s0 + ny * side, f.ax + ca * s1 + nx * side, f.ay + sa * s1 + ny * side, 4, fade * Math.max(0.35, 1 - i * 0.12), true); prims++;
       }
     }
-    const hk = clamp01((u - num(p, 'headFrac')) / (1 - num(p, 'headFrac')));
+    const tHit = num(p, 'headFrac') * num(p, 'durationSec');
     const tipX = f.ax + ca * head, tipY = f.ay + sa * head;
+    prims += this.flash(g, f, tipX, tipY, (t - tHit) / GL.flash.sec, opt(p, 'flashScale', 1));
+    const hk = clamp01((u - num(p, 'headFrac')) / (1 - num(p, 'headFrac')));
     const nSpark = Math.min(num(p, 'sparkCount'), Math.max(0, f.particles - num(p, 'speedLines')));
     prims += this.burst(g, f, tipX, tipY, hk, nSpark, num(p, 'sparkLenPx'), num(p, 'sparkWidthPx'), num(p, 'ringPx'), f.ang, Math.PI * 1.4);
     return prims;
+  }
+
+  /** 沿攻擊方向的菱形（槍刺光）：t0→t1 為長，w 為半寬 */
+  private tri(g: Graphics, f: Fx, t0: number, t1: number, w: number, off: number, color: Color): void {
+    const ca = Math.cos(f.ang), sa = Math.sin(f.ang), nx = -sa, ny = ca;
+    g.fillColor = color;
+    for (let k = 0; k < PASS; k++) {
+      g.moveTo(f.ax + ca * t0 + nx * off, f.ay + sa * t0 + ny * off);
+      g.lineTo(f.ax + ca * (t1 - w * 2) + nx * (off + w), f.ay + sa * (t1 - w * 2) + ny * (off + w));
+      g.lineTo(f.ax + ca * t1 + nx * off, f.ay + sa * t1 + ny * off);
+      g.lineTo(f.ax + ca * (t1 - w * 2) + nx * (off - w), f.ay + sa * (t1 - w * 2) + ny * (off - w));
+      g.close(); this.fil(g);
+    }
   }
 
   // ───────────── arrowTrail ─────────────
@@ -368,25 +573,110 @@ export class AttackVfxPlayer {
       const post = t > flight ? 1 - (t - flight) / 0.08 : 1;
       for (let i = 0; i < S; i++) {
         const k0 = i / S, k1 = (i + 1) / S; // k0 靠尾端
-        const x0 = hx - ca * len * (1 - k0), y0 = hy - sa * len * (1 - k0);
-        const x1 = hx - ca * len * (1 - k1), y1 = hy - sa * len * (1 - k1);
-        g.lineWidth = Math.max(2, num(p, 'trailWidthPx') * k1 * 1.9); g.strokeColor = col(f.pal.glow, 120 * k1 * post);
-        g.moveTo(x0, y0); g.lineTo(x1, y1); g.stroke();
-        g.lineWidth = Math.max(2, num(p, 'trailWidthPx') * k1 * 0.8); g.strokeColor = col(f.pal.main, 235 * k1 * post);
-        g.moveTo(x0, y0); g.lineTo(x1, y1); g.stroke(); prims += 2;
+        this.line(g, f, hx - ca * len * (1 - k0), hy - sa * len * (1 - k0), hx - ca * len * (1 - k1), hy - sa * len * (1 - k1), num(p, 'trailWidthPx') * (0.15 + 0.85 * k1), post * (0.25 + 0.75 * k1));
+        prims++;
       }
       const n = Math.min(num(p, 'glints'), f.particles);
       for (let i = 0; i < n; i++) {
         const back = (0.15 + hash(f.seed + i) * 0.8) * len;
-        const wob = Math.sin(t * 24 + i * 2.3) * 7;
+        const wob = Math.sin(t * 24 + i * 2.3) * 8;
         const life = 1 - (back / len) * 0.8;
-        g.fillColor = col(f.pal.core, 230 * life * post);
-        g.circle(hx - ca * back - sa * wob, hy - sa * back + ca * wob, Math.max(2, num(p, 'glintSizePx') * life)); g.fill(); prims++;
+        this.dot(g, f, hx - ca * back - sa * wob, hy - sa * back + ca * wob, Math.max(2, num(p, 'glintSizePx') * life), life * post); prims++;
       }
+      this.dot(g, f, hx, hy, num(p, 'glintSizePx') * 1.6, post); prims++; // 箭頭亮點
     }
+    prims += this.flash(g, f, f.bx, f.by, (t - flight) / GL.flash.sec, opt(p, 'flashScale', 1));
     const hk = clamp01((t - flight) / (num(p, 'durationSec') - flight));
     const nSpark = Math.min(num(p, 'sparkCount'), f.particles);
     prims += this.burst(g, f, f.bx, f.by, hk, nSpark, num(p, 'sparkLenPx'), num(p, 'sparkWidthPx'), num(p, 'ringPx'), f.ang + Math.PI, Math.PI * 1.2);
+    return prims;
+  }
+
+  // ───────────── shieldWave（盾兵） ─────────────
+  private drawShield(g: Graphics, f: Fx, t: number, u: number): number {
+    const p = f.p; let prims = 0;
+    const R = num(p, 'waveRadiusPx'), half = num(p, 'waveArcDeg') * DEG / 2;
+    const waves = num(p, 'waves'), lag = num(p, 'waveLagFrac');
+    // 衝擊波弧：以命中點為圓心，朝攻擊方向的扇形弧向外擴張，後一圈慢半拍
+    for (let w = 0; w < waves; w++) {
+      const k = clamp01((u - w * lag) / (1 - (waves - 1) * lag));
+      if (k <= 0 || k >= 1) continue;
+      const r = R * (0.25 + 0.75 * easeOut(k)) * (1 - w * 0.2);
+      const fade = (1 - k) * (w === 0 ? 1 : 0.8);
+      const wid = num(p, 'waveWidthPx') * (1 - k * 0.55);
+      for (let L = 0; L < 3; L++) {
+        this.layer3(g, f, L, wid, fade);
+        for (let k = 0; k < PASS; k++) {
+          g.moveTo(f.bx + Math.cos(f.ang - half) * r, f.by + Math.sin(f.ang - half) * r);
+          g.arc(f.bx, f.by, r, f.ang - half, f.ang + half, true);
+          this.stk(g);
+        }
+      }
+      prims++;
+    }
+    // 碎光：朝前半圓飛出
+    const k2 = clamp01(u / 0.85);
+    const n = Math.min(num(p, 'sparkCount'), f.particles);
+    if (k2 < 1) {
+      for (let i = 0; i < n; i++) {
+        const a = f.ang + ((n === 1 ? 0.5 : i / (n - 1)) - 0.5) * half * 2.2 + (hash(f.seed + i) - 0.5) * 0.3;
+        const len = num(p, 'sparkLenPx') * (0.7 + hash(f.seed + i * 3) * 0.6);
+        const r0 = R * 0.3 + len * 0.5 * easeOut(k2), r1 = r0 + len * (1 - k2 * 0.6);
+        this.line(g, f, f.bx + Math.cos(a) * r0, f.by + Math.sin(a) * r0, f.bx + Math.cos(a) * r1, f.by + Math.sin(a) * r1, num(p, 'sparkWidthPx') * (1 - k2 * 0.5), 1 - k2, (i & 1) === 1); prims++;
+      }
+    }
+    prims += this.flash(g, f, f.bx, f.by, t / GL.flash.sec, opt(p, 'flashScale', 1));
+    return prims;
+  }
+
+  // ───────────── chargeRush（騎兵） ─────────────
+  private drawCharge(g: Graphics, f: Fx, t: number, u: number): number {
+    const p = f.p; let prims = 0;
+    const reach = Math.hypot(f.bx - f.ax, f.by - f.ay);
+    const hf = num(p, 'headFrac');
+    const head = reach * easeOut(clamp01(u / hf));
+    const fade = u < 0.55 ? 1 : 1 - (u - 0.55) / 0.45;
+    const ca = Math.cos(f.ang), sa = Math.sin(f.ang), nx = -sa, ny = ca;
+    // 速度線：自騎兵身後追到衝撞點，平行排開，長短不一
+    const n = Math.min(num(p, 'speedLines'), f.particles);
+    if (fade > 0) {
+      for (let i = 0; i < n; i++) {
+        const side = (i - (n - 1) / 2) * num(p, 'speedLineGapPx');
+        const len = num(p, 'speedLineLenPx') * (0.55 + hash(f.seed + i) * 0.45);
+        const s1 = head - hash(f.seed + i * 5) * 16, s0 = Math.max(0, s1 - len);
+        this.line(g, f, f.ax + ca * s0 + nx * side, f.ay + sa * s0 + ny * side, f.ax + ca * s1 + nx * side, f.ay + sa * s1 + ny * side, num(p, 'speedLineWidthPx'), fade, (i & 1) === 1); prims++;
+      }
+    }
+    // 揚塵扇形：騎兵腳下前方、一般混合（不用加色，才不會發白）。畫在另一個 Graphics
+    const d = this.dg;
+    if (d) {
+      const du = clamp01(t / num(p, 'durationSec'));
+      const dfade = du < 0.3 ? 1 : 1 - (du - 0.3) / 0.7;
+      const hex = p.dustColor as string, al = num(p, 'dustAlpha');
+      const ox = f.ax + ca * num(p, 'dustForwardPx'), oy = f.ay - num(p, 'footDropPx') + sa * num(p, 'dustForwardPx') * 0.5;
+      const fanR = num(p, 'dustFanLenPx') * easeOut(clamp01(du / 0.7)), fanH = num(p, 'dustFanDeg') * DEG / 2;
+      if (dfade > 0) {
+        this.dustUsed = true;
+        d.fillColor = col(hex, al * 0.8 * dfade);
+        d.moveTo(ox, oy);
+        for (let i = 0; i <= 5; i++) { const a = f.ang - fanH + (fanH * 2) * i / 5; d.lineTo(ox + Math.cos(a) * fanR, oy + Math.sin(a) * fanR * 0.6); }
+        d.close(); this.fil(d); prims++;
+        const puffs = num(p, 'dustPuffs');
+        for (let i = 0; i < puffs; i++) {
+          const a = f.ang + ((puffs === 1 ? 0.5 : i / (puffs - 1)) - 0.5) * fanH * 1.8;
+          const rr = fanR * (0.45 + hash(f.seed + i) * 0.55);
+          const sz = num(p, 'dustPuffSizePx') * (0.6 + 0.8 * du) * (0.8 + hash(f.seed + i * 7) * 0.4);
+          d.fillColor = col(hex, al * dfade);
+          d.circle(ox + Math.cos(a) * rr, oy + Math.sin(a) * rr * 0.6 + du * 18, sz); this.fil(d); prims++;
+        }
+      }
+    }
+    // 命中：星形閃光＋火花＋光圈
+    const tHit = hf * num(p, 'durationSec');
+    prims += this.flash(g, f, f.bx, f.by, (t - tHit) / GL.flash.sec, opt(p, 'flashScale', 1));
+    const hk = clamp01((u - hf) / (1 - hf));
+    const nSpark = Math.min(num(p, 'sparkCount'), Math.max(0, f.particles - num(p, 'speedLines')));
+    prims += this.burst(g, f, f.bx, f.by, hk, nSpark, num(p, 'sparkLenPx'), num(p, 'sparkWidthPx'), num(p, 'ringPx'), f.ang + Math.PI, 2.4);
     return prims;
   }
 
@@ -398,97 +688,116 @@ export class AttackVfxPlayer {
     const burstK = clamp01((t - num(p, 'orbStartSec') - num(p, 'orbFlightSec')) / num(p, 'burstSec'));
     const out = u > 0.75 ? 1 - (u - 0.75) / 0.25 : 1;
     const rcx = f.ax, rcy = f.ay - num(p, 'ringDropPx'); // 武將節點在身體中心，法陣畫在腳下
-    // 腳下法陣：橢圓（3/4 視角）＋緩轉刻度
+    // 腳下法陣：外圈（粗、帶眩光）＋內圈＋緩轉刻度
     const rx = num(p, 'ringRxPx') * easeOut(rise), ry = num(p, 'ringRyPx') * easeOut(rise);
-    g.lineWidth = 3; g.strokeColor = col(f.pal.main, 235 * out); g.ellipse(rcx, rcy, rx, ry); g.stroke();
-    g.lineWidth = 2; g.strokeColor = col(f.pal.glow, 200 * out); g.ellipse(rcx, rcy, rx * 0.72, ry * 0.72); g.stroke(); prims += 2;
-    g.fillColor = col(f.pal.glow, 55 * out); g.ellipse(rcx, rcy, rx * 0.72, ry * 0.72); g.fill(); prims++;
+    this.ring(g, f, rcx, rcy, rx, ry, num(p, 'ringWidthPx'), out);
+    this.ring(g, f, rcx, rcy, rx * 0.72, ry * 0.72, num(p, 'ringWidthPx') * 0.6, out * 0.9);
+    g.fillColor = col(f.pal.glow, 90 * out); g.ellipse(rcx, rcy, rx * 0.72, ry * 0.72); this.fil(g); prims += 3;
     const spin = t * num(p, 'ringSpinDegPerSec') * DEG;
     const ticks = num(p, 'ringTicks');
-    g.lineWidth = 2.5; g.strokeColor = col(f.pal.core, 220 * out);
-    for (let i = 0; i < ticks; i++) {
-      const a = spin + i * Math.PI * 2 / ticks;
-      g.moveTo(rcx + Math.cos(a) * rx * 0.8, rcy + Math.sin(a) * ry * 0.8);
-      g.lineTo(rcx + Math.cos(a) * rx * 0.97, rcy + Math.sin(a) * ry * 0.97);
+    for (let L = 0; L < 3; L++) {
+      this.layer3(g, f, L, 4.5, out, true);
+      for (let k = 0; k < PASS; k++) {
+        for (let i = 0; i < ticks; i++) {
+          const a = spin + i * Math.PI * 2 / ticks;
+          g.moveTo(rcx + Math.cos(a) * rx * 0.8, rcy + Math.sin(a) * ry * 0.8);
+          g.lineTo(rcx + Math.cos(a) * rx * 0.97, rcy + Math.sin(a) * ry * 0.97);
+        }
+        this.stk(g);
+      }
     }
-    g.stroke(); prims++;
+    prims++;
     if (f.sig && f.sigName === 'bagua') prims += this.drawBagua(g, f, rcx, rcy, rx, ry, spin, out);
     // 氣旋球：螺旋尾跡
     if (orbT > 0 && orbT < 1.12) {
       const k = clamp01(orbT);
-      const ca = Math.cos(f.ang), sa = Math.sin(f.ang), nx = -sa, ny = ca;
-      const px = (kk: number): number => f.ax + (f.bx - f.ax) * easeOut(kk);
-      const py = (kk: number): number => f.ay + (f.by - f.ay) * easeOut(kk) + 34 * Math.sin(Math.PI * kk); // 微拋物
-      const arms = Math.min(num(p, 'spiralArms'), f.particles);
+      const nx = -Math.sin(f.ang);
       const tl = num(p, 'trailLenFrac'); const fadeEnd = orbT > 1 ? 1 - (orbT - 1) / 0.12 : 1;
+      const arms = Math.min(num(p, 'spiralArms'), f.particles);
       for (let a = 0; a < arms; a++) {
         const ph = a * Math.PI * 2 / Math.max(1, arms);
-        g.lineWidth = 2.5; g.strokeColor = col(a & 1 ? f.pal.accent : f.pal.main, 230 * fadeEnd);
-        const N = 8;
-        for (let i = 0; i <= N; i++) {
-          const kk = clamp01(k - tl * (1 - i / N));
-          const rad = num(p, 'spiralRadiusPx') * (i / N) * (1 - 0.3 * kk);
-          const ang = ph + kk * num(p, 'spiralTurns') * Math.PI * 2 * 2 - 0;
-          const x = px(kk) + (nx * Math.cos(ang)) * rad, y = py(kk) + (Math.sin(ang) * rad * 0.9);
-          if (i === 0) g.moveTo(x, y); else g.lineTo(x, y);
+        for (let L = 0; L < 3; L++) {
+          this.layer3(g, f, L, 5, fadeEnd, (a & 1) === 1);
+          const N = 8;
+          for (let q = 0; q < PASS; q++) {
+            for (let i = 0; i <= N; i++) {
+              const kk = clamp01(k - tl * (1 - i / N));
+              const rad = num(p, 'spiralRadiusPx') * (i / N) * (1 - 0.3 * kk);
+              const ang = ph + kk * num(p, 'spiralTurns') * Math.PI * 2 * 2;
+              const x = f.ax + (f.bx - f.ax) * easeOut(kk) + nx * Math.cos(ang) * rad;
+              const y = f.ay + (f.by - f.ay) * easeOut(kk) + 34 * Math.sin(Math.PI * kk) + Math.sin(ang) * rad * 0.9;
+              if (i === 0) g.moveTo(x, y); else g.lineTo(x, y);
+            }
+            this.stk(g);
+          }
         }
-        g.stroke(); prims++;
+        prims++;
       }
-      const ox = px(k), oy = py(k), orad = num(p, 'orbRadiusPx');
-      g.fillColor = col(f.pal.glow, 120 * fadeEnd); g.circle(ox, oy, orad * 1.9); g.fill();
-      g.fillColor = col(f.pal.main, 255 * fadeEnd); g.circle(ox, oy, orad); g.fill();
-      g.fillColor = col(f.pal.core, 255 * fadeEnd); g.circle(ox, oy, orad * 0.5); g.fill(); prims += 3;
+      const ox = f.ax + (f.bx - f.ax) * easeOut(k), oy = f.ay + (f.by - f.ay) * easeOut(k) + 34 * Math.sin(Math.PI * k);
+      this.dot(g, f, ox, oy, num(p, 'orbRadiusPx') * 1.2, fadeEnd); prims += 3;
     }
-    // 爆點：光圈＋放射光芒＋羽扇弧
+    // 爆點：星形閃光＋光圈＋放射光芒＋羽扇弧
+    const tBurst = num(p, 'orbStartSec') + num(p, 'orbFlightSec');
+    prims += this.flash(g, f, f.bx, f.by, (t - tBurst) / GL.flash.sec, opt(p, 'flashScale', 1.3));
     if (burstK > 0) {
       const fade = 1 - burstK;
-      g.lineWidth = 4; g.strokeColor = col(f.pal.main, 240 * fade);
-      g.circle(f.bx, f.by, num(p, 'burstRingPx') * (0.2 + 0.8 * easeOut(burstK))); g.stroke();
-      g.fillColor = col(f.pal.glow, 90 * fade); g.circle(f.bx, f.by, num(p, 'burstRingPx') * 0.7 * easeOut(burstK)); g.fill(); prims += 2;
+      const br = num(p, 'burstRingPx') * (0.2 + 0.8 * easeOut(burstK));
+      this.ring(g, f, f.bx, f.by, br, br, 6, fade);
+      g.fillColor = col(f.pal.glow, 130 * fade); g.circle(f.bx, f.by, num(p, 'burstRingPx') * 0.7 * easeOut(burstK)); this.fil(g); prims += 2;
       const n = Math.min(num(p, 'burstRays'), f.particles);
       for (let i = 0; i < n; i++) {
         const a = i * Math.PI * 2 / n + f.seed;
-        this.ray(g, f.bx, f.by, a, num(p, 'burstRayLenPx') * 0.3 * easeOut(burstK), num(p, 'burstRayLenPx') * easeOut(burstK), num(p, 'sparkWidthPx') * (1 - burstK * 0.5), col(i & 1 ? f.pal.core : f.pal.accent, 255 * fade)); prims++;
+        const ca = Math.cos(a), sa = Math.sin(a), L1 = num(p, 'burstRayLenPx') * easeOut(burstK), L0 = L1 * 0.3;
+        this.line(g, f, f.bx + ca * L0, f.by + sa * L0, f.bx + ca * L1, f.by + sa * L1, num(p, 'sparkWidthPx') * (1 - burstK * 0.5), fade, (i & 1) === 1); prims++;
       }
       if (f.sig && f.sigName === 'bagua') {
         const sg = f.sig; const arcs = num(sg, 'featherArcs');
-        g.lineWidth = num(sg, 'featherWidthPx');
-        for (let i = 0; i < arcs; i++) {
-          const base = f.ang + Math.PI + (i - (arcs - 1) / 2) * 0.55;
-          g.strokeColor = col(f.pal.core, 230 * fade);
-          const r0 = 10 + 18 * easeOut(burstK), r1 = num(sg, 'featherLenPx') * easeOut(burstK);
-          g.moveTo(f.bx + Math.cos(base) * r0, f.by + Math.sin(base) * r0);
-          g.quadraticCurveTo(f.bx + Math.cos(base + 0.5) * (r0 + r1) * 0.6, f.by + Math.sin(base + 0.5) * (r0 + r1) * 0.6, f.bx + Math.cos(base + 0.18) * r1, f.by + Math.sin(base + 0.18) * r1);
-          g.stroke(); prims++;
+        for (let L = 0; L < 3; L++) {
+          this.layer3(g, f, L, num(sg, 'featherWidthPx'), fade, true);
+          for (let k = 0; k < PASS; k++) {
+            for (let i = 0; i < arcs; i++) {
+              const base = f.ang + Math.PI + (i - (arcs - 1) / 2) * 0.55;
+              const r0 = 10 + 18 * easeOut(burstK), r1 = num(sg, 'featherLenPx') * easeOut(burstK);
+              g.moveTo(f.bx + Math.cos(base) * r0, f.by + Math.sin(base) * r0);
+              g.quadraticCurveTo(f.bx + Math.cos(base + 0.5) * (r0 + r1) * 0.6, f.by + Math.sin(base + 0.5) * (r0 + r1) * 0.6, f.bx + Math.cos(base + 0.18) * r1, f.by + Math.sin(base + 0.18) * r1);
+            }
+            this.stk(g);
+          }
         }
+        prims += arcs;
       }
     }
     return prims;
   }
 
-  /** 八卦爻：法陣外圈八組三爻，連爻一條、斷爻兩截，隨法陣緩轉。 */
+  /** 八卦爻：法陣外圈八組三爻，連爻一條、斷爻兩截，隨法陣緩轉；三層眩光（外圈暈＋飽和＋白芯）。 */
   private drawBagua(g: Graphics, f: Fx, rcx: number, rcy: number, rx: number, ry: number, spin: number, out: number): number {
-    const sg = f.sig!; let prims = 0;
+    const sg = f.sig!;
     const bar = num(sg, 'barLenPx'), gap = num(sg, 'barGapPx'), s = num(sg, 'trigramRadiusScale');
-    g.lineWidth = num(sg, 'barWidthPx'); g.strokeColor = col(f.pal.accent, 235 * out);
-    for (let i = 0; i < 8; i++) {
-      const a = spin * 0.35 + i * Math.PI / 4;
-      const ca = Math.cos(a), sa = Math.sin(a);
-      const tx = -sa * rx, ty = ca * ry; const tl = Math.hypot(tx, ty) || 1; const tdx = tx / tl, tdy = ty / tl; // 切線
-      const rdx = ca * rx, rdy = sa * ry; const rl = Math.hypot(rdx, rdy) || 1; // 徑向
-      for (let b = 0; b < 3; b++) {
-        const off = (b - 1) * gap;
-        const cx = rcx + ca * rx * s + (rdx / rl) * off, cy = rcy + sa * ry * s + (rdy / rl) * off;
-        const yang = (TRIGRAMS[i] >> b) & 1;
-        const half = bar / 2;
-        if (yang) { g.moveTo(cx - tdx * half, cy - tdy * half); g.lineTo(cx + tdx * half, cy + tdy * half); }
-        else {
-          g.moveTo(cx - tdx * half, cy - tdy * half); g.lineTo(cx - tdx * 2, cy - tdy * 2);
-          g.moveTo(cx + tdx * 2, cy + tdy * 2); g.lineTo(cx + tdx * half, cy + tdy * half);
+    // 八卦外圈（外圈眩光）：貼在爻外側的一圈橢圓
+    this.ring(g, f, rcx, rcy, rx * (s + 0.2), ry * (s + 0.2), 3, out * 0.8);
+    for (let L = 0; L < 3; L++) {
+      this.layer3(g, f, L, num(sg, 'barWidthPx'), out, true);
+      for (let q = 0; q < PASS; q++) {
+      for (let i = 0; i < 8; i++) {
+        const a = spin * 0.35 + i * Math.PI / 4;
+        const ca = Math.cos(a), sa = Math.sin(a);
+        const tx = -sa * rx, ty = ca * ry; const tl = Math.hypot(tx, ty) || 1; const tdx = tx / tl, tdy = ty / tl; // 切線
+        const rdx = ca * rx, rdy = sa * ry; const rl = Math.hypot(rdx, rdy) || 1; // 徑向
+        for (let b = 0; b < 3; b++) {
+          const off = (b - 1) * gap;
+          const cx = rcx + ca * rx * s + (rdx / rl) * off, cy = rcy + sa * ry * s + (rdy / rl) * off;
+          const half = bar / 2;
+          if ((TRIGRAMS[i] >> b) & 1) { g.moveTo(cx - tdx * half, cy - tdy * half); g.lineTo(cx + tdx * half, cy + tdy * half); }
+          else {
+            g.moveTo(cx - tdx * half, cy - tdy * half); g.lineTo(cx - tdx * 2, cy - tdy * 2);
+            g.moveTo(cx + tdx * 2, cy + tdy * 2); g.lineTo(cx + tdx * half, cy + tdy * half);
+          }
         }
       }
+      this.stk(g);
+      }
     }
-    g.stroke(); prims++;
-    return prims;
+    return 4;
   }
 }
