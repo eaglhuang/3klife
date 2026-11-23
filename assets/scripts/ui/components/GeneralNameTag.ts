@@ -132,6 +132,10 @@ function ensureTag(parent: Node, labelNode: Node, style: NameTagStyle): Node {
     label.verticalAlign = VerticalTextAlignment.CENTER;
     seal.addChild(sealText);
 
+    // 程式建立的節點預設在 DEFAULT 圖層，UI 相機看不到，要跟父節點同圖層
+    const setLayer = (n: Node): void => { n.layer = parent.layer; n.children.forEach(setLayer); };
+    setLayer(tag);
+
     setSealColors(tag, style);
     return tag;
 }
