@@ -12030,15 +12030,30 @@
         "activeVersion": "0002"
       },
       "avatar": {
-        "status": "integrated",
+        "status": "review-pending",
         "history": [
           {
             "version": "0002",
             "file": "avatars/xu_shi__徐氏__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/xu_shi__徐氏__avatar_0003.png",
+            "status": "review-pending",
+            "sha256": "c097493f86ec61bcd8a792541b8aab9a3ec8820324e1d5eeacaac853ca393ace",
+            "canvas": "409x415",
+            "sourceBust": "xu_shi__徐氏__bust_0001.png",
+            "cropBox": [
+              164,
+              0,
+              573,
+              415
+            ],
+            "note": "Geometric crop only; original hair ornaments, face and costume design preserved."
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "battle": {
         "activeVersion": "0001",
@@ -12075,6 +12090,27 @@
           }
         ],
         "activeVersion": "0001"
+      },
+      "bust": {
+        "history": [
+          {
+            "version": "0001",
+            "file": "bust/xu_shi__徐氏__bust_0001.png",
+            "status": "review-pending",
+            "sha256": "326cf263e9b2988bb91d504e312f7394bf3b24356b9f32634a79d9d7b13b9390",
+            "canvas": "778x799",
+            "sourceStanding": "standing/xu_shi__徐氏__standing_0002.png",
+            "cropBox": [
+              123,
+              0,
+              901,
+              799
+            ],
+            "note": "Geometric crop only; original hair ornaments, face and costume design preserved."
+          }
+        ],
+        "activeVersion": "0001",
+        "status": "review-pending"
       }
     }
   ]
