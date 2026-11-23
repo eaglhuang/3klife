@@ -43,6 +43,7 @@ import {
   VerticalTextAlignment,
   resources,
   Rect,
+  JsonAsset,
 } from "cc";
 import { BattleTactic, EVENT_NAMES, Faction, GAME_CONFIG, TroopType } from "../../core/config/Constants";
 import { GeneralUnit } from "../../core/models/GeneralUnit";
@@ -61,7 +62,7 @@ import { playBattleAudio, playBattleFootstep } from "../shared/BattleAudio";
 import { MoveDustEmitter } from "./MoveDustEmitter";
 import { SpineUnitOverlay } from "./SpineGeneralOverlay";
 import { GeneralPortraitStandee, STANDEE_HEIGHT_PX, needsStandeeFallback } from "./GeneralPortraitStandee";
-import { generalSpineConfig, squadMemberCount, troopSpineConfigWithFallback } from '../shared/UnitPresentationConfig';
+import { generalSpineConfig, resolveRidingTier, squadMemberCount, troopSpineConfigWithFallback } from '../shared/UnitPresentationConfig';
 import { DuelExchange } from '../shared/DuelPresentationCore';
 import { BATTLE_VISUAL_TIMING, buildHitShakeSteps, hitScaleNeighborDepth, planHitFeedback, planMoveSegment } from "./BattlePresentationTiming";
 import { BuffGainEffectPool } from "./effects/BuffGainEffectPool";
@@ -359,6 +360,7 @@ export class UnitRenderer extends Component {
   }
 
   public initialize(boardRenderer: BoardRenderer | null, worldCamera: Camera | null, canvasNode: Node | null): void {
+    this.loadInnateRidingTiers();
     this.boardRenderer = boardRenderer;
     this.worldCamera = worldCamera;
     this.canvasNode = canvasNode;
@@ -2432,8 +2434,24 @@ export class UnitRenderer extends Component {
     return false;
   }
 
+  /** 天生騎術表（data/riding-tiers.json 的 acquire.innate），讀一次；讀到前為 null，只看武將自己的 ridingTier。 */
+  private innateRidingTiers: Record<string, number> | null = null;
+  private innateRidingLoading = false;
+
+  /** 開戰前就開始讀，讓第一次建立武將骨架時已拿到天生騎術表。 */
+  private loadInnateRidingTiers(): void {
+    if (this.innateRidingTiers || this.innateRidingLoading) return;
+    this.innateRidingLoading = true;
+    resources.load('data/riding-tiers', JsonAsset, (err, asset) => {
+      if (err || !asset) return;
+      this.innateRidingTiers = (asset.json as { acquire?: { innate?: Record<string, number> } })?.acquire?.innate ?? {};
+    });
+  }
+
   private generalSpine(general: { id: string; templateId?: string | null; ridingTier?: number }, _faction: Faction) {
-    return generalSpineConfig(general.id, general.templateId, general.ridingTier ?? 0, path => this.spineUnits.hasFailed(path));
+    this.loadInnateRidingTiers();
+    const tier = resolveRidingTier(general.id, general.ridingTier ?? 0, this.innateRidingTiers);
+    return generalSpineConfig(general.id, general.templateId, tier, path => this.spineUnits.hasFailed(path));
   }
 
   private isGeneralAvatarUnit(unit: TroopUnit): boolean {
