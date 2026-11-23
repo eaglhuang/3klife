@@ -1,5 +1,12 @@
 {
     "ui.back":  "戻る",
+    "ui.avatarTalk.generic.1":  "殿、今日もがんばりましょう！",
+    "ui.avatarTalk.generic.2":  "何なりとお申し付けください。",
+    "ui.avatarTalk.generic.3":  "おや、殿、私に何かご用ですか？",
+    "ui.avatarTalk.generic.4":  "腹が減っては戦はできぬ。食事はお忘れなく。",
+    "ui.avatarTalk.generic.5":  "天下はゆっくり、急がば回れですぞ。",
+    "ui.avatarTalk.generic.6":  "ご指名とは光栄です！",
+    "ui.avatarTalk.format":  "{0}：{1}",
     "ui.item.expire":  "{0} は期限切れのため回収されました",
     "ui.confirm":  "確認",
     "ui.cancel":  "キャンセル",

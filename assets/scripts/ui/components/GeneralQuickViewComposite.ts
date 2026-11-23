@@ -17,6 +17,7 @@ import { EVENT_NAMES } from '../../core/config/Constants';
 import type { GeneralQuickViewData } from './GeneralQuickViewPanel';
 import { generalQuickViewTexts } from './GeneralQuickViewTexts';
 import { loadGeneralAvatar } from '../core/GeneralAvatarLoader';
+import { bindAvatarTalk } from '../core/AvatarTalkBubble';
 
 const { ccclass } = _decorator;
 
@@ -86,6 +87,7 @@ export class GeneralQuickViewComposite extends CompositePanel {
         const sprite = this._templateBinder?.getSprite(PORTRAIT_ID);
         if (!sprite || !generalId) return;
         const seq = ++this._portraitSeq;
+        bindAvatarTalk(sprite.node, generalId);
         const frame = await loadGeneralAvatar(generalId).catch(() => null);
         if (seq !== this._portraitSeq || !frame || !sprite.isValid) return;
         sprite.spriteFrame = frame;

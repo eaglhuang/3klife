@@ -84,6 +84,8 @@ export interface NpcDialogueRecord {
     provider: string | null;
     model: string | null;
     cachedAtMs: number;
+    /** 這句是哪個語系產生的（頭像點擊說話要挑同語系）；舊資料沒有就視為不分語系 */
+    locale?: string;
 }
 
 /** 依證據與降級狀態把回應分類成可驗證摘要或可丟棄快取。 */
@@ -114,12 +116,27 @@ export class NpcDialogueCache {
 
     public put(request: Readonly<NpcDialogueRequest>, response: Readonly<NpcDialogueResponse>, nowMs: number): NpcDialogueRecord {
         const record = classifyNpcDialogue(response, nowMs);
+        record.locale = request.locale ?? 'zh-TW';
         this._entries.set(npcDialogueCacheKey(request), record);
         return record;
     }
 
     public get(request: Readonly<NpcDialogueRequest>): NpcDialogueRecord | null {
         return this._entries.get(npcDialogueCacheKey(request)) ?? null;
+    }
+
+    /**
+     * 該武將最新一句 AI 台詞（頭像點擊說話用，PROG-2-9885）：不取降級（fallback）句，
+     * 指定語系時只取同語系（沒標語系的舊資料也算）。沒有回 null。
+     */
+    public latestFor(generalId: string, locale?: string): NpcDialogueRecord | null {
+        let best: NpcDialogueRecord | null = null;
+        for (const record of this._entries.values()) {
+            if (record.generalId !== generalId || record.fallbackUsed || record.text.trim().length === 0) continue;
+            if (locale && record.locale && record.locale !== locale) continue;
+            if (!best || record.cachedAtMs >= best.cachedAtMs) best = record;
+        }
+        return best;
     }
 
     /** 清快取；onlyDisposable 為 true 時保留可驗證摘要。回傳清掉幾筆。 */
@@ -137,3 +154,6 @@ export class NpcDialogueCache {
         return this._entries.size;
     }
 }
+
+/** 全遊戲共用的一份本機台詞快取：NPC 對話測試寫入，頭像點擊說話讀取（PROG-2-9885） */
+export const sharedNpcDialogueCache = new NpcDialogueCache();

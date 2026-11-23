@@ -14,6 +14,7 @@ import { services } from '../../core/managers/ServiceLoader';
 import { ThemeService } from '../core/ThemeService';
 import type { ThemeRegistry } from '../core/UIThemeResolver';
 import { loadGeneralAvatar } from '../core/GeneralAvatarLoader';
+import { bindAvatarTalk } from '../core/AvatarTalkBubble';
 import {
     NAME_TAG_AVATAR_SIZE,
     NAME_TAG_GAP,
@@ -65,6 +66,7 @@ export function applyGeneralNameTag(labelNode: Node, generalId: string, name: st
     }
     const tag = ensureTag(parent, labelNode, style);
     tag.active = true;
+    bindAvatarTalk(tag, generalId);
     placeTag(labelNode, tag);
     watchLabelSize(labelNode);
     setSeal(tag, nameTagInitial(name));

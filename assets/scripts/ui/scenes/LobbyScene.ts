@@ -119,6 +119,7 @@ import { FAST_FORWARD_MAX_SEASONS, FAST_FORWARD_REASON_TEXT, fastForwardSeasons 
 import { BREEDING_MIN_AGE } from '../../core/systems/BreedingSystem';
 import { RECRUIT_ROWS_PER_PAGE, RecruitHallController } from '../core/RecruitHallController';
 import { loadGeneralAvatar, loadGeneralPortrait } from '../core/GeneralAvatarLoader';
+import { bindAvatarTalk, setAvatarTalkProvider } from '../core/AvatarTalkBubble';
 import { applyGeneralNameTags, loadGeneralNameTagStyle } from '../components/GeneralNameTag';
 import { setPlaceholderBackdropVisible } from '../core/PlaceholderBackdrop';
 import { RELATION_GRAPH_SLOTS, RelationGraphController } from '../core/RelationGraphController';
@@ -2085,6 +2086,7 @@ export class LobbyScene extends Component {
             const sprite = binder.getSprite('lordAvatar');
             if (holder && sprite) {
                 if (!holder.getComponent(Mask)) holder.addComponent(Mask).type = Mask.Type.GRAPHICS_ELLIPSE;
+                bindAvatarTalk(holder, leadId);
                 void loadGeneralAvatar(leadId).then((frame) => {
                     if (frame && leadId === this._cityHubAvatarId && sprite.isValid) {
                         sprite.spriteFrame = frame;
@@ -4497,6 +4499,8 @@ ${spent}`,
         this._hallDialogue = createLobbyDialogueProvider(chatRaw, chatStore, {
             fetcher: createHttpChatBookFetcher(parseCloudDialogueConfig(chatRaw).endpoint),
         });
+        // 全遊戲頭像點擊說話共用同一個台詞接口（PROG-2-9885）
+        setAvatarTalkProvider(this._hallDialogue);
         const host = await this._mountPreviewScreenHost('LobbyHallHost', 'lobby-hall-screen');
         this._lobbyHallHost = host;
         // 大廳底欄與城池底欄同一套分類：點了展開城池子選單（轉蛋等入口都在裡面），不再各自直達單一功能
@@ -4899,6 +4903,7 @@ ${spent}`,
             const sprite = binder.getSprite(portraitId);
             if (!holder || !sprite) return;
             if (!holder.getComponent(Mask)) holder.addComponent(Mask).type = Mask.Type.GRAPHICS_RECT;
+            bindAvatarTalk(holder, key.replace(/_portrait$/, '').replace(/_/g, '-'));
             // 換成另一位：新圖載完前不顯示上一位或版面預設的剪影（issue #2086：孫策甘寧同圖、張飛「?」）
             const slot = `${prefix}:${i}`;
             if (this._portraitSwap.begin(slot, key)) {
@@ -4942,6 +4947,7 @@ ${spent}`,
             const sprite = binder.getSprite(`${prefix}Avatar${i}`);
             if (!holder || !sprite) return;
             if (!holder.getComponent(Mask)) holder.addComponent(Mask).type = Mask.Type.GRAPHICS_ELLIPSE;
+            bindAvatarTalk(holder, id);
             void loadGeneralAvatar(id).then((frame) => {
                 if (frame && seq === this._avatarSeq.get(prefix) && sprite.isValid) {
                     sprite.spriteFrame = frame;
@@ -5237,6 +5243,7 @@ ${spent}`,
             const sprite = binder.getSprite(spriteId);
             if (!holder || !sprite || !id) continue;
             if (!holder.getComponent(Mask)) holder.addComponent(Mask).type = Mask.Type.GRAPHICS_ELLIPSE;
+            bindAvatarTalk(holder, id);
             void loadGeneralAvatar(id).then((frame) => {
                 if (!frame || seq !== this._avatarSeq.get('bonding') || !sprite.isValid) return;
                 sprite.sizeMode = Sprite.SizeMode.CUSTOM;
@@ -6409,6 +6416,7 @@ ${spent}`,
         const root = binder.getNode('LobbyMainScreen_div_21');
         const portrait = root?.getChildByName('skinLayer_LobbyMainScreen_div_21_LobbyMainScreen_img_2');
         const sprite = portrait?.getComponent(Sprite);
+        bindAvatarTalk(portrait, id);
         void presentLobbyLead(general ?? null, {
             setTexts: texts => binder.setTexts(texts),
             setFrame: frame => { if (sprite) sprite.spriteFrame = frame; },
