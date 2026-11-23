@@ -135,5 +135,22 @@ export function createHallChatLinesSuite(): TestSuite {
         assert.isTrue(store2.applyDownloaded({ version: 9, generals: {} }), '存不進去仍套用到記憶體');
     });
 
+    suite.test('負值 minFriendship（段 0 敵意台詞）保留在 [-100, 100] 內，超界或非數字視為 0', () => {
+        const book = parseChatBook({
+            version: 1,
+            generic: [{ id: 'g', text: '通用' }],
+            generals: { a: [
+                { id: 'hostile', text: '哼', minFriendship: -100 },
+                { id: 'cold', text: '冷', minFriendship: -30 },
+                { id: 'out', text: '超界', minFriendship: -500 },
+            ] },
+        })!;
+        assert.equals(-100, book.generals.a[0].minFriendship);
+        assert.equals(-30, book.generals.a[1].minFriendship);
+        assert.equals(undefined, book.generals.a[2].minFriendship);
+        assert.equals(1, unlockedLines(book, 'a', -50).length, '友誼 -50 只解鎖 -100 那句');
+        assert.equals(3, unlockedLines(book, 'a', 0).length, '友誼 0 解鎖三句（含 -30）');
+    });
+
     return suite;
 }
