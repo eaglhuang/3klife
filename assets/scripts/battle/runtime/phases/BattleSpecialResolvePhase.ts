@@ -29,6 +29,8 @@ export interface BattleSpecialResolvePhaseContext {
    * 規格要求此時改普攻，不再退回武將主技能硬放；SP 保留。沒有戰法槽時為 false，仍用主技能。
    */
   enemyTacticDeclined?(): boolean;
+  /** 敵將戰法施放成功後扣計謀點（裁決 11/23） */
+  spendEnemyTacticPoints?(tacticId: string | null): void;
   /** 守城戰敵方每隊工兵每回合投石扣我方城寨（PROG-2-9429）；非守城或未設定為 0 */
   defenseEngineerBombard?: number;
 }
@@ -68,6 +70,7 @@ export function executeBattleSpecialResolvePhase(context: BattleSpecialResolvePh
       chosen?.tacticId ?? null,
     );
     if (result.applied) {
+      context.spendEnemyTacticPoints?.(chosen?.tacticId ?? null);
       context.turnManager.markEnemyAutoSkillUsed(currentTurn);
       enemyGeneral.currentSp = 0;
       svc.event.emit(EVENT_NAMES.GeneralSpChanged, {

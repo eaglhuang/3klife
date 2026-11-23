@@ -24,9 +24,9 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 264,
-    "in_progress": 11,
-    "open": 85,
+    "done": 278,
+    "in_progress": 0,
+    "open": 86,
     "total": 364
   },
   "tasks": [
@@ -15905,6 +15905,50 @@
       "doc_id": "",
       "id": "PROG-2-9848",
       "title": "敵將戰法全 0 分／無傷害改普攻（不再硬放主技能）",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-23",
+      "created_by_agent": "codex-gpt-5.4-mini",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-23 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9851",
+      "title": "敵將扣 TP 保留 20／治療健康線 >70%／冷卻規格對齊",
       "owner": "ClaudeCode_opus-5-5",
       "priority": "P1",
       "status": "done",

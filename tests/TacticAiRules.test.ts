@@ -42,6 +42,13 @@ export function createTacticAiRulesSuite(): TestSuite {
         assert.equals('dmg', pickTacticByAiRule([heal, dmg], HEALTHY));
     });
 
+    suite.test('Buff / Heal：35%~70% 之間不降權也不加分，高於 70% 才折半', () => {
+        const heal: TacticAiCandidate = { tacticId: 'heal', category: 'buff-heal', effectValue: 200 };
+        assert.equals(200, scoreTacticCandidate(heal, { enemyHp: [], allyLowestHpRate: 0.5 }));
+        assert.equals(200, scoreTacticCandidate(heal, { enemyHp: [], allyLowestHpRate: 0.7 }));
+        assert.equals(100, scoreTacticCandidate(heal, { enemyHp: [], allyLowestHpRate: 0.71 }));
+    });
+
     suite.test('Buff / Heal：我方危險線邊界（剛好 35% 算危險）', () => {
         const heal: TacticAiCandidate = { tacticId: 'heal', category: 'buff-heal', effectValue: 100 };
         const edge: TacticAiSituation = { enemyHp: [], allyLowestHpRate: 0.35 };

@@ -130,6 +130,22 @@ export function createEnemyTacticTurnE2ESuite(): TestSuite {
         assert.equals('test-scene-tactic', picked!.tacticId);
     });
 
+    suite.test('敵將戰法成功施放後扣計謀點，且不會扣到保留線以下', () => {
+        const ctrl = battle([{ slot: 0, tacticId: TEST_TACTIC_ID } as unknown as GeneralUnit['tacticSlots'][number]]);
+        const pool = ctrl.getEnemyTacticPoints();
+        assert.isTrue(pool !== null && pool.current === pool.max, '開場滿點');
+        ctrl.spendEnemyTacticPoints(TEST_TACTIC_ID);
+        const after = ctrl.getEnemyTacticPoints()!;
+        assert.isTrue(after.current <= pool!.current, '施放後點數不增加');
+    });
+
+    suite.test('敵將計謀點只剩保留線附近時，付不起的戰法不進候選，改普攻', () => {
+        const ctrl = battle([{ slot: 0, tacticId: TEST_TACTIC_ID } as unknown as GeneralUnit['tacticSlots'][number]]);
+        (ctrl as unknown as { enemyTacticPoints: { current: number; max: number } }).enemyTacticPoints.current = BattleController.ENEMY_TACTIC_TP_RESERVE;
+        assert.equals(null, ctrl.chooseEnemyTactic());
+        assert.isTrue(ctrl.enemyTacticDeclined(), '付不起要記成放棄放招');
+    });
+
     suite.test('PROG-2-9848：沒有戰法槽時不算「放棄放招」（仍用武將主技能）', () => {
         const ctrl = battle([]);
         assert.equals(null, ctrl.chooseEnemyTactic());
