@@ -134,21 +134,24 @@ const ELITE_ART: Record<string, { troop: string; art: string }> = {
  */
 const CAVALRY_GALLOP_PERIOD_SEC = 0.5667;
 const CAVALRY_NAME = 'soldier_cavalry_blue';
+/** 騎乘版骨架檔名（PROG-2-9868）：騎手騎在栗色馬上，動作名稱與舊合成骨架相同；缺圖時退回 CAVALRY_NAME。 */
+const CAVALRY_MOUNTED_NAME = `${CAVALRY_NAME}__mount_horse_bay`;
 const CAVALRY_SQUAD_SLOTS: ReadonlyArray<{ x: number; y: number; phase: number }> = [
   { x: 30, y: 24, phase: 0.35 },
   { x: 48, y: -22, phase: 0.7 },
 ];
-function cavalrySpineConfig(): UnitSpineConfig {
-  const cached = soldierCache.get(CAVALRY_NAME);
+function cavalrySpineConfig(mounted = true): UnitSpineConfig {
+  const skeleton = mounted ? CAVALRY_MOUNTED_NAME : CAVALRY_NAME;
+  const cached = soldierCache.get(skeleton);
   if (cached) return cached;
-  const config: UnitSpineConfig = { path: `spine/soldiers/${CAVALRY_NAME}/${CAVALRY_NAME}`, displayScale: 0.1, labelToFoot: 150, footOffset: { x: 0, y: 0 },
+  const config: UnitSpineConfig = { path: `spine/soldiers/${CAVALRY_NAME}/${skeleton}`, displayScale: 0.1, labelToFoot: 150, footOffset: { x: 0, y: 0 },
     walkGroundSpeed: 1251.14, speedMultiplier: 2, maxAnimationSpeed: MAX_WALK_ANIMATION_SPEED, mirrorSkin: 'hand_mirror', squad: CAVALRY_SQUAD_SLOTS,
     footfallIntervalSec: CAVALRY_GALLOP_PERIOD_SEC / 2, bobPx: 0,
     clips: {
       idle: clip('idle', 1.6, true), move: clip('gallop', CAVALRY_GALLOP_PERIOD_SEC, true, 'trot'), retreat: clip('retreat', 1.2, true, 'gallop'),
       attack: clip('attack_spear', 1.2, false, 'thrust'), hit: clip('hit', 0.8), dodge: clip('dodge', 0.9, false, 'hit'), fall: clip('fall', 1.8, false, 'hit'),
     } };
-  soldierCache.set(CAVALRY_NAME, config);
+  soldierCache.set(skeleton, config);
   return config;
 }
 /** 兵種（TroopType 的字串值）選素材；連弩手等尚無專屬素材者沿用槍兵／弓兵；騎兵目前只有我方藍色版。 */
@@ -174,7 +177,9 @@ export function troopSpineConfig(troop: string, isEnemy = false, tallyTemplateId
  */
 export function troopSpineConfigWithFallback(troop: string, isEnemy: boolean, tallyTemplateId: string | null | undefined,
   hasFailed: (path: string) => boolean): UnitSpineConfig {
-  const candidates = [troopSpineConfig(troop, isEnemy, tallyTemplateId), troopSpineConfig(troop, isEnemy),
+  // 我方騎兵：騎乘版載不起來時先退回原步行版骨架，再退槍兵
+  const legacyCavalry = troop === 'cavalry' && !isEnemy ? [cavalrySpineConfig(false)] : [];
+  const candidates = [troopSpineConfig(troop, isEnemy, tallyTemplateId), troopSpineConfig(troop, isEnemy), ...legacyCavalry,
     troopSpineConfig(troop === 'archer' ? 'archer' : 'pikeman', isEnemy)];
   return candidates.find(config => !hasFailed(config.path)) ?? candidates[candidates.length - 1];
 }

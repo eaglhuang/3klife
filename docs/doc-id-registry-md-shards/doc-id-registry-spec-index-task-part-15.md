@@ -236,3 +236,4 @@
 | `doc_task_3002` | docs/agent-briefs/tasks/PROG/PROG-2-9866.md | [PROG-2-9866] 玩家行為統一權重表（武將友誼值）資料與規格 |
 | `doc_task_3003` | docs/agent-briefs/tasks/PROG/PROG-2-9867.md | [PROG-2-9867] 友誼值範圍改為 -100～+100 |
 | `doc_task_3004` | docs/agent-briefs/tasks/PROG/PROG-2-9615.md | [PROG-2-9615] 首年引導接進畫面與實機視角驗收 |
+| `doc_task_3005` | docs/agent-briefs/tasks/PROG/PROG-2-9868.md | [PROG-2-9868] 藍軍騎兵改用騎乘版 Spine 骨架（mount_horse_bay） |

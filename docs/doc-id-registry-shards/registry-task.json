@@ -16864,5 +16864,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9615.md",
     "title": "[PROG-2-9615] 首年引導接進畫面與實機視角驗收",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3005",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9868.md",
+    "title": "[PROG-2-9868] 藍軍騎兵改用騎乘版 Spine 骨架（mount_horse_bay）",
+    "category": "task"
   }
 ]

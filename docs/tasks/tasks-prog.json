@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 289,
-    "in_progress": 0,
-    "open": 87,
-    "total": 377
+    "done": 292,
+    "in_progress": 1,
+    "open": 86,
+    "total": 379
   },
   "tasks": [
     {
@@ -16637,6 +16637,57 @@
         "metrics_summary": []
       },
       "completed_at": "2026-11-23"
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9868",
+      "title": "藍軍騎兵改用騎乘版 Spine 骨架（mount_horse_bay）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-23",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-23T22:41:56+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "assets/scripts/battle/shared/UnitPresentationConfig.ts；tests/UnitPresentationCore.test.ts",
+      "related": [
+        "PROG-2-9738"
+      ],
+      "depends": [],
+      "acceptance": [
+        "單元測試與 tsc 0 錯；戰場移動／攻擊／受擊截圖騎在馬上"
+      ],
+      "deliverables": [
+        "騎兵改載 soldier_cavalry_blue__mount_horse_bay、缺圖回退舊骨架"
+      ],
+      "notes": "2026-11-23 | 狀態: done | 驗證: tsc 0 錯；單元測試 9382 過（3 skip）；compute-gate quick 4/4；web-desktop 建置成功（exit 36 但產物存在）；實機 7456 無頭預覽：我方騎兵 player-cavalry-4 部署後前進 D0→D3→D4，攻擊敵盾兵，截移動／攻擊／受擊各一張，騎手坐在栗色馬上、藍甲、無白方塊；Cocos 資產庫 uuid 與 .meta 一致 | 變更: 藍軍騎兵改載 soldier_cavalry_blue__mount_horse_bay 骨架，缺圖依序退回原步行版骨架、槍兵；新增單元測試 | 阻塞: 騎乘版比例與原版略有差，未逐格驗動畫名（gallop/attack_spear 為既有 clip 名，骨架內存在）；截圖在 side-session-notes 三張",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      },
+      "completed_at": "2026-11-23T15:12:41.894Z"
     }
   ],
   "updated": "2026-11-22"

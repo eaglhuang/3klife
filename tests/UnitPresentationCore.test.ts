@@ -118,7 +118,7 @@ import { troopSpineConfig } from '../assets/scripts/battle/shared/UnitPresentati
 assert.equal(troopSpineConfig('medic', true).path, 'spine/soldiers/soldier_medic_red/soldier_medic_red');
 // PROG-2-9408：我方騎兵改用騎手＋馬合成骨架；前進播 gallop、蹄聲依 gallop 半週期同拍；敵方暫時沿用紅色槍兵
 const cavalry = troopSpineConfig('cavalry');
-assert.equal(cavalry.path, 'spine/soldiers/soldier_cavalry_blue/soldier_cavalry_blue');
+assert.equal(cavalry.path, 'spine/soldiers/soldier_cavalry_blue/soldier_cavalry_blue__mount_horse_bay');
 assert.equal(cavalry.clips.move.name, 'gallop');
 assert.equal(cavalry.clips.attack.name, 'attack_spear');
 assert.equal(cavalry.clips.attack.fallback, 'thrust');
@@ -176,6 +176,14 @@ assert.equal(troopSpineConfigWithFallback('infantry', false, 'tiger-tally-xian-z
 assert.equal(troopSpineConfigWithFallback('infantry', false, 'tiger-tally-xian-zhen', p => p === eliteBlue || p === infantryBlue).path,
   'spine/soldiers/soldier_spear_blue/soldier_spear_blue');
 assert.equal(troopSpineConfigWithFallback('archer', true, null, () => false).path, 'spine/soldiers/soldier_bow_red/soldier_bow_red');
+// PROG-2-9868：騎乘版載入失敗時退回原步行版骨架，兩者都失敗才退槍兵；敵方騎兵直接退槍兵
+const cavalryMounted = troopSpineConfig('cavalry').path;
+const legacyCavalryPath = 'spine/soldiers/soldier_cavalry_blue/soldier_cavalry_blue';
+assert.equal(troopSpineConfigWithFallback('cavalry', false, null, () => false).path, cavalryMounted);
+assert.equal(troopSpineConfigWithFallback('cavalry', false, null, path => path === cavalryMounted).path, legacyCavalryPath);
+assert.equal(troopSpineConfigWithFallback('cavalry', false, null, path => path !== 'spine/soldiers/soldier_spear_blue/soldier_spear_blue').path, 'spine/soldiers/soldier_spear_blue/soldier_spear_blue');
+assert.equal(troopSpineConfigWithFallback('cavalry', true, null, () => false).path, 'spine/soldiers/soldier_spear_red/soldier_spear_red');
+assert.equal(troopSpineConfigWithFallback('cavalry', false, null, path => path === cavalryMounted).clips.move.name, 'gallop');
 
 // PROG-2-9366：單挑退場走回場邊後，朝向要恢復成退場前的方向。
 // 以前退場時朝向跟著行進方向翻面後就不再翻回，單挑結束兩位主將都背對戰場。
