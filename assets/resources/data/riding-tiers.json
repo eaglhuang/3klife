@@ -331,6 +331,38 @@
       "note": "突騎與衝鋒首擊消耗耐力，耐力不足時無法衝鋒"
     },
     "totalMountMoveSpeedMulCapAdd": 0.15,
+    "lifespan": {
+      "unit": "season",
+      "ageStartsAt": "馬匹實體建立（配種出生、將階授馬、收服）時歸零",
+      "normal": { "lifespanSeasons": 20 },
+      "famous": { "lifespanSeasons": 32 },
+      "oldAgeFraction": 0.25,
+      "oldAgeNote": "老年起始年齡 = 壽命 ×(1 − 0.25)：一般馬第 15 季、名駒第 24 季",
+      "oldAgeRules": {
+        "canSortie": false,
+        "canBreed": true,
+        "canFeed": true
+      },
+      "oldAgeDecay": {
+        "perSeasonMul": 0.96,
+        "floorMul": 0.6,
+        "applyTo": ["moveSpeedBonus", "stamina", "famousBonus"],
+        "note": "每老年季乘算遞減，下限 0.6；不影響騎者個人加成與整隊加成"
+      },
+      "sortieMinAgeSeasons": 4,
+      "sortieMinAgeNote": "小馬 4 季成駒前不可出征（與 breeding.foalGrowSeasons 同值）",
+      "soul": {
+        "triggerOn": "death",
+        "bonusPlusOneChance": {
+          "normal": 0.05,
+          "famous": 0.08
+        },
+        "bonusFrom0Chance": "同額自潛力浮動 0 檔扣除（對應 breeding.potentialRoll.fluctuation）",
+        "maxFoalsPerSoul": 3,
+        "maxBonusFromParents": 0.1,
+        "note": "馬魂只對壽終馬的前 3 匹子代有效；雙親各有馬魂時加總，合計上限 +10%；不改變名駒不可配出名駒的規則"
+      }
+    },
     "breakthrough": {
       "requiresLevel": 10,
       "cost": {
