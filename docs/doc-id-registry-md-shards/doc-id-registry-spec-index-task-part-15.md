@@ -209,8 +209,17 @@
 | `doc_task_2974` | docs/agent-briefs/tasks/PROG/PROG-2-9735.md | [PROG-2-9735] 戰場天氣：季節機率抽取、劇情關固定、戰前顯示 |
 | `doc_task_2975` | docs/agent-briefs/tasks/PROG/PROG-2-9736.md | [PROG-2-9736] 移除舊 buff 獲得 3D 特效（攻擊／回血）＋吃到 buff 特效依倍率分級 |
 | `doc_task_2976` | docs/agent-briefs/tasks/PROG/PROG-2-9737.md | [PROG-2-9737] 攻擊特效正式量產：騎兵／盾兵／法陣縮小降透明度（分兵種倍率） |
-| `doc_task_2977` | docs/agent-briefs/tasks/PROG/PROG-2-9832.md | [PROG-2-9832] 幕府大廳套用大廳・內政統一風格（第一階段：共用 token＋主畫面） |
+| `doc_task_2977` | docs/agent-briefs/tasks/PROG/PROG-2-9738.md | [PROG-2-9738] 騎兵／騎馬武將套用 spine-trial 全套騎乘動作（攻擊／閃避／倒下／後退） |
 | `doc_task_2978` | docs/agent-briefs/tasks/PROG/PROG-2-9841.md | [PROG-2-9841] 技分頁戰法／奧義點擊開啟通用詳情子視窗 |
-| `doc_task_2983` | docs/agent-briefs/tasks/PROG/PROG-2-9842.md | [PROG-2-9842] 十連結果卡片壓扁＋統計列漏算 N |
+| `doc_task_2979` | docs/agent-briefs/tasks/PROG/PROG-2-9847.md | [PROG-2-9847] 趙雲騎馬骨架接入戰場（ridingTier 依 riding-tiers.json） |
 | `doc_task_2980` | docs/agent-briefs/tasks/PROG/PROG-2-9843.md | [PROG-2-9843] 戰法詳情子視窗補招式描述文字 |
 | `doc_task_2981` | docs/agent-briefs/tasks/PROG/PROG-2-9845.md | [PROG-2-9845] 騎術系統與馬廄規格（ridingTier 三級、名駒、馬廄與配種） |
+| `doc_task_2983` | docs/agent-briefs/tasks/PROG/PROG-2-9842.md | [PROG-2-9842] 十連結果卡片壓扁＋統計列漏算 N |
+| `doc_task_2984` | docs/agent-briefs/tasks/PROG/PROG-2-9848.md | [PROG-2-9848] 敵將戰法全 0 分／無傷害改普攻（不再硬放主技能） |
+| `doc_task_2985` | docs/agent-briefs/tasks/PROG/PROG-2-9851.md | [PROG-2-9851] 敵將扣 TP 保留 20／治療健康線 >70%／冷卻規格對齊 |
+| `doc_task_2986` | docs/agent-briefs/tasks/PROG/PROG-2-9852.md | [PROG-2-9852] 敵將戰法群傷評分（單目標傷害×預估命中數） |
+| `doc_task_2988` | docs/agent-briefs/tasks/PROG/PROG-2-9853.md | [PROG-2-9853] 敵將戰法自動索敵（最低血量／補最低友軍／範圍錨點） |
+| `doc_task_2989` | docs/agent-briefs/tasks/PROG/PROG-2-9832.md | [PROG-2-9832] 幕府大廳套用大廳・內政統一風格（第一階段：共用 token＋主畫面） |
+| `doc_task_2990` | docs/agent-briefs/tasks/PROG/PROG-2-9844.md | [PROG-2-9844] 武將名稱旁顯示縮小頭像（GeneralNameTag） |
+| `doc_task_2991` | docs/agent-briefs/tasks/PROG/PROG-2-9846.md | [PROG-2-9846] 幕府大廳風格統一第二階段：任務牆／太守府／招賢館套用主題＋分節標題小字距與金線 |
+| `doc_task_2992` | docs/agent-briefs/tasks/PROG/PROG-2-9854.md | [PROG-2-9854] 修正幕府大廳任務牆／太守府套用主題後跑版 |

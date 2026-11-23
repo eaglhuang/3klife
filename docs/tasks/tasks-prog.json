@@ -15828,6 +15828,67 @@
     },
     {
       "doc_id": "",
+      "id": "PROG-2-9854",
+      "title": "修正幕府大廳任務牆／太守府套用主題後跑版：面板不透明、卡片與次要鈕不再套深紅主按鈕",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-23",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-23T16:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "9846 之後任務牆面板半透明、分頁鈕與卡片變實心紅、文字穿透。新增不透明玻璃主面板與內嵌卡片角色，slotRoles 指定次要鈕，主按鈕改用專屬 slot；季節主題仍由 token 決定，不寫死 skin 名。",
+      "related": [
+        "PROG-2-9846",
+        "PROG-2-9832"
+      ],
+      "depends": [],
+      "acceptance": [
+        "面板底不透明深色玻璃",
+        "分頁鈕、詳情鈕為次要淡金框，僅接取／升級鈕為深紅",
+        "卡片列底為內嵌淡色，文字不穿透",
+        "tsc 0 錯；run-cli 全過"
+      ],
+      "deliverables": [
+        "assets/resources/ui-spec/themes/theme-registry.json",
+        "assets/scripts/ui/core/UIThemeResolver.ts",
+        "assets/resources/ui-spec/skins/hall-board-screen.skin.json",
+        "assets/resources/ui-spec/skins/governor-hall-screen.skin.json",
+        "assets/resources/ui-spec/layouts/hall-board-main.json",
+        "assets/resources/ui-spec/layouts/governor-hall-main.json",
+        "tests/ThemeSystem.test.ts",
+        "docs/agent-briefs/tasks/PROG/PROG-2-9854.md"
+      ],
+      "notes": "2026-11-23 | 狀態: done | 驗證: tsc -p tsconfig.test.json 0 錯；run-cli 9342 passed 3 skipped；本機建置實跑任務牆截圖（scratchpad/fix-board-board.png）面板不透明、僅接取鈕深紅 | 變更: 根因是 9846 把 hall-board／governor-hall 套進主題後，skin 的 hall.button.bg／spot.bg 填色為 primary 命中 fillRoles 變實心深紅，card／row 底套 glassPanel（alpha 118 半透明）造成後方文字穿透；新增 glassPanelSolid／insetPanel 角色與 .panel.solid／.spot.bg／.button.bg slotRoles，接取與升級鈕改用 *.button.primary.bg | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "修正任務牆／太守府主題套用跑版",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
       "id": "PROG-2-9845",
       "title": "騎術系統與馬廄規格（ridingTier 三級、名駒、馬廄與配種）",
       "owner": "ClaudeCode_claude-sonnet-5-5",

@@ -16,8 +16,11 @@
       "recruit-hall-screen.skin"
     ],
     "slotRoles": {
+      ".panel.solid": "glassPanelSolid",
       ".card.bg": "glassPanel",
-      ".row.bg": "glassPanel",
+      ".row.bg": "insetPanel",
+      ".spot.bg": "insetPanel",
+      ".button.bg": "buttonSecondary",
       ".label.section": "labelSection",
       ".divider.section": "divider"
     },
@@ -45,6 +48,12 @@
         "panel.cornerRadius": 4,
         "panel.borderWidth": 1,
         "panel.border": "#E8C88CA0",
+        "panel.solid.alpha": 255,
+        "panel.inset.bg": "#FFF0D7",
+        "panel.inset.alpha": 14,
+        "panel.inset.cornerRadius": 4,
+        "panel.inset.borderWidth": 1,
+        "panel.inset.border": "#E8C88C50",
         "button.secondary.bg": "#FFF0D7",
         "button.secondary.alpha": 20,
         "button.secondary.cornerRadius": 2,
