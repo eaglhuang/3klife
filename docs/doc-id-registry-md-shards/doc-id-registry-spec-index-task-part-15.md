@@ -225,3 +225,7 @@
 | `doc_task_2991` | docs/agent-briefs/tasks/PROG/PROG-2-9846.md | [PROG-2-9846] 幕府大廳風格統一第二階段：任務牆／太守府／招賢館套用主題＋分節標題小字距與金線 |
 | `doc_task_2992` | docs/agent-briefs/tasks/PROG/PROG-2-9854.md | [PROG-2-9854] 修正幕府大廳任務牆／太守府套用主題後跑版 |
 | `doc_task_2993` | docs/agent-briefs/tasks/PROG/PROG-2-9855.md | [PROG-2-9855] 戰場回饋：燃燒／中毒 DOT 跳字分色 |
+| `doc_task_2994` | docs/agent-briefs/tasks/PROG/PROG-2-9860.md | [PROG-2-9860] 測試工具：解鎖分頁（debug.setRank／debug.unlockAll）＋DEV 圓鈕醒目化 |
+| `doc_task_2995` | docs/agent-briefs/tasks/PROG/PROG-2-9856.md | [PROG-2-9856] 戰場名牌：主將不顯示開發用「（主將棋子）」 |
+| `doc_task_2996` | docs/agent-briefs/tasks/PROG/PROG-2-9861.md | [PROG-2-9861] 太守府數字標示釐清：每季產出 vs 現有存量、黃金 0 提示、左欄留白 |
+| `doc_task_2997` | docs/agent-briefs/tasks/PROG/PROG-2-9857.md | [PROG-2-9857] 戰場回饋：狀態飄字依增益／減益／控制分色 |
