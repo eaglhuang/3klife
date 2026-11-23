@@ -24,9 +24,9 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 287,
+    "done": 286,
     "in_progress": 0,
-    "open": 86,
+    "open": 87,
     "total": 373
   },
   "tasks": [
@@ -16302,6 +16302,50 @@
       "acceptance": [],
       "deliverables": [],
       "notes": "2026-11-23 | 狀態: done | 驗證: tsc 0 錯、單測 9361 通過 | 變更: UnitRenderer 主將名牌只顯示武將名；測試改斷言不含（主將棋子）；狀態圖示回合／層數角標 #2521 已有 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9857",
+      "title": "戰場回饋：狀態飄字依增益／減益／控制分色",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-23",
+      "created_by_agent": "codex-gpt-5.4-mini",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-23 | 狀態: done | 驗證: tsc 0 錯、單測 9364 通過、無頭截圖 a1fire-010 橘紅「燃燒」、e1ult-016 紫色「暈眩」 | 變更: FloatTextStyle 新增 status_buff／status_debuff／status_control；StatusApplyFeedback.statusFloatTypeOf；UnitRenderer／BattleUIBridge 依極性選樣式（補註：本卡程式先於上鎖完成，提交前才補卡上鎖） | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",

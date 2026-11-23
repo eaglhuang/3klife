@@ -34,6 +34,11 @@ export function statusPolarityOf(effect: StatusEffect | string): StatusPolarity 
   return STATUS_POLARITY[effect as StatusEffect] ?? 'buff';
 }
 
+/** 狀態飄字樣式：增益金綠、減益橘紅、控制紫（PROG-2-9857） */
+export function statusFloatTypeOf(polarity: StatusPolarity): 'status_buff' | 'status_debuff' | 'status_control' {
+  return polarity === 'control' ? 'status_control' : polarity === 'debuff' ? 'status_debuff' : 'status_buff';
+}
+
 /** 控制與減益讓目標做受擊動作（縮一下）；增益不做 */
 export function statusMakesTargetFlinch(polarity: StatusPolarity): boolean {
   return polarity !== 'buff';
