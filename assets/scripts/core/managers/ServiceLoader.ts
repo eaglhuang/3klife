@@ -73,7 +73,10 @@ import { DEFAULT_QUEST_CONFIG, normalizeQuestConfig } from "../../shared/quest/Q
 import { FAMILY_CONFIG_JSON } from "../../shared/family/FamilyConfig";
 import { OCCUPANCY_MATRIX_JSON } from "../../shared/occupancy/OccupancyMatrix";
 import { QUEST_CONFIG_JSON, type QuestConfigV1 } from "../../shared/quest/QuestTypes";
-import { DEFAULT_REWARD_CONFIG, normalizeRewardConfig, REWARD_CONFIG_JSON, type RewardConfigV1, type RewardPoolDef } from "../../shared/reward/RewardConfig";
+import { DEFAULT_INSIGHT_CONFIG, DEFAULT_REWARD_CONFIG, normalizeRewardConfig, REWARD_CONFIG_JSON, type InsightConfigV1, type RewardConfigV1, type RewardPoolDef } from "../../shared/reward/RewardConfig";
+import { isApiFail } from "../../shared/api/ApiProtocol";
+import { evaluateInsight, type InsightDecision } from "../dialogue/NpcDialogueCache";
+import { FriendshipService } from "../services/FriendshipService";
 import { DEFAULT_STORY_CONFIG, normalizeStoryConfig, STORY_CONFIG_JSON, type StoryConfigV1 } from "../../shared/story/StoryConfig";
 import { ITEM_CONFIG_JSON, normalizeItemConfig, DEFAULT_ITEM_CONFIG, type ItemConfigV1 } from "../../shared/item/ItemConfig";
 import { DEFAULT_SUPPORT_CARDS_CONFIG, normalizeSupportCards, SUPPORT_CARDS_JSON, type SupportCardsConfigV1 } from "../../shared/support/SupportCardConfig";
@@ -393,6 +396,19 @@ export class ServiceLoader {
         this.applyRewardConfig();
         // 支援卡發放（PROG-2-9242）：入學／傳承／傳承滿轉學分都走 item.* 命令；卡表與規則用 getter，設定重載後立即生效
         this.localApi.registerRewardEffect(SUPPORT_CARD_EFFECT_KIND, createSupportCardHandler(() => ({ cards: this.supportCards, rules: this.supportRules })));
+        // 台詞成就「有感而發」（PROG-2-9864）：效果 insight 只加友誼（走友誼框架），成就與已見紀錄由 recordInsightDialogue 寫進 rewardMeta
+        this.localApi.registerRewardEffect('insight', (effect, env) => {
+            const generalId = env.source?.ref ?? '';
+            const amount = typeof effect.friendship === 'number' ? effect.friendship : 0;
+            if (!generalId || amount <= 0) throw new Error('insight 效果缺少武將 id 或友誼量');
+            FriendshipService.getInstance().add(generalId, amount, 'insight');
+            return {
+                applied: effect,
+                trace: [`FRIENDSHIP+${amount}`],
+                events: [{ evt: 'insight.granted', data: { generalId, tier: effect.tier ?? null, friendship: amount } }],
+                undo: async () => { FriendshipService.getInstance().add(generalId, -amount, 'insight:undo'); },
+            };
+        });
         if (this.generalGrantHost) this.localApi.registerRewardEffect('general', createGeneralGrantHandler(this.generalGrantHost));
         this.localApi.setRewardAuthority(this.session.rewardAuthority());
         this.session.setRewardApi(this.localApi.api);
@@ -458,6 +474,30 @@ export class ServiceLoader {
         } catch (e) {
             UCUFLogger.warn(LogCategory.DATA, '[ServiceLoader] quick-resolve-config.json 載入失敗，退回內建預設:', e);
         }
+    }
+
+    /**
+     * 台詞成就「有感而發」（PROG-2-9864）：玩家觸發台詞中台並取得非降級台詞後呼叫。
+     * 先在權威端判定新台詞與次數上限（寫進 rewardMeta.insight），再走 reward.claim 入帳；入帳失敗就還原狀態。
+     * dayKey 為本機日期 YYYY-MM-DD。
+     */
+    public async recordInsightDialogue(generalId: string, text: string, dayKey: string): Promise<{ decision: InsightDecision; badgeId: string | null }> {
+        const cfg: InsightConfigV1 = this.rewardConfig.insight ?? DEFAULT_INSIGHT_CONFIG;
+        const authority = this.session.rewardAuthority();
+        const prev = authority.meta();
+        const ev = evaluateInsight(prev.insight, generalId, text, dayKey, cfg);
+        if (ev.decision === 'none') return { decision: 'none', badgeId: null };
+        authority.setMeta({ ...prev, insight: ev.next });
+        if (ev.decision === 'capped') return { decision: 'capped', badgeId: null };
+        const bundleId = ev.decision === 'first' ? cfg.firstBundle : cfg.stepBundle;
+        const res = await this.api.cmd('reward.claim', {
+            bundleId, grantKey: `insight:${generalId}:${ev.fingerprint}`, source: { kind: 'insight', ref: generalId },
+        });
+        if (isApiFail(res)) {
+            authority.setMeta(prev);
+            return { decision: 'none', badgeId: null };
+        }
+        return { decision: ev.decision, badgeId: ev.decision === 'first' ? (ev.next.achieved[generalId]?.badgeId ?? null) : null };
     }
 
     /** NPC 好友教官清單（MENT-14 MVP）：資料表載入失敗時清單為空，借用入口不可用 */

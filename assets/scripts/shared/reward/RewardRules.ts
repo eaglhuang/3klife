@@ -34,6 +34,16 @@ export interface StoredGrant {
     result: Record<string, unknown>;
 }
 
+/** 台詞成就「有感而發」（PROG-2-9864）的權威狀態：已見台詞指紋、每日加友誼次數、已解鎖成就 */
+export interface InsightMeta {
+    /** generalId → 已見台詞指紋（舊到新，上限由 insight 設定決定） */
+    seen: Record<string, string[]>;
+    /** generalId → 當日已加友誼次數（day 為 YYYY-MM-DD） */
+    daily: Record<string, { day: string; count: number }>;
+    /** generalId → 已解鎖成就（首次新台詞時寫入） */
+    achieved: Record<string, { badgeId: string; unlockedDay: string }>;
+}
+
 export interface RewardMeta {
     v: 1;
     seq: number;
@@ -42,6 +52,8 @@ export interface RewardMeta {
     /** 保底計數器：counterKey → 距離上次保底等階已連續幾抽 */
     pity: Record<string, number>;
     grants: StoredGrant[];
+    /** 台詞成就（PROG-2-9864）；沒有台詞成就紀錄時不寫入存檔 */
+    insight?: InsightMeta;
 }
 
 export function emptyRewardMeta(): RewardMeta {
@@ -71,12 +83,43 @@ export function normalizeRewardMeta(raw: unknown): RewardMeta {
         rng = { seedHex: raw.rng.seedHex, stepIndex: raw.rng.stepIndex };
     }
     const seq = typeof raw.seq === 'number' && Number.isInteger(raw.seq) && raw.seq >= 0 ? raw.seq : grants.length;
-    return { v: 1, seq, rng, pity, grants: grants.slice(-REWARD_GRANT_LIMIT) };
+    const insight = normalizeInsightMeta(raw.insight);
+    return { v: 1, seq, rng, pity, grants: grants.slice(-REWARD_GRANT_LIMIT), ...(insight ? { insight } : {}) };
+}
+
+/** 讀台詞成就狀態；不合形狀的條目丟掉，全空回 undefined（不寫存檔） */
+export function normalizeInsightMeta(raw: unknown): InsightMeta | undefined {
+    if (!isRecord(raw)) return undefined;
+    const seen: Record<string, string[]> = {};
+    if (isRecord(raw.seen)) {
+        for (const [gid, list] of Object.entries(raw.seen)) {
+            const fps = Array.isArray(list) ? list.filter((x): x is string => typeof x === 'string' && x.length > 0) : [];
+            if (fps.length > 0) seen[gid] = fps;
+        }
+    }
+    const daily: InsightMeta['daily'] = {};
+    if (isRecord(raw.daily)) {
+        for (const [gid, v] of Object.entries(raw.daily)) {
+            if (isRecord(v) && typeof v.day === 'string' && typeof v.count === 'number' && Number.isInteger(v.count) && v.count >= 0) {
+                daily[gid] = { day: v.day, count: v.count };
+            }
+        }
+    }
+    const achieved: InsightMeta['achieved'] = {};
+    if (isRecord(raw.achieved)) {
+        for (const [gid, v] of Object.entries(raw.achieved)) {
+            if (isRecord(v) && typeof v.badgeId === 'string' && typeof v.unlockedDay === 'string') {
+                achieved[gid] = { badgeId: v.badgeId, unlockedDay: v.unlockedDay };
+            }
+        }
+    }
+    if (Object.keys(seen).length === 0 && Object.keys(daily).length === 0 && Object.keys(achieved).length === 0) return undefined;
+    return { seen, daily, achieved };
 }
 
 /** 空白中繼資料不必寫進存檔（舊檔相容、存檔瘦身） */
 export function isEmptyRewardMeta(meta: RewardMeta): boolean {
-    return meta.seq === 0 && meta.rng === null && meta.grants.length === 0 && Object.keys(meta.pity).length === 0;
+    return meta.seq === 0 && meta.rng === null && meta.grants.length === 0 && Object.keys(meta.pity).length === 0 && !meta.insight;
 }
 
 /** 效果裡「數量」欄位的名稱；內建 currency 用 amount、item 用 qty，宿主自訂種類兩者擇一 */
