@@ -11286,15 +11286,30 @@
         "activeVersion": "0002"
       },
       "avatar": {
-        "status": "integrated",
+        "status": "review-pending",
         "history": [
           {
             "version": "0002",
             "file": "avatars/sun_lu_yu__孫魯育__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/sun_lu_yu__孫魯育__avatar_0003.png",
+            "status": "review-pending",
+            "sha256": "edc6c0eeae3b75c07eb0af36dedfdfb779fd98de3185bb14717e9d596bcd490b",
+            "canvas": "400x400",
+            "sourceBust": "sun_lu_yu__孫魯育__bust_0001.png",
+            "cropBox": [
+              240,
+              0,
+              640,
+              400
+            ],
+            "note": "Geometric crop only; identity and design unchanged."
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "smallAvatar": {
         "activeVersion": "0001",
@@ -11328,6 +11343,27 @@
             "qc": "Full figure and both shoes visible; straight blade and hand on hilt; transparent background; elegant, restrained expression. Review candidate only."
           }
         ]
+      },
+      "bust": {
+        "history": [
+          {
+            "version": "0001",
+            "file": "bust/sun_lu_yu__孫魯育__bust_0001.png",
+            "status": "review-pending",
+            "sha256": "5df8ce2a7b0f3271244bf9da27caea896f316a1929e4bf6311b12884de1e8407",
+            "canvas": "824x820",
+            "sourceStanding": "standing/sun_lu_yu__孫魯育__standing_0002.png",
+            "cropBox": [
+              100,
+              0,
+              924,
+              820
+            ],
+            "note": "Geometric crop only; identity and design unchanged."
+          }
+        ],
+        "activeVersion": "0001",
+        "status": "review-pending"
       }
     },
     {
