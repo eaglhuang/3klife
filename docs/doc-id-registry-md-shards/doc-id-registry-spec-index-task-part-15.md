@@ -233,4 +233,5 @@
 | `doc_task_2999` | docs/agent-briefs/tasks/PROG/PROG-2-9862.md | [PROG-2-9862] 戰場回饋：DOT tick 命中音與毒箭回饋 |
 | `doc_task_3000` | docs/agent-briefs/tasks/PROG/PROG-2-9863.md | [PROG-2-9863] 太守府：黃金為 0 時加新手引導提示（選商業任務才有黃金） |
 | `doc_task_3001` | docs/agent-briefs/tasks/PROG/PROG-2-9865.md | [PROG-2-9865] 線上試玩腳本修正：重載等載入遮罩消失、商業任務銀兩檢查依情報度 |
-| `doc_task_3002` | docs/agent-briefs/tasks/PROG/PROG-2-9615.md | [PROG-2-9615] 首年引導接進畫面與實機視角驗收 |
+| `doc_task_3002` | docs/agent-briefs/tasks/PROG/PROG-2-9866.md | [PROG-2-9866] 玩家行為統一權重表（武將友誼值）資料與規格 |
+| `doc_task_3003` | docs/agent-briefs/tasks/PROG/PROG-2-9615.md | [PROG-2-9615] 首年引導接進畫面與實機視角驗收 |
