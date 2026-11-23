@@ -3,6 +3,8 @@
  * 規格：單體傷害看斬殺線；Buff / Heal 看我方危險值；Tile / Scene 看 choke point、密集區、天氣相容。
  */
 import { TestSuite, assert } from './TestRunner';
+import { estimateTacticHitCount } from '../assets/scripts/battle/shared/TacticDamageEstimate';
+import { BattleSkillTargetMode } from '../assets/scripts/shared/SkillRuntimeContract';
 import {
     pickTacticByAiRule,
     scoreTacticCandidate,
@@ -53,6 +55,23 @@ export function createTacticAiRulesSuite(): TestSuite {
         const heal: TacticAiCandidate = { tacticId: 'heal', category: 'buff-heal', effectValue: 100 };
         const edge: TacticAiSituation = { enemyHp: [], allyLowestHpRate: 0.35 };
         assert.equals(100 + TACTIC_AI_DANGER_BONUS, scoreTacticCandidate(heal, edge));
+    });
+
+    suite.test('群傷（PROG-2-9852）：單目標傷害 × 命中數計分，多人戰法勝過同傷害單體', () => {
+        const single: TacticAiCandidate = { tacticId: 'single', category: 'single-damage', estimatedDamage: 100 };
+        const aoe: TacticAiCandidate = { tacticId: 'aoe', category: 'single-damage', estimatedDamage: 100, hitCount: 3 };
+        const s: TacticAiSituation = { enemyHp: [900], allyLowestHpRate: 1 };
+        assert.equals(300, scoreTacticCandidate(aoe, s));
+        assert.equals('aoe', pickTacticByAiRule([single, aoe], s));
+    });
+
+    suite.test('群傷：estimateTacticHitCount 全體／範圍／單體', () => {
+        const cells = [{ lane: 1, depth: 1 }, { lane: 1, depth: 2 }, { lane: 4, depth: 4 }];
+        assert.equals(3, estimateTacticHitCount(BattleSkillTargetMode.EnemyAll, cells));
+        assert.equals(2, estimateTacticHitCount(BattleSkillTargetMode.EnemyAll, cells, { maxTargets: 2 }));
+        assert.equals(2, estimateTacticHitCount(BattleSkillTargetMode.Area, cells, { areaRadius: 1 }));
+        assert.equals(1, estimateTacticHitCount(BattleSkillTargetMode.EnemySingle, cells));
+        assert.equals(1, estimateTacticHitCount(BattleSkillTargetMode.EnemyAll, []));
     });
 
     suite.test('Tile / Scene：天氣不相容直接不選，即使有 choke point', () => {

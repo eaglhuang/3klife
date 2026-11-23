@@ -118,7 +118,7 @@ import { aiShouldInitiateDuel } from '../../core/systems/AiDuelDecision';
 import { lastSpurtReasonOf } from '../../core/systems/LastSpurtJudge';
 import { burnStamina, staminaPool, willOf } from '../../core/systems/StaminaBurn';
 import { advanceWisdomMeter, applyWisdomSurge } from '../shared/WisdomMeter';
-import { estimateTacticDamage } from '../shared/TacticDamageEstimate';
+import { estimateTacticDamage, estimateTacticHitCount } from '../shared/TacticDamageEstimate';
 import type { TacticAiSituation } from '../shared/TacticAiRules';
 import { estimateHealValue, hasChokePointLane, hasDenseArea } from '../shared/EnemyTacticBoard';
 import { resolveEnemyInitialDeployment, type EnemyInitialDeploymentEntry } from '../shared/EnemyInitialDeployment';
@@ -984,9 +984,16 @@ export class BattleController {
     );
     if (weakest) {
       const damage = this.estimateEnemyStrikeDamage(general, weakest);
+      const playerCellsForAoe = playerUnits.map(unit => ({ lane: unit.lane, depth: unit.depth }));
       for (const candidate of candidates) {
         if (candidate.category === 'single-damage') {
-          metrics[candidate.tacticId] = { estimatedDamage: damage };
+          // 群傷（PROG-2-9852）：依戰法設定估算同時打到幾個我方單位
+          const battleSkillId = this.tacticDefinitionMap.get(candidate.tacticId)?.battleSkillId ?? null;
+          const profile = battleSkillId ? resolveBattleSkillProfile(battleSkillId) : null;
+          const hitCount = profile
+            ? estimateTacticHitCount(profile.targetMode, playerCellsForAoe, { maxTargets: profile.maxTargets, areaRadius: profile.areaRadius })
+            : 1;
+          metrics[candidate.tacticId] = { estimatedDamage: damage, hitCount };
         }
       }
     }

@@ -7,6 +7,7 @@
  *
  * Unity 對照：像 Damage Calculator 的 Preview 模式，只算數字、不扣血。
  */
+import { BattleSkillTargetMode } from '../../shared/SkillRuntimeContract';
 import { FormulaSystem, type DamageContext } from '../../core/systems/FormulaSystem';
 
 export function estimateTacticDamage(
@@ -16,4 +17,28 @@ export function estimateTacticDamage(
 ): number {
     const base = formula.calculateDamage(context);
     return Math.max(1, Math.floor(base * multiplier));
+}
+
+/**
+ * 戰法預估命中單位數（群傷評分用，PROG-2-9852）：
+ * 全體取 min(人數, maxTargets)；範圍取「以任一我方單位為圓心、半徑內」最多人數；其餘（單體、直線、扇形等）保守算 1。
+ */
+export function estimateTacticHitCount(
+    targetMode: BattleSkillTargetMode,
+    cells: readonly { lane: number; depth: number }[],
+    options: { maxTargets?: number; areaRadius?: number } = {},
+): number {
+    if (cells.length === 0) return 1;
+    const cap = options.maxTargets && options.maxTargets > 0 ? options.maxTargets : Infinity;
+    if (targetMode === BattleSkillTargetMode.EnemyAll) return Math.max(1, Math.min(cells.length, cap));
+    if (targetMode === BattleSkillTargetMode.Area) {
+        const radius = Math.max(0, options.areaRadius ?? 0);
+        let best = 1;
+        for (const center of cells) {
+            const hit = cells.filter(c => Math.max(Math.abs(c.lane - center.lane), Math.abs(c.depth - center.depth)) <= radius).length;
+            if (hit > best) best = hit;
+        }
+        return Math.max(1, Math.min(best, cap));
+    }
+    return 1;
 }
