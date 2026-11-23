@@ -1,10 +1,11 @@
 /**
- * 史境天下風雲榜總控管理器（PROG-2-9601）
+ * 史境天下風雲榜總控管理器（PROG-2-9601 / PROG-2-9602）
  * 職責：
  * 1. 載入並管理 annual-ranking-config.json 配置
  * 2. 初始化核心帳本與 4 大首發 Provider
  * 3. 匯總平時大廳即時看板資料（前 3 名 ＋ 自家名次）
  * 4. 執行年終完整結算與年度輪替
+ * 5. 俸祿機制雙軌計算（季常官職俸金 ＋ 年終風雲榜恩賞）
  */
 
 import { AnnualGeneralLedger, LedgerSerializedData } from './AnnualGeneralLedger';
@@ -14,7 +15,8 @@ import {
   BoardConfig,
   BoardRankResult,
   LobbyBoardPreview,
-  RankingContext
+  RankingContext,
+  SalarySystemConfig
 } from './AnnualRankingTypes';
 export type { AnnualRankingSaveData } from './AnnualRankingTypes';
 import { RankingBoardRegistry } from './RankingBoardRegistry';
@@ -22,8 +24,12 @@ import { KillsRankingProvider } from './providers/KillsRankingProvider';
 import { GovernanceRankingProvider } from './providers/GovernanceRankingProvider';
 import { CharmRankingProvider } from './providers/CharmRankingProvider';
 import { RookieRankingProvider } from './providers/RookieRankingProvider';
-
-
+import {
+  calculateOfficialQuarterlySalary,
+  calculateAnnualRankingBounty,
+  QuarterlySalaryResult,
+  AnnualRankingBountyResult
+} from './AnnualRankingSalary';
 
 export class AnnualRankingManager {
   private static _instance: AnnualRankingManager | null = null;
@@ -31,6 +37,8 @@ export class AnnualRankingManager {
   private _ledger: AnnualGeneralLedger;
   private _registry: RankingBoardRegistry;
   private _previousYearRanks: Record<string, Record<string, number>> = {};
+  private _salaryClaimedYears: Set<number> = new Set();
+  private _quarterlySalaryClaims: Record<string, boolean> = {};
 
   constructor(config?: AnnualRankingConfig, ledger?: AnnualGeneralLedger) {
     this._ledger = ledger || new AnnualGeneralLedger(1);
@@ -195,19 +203,20 @@ export class AnnualRankingManager {
   public serialize(): AnnualRankingSaveData {
     return {
       ledger: this._ledger.serialize(),
-      previousYearRanks: this._previousYearRanks
+      previousYearRanks: this._previousYearRanks,
+      salaryClaimedYears: Array.from(this._salaryClaimedYears),
+      quarterlySalaryClaims: { ...this._quarterlySalaryClaims }
     };
   }
 
-  /**
-   * 存檔反序列化
-   */
   /**
    * 讀檔／開新局時換成該存檔的風雲榜狀態；沒有資料時清空（不影響已載入的榜單設定）
    */
   public restoreSaveData(data?: AnnualRankingSaveData | null): void {
     this._ledger = new AnnualGeneralLedger(1);
     this._previousYearRanks = {};
+    this._salaryClaimedYears.clear();
+    this._quarterlySalaryClaims = {};
     if (data) this.deserialize(data);
   }
 
@@ -218,6 +227,12 @@ export class AnnualRankingManager {
     }
     if (data.previousYearRanks) {
       this._previousYearRanks = data.previousYearRanks;
+    }
+    if (Array.isArray(data.salaryClaimedYears)) {
+      this._salaryClaimedYears = new Set(data.salaryClaimedYears);
+    }
+    if (data.quarterlySalaryClaims && typeof data.quarterlySalaryClaims === 'object') {
+      this._quarterlySalaryClaims = { ...data.quarterlySalaryClaims };
     }
   }
 
@@ -247,5 +262,49 @@ export class AnnualRankingManager {
     }
 
     return Math.min(max, total);
+  }
+
+  /**
+   * 俸祿機制方案 B：計算季常官職俸祿（金）
+   */
+  public calculateOfficialQuarterlySalary(officialTier: number): QuarterlySalaryResult {
+    return calculateOfficialQuarterlySalary(officialTier, this._config?.salarySystem);
+  }
+
+  /**
+   * 俸祿機制方案 B：計算年終風雲榜恩賞（銀兩＋名聲）
+   */
+  public calculateAnnualRankingBounty(ranks: number[]): AnnualRankingBountyResult {
+    return calculateAnnualRankingBounty(ranks, this._config?.salarySystem);
+  }
+
+  /**
+   * 季常官職俸金領取標記檢驗
+   */
+  public isQuarterlySalaryClaimed(year: number, quarter: number): boolean {
+    const key = `${year}_Q${quarter}`;
+    return !!this._quarterlySalaryClaims[key];
+  }
+
+  /**
+   * 標記季常官職俸金已領取
+   */
+  public markQuarterlySalaryClaimed(year: number, quarter: number): void {
+    const key = `${year}_Q${quarter}`;
+    this._quarterlySalaryClaims[key] = true;
+  }
+
+  /**
+   * 年終風雲榜恩賞領取標記檢驗
+   */
+  public isAnnualRankingBountyClaimed(year: number): boolean {
+    return this._salaryClaimedYears.has(year);
+  }
+
+  /**
+   * 標記年終風雲榜恩賞已領取
+   */
+  public markAnnualRankingBountyClaimed(year: number): void {
+    this._salaryClaimedYears.add(year);
   }
 }

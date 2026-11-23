@@ -974,5 +974,13 @@
   "ui.annual_ranking.lobby.btn_ceremony": "年間授賞式典",
   "ui.annual_ranking.lobby.ceremony_ready": "【年末式典】群雄集結、大宴開幕！",
   "ui.annual_ranking.lobby.btn_history": "歴代風雲史冊",
-  "ui.hall.btn.annual_ranking": "天下風雲録"
+  "ui.hall.btn.annual_ranking": "天下風雲録",
+  "ui.clan.tier.1": "微末なる寒門",
+  "ui.clan.tier.2": "新興の名族",
+  "ui.clan.tier.3": "郡望の豪門",
+  "ui.clan.tier.4": "州府の門閥",
+  "ui.clan.tier.5": "柱国の名門世家",
+  "ui.annual_ranking.bulletin.title": "【史境速報】世家名声の新報",
+  "ui.annual_ranking.bulletin.summary": "年末の論功行賞により、我が一族は世家名声 +{0} を獲得しました！",
+  "ui.annual_ranking.bulletin.btn_confirm": "門中を称える"
 }
