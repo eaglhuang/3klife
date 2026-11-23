@@ -25,9 +25,9 @@
   "generated": "2026-04-06",
   "summary": {
     "done": 292,
-    "in_progress": 1,
+    "in_progress": 2,
     "open": 86,
-    "total": 379
+    "total": 380
   },
   "tasks": [
     {
@@ -16688,7 +16688,65 @@
         "metrics_summary": []
       },
       "completed_at": "2026-11-23T15:12:41.894Z"
+    },
+    {
+      "id": "PROG-2-9880",
+      "title": "藍軍騎兵騎乘版 displayScale 比例校正",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "in_progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-23",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-23T15:51:40+08:00",
+      "completed_at": "",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "我方藍軍騎兵改載騎乘版 Spine（soldier_cavalry_blue__mount_horse_bay，PR #2573／PROG-2-9868）後，全畫面騎兵偏小、騎乘版比例與舊版不同，displayScale 目前 0.1。以實測像素高度比照步兵與敵方紅槍騎兵，使騎手加馬整體高度不小於步兵約 1.2 倍；並核對動畫名（gallop／attack_spear／受擊）與程式 clip 名一致。",
+      "related": [
+        "PROG-2-9868"
+      ],
+      "depends": [
+        "PROG-2-9868"
+      ],
+      "acceptance": [
+        "我方藍軍騎兵 displayScale 依實測 sprite／骨架高度調整，報告含改前改後數值",
+        "騎手加馬整體高度不小於步兵約 1.2 倍",
+        "soldier_cavalry_blue__mount_horse_bay.json 的 animations 與程式 clip 名逐一比對，結果寫入報告",
+        "單元測試補強，npx tsc -p tsconfig.test.json --noEmit 為 0 錯，tests/run-cli.ts 全過，compute-gate quick 通過",
+        "web-desktop 實機建置後對比圖（騎兵／步兵／敵騎同畫面）已存檔並給出品質判斷"
+      ],
+      "deliverables": [
+        "assets/scripts 內藍軍騎兵 displayScale 設定處",
+        "對應單元測試",
+        "side-session-notes/cavalry-scale-compare.jpg"
+      ],
+      "notes": "2026-11-23 | 狀態: in-progress | 驗證: pending | 變更: 開卡上鎖，於工作樹 cavalry-scale-9880 量測並調整藍軍騎兵 displayScale | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
-  "updated": "2026-11-22"
+  "updated": "2026-11-23T15:51:40.046Z"
 }
