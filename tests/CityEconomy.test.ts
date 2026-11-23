@@ -93,7 +93,7 @@ export function createCityEconomySuite(): TestSuite {
         const view = buildGovernorHallView(session.governorSnapshot());
         assert.equals('人口 80000', view.populationText);
         assert.equals('民心 60', view.moraleText);
-        assert.equals('基礎值 0（已入帳）', view.goldCard.baseText);
+        assert.equals('基礎值 0（本季未選商業任務）', view.goldCard.baseText);
         assert.equals('人口紅利 +0（換季入帳）', view.goldCard.populationBonusText);
         assert.equals('政策修正 +0', view.goldCard.policyModifierText);
         assert.equals('政策修正 +0', view.foodCard.policyModifierText);

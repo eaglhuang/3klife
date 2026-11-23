@@ -46,6 +46,16 @@ export function createGovernorHallViewSuite(): TestSuite {
         assert.equals('總計 115', card.totalText);
     });
 
+    suite.test('黃金基礎值為 0 時標明本季未選商業任務；產出卡與流向標題寫明是產出（PROG-2-9861）', () => {
+        const snap = snapshot();
+        const view = buildGovernorHallView({ ...snap, gold: { base: 0, populationBonus: 0, policyModifier: 0 } });
+        assert.equals('基礎值 0（本季未選商業任務）', view.goldCard.baseText);
+        assert.equals('黃金產出', view.goldCard.title);
+        assert.equals('糧草產出', view.foodCard.title);
+        assert.equals('本季黃金產出', view.flows[0].label);
+        assert.equals('本季糧草產出', view.flows[1].label);
+    });
+
     suite.test('修正為 0 時顯示 +0', () => {
         const card = buildGovernorHallView(snapshot()).foodCard;
         assert.equals('人口紅利 +0', card.populationBonusText);

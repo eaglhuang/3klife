@@ -91,7 +91,7 @@
                 "name": "GovPopulation",
                 "id": "govPopulation",
                 "widget": {
-                  "top": 110,
+                  "top": 30,
                   "left": 32
                 },
                 "height": 48,
@@ -104,7 +104,20 @@
                 "name": "GovMorale",
                 "id": "govMorale",
                 "widget": {
-                  "top": 170,
+                  "top": 90,
+                  "left": 32
+                },
+                "height": 40,
+                "text": "",
+                "styleSlot": "mp.label.body",
+                "width": 640
+              },
+              {
+                "type": "label",
+                "name": "GovStock",
+                "id": "govStock",
+                "widget": {
+                  "top": 150,
                   "left": 32
                 },
                 "height": 40,
@@ -117,7 +130,7 @@
                 "name": "GovFlowGold",
                 "id": "govFlowGold",
                 "widget": {
-                  "top": 250,
+                  "top": 210,
                   "left": 32
                 },
                 "height": 40,
@@ -130,7 +143,7 @@
                 "name": "GovFlowFood",
                 "id": "govFlowFood",
                 "widget": {
-                  "top": 300,
+                  "top": 260,
                   "left": 32
                 },
                 "height": 40,
@@ -143,7 +156,7 @@
                 "name": "GovFlowCityTroopCap",
                 "id": "govFlowCityTroopCap",
                 "widget": {
-                  "top": 350,
+                  "top": 310,
                   "left": 32
                 },
                 "height": 40,
@@ -156,7 +169,7 @@
                 "name": "GovFlowRecruitRegen",
                 "id": "govFlowRecruitRegen",
                 "widget": {
-                  "top": 400,
+                  "top": 360,
                   "left": 32
                 },
                 "height": 40,
@@ -169,7 +182,7 @@
                 "name": "GovLevel",
                 "id": "govLevel",
                 "widget": {
-                  "top": 460,
+                  "top": 420,
                   "left": 32
                 },
                 "height": 40,
@@ -182,7 +195,7 @@
                 "name": "GovSlots",
                 "id": "govSlots",
                 "widget": {
-                  "top": 510,
+                  "top": 470,
                   "left": 32
                 },
                 "height": 40,
@@ -195,7 +208,7 @@
                 "name": "GovPending",
                 "id": "govPending",
                 "widget": {
-                  "top": 560,
+                  "top": 520,
                   "left": 32
                 },
                 "height": 40,
@@ -208,7 +221,7 @@
                 "name": "BtnUpgrade",
                 "id": "btnUpgrade",
                 "widget": {
-                  "top": 610,
+                  "top": 570,
                   "left": 32
                 },
                 "width": 420,

@@ -112,10 +112,13 @@ export class GovernorHallController {
             btnCloseLabel: '關閉',
             ...territory.texts,
         };
+        // 現有存量與大廳頂欄、升級鈕提示同源（territory.owned），與下方「每季產出」分開標示。
+        const owned = this._deps.territory?.().owned;
+        texts.govStock = owned ? `現有存量　金 ${owned.gold}　糧草 ${owned.food}` : '';
         for (const flow of view.flows) {
             texts[this._flowNodeId(flow.key)] = `${flow.label}　${flow.valueText}`;
         }
-        const actives: Record<string, boolean> = { btnUpgrade: true };
+        const actives: Record<string, boolean> = { btnUpgrade: true, govStock: owned !== undefined };
         for (const flow of view.flows) {
             actives[this._flowNodeId(flow.key)] = true;
         }
