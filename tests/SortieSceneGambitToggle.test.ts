@@ -9,6 +9,7 @@ function controllerWith(initial: PendingSceneGambit | null): { ctrl: SortieSetup
     const commander = { id: 'g-a', name: '主將', lea: 80, int: 80, pol: 80 };
     const session = {
         leadGeneralId: 'g-a',
+        deck: [],
         sortieSupport: { strategistUid: null, deputyUid: null },
         military: {},
         get pendingSceneGambit() { return pending; },

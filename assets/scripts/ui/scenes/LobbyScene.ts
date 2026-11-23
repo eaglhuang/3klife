@@ -254,7 +254,8 @@ import { buildLobbyScout, ScoutPanelController } from '../core/ScoutPanelControl
 import type { TacticCounterTagTable } from '../../core/systems/LoadoutCheck';
 import { spiritSlotViewOf } from '../../core/systems/SpiritSlotState';
 import { DestinyShopController } from '../core/DestinyShopController';
-import { SortieSetupController, type SortieRole } from '../core/SortieSetupController';
+import { SortieSetupController, type SortieDeckCardInfo, type SortieRole } from '../core/SortieSetupController';
+import { parsePreBattleWeights, type PreBattleWeights } from '../../core/systems/PreBattleRecommend';
 import type { PowDecision } from '../../core/systems/PrisonerOfWar';
 import { OracleCouple, SageOracleController } from '../core/SageOracleController';
 import { buildRetireReviewTexts, RETIRE_REVIEW_OPEN_EVENT, withRetireReviewFallback, type RetireReviewOpenPayload } from '../core/RetireReviewController';
@@ -5969,7 +5970,7 @@ ${spent}`,
             mountHost: (bindings) => this._mountPreviewScreenHost('DeckSelectHost', 'lobby-deck-select-screen', bindings),
             deck: () => services().session.deck,
             cards: () => getTallyCardSummaries(),
-            toggle: (cardId, catalogIds) => services().session.toggleDeckCard(cardId, catalogIds),
+            toggle: (cardId, catalogIds) => { this._sortie?.clearRecommendation(); return services().session.toggleDeckCard(cardId, catalogIds); },
             toast: (message, duration) => services().event.emit('SHOW_TOAST', { message, duration }),
             warn: (message, error) => UCUFLogger.warn(LogCategory.DATA, message, error),
         });
@@ -5992,7 +5993,7 @@ ${spent}`,
             mountHost: (bindings) => this._mountPreviewScreenHost('LeadSelectHost', 'lobby-lead-select-screen', bindings),
             deployable: () => services().session.getDeployableGenerals(),
             leadId: () => services().session.leadGeneralId,
-            setLead: (id) => services().session.setLeadGeneral(id),
+            setLead: (id) => { this._sortie?.clearRecommendation(); return services().session.setLeadGeneral(id); },
             openSortie: () => this._openSortieSetup(),
             toast: (message, duration) => services().event.emit('SHOW_TOAST', { message, duration }),
             warn: (message, error) => UCUFLogger.warn(LogCategory.DATA, message, error),
@@ -6014,6 +6015,13 @@ ${spent}`,
      * 候選與加成都在 SortieSetupController（純邏輯），這裡只綁按鈕、套 view。
      */
     private async _mountSortieSetup(): Promise<void> {
+        const weights = await this._loadPreBattleWeights();
+        const tallyCards: SortieDeckCardInfo[] = Array.from(buildTallyCardCatalog().entries()).map(([cardId, card]) => ({
+            cardId,
+            name: card.unitName,
+            unitType: card.unitType,
+            rarity: card.rarity,
+        }));
         // 守方 = 大廳開戰用的當前關卡敵將（與開戰時取的 _currentEncounter() 同一來源）
         const sortie = new SortieSetupController({
             session: services().session,
@@ -6026,11 +6034,23 @@ ${spent}`,
                 get: () => services().session.sortiePresets,
                 set: (store) => { void services().session.setSortiePresets(store); },
             },
+            lookup: (key: string, ...args: string[]) => services().i18n.t(key, ...args),
+            // 一鍵推薦（PROG-2-9911）：權重載入失敗時推薦鈕停用，其餘編制照常
+            prebattle: {
+                weights,
+                encounters: () => this._encounters,
+                currentEncounterId: () => this._currentEncounter()?.id ?? null,
+                cards: () => tallyCards,
+            },
         });
         this._sortie = sortie;
         const step = (role: SortieRole, delta: number): void => { sortie.cycle(role, delta); this._refreshSortieSetup(); };
         this._sortieHost = await this._mountPreviewScreenHost('SortieSetupHost', 'sortie-setup-screen', [
             { buttonId: 'btnCloseSortie', handler: () => { this._closeSortieSetup(); } },
+            { buttonId: 'btnPickLead', handler: () => { this._openHostFromSortie(this._leadSelect); } },
+            { buttonId: 'btnPickDeck', handler: () => { this._openHostFromSortie(this._deckSelect); } },
+            { buttonId: 'btnRecommend', handler: () => { void sortie.recommend().then(() => { this._refreshSortieSetup(); }); } },
+            { buttonId: 'btnConfirmSortie', handler: () => { this._closeSortieSetup(); this.onClickEnterBattle(); } },
             { buttonId: 'btnPrevStrategist', handler: () => { step('strategist', -1); } },
             { buttonId: 'btnNextStrategist', handler: () => { step('strategist', 1); } },
             { buttonId: 'btnClearStrategist', handler: () => { sortie.clear('strategist'); this._refreshSortieSetup(); } },
@@ -6047,8 +6067,30 @@ ${spent}`,
             event.on(GAME_SESSION_EVENTS.LeadGeneralChanged, refresh),
             event.on(GAME_SESSION_EVENTS.RosterChanged, refresh),
             event.on(GAME_SESSION_EVENTS.BattleSettled, refresh),
+            event.on(GAME_SESSION_EVENTS.DeckChanged, refresh),
             event.on(GAME_SESSION_EVENTS.Loaded, refresh),
         );
+    }
+
+    /** 戰前推薦權重（PROG-2-9910 的 JSON）；讀取或驗證失敗回傳 null，編制視窗的推薦鈕會停用 */
+    private async _loadPreBattleWeights(): Promise<PreBattleWeights | null> {
+        try {
+            return parsePreBattleWeights(await services().resource.loadJson<unknown>('data/prebattle-recommend-weights'));
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 戰前推薦權重載入失敗', error);
+            return null;
+        }
+    }
+
+    /** 從出征編制開啟主將／卡組選擇畫面（既有畫面，不另開一套）；畫面關閉後仍停在編制視窗之下 */
+    private _openHostFromSortie(picker: { host: UIScreenPreviewHost | null; refresh(): void } | null): void {
+        const host = picker?.host;
+        if (!host) {
+            return;
+        }
+        picker?.refresh();
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
     }
 
     private _openSortieSetup(): void {
