@@ -14,6 +14,7 @@ import { createPowRecord, createPrisonState, type PowDecision, type PrisonState 
 import { STARTER_MILITARY } from '../assets/scripts/core/systems/MilitaryReserve';
 import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
 import { SortieSetupController } from '../assets/scripts/ui/core/SortieSetupController';
+import { zhTwLookup } from './SortieZhTwLookup';
 import { getDeputyFoodBonus } from '../assets/scripts/core/systems/SortieDeploy';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 
@@ -200,7 +201,7 @@ export function createM5ViewSpecSuite(): TestSuite {
         const layout = readSpec<{ root: SpecNode & { id?: string } }>('layouts/sortie-setup-main.json');
         const ids = collectIds(layout.root, new Set());
         const session = await sortieSession();
-        assertViewKeysInLayout(new SortieSetupController({ session }).getView(), ids, 'sortie-setup-main');
+        assertViewKeysInLayout(new SortieSetupController({ session, lookup: zhTwLookup() }).getView(), ids, 'sortie-setup-main');
         const screen = readSpec<{ layout: string; skin: string }>('screens/sortie-setup-screen.json');
         assert.equals('sortie-setup-main', screen.layout);
         assert.equals('sortie-setup-screen.skin', screen.skin);
@@ -237,13 +238,13 @@ export function createM5ViewSpecSuite(): TestSuite {
     });
 
     suite.test('0083 出征編制畫面：沒有主將顯示提示；循環挑人跳過主將與另一角色、遇同名血統往下找', async () => {
-        const empty = new SortieSetupController({ session: new GameSession(1) }).getView();
+        const empty = new SortieSetupController({ session: new GameSession(1), lookup: zhTwLookup() }).getView();
         assert.isFalse(empty.actives.sortiePanel);
         assert.isTrue(empty.actives.sortieEmptyHint);
         assert.isFalse(empty.enabled.btnNextStrategist);
 
         const session = await sortieSession();
-        const ctrl = new SortieSetupController({ session });
+        const ctrl = new SortieSetupController({ session, lookup: zhTwLookup() });
         const first = ctrl.getView();
         assert.equals('主將：曹操（統率 95）', first.texts.sortieCommander);
         assert.equals('不派', first.texts.strategistName);
