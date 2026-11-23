@@ -12066,9 +12066,24 @@
               415
             ],
             "note": "Tight head-and-shoulders crop; raised weapon and hand excluded, full head ornaments and shoulder line retained."
+          },
+          {
+            "version": "0005",
+            "file": "avatars/xu_shi__徐氏__avatar_0005.png",
+            "status": "review-pending",
+            "sha256": "f302e8859facc73346eedcb738f1ecb863f140906f4529992fc597f2dee729e8",
+            "canvas": "512x415",
+            "sourceBust": "xu_shi__徐氏__bust_0001.png",
+            "cropBox": [
+              215,
+              0,
+              727,
+              415
+            ],
+            "note": "Wider shoulder framing shifted to align face center; excludes raised dagger, keeps full head ornament and both shoulders without distortion."
           }
         ],
-        "activeVersion": "0004"
+        "activeVersion": "0005"
       },
       "battle": {
         "activeVersion": "0001",
