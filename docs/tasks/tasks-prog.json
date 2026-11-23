@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 287,
+    "done": 288,
     "in_progress": 0,
     "open": 87,
-    "total": 374
+    "total": 375
   },
   "tasks": [
     {
@@ -16461,6 +16461,59 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9862",
+      "title": "戰場回饋：DOT tick 命中音與毒箭回饋",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-23",
+      "created_by_agent": "codex-gpt-5.4-mini",
+      "started_at": "2026-11-23T18:00:00+08:00",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "DOT tick（燃燒／火格／中毒／群體減益）不再走一般受擊音",
+        "同一單位同回合只響一次",
+        "tsc 0 錯、run-cli ALL PASS"
+      ],
+      "deliverables": [
+        "assets/scripts/battle/shared/BattleAudio.ts",
+        "assets/scripts/battle/views/BattleUIBridge.ts",
+        "tests/BattleDotTickSfx.test.ts"
+      ],
+      "notes": "2026-11-23 | 狀態: done | 驗證: tsc 0 錯、單測通過（未做聽感實測） | 變更: DOT tick 專屬 cue（燃燒 fireball／中毒 hurt 輕量版）、同單位節流 1 秒、新增 tests/BattleDotTickSfx.test.ts | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      },
+      "completed_at": "2026-11-23"
     }
   ],
   "updated": "2026-11-22"
