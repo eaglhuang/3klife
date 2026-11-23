@@ -227,4 +227,4 @@
 | `doc_task_2993` | docs/agent-briefs/tasks/PROG/PROG-2-9855.md | [PROG-2-9855] 戰場回饋：燃燒／中毒 DOT 跳字分色 |
 | `doc_task_2994` | docs/agent-briefs/tasks/PROG/PROG-2-9860.md | [PROG-2-9860] 測試工具：解鎖分頁（debug.setRank／debug.unlockAll）＋DEV 圓鈕醒目化 |
 | `doc_task_2995` | docs/agent-briefs/tasks/PROG/PROG-2-9856.md | [PROG-2-9856] 戰場名牌：主將不顯示開發用「（主將棋子）」 |
-| `doc_task_2996` | docs/agent-briefs/tasks/PROG/PROG-2-9615.md | [PROG-2-9615] 首年引導接進畫面與實機視角驗收 |
+| `doc_task_2997` | docs/agent-briefs/tasks/PROG/PROG-2-9615.md | [PROG-2-9615] 首年引導接進畫面與實機視角驗收 |
