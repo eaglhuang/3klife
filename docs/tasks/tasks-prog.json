@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 293,
-    "in_progress": 1,
+    "done": 295,
+    "in_progress": 0,
     "open": 86,
-    "total": 380
+    "total": 381
   },
   "tasks": [
     {
@@ -16725,6 +16725,54 @@
         "side-session-notes/cavalry-scale-compare.jpg"
       ],
       "notes": "2026-11-24 | 狀態: done | 驗證: 實機 web-desktop 量測（sp runtime attachment 頂點 AABB，idle 姿勢）：騎兵 mount_horse_bay 0.10 時約 52 設計像素高，步兵藍 0.18 約 37、敵紅槍 0.18 約 37，比值 1.41 ≥ 1.2，符合規則，故 displayScale 維持 0.10 未改；動畫名（idle/gallop/trot/retreat/attack_spear/hit/dodge/fall）已與 soldier_cavalry_blue__mount_horse_bay.json 逐一核對一致；tsc 0 錯、run-cli 9386 pass／3 skip、compute-gate quick 4/4 | 變更: 開卡＋上鎖＋量測，無程式變更；對比圖 side-session-notes/cavalry-scale-compare.jpg | 阻塞: 無；原卡「騎兵偏小」判斷與量測不一致，需使用者以遊戲內觀感再裁決是否加大",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9869",
+      "title": "十連結果卡片加寬（使用者：左右太瘦）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-23",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "十連結果卡由 200x318 改 216x288（約 3:4），結果面板加寬為 1200、格線同步，立繪左右不再被裁成窄條，2x5 仍放得下",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "卡片寬高比約 3:4"
+      ],
+      "deliverables": [
+        "assets/resources/ui-spec/layouts/gacha-pull-result.json"
+      ],
+      "notes": "2026-11-24 | 狀態: done | 驗證: 實跑十連截圖目視、compute-gate quick 4/4、run-cli 9386 全過 | 變更: gacha-pull-result.json 與 .layout.json 卡片加寬、面板 1200 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
