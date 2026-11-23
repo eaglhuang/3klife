@@ -16798,5 +16798,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9855.md",
     "title": "[PROG-2-9855] 戰場回饋：燃燒／中毒 DOT 跳字分色",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2995",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9856.md",
+    "title": "[PROG-2-9856] 戰場名牌：主將不顯示開發用「（主將棋子）」",
+    "category": "task"
   }
 ]

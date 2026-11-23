@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 282,
+    "done": 284,
     "in_progress": 0,
-    "open": 88,
-    "total": 370
+    "open": 87,
+    "total": 371
   },
   "tasks": [
     {
@@ -16204,6 +16204,50 @@
       "acceptance": [],
       "deliverables": [],
       "notes": "2026-11-23 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9856",
+      "title": "戰場名牌：主將不顯示開發用「（主將棋子）」",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-23",
+      "created_by_agent": "codex-gpt-5.4-mini",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-23 | 狀態: done | 驗證: tsc 0 錯、單測 9361 通過 | 變更: UnitRenderer 主將名牌只顯示武將名；測試改斷言不含（主將棋子）；狀態圖示回合／層數角標 #2521 已有 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
