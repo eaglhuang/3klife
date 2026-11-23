@@ -91,7 +91,7 @@ assert.equal(returned.phase, 'done');
 assert.equal(returned.units[0].foot.x, 0);
 assert.equal(returned.units[1].foot.x, 100);
 
-import { MAX_WALK_ANIMATION_SPEED, generalSpineConfig, soldierSpineConfig } from '../assets/scripts/battle/shared/UnitPresentationConfig';
+import { MAX_WALK_ANIMATION_SPEED, generalSpineConfig, resolveRidingTier, soldierSpineConfig } from '../assets/scripts/battle/shared/UnitPresentationConfig';
 import { resolveClipName } from '../assets/scripts/battle/shared/UnitPresentationCore';
 assert.equal(generalSpineConfig('zhao-yun')?.walkGroundSpeed, 93.33);
 assert.equal(generalSpineConfig('unknown'), null);
@@ -128,9 +128,16 @@ assert.equal(cavalry.clips.retreat.name, 'retreat');
 // 騎馬武將（PROG-2-9738）：ridingTier > 0 才騎馬；缺素材退回步行版；沒有騎馬骨架的武將不受影響
 assert.equal(generalSpineConfig('zhao-yun')?.path, 'spine/generals/zhao_yun/zhao_v2');
 const mountedZhao = generalSpineConfig('zhao-yun', null, 1);
-assert.equal(mountedZhao?.path, 'spine/generals/zhao_yun_mounted/zhao_mounted');
+assert.equal(mountedZhao?.path, 'spine/generals/zhao_yun_mounted/zhao__mount_horse_bay');
+// 精騎、神駒尚無專屬外觀：沿用等級 1 外觀（取不超過該等級的最高一套）
+assert.equal(generalSpineConfig('zhao-yun', null, 3)?.path, mountedZhao?.path);
 assert.equal(mountedZhao?.clips.move.name, 'gallop');
 assert.equal(generalSpineConfig('zhao-yun', null, 2, p => p.includes('zhao_yun_mounted'))?.path, 'spine/generals/zhao_yun/zhao_v2');
+// 天生騎術：資料欄位與表格取高者；表格未讀到時只看欄位
+assert.equal(resolveRidingTier('zhao_yun', 0, { 'zhao-yun': 2 }), 2);
+assert.equal(resolveRidingTier('zhao-yun', 3, { 'zhao-yun': 2 }), 3);
+assert.equal(resolveRidingTier('zhao-yun', 0, null), 0);
+assert.equal(resolveRidingTier('liu-bei', 0, { 'zhao-yun': 2 }), 0);
 assert.equal(generalSpineConfig('guan-yu', null, 3)?.path, generalSpineConfig('guan-yu')?.path);
 assert.equal(cavalry.bobPx, 0);
 assert.ok(Math.abs((cavalry.footfallIntervalSec ?? 0) - cavalry.clips.move.duration / 2) < 1e-6);
