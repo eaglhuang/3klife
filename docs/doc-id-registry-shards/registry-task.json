@@ -16758,6 +16758,12 @@
     "category": "task"
   },
   {
+    "id": "doc_task_2987",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9858.md",
+    "title": "[PROG-2-9858] 測試工具 2.0：全域 dev overlay＋共通 API debug 指令＋分頁面板",
+    "category": "task"
+  },
+  {
     "id": "doc_task_2988",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9853.md",
     "title": "[PROG-2-9853] 敵將戰法自動索敵（最低血量／補最低友軍／範圍錨點）",

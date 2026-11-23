@@ -218,6 +218,7 @@
 | `doc_task_2984` | docs/agent-briefs/tasks/PROG/PROG-2-9848.md | [PROG-2-9848] 敵將戰法全 0 分／無傷害改普攻（不再硬放主技能） |
 | `doc_task_2985` | docs/agent-briefs/tasks/PROG/PROG-2-9851.md | [PROG-2-9851] 敵將扣 TP 保留 20／治療健康線 >70%／冷卻規格對齊 |
 | `doc_task_2986` | docs/agent-briefs/tasks/PROG/PROG-2-9852.md | [PROG-2-9852] 敵將戰法群傷評分（單目標傷害×預估命中數） |
+| `doc_task_2987` | docs/agent-briefs/tasks/PROG/PROG-2-9858.md | [PROG-2-9858] 測試工具 2.0：全域 dev overlay＋共通 API debug 指令＋分頁面板 |
 | `doc_task_2988` | docs/agent-briefs/tasks/PROG/PROG-2-9853.md | [PROG-2-9853] 敵將戰法自動索敵（最低血量／補最低友軍／範圍錨點） |
 | `doc_task_2989` | docs/agent-briefs/tasks/PROG/PROG-2-9832.md | [PROG-2-9832] 幕府大廳套用大廳・內政統一風格（第一階段：共用 token＋主畫面） |
 | `doc_task_2990` | docs/agent-briefs/tasks/PROG/PROG-2-9844.md | [PROG-2-9844] 武將名稱旁顯示縮小頭像（GeneralNameTag） |

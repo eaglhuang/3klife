@@ -3841,6 +3841,29 @@ export class GameSession implements AcademyRecordPort {
         return { ...this._military };
     }
 
+    /**
+     * 測試工具 2.0（PROG-2-9858，只由偵錯宿主呼叫）：調整城市兵源或糧草，夾在 0～上限（上限是規則，讀檔會被夾回，所以不能超過）。
+     * 回傳實際變動量與調整後數值；不寫檔，由呼叫端決定存檔時機。
+     */
+    public debugAdjustMilitary(field: 'food' | 'cityTroops', delta: number): { applied: number; value: number } {
+        const cap = field === 'food' ? this._military.foodCap : this._military.cityTroopsCap;
+        const before = this._military[field];
+        const value = Math.max(0, Math.min(cap, before + Math.trunc(delta)));
+        this._military = { ...this._military, [field]: value };
+        return { applied: value - before, value };
+    }
+
+    /** 測試工具 2.0：直接設定數值（recruitRegen／woundedCamp／discoveryLevel）；不寫檔 */
+    public debugSetStat(key: 'recruitRegen' | 'woundedCamp' | 'discoveryLevel', value: number): number {
+        const next = Math.max(0, Math.trunc(value));
+        if (key === 'discoveryLevel') {
+            this._discoveryLevel = Math.max(1, next);
+            return this._discoveryLevel;
+        }
+        this._military = { ...this._military, [key]: next };
+        return next;
+    }
+
     /** 太守府的治理快照：季節倍率取目前季節，與季結入帳一致 */
     public governorSnapshot(): GovernorSnapshot {
         return buildGovernorSnapshot(this._military, seasonModifiersOf(this._clock.state.currentSeason).foodMultiplier, {
