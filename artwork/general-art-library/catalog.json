@@ -967,7 +967,7 @@
         ]
       }
     },
-        {
+    {
       "uid": "huang-yue-ying",
       "name": "黃月英",
       "standing": {
@@ -10043,7 +10043,7 @@
         ]
       }
     },
-        {
+    {
       "uid": "zhang-chun-hua",
       "name": "張春華",
       "standing": {
@@ -11477,29 +11477,54 @@
       "uid": "hua-man",
       "name": "花鬘",
       "standing": {
-        "status": "integrated",
+        "status": "review-pending",
         "history": [
           {
             "version": "0002",
             "file": "standing/hua_man__花鬘__standing_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "standing/hua_man__花鬘__standing_0003.png",
+            "status": "review-pending",
+            "sha256": "f579ce743a90028ee534c474e5ebbedca93e1572c4960fac0d16b6bd6a7f4358",
+            "canvas": "1024x1536",
+            "poseLabel": "three-quarter poised stance",
+            "weaponClass": "twin short curved blades",
+            "note": "New static master; identity and paired blades retained."
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "avatar": {
-        "status": "integrated",
+        "status": "review-pending",
         "history": [
           {
             "version": "0002",
             "file": "avatars/hua_man__花鬘__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/hua_man__花鬘__avatar_0003.png",
+            "status": "review-pending",
+            "sha256": "34b61267e3b8e14ffdc01eb886aaf642bddd33975cc675d5f4ef392d508ab8ca",
+            "canvas": "760x760",
+            "sourceBust": "hua_man__花鬘__bust_0001.png",
+            "cropBox": [
+              132,
+              0,
+              892,
+              760
+            ],
+            "note": "Direct crop from bust; complete head silhouette and ornaments preserved, both shoulders included."
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "battle": {
-        "activeVersion": "0001",
+        "activeVersion": "0002",
         "status": "review-pending",
         "displayStatus": "not-yet-verified",
         "history": [
@@ -11514,6 +11539,16 @@
             "sourceStanding": "standing/hua_man__花鬘__standing_0002.png",
             "weaponClass": "paired short crescent-hook blades",
             "note": "Character and weapon design follow approved standing art. Whole transparent layer was translated 27px right for centered safe framing; no crop or stretch."
+          },
+          {
+            "version": "0002",
+            "file": "battle/hua_man__花鬘__battle_0002.png",
+            "status": "review-pending",
+            "sha256": "d0f17c14c9cfb1df1c855f43e273887ad7515aab34e6414ca4c6ce28bc006bc5",
+            "canvas": "1024x1536",
+            "sourceStanding": "hua_man__花鬘__standing_0003.png",
+            "poseLabel": "cross-body twin-blade sweep and low guard",
+            "weaponClass": "twin short curved blades"
           }
         ]
       },
@@ -11579,6 +11614,27 @@
             "createdAt": "2026-11-20"
           }
         ]
+      },
+      "bust": {
+        "history": [
+          {
+            "version": "0001",
+            "file": "bust/hua_man__花鬘__bust_0001.png",
+            "status": "review-pending",
+            "sha256": "4cb394f80a637c458626b8010fb15618e1ac482b56251be20f14478e9c00e699",
+            "canvas": "1024x1050",
+            "sourceStanding": "hua_man__花鬘__standing_0003.png",
+            "cropBox": [
+              0,
+              0,
+              1024,
+              1050
+            ],
+            "note": "Direct crop from standing; no redraw."
+          }
+        ],
+        "activeVersion": "0001",
+        "status": "review-pending"
       }
     },
     {
