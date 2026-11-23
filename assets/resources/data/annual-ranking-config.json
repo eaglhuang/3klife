@@ -52,13 +52,13 @@
       "maxQuarterScore": 800,
       "maxAnnualScore": 3200,
       "taskWeights": {
-        "agriculture": 1.0,
-        "commerce": 1.0,
-        "recruitment": 1.0,
+        "agriculture": 1,
+        "commerce": 1,
+        "recruitment": 1,
         "diplomacy": 1.6,
         "espionage": 1.6
       },
-      "defaultTaskWeight": 1.0,
+      "defaultTaskWeight": 1,
       "effClampMin": 0.6,
       "effClampMax": 1.3,
       "volunteeredMultiplier": 1.2
@@ -75,7 +75,7 @@
       "hypeDivisor": 50,
       "maxSingleGeneralVotes": 50,
       "repeatDecayMin": 0.6,
-      "repeatDecayMax": 1.0,
+      "repeatDecayMax": 1,
       "repeatDecayStep": 0.1,
       "defaultCha": 70,
       "voterMin": 10,
@@ -100,9 +100,9 @@
       "debutBaseMax": 350,
       "prodigyBonus": 150,
       "scoreWeights": {
-        "debut": 1.0,
-        "kills": 1.0,
-        "governance": 1.0,
+        "debut": 1,
+        "kills": 1,
+        "governance": 1,
         "charmVotes": 0.8
       }
     }
@@ -112,10 +112,10 @@
     "baseContribution": 50,
     "maxPerGeneral": 500,
     "multipliers": {
-      "rank1": 5.0,
-      "rankTop3": 3.0,
-      "rankTop10": 2.0,
-      "rankTop100": 1.0
+      "rank1": 5,
+      "rankTop3": 3,
+      "rankTop10": 2,
+      "rankTop100": 1
     }
   },
   "salarySystem": {
@@ -129,13 +129,34 @@
     },
     "defaultQuarterlyGold": 50,
     "annualRankingBounties": {
-      "rank1": { "silver": 1000, "fame": 100 },
-      "rankTop3": { "silver": 600, "fame": 60 },
-      "rankTop10": { "silver": 300, "fame": 30 },
-      "rankTop20": { "silver": 150, "fame": 15 },
-      "rankTop100": { "silver": 50, "fame": 5 }
+      "rank1": {
+        "silver": 1000,
+        "fame": 100
+      },
+      "rankTop3": {
+        "silver": 600,
+        "fame": 60
+      },
+      "rankTop10": {
+        "silver": 300,
+        "fame": 30
+      },
+      "rankTop20": {
+        "silver": 150,
+        "fame": 15
+      },
+      "rankTop100": {
+        "silver": 50,
+        "fame": 5
+      }
     },
     "maxAnnualSilverPerGeneral": 3000,
     "maxAnnualFamePerGeneral": 300
+  },
+  "academyGraduationFavorSystem": {
+    "enabled": true,
+    "baseFavorTickets": 10,
+    "rankedClanBonusTickets": 5,
+    "maxSeasonFavorTickets": 30
   }
 }
