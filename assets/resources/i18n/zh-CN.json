@@ -974,5 +974,13 @@
   "ui.annual_ranking.lobby.btn_ceremony": "年终颁奖典礼",
   "ui.annual_ranking.lobby.ceremony_ready": "【岁末盛典】诸侯齐聚，大宴揭幕！",
   "ui.annual_ranking.lobby.btn_history": "历年风云史册",
-  "ui.hall.btn.annual_ranking": "天下风云榜"
+  "ui.hall.btn.annual_ranking": "天下风云榜",
+  "ui.clan.tier.1": "微末寒门",
+  "ui.clan.tier.2": "新兴世族",
+  "ui.clan.tier.3": "郡望豪门",
+  "ui.clan.tier.4": "州府名阀",
+  "ui.clan.tier.5": "柱国世家",
+  "ui.annual_ranking.bulletin.title": "【史境快报】世家声望新传",
+  "ui.annual_ranking.bulletin.summary": "岁末年终群英论定，我族共获世家声望 +{0} 点！",
+  "ui.annual_ranking.bulletin.btn_confirm": "光耀门楣"
 }
