@@ -52,29 +52,43 @@ const generals: Record<string, { name: string; footX: number }> = {
 };
 /**
  * 騎馬武將（PROG-2-9738）：騎馬是「騎術」資格（使用者 11/23 裁決），武將資料的 ridingTier > 0 就騎馬，與帶什麼兵種無關；
- * 騎術三級（騎術／精騎／神駒）將來換坐騎外觀，目前只有一種馬。
+ * 騎術三級（1 騎術／2 精騎／3 神駒，見 data/riding-tiers.json）換坐騎外觀：looks 以等級為鍵，
+ * 取「不超過該等級的最高一套」，沒有更高等級的外觀時沿用較低一套。
  * 騎馬版素材（騎手＋馬合成骨架）來自 spine-trial，私有、不進倉庫；缺素材時由 hasFailed 退回步行版。
- * 目前只有趙雲有騎馬骨架，待 spine-trial 補提交 zhao_v2 騎手圖集後才會真的載入。
+ * 目前只有趙雲有騎馬骨架（horse_bay，等級 1 外觀），精騎、神駒外觀待 spine-trial 補。
  */
-const MOUNTED_GENERALS: Record<string, { dir: string; name: string; footX: number }> = {
-  zhao_yun: { dir: 'zhao_yun_mounted', name: 'zhao_mounted', footX: 0 },
+const MOUNTED_GENERALS: Record<string, { dir: string; looks: Record<number, string>; footX: number }> = {
+  zhao_yun: { dir: 'zhao_yun_mounted', looks: { 1: 'zhao__mount_horse_bay' }, footX: 0 },
 };
 const mountedCache = new Map<string, UnitSpineConfig>();
-function mountedGeneralConfig(key: string): UnitSpineConfig | null {
+function mountedGeneralConfig(key: string, ridingTier: number): UnitSpineConfig | null {
   const art = MOUNTED_GENERALS[key];
   if (!art) return null;
-  let config = mountedCache.get(key);
+  const tier = Object.keys(art.looks).map(Number).filter(t => t <= ridingTier).sort((a, b) => b - a)[0];
+  if (tier === undefined) return null;
+  const cacheKey = `${key}#${tier}`;
+  let config = mountedCache.get(cacheKey);
   if (!config) {
-    config = { path: `spine/generals/${art.dir}/${art.name}`, displayScale: 0.12, labelToFoot: 230, footOffset: { x: art.footX, y: 0 },
+    config = { path: `spine/generals/${art.dir}/${art.looks[tier]}`, displayScale: 0.12, labelToFoot: 230, footOffset: { x: art.footX, y: 0 },
       walkGroundSpeed: 1251.14, speedMultiplier: 2, maxAnimationSpeed: MAX_WALK_ANIMATION_SPEED, mirrorSkin: 'hand_mirror',
       footfallIntervalSec: CAVALRY_GALLOP_PERIOD_SEC / 2, bobPx: 0,
       clips: {
         idle: clip('idle', 1.6, true), move: clip('gallop', CAVALRY_GALLOP_PERIOD_SEC, true, 'trot'), retreat: clip('retreat', 1.2, true, 'gallop'),
         attack: clip('attack_spear', 1.2, false, 'thrust'), hit: clip('hit', 0.8), dodge: clip('dodge', 0.9, false, 'hit'), fall: clip('fall', 1.8, false, 'hit'),
       } };
-    mountedCache.set(key, config);
+    mountedCache.set(cacheKey, config);
   }
   return config;
+}
+/**
+ * 武將實際騎術等級：資料欄位 ridingTier 與 data/riding-tiers.json 的天生等級（innate，鍵為 zhao-yun 這類 id）取較高者。
+ * 表格由呼叫端讀 JSON 後傳入；讀到前傳 null，只看武將自己的欄位。
+ */
+export function resolveRidingTier(id: string, configTier: number, innate?: Record<string, number> | null): number {
+  const own = Math.max(0, Math.floor(configTier || 0));
+  const key = id.toLowerCase().replace(/_/g, '-');
+  const born = innate && Number.isFinite(innate[key]) ? Math.max(0, Math.floor(innate[key])) : 0;
+  return Math.max(own, born);
 }
 const generalCache = new Map<string, UnitSpineConfig>();
 const soldierCache = new Map<string, UnitSpineConfig>();
@@ -85,7 +99,7 @@ export function generalSpineConfig(id: string, templateId?: string | null, ridin
   const art = generals[key];
   if (!art) return null;
   if (ridingTier > 0) {
-    const mounted = mountedGeneralConfig(key);
+    const mounted = mountedGeneralConfig(key, ridingTier);
     if (mounted && !(hasFailed?.(mounted.path))) return mounted;
   }
   let config = generalCache.get(key);

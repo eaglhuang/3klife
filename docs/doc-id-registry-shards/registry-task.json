@@ -16702,5 +16702,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9738.md",
     "title": "[PROG-2-9738] 騎兵／騎馬武將套用 spine-trial 全套騎乘動作（攻擊／閃避／倒下／後退）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2978",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9844.md",
+    "title": "[PROG-2-9844] 趙雲騎馬骨架接入戰場（ridingTier 依 riding-tiers.json）",
+    "category": "task"
   }
 ]
