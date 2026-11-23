@@ -10569,15 +10569,30 @@
         "activeVersion": "0002"
       },
       "avatar": {
-        "status": "integrated",
+        "status": "review-pending",
         "history": [
           {
             "version": "0002",
             "file": "avatars/wu_guo_tai__吳國太__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/wu_guo_tai__吳國太__avatar_0003.png",
+            "status": "review-pending",
+            "sha256": "8511125c8e11caf30f9ff7bc16407a54bfd71c870cd6ee29a1dad1df87d99c9b",
+            "canvas": "174x177",
+            "sourceBust": "wu_guo_tai__吳國太__bust_0001.png",
+            "cropBox": [
+              92,
+              0,
+              266,
+              177
+            ],
+            "note": "Tighter geometric crop from bust; complete hairstyle and head ornament retained, shoulder line still visible."
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "battle": {
         "status": "review-pending",
@@ -10616,6 +10631,27 @@
             "qc": "Crop-only from approved standing art; head height approximately 72% of frame; face centered; original hair ornament, face, neck and shoulder tops retained; no chest; no redraw."
           }
         ]
+      },
+      "bust": {
+        "history": [
+          {
+            "version": "0001",
+            "file": "bust/wu_guo_tai__吳國太__bust_0001.png",
+            "status": "review-pending",
+            "sha256": "efdb065b7c45562567e588f8eb04c95e2a45caccb06b4329bb670ee809a3a615",
+            "canvas": "358x399",
+            "sourceStanding": "standing/wu_guo_tai__吳國太__standing_0002.png",
+            "cropBox": [
+              77,
+              0,
+              435,
+              399
+            ],
+            "note": "Geometric crop only; original identity, hair, costume and accessories unchanged."
+          }
+        ],
+        "activeVersion": "0001",
+        "status": "review-pending"
       }
     },
     {
