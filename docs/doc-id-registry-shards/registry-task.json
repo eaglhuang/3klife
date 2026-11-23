@@ -16690,5 +16690,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9736.md",
     "title": "[PROG-2-9736] 移除舊 buff 獲得 3D 特效（攻擊／回血）＋吃到 buff 特效依倍率分級",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2976",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9737.md",
+    "title": "[PROG-2-9737] 攻擊特效正式量產：騎兵／盾兵／法陣縮小降透明度（分兵種倍率）",
+    "category": "task"
   }
 ]
