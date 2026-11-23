@@ -85,6 +85,10 @@ export function createStatusApplyFeedbackSuite(): TestSuite {
         const cfg = buildPlaceholderCutinConfig('zhang-fei', '張飛', '震軍怒喝');
         const keys = (cfg.panels[0].sfx ?? []).map((c) => c.key);
         assert.isTrue(keys.includes('whoosh') && keys.includes('roar'), keys.join(','));
+        // PROG-2-9859：音效要散在整段（約 1.0 秒 hold）而不是全擠在開頭，否則中段會空白
+        const offsets = (cfg.panels[0].sfx ?? []).map((c) => c.offset ?? 0);
+        assert.isTrue(Math.max(...offsets) >= 0.9, offsets.join(','));
+        assert.isTrue(offsets.filter((o) => o >= 0.3).length >= 2, offsets.join(','));
     });
 
     suite.test('狀態飄字：粗字、比以前大、停留更久、會彈出，但比一般傷害小一級', () => {
