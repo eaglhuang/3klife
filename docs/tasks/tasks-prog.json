@@ -16955,7 +16955,7 @@
       "title": "戰前編成視窗（卡 B）",
       "owner": "ClaudeCode_claude-opus-5-5",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-24",
@@ -16972,7 +16972,7 @@
       ],
       "acceptance": [],
       "deliverables": [],
-      "notes": "2026-11-24 | 狀態: in-progress | 驗證: pending | 變更: 上鎖開工 | 阻塞: PROG-2-2211/2212 已於 11-10 以 PR #2072/#2073 合併，分支過期無作用中衝突；見卡內協調結論",
+      "notes": "2026-11-24 | 狀態: done | 驗證: run-cli 9420 pass 3 skip、tsc 測試設定 0 錯誤、compute-gate standard 13/14（1 警告為既有 LoginScene.ts 引用 QaTimeController）、validate-ui-specs 通過、web-desktop 實機 QA 三張截圖（推薦與換槽為真實點擊；主將設定與開啟視窗為方法呼叫，大廳主畫面隱藏） | 變更: PR #2582 squash 合併；編制問題文案改 i18n；手動改編制清除舊推薦理由；推薦通知改為不指定槽位 | 阻塞: 無；卡組選擇器缺關閉鈕、背景透出為既有外觀，另案處理",
       "brief": {
         "style": "classic",
         "label": "",
@@ -16993,7 +16993,8 @@
         "handoff_diff_status": "",
         "trace_artifacts": [],
         "metrics_summary": []
-      }
+      },
+      "completed_at": "2026-11-24T04:30:00+08:00"
     },
     {
       "doc_id": "",
