@@ -15758,6 +15758,73 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9846",
+      "title": "幕府大廳風格統一第二階段：任務牆／太守府／招賢館套用主題＋分節標題小字距與金線",
+      "owner": "claude-code-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-23",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-23T08:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "把主題 token 套到 hall-board／governor-hall／recruit-hall 三個子畫面（appliesToSkins 清單資料化），補分節標題小字距與上方細金線，靜態文字走 textKey",
+      "related": [
+        "PROG-2-9832"
+      ],
+      "depends": [],
+      "acceptance": [
+        "三個子畫面在 appliesToSkins 清單內，無寫死 skin 名稱判斷",
+        "分節標題字距與金線跟隨主題 token（季節／節慶可換色）",
+        "靜態文字有 textKey，四語系齊全",
+        "tsc 0 錯；run-cli 全過"
+      ],
+      "deliverables": [
+        "assets/resources/ui-spec/themes/theme-registry.json",
+        "assets/scripts/ui/core/ThemeSkinRestyle.ts",
+        "assets/scripts/ui/core/UIThemeResolver.ts",
+        "assets/resources/ui-spec/skins/hall-board-screen.skin.json",
+        "assets/resources/ui-spec/skins/governor-hall-screen.skin.json",
+        "assets/resources/ui-spec/layouts/hall-board-main.json",
+        "assets/resources/ui-spec/layouts/governor-hall-main.json",
+        "assets/resources/ui-spec/layouts/recruit-hall-main.json",
+        "assets/resources/i18n/zh-TW.json",
+        "assets/resources/i18n/zh-CN.json",
+        "assets/resources/i18n/en.json",
+        "assets/resources/i18n/ja.json",
+        "tests/ThemeSystem.test.ts",
+        "docs/遊戲規格文件/系統規格書/共用框架總綱規格書-shards/shard-f.md",
+        "docs/agent-briefs/tasks/PROG/PROG-2-9846.md"
+      ],
+      "notes": "2026-11-23 | 狀態: done | 驗證: tsc -p tsconfig.test.json 0 錯；run-cli 9327 passed 3 skipped（ThemeSystem 新增 6 項）；compute-gate standard 見 PR | 變更: registry appliesToSkins 加三個子畫面並新增 slotRoles／skipSlots 資料欄位（ThemeSkinRestyle 依後綴指定卡片底、分節標題、分節金線；pg.* 肖像牆略過）；任務牆／太守府新增 section 標題 slot 與金線節點；靜態文字補 textKey 與四語系 | 阻塞: 未做實機截圖（待使用者驗收）；控制器以 texts 覆寫的標題（任務牆標題、太守府標題等）仍為控制器字串，未改走 i18n；招賢館無分節標題故未加金線；大廳子面板（wall／altar／clan）仍待後續",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "任務牆／太守府／招賢館套用統一主題＋分節標題小字距與金線",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "updated": "2026-11-22"

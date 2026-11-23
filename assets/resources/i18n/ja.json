@@ -982,5 +982,15 @@
   "ui.clan.tier.5": "柱国の名門世家",
   "ui.annual_ranking.bulletin.title": "【史境速報】世家名声の新報",
   "ui.annual_ranking.bulletin.summary": "年末の論功行賞により、我が一族は世家名声 +{0} を獲得しました！",
-  "ui.annual_ranking.bulletin.btn_confirm": "門中を称える"
+  "ui.annual_ranking.bulletin.btn_confirm": "門中を称える",
+  "ui.hall.board.title": "大広間・任務掲示板",
+  "ui.hall.board.spots_header": "大広間・武将配置",
+  "ui.hall.board.btn.military": "軍事",
+  "ui.hall.board.btn.expedition": "天下沙盤",
+  "ui.hall.board.btn.extreme": "天下征鋒",
+  "ui.hall.board.btn.detail": "詳細",
+  "ui.hall.board.btn.accept": "受注",
+  "ui.governor.title": "太守府",
+  "ui.recruit.title": "招賢館",
+  "ui.recruit.btn.rescue": "民間探訪"
 }

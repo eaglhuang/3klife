@@ -43,7 +43,8 @@
             "width": 700,
             "height": 40,
             "text": "大廳・任務牆",
-            "styleSlot": "hall.label.title"
+            "styleSlot": "hall.label.title",
+            "textKey": "ui.hall.board.title"
           },
           {
             "type": "button",
@@ -68,7 +69,8 @@
                 },
                 "height": 40,
                 "text": "關閉",
-                "styleSlot": "hall.label.button"
+                "styleSlot": "hall.label.button",
+                "textKey": "ui.close"
               }
             ]
           },
@@ -95,7 +97,8 @@
                 },
                 "height": 40,
                 "text": "軍事",
-                "styleSlot": "hall.label.button"
+                "styleSlot": "hall.label.button",
+                "textKey": "ui.hall.board.btn.military"
               }
             ]
           },
@@ -122,7 +125,8 @@
                 },
                 "height": 40,
                 "text": "內政",
-                "styleSlot": "hall.label.button"
+                "styleSlot": "hall.label.button",
+                "textKey": "ui.hall.btn.domestic"
               }
             ]
           },
@@ -149,7 +153,8 @@
                 },
                 "height": 40,
                 "text": "天下沙盤",
-                "styleSlot": "hall.label.button"
+                "styleSlot": "hall.label.button",
+                "textKey": "ui.hall.board.btn.expedition"
               }
             ]
           },
@@ -176,7 +181,8 @@
                 },
                 "height": 40,
                 "text": "天下征鋒",
-                "styleSlot": "hall.label.button"
+                "styleSlot": "hall.label.button",
+                "textKey": "ui.hall.board.btn.extreme"
               }
             ]
           },
@@ -254,7 +260,8 @@
                     },
                     "height": 36,
                     "text": "詳情",
-                    "styleSlot": "hall.label.button"
+                    "styleSlot": "hall.label.button",
+                    "textKey": "ui.hall.board.btn.detail"
                   }
                 ]
               },
@@ -281,7 +288,8 @@
                     },
                     "height": 36,
                     "text": "接取",
-                    "styleSlot": "hall.label.button"
+                    "styleSlot": "hall.label.button",
+                    "textKey": "ui.hall.board.btn.accept"
                   }
                 ]
               }
@@ -361,7 +369,8 @@
                     },
                     "height": 36,
                     "text": "詳情",
-                    "styleSlot": "hall.label.button"
+                    "styleSlot": "hall.label.button",
+                    "textKey": "ui.hall.board.btn.detail"
                   }
                 ]
               },
@@ -388,7 +397,8 @@
                     },
                     "height": 36,
                     "text": "接取",
-                    "styleSlot": "hall.label.button"
+                    "styleSlot": "hall.label.button",
+                    "textKey": "ui.hall.board.btn.accept"
                   }
                 ]
               }
@@ -468,7 +478,8 @@
                     },
                     "height": 36,
                     "text": "詳情",
-                    "styleSlot": "hall.label.button"
+                    "styleSlot": "hall.label.button",
+                    "textKey": "ui.hall.board.btn.detail"
                   }
                 ]
               },
@@ -495,7 +506,8 @@
                     },
                     "height": 36,
                     "text": "接取",
-                    "styleSlot": "hall.label.button"
+                    "styleSlot": "hall.label.button",
+                    "textKey": "ui.hall.board.btn.accept"
                   }
                 ]
               }
@@ -575,7 +587,8 @@
                     },
                     "height": 36,
                     "text": "詳情",
-                    "styleSlot": "hall.label.button"
+                    "styleSlot": "hall.label.button",
+                    "textKey": "ui.hall.board.btn.detail"
                   }
                 ]
               },
@@ -602,7 +615,8 @@
                     },
                     "height": 36,
                     "text": "接取",
-                    "styleSlot": "hall.label.button"
+                    "styleSlot": "hall.label.button",
+                    "textKey": "ui.hall.board.btn.accept"
                   }
                 ]
               }
@@ -682,7 +696,8 @@
                     },
                     "height": 36,
                     "text": "詳情",
-                    "styleSlot": "hall.label.button"
+                    "styleSlot": "hall.label.button",
+                    "textKey": "ui.hall.board.btn.detail"
                   }
                 ]
               },
@@ -709,7 +724,8 @@
                     },
                     "height": 36,
                     "text": "接取",
-                    "styleSlot": "hall.label.button"
+                    "styleSlot": "hall.label.button",
+                    "textKey": "ui.hall.board.btn.accept"
                   }
                 ]
               }
@@ -789,7 +805,8 @@
                     },
                     "height": 36,
                     "text": "詳情",
-                    "styleSlot": "hall.label.button"
+                    "styleSlot": "hall.label.button",
+                    "textKey": "ui.hall.board.btn.detail"
                   }
                 ]
               },
@@ -816,11 +833,24 @@
                     },
                     "height": 36,
                     "text": "接取",
-                    "styleSlot": "hall.label.button"
+                    "styleSlot": "hall.label.button",
+                    "textKey": "ui.hall.board.btn.accept"
                   }
                 ]
               }
             ]
+          },
+          {
+            "type": "panel",
+            "name": "SpotsHeaderLine",
+            "id": "spotsHeaderLine",
+            "widget": {
+              "top": 88,
+              "left": 968
+            },
+            "width": 400,
+            "height": 1,
+            "skinSlot": "hall.divider.section"
           },
           {
             "type": "label",
@@ -833,7 +863,8 @@
             "width": 400,
             "height": 36,
             "text": "大廳・武將點位",
-            "styleSlot": "hall.label.name"
+            "styleSlot": "hall.label.section",
+            "textKey": "ui.hall.board.spots_header"
           },
           {
             "type": "panel",

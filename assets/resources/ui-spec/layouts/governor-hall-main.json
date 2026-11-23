@@ -43,7 +43,8 @@
             "height": 40,
             "text": "太守府",
             "styleSlot": "mp.label.title",
-            "width": 700
+            "width": 700,
+            "textKey": "ui.governor.title"
           },
           {
             "type": "button",
@@ -68,7 +69,8 @@
                 },
                 "height": 40,
                 "text": "關閉",
-                "styleSlot": "mp.label.button"
+                "styleSlot": "mp.label.button",
+                "textKey": "ui.close"
               }
             ]
           },
@@ -243,6 +245,18 @@
             "skinSlot": "mp.row.bg",
             "children": [
               {
+                "type": "panel",
+                "name": "GovGoldTitleLine",
+                "id": "govGoldTitleLine",
+                "widget": {
+                  "top": 12,
+                  "left": 24
+                },
+                "width": 560,
+                "height": 1,
+                "skinSlot": "mp.divider.section"
+              },
+              {
                 "type": "label",
                 "name": "GovGoldCardTitle",
                 "id": "govGoldTitle",
@@ -252,7 +266,7 @@
                 },
                 "height": 40,
                 "text": "",
-                "styleSlot": "mp.label.name",
+                "styleSlot": "mp.label.section",
                 "width": 560
               },
               {
@@ -322,6 +336,18 @@
             "skinSlot": "mp.row.bg",
             "children": [
               {
+                "type": "panel",
+                "name": "GovFoodTitleLine",
+                "id": "govFoodTitleLine",
+                "widget": {
+                  "top": 12,
+                  "left": 24
+                },
+                "width": 560,
+                "height": 1,
+                "skinSlot": "mp.divider.section"
+              },
+              {
                 "type": "label",
                 "name": "GovFoodCardTitle",
                 "id": "govFoodTitle",
@@ -331,7 +357,7 @@
                 },
                 "height": 40,
                 "text": "",
-                "styleSlot": "mp.label.name",
+                "styleSlot": "mp.label.section",
                 "width": 560
               },
               {
@@ -401,6 +427,18 @@
             "skinSlot": "mp.row.bg",
             "children": [
               {
+                "type": "panel",
+                "name": "GovTroopTitleLine",
+                "id": "govTroopTitleLine",
+                "widget": {
+                  "top": 12,
+                  "left": 24
+                },
+                "width": 560,
+                "height": 1,
+                "skinSlot": "mp.divider.section"
+              },
+              {
                 "type": "label",
                 "name": "GovTroopCardTitle",
                 "id": "govTroopTitle",
@@ -410,7 +448,7 @@
                 },
                 "height": 40,
                 "text": "",
-                "styleSlot": "mp.label.name",
+                "styleSlot": "mp.label.section",
                 "width": 560
               },
               {
