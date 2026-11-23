@@ -9,7 +9,7 @@
 import { assert, TestSuite } from './TestRunner';
 import { StatusEffect } from '../assets/scripts/shared/CommonEnums';
 import {
-    STATUS_WAVE_MAX_SEC, StatusCueThrottle, statusMakesTargetFlinch, statusPolarityOf, statusWaveDelaySec,
+    STATUS_WAVE_MAX_SEC, StatusCueThrottle, statusFloatTypeOf, statusMakesTargetFlinch, statusPolarityOf, statusWaveDelaySec,
 } from '../assets/scripts/battle/shared/StatusApplyFeedback';
 import { buildPlaceholderCutinConfig, CUTIN_SFX_FALLBACK, resolveCutinSfxClip } from '../assets/scripts/shared/cutin/cutinSupport';
 import { FLOAT_TEXT_STYLES } from '../assets/scripts/core/systems/FloatTextStyle';
@@ -33,6 +33,14 @@ export function createStatusApplyFeedbackSuite(): TestSuite {
         assert.isTrue(statusMakesTargetFlinch('control'));
         assert.isTrue(statusMakesTargetFlinch('debuff'));
         assert.isTrue(!statusMakesTargetFlinch('buff'));
+    });
+
+    suite.test('狀態飄字依極性分色：增益金綠、減益橘紅、控制紫，三種樣式顏色互不相同', () => {
+        assert.equals('status_buff', statusFloatTypeOf('buff'));
+        assert.equals('status_debuff', statusFloatTypeOf('debuff'));
+        assert.equals('status_control', statusFloatTypeOf('control'));
+        const key = (t: 'status_buff' | 'status_debuff' | 'status_control') => JSON.stringify(FLOAT_TEXT_STYLES[t].color);
+        assert.equals(3, new Set([key('status_buff'), key('status_debuff'), key('status_control')]).size);
     });
 
     suite.test('震波：我方奧義暈敵軍，離我方越遠的敵軍越晚', () => {
@@ -77,6 +85,10 @@ export function createStatusApplyFeedbackSuite(): TestSuite {
         const cfg = buildPlaceholderCutinConfig('zhang-fei', '張飛', '震軍怒喝');
         const keys = (cfg.panels[0].sfx ?? []).map((c) => c.key);
         assert.isTrue(keys.includes('whoosh') && keys.includes('roar'), keys.join(','));
+        // PROG-2-9859：音效要散在整段（約 1.0 秒 hold）而不是全擠在開頭，否則中段會空白
+        const offsets = (cfg.panels[0].sfx ?? []).map((c) => c.offset ?? 0);
+        assert.isTrue(Math.max(...offsets) >= 0.9, offsets.join(','));
+        assert.isTrue(offsets.filter((o) => o >= 0.3).length >= 2, offsets.join(','));
     });
 
     suite.test('狀態飄字：粗字、比以前大、停留更久、會彈出，但比一般傷害小一級', () => {

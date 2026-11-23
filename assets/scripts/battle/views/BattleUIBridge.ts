@@ -22,7 +22,7 @@ import { statusEffectFloatText, POISON_STATUS_ID } from '../shared/StatusEffectL
 import { ensureBattleUiFeedbackLoaded, getBattleUiFeedback, isPlateFadeTask, planHealSteps, statusFloatWithStacks } from '../shared/BattleUiFeedback';
 import { overrideFloatTextStyle } from '../../core/systems/FloatTextStyle';
 import { BLOCK_FLOAT_TEXT, shieldHitFeedback, type DamageBlockReason } from '../shared/BlockFeedback';
-import { StatusCueThrottle, statusMakesTargetFlinch, statusPolarityOf, statusWaveDelaySec } from '../shared/StatusApplyFeedback';
+import { StatusCueThrottle, statusFloatTypeOf, statusMakesTargetFlinch, statusPolarityOf, statusWaveDelaySec } from '../shared/StatusApplyFeedback';
 import { salvageSummaryLines } from '../../core/systems/StageSalvageSettlement';
 import { AUTO_PLAY_NO_SORTIE_LINE, AUTO_PLAY_OFF_LINE, AUTO_PLAY_ON_LINE, AUTO_PLAY_SKIP_LINE, AutoPlayState, delegateToggleStopsAutoPlay } from '../../core/systems/AutoPlay';
 import { DELEGATE_OFF_LINE, DELEGATE_UNAVAILABLE_LINE, delegateOnLine, FOOD_EMPTY_LINE } from '../../core/systems/SortieDeployScripts';
@@ -1595,7 +1595,7 @@ export class BattleUIBridge {
           return;
         }
         const text = statusFloatWithStacks(statusEffectFloatText(data.effect), data.stacks, getBattleUiFeedback().statusBadge.stackFloatSuffix);
-        if (text) this.ctx.unitRenderer?.playBuffConsumeValue(live.lane, live.depth, text);
+        if (text) this.ctx.unitRenderer?.playBuffConsumeValue(live.lane, live.depth, text, statusFloatTypeOf(polarity));
       };
       if (delay > 0) this.scene.scheduleOnce(show, delay);
       else show();

@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 286,
+    "done": 287,
     "in_progress": 0,
-    "open": 86,
-    "total": 372
+    "open": 87,
+    "total": 374
   },
   "tasks": [
     {
@@ -16302,6 +16302,144 @@
       "acceptance": [],
       "deliverables": [],
       "notes": "2026-11-23 | 狀態: done | 驗證: tsc 0 錯、單測 9361 通過 | 變更: UnitRenderer 主將名牌只顯示武將名；測試改斷言不含（主將棋子）；狀態圖示回合／層數角標 #2521 已有 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9857",
+      "title": "戰場回饋：狀態飄字依增益／減益／控制分色",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-23",
+      "created_by_agent": "codex-gpt-5.4-mini",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-23 | 狀態: done | 驗證: tsc 0 錯、單測 9364 通過、無頭截圖 a1fire-010 橘紅「燃燒」、e1ult-016 紫色「暈眩」 | 變更: FloatTextStyle 新增 status_buff／status_debuff／status_control；StatusApplyFeedback.statusFloatTypeOf；UnitRenderer／BattleUIBridge 依極性選樣式（補註：本卡程式先於上鎖完成，提交前才補卡上鎖） | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_2996",
+      "id": "PROG-2-9861",
+      "title": "太守府數字標示釐清：每季產出 vs 現有存量、黃金 0 提示、左欄留白",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-23",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "太守府左欄黃金／糧草是每季產出流向，與大廳頂欄現有存量易混；加標籤與存量列、黃金基礎值 0 加原因提示、左欄上移去留白。不改數值規則。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [
+        "assets/scripts/core/systems/GovernorHallView.ts",
+        "assets/scripts/ui/core/GovernorHallController.ts",
+        "assets/resources/ui-spec/layouts/governor-hall-main.json",
+        "tests/GovernorHallView.test.ts",
+        "tests/GovernorHallController.test.ts"
+      ],
+      "notes": "2026-11-23 | 狀態: done | 驗證: 單元測試 9365 通過、tsc 0 錯、web-desktop 實開太守府 console 0 錯 | 變更: 本季產出標示、現有存量列、黃金 0 提示、左欄去留白；數值規則未改 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9859",
+      "title": "戰場回饋：奧義暫代分鏡中段補音效（1.3 秒空白）",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-23",
+      "created_by_agent": "codex-gpt-5.4-mini",
+      "started_at": "2026-11-23T11:40:09.232Z",
+      "started_by_agent": "ClaudeCode_opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-23 | 狀態: done | 驗證: tsc 0 錯、單測 ALL PASS（9364 passed）、錄製奧義音效時間點：cast 後 wave +229ms、thunder +295ms、boom +862ms、hurt +1246ms、fireball +1626ms、teleport +1846ms，相鄰間隔皆 < 700ms | 變更: cutinSupport 暫代分鏡 sfx 加 hit_heavy@0.6、hit@0.98；測試加 offsets 斷言 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",

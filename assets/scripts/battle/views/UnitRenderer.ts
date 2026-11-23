@@ -1330,10 +1330,10 @@ export class UnitRenderer extends Component {
     });
   }
 
-  public playBuffConsumeValue(lane: number, depth: number, text: string): void {
+  public playBuffConsumeValue(lane: number, depth: number, text: string, floatType: FloatTextType = 'status'): void {
     const worldPos = this.getUnitWorldPosition(lane, depth);
     if (!worldPos) return;
-    this.spawnFloatText(text, 'status', worldPos);
+    this.spawnFloatText(text, floatType, worldPos);
   }
 
   /**
