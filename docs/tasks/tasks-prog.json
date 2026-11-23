@@ -15862,7 +15862,7 @@
         "assets/resources/ui-spec/layouts/hall-board-main.json",
         "assets/resources/ui-spec/layouts/governor-hall-main.json",
         "tests/ThemeSystem.test.ts",
-        "docs/agent-briefs/tasks/PROG/PROG-2-9853.md"
+        "docs/agent-briefs/tasks/PROG/PROG-2-9854.md"
       ],
       "notes": "2026-11-23 | 狀態: done | 驗證: tsc -p tsconfig.test.json 0 錯；run-cli 9342 passed 3 skipped；本機建置實跑任務牆截圖（scratchpad/fix-board-board.png）面板不透明、僅接取鈕深紅 | 變更: 根因是 9846 把 hall-board／governor-hall 套進主題後，skin 的 hall.button.bg／spot.bg 填色為 primary 命中 fillRoles 變實心深紅，card／row 底套 glassPanel（alpha 118 半透明）造成後方文字穿透；新增 glassPanelSolid／insetPanel 角色與 .panel.solid／.spot.bg／.button.bg slotRoles，接取與升級鈕改用 *.button.primary.bg | 阻塞: 無",
       "brief": {
