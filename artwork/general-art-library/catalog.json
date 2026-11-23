@@ -12151,7 +12151,7 @@
           {
             "version": "0008",
             "file": "avatars/xu_shi__徐氏__avatar_0008.png",
-            "status": "review-pending",
+            "status": "superseded",
             "sha256": "1948875b842ef5d2b9984e09ad869c23fd853df533f361718e3112e600025c63",
             "canvas": "380x415",
             "sourceBust": "xu_shi__徐氏__bust_0001.png",
@@ -12161,10 +12161,25 @@
               582,
               415
             ],
-            "note": "Face-centered shoulder crop derived from measured face center on the standing source; dagger excluded, both shoulder caps kept, no redesign or distortion."
+            "note": "Superseded by face-centered shoulder crop version 0009."
+          },
+          {
+            "version": "0009",
+            "file": "avatars/xu_shi__徐氏__avatar_0009.png",
+            "status": "review-pending",
+            "sha256": "4ec339b7326a43234324db2899afcac735880f165e508b1be88593efd1bcd118",
+            "canvas": "430x430 RGBA",
+            "sourceBust": "xu_shi__徐氏__bust_0001.png",
+            "cropBox": [
+              309,
+              0,
+              739,
+              430
+            ],
+            "note": "Geometric crop only; measured face center aligned to canvas centerline; full hair ornament retained and both shoulder/chest areas visible, no redesign."
           }
         ],
-        "activeVersion": "0008"
+        "activeVersion": "0009"
       },
       "battle": {
         "activeVersion": "0001",
