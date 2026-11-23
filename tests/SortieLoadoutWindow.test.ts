@@ -91,6 +91,41 @@ export function createSortieLoadoutWindowSuite(): TestSuite {
         assert.equals('cao-ren', session.leadGeneralId);
     });
 
+    suite.test('首戰指定主將不在名冊：仍推薦為主將、lead 留空交戰場 fallback，理由為本關指定主將（PROG-2-9913）', async () => {
+        const session = await sessionWith(roster(), null);
+        const zhangFei = officer('zhang-fei', '張飛', { lea: 90, str: 95 });
+        const prebattle: SortiePrebattleDeps = {
+            weights: weights(),
+            encounters: () => [{ id: 'enc-outside', playerGeneralId: 'zhang-fei' }],
+            currentEncounterId: () => 'enc-outside',
+            cards: cardInfos,
+        };
+        const ctrl = new SortieSetupController({ session, lookup: zhTwLookup(), prebattle, fixedCommander: () => zhangFei });
+        assert.equals('zhang-fei', ctrl.commander()?.id ?? '');
+        assert.isTrue(await ctrl.recommend());
+        assert.equals('zhang-fei', ctrl.getView().commanderId ?? '');
+        assert.equals(null, session.leadGeneralId);
+        assert.isTrue(session.sortieSupport.strategistUid !== null, '名冊外主將仍能存參謀官');
+        assert.isFalse(ctrl.getView().texts.sortieNotice.includes('尚未選定主將'), ctrl.getView().texts.sortieNotice);
+        assert.isTrue(ctrl.getView().texts.recommendReasonLabel.includes('張飛'), ctrl.getView().texts.recommendReasonLabel);
+        assert.isTrue(ctrl.getView().texts.recommendReasonLabel.includes('本關指定主將'), ctrl.getView().texts.recommendReasonLabel);
+        assert.isFalse(ctrl.getView().texts.sortieNotice.includes('不能出戰'), ctrl.getView().texts.sortieNotice);
+    });
+
+    suite.test('非首戰（沒有 fixedCommander）：指定主將不在名冊時不自動當主將，行為與舊版相同', async () => {
+        const session = await sessionWith(roster(), null);
+        const prebattle: SortiePrebattleDeps = {
+            weights: weights(),
+            encounters: () => [{ id: 'enc-y', playerGeneralId: 'zhang-fei' }],
+            currentEncounterId: () => 'enc-y',
+            cards: cardInfos,
+        };
+        const ctrl = new SortieSetupController({ session, lookup: zhTwLookup(), prebattle });
+        assert.equals(null, ctrl.commander());
+        assert.isTrue(await ctrl.recommend());
+        assert.isTrue(session.leadGeneralId !== null && session.leadGeneralId !== 'zhang-fei', '退回一般推薦');
+    });
+
     suite.test('沒有可出戰主將時推薦不改動任何東西，通知說明原因', async () => {
         const session = await sessionWith([], null);
         const prebattle: SortiePrebattleDeps = { weights: weights(), encounters: () => [], currentEncounterId: () => null, cards: cardInfos };

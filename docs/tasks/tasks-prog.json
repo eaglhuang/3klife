@@ -17062,17 +17062,17 @@
       "title": "戰前編成實機驗收合併（卡 D）",
       "owner": "ClaudeCode_claude-opus-5-5",
       "priority": "P1",
-      "status": "open",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-24",
       "created_by_agent": "ClaudeCode_claude-opus-5-5",
-      "started_at": "",
-      "started_by_agent": "",
+      "started_at": "2026-11-24T05:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
       "chain_id": "",
       "chain_step": "",
       "sensor_triggered_by": "",
-      "description": "併入 PROG-2-0143（儲存預設／套用預設實機驗收）與 PROG-2-0165（委任按鈕實機驗收），對卡 A、B、C 的戰前編成做一次實機驗收。",
+      "description": "依總PM 裁決：驗收首戰戰前編成（推薦、預填、確認出戰）並修首戰指定主將不在名冊時仍可當主將（方案 A）；0143／0165 等其餘驗收另卡處理。",
       "related": [
         "PROG-2-0143",
         "PROG-2-0165"
@@ -17091,7 +17091,7 @@
       "deliverables": [
         "實機驗收紀錄"
       ],
-      "notes": "2026-11-24 | 狀態: open | 驗證: pending | 變更: 開草稿 | 阻塞: 依賴 B、C 完成，以及 PROG-2-0143、PROG-2-0165 兩張 open 驗收卡",
+      "notes": "2026-11-24 | 狀態: done | 驗證: run-cli 9439 pass 3 skip exit 0；tsc 測試設定 0 錯；compute-gate quick 4/4；web-desktop 建置 exit 36 且 index.html 存在；playtest-online 首戰 3 場各 12/12 通過、console error 0、pageerror 0：場1 勝 battleMs 80.6s endTurnFallbacks 0；場2 敗 68.2s endTurnFallbacks 0；場3 勝 80.2s endTurnFallbacks 0；首戰編成視窗截圖：主將張飛（本關指定主將）、通知「已依推薦編制完成」無「尚未選定主將」、參謀／後勤不派（encounter-001 權重覆寫 skipStrategist／skipDeputy，設計如此）| 變更: 依總PM 裁決 A，首戰指定主將不在名冊時仍推薦為主將（SortieSetupController fixedCommander；LobbyScene 只限首戰）；lead 留空由戰場 fallback 到關卡指定主將；setSortieSupport／getSortieSupportSummary 明確帶主將 uid，並補名冊外主將成員（GameSession withCommanderMember）；名稱顯示修正；新增 SortieLoadoutWindow 測試 2 案 | 另卡驗收（本卡未做，建議另派）: 0143 儲存／套用預設實機、0165 btnDelegate 實機、戰中教學浮窗截圖、確認出戰過早 fallback 實機點擊、卡組選擇器關閉鈕、非首戰出征流程實機 | 75 秒回歸未定論: 改前 1 場 battleMs 64s（主將甘寧），改後 3 場 68–81s（主將張飛），仍高於基準 35–54 秒，待總PM 決定（建議同名冊對照實測） | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",

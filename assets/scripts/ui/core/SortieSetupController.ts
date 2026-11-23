@@ -74,7 +74,8 @@ export interface SortieSetupDeps {
         readonly deck: readonly string[];
         setPendingSceneGambitArmed(armed: boolean): Promise<boolean>;
         getDeployableGenerals(): GeneralConfig[];
-        setSortieSupport(strategistUid: string | null, deputyUid: string | null): SortieLoadoutCheck;
+        /** commanderUid 省略時用 session 的主將；名冊外的首戰指定主將要明確傳入（PROG-2-9913） */
+        setSortieSupport(strategistUid: string | null, deputyUid: string | null, commanderUid?: string | null): SortieLoadoutCheck;
         getSortieSupportSummary(commanderUid: string): SortieSupportSummary;
         getSortieInput(generalId: string): CreateSortieInput | null;
         setLeadGeneral(generalId: string | null): Promise<boolean>;
@@ -82,6 +83,11 @@ export interface SortieSetupDeps {
     };
     /** 大廳開戰時的守方敵將（第一個關卡）；未載入時回傳 null，畫面顯示資料未載入 */
     getEnemyGeneral?: () => GeneralConfig | null;
+    /**
+     * 首戰指定主將不在玩家名冊時（總PM 裁決 A，PROG-2-9913）：回傳該關指定的武將資料，讓他仍可被推薦、顯示為主將。
+     * 戰場會以關卡資料上陣；lead 留空讓戰場 fallback 到關卡指定主將。名冊內或沒有指定主將時回傳 null。
+     */
+    fixedCommander?: () => GeneralConfig | null;
     /** 編制預設（DEP-14）：每位主將一組；未提供時不能儲存、也沒有推薦 */
     presets?: {
         get(): SortiePresetStore;
@@ -118,8 +124,14 @@ export class SortieSetupController {
     /** 主將（必須仍可出戰），沒有指定或不能出戰時回傳 null */
     commander(): GeneralConfig | null {
         const lead = this._deps.session.leadGeneralId;
-        if (!lead) return null;
-        return this._deps.session.getDeployableGenerals().find((g) => g.id === lead) ?? null;
+        if (lead) {
+            const deployable = this._deps.session.getDeployableGenerals().find((g) => g.id === lead);
+            if (deployable) return deployable;
+        }
+        // 名冊外的首戰指定主將：lead 為空（或就是他）時視為主將（PROG-2-9913）
+        const fixed = this._deps.fixedCommander?.() ?? null;
+        if (fixed && (lead === null || lead === fixed.id)) return fixed;
+        return null;
     }
 
     /** 某角色的候選清單（不含主將與另一個角色），第一格是「不派」 */
@@ -333,8 +345,11 @@ export class SortieSetupController {
             pol: statOf(g, 'pol'),
             bloodlineId: g.bloodlineId,
         });
+        const fixed = this._deps.fixedCommander?.() ?? null;
+        const commanderPool = generals.map(toCandidate);
+        if (fixed && !generals.some((g) => g.id === fixed.id)) commanderPool.push(toCandidate(fixed));
         const roster: PreBattleRosterInput = {
-            commanders: generals.map(toCandidate),
+            commanders: commanderPool,
             strategists: generals.map(toCandidate),
             deputies: generals.map(toCandidate),
             tallies: cards.map((c) => ({ cardId: c.cardId, unitType: c.unitType, rarity: c.rarity })),
@@ -348,15 +363,19 @@ export class SortieSetupController {
             this._notice = issueText || t('sortie.recommend.failed');
             return false;
         }
-        const nameOf = (id: string): string => generals.find((g) => g.id === id)?.name ?? id;
+        const nameOf = (id: string): string => (fixed?.id === id ? fixed.name : generals.find((g) => g.id === id)?.name) ?? id;
         const line = (role: string, name: string, reasonKey: string): string => t('sortie.recommend.line', role, name, t(reasonKey));
 
-        if (this._deps.session.leadGeneralId !== rec.commander.id && !(await this._deps.session.setLeadGeneral(rec.commander.id))) {
+        // 名冊外的指定主將：lead 設為空，戰場 fallback 到關卡指定主將（PROG-2-9913）
+        const commanderId = rec.commander.id;
+        const outsideRoster = !generals.some((g) => g.id === commanderId);
+        const leadTarget = outsideRoster ? null : commanderId;
+        if (this._deps.session.leadGeneralId !== leadTarget && !(await this._deps.session.setLeadGeneral(leadTarget))) {
             this._notice = t('sortie.recommend.failed');
             return false;
         }
         this._reasonLines.push(line(t('prebattle.role.commander'), nameOf(rec.commander.id), rec.commander.reasonKey));
-        const check = this._deps.session.setSortieSupport(rec.strategist?.id ?? null, rec.deputy?.id ?? null);
+        const check = this._deps.session.setSortieSupport(rec.strategist?.id ?? null, rec.deputy?.id ?? null, commanderId);
         if (rec.strategist) this._reasonLines.push(line(t('prebattle.role.strategist'), nameOf(rec.strategist.id), rec.strategist.reasonKey));
         if (rec.deputy) this._reasonLines.push(line(t('prebattle.role.deputy'), nameOf(rec.deputy.id), rec.deputy.reasonKey));
         if (rec.tallyCards.length > 0) {
@@ -394,7 +413,7 @@ export class SortieSetupController {
             this._notice = this._t('sortie.preset.unavailable');
             return false;
         }
-        const check = this._deps.session.setSortieSupport(resolved.strategistUid, resolved.deputyUid);
+        const check = this._deps.session.setSortieSupport(resolved.strategistUid, resolved.deputyUid, commander.id);
         this._notice = check.ok ? this._t('sortie.preset.applied') : check.issues.map((i) => this._t(SORTIE_LOADOUT_ISSUE_KEY[i])).join('、');
         return check.ok;
     }
@@ -409,7 +428,7 @@ export class SortieSetupController {
         const commander = this.commander();
         const support = commander ? this._effective(commander.id) : { strategistUid: null, deputyUid: null };
         return role === 'strategist'
-            ? this._deps.session.setSortieSupport(uid, support.deputyUid)
-            : this._deps.session.setSortieSupport(support.strategistUid, uid);
+            ? this._deps.session.setSortieSupport(uid, support.deputyUid, commander?.id ?? null)
+            : this._deps.session.setSortieSupport(support.strategistUid, uid, commander?.id ?? null);
     }
 }

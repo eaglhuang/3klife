@@ -765,6 +765,12 @@ export interface SortieSupportSummary {
     deputyBonus: DeputyFoodBonus;
 }
 
+/** 名冊外的首戰指定主將（PROG-2-9913）：不可出戰也要能當主將；補一筆無血統的成員，只為了通過「主將必須在成員中」的檢查 */
+function withCommanderMember(members: SortieMember[], commanderUid: string | null): SortieMember[] {
+    if (!commanderUid || members.some((m) => m.id === commanderUid)) return members;
+    return [...members, { id: commanderUid }];
+}
+
 function toSortieMember(g: GeneralConfig): SortieMember {
     return {
         id: g.id,
@@ -5602,7 +5608,7 @@ export class GameSession implements AcademyRecordPort {
     /** 某主將出征時實際生效的支援與加成；失效的支援（不能出戰、與主將撞角色或血統）視為不派 */
     public getSortieSupportSummary(commanderUid: string): SortieSupportSummary {
         const deployable = this.getDeployableGenerals();
-        const members = deployable.map(toSortieMember);
+        const members = withCommanderMember(deployable.map(toSortieMember), commanderUid);
         const byId = new Map(deployable.map((g) => [g.id, g]));
         const pick = (uid: string | null): GeneralConfig | null => (uid && uid !== commanderUid ? byId.get(uid) ?? null : null);
         const fits = (st: GeneralConfig | null, dp: GeneralConfig | null): boolean =>
@@ -5620,7 +5626,7 @@ export class GameSession implements AcademyRecordPort {
     }
 
     private _checkSortieSupport(commanderUid: string | null, strategistUid: string | null, deputyUid: string | null): SortieLoadoutCheck {
-        const members = this.getDeployableGenerals().map(toSortieMember);
+        const members = withCommanderMember(this.getDeployableGenerals().map(toSortieMember), commanderUid);
         return validateSortieLoadout({ commanderUid: commanderUid ?? '', strategistUid, deputyUid }, members);
     }
 
