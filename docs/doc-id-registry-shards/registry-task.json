@@ -16696,5 +16696,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9737.md",
     "title": "[PROG-2-9737] 攻擊特效正式量產：騎兵／盾兵／法陣縮小降透明度（分兵種倍率）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_2977",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9738.md",
+    "title": "[PROG-2-9738] 騎兵／騎馬武將套用 spine-trial 全套騎乘動作（攻擊／閃避／倒下／後退）",
+    "category": "task"
   }
 ]

@@ -50,13 +50,44 @@ const generals: Record<string, { name: string; footX: number }> = {
   zhao_yun: { name: 'zhao_v2', footX: 4.5 }, zhang_fei: { name: 'char2', footX: 15 },
   guan_yu: { name: 'guan_yu', footX: 9 }, lu_bu: { name: 'lu_bu', footX: 9 },
 };
+/**
+ * 騎馬武將（PROG-2-9738）：騎馬是「騎術」資格（使用者 11/23 裁決），武將資料的 ridingTier > 0 就騎馬，與帶什麼兵種無關；
+ * 騎術三級（騎術／精騎／神駒）將來換坐騎外觀，目前只有一種馬。
+ * 騎馬版素材（騎手＋馬合成骨架）來自 spine-trial，私有、不進倉庫；缺素材時由 hasFailed 退回步行版。
+ * 目前只有趙雲有騎馬骨架，待 spine-trial 補提交 zhao_v2 騎手圖集後才會真的載入。
+ */
+const MOUNTED_GENERALS: Record<string, { dir: string; name: string; footX: number }> = {
+  zhao_yun: { dir: 'zhao_yun_mounted', name: 'zhao_mounted', footX: 0 },
+};
+const mountedCache = new Map<string, UnitSpineConfig>();
+function mountedGeneralConfig(key: string): UnitSpineConfig | null {
+  const art = MOUNTED_GENERALS[key];
+  if (!art) return null;
+  let config = mountedCache.get(key);
+  if (!config) {
+    config = { path: `spine/generals/${art.dir}/${art.name}`, displayScale: 0.12, labelToFoot: 230, footOffset: { x: art.footX, y: 0 },
+      walkGroundSpeed: 1251.14, speedMultiplier: 2, maxAnimationSpeed: MAX_WALK_ANIMATION_SPEED, mirrorSkin: 'hand_mirror',
+      footfallIntervalSec: CAVALRY_GALLOP_PERIOD_SEC / 2, bobPx: 0,
+      clips: {
+        idle: clip('idle', 1.6, true), move: clip('gallop', CAVALRY_GALLOP_PERIOD_SEC, true, 'trot'), retreat: clip('retreat', 1.2, true, 'gallop'),
+        attack: clip('attack_spear', 1.2, false, 'thrust'), hit: clip('hit', 0.8), dodge: clip('dodge', 0.9, false, 'hit'), fall: clip('fall', 1.8, false, 'hit'),
+      } };
+    mountedCache.set(key, config);
+  }
+  return config;
+}
 const generalCache = new Map<string, UnitSpineConfig>();
 const soldierCache = new Map<string, UnitSpineConfig>();
-export function generalSpineConfig(id: string, templateId?: string | null): UnitSpineConfig | null {
+export function generalSpineConfig(id: string, templateId?: string | null, ridingTier = 0,
+  hasFailed?: (path: string) => boolean): UnitSpineConfig | null {
   const template = templateId?.toLowerCase().replace(/-/g, '_');
   const key = template && generals[template] ? template : id.toLowerCase().replace(/-/g, '_');
   const art = generals[key];
   if (!art) return null;
+  if (ridingTier > 0) {
+    const mounted = mountedGeneralConfig(key);
+    if (mounted && !(hasFailed?.(mounted.path))) return mounted;
+  }
   let config = generalCache.get(key);
   if (!config) {
     config = { path: `spine/generals/${key}/${art.name}`, displayScale: 0.22, labelToFoot: 230, footOffset: { x: art.footX, y: 0 },
@@ -84,7 +115,7 @@ const ELITE_ART: Record<string, { troop: string; art: string }> = {
  * - 縮放 0.10：實機對照（11/19）0.12 時騎手頭比步兵大一圈；0.10 時騎手頭與步兵相同，馬身約 90 像素、比一格窄。
  * - 隊形比步兵拉開：馬身寬，用步兵站位三匹馬會疊成一團。
  * - gallop 週期 0.567 秒（橫向襲步：後遠→後近→前遠→前近→騰空），揚塵與蹄聲取每半週期一拍（每拍兩聲蹄響）；馬骨架本身有起伏，不再加整隊起伏。
- * - 合成骨架沒有 dodge／fall／retreat：retreat 用 gallop、dodge／fall 用 hit 代替，待 spine-trial 補動作。
+ * - 合成骨架 v2（PROG-2-9738，50 個動作）已有 attack_spear／dodge／fall／retreat；舊骨架缺這些動作時由 fallback 退回 thrust／hit／gallop。
  * - 只有藍色版：敵方騎兵沿用紅色槍兵，待換色版。
  */
 const CAVALRY_GALLOP_PERIOD_SEC = 0.5667;
@@ -100,8 +131,8 @@ function cavalrySpineConfig(): UnitSpineConfig {
     walkGroundSpeed: 1251.14, speedMultiplier: 2, maxAnimationSpeed: MAX_WALK_ANIMATION_SPEED, mirrorSkin: 'hand_mirror', squad: CAVALRY_SQUAD_SLOTS,
     footfallIntervalSec: CAVALRY_GALLOP_PERIOD_SEC / 2, bobPx: 0,
     clips: {
-      idle: clip('idle', 1.6, true), move: clip('gallop', CAVALRY_GALLOP_PERIOD_SEC, true, 'trot'), retreat: clip('gallop', CAVALRY_GALLOP_PERIOD_SEC, true, 'trot'),
-      attack: clip('thrust', 1), hit: clip('hit', 0.8), dodge: clip('hit', 0.8), fall: clip('hit', 0.8),
+      idle: clip('idle', 1.6, true), move: clip('gallop', CAVALRY_GALLOP_PERIOD_SEC, true, 'trot'), retreat: clip('retreat', 1.2, true, 'gallop'),
+      attack: clip('attack_spear', 1.2, false, 'thrust'), hit: clip('hit', 0.8), dodge: clip('dodge', 0.9, false, 'hit'), fall: clip('fall', 1.8, false, 'hit'),
     } };
   soldierCache.set(CAVALRY_NAME, config);
   return config;
