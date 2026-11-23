@@ -17111,6 +17111,76 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9885",
+      "title": "武將頭像點擊一定說話：全遊戲共用的頭像點擊說話行為（AI 快取→大廳台詞→i18n 保底）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-24T14:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者裁定 2026-11-24：遊戲中只要出現武將頭像，點擊就一定會說話。新增共用選句（core/systems/AvatarTalk.ts：本機 AI 快取→HallChatLines 底稿→i18n 保底，依友誼值、時段、連點換句與冷卻）與共用泡泡（ui/core/AvatarTalkBubble.ts：單一泡泡節點重用、點泡泡關閉），各畫面只呼叫 bindAvatarTalk(node, generalId)。AI 快取句沿用「有感而發」成就。戰場 HUD 頭像不在範圍（戰場專家）。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "全遊戲非戰場頭像（武將列表、快速檢視、結算窗、血統樹、關係圖、轉蛋結果與主角、大廳主將／城池／列表／結緣頭像、名牌小頭像）點擊都有台詞",
+        "台詞來源順序 AI 快取→大廳台詞底稿（依友誼值）→i18n 保底；任何情況不回空",
+        "連點換句、極短間隔冷卻；泡泡單一節點重用、可點掉、自動消失、夾在畫面內",
+        "保底句與格式走 i18n 四語系（zh-TW、zh-CN、en、ja）",
+        "AI 快取句觸發既有有感而發成就（共用 InsightFlow），不另造",
+        "tsc -p tsconfig.test.json 0 錯；tests/run-cli.ts 通過；compute-gate standard 無阻擋"
+      ],
+      "deliverables": [
+        "assets/scripts/core/systems/AvatarTalk.ts",
+        "assets/scripts/ui/core/AvatarTalkBubble.ts",
+        "assets/scripts/core/dialogue/InsightFlow.ts",
+        "assets/scripts/core/dialogue/NpcDialogueCache.ts",
+        "assets/scripts/ui/components/GeneralListComposite.ts",
+        "assets/scripts/ui/components/GeneralNameTag.ts",
+        "assets/scripts/ui/components/GeneralQuickViewComposite.ts",
+        "assets/scripts/ui/components/ResultPopupComposite.ts",
+        "assets/scripts/ui/core/GachaFlowCoordinator.ts",
+        "assets/scripts/ui/core/RelationGraphRenderer.ts",
+        "assets/scripts/ui/panels/BloodlineTreePanel.ts",
+        "assets/scripts/ui/scenes/LobbyScene.ts",
+        "assets/resources/i18n/zh-TW.json",
+        "assets/resources/i18n/zh-CN.json",
+        "assets/resources/i18n/en.json",
+        "assets/resources/i18n/ja.json",
+        "tests/AvatarTalk.test.ts"
+      ],
+      "notes": "2026-11-24 | 狀態: done | 接手者: ClaudeCode_claude-opus-5-5（task-lock lock --files）| 變更: 共用選句 AvatarTalk、共用泡泡 AvatarTalkBubble、InsightFlow 抽出共用、NpcDialogueCache.latestFor、四語系保底句，9 個非戰場畫面綁定 | 驗證: tsc -p tsconfig.test.json 0 錯；run-cli 新增 10 案全過；compute-gate standard 13/14（1 警告為既有模組邊界）| 未完成: 編輯器預覽專案（主目錄）落後 origin/master，未做實跑截圖 驗證：實機（建置版＋真滑鼠）大廳主將頭像、招賢館、名冊列頭像、十連結果皆出泡泡且不壓按鈕；修正 LeadSelectHost／DeckSelectHost 整頁透明擋點擊、換頁後泡泡被收掉。",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      },
+      "completed_at": "2026-11-23"
     }
   ],
   "updated": "2026-11-23T16:27:44.175Z"

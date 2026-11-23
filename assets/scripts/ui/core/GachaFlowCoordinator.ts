@@ -24,6 +24,7 @@ import {
 import { buildHeroSlotAliases, buildResultSlotAliases, gachaCardStars, toGachaCardTier } from './GachaResultCardTheme';
 import { formatResultBalance } from '../../core/gacha/GachaButtonRules';
 import { loadGeneralAvatar, loadGeneralPortrait } from './GeneralAvatarLoader';
+import { bindAvatarTalk } from './AvatarTalkBubble';
 
 export const DEFAULT_POOL_ID = 'GENERAL_STANDARD_01';
 
@@ -547,6 +548,7 @@ export class GachaFlowCoordinator {
             sprite.enabled = false;
             const entry = results[index];
             if (!entry) return;
+            bindAvatarTalk(portraitNode, entry.general.id);
             // 頭像填滿名牌以上的卡面（名牌 64px）：寬度扣掉外框，高度到名牌上緣；圖是方的，載入後置中裁成同比例，不拉伸
             const width = cardBox.width - 12;
             const height = cardBox.height - 64 - 6;
@@ -569,6 +571,7 @@ export class GachaFlowCoordinator {
     private _updateHeroPortrait(binder: any, generalId: string): void {
         const portraitNode: Node | null = binder.getNode ? binder.getNode('GachaPullResult_hero_portrait') : null;
         if (!portraitNode) return;
+        bindAvatarTalk(portraitNode, generalId);
         // 版面 objectFit 非 fill 時，圖畫在 <id>_ImageContent 子節點（已按 contain 置中）；換圖要換在那裡並重算大小，
         // 不能在外框另掛 Sprite，否則版面烘進去的示意立繪（關羽）會疊在後面（issue #2086）。
         const content = portraitNode.getChildByName(`${portraitNode.name}_ImageContent`);
