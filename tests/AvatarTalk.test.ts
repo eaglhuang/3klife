@@ -1,6 +1,8 @@
 /**
  * AvatarTalk — 頭像點擊一定說話：選句順序、友誼段、連點換句與冷卻、保底、泡泡擺位（PROG-2-9885）
  */
+import * as fs from 'fs';
+import * as path from 'path';
 import { assert, TestSuite } from './TestRunner';
 import {
     AVATAR_TALK_COOLDOWN_MS,
@@ -174,16 +176,50 @@ export function createAvatarTalkSuite(): TestSuite {
         assert.equals(AVATAR_TALK_LAST_RESORT, r.text);
     });
 
-    suite.test('泡泡擺位：優先在頭像上方；頂端放不下改下方；左右夾在畫面內', () => {
+    suite.test('泡泡擺位：貼頭像上方；頂端放不下改下方；左右夾在畫面內', () => {
         const base = { canvasWidth: 1280, canvasHeight: 720, fontSize: 24, maxWidth: 420, padding: 16, margin: 12, textLength: 20 };
-        const mid = layoutAvatarBubble({ ...base, anchorX: 0, anchorY: 0, anchorHalfHeight: 40 });
-        assert.isTrue(!mid.below && mid.y > 40, '中央頭像泡泡在上方');
-        const top = layoutAvatarBubble({ ...base, anchorX: 0, anchorY: 330, anchorHalfHeight: 30 });
-        assert.isTrue(top.below && top.y < 300, '貼頂頭像泡泡在下方');
-        const edge = layoutAvatarBubble({ ...base, anchorX: 630, anchorY: 0, anchorHalfHeight: 40 });
+        const mid = layoutAvatarBubble({ ...base, anchor: { x: 0, y: 0, width: 80, height: 80 } });
+        assert.equals('above', mid.side);
+        assert.isTrue(mid.y > 40, '中央頭像泡泡在上方');
+        const top = layoutAvatarBubble({ ...base, anchor: { x: 0, y: 330, width: 60, height: 60 } });
+        assert.equals('below', top.side);
+        const edge = layoutAvatarBubble({ ...base, anchor: { x: 630, y: 0, width: 80, height: 80 } });
         assert.isTrue(edge.x + edge.width / 2 <= 640 - 12 + 0.001, '不超出右邊界');
-        const left = layoutAvatarBubble({ ...base, anchorX: -900, anchorY: -400, anchorHalfHeight: 40 });
+        const left = layoutAvatarBubble({ ...base, anchor: { x: -900, y: -400, width: 80, height: 80 } });
         assert.isTrue(left.x - left.width / 2 >= -640 + 12 - 0.001 && left.y - left.height / 2 >= -360 + 12 - 0.001, '不超出左下邊界');
+    });
+
+    suite.test('泡泡避讓按鈕：上方有按鈕就換下方；四邊都有按鈕時選壓得最少的', () => {
+        const base = { canvasWidth: 1280, canvasHeight: 720, fontSize: 24, maxWidth: 420, padding: 16, margin: 12, textLength: 20 };
+        const anchor = { x: 0, y: 0, width: 80, height: 80 };
+        const buttonAbove = { x: 0, y: 90, width: 300, height: 60 };
+        const free = layoutAvatarBubble({ ...base, anchor, avoid: [buttonAbove] });
+        assert.equals('below', free.side);
+        assert.equals(0, free.overlap);
+        const buttonBelow = { x: 0, y: -90, width: 300, height: 60 };
+        const tight = layoutAvatarBubble({ ...base, anchor, avoid: [buttonAbove, buttonBelow] });
+        assert.equals(0, tight.overlap, '上下被擋時改放右側或左側');
+        assert.isTrue(tight.side === 'right' || tight.side === 'left');
+        const wall = [buttonAbove, buttonBelow, { x: 300, y: 0, width: 400, height: 200 }, { x: -300, y: 0, width: 400, height: 200 }];
+        const worst = layoutAvatarBubble({ ...base, anchor, avoid: wall });
+        assert.isTrue(worst.overlap > 0, '無處可放時仍回傳（壓到最少的位置），不丟錯');
+    });
+
+    suite.test('大廳選主將／選卡組 host 不吃整頁點擊（否則左上主將頭像點不到）', () => {
+        const src = fs.readFileSync(path.resolve(__dirname, '../assets/scripts/ui/scenes/LobbyScene.ts'), 'utf8');
+        const line = src.split(/\r?\n/).find((l) => l.includes('const nonBlockingHosts')) ?? '';
+        assert.isTrue(line.includes("'LeadSelectHost'") && line.includes("'DeckSelectHost'"), '兩個大廳底層 host 應列入 nonBlockingHosts');
+    });
+
+    suite.test('換頁後泡泡會搬到還在畫面上的 Canvas（名冊列頭像 → 詳情）', () => {
+        const src = fs.readFileSync(path.resolve(__dirname, '../assets/scripts/ui/core/AvatarTalkBubble.ts'), 'utf8');
+        assert.isTrue(src.includes('rehomeBubble()') && src.includes('activeInHierarchy'), '頭像所在頁收起時應搬移泡泡');
+    });
+
+    suite.test('招賢館、名冊、十連結果、大廳主將頭像都已綁定點擊說話', () => {
+        const lobby = fs.readFileSync(path.resolve(__dirname, '../assets/scripts/ui/scenes/LobbyScene.ts'), 'utf8');
+        assert.isTrue(lobby.includes("bindAvatarTalk(holder, key.replace"), '_applyFramePortraits（招賢館六框、重逢名將等）應綁定');
+        assert.isTrue(lobby.includes("binder.getNode('lordAvatarMask')"), '主將頭像應綁定');
     });
 
     return suite;

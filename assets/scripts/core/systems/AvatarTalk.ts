@@ -119,18 +119,33 @@ export interface BubbleRect {
     y: number;
     width: number;
     height: number;
-    /** true＝泡泡放在頭像下方（上方放不下時） */
-    below: boolean;
+    /** 泡泡放在頭像的哪一側（上方放不下或會壓到按鈕時會換邊） */
+    side: 'above' | 'below' | 'right' | 'left';
+    /** 與要避讓的按鈕重疊的面積（0＝完全不擋） */
+    overlap: number;
+}
+
+/** 以中心點表示的矩形（Canvas 本地座標） */
+export interface CenterRect {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+}
+
+function overlapArea(a: CenterRect, b: CenterRect): number {
+    const w = Math.min(a.x + a.width / 2, b.x + b.width / 2) - Math.max(a.x - a.width / 2, b.x - b.width / 2);
+    const h = Math.min(a.y + a.height / 2, b.y + b.height / 2) - Math.max(a.y - a.height / 2, b.y - b.height / 2);
+    return w > 0 && h > 0 ? w * h : 0;
 }
 
 /**
- * 泡泡擺位（Canvas 本地座標，原點在畫面中心）：優先放頭像正上方，放不下改放下方，左右夾在畫面內。
+ * 泡泡擺位（Canvas 本地座標，原點在畫面中心）：貼著被點的頭像，依序試 上、下、右、左 四個位置，
+ * 每個位置都夾在畫面內；挑「壓到按鈕（avoid）最少、且不蓋住頭像本身」的那一個，同分取先試的。
  * 只算位置與大小，不碰節點；高度依字數估算（CJK 約一字一個字寬）。
  */
 export function layoutAvatarBubble(input: {
-    anchorX: number;
-    anchorY: number;
-    anchorHalfHeight: number;
+    anchor: CenterRect;
     canvasWidth: number;
     canvasHeight: number;
     textLength: number;
@@ -138,8 +153,10 @@ export function layoutAvatarBubble(input: {
     maxWidth: number;
     padding: number;
     margin: number;
+    /** 不要壓住的按鈕範圍（已排除包含頭像的整列／整面板按鈕） */
+    avoid?: readonly CenterRect[];
 }): BubbleRect {
-    const { fontSize, padding, margin } = input;
+    const { fontSize, padding, margin, anchor } = input;
     const innerMax = Math.max(fontSize, input.maxWidth - padding * 2);
     const charsPerLine = Math.max(1, Math.floor(innerMax / fontSize));
     const lines = Math.max(1, Math.ceil(input.textLength / charsPerLine));
@@ -149,10 +166,26 @@ export function layoutAvatarBubble(input: {
     const halfW = input.canvasWidth / 2;
     const halfH = input.canvasHeight / 2;
     const gap = 10;
-    const aboveCenter = input.anchorY + input.anchorHalfHeight + gap + height / 2;
-    const below = aboveCenter + height / 2 > halfH - margin;
-    const rawY = below ? input.anchorY - input.anchorHalfHeight - gap - height / 2 : aboveCenter;
-    const y = Math.max(-halfH + margin + height / 2, Math.min(halfH - margin - height / 2, rawY));
-    const x = Math.max(-halfW + margin + width / 2, Math.min(halfW - margin - width / 2, input.anchorX));
-    return { x, y, width, height, below };
+    const clampX = (v: number): number => Math.max(-halfW + margin + width / 2, Math.min(halfW - margin - width / 2, v));
+    const clampY = (v: number): number => Math.max(-halfH + margin + height / 2, Math.min(halfH - margin - height / 2, v));
+    const sides: Array<{ side: BubbleRect['side']; x: number; y: number }> = [
+        { side: 'above', x: anchor.x, y: anchor.y + anchor.height / 2 + gap + height / 2 },
+        { side: 'below', x: anchor.x, y: anchor.y - anchor.height / 2 - gap - height / 2 },
+        { side: 'right', x: anchor.x + anchor.width / 2 + gap + width / 2, y: anchor.y },
+        { side: 'left', x: anchor.x - anchor.width / 2 - gap - width / 2, y: anchor.y },
+    ];
+    let best: BubbleRect | null = null;
+    let bestScore = Infinity;
+    for (const candidate of sides) {
+        const rect: CenterRect = { x: clampX(candidate.x), y: clampY(candidate.y), width, height };
+        let overlap = 0;
+        for (const box of input.avoid ?? []) overlap += overlapArea(rect, box);
+        // 蓋住頭像本身比壓到按鈕更糟（被點的人要看得到）
+        const score = overlap + overlapArea(rect, anchor) * 4;
+        if (score < bestScore) {
+            bestScore = score;
+            best = { ...rect, side: candidate.side, overlap };
+        }
+    }
+    return best as BubbleRect;
 }

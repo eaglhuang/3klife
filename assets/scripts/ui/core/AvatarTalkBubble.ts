@@ -10,7 +10,7 @@
  *
  * Unity 對照：像一個全域 SpeechBubbleManager，頭像上掛 OnPointerClick → Manager.Show(general, anchor)。
  */
-import { Canvas, Color, Graphics, Label, Node, UITransform, director } from 'cc';
+import { Button, Canvas, Color, Graphics, Label, Node, UITransform, Vec2, Vec3, director, view } from 'cc';
 import { services } from '../../core/managers/ServiceLoader';
 import { sharedNpcDialogueCache } from '../../core/dialogue/NpcDialogueCache';
 import { applyInsightFromDialogue } from '../../core/dialogue/InsightFlow';
@@ -19,6 +19,7 @@ import {
     AVATAR_TALK_HOLD_SEC,
     AvatarTalkPicker,
     layoutAvatarBubble,
+    type CenterRect,
     type AvatarTalkResult,
 } from '../../core/systems/AvatarTalk';
 import { HallChatStore, parseChatBook } from '../../core/systems/HallChatLines';
@@ -26,6 +27,8 @@ import { LocalLobbyDialogueProvider, type LobbyDialogueProvider } from '../../co
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 
 const BUBBLE_NODE_NAME = 'AvatarTalkBubble';
+/** 顯示後再把泡泡提到最上層的時間點（毫秒）：蓋過點擊後才開出的詳情面板 */
+const RAISE_DELAYS_MS = [120, 400, 900, 1600];
 const HALL_CHAT_PATH = 'data/hall-map/hall-chat-lines';
 const FONT_SIZE = 24;
 const PADDING = 16;
@@ -42,6 +45,8 @@ let _provider: LobbyDialogueProvider | null = null;
 let _providerLoading: Promise<void> | null = null;
 let _bubble: Node | null = null;
 let _hideTimer: ReturnType<typeof setTimeout> | null = null;
+/** 泡泡該顯示到的時間點；換頁流程若順手把泡泡關掉，這段時間內會再打開（點掉泡泡或到時間才算真的收） */
+let _holdUntil = 0;
 
 const _picker = new AvatarTalkPicker({
     provider: () => _provider,
@@ -103,6 +108,7 @@ export function showAvatarTalk(anchor: Node, generalId: string): AvatarTalkResul
 
 /** 立刻關掉泡泡（離開畫面、開面板時可呼叫） */
 export function hideAvatarTalk(): void {
+    _holdUntil = 0;
     if (_hideTimer) {
         clearTimeout(_hideTimer);
         _hideTimer = null;
@@ -110,22 +116,36 @@ export function hideAvatarTalk(): void {
     if (_bubble?.isValid) _bubble.active = false;
 }
 
-function canvasOf(anchor: Node): Node | null {
-    return anchor.scene?.getComponentInChildren(Canvas)?.node ?? director.getScene()?.getComponentInChildren(Canvas)?.node ?? null;
+/**
+ * 泡泡要掛的根節點：優先是頭像所在的 Canvas（多個 Canvas／畫面宿主時，座標與層級才跟頭像一致），
+ * 找不到就用場景的 Canvas，再不行用頭像最上層的祖先。
+ */
+function rootOf(anchor: Node): Node | null {
+    let cursor: Node | null = anchor.parent;
+    let top: Node | null = null;
+    while (cursor) {
+        if (cursor.getComponent(Canvas)) return cursor;
+        if (cursor.parent && !cursor.parent.parent) top = cursor;
+        cursor = cursor.parent;
+    }
+    return anchor.scene?.getComponentInChildren(Canvas)?.node ?? director.getScene()?.getComponentInChildren(Canvas)?.node ?? top;
 }
 
-/** 泡泡節點只建一次（場景換掉被銷毀時才重建）；掛 Canvas 最上層 */
-function ensureBubble(canvas: Node): Node {
+/** 泡泡節點只建一次（場景換掉被銷毀時才重建）；掛在頭像所屬根節點最上層 */
+function ensureBubble(root: Node): Node {
     if (_bubble?.isValid) {
-        if (_bubble.parent !== canvas) canvas.addChild(_bubble);
+        if (_bubble.parent !== root) {
+            _bubble.removeFromParent();
+            root.addChild(_bubble);
+        }
         return _bubble;
     }
     const node = new Node(BUBBLE_NODE_NAME);
-    node.layer = canvas.layer;
+    node.layer = root.layer;
     node.addComponent(UITransform);
     node.addComponent(Graphics);
     const labelNode = new Node('Text');
-    labelNode.layer = canvas.layer;
+    labelNode.layer = root.layer;
     labelNode.addComponent(UITransform);
     const label = labelNode.addComponent(Label);
     label.fontSize = FONT_SIZE;
@@ -136,36 +156,68 @@ function ensureBubble(canvas: Node): Node {
     label.verticalAlign = Label.VerticalAlign.CENTER;
     label.enableWrapText = true;
     node.addChild(labelNode);
-    // 點泡泡就關掉（泡泡本身只吃這一下，不擋其他按鈕：只有泡泡範圍內的點擊會被它收走）
+    // 點泡泡就關掉（泡泡只吃泡泡範圍內的點擊，不擋其他按鈕）
     node.on(Node.EventType.TOUCH_END, () => hideAvatarTalk());
-    canvas.addChild(node);
+    root.addChild(node);
     _bubble = node;
     return node;
 }
 
-function presentBubble(anchor: Node, text: string): void {
-    const canvas = canvasOf(anchor);
-    if (!canvas) return;
-    const bubble = ensureBubble(canvas);
-    const canvasUi = canvas.getComponent(UITransform);
-    const anchorUi = anchor.getComponent(UITransform);
-    if (!canvasUi || !anchorUi) return;
+/** 世界座標矩形 → 根節點本地的中心矩形 */
+function toLocalRect(root: Node, ui: UITransform): CenterRect {
+    const box = ui.getBoundingBoxToWorld();
+    const center = new Vec3();
+    root.inverseTransformPoint(center, new Vec3(box.x + box.width / 2, box.y + box.height / 2, 0));
+    const scale = root.getWorldScale();
+    return { x: center.x, y: center.y, width: box.width / (scale.x || 1), height: box.height / (scale.y || 1) };
+}
 
-    const world = anchor.worldPosition;
-    const local = canvasUi.convertToNodeSpaceAR(world);
-    // 頭像錨點可能不在中心（anchorY≠0.5）：以實際範圍中心為準
-    const centerY = local.y + (0.5 - anchorUi.anchorY) * anchorUi.height * anchor.getWorldScale().y;
+/** 收集畫面上可見的按鈕範圍（排除包含頭像的整列按鈕與大面積容器），泡泡擺位時避開 */
+function collectButtonRects(root: Node, anchor: Node, bubble: Node, maxW: number, maxH: number): CenterRect[] {
+    const rects: CenterRect[] = [];
+    const stack: Node[] = [root];
+    while (stack.length > 0) {
+        const node = stack.pop()!;
+        if (!node.activeInHierarchy || node === bubble) continue;
+        const button = node.getComponent(Button);
+        if (button && button.enabled && button.interactable && !anchor.isChildOf(node) && node !== anchor) {
+            const ui = node.getComponent(UITransform);
+            if (ui) {
+                const rect = toLocalRect(root, ui);
+                if (rect.width > 0 && rect.height > 0 && rect.width <= maxW && rect.height <= maxH) rects.push(rect);
+            }
+        }
+        for (const child of node.children) stack.push(child);
+    }
+    return rects;
+}
+
+function presentBubble(anchor: Node, text: string): void {
+    const root = rootOf(anchor);
+    if (!root) return;
+    const anchorUi = anchor.getComponent(UITransform);
+    if (!anchorUi) return;
+    const bubble = ensureBubble(root);
+    const rootUi = root.getComponent(UITransform);
+    const visible = view.getVisibleSize();
+    const canvasW = rootUi && rootUi.width > 0 ? rootUi.width : visible.width;
+    const canvasH = rootUi && rootUi.height > 0 ? rootUi.height : visible.height;
+    // 根節點的原點：有 UITransform 時以其錨點換算，讓座標原點落在畫面中心
+    const originShift = rootUi ? new Vec2((0.5 - rootUi.anchorX) * canvasW, (0.5 - rootUi.anchorY) * canvasH) : new Vec2(0, 0);
+
+    const anchorRect = toLocalRect(root, anchorUi);
+    const avoid = collectButtonRects(root, anchor, bubble, canvasW * 0.45, canvasH * 0.45)
+        .map((r) => ({ ...r, x: r.x - originShift.x, y: r.y - originShift.y }));
     const rect = layoutAvatarBubble({
-        anchorX: local.x,
-        anchorY: centerY,
-        anchorHalfHeight: (anchorUi.height * anchor.getWorldScale().y) / 2,
-        canvasWidth: canvasUi.width,
-        canvasHeight: canvasUi.height,
+        anchor: { ...anchorRect, x: anchorRect.x - originShift.x, y: anchorRect.y - originShift.y },
+        canvasWidth: canvasW,
+        canvasHeight: canvasH,
         textLength: text.length,
         fontSize: FONT_SIZE,
         maxWidth: MAX_WIDTH,
         padding: PADDING,
         margin: SCREEN_MARGIN,
+        avoid,
     });
 
     const labelNode = bubble.getChildByName('Text')!;
@@ -176,7 +228,7 @@ function presentBubble(anchor: Node, text: string): void {
     labelNode.getComponent(UITransform)!.setContentSize(rect.width - PADDING * 2, rect.height - PADDING * 2);
 
     bubble.getComponent(UITransform)!.setContentSize(rect.width, rect.height);
-    bubble.setPosition(rect.x, rect.y, 0);
+    bubble.setPosition(rect.x + originShift.x, rect.y + originShift.y, 0);
     const g = bubble.getComponent(Graphics)!;
     g.clear();
     g.fillColor = FILL;
@@ -187,11 +239,49 @@ function presentBubble(anchor: Node, text: string): void {
     g.stroke();
 
     bubble.active = true;
-    bubble.setSiblingIndex(canvas.children.length - 1);
+    _holdUntil = Date.now() + AVATAR_TALK_HOLD_SEC * 1000;
+    raiseBubble(root);
+    // 點頭像可能同時開了詳情／換頁（新面板會蓋在上面）：稍後再提到最上層，讓泡泡不被蓋掉
+    for (const delay of RAISE_DELAYS_MS) {
+        setTimeout(() => {
+            if (!_bubble?.isValid || Date.now() >= _holdUntil) return;
+            if (!_bubble.active) _bubble.active = true;
+            if (!anchor.isValid || !anchor.activeInHierarchy) rehomeBubble();
+            raiseBubble(_bubble.parent);
+        }, delay);
+    }
     if (_hideTimer) clearTimeout(_hideTimer);
     _hideTimer = setTimeout(() => {
         _hideTimer = null;
         if (_bubble?.isValid) _bubble.active = false;
     }, AVATAR_TALK_HOLD_SEC * 1000);
-    UCUFLogger.info(LogCategory.UI, `[AvatarTalk] ${anchor.name} → ${text.slice(0, 24)}`);
+    UCUFLogger.info(LogCategory.UI, `[AvatarTalk] ${anchor.name} root=${root.name} side=${rect.side} overlap=${Math.round(rect.overlap)} → ${text.slice(0, 24)}`);
+}
+
+/**
+ * 點頭像同時換了頁（例如名冊列頭像 → 進詳情）：原頁整個收起，掛在那頁底下的泡泡會跟著看不到。
+ * 這時把泡泡搬到目前還在畫面上的最上層 Canvas，擺在上方正中（詳情頁此處是空的），讓話仍然看得到。
+ */
+function rehomeBubble(): void {
+    const bubble = _bubble;
+    const scene = director.getScene();
+    if (!bubble?.isValid || !scene) return;
+    const canvases = scene.getComponentsInChildren(Canvas).filter((c) => c.node.activeInHierarchy);
+    const root = canvases.length > 0 ? canvases[canvases.length - 1].node : null;
+    if (!root) return;
+    if (bubble.parent !== root) {
+        bubble.removeFromParent();
+        root.addChild(bubble);
+    }
+    const rootUi = root.getComponent(UITransform);
+    const visible = view.getVisibleSize();
+    const canvasH = rootUi && rootUi.height > 0 ? rootUi.height : visible.height;
+    const bubbleH = bubble.getComponent(UITransform)?.height ?? 0;
+    const shiftY = rootUi ? (0.5 - rootUi.anchorY) * canvasH : 0;
+    const shiftX = rootUi ? (0.5 - rootUi.anchorX) * (rootUi.width > 0 ? rootUi.width : visible.width) : 0;
+    bubble.setPosition(shiftX, shiftY + canvasH / 2 - bubbleH / 2 - SCREEN_MARGIN - 40, 0);
+}
+
+function raiseBubble(root: Node | null): void {
+    if (root?.isValid && _bubble?.isValid) _bubble.setSiblingIndex(root.children.length - 1);
 }

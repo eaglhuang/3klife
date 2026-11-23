@@ -6595,7 +6595,8 @@ ${spent}`,
 
         this._ensureWidget(hostNode);
         // 彈窗／全螢幕 host 必須吃掉點擊，避免點空白或按鈕邊緣穿透到底層大廳與武將
-        const nonBlockingHosts = new Set(['LobbyHallHost', 'LobbyMainHost', 'SeasonHudHost']);
+        // 選主將／選卡組是大廳底層的小卡，不是彈窗：整頁透明 host 若吃點擊，會蓋住左上主將頭像等底下可點的東西（頭像點擊說話 PROG-2-9885）
+        const nonBlockingHosts = new Set(['LobbyHallHost', 'LobbyMainHost', 'SeasonHudHost', 'LeadSelectHost', 'DeckSelectHost']);
         if (BlockInputEvents && !nonBlockingHosts.has(hostName) && !hostNode.getComponent(BlockInputEvents)) {
             hostNode.addComponent(BlockInputEvents);
         }
