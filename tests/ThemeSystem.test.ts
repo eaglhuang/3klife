@@ -126,17 +126,22 @@ export function createThemeSystemSuite(): TestSuite {
         }
     });
 
-    suite.test('子畫面：卡片底與列底換成深色玻璃，主按鈕深紅，字型統一', () => {
+    suite.test('子畫面：主面板不透明深色玻璃、列底內嵌淡色、次要鈕淡金框、僅主按鈕深紅', () => {
         for (const name of ['hall-board', 'governor-hall']) {
             const slots = subSlots(name);
             const out = restyleSkinSlots(slots, tokens);
             const prefix = name === 'hall-board' ? 'hall' : 'mp';
-            assert.equals(tokens.roles.glassPanel.borderColor, out[`${prefix}.card.bg`].borderColor);
-            assert.equals(tokens.roles.glassPanel.color, out[`${prefix}.row.bg`].color);
-            assert.equals(tokens.roles.buttonAccent.color, out[`${prefix}.button.bg`].color);
+            const panel = out[`${prefix}.panel.solid`];
+            assert.equals(tokens.roles.glassPanel.borderColor, panel.borderColor);
+            assert.isTrue(panel.alpha >= 230, '主面板需接近不透明，避免後方文字穿透');
+            assert.equals(tokens.roles.insetPanel.color, out[`${prefix}.row.bg`].color);
+            assert.equals(tokens.roles.buttonSecondary.color, out[`${prefix}.button.bg`].color);
+            assert.equals(tokens.roles.buttonAccent.color, out[`${prefix}.button.primary.bg`].color);
             assert.equals(tokens.font, out[`${prefix}.label.body`].font);
             assert.equals(Object.keys(slots).length, Object.keys(out).length);
         }
+        const board = restyleSkinSlots(subSlots('hall-board'), tokens);
+        assert.equals(tokens.roles.insetPanel.color, board['hall.spot.bg'].color);
     });
 
     suite.test('分節標題：小字距＋分節色；上方細金線用 divider 角色', () => {
