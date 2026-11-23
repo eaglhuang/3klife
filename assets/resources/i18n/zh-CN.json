@@ -1075,5 +1075,13 @@
   "dev.unlock.rank5": "阶 5 最高",
   "dev.unlock.all_facilities": "官职拉满（开放全部大厅设施）",
   "dev.unlock.all_stages": "解锁全部关卡",
-  "dev.unlock.hall_level": "幕府等级拉满"
+  "dev.unlock.hall_level": "幕府等级拉满",
+  "prebattle.role.commander": "主将",
+  "prebattle.role.strategist": "参谋官",
+  "prebattle.role.deputy": "后勤官（副将）",
+  "prebattle.reason.commander.statBlend": "统御与武力综合最高",
+  "prebattle.reason.commander.encounterFixed": "本关指定主将",
+  "prebattle.reason.strategist.intPol": "智力与政治综合最高",
+  "prebattle.reason.deputy.leaPol": "统御与政治综合最高",
+  "prebattle.reason.tally.rarityDiversity": "稀有度高且兵种不重复"
 }

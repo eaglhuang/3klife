@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 295,
+    "done": 296,
     "in_progress": 0,
-    "open": 86,
-    "total": 381
+    "open": 89,
+    "total": 385
   },
   "tasks": [
     {
@@ -16857,12 +16857,268 @@
       "completed_at": "2026-11-24T00:00:00+08:00"
     },
     {
+      "id": "PROG-2-9950",
+      "priority": "P0",
+      "phase": "M0",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "status": "done",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-23T16:16:49+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "completed_at": "2026-11-23T17:01:49+08:00",
+      "completed_by_agent": "ClaudeCode_claude-opus-5-5",
+      "type": "bugfix",
+      "title": "戰場小兵格子底框壞掉（紫色橢圓底座變扁、鋸齒鑲邊、攻÷2徽章疊底座）",
+      "description": "使用者回報小兵腳下buff底框壞掉：紫色橢圓底座上有金色刃形三角與刻度鑲邊、底座偏灰紫。根因：PROG-2-9734 的 drawTileStatic 對攻類格子一律畫刻度與金刃，攻÷N 減益格也吃到，金色刃形疊在紫色底框上。修正：裝飾只給增益格（tileDecorationOf），減益格素面。",
+      "related": [],
+      "depends": [
+        "PROG-2-9708"
+      ],
+      "acceptance": [
+        "底座恢復原本精緻橢圓底框（不壓扁、不鋸齒、顏色正常）",
+        "攻÷2 徽章仍顯示且位於底座上方獨立節點",
+        "單元測試、tsc、compute-gate quick 通過",
+        "修前後實機截圖已存檔"
+      ],
+      "deliverables": [
+        "assets/scripts/battle/shared/TileBuffVfxMath.ts",
+        "assets/scripts/battle/views/TileBuffVfx.ts",
+        "tests/TileBuffVfx.test.ts"
+      ],
+      "notes": "2026-11-24 | 狀態: done | 驗證: 單元測試 9387 全過（含新增減益素面測試）、tsc 0 錯、compute-gate quick 通過、實機 web-desktop 修前後截圖（攻÷2 同格對照） | 變更: TileBuffVfx.ts drawTileStatic 依 tileDecorationOf 決定裝飾；TileBuffVfxMath.ts 新增 tileDecorationOf；測試新增一條 | 阻塞: 無；底座色調（偏灰紫）未改，留待美術確認"
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9910",
+      "title": "戰前推薦編制純邏輯（卡 A）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-24T00:49:57+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "戰前一鍵推薦編制的純邏輯模組（無 UI、無 cc 依賴）：輸入主將候選、4 張虎符卡組候選、參謀官／後勤官（副將）候選與屬性，輸出推薦編制與理由 i18n key；權重放 JSON；提供 recommendForEncounter 首戰預填入口。不接 UI（卡 B、C）。依賴順序 A→B→C→D。盤點依據：side-session-notes/prebattle-deploy-survey-1124.md。",
+      "related": [
+        "PROG-2-0070",
+        "PROG-2-0083"
+      ],
+      "depends": [],
+      "acceptance": [
+        "推薦規則決定論（同輸入同輸出、tie-break 固定）",
+        "空候選與候選不足有明確降級行為",
+        "權重資料放 assets/resources/data JSON",
+        "recommendForEncounter(encounter-001) 可預填",
+        "單元測試覆蓋決定論／空候選／候選不足／tie-break／首戰入口",
+        "tsc test 0 錯、tests/run-cli.ts 全過、compute-gate quick 通過",
+        "不改戰場核心規則"
+      ],
+      "deliverables": [
+        "assets/scripts/core/systems/PreBattleRecommend.ts",
+        "assets/resources/data/prebattle-recommend-weights.json",
+        "tests/PreBattleRecommend.test.ts",
+        "assets/resources/i18n/{zh-TW,zh-CN,en,ja}.json（prebattle.* key）"
+      ],
+      "notes": "2026-11-24 | 狀態: done | 驗證: tsc tests 0 錯；tests/run-cli.ts 9401 pass／3 skip（含新增 PreBattleRecommend 15 項）；compute-gate quick 4/4 | 變更: 新增純邏輯 assets/scripts/core/systems/PreBattleRecommend.ts（recommendPreBattleLoadout／recommendForEncounter／parsePreBattleWeights）；權重 assets/resources/data/prebattle-recommend-weights.json；四語系新增 prebattle.* 文案 key（後勤官（副將）為 prebattle.role.deputy）；測試 tests/PreBattleRecommend.test.ts | 阻塞: 無；首次 CI 因新資源缺 .meta 失敗，已補 .meta 並重新推送；UI 接線與「副將」顯示字樣統一留給卡 B（SortieSetupController 文案未動）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      },
+      "completed_at": "2026-11-24T02:00:00+08:00"
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9911",
+      "title": "戰前編成視窗（卡 B）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "open",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "x",
+      "related": [],
+      "depends": [
+        "PROG-2-9910"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-24 | 狀態: open | 驗證: pending | 變更: 開草稿 | 阻塞: 與 PROG-2-2211 重疊，開工前須與 cursor-grok-bot 協調",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9912",
+      "title": "首戰教學戰接入編成（卡 C）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "open",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "首戰（encounter-001）進入戰前編成視窗並預填推薦（主將 zhang-fei、卡組前 4 張、後勤空），玩家確認後出戰；戰中部署仍手動保留 FirstBattleTutorial 三步教學。依 Q4 裁決 A。",
+      "related": [
+        "PROG-2-9309",
+        "PROG-2-9313",
+        "PROG-2-9324",
+        "PROG-2-9334"
+      ],
+      "depends": [
+        "PROG-2-9910",
+        "PROG-2-9911"
+      ],
+      "acceptance": [
+        "首戰進編成視窗",
+        "預填 recommendForEncounter 結果",
+        "戰中部署仍手動",
+        "FirstBattleTutorial 三步不變"
+      ],
+      "deliverables": [
+        "首戰入口接線與測試"
+      ],
+      "notes": "2026-11-24 | 狀態: open | 驗證: pending | 變更: 開草稿 | 阻塞: 依賴 A、B；依 Q4 裁決採 A（不自動部署）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9913",
+      "title": "戰前編成實機驗收合併（卡 D）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "open",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "併入 PROG-2-0143（儲存預設／套用預設實機驗收）與 PROG-2-0165（委任按鈕實機驗收），對卡 A、B、C 的戰前編成做一次實機驗收。",
+      "related": [
+        "PROG-2-0143",
+        "PROG-2-0165"
+      ],
+      "depends": [
+        "PROG-2-9911",
+        "PROG-2-9912",
+        "PROG-2-0143",
+        "PROG-2-0165"
+      ],
+      "acceptance": [
+        "PROG-2-0143 驗收完成",
+        "PROG-2-0165 驗收完成",
+        "戰前編成推薦、首戰預填、確認出戰實機驗收有截圖證據"
+      ],
+      "deliverables": [
+        "實機驗收紀錄"
+      ],
+      "notes": "2026-11-24 | 狀態: open | 驗證: pending | 變更: 開草稿 | 阻塞: 依賴 B、C 完成，以及 PROG-2-0143、PROG-2-0165 兩張 open 驗收卡",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
       "doc_id": "",
       "id": "PROG-2-9885",
       "title": "武將頭像點擊一定說話：全遊戲共用的頭像點擊說話行為（AI 快取→大廳台詞→i18n 保底）",
       "owner": "ClaudeCode_claude-opus-5-5",
       "priority": "P2",
-      "status": "done",
+      "status": "in-progress",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-24",

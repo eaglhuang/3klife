@@ -1,5 +1,5 @@
 // PROG-2-9734：buff 格靜態光圈分級、部隊腳下特效時間軸與插槽表的純邏輯測試
-import { PickupSlotTable, pickupEnvelope, tileBuffFactorFromText, tileBuffTierIndex } from '../assets/scripts/battle/shared/TileBuffVfxMath';
+import { PickupSlotTable, pickupEnvelope, tileBuffFactorFromText, tileBuffTierIndex, tileDecorationOf } from '../assets/scripts/battle/shared/TileBuffVfxMath';
 import { TestSuite, assert } from './TestRunner';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -27,6 +27,13 @@ export function createTileBuffVfxSuite(): TestSuite {
         assert.isTrue(cfg.pickup.tierIndex === undefined, 'pickup 不再有固定 tierIndex');
         const rings = [2, 3, 5].map(f => cfg.stackTiers[idx(f)].rings);
         assert.isTrue(rings[0] < rings[1] && rings[1] < rings[2], `${rings}`);
+    });
+
+    suite.test('減益格素面：攻÷N 不畫金刃與刻度、命÷N 不畫玉符；增益照舊有裝飾（PROG-2-9950）', () => {
+        assert.isTrue(!tileDecorationOf('attack', true).ticksAndBlades && !tileDecorationOf('attack', true).gems);
+        assert.isTrue(!tileDecorationOf('hp', true).ticksAndBlades && !tileDecorationOf('hp', true).gems);
+        assert.isTrue(tileDecorationOf('attack', false).ticksAndBlades && !tileDecorationOf('attack', false).gems);
+        assert.isTrue(tileDecorationOf('hp', false).gems && !tileDecorationOf('hp', false).ticksAndBlades);
     });
 
     suite.test('倍數文字解析：×3、÷5、×2.3，壞字串回 1', () => {

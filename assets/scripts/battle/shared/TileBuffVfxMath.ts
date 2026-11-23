@@ -19,6 +19,14 @@ export function tileBuffTierIndex(tiers: readonly TileBuffTier[], factor: number
   return idx;
 }
 
+/**
+ * 格子底框的裝飾種類（PROG-2-9950）：只有增益才畫刻度／刃形三角（攻）或玉符（命）；
+ * 減益一律素面，不把金色刃形疊上紫色底框（修前攻÷N 會畫出金刃與刻度，像鋸齒鑲邊）。
+ */
+export function tileDecorationOf(kind: 'attack' | 'hp', isDebuff: boolean): { ticksAndBlades: boolean; gems: boolean } {
+  return { ticksAndBlades: kind === 'attack' && !isDebuff, gems: kind === 'hp' && !isDebuff };
+}
+
 /** 由倍數文字（「×3」「÷5」「×2.3」）取出倍數；讀不出來回 1 */
 export function tileBuffFactorFromText(amountText: string): number {
   const n = parseFloat(amountText.slice(1));
