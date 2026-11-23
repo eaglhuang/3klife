@@ -16855,6 +16855,38 @@
         "metrics_summary": []
       },
       "completed_at": "2026-11-24T00:00:00+08:00"
+    },
+    {
+      "id": "PROG-2-9950",
+      "priority": "P0",
+      "phase": "M0",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "status": "done",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-23T16:16:49+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "completed_at": "2026-11-23T17:01:49+08:00",
+      "completed_by_agent": "ClaudeCode_claude-opus-5-5",
+      "type": "bugfix",
+      "title": "戰場小兵格子底框壞掉（紫色橢圓底座變扁、鋸齒鑲邊、攻÷2徽章疊底座）",
+      "description": "使用者回報小兵腳下buff底框壞掉：紫色橢圓底座上有金色刃形三角與刻度鑲邊、底座偏灰紫。根因：PROG-2-9734 的 drawTileStatic 對攻類格子一律畫刻度與金刃，攻÷N 減益格也吃到，金色刃形疊在紫色底框上。修正：裝飾只給增益格（tileDecorationOf），減益格素面。",
+      "related": [],
+      "depends": [
+        "PROG-2-9708"
+      ],
+      "acceptance": [
+        "底座恢復原本精緻橢圓底框（不壓扁、不鋸齒、顏色正常）",
+        "攻÷2 徽章仍顯示且位於底座上方獨立節點",
+        "單元測試、tsc、compute-gate quick 通過",
+        "修前後實機截圖已存檔"
+      ],
+      "deliverables": [
+        "assets/scripts/battle/shared/TileBuffVfxMath.ts",
+        "assets/scripts/battle/views/TileBuffVfx.ts",
+        "tests/TileBuffVfx.test.ts"
+      ],
+      "notes": "2026-11-24 | 狀態: done | 驗證: 單元測試 9387 全過（含新增減益素面測試）、tsc 0 錯、compute-gate quick 通過、實機 web-desktop 修前後截圖（攻÷2 同格對照） | 變更: TileBuffVfx.ts drawTileStatic 依 tileDecorationOf 決定裝飾；TileBuffVfxMath.ts 新增 tileDecorationOf；測試新增一條 | 阻塞: 無；底座色調（偏灰紫）未改，留待美術確認"
     }
   ],
   "updated": "2026-11-23T16:27:44.175Z"

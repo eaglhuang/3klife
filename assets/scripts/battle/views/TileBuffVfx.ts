@@ -19,7 +19,7 @@
  * Unity 對照：LineRenderer／Mesh 程式繪製的格子特效；config 即 ScriptableObject。
  */
 import { Color, Graphics, JsonAsset, resources } from 'cc';
-import { pickupEnvelope, tileBuffTierIndex } from '../shared/TileBuffVfxMath';
+import { pickupEnvelope, tileBuffTierIndex, tileDecorationOf } from '../shared/TileBuffVfxMath';
 
 export interface TileBuffVfxTier { minFactor: number; rings: number; particles: number; ticks: number; glow: number }
 interface Palette {
@@ -142,7 +142,8 @@ export function drawTileStatic(
     g.strokeColor = col(pal.inner, 255 * k);
     g.ellipse(0, 0, rx * s, ry * s); g.stroke(); prims++;
   }
-  if (kind === 'attack') {
+  const deco = tileDecorationOf(kind, isDebuff);
+  if (deco.ticksAndBlades) {
     // 刻度：外圈與第一圈之間的短刻度，層數越高越密
     g.lineWidth = 1.6;
     g.strokeColor = col(pal.rim, 255 * k);
@@ -162,8 +163,8 @@ export function drawTileStatic(
       ellipsePoint(rx, ry, a + 0.16, 0.86, pt);
       g.moveTo(tx, ty); g.lineTo(lx, ly); g.lineTo(pt.x, pt.y); g.close(); g.fill(); prims++;
     }
-  } else {
-    // 外緣小菱形（玉符）：數量隨層數
+  } else if (deco.gems) {
+    // 外緣小菱形（玉符）：數量隨層數（只有增益）
     const gems = tier.ticks / 2;
     g.fillColor = col(pal.rim, 255 * k);
     for (let i = 0; i < gems; i++) {
