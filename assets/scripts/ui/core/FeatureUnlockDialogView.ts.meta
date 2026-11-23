@@ -1,9 +1,9 @@
-﻿{
-  ver: 4.0.24,
-  importer: typescript,
-  imported: true,
-  uuid: 0dd1540a-9d2e-4ee1-b1c6-1bdf2a8dca5c,
-  files: [],
-  subMetas: {},
-  userData: {}
+{
+  "ver": "4.0.24",
+  "importer": "typescript",
+  "imported": true,
+  "uuid": "7b1e61cc-f939-46c8-aa8c-98589bd35b0f",
+  "files": [],
+  "subMetas": {},
+  "userData": {}
 }

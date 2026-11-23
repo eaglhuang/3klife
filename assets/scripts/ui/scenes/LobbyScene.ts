@@ -1976,6 +1976,7 @@ export class LobbyScene extends Component {
         this._sessionEventUnsubscribers.push(
             event.on(GAME_SESSION_EVENTS.LeadGeneralChanged, refresh),
             event.on(GAME_SESSION_EVENTS.OfficerPromoted, refresh),
+            event.on(GAME_SESSION_EVENTS.OfficerStateChanged, refresh),
             event.on(GAME_SESSION_EVENTS.BattleSettled, refresh),
             event.on(GAME_SESSION_EVENTS.InventoryChanged, refresh),
         );
