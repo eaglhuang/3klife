@@ -103,7 +103,10 @@ import {
   resolveBattleGeneralHitSfxKey,
   resolveBattleUnitAttackSfxKey,
   resolveBattleUnitHitSfxKey,
+  resolveBattleDotTickSfx,
+  DotTickSfxThrottle,
   type BattleAudioCue,
+  type DotTickSfx,
 } from '../shared/BattleAudio';
 import { attackSfxDelaySec, pickHitSfx, resolveHitTier, shouldPlayCritBoom, type HitTier } from '../shared/BattleAudioLayers';
 
@@ -239,6 +242,8 @@ export class BattleUIBridge {
   private readonly ultCutin = new UltCutinDirector();
   /** 一招打到多個目標時，同一聲只播一次（PROG-2-9435） */
   private readonly statusCueThrottle = new StatusCueThrottle();
+  /** 回合扣血 tick 每單位節流（PROG-2-9862）：同一回合火格＋中毒不疊兩聲 */
+  private readonly dotTickSfxThrottle = new DotTickSfxThrottle();
   /** PROG-2-9410：放招時畫面中央的招式名橫幅（排隊／合併見 SkillBannerQueue） */
   /** 勝敗停頓計時與待開的結算窗（PROG-2-9427） */
   private _resultBeatTimer: ReturnType<typeof setTimeout> | null = null;
@@ -527,13 +532,17 @@ export class BattleUIBridge {
    * 受擊音效＋受擊特效。delaySec 預設沿用 recoilStartDelaySec（舊路徑：等攻擊方撞過來）；
    * PROG-2-9412 命中路徑已經等到命中瞬間才呼叫，傳 0 不再多等。
    */
-  private _scheduleBattleUnitHitFeedback(lane: number, depth: number, damageSource?: string, delaySec: number = BATTLE_VISUAL_TIMING.recoilStartDelaySec, hitTier?: HitTier): Promise<void> {
+  private _scheduleBattleUnitHitFeedback(lane: number, depth: number, damageSource?: string, delaySec: number = BATTLE_VISUAL_TIMING.recoilStartDelaySec, hitTier?: HitTier, dotTickSfx?: DotTickSfx | 'none'): Promise<void> {
     const hitAudioKey = resolveBattleUnitHitSfxKey(damageSource);
     // PROG-2-9729：夜襲先機打擊維持雷聲；其餘依輕／重／擋下／致命分層挑變調 clip 與隨機音量
-    const layered = hitTier && hitAudioKey === BATTLE_AUDIO_CUE.unitHitCommon ? pickHitSfx(hitTier, battleAudioLayers) : null;
+    // PROG-2-9862：回合扣血 tick（dotTickSfx 有值）不走分層受擊音；'none' 代表同回合已響過，整段靜音
+    const layered = !dotTickSfx && hitTier && hitAudioKey === BATTLE_AUDIO_CUE.unitHitCommon ? pickHitSfx(hitTier, battleAudioLayers) : null;
     const hitEffectKey = resolveBattleUnitHitEffectKey(damageSource);
     const play = () => {
-      if (layered) playBattleClip(layered.clip, layered.volume); else playBattleAudio(hitAudioKey);
+      if (dotTickSfx === 'none') { /* 同回合同單位已響過 DOT tick */ }
+      else if (dotTickSfx) playBattleAudio(dotTickSfx.cue, dotTickSfx.volume);
+      else if (layered) playBattleClip(layered.clip, layered.volume);
+      else playBattleAudio(hitAudioKey);
       playBattleFlowEffectAtCell(services().effect, this.ctx.boardRenderer, hitEffectKey, lane, depth, 0.9, 0.12);
     };
 
@@ -660,6 +669,11 @@ export class BattleUIBridge {
     this._observeSpecialActionHit(data);
     // PROG-2-9437：跳字只顯示真的扣掉的生命，護盾吸收的部分改飄「格擋」並播盾擊聲
     const shieldFb = shieldHitFeedback(data.damage, data.shieldAbsorbed);
+    // PROG-2-9862：回合扣血 tick 改用專屬輕音；同單位在節流窗內已響過就靜音（事件同步到達，以到達時刻判定）
+    const dotTick = resolveBattleDotTickSfx(data.damageSource);
+    const dotTickSfx: DotTickSfx | 'none' | undefined = dotTick
+      ? (this.dotTickSfxThrottle.shouldPlay(data.unitId, Date.now()) ? dotTick : 'none')
+      : undefined;
     const unit = c.ctrl?.state.units.get(data.unitId);
     this.performance.observeUnitDamaged(data.damage, data.attackerFaction, unit?.faction ?? null);
     if (unit) {
@@ -707,7 +721,7 @@ export class BattleUIBridge {
             // 擋下的聲音由受擊分層的 block 層負責（原本另播 shield 再疊 hurt）
             c.unitRenderer?.playBuffConsumeValue(hitLane, hitDepth, BLOCK_FLOAT_TEXT.shield);
           }
-          const hitFeedbackPromise = this._scheduleBattleUnitHitFeedback(hitLane, hitDepth, data.damageSource, impactSec > 0 ? 0 : undefined, hitTier);
+          const hitFeedbackPromise = this._scheduleBattleUnitHitFeedback(hitLane, hitDepth, data.damageSource, impactSec > 0 ? 0 : undefined, hitTier, dotTickSfx);
           // 暴擊命中額外播 boom（與既有攻擊／受擊音效疊加）
           // 致命暴擊不再疊 boom（已有 hit_lethal＋die）；其餘 boom 與 die 由 playBattleAudio 錯開 80ms
           const critAudioPromise = data.isCrit && shouldPlayCritBoom(lethal, battleAudioLayers)
