@@ -123,6 +123,15 @@ export function lobbyActionLock(action: string, rank: number): LobbyActionLock {
     return { locked: true, requiredTier: feature.unlockTier, requiredTitle: rankTitleOf(feature.unlockTier) };
 }
 
+/** 這個官職階位已開放的大廳選單項目 id（只列有 lobbyAction 的功能；資料沒載入回空陣列）；測試工具回報用 */
+export function unlockedLobbyActions(rank: number): string[] {
+    const out: string[] = [];
+    for (const f of table()) {
+        if (f.lobbyAction && clampRank(rank) >= f.unlockTier) out.push(f.lobbyAction);
+    }
+    return out;
+}
+
 /** 未解鎖按鈕上的字：兩行「🔒天下沙盤」「郡守開放」（按鈕寬度有限，分行字才不會縮太小）；沒鎖回原名稱 */
 export function lockedActionLabel(name: string, lock: LobbyActionLock): string {
     return lock.locked ? `🔒${name}\n${lock.requiredTitle}開放` : name;

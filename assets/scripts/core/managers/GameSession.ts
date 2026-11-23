@@ -31,7 +31,7 @@ import { tallyProducedSpec, tallyStarUpSpec } from '../systems/TallyScripts';
 import { formatTallyLine, type TallyLine, type TallyTranslate } from '../systems/TallyLineSpec';
 import { UCUFLogger, LogCategory } from '../utils/UCUFLogger';
 import { normalizeOfficerSnapshot, officerUnlocksOf, type OfficerUnlocks } from '../systems/OfficerSnapshot';
-import { addOfficerExp, BATTLE_MERIT_OFFICER_TASK, applyEraShiftToOfficerState, calcOfficerExpGain, initialOfficerState, normalizeOfficerState, toOfficerSnapshot, type OfficerState, type OfficerTaskResult } from '../systems/OfficerState';
+import { addOfficerExp, BATTLE_MERIT_OFFICER_TASK, OFFICER_TIER_EXP_THRESHOLDS, OFFICER_TIER_MAX, OFFICER_TIER_MIN, applyEraShiftToOfficerState, calcOfficerExpGain, initialOfficerState, normalizeOfficerState, toOfficerSnapshot, type OfficerState, type OfficerTaskResult } from '../systems/OfficerState';
 import { officerPermissionsOf, type OfficerPermissions } from '../systems/OfficerPermissions';
 import { FRESH_OPENING_OFFER_STATE, nextOpeningOffer, normalizeOpeningOfferState, resolveOpeningOffer, type OpeningOffer, type OpeningOfferOutcome, type OpeningOfferState, type OpeningOfferTable } from '../systems/OpeningOffer';
 import { activeOfficerTrial, boostedOfficerExp, effectiveOfficerState, grantOfficerTrial, normalizeOfficerTrial, type OfficerTrial, type OfficerTrialGrant } from '../systems/OfficerCommerce';
@@ -435,6 +435,8 @@ export const GAME_SESSION_EVENTS = {
     SeasonAdvanced: 'game-session-season-advanced',
     /** payload: { tiers: number[] }（大廳任務結算後官職晉升，OFC-08 提示用） */
     OfficerPromoted: 'game-session-officer-promoted',
+    /** payload: { tier: number }（測試工具直接設定官職階位後發出；大廳據此刷新設施鎖，PROG-2-9860） */
+    OfficerStateChanged: 'game-session-officer-state-changed',
     /** payload: GeneralRankPromotedPayload（武將名聲達門檻升將階，PROG-2-1898） */
     GeneralRankPromoted: 'game-session-general-rank-promoted',
     /** payload: YearReport（第 4 季結束時發出；養成線 FEM-06 等年度掛點接在這裡） */
@@ -3862,6 +3864,21 @@ export class GameSession implements AcademyRecordPort {
         }
         this._military = { ...this._military, [key]: next };
         return next;
+    }
+
+    /**
+     * 測試工具 2.0（PROG-2-9860，只由偵錯宿主呼叫）：把官職直接設為指定階位。
+     * 經驗設為該階晉升門檻，解鎖歷史補到該階；可往下調（方便重測鎖定狀態）。不寫檔，由呼叫端排程存檔。
+     */
+    public debugSetOfficerTier(tier: number): OfficerState {
+        const next = Math.min(OFFICER_TIER_MAX, Math.max(OFFICER_TIER_MIN, Math.trunc(tier)));
+        const officerExp = next <= OFFICER_TIER_MIN ? 0 : (OFFICER_TIER_EXP_THRESHOLDS[next] ?? 0);
+        const unlockHistory: number[] = [];
+        for (let t = OFFICER_TIER_MIN; t <= next; t++) unlockHistory.push(t);
+        this._officerState = { currentTier: next, officerExp, unlockHistory };
+        this._recordSandtableUnlockReached();
+        this._emit(GAME_SESSION_EVENTS.OfficerStateChanged, { tier: next });
+        return this.officerState;
     }
 
     /** 太守府的治理快照：季節倍率取目前季節，與季結入帳一致 */

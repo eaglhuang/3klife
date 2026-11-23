@@ -21,6 +21,7 @@ import {
 import { parseDevToolPanelConfig } from '../assets/scripts/core/dev/DevToolPanelConfig';
 import { DevToolRunner } from '../assets/scripts/core/dev/DevToolRunner';
 import { DevToolJobs, DevToolLog } from '../assets/scripts/core/dev/DevToolRuntime';
+import { installOfficerFeatureUnlocks, isLobbyActionUnlocked, resetOfficerFeatureUnlocks } from '../assets/scripts/core/systems/OfficerFeatureUnlocks';
 import { isApiFail } from '../assets/scripts/shared/api/ApiProtocol';
 import type { IApiClient } from '../assets/scripts/shared/api/IApiClient';
 
@@ -68,6 +69,7 @@ function newBundle(opts: { withHost: boolean; session?: GameSession }) {
     const fake: DevHostSession = {
         debugAdjustMilitary: (field, delta) => session.debugAdjustMilitary(field, delta),
         debugSetStat: (key, value) => session.debugSetStat(key, value),
+        debugSetOfficerTier: (tier) => { const s = session.debugSetOfficerTier(tier); return { currentTier: s.currentTier, officerExp: s.officerExp }; },
         createSnapshot: () => session.createSnapshot(),
         advanceSeason: async () => { await Promise.resolve(); calls.push('advance'); return null; },
         save: async () => { calls.push('save'); return null; },
@@ -132,7 +134,7 @@ export function createDevToolSuite(): TestSuite {
         assert.equals(0, parsed.errors.length, parsed.errors.join('；'));
         const ids = parsed.config.tabs.map((tab) => tab.id);
         for (const id of ['resources', 'time', 'save', 'generals', 'family', 'battle', 'unlock']) assert.isTrue(ids.indexOf(id) >= 0, `缺分頁 ${id}`);
-        assert.isTrue(parsed.config.tabs.filter((tab) => tab.skeleton).length >= 4, '武將／家族／戰場／解鎖是骨架分頁');
+        assert.isTrue(parsed.config.tabs.filter((tab) => tab.skeleton).length >= 3, '武將／家族／戰場是骨架分頁（解鎖已接線，PROG-2-9860）');
         const resources = parsed.config.tabs.find((tab) => tab.id === 'resources');
         assert.equals(7, resources?.groups[0].items.length, '七種資源');
         assert.isTrue(Object.keys(parsed.config.presets).length === 3);
@@ -266,6 +268,69 @@ export function createDevToolSuite(): TestSuite {
         assert.equals(3, session.debugSetStat('woundedCamp', 3));
         assert.equals(3, session.military.woundedCamp);
         assert.equals(1, session.debugSetStat('discoveryLevel', 0), '等級至少 1');
+    });
+
+    suite.test('debug.setRank／debug.unlockAll（PROG-2-9860）：寫入存檔、太守府（階 3）與招賢館（階 2）隨階位開放，可往下調、參數錯誤與未綁定被拒', async () => {
+        installOfficerFeatureUnlocks(JSON.parse(readFileSync(join(ROOT, 'assets/resources/data/officer-feature-unlocks.json'), 'utf8')));
+        try {
+            const unbound = newBundle({ withHost: false });
+            const denied = await unbound.api.cmd('debug.setRank', { tier: 3 });
+            assert.isTrue(isApiFail(denied) && denied.errorCode === 'E107', '未綁定回 E107');
+
+            const { api, session } = newBundle({ withHost: true });
+            assert.isTrue(!isApiFail(await api.cmd('debug.setRank', { tier: 1 })));
+            assert.isTrue(!isLobbyActionUnlocked('governorHall', session.officerState.currentTier), '階 1 太守府鎖著');
+            assert.isTrue(!isLobbyActionUnlocked('recruitHall', session.officerState.currentTier), '階 1 招賢館鎖著');
+
+            const r2 = await api.cmd<{ tier: number; exp: number; unlockedActions: string[] }>('debug.setRank', { tier: 2 });
+            assert.isTrue(!isApiFail(r2) && r2.result.tier === 2 && r2.result.unlockedActions.indexOf('recruitHall') >= 0);
+            assert.isTrue(isLobbyActionUnlocked('recruitHall', session.officerState.currentTier), '階 2 招賢館開');
+            assert.isTrue(!isLobbyActionUnlocked('governorHall', session.officerState.currentTier), '階 2 太守府仍鎖');
+
+            const r3 = await api.cmd<{ tier: number; unlockedActions: string[] }>('debug.setRank', { tier: 3 });
+            assert.isTrue(!isApiFail(r3) && r3.result.unlockedActions.indexOf('governorHall') >= 0);
+            assert.isTrue(isLobbyActionUnlocked('governorHall', session.officerState.currentTier), '階 3 太守府開');
+            assert.equals(3, session.createSnapshot().officerState?.currentTier, '寫進存檔快照');
+            assert.equals('[1,2,3]', JSON.stringify(session.officerState.unlockHistory));
+
+            const all = await api.cmd<{ tier: number }>('debug.unlockAll', {});
+            assert.isTrue(!isApiFail(all) && all.result.tier === 5);
+            assert.equals(5, session.officerState.currentTier);
+
+            await api.cmd('debug.setRank', { tier: 1 });
+            assert.equals(1, session.officerState.currentTier, '可往下調');
+            assert.equals(0, session.officerState.officerExp);
+            assert.isTrue(!isLobbyActionUnlocked('governorHall', 1), '調回 1 太守府重新上鎖');
+
+            for (const bad of [0, 6, 2.5, '3', null]) {
+                const fail = await api.cmd('debug.setRank', { tier: bad });
+                assert.isTrue(isApiFail(fail) && fail.errorCode === 'E001', `tier=${String(bad)} 拒絕`);
+            }
+        } finally {
+            resetOfficerFeatureUnlocks();
+        }
+    });
+
+    suite.test('面板資料：解鎖分頁的官職按鈕全走 debug.setRank／debug.unlockAll，且 i18n 三語都有鍵', () => {
+        const parsed = parseDevToolPanelConfig(panelJson);
+        assert.equals(0, parsed.errors.length);
+        const tab = parsed.config?.tabs.find((x) => x.id === 'unlock');
+        assert.isTrue(!!tab && !tab.skeleton, '解鎖分頁不再是骨架');
+        const apiCmds: string[] = [];
+        const keys: string[] = [];
+        for (const g of tab?.groups ?? []) {
+            keys.push(g.titleKey);
+            for (const item of g.items) {
+                keys.push(item.labelKey);
+                if (item.type === 'button' && item.action.kind === 'api') apiCmds.push(`${item.action.cmd}:${JSON.stringify(item.action.args)}`);
+            }
+        }
+        for (let t = 1; t <= 5; t++) assert.isTrue(apiCmds.indexOf(`debug.setRank:{"tier":${t}}`) >= 0, `缺階 ${t} 按鈕`);
+        assert.isTrue(apiCmds.indexOf('debug.unlockAll:{}') >= 0, '缺官職拉滿按鈕');
+        for (const lang of ['zh-TW', 'zh-CN', 'en']) {
+            const dict = JSON.parse(readFileSync(join(ROOT, `assets/resources/i18n/${lang}.json`), 'utf8')) as Record<string, string>;
+            for (const key of keys) assert.isTrue(typeof dict[key] === 'string' && dict[key].length > 0, `${lang} 缺 ${key}`);
+        }
     });
 
     return suite;

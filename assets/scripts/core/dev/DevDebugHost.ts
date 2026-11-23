@@ -7,12 +7,14 @@
  * - 背景能力（推進季數、開新局、套用匯入存檔）開工時向 DevToolJobs 登記，結束時結案，預設存檔靠它對齊步驟。
  */
 import type { DebugHost } from '../api/localserver/DebugCommands';
+import { unlockedLobbyActions } from '../systems/OfficerFeatureUnlocks';
 import type { DevToolJobs, DevToolLog } from './DevToolRuntime';
 
 /** GameSession 中宿主用到的部分（測試可用假物件） */
 export interface DevHostSession {
     debugAdjustMilitary(field: 'food' | 'cityTroops', delta: number): { applied: number; value: number };
     debugSetStat(key: 'recruitRegen' | 'woundedCamp' | 'discoveryLevel', value: number): number;
+    debugSetOfficerTier(tier: number): { currentTier: number; officerExp: number };
     createSnapshot(): unknown;
     advanceSeason(): Promise<unknown>;
     save(): Promise<unknown>;
@@ -53,6 +55,12 @@ export function createDevDebugHost(deps: DevDebugHostDeps): DebugHost {
             saveSoon();
             deps.onStateChanged?.();
             return applied;
+        },
+        setRank: (tier) => {
+            const state = deps.session().debugSetOfficerTier(tier);
+            saveSoon();
+            deps.onStateChanged?.();
+            return { tier: state.currentTier, exp: state.officerExp, unlockedActions: unlockedLobbyActions(state.currentTier) };
         },
         exportSnapshot: () => deps.session().createSnapshot(),
         advanceTime: (seasons) => {
