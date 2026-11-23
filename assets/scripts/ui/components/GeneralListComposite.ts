@@ -1048,6 +1048,9 @@ export class GeneralListComposite extends CompositePanel {
                 });
             }
             services().event.emit('SHOW_TOAST', { message: response.text, duration: 4 });
+            if (!response.fallbackUsed) {
+                void this._applyInsightFromDialogue(response.generalId, response.text, this._npcDialogueSelectedGeneral.name ?? response.generalId);
+            }
             UCUFLogger.info(LogCategory.DATA, '[GeneralListComposite] npc dialogue response', {
                 generalId: response.generalId,
                 selectedKeywordKey: this._npcDialogueSelectedKeyword.keywordKey,
@@ -1077,6 +1080,28 @@ export class GeneralListComposite extends CompositePanel {
             this._setNpcDialogueProviderTrace(`Quality：request-failed｜Trace：${this._npcDialogueErrorPreview(error)}`);
             services().event.emit('SHOW_TOAST', { message: '對話測試失敗', duration: 2.5 });
             UCUFLogger.warn(LogCategory.DATA, '[GeneralListComposite] npc dialogue request failed', { error });
+        }
+    }
+
+    /** 台詞成就「有感而發」（PROG-2-9864）：新台詞判定與入帳；失敗只記 log，不影響台詞顯示 */
+    private async _applyInsightFromDialogue(generalId: string, text: string, generalName: string): Promise<void> {
+        try {
+            const now = new Date();
+            const pad = (n: number): string => String(n).padStart(2, '0');
+            const dayKey = `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`;
+            const result = await services().recordInsightDialogue(generalId, text, dayKey);
+            const i18n = services().i18n;
+            if (result.decision === 'first') {
+                services().event.emit('SHOW_TOAST', {
+                    message: `${i18n.t('ui.insight.unlock', generalName)}
+${i18n.t('ui.insight.achievement', generalName)}`,
+                    duration: 4,
+                });
+            } else if (result.decision === 'step') {
+                services().event.emit('SHOW_TOAST', { message: i18n.t('ui.insight.step', generalName), duration: 2.5 });
+            }
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[GeneralListComposite] insight dialogue failed', { error });
         }
     }
 
