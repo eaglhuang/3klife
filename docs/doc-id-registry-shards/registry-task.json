@@ -16836,6 +16836,12 @@
     "category": "task"
   },
   {
+    "id": "doc_task_3000",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9863.md",
+    "title": "[PROG-2-9863] 太守府：黃金為 0 時加新手引導提示（選商業任務才有黃金）",
+    "category": "task"
+  },
+  {
     "id": "doc_task_3001",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9615.md",
     "title": "[PROG-2-9615] 首年引導接進畫面與實機視角驗收",

@@ -3321,6 +3321,7 @@ export class LobbyScene extends Component {
             // 人口、民心、黃金基礎值、人口紅利都由 GameSession 快照給出（PROG-2-9138）
             snapshot: () => services().session.governorSnapshot(),
             territory: () => this._governorTerritoryInfo(),
+            t: (key: string) => services().i18n.t(key),
         });
         this._govHallHost = await this._mountPreviewScreenHost('GovernorHallHost', 'governor-hall-screen', [
             { buttonId: 'btnClose', handler: () => { this._closeGovernorHall(); } },

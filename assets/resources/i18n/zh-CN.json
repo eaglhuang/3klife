@@ -991,6 +991,7 @@
   "ui.hall.board.btn.detail": "详情",
   "ui.hall.board.btn.accept": "接取",
   "ui.governor.title": "太守府",
+  "ui.governor.goldHint": "城库空空如也？去内政墙接个商业任务，钱就进来啦！",
   "ui.recruit.title": "招贤馆",
   "ui.recruit.btn.rescue": "民间寻访",
   "ui.academy.empty_guard.btn_go_nurture": "回府悉心培育",

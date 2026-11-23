@@ -24,7 +24,7 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 288,
+    "done": 289,
     "in_progress": 0,
     "open": 87,
     "total": 377
@@ -16516,42 +16516,61 @@
       "completed_at": "2026-11-23"
     },
     {
-      "doc_id": "doc_task_3001",
-      "id": "PROG-2-9615",
-      "title": "首年引導接進畫面與實機視角驗收",
-      "owner": "Antigravity",
-      "priority": "P1",
-      "status": "in-progress",
+      "doc_id": "",
+      "id": "PROG-2-9863",
+      "title": "太守府：黃金為 0 時加新手引導提示（選商業任務才有黃金）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P2",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-23",
-      "created_by_agent": "Antigravity",
-      "started_at": "2026-11-23T17:35:00+08:00",
-      "started_by_agent": "Antigravity",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-23T20:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
       "chain_id": "",
       "chain_step": "",
       "sensor_triggered_by": "",
-      "description": "大廳學府按鈕點擊接入學府空轉防呆（詼諧告示與媒人導流），晉升彈窗升級深色玻璃面板風格",
-      "related": [
-        "PROG-2-9614",
-        "PROG-2-9613"
-      ],
-      "depends": [
-        "PROG-2-9614"
-      ],
+      "description": "",
+      "related": [],
+      "depends": [],
       "acceptance": [
-        "學府無滿15歲子嗣點擊出詼諧告示並導向媒人",
-        "官職晉升解鎖彈窗採用深色玻璃面板 token",
-        "單元測試 100% 通過"
+        "黃金基礎值為 0 時，太守府黃金產出卡顯示一行提示（zh-TW／zh-CN／en 走 i18n）",
+        "黃金基礎值大於 0 時提示列隱藏",
+        "不改任何數值規則，只加提示與文字",
+        "tsc 0 錯、run-cli ALL PASS、compute-gate standard 0 阻擋"
       ],
       "deliverables": [
-        "assets/scripts/ui/scenes/LobbyScene.ts",
-        "assets/resources/ui-spec/skins/rank-unlock-popup-screen.skin.json",
-        "tests/Year1GuidanceScreens.test.ts",
-        "artifacts/ui-qa/academy_empty_guard_verified.png",
-        "artifacts/ui-qa/rank_unlock_popup_verified.png"
+        "assets/scripts/ui/core/GovernorHallController.ts",
+        "assets/resources/ui-spec/layouts/governor-hall-main.json",
+        "assets/resources/i18n/zh-TW.json",
+        "assets/resources/i18n/zh-CN.json",
+        "assets/resources/i18n/en.json",
+        "tests/GovernorHallController.test.ts"
       ],
-      "notes": "2026-11-23 | 狀態: in-progress | 驗證: Year1GuidanceScreens.test.ts 通過 | 變更: 接線學府空轉與晉升彈窗樣式 | 阻塞: 無"
+      "notes": "2026-11-23 | 狀態: done | 驗證: tsc 0 錯、run-cli ALL PASS（9375 passed，含新增 4 則）、compute-gate standard 0 阻擋（僅既有 CharacterDs3TacticsChild 邊界警告）| 變更: 太守府黃金基礎值 0 時顯示新手引導提示（ui.governor.goldHint 三語）、黃金卡加高並下移兩卡；未開編輯器實機截圖 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      },
+      "completed_at": "2026-11-23"
     }
   ],
   "updated": "2026-11-22"

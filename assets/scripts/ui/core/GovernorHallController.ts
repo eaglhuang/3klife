@@ -32,7 +32,14 @@ export interface GovernorTerritoryInfo {
 export interface GovernorHallDeps {
     snapshot: () => GovernorSnapshot;
     territory?: () => GovernorTerritoryInfo;
+    /** i18n 查字串（services().i18n.t）；沒傳或查不到時退回 zh-TW 預設字串。 */
+    t?: (key: string) => string;
 }
+
+/** 黃金基礎值為 0 時的新手引導提示 key（PROG-2-9863） */
+export const GOLD_HINT_KEY = 'ui.governor.goldHint';
+/** 語系表未載入或沒有該 key 時的 zh-TW 預設 */
+export const GOLD_HINT_FALLBACK = '城庫空空如也？去內政牆接個商業任務，錢就進來啦！';
 
 const UPGRADE_REJECT_TEXT: Record<TerritoryUpgradeRejectReason, string> = {
     'max-level': '已達最高等級',
@@ -87,10 +94,19 @@ export class GovernorHallController {
         return buildGovernorHallView(this._deps.snapshot());
     }
 
+    /** 黃金提示文字：沒有經濟資料（黃金基礎值為 null）或基礎值大於 0 時不顯示。 */
+    private _goldHint(snapshot: GovernorSnapshot): string | null {
+        if (snapshot.gold === null || snapshot.gold.base !== 0) return null;
+        const text = this._deps.t?.(GOLD_HINT_KEY);
+        return text && text !== GOLD_HINT_KEY ? text : GOLD_HINT_FALLBACK;
+    }
+
     /** 扁平 FlowView：key 與 governor-hall-main.json 的節點 id 對應。 */
     public getFlowView(): GovernorHallFlowView {
-        const view = this.view();
+        const snapshot = this._deps.snapshot();
+        const view = buildGovernorHallView(snapshot);
         const territory = this.territoryTexts();
+        const goldHint = this._goldHint(snapshot);
         const texts: Record<string, string> = {
             govHallTitle: '太守府',
             govPopulation: view.populationText,
@@ -100,6 +116,7 @@ export class GovernorHallController {
             govGoldPopulationBonus: view.goldCard.populationBonusText,
             govGoldPolicyModifier: view.goldCard.policyModifierText,
             govGoldTotal: view.goldCard.totalText,
+            govGoldHint: goldHint ?? '',
             govFoodTitle: view.foodCard.title,
             govFoodBase: view.foodCard.baseText,
             govFoodPopulationBonus: view.foodCard.populationBonusText,
@@ -118,7 +135,7 @@ export class GovernorHallController {
         for (const flow of view.flows) {
             texts[this._flowNodeId(flow.key)] = `${flow.label}　${flow.valueText}`;
         }
-        const actives: Record<string, boolean> = { btnUpgrade: true, govStock: owned !== undefined };
+        const actives: Record<string, boolean> = { btnUpgrade: true, govStock: owned !== undefined, govGoldHint: goldHint !== null };
         for (const flow of view.flows) {
             actives[this._flowNodeId(flow.key)] = true;
         }

@@ -119,5 +119,41 @@ export function createGovernorHallControllerSuite(): TestSuite {
         assert.equals('黃金不足（需 4000，現有 100）', flow.texts.btnUpgradeLabel);
     });
 
+    suite.test('黃金基礎值為 0（沒選商業）時顯示新手引導提示，走 i18n key', () => {
+        const keys: string[] = [];
+        const flow = new GovernorHallController({
+            snapshot: () => snapshot({ gold: { base: 0, populationBonus: 0, policyModifier: 0 } }),
+            t: (key: string) => { keys.push(key); return '去內政牆接商業任務'; },
+        }).getFlowView();
+        assert.equals('去內政牆接商業任務', flow.texts.govGoldHint);
+        assert.isTrue(flow.actives.govGoldHint);
+        assert.equals('ui.governor.goldHint', keys[0]);
+    });
+
+    suite.test('黃金基礎值為 0 且沒注入 t 時退回 zh-TW 預設文字', () => {
+        const flow = new GovernorHallController({
+            snapshot: () => snapshot({ gold: { base: 0, populationBonus: 0, policyModifier: 0 } }),
+        }).getFlowView();
+        assert.equals('城庫空空如也？去內政牆接個商業任務，錢就進來啦！', flow.texts.govGoldHint);
+        assert.isTrue(flow.actives.govGoldHint);
+    });
+
+    suite.test('i18n 查不到 key（回傳 key 本身）時退回預設文字', () => {
+        const flow = new GovernorHallController({
+            snapshot: () => snapshot({ gold: { base: 0, populationBonus: 0, policyModifier: 0 } }),
+            t: (key: string) => key,
+        }).getFlowView();
+        assert.equals('城庫空空如也？去內政牆接個商業任務，錢就進來啦！', flow.texts.govGoldHint);
+    });
+
+    suite.test('黃金基礎值大於 0 或沒有經濟資料時不顯示提示', () => {
+        const withGold = new GovernorHallController({ snapshot: () => snapshot() }).getFlowView();
+        assert.equals('', withGold.texts.govGoldHint);
+        assert.isFalse(withGold.actives.govGoldHint);
+        const noEconomy = new GovernorHallController({ snapshot: () => snapshot({ gold: null, population: null, morale: null }) }).getFlowView();
+        assert.equals('', noEconomy.texts.govGoldHint);
+        assert.isFalse(noEconomy.actives.govGoldHint);
+    });
+
     return suite;
 }

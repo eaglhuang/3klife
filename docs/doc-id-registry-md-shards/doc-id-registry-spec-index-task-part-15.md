@@ -231,4 +231,5 @@
 | `doc_task_2997` | docs/agent-briefs/tasks/PROG/PROG-2-9857.md | [PROG-2-9857] 戰場回饋：狀態飄字依增益／減益／控制分色 |
 | `doc_task_2998` | docs/agent-briefs/tasks/PROG/PROG-2-9859.md | [PROG-2-9859] 戰場回饋：奧義暫代分鏡中段補音效（1.3 秒空白） |
 | `doc_task_2999` | docs/agent-briefs/tasks/PROG/PROG-2-9862.md | [PROG-2-9862] 戰場回饋：DOT tick 命中音與毒箭回饋 |
+| `doc_task_3000` | docs/agent-briefs/tasks/PROG/PROG-2-9863.md | [PROG-2-9863] 太守府：黃金為 0 時加新手引導提示（選商業任務才有黃金） |
 | `doc_task_3001` | docs/agent-briefs/tasks/PROG/PROG-2-9615.md | [PROG-2-9615] 首年引導接進畫面與實機視角驗收 |
