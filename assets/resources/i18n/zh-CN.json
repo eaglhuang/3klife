@@ -1107,7 +1107,7 @@
   "sortie.preset.unavailable": "编制预设的人选都已无法出战",
   "sortie.recommend": "一键推荐编制",
   "sortie.recommend.hint": "依主将、参谋官、后勤官与卡组的属性挑选人选，并列出理由。",
-  "sortie.recommend.done": "已按推荐编制主将、参谋官、后勤官与卡组",
+  "sortie.recommend.done": "已按推荐编制完成",
   "sortie.recommend.line": "{0}：{1}（{2}）",
   "sortie.recommend.unavailable": "目前没有推荐数据",
   "sortie.recommend.failed": "推荐编制失败，请稍后再试",
@@ -1117,5 +1117,9 @@
   "prebattle.issue.NO_DEPUTY": "没有可派的后勤官",
   "prebattle.issue.TALLY_SHORTAGE": "虎符卡不足，卡组未满",
   "prebattle.issue.UNKNOWN_ENCOUNTER": "找不到本关设定，已改用一般推荐",
-  "prebattle.issue.ENCOUNTER_LEAD_UNAVAILABLE": "本关指定主将目前不能出战"
+  "prebattle.issue.ENCOUNTER_LEAD_UNAVAILABLE": "本关指定主将目前不能出战",
+  "sortie.issue.MISSING_COMMANDER": "尚未选定主将",
+  "sortie.issue.ROLE_LOCK": "同一武将不可同时担任两个出征角色",
+  "sortie.issue.SAME_BLOODLINE": "同名武将不可同场出征",
+  "sortie.issue.UNKNOWN_GENERAL": "编制中有不在名册的武将"
 }

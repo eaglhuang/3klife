@@ -23,7 +23,7 @@ import {
     computeSortiePoolMax,
     sortieGuaranteeOf,
     sortieShortageNotice,
-    SORTIE_LOADOUT_ISSUE_TEXT,
+    SORTIE_LOADOUT_ISSUE_KEY,
     type CreateSortieInput,
     type SortieLoadoutCheck,
 } from '../../core/systems/SortieDeploy';
@@ -148,12 +148,18 @@ export class SortieSetupController {
                 this._notice = '';
                 return;
             }
-            this._notice = check.issues.map((i) => SORTIE_LOADOUT_ISSUE_TEXT[i]).join('、');
+            this._notice = check.issues.map((i) => this._t(SORTIE_LOADOUT_ISSUE_KEY[i])).join('、');
         }
     }
 
     clear(role: SortieRole): void {
         this._assign(role, null);
+        this._notice = '';
+    }
+
+    /** 使用者手動改動編制後，清掉舊的推薦理由與通知，避免顯示過時文字 */
+    clearRecommendation(): void {
+        this._reasonLines = [];
         this._notice = '';
     }
 
@@ -358,7 +364,7 @@ export class SortieSetupController {
             await this._deps.session.setDeck(rec.tallyCards.map((p) => p.cardId), cards.map((c) => c.cardId));
             this._reasonLines.push(line(t('sortie.deck.label'), names.join('、'), rec.tallyCards[0].reasonKey));
         }
-        const supportIssue = check.ok ? '' : check.issues.map((i) => SORTIE_LOADOUT_ISSUE_TEXT[i]).join('、');
+        const supportIssue = check.ok ? '' : check.issues.map((i) => this._t(SORTIE_LOADOUT_ISSUE_KEY[i])).join('、');
         const gaps = [issueText, supportIssue].filter((s) => s.length > 0).join('、');
         this._notice = gaps ? `${t('sortie.recommend.done')}（${gaps}）` : t('sortie.recommend.done');
         return true;
@@ -389,7 +395,7 @@ export class SortieSetupController {
             return false;
         }
         const check = this._deps.session.setSortieSupport(resolved.strategistUid, resolved.deputyUid);
-        this._notice = check.ok ? this._t('sortie.preset.applied') : check.issues.map((i) => SORTIE_LOADOUT_ISSUE_TEXT[i]).join('、');
+        this._notice = check.ok ? this._t('sortie.preset.applied') : check.issues.map((i) => this._t(SORTIE_LOADOUT_ISSUE_KEY[i])).join('、');
         return check.ok;
     }
 

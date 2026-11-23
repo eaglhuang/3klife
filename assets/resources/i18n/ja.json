@@ -1049,5 +1049,9 @@
   "prebattle.issue.NO_DEPUTY": "配置できる兵站官がいません",
   "prebattle.issue.TALLY_SHORTAGE": "虎符カードが足りずデッキが埋まりません",
   "prebattle.issue.UNKNOWN_ENCOUNTER": "ステージ設定が見つからず一般推薦を使用",
-  "prebattle.issue.ENCOUNTER_LEAD_UNAVAILABLE": "このステージの指定主将は出陣できません"
+  "prebattle.issue.ENCOUNTER_LEAD_UNAVAILABLE": "このステージの指定主将は出陣できません",
+  "sortie.issue.MISSING_COMMANDER": "主将が未選択です",
+  "sortie.issue.ROLE_LOCK": "同じ武将は二つの出陣役割を兼ねられません",
+  "sortie.issue.SAME_BLOODLINE": "同名の武将は同時に出陣できません",
+  "sortie.issue.UNKNOWN_GENERAL": "編成に名簿にない武将が含まれています"
 }

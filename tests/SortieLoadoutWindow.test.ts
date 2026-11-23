@@ -130,6 +130,18 @@ export function createSortieLoadoutWindowSuite(): TestSuite {
         assert.equals('出戰卡組（手動 1/4）', manual.deckTitleLabel);
     });
 
+    suite.test('手動改動編制後清掉舊推薦理由與通知', async () => {
+        const session = await sessionWith(roster(), null);
+        const prebattle: SortiePrebattleDeps = { weights: weights(), encounters: () => [], currentEncounterId: () => null, cards: cardInfos };
+        const ctrl = new SortieSetupController({ session, lookup: zhTwLookup(), prebattle });
+        assert.isTrue(await ctrl.recommend());
+        assert.isTrue(ctrl.getView().texts.recommendReasonLabel.includes('出戰卡組：'));
+        ctrl.clearRecommendation();
+        const view = ctrl.getView().texts;
+        assert.isFalse(view.recommendReasonLabel.includes('出戰卡組：'), view.recommendReasonLabel);
+        assert.equals('', view.sortieNotice);
+    });
+
     suite.test('版面：編成視窗的新節點都在 sortie-setup-main，且 sortie-setup-screen 仍指向該版面', () => {
         const layout = readJson<{ root: unknown }>('assets/resources/ui-spec/layouts/sortie-setup-main.json');
         const ids = collectIds(layout.root, new Set<string>());
@@ -150,6 +162,7 @@ export function createSortieLoadoutWindowSuite(): TestSuite {
         keys.add('prebattle.issue.TALLY_SHORTAGE');
         keys.add('prebattle.issue.UNKNOWN_ENCOUNTER');
         keys.add('prebattle.issue.ENCOUNTER_LEAD_UNAVAILABLE');
+        for (const k of ['MISSING_COMMANDER', 'ROLE_LOCK', 'SAME_BLOODLINE', 'UNKNOWN_GENERAL']) keys.add(`sortie.issue.${k}`);
         for (const lang of ['zh-TW', 'en', 'ja', 'zh-CN']) {
             const dict = readJson<Record<string, string>>(`assets/resources/i18n/${lang}.json`);
             for (const k of keys) assert.isTrue(typeof dict[k] === 'string' && dict[k].length > 0, `${lang} 缺 ${k}`);

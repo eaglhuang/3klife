@@ -1108,7 +1108,7 @@
   "sortie.preset.unavailable": "編制預設的人選都已無法出戰",
   "sortie.recommend": "一鍵推薦編制",
   "sortie.recommend.hint": "依主將、參謀官、後勤官與卡組的屬性挑選人選，並列出理由。",
-  "sortie.recommend.done": "已依推薦編制主將、參謀官、後勤官與卡組",
+  "sortie.recommend.done": "已依推薦編制完成",
   "sortie.recommend.line": "{0}：{1}（{2}）",
   "sortie.recommend.unavailable": "目前沒有推薦資料",
   "sortie.recommend.failed": "推薦編制失敗，請稍後再試",
@@ -1118,5 +1118,9 @@
   "prebattle.issue.NO_DEPUTY": "沒有可派的後勤官",
   "prebattle.issue.TALLY_SHORTAGE": "虎符卡不足，卡組未滿",
   "prebattle.issue.UNKNOWN_ENCOUNTER": "找不到本關設定，已改用一般推薦",
-  "prebattle.issue.ENCOUNTER_LEAD_UNAVAILABLE": "本關指定主將目前不能出戰"
+  "prebattle.issue.ENCOUNTER_LEAD_UNAVAILABLE": "本關指定主將目前不能出戰",
+  "sortie.issue.MISSING_COMMANDER": "尚未選定主將",
+  "sortie.issue.ROLE_LOCK": "同一武將不可同時擔任兩個出征角色",
+  "sortie.issue.SAME_BLOODLINE": "同名武將不可同場出征",
+  "sortie.issue.UNKNOWN_GENERAL": "編制中有不在名冊的武將"
 }

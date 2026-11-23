@@ -1117,5 +1117,9 @@
   "prebattle.issue.NO_DEPUTY": "No quartermaster available",
   "prebattle.issue.TALLY_SHORTAGE": "Not enough tally cards, deck not full",
   "prebattle.issue.UNKNOWN_ENCOUNTER": "Stage not found, used general recommendation",
-  "prebattle.issue.ENCOUNTER_LEAD_UNAVAILABLE": "The stage's fixed commander cannot deploy now"
+  "prebattle.issue.ENCOUNTER_LEAD_UNAVAILABLE": "The stage's fixed commander cannot deploy now",
+  "sortie.issue.MISSING_COMMANDER": "No commander selected",
+  "sortie.issue.ROLE_LOCK": "A general cannot fill two sortie roles at once",
+  "sortie.issue.SAME_BLOODLINE": "Generals with the same name cannot deploy together",
+  "sortie.issue.UNKNOWN_GENERAL": "The loadout includes a general not in the roster"
 }
