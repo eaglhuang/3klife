@@ -24,10 +24,10 @@
   "shard": "PROG",
   "generated": "2026-04-06",
   "summary": {
-    "done": 262,
-    "in_progress": 9,
+    "done": 264,
+    "in_progress": 10,
     "open": 85,
-    "total": 356
+    "total": 359
   },
   "tasks": [
     {
@@ -15634,6 +15634,60 @@
         "style": "classic",
         "label": "",
         "summary": "幕府大廳主畫面套用大廳・內政玻璃風格（第一階段）",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9737",
+      "title": "攻擊特效正式量產：騎兵／盾兵／法陣縮小降透明度（分兵種倍率）",
+      "owner": "ClaudeCode_opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-23",
+      "created_by_agent": "codex-gpt-5.4-mini",
+      "started_at": "2026-11-23T10:50:48+08:00",
+      "started_by_agent": "codex-gpt-5.4-mini",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "攻擊特效採中間亮度；騎兵、盾兵、諸葛亮法陣依使用者裁決縮小並降低不透明度（JSON sizeMul／alphaMul 分兵種），不遮住部隊身形；附 180px 峰值截圖。",
+      "related": [
+        "PROG-2-9736"
+      ],
+      "depends": [],
+      "acceptance": [
+        "attack-vfx.json 有 sizeMul/alphaMul",
+        "單元測試與 tsc 0 錯",
+        "180px 峰值截圖確認不遮擋"
+      ],
+      "deliverables": [
+        "assets/resources/data/attack-vfx.json",
+        "assets/scripts/battle/views/AttackVfxPlayer.ts",
+        "tests/AttackVfxConfig.test.ts"
+      ],
+      "notes": "2026-11-23 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
         "position": "",
         "prereq": ""
       },
