@@ -66,6 +66,7 @@ const http = require('http');
 const path = require('path');
 const { execFileSync } = require('child_process');
 const { createRealMouse } = require('./playtest-real-mouse');
+const { decideEndTurnAction } = require('./playtest-end-turn-fallback');
 
 const projectRoot = path.resolve(__dirname, '..');
 const DEFAULT_URL = 'https://eaglhuang.github.io/3klife-play/';
@@ -290,6 +291,83 @@ function installPageHelpers() {
                 if (label && label.string && new RegExp(re).test(label.string)) out.push(label.string);
             });
             return out;
+        },
+        /**
+         * 戰場狀態（唯讀）：讀 BattleScene 元件的 sceneContext 旗標與控制器判斷方法，不改遊戲狀態。
+         * 回傳 null 表示畫面上找不到戰場。（PROG-2-9803）
+         */
+        battleState: () => {
+            let comp = window.__ptBattleComp;
+            if (!comp || !comp.sceneContext) {
+                comp = null;
+                walk(scene(), (node) => {
+                    if (comp || !node.getComponent) return;
+                    const found = node.getComponent('BattleScene');
+                    if (found && found.sceneContext) comp = found;
+                });
+                window.__ptBattleComp = comp;
+            }
+            if (!comp) return null;
+            const sc = comp.sceneContext;
+            const ctrl = sc.ctrl || null;
+            let canAdvance = null;
+            try { canAdvance = ctrl ? Boolean(ctrl.canAdvanceBattleTurn()) : null; } catch (e) { canAdvance = null; }
+            let thinking = false;
+            if (sc.isAdvancingTurn) {
+                walk(scene(), (node) => { if (!thinking && node.name === 'EnemyThinking' && node.activeInHierarchy) thinking = true; });
+            }
+            return {
+                advancing: Boolean(sc.isAdvancingTurn),
+                duelPanel: Boolean(sc.isDuelPanelActive),
+                ultCutin: Boolean(sc.isUltCutinActive),
+                waitingDuel: Boolean(ctrl && ctrl.isWaitingDuelPlacement),
+                battleEnded: Boolean(ctrl && ctrl.state && ctrl.state.battleEndAnnounced),
+                canAdvance,
+                thinking,
+            };
+        },
+        /**
+         * 每回合各段演出實測秒數取樣器（PROG-2-9803）：每 50ms 讀一次 battleState，
+         * 把狀態切成連續區段：idle＝我方可操作、advance＝回合推進中、enemyThinking＝敵軍思考中、duel＝單挑、ult＝奧義演出。
+         * 每段記起迄時間與所屬回合（window.__ptRound 由 QA 迴圈更新）。
+         */
+        startTimingSampler: () => {
+            if (window.__ptSampler) clearInterval(window.__ptSampler);
+            window.__ptRuns = [];
+            window.__ptRound = -1;
+            window.__ptCur = null;
+            window.__ptSampler = setInterval(() => {
+                const st = window.__pt.battleState();
+                const label = !st ? 'unknown' : st.ultCutin ? 'ult' : st.duelPanel ? 'duel' : st.advancing ? (st.thinking ? 'enemyThinking' : 'advance') : 'idle';
+                const now = performance.now();
+                const round = window.__ptRound;
+                const cur = window.__ptCur;
+                if (!cur || cur.label !== label || cur.round !== round) {
+                    if (cur) cur.end = now;
+                    const next = { label, round, start: now, end: now };
+                    window.__ptCur = next;
+                    window.__ptRuns.push(next);
+                } else {
+                    cur.end = now;
+                }
+            }, 50);
+        },
+        stopTimingSampler: () => {
+            if (window.__ptSampler) clearInterval(window.__ptSampler);
+            window.__ptSampler = null;
+        },
+        /** 取樣器彙整：byLabel＝各段總毫秒；byRound＝每回合各段毫秒；runs＝逐段明細 */
+        timingSummary: () => {
+            const runs = (window.__ptRuns || []).map((r) => ({ label: r.label, round: r.round, ms: Math.round(r.end - r.start) }));
+            const byLabel = {};
+            const byRound = {};
+            for (const r of runs) {
+                byLabel[r.label] = (byLabel[r.label] || 0) + r.ms;
+                const key = String(r.round);
+                byRound[key] = byRound[key] || {};
+                byRound[key][r.label] = (byRound[key][r.label] || 0) + r.ms;
+            }
+            return { byLabel, byRound, runs };
         },
     };
     window.__pt = pt;
@@ -1331,6 +1409,8 @@ async function main() {
             let settled = null;
             let lastRound = -1;
             let lastProgressAt = Date.now();
+            // 每回合各段演出實測秒數（PROG-2-9803）：取樣器跟著戰鬥迴圈跑，結算時彙整成 presentation-timing.json
+            await page.evaluate(() => window.__pt.startTimingSampler());
             const hardDeadline = Date.now() + 360000;
             while (!settled) {
                 if ((await scene()) === 'LobbyScene') { settled = 'auto-lobby'; break; }
@@ -1340,16 +1420,22 @@ async function main() {
                 const round = roundTexts.length ? Number(String(roundTexts[0]).replace(/\D/g, '')) : -1;
                 if (round !== lastRound) { lastRound = round; lastProgressAt = Date.now(); }
                 rec.detail.lastRound = lastRound;
+                await page.evaluate((r) => { window.__ptRound = r; }, lastRound);
                 // 首戰教學戰打不死（回合持續推進仍無勝負）：超過 20 回合改按右上「退」結束教學，記錄為 retreat
                 if (lastRound >= 20) {
                     rec.detail.retreatedAtRound = rec.detail.retreatedAtRound || lastRound;
                     await clickByText('.*', '^\\s*退\\s*$');
                     await clickByText('.*', '^\\s*(確認|確定|是|撤退|結束教學)\\s*$');
                 }
-                // 自動代打時由遊戲自己結束回合；同一回合停超過 12 秒才補按（計入 endTurnFallbacks，代表自動代打沒推進）
+                // 自動代打時由遊戲自己結束回合。只有「推進演出已結束、按鈕可操作、回合停超過 12 秒」才補按並計入 endTurnFallbacks（PROG-2-9803）
                 // 沒開自動代打時逐回合手按結束回合；絕不再按自動鈕（第二次按＝跳到極速決戰）
-                if (!autoPlay || Date.now() - lastProgressAt > 12000) {
-                    if ((await clickButton('^(BtnEndTurn|btnEndTurn|EndTurnBtn)$')) && autoPlay) rec.detail.endTurnFallbacks += 1;
+                const stalled = Date.now() - lastProgressAt > 12000;
+                const battleState = autoPlay && stalled ? await page.evaluate(() => window.__pt.battleState()) : null;
+                const endTurnAction = decideEndTurnAction({ autoPlay, stalled, state: battleState });
+                if (endTurnAction.click) {
+                    const clicked = await clickButton('^(BtnEndTurn|btnEndTurn|EndTurnBtn)$');
+                    if (clicked && endTurnAction.count) rec.detail.endTurnFallbacks += 1;
+                    if (clicked && endTurnAction.unknownState) rec.detail.endTurnUnknownStateClicks = (rec.detail.endTurnUnknownStateClicks || 0) + 1;
                 }
                 if (Date.now() - lastProgressAt > BATTLE_LIMIT_MS) throw new Error(`戰鬥卡住：第 ${lastRound} 回合起超過 ${Math.round(BATTLE_LIMIT_MS / 1000)} 秒沒有推進（可按按鈕：${(await listButtons()).join(', ')}）`);
                 if (Date.now() > hardDeadline) throw new Error(`戰鬥 6 分鐘內未結算（停在第 ${lastRound} 回合；回合仍在推進，疑似戰鬥變長）`);
@@ -1357,6 +1443,14 @@ async function main() {
             }
             rec.detail.settledBy = settled;
             rec.detail.battleMs = Date.now() - battleT0;
+            {
+                const timing = await page.evaluate(() => { window.__pt.stopTimingSampler(); return window.__pt.timingSummary(); }).catch(() => null);
+                if (timing) {
+                    rec.detail.presentationTiming = { byLabel: timing.byLabel, byRound: timing.byRound };
+                    fs.writeFileSync(path.join(outDir, 'presentation-timing.json'), JSON.stringify(timing, null, 2), 'utf8');
+                    rec.detail.presentationTimingFile = path.relative(projectRoot, path.join(outDir, 'presentation-timing.json')).replace(/\\/g, '/');
+                }
+            }
             if (settled === 'review') {
                 rec.detail.result = (await page.evaluate(() => window.__pt.textsMatching('^(勝利|失敗|戰敗|平手)$')))[0] || null;
                 // 戰後獎懲（PROG-2-9149）在 recordBattle 存檔後才補進結算框，要等一下才看得到
