@@ -16,13 +16,13 @@ export function createMatchmakerRankingLinkageSuite(): TestSuite {
 
     suite.test('應在家族未上榜時回傳預設 2 人名額', () => {
         const count = calculateMatchmakerCandidateCount({ hasRankedClanMember: false });
-        assert(count === 2, 預期名額為 2，實際為 );
+        assert(count === 2, '預期名額為 2');
         assert(count === DEFAULT_MATCHMAKER_RANKING_CONFIG.defaultCandidateCount, '應等於預設設定');
     });
 
     suite.test('應在家族有成員上榜時擴充為 4 人名額', () => {
         const count = calculateMatchmakerCandidateCount({ hasRankedClanMember: true });
-        assert(count === 4, 預期名額為 4，實際為 );
+        assert(count === 4, '預期名額為 4');
         assert(count === DEFAULT_MATCHMAKER_RANKING_CONFIG.rankedFamilyCandidateCount, '應等於入榜設定');
     });
 
@@ -35,13 +35,13 @@ export function createMatchmakerRankingLinkageSuite(): TestSuite {
             hasRankedClanMember: false,
             config: customConfig,
         });
-        assert(countNormal === 3, 預期名額為 3，實際為 );
+        assert(countNormal === 3, '預期名額為 3');
 
         const countRanked = calculateMatchmakerCandidateCount({
             hasRankedClanMember: true,
             config: customConfig,
         });
-        assert(countRanked === 6, 預期名額為 6，實際為 );
+        assert(countRanked === 6, '預期名額為 6');
     });
 
     suite.test('isClanRankedInAnnualBoard 判定邏輯正確性', () => {
