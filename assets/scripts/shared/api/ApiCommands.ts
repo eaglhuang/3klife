@@ -71,6 +71,8 @@ export const API_COMMANDS = Object.freeze({
     // 測試工具 2.0（PROG-2-9858）：資源、屬性、時間、存檔匯出入；同樣只有本機 adapter 掛處理器，且要綁定偵錯宿主才生效
     'debug.grant': { kind: 'cmd', revGuard: false },
     'debug.setStat': { kind: 'cmd', revGuard: false },
+    'debug.setRank': { kind: 'cmd', revGuard: false },
+    'debug.unlockAll': { kind: 'cmd', revGuard: false },
     'debug.advanceTime': { kind: 'cmd', revGuard: false },
     'debug.resetGame': { kind: 'cmd', revGuard: false },
     'debug.exportSave': { kind: 'query', revGuard: false },
@@ -705,6 +707,26 @@ export const DEBUG_STAT_KEYS: readonly string[] = Object.freeze(['recruitRegen',
 export interface DebugSetStatResult {
     key: string;
     value: number;
+}
+
+/** debug.setRank：官職階位範圍（與 OfficerState 的 1～5 一致）；太守府要階位 3、招賢館要階位 2 */
+export const DEBUG_RANK_MIN = 1;
+export const DEBUG_RANK_MAX = 5;
+
+export interface DebugSetRankResult {
+    /** 設定後的官職階位 */
+    tier: number;
+    /** 設定後的累積官職經驗（等於該階晉升門檻） */
+    exp: number;
+    /** 該階位下已開放的大廳選單項目 id（lobbyAction），方便測試記錄對照 */
+    unlockedActions?: string[];
+}
+
+/** debug.unlockAll：目前只做官職拉滿（開放所有依官職鎖定的大廳設施）；關卡與幕府等級另案 */
+export interface DebugUnlockAllResult {
+    tier: number;
+    exp: number;
+    unlockedActions?: string[];
 }
 
 /** debug.advanceTime：單位與單次上限（一年＝4 季；上限 40 季＝10 年） */

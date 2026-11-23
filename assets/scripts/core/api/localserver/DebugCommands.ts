@@ -9,6 +9,8 @@
  * - debug.grant：資源加減。錢包幣別（金、銀兩、鑽石、召喚券）走 WalletAuthority 的 credit／spend，
  *   兵與糧走宿主的 adjustMilitary；玉尚無權威儲存，回 E107 說明。
  * - debug.setStat：直接設定數值（白名單）。
+ * - debug.setRank：把官職設為 1～5 階（經驗同步設為該階門檻），太守府（階 3）、招賢館（階 2）等依官職鎖定的設施隨之開放或重新上鎖；
+ *   debug.unlockAll：官職拉滿，一次開放所有依官職鎖定的大廳設施。皆寫入存檔（PROG-2-9860）。
  * - debug.advanceTime、debug.resetGame、debug.importSave 的後續動作：命令佇列是串行的，處理器裡不能等宿主跑完
  *   （宿主推進時要呼叫 save.* 等命令，會排在自己後面造成死結），所以只啟動並回 ack，進度由宿主公布。
  * - debug.exportSave（查詢）：回整份存檔快照 JSON。debug.importSave：驗證後經 save.full 寫入，再請宿主套用。
@@ -17,6 +19,8 @@ import {
     DEBUG_ADVANCE_MAX_SEASONS,
     DEBUG_GRANT_MAX_ABS,
     DEBUG_GRANT_RESOURCES,
+    DEBUG_RANK_MAX,
+    DEBUG_RANK_MIN,
     DEBUG_STAT_KEYS,
     type DebugAdvanceAck,
     type DebugExportSaveResult,
@@ -25,7 +29,9 @@ import {
     type DebugGrantResource,
     type DebugGrantResult,
     type DebugImportSaveResult,
+    type DebugSetRankResult,
     type DebugSetStatResult,
+    type DebugUnlockAllResult,
 } from '../../../shared/api/ApiCommands';
 import { ApiError } from '../../../shared/api/ApiErrors';
 import { validatePlayerSaveSnapshot } from '../../services/PlayerSaveService';
@@ -40,6 +46,8 @@ export interface DebugHost {
     adjustMilitary?(field: 'food' | 'cityTroops', delta: number): { applied: number; value: number };
     /** 直接設定數值，回設定後的值 */
     setStat?(key: string, value: number): number;
+    /** 官職設為指定階位（同步；存檔由宿主排程），回設定後的階位、經驗與已開放的大廳項目 */
+    setRank?(tier: number): DebugSetRankResult;
     /** 推進季數（呼叫端不 await；進度由宿主公布） */
     advanceTime?(seasons: number): Promise<void>;
     /** 開新局並存檔（呼叫端不 await） */
@@ -130,6 +138,20 @@ export function registerDebugCommands(adapter: LocalApiAdapter, getHost: () => D
         const applied = set(key, value);
         const result: DebugSetStatResult = { key, value: applied };
         return { result };
+    });
+
+    adapter.register('debug.setRank', (args) => {
+        const tier = args.tier;
+        if (!isIntInRange(tier, DEBUG_RANK_MIN, DEBUG_RANK_MAX)) throw new ApiError('INVALID_SCHEMA', `tier 必須是 ${DEBUG_RANK_MIN}～${DEBUG_RANK_MAX} 的整數`);
+        const setRank = requireHost(getHost(), 'setRank', '官職設定');
+        const result: DebugSetRankResult = setRank(tier);
+        return { result, delta: [{ path: '/officerState/currentTier', op: 'replace', value: result.tier }] };
+    });
+
+    adapter.register('debug.unlockAll', () => {
+        const setRank = requireHost(getHost(), 'setRank', '全部解鎖');
+        const result: DebugUnlockAllResult = setRank(DEBUG_RANK_MAX);
+        return { result, delta: [{ path: '/officerState/currentTier', op: 'replace', value: result.tier }] };
     });
 
     adapter.register('debug.advanceTime', (args) => {

@@ -1977,10 +1977,10 @@ export class UnitRenderer extends Component {
     this.drawHpBar(view.hpBar, hpState, view.hpChip?.lag);
     this.refreshStatusIcons(view, unit);
 
-    // 更新下排兵種名稱（小兵顯示完整對應名稱，將軍化身則顯示「將」）
+    // 更新下排兵種名稱（小兵顯示完整對應名稱，將軍化身只顯示武將名；「將」徽章已另外標示，不加開發用括號字）
     if (view.bottomNameLabel) {
       view.bottomNameLabel.string = this.isGeneralAvatarUnit(unit)
-        ? `${this.latestState?.getGeneral(unit.faction)?.name ?? unit.name}（主將棋子）`
+        ? (this.latestState?.getGeneral(unit.faction)?.name ?? unit.name)
         : view.formationLoading ? `${unit.name}（模型載入中）`
           : view.formationLoad && !view.usingTroopFormation ? `${unit.name}（戰術棋子）` : unit.name;
     }
