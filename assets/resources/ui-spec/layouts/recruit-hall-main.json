@@ -57,7 +57,8 @@
             "height": 56,
             "text": "招賢館",
             "styleSlot": "recruit.label.title",
-            "width": 300
+            "width": 300,
+            "textKey": "ui.recruit.title"
           },
           {
             "type": "label",
@@ -95,7 +96,8 @@
                 },
                 "height": 36,
                 "text": "關閉",
-                "styleSlot": "recruit.label.button"
+                "styleSlot": "recruit.label.button",
+                "textKey": "ui.close"
               }
             ]
           },
@@ -122,7 +124,8 @@
                 },
                 "height": 36,
                 "text": "民間尋訪",
-                "styleSlot": "recruit.label.button"
+                "styleSlot": "recruit.label.button",
+                "textKey": "ui.recruit.btn.rescue"
               }
             ]
           },

@@ -983,5 +983,15 @@
   "ui.clan.tier.5": "柱國世家",
   "ui.annual_ranking.bulletin.title": "【史境快報】世家聲望新傳",
   "ui.annual_ranking.bulletin.summary": "歲末年終群英論定，我族共獲世家聲望 +{0} 點！",
-  "ui.annual_ranking.bulletin.btn_confirm": "光耀門楣"
+  "ui.annual_ranking.bulletin.btn_confirm": "光耀門楣",
+  "ui.hall.board.title": "大廳・任務牆",
+  "ui.hall.board.spots_header": "大廳・武將點位",
+  "ui.hall.board.btn.military": "軍事",
+  "ui.hall.board.btn.expedition": "天下沙盤",
+  "ui.hall.board.btn.extreme": "天下征鋒",
+  "ui.hall.board.btn.detail": "詳情",
+  "ui.hall.board.btn.accept": "接取",
+  "ui.governor.title": "太守府",
+  "ui.recruit.title": "招賢館",
+  "ui.recruit.btn.rescue": "民間尋訪"
 }

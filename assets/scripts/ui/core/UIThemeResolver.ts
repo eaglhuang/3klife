@@ -54,6 +54,10 @@ export interface ThemeStyleBinding {
     appliesToSkins: string[];
     /** skin 填色 → 風格角色 */
     fillRoles: Record<string, string>;
+    /** slot id 後綴 → 風格角色（分節標題、分節金線、卡片底） */
+    slotRoles?: Record<string, string>;
+    /** 不套主題的 slot（結尾 * 為前綴比對） */
+    skipSlots?: string[];
 }
 
 export interface ThemeRegistry {
@@ -204,6 +208,8 @@ export function buildSkinStyle(tokens: TokenMap, binding: Readonly<ThemeStyleBin
         version: 1,
         appliesToSkins: binding.appliesToSkins,
         fillRoles: binding.fillRoles,
+        slotRoles: binding.slotRoles,
+        skipSlots: binding.skipSlots,
         font: str(tokens, 'text.font') ?? '',
         titleMinFontSize: num(tokens, 'text.title.minSize') ?? 26,
         roles: {

@@ -61,6 +61,20 @@
       "lineHeight": 30,
       "color": "secondaryLight",
       "overflow": "SHRINK"
+    },
+    "mp.label.section": {
+      "kind": "label-style",
+      "font": "fonts/notoserif_tc/notoserif_tc",
+      "fontSize": 20,
+      "lineHeight": 28,
+      "letterSpacing": 8,
+      "color": "#C4A05C",
+      "overflow": "CLAMP"
+    },
+    "mp.divider.section": {
+      "kind": "color-rect",
+      "color": "#E8C88C",
+      "alpha": 110
     }
   }
 }
