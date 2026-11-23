@@ -16834,5 +16834,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9862.md",
     "title": "[PROG-2-9862] 戰場回饋：DOT tick 命中音與毒箭回饋",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3001",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9865.md",
+    "title": "[PROG-2-9865] 線上試玩腳本修正：重載等載入遮罩消失、商業任務銀兩檢查依情報度",
+    "category": "task"
   }
 ]
