@@ -4882,6 +4882,8 @@ ${spent}`,
             this._generalGalleryHost,
             this._spiritCardDetailHost,
             this._spiritFamilyOverviewHost,
+            this._deckSelect?.host,
+            this._leadSelect?.host,
         ];
         const byId = new Map<string, UIScreenPreviewHost>();
         const candidates: OverlayCandidate[] = [];
@@ -6181,6 +6183,9 @@ ${spent}`,
         if (this._sortieHost) {
             this._sortieHost.node.active = false;
         }
+        this._deckSelect?.close();
+        const leadSelectHost = this._leadSelect?.host;
+        if (leadSelectHost) leadSelectHost.node.active = false;
     }
 
     private _refreshSortieSetup(): void {

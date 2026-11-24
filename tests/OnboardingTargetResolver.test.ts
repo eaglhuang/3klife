@@ -24,10 +24,10 @@ const node = (name: string, ucufId?: string, children: FakeNode[] = [], active =
     return n;
 };
 
-/** 依 lobby-hall-screen 實際結構縮小：頂列 金銀兩玉糧兵＋返回、底列 dock */
+/** 依 lobby-hall-screen 實際結構縮小：頂列 金銀兩玉糧兵（resource-row）、底列 dock；推進一季鈕已移到右下角 */
 const buildHall = (active = true): FakeNode => node('LobbyHallScreen', undefined, [
     node('topbar', 'lobby-hall-screen.topbar', [
-        node('res', undefined, [node('gold'), node('jade'), node('grain'), node('troops'), node('back', 'lobby-hall-screen.back')]),
+        node('res', 'lobby-hall-screen.resource-row', [node('gold'), node('jade'), node('grain'), node('troops')]),
     ]),
     node('dock', undefined, [
         node('sortie', 'lobby-hall-screen.dock-sortie'),
@@ -70,8 +70,8 @@ export function createOnboardingTargetResolverSuite(): TestSuite {
 
     suite.test('隱藏中的資源格不列入合併框', () => {
         const hallRoot = buildHall();
-        const back = findUcufNode(hallRoot, 'lobby-hall-screen.back') as FakeNode;
-        back.parent!.children[3].activeInHierarchy = false;
+        const row = findUcufNode(hallRoot, 'lobby-hall-screen.resource-row') as FakeNode;
+        row.children[3].activeInHierarchy = false;
         assert.equals('gold,jade,grain', names(resolveTutorialTargets('fate', { hallRoot, cityTarget })));
     });
 
@@ -92,8 +92,8 @@ export function createOnboardingTargetResolverSuite(): TestSuite {
             return null;
         };
         for (const spec of Object.values(ONBOARDING_HALL_TARGETS)) assert.isTrue(!!find(layout.root, spec.anchor), spec.anchor);
-        const back = find(layout.root, ONBOARDING_HALL_TARGETS.fate.anchor)!;
-        const labels = (back.parent?.children ?? []).filter(c => c !== back.hit).map(c => c.children?.[0]?.text ?? '').join('');
+        const row = find(layout.root, ONBOARDING_HALL_TARGETS.fate.anchor)!;
+        const labels = (row.hit.children ?? []).map(c => c.children?.[0]?.text ?? '').join('');
         assert.equals('金銀兩玉糧兵', labels);
     });
 

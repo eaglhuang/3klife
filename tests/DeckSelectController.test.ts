@@ -1,9 +1,13 @@
 /**
  * DeckSelectController.test.ts — 大廳選卡控制器（PROG-2-1633 自 LobbyScene 拆出）
  */
+import * as fs from 'fs';
+import * as path from 'path';
 import { TestSuite, assert } from './TestRunner';
 import { DeckSelectController, DECK_SELECT_SLOTS } from '../assets/scripts/ui/core/DeckSelectController';
 import type { MentorHoldingsButtonBinding } from '../assets/scripts/ui/core/MentorHoldingsController';
+
+const ROOT = path.resolve(__dirname, '..');
 
 function harness(outcome: () => Promise<string>) {
     let bindings: MentorHoldingsButtonBinding[] = [];
@@ -25,7 +29,7 @@ function harness(outcome: () => Promise<string>) {
         warn: () => { log.warns++; },
     });
     const click = (id: string) => bindings.find((b) => b.buttonId === id)?.handler();
-    return { ctrl, log, click, deck, bindingCount: () => bindings.length };
+    return { ctrl, log, click, deck, host, bindingCount: () => bindings.length };
 }
 
 export function createDeckSelectControllerSuite(): TestSuite {
@@ -34,7 +38,7 @@ export function createDeckSelectControllerSuite(): TestSuite {
     suite.test('掛載綁定四個卡位並顯示勾選；無卡的卡位隱藏', async () => {
         const h = harness(async () => 'added');
         await h.ctrl.mount();
-        assert.equals(DECK_SELECT_SLOTS, h.bindingCount());
+        assert.equals(DECK_SELECT_SLOTS + 1, h.bindingCount());
         assert.isTrue(h.log.texts.deckTitleLabel.startsWith('手動已選 1/'));
         assert.equals('＋ 甲（攻）', h.log.texts.deckCardLabel0);
         assert.equals('✓ 乙（守）', h.log.texts.deckCardLabel1);
@@ -66,6 +70,33 @@ export function createDeckSelectControllerSuite(): TestSuite {
         assert.equals('＋ 甲（攻）', h.log.texts.deckCardLabel0);
         assert.contains(h.log.texts.deckHintLabel, '可選卡');
         assert.contains(h.log.texts.deckHintLabel, '未選卡時使用預設卡組');
+    });
+
+    suite.test('關閉鈕隱藏選卡 host；版面有 btnDeckClose 且 LobbyScene 收起編組與 Esc 會收選卡', async () => {
+        const h = harness(async () => 'added');
+        await h.ctrl.mount();
+        assert.isTrue(h.host.node.active);
+        h.click('btnDeckClose');
+        assert.isFalse(h.host.node.active);
+        h.host.node.active = true;
+        h.ctrl.close();
+        assert.isFalse(h.host.node.active);
+
+        const layout = JSON.parse(fs.readFileSync(path.join(ROOT, 'assets/resources/ui-spec/layouts/lobby-deck-select-main.json'), 'utf8'));
+        const ids: string[] = [];
+        const walk = (node: { id?: string; children?: unknown[] }) => {
+            if (node.id) ids.push(node.id);
+            (node.children ?? []).forEach((child) => walk(child as typeof node));
+        };
+        walk(layout.root);
+        assert.contains(ids.join(','), 'btnDeckClose');
+
+        const lobby = fs.readFileSync(path.join(ROOT, 'assets/scripts/ui/scenes/LobbyScene.ts'), 'utf8');
+        const closeBody = lobby.slice(lobby.indexOf('private _closeSortieSetup(): void {'), lobby.indexOf('private _refreshSortieSetup'));
+        assert.contains(closeBody, 'this._deckSelect?.close()');
+        assert.contains(closeBody, 'this._leadSelect?.host');
+        const escBody = lobby.slice(lobby.indexOf('private _onEscapeKeyUp('), lobby.indexOf('private _onEscapeKeyUp(') + 700);
+        assert.contains(escBody, 'this._deckSelect?.host');
     });
 
     return suite;
