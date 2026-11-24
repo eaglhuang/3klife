@@ -82,8 +82,8 @@ export class MindRequestPanel {
         fillRect(this.entry, 150, 56, new Color(120, 70, 30, 230));
         this._badge = makeLabel(this.entry, 'Text', '信箱', 28, new Color(255, 240, 200, 255), 150, 56, 0, 0, HorizontalTextAlignment.CENTER);
         const widget = this.entry.addComponent(Widget);
-        // 放右下角空白處：右上角被內政／人脈面板蓋住，真滑鼠點不到
-        widget.isAlignBottom = true; widget.isAlignRight = true; widget.bottom = 30; widget.right = 40;
+        // 放右下角空白處（PROG-2-9953）：貼底欄右側、推進一季鈕（右下角 200x84）的左邊，右上角被內政／人脈面板蓋住點不到
+        widget.isAlignBottom = true; widget.isAlignRight = true; widget.bottom = 38; widget.right = 250;
         this.entry.addComponent(Button);
         this.entry.on(Button.EventType.CLICK, () => { this.toggle(); });
 
