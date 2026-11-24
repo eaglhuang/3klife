@@ -5001,6 +5001,8 @@ export class GameSession implements AcademyRecordPort {
     private _missionSettleGains = { grain: 0, gold: 0, silver: 0, generalExp: 0 };
     private _missionSettleByMission = new Map<string, { grain: number; gold: number; silver: number; generalExp: number; fame: number }>();
     private _missionLedgerSeen = { fame: false, morale: false, sceneGambit: false };
+    /** 換季結算期間每筆任務帶來的友誼變化（任務 id → 實際寫入的友誼合計），給季報行尾顯示；結算結束清空（PROG-2-9965） */
+    private _missionSettleFriendship = new Map<string, number>();
     private _missionMindCache: GeneralMindSave['ledger'] | null = null;
     private _missionRequestSeq = 0;
 
@@ -5257,6 +5259,18 @@ export class GameSession implements AcademyRecordPort {
             const gambit = pendingSceneGambitOfTask({ Task_ID: info.missionId, Scene_Gambit: info.sceneGambit });
             if (gambit) this._pendingSceneGambit = gambit;
         }
+        // 友誼（PROG-2-9965）：自告奮勇獲准承擔，加上依結果的行為（大成功／成功／大失敗；一般失敗不扣）
+        const friendActions: string[] = [];
+        if (info.volunteered) friendActions.push('admin_volunteer_accepted');
+        if (info.tier === 'critical') friendActions.push('admin_mission_critical');
+        else if (info.tier === 'success') friendActions.push('admin_mission_success');
+        else if (info.tier === 'disaster') friendActions.push('admin_mission_disaster');
+        let friendGain = 0;
+        for (const actionId of friendActions) {
+            const applied = this.applyFriendshipAction(actionId, info.generalId);
+            if (applied.applied) friendGain += applied.delta;
+        }
+        this._missionSettleFriendship.set(info.missionId, friendGain);
         this._recordEventJournal(success ? 'DISPATCH_SUCCESS' : 'DISPATCH_FAIL', this._journalSubjects([info.generalId]));
         const index = (HALL_MISSION_DIFFICULTIES as readonly string[]).indexOf(info.difficulty);
         this._mindWrite().onTaskSettled({
@@ -5284,6 +5298,7 @@ export class GameSession implements AcademyRecordPort {
         if (!service) return undefined;
         this._missionSettleGains = { grain: 0, gold: 0, silver: 0, generalExp: 0 };
         this._missionSettleByMission.clear();
+        this._missionSettleFriendship.clear();
         const result = await service.advanceSeason({ requestId: this.nextMissionRequestId('season') });
         if (result.ok === false) {
             UCUFLogger.warn(LogCategory.DATA, '[GameSession] 換季任務結算失敗', result.text);
@@ -5299,8 +5314,12 @@ export class GameSession implements AcademyRecordPort {
                 mine.silver !== 0 ? `銀兩 ${mine.silver > 0 ? '+' : ''}${mine.silver}` : '',
                 mine.generalExp > 0 ? `武將經驗 +${mine.generalExp}` : '',
             ].filter((t) => t.length > 0).join('、') : '';
-            const tail = s.narratives.length > 0 ? `　${s.narratives[s.narratives.length - 1]}` : '';
-            return `${s.generalName}完成「${s.title}」：${MISSION_TIER_TEXT[s.tier]}${gained ? `（${gained}）` : ''}${tail}`;
+            const story = s.narratives.length > 0 ? s.narratives[s.narratives.length - 1] : '';
+            const friend = this._missionSettleFriendship.get(s.missionId) ?? 0;
+            // 成敗標籤放最前面，玩家一眼看得出大成功或大失敗；故事另起一行縮排
+            const head = `【${MISSION_TIER_TEXT[s.tier]}】${s.generalName}・「${s.title}」${gained ? `　${gained}` : ''}${friend !== 0 ? `　友誼 ${friend > 0 ? '+' : ''}${friend}` : ''}`;
+            return story ? `${head}
+　${story}` : head;
         });
         return {
             lines,

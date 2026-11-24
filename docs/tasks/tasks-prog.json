@@ -17303,6 +17303,25 @@
       "notes": "2026-11-24 | 狀態: in-progress | 驗證: pending | 變更: 開卡並上鎖 | 阻塞: none"
     },
     {
+      "id": "PROG-2-9965",
+      "title": "大廳任務補到規格樂趣：點牆直開詳情、結算接友誼、季報成敗標籤、情報解鎖提示",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "feature",
+      "phase": "M9",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-24T13:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "related": ["HALL-15", "doc_spec_1178", "doc_spec_0454", "doc_spec_0455"],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "description": "盤點大廳任務對照規格的落差並補齊：點牆上任務卡直接開詳情窗（不再先開任務牆）；結算接友誼行為（大成功+7、成功+4、大失敗-3、自告奮勇+6）；季報大廳任務加【大成功】等標籤與友誼變化；情報提示寫出到幾 % 解鎖成功率區間。",
+      "notes": "2026-11-25 | 狀態: done | 驗證: 單元測試與網頁建置實玩截圖 | 變更: LobbyScene、GameSession、MissionDetailPresenter、友誼權重表 | 阻塞: none（待裁決見 scratchpad/lobby-mission-questions.md：牆上進行中置頂、接取鈕合併、紀錄入口、低情報數字）"
+    },
+    {
       "id": "PROG-2-9964",
       "title": "武將台詞人性化：v2 參數推導器＋觸發點接線（DialogueContextBuilder）",
       "owner": "ClaudeCode_claude-opus-5-5",
