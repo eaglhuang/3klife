@@ -91,7 +91,7 @@ export const DEPLOY_LANDING_PUFFS: ReadonlyArray<{ dx: number; driftFacing: 1 | 
 ];
 
 /**
- * 騎術落下特效（data/riding-tiers.json 的 tiers[].deployDrop，PROG-2-9953）：
+ * 騎術落下特效（data/riding-tiers.json 的 tiers[].deployDrop，PROG-2-9957）：
  * fx 'dust_ring' → 騎兵落地時腳下外圍再加一圈塵團（比基本塵團更寬）；其他 fx 目前沒有素材，不出。
  * sfx 'horse_snort' 目前沒有鼻息素材，由騎兵落地蹄聲代替（deployLandingThud 已是騎兵雙蹄）。
  */

@@ -141,7 +141,7 @@ assert.equal(generalSpineConfig('guan-yu', null, 3)?.path, generalSpineConfig('g
 assert.equal(cavalry.bobPx, 0);
 assert.ok(Math.abs((cavalry.footfallIntervalSec ?? 0) - cavalry.clips.move.duration / 2) < 1e-6);
 assert.ok(cavalry.displayScale > 0 && cavalry.displayScale < troopSpineConfig('infantry').displayScale); // 合成骨架騎手已放大 1.54 倍
-// PROG-2-9953：敵方騎兵用 spine-trial 紅方騎馬骨架（獨立資料夾），不染色；我方藍騎兵不染色
+// PROG-2-9957：敵方騎兵用 spine-trial 紅方騎馬骨架（獨立資料夾），不染色；我方藍騎兵不染色
 const enemyCavalry = troopSpineConfig('cavalry', true);
 assert.equal(enemyCavalry.path, 'spine/soldiers/soldier_cavalry_red/soldier_cavalry_red__mount_horse_bay');
 assert.equal(enemyCavalry.tint, undefined);
@@ -174,7 +174,7 @@ assert.equal(generalSpineConfig('guan-yu', 'unknown')?.path, 'spine/generals/gua
 import { troopSpineConfigWithFallback } from '../assets/scripts/battle/shared/UnitPresentationConfig';
 import { DUST_RING_PUFFS, riderDeployRingPuffs } from '../assets/scripts/battle/shared/DeployLanding';
 import { TroopType } from '../assets/scripts/shared/CommonEnums';
-// PROG-2-9953：騎術落下 fx = dust_ring 只對騎兵加外圍塵圈；其他兵種與其他 fx 不加
+// PROG-2-9957：騎術落下 fx = dust_ring 只對騎兵加外圍塵圈；其他兵種與其他 fx 不加
 assert.equal(riderDeployRingPuffs(TroopType.Cavalry, { fx: 'dust_ring', sfx: 'horse_snort' }), DUST_RING_PUFFS);
 assert.equal(riderDeployRingPuffs(TroopType.Infantry, { fx: 'dust_ring' }).length, 0);
 assert.equal(riderDeployRingPuffs(TroopType.Cavalry, { fx: 'armor_spark' }).length, 0);

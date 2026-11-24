@@ -133,7 +133,7 @@ const ELITE_ART: Record<string, { troop: string; art: string }> = {
  * - 隊形比步兵拉開：馬身寬，用步兵站位三匹馬會疊成一團。
  * - gallop 週期 0.567 秒（橫向襲步：後遠→後近→前遠→前近→騰空），揚塵與蹄聲取每半週期一拍（每拍兩聲蹄響）；馬骨架本身有起伏，不再加整隊起伏。
  * - 合成骨架 v2（PROG-2-9738，50 個動作）已有 attack_spear／dodge／fall／retreat；舊骨架缺這些動作時由 fallback 退回 thrust／hit／gallop。
- * - 敵方（PROG-2-9953）：沒有紅騎兵骨架，沿用藍騎兵騎馬骨架加 ENEMY_CAVALRY_TINT 紅色調暫代，不再退回紅方步矛兵。
+ * - 敵方（PROG-2-9957）：沒有紅騎兵骨架，沿用藍騎兵騎馬骨架加 ENEMY_CAVALRY_TINT 紅色調暫代，不再退回紅方步矛兵。
  */
 const CAVALRY_GALLOP_PERIOD_SEC = 0.5667;
 const CAVALRY_NAME = 'soldier_cavalry_blue';
