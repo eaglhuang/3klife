@@ -17211,7 +17211,7 @@
         "encounter-001 資料調整 PR",
         "side-session-notes/first-battle-tuning-1124.md"
       ],
-      "notes": "2026-11-24 | 狀態: in-progress | 驗證: pending | 變更: 開卡並上鎖 | 阻塞: 無"
+      "notes": "2026-11-24 | 狀態: in-progress（目標未達，未合併） | 驗證: 基準 20 場 55%（11/20）平均 77.6 秒；第一輪 HP0.3 8隊 65%（13/20）平均 73.6 秒；第二輪 HP0.3 6隊 100%（20/20）平均 78.2 秒（最候選）；第三輪 HP0.15 6隊 95%（19/20）平均 90.9 秒。時長皆約 8～9 秒／回合，勝場多跑滿 10 回合，40～60 秒未達 | 變更: Constants.tutorialEnemyDeployByTurn 8隊→6隊 [0,1,1,1,1,1,1]、tutorialEnemyGeneralHpRatio 0.5→0.3（encounters.json 未改）；未開 PR、未合併 | 阻塞: 40～60 秒目標需總PM 裁決：縮短教學回合上限（規則／節奏變更）或加快推進演出；數據見 side-session-notes/first-battle-tuning-1124.md"
     }
   ],
   "updated": "2026-11-23T16:27:44.175Z"
