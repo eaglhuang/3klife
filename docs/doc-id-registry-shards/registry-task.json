@@ -16912,5 +16912,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9871.md",
     "title": "[PROG-2-9871] 轉蛋抽到的教官支援卡進支援卡清單與培育選卡（物品庫存 → 教官卡橋接）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3054",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9970.md",
+    "title": "[PROG-2-9970] 武將武器欄位依最新立繪重建",
+    "category": "task"
   }
 ]
