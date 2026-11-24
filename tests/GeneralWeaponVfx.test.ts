@@ -3,7 +3,7 @@
  */
 import { readFileSync } from 'fs';
 import { join } from 'path';
-import { weaponByAptitude, weaponOfGeneral } from '../assets/scripts/battle/shared/GeneralWeapon';
+import { resolveGeneralWeapon, weaponByAptitude } from '../assets/scripts/battle/shared/GeneralWeapon';
 import { TestSuite, assert } from './TestRunner';
 
 const cfg = JSON.parse(readFileSync(join(__dirname, '../assets/resources/data/attack-vfx.json'), 'utf8'));
@@ -14,6 +14,14 @@ const renderer = readFileSync(join(__dirname, '../assets/scripts/battle/views/Un
 const bridge = readFileSync(join(__dirname, '../assets/scripts/battle/views/BattleUIBridge.ts'), 'utf8');
 
 const FB = cfg.fallback;
+const TEMPLATE_KEYS = Object.keys(cfg.generalTemplates).filter(k => !k.startsWith('_'));
+
+/** 適性推算鏈（與 AttackVfxPlayer.resolveGeneralVfx 同順序，不含 weapon 欄位與 profile）：支援型跳過 → 適性 → 角色預設 */
+function weaponOfGeneral(fb: typeof FB, g: { role?: string; troopAptitude?: Record<string, string> }): string {
+    const skip = !!g.role && (fb.aptitudeRule?.skipRoles ?? []).includes(g.role);
+    const aptitudeWeapon = skip ? null : weaponByAptitude(fb.aptitudeRule, g.troopAptitude);
+    return resolveGeneralWeapon({ aptitudeWeapon, role: g.role }, fb, TEMPLATE_KEYS);
+}
 
 function weaponFor(id: string): string {
     const g = generals.find(x => x.id === id);
@@ -75,8 +83,10 @@ export function createGeneralWeaponVfxSuite(): TestSuite {
         assert.isTrue(/BATTLE_VISUAL_TIMING\.critHitStopSec/.test(bridge), '暴擊命中需微頓幀');
     });
 
-    suite.test('武器推算不改戰場規則：generals.json 沒有新增 weapon 欄位', () => {
-        assert.isTrue(generals.every(g => !('weapon' in g)), 'generals.json 不應有 weapon 欄位');
+    suite.test('generals.json weapon 欄位（PROG-2-9955）的值都是有效模板鍵', () => {
+        for (const g of generals as Array<{ id: string; weapon?: string }>) {
+            if (g.weapon !== undefined) assert.isTrue(TEMPLATE_KEYS.includes(g.weapon), 'weapon 非模板鍵: ' + g.id);
+        }
     });
 
     return suite;

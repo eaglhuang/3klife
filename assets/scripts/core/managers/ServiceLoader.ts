@@ -77,8 +77,10 @@ import { DEFAULT_INSIGHT_CONFIG, DEFAULT_REWARD_CONFIG, normalizeRewardConfig, R
 import { isApiFail } from "../../shared/api/ApiProtocol";
 import { evaluateInsight, type InsightDecision } from "../dialogue/NpcDialogueCache";
 import { FriendshipService } from "../services/FriendshipService";
+import { FRIENDSHIP_ACTION_WEIGHTS_JSON } from "../systems/FriendshipActionEngine";
 import { DEFAULT_STORY_CONFIG, normalizeStoryConfig, STORY_CONFIG_JSON, type StoryConfigV1 } from "../../shared/story/StoryConfig";
 import { ITEM_CONFIG_JSON, normalizeItemConfig, DEFAULT_ITEM_CONFIG, type ItemConfigV1 } from "../../shared/item/ItemConfig";
+import { setBattleSkillNameTranslator } from "../../shared/BattleSkillPresentation";
 import { DEFAULT_SUPPORT_CARDS_CONFIG, normalizeSupportCards, SUPPORT_CARDS_JSON, type SupportCardsConfigV1 } from "../../shared/support/SupportCardConfig";
 import { DEFAULT_SUPPORT_RULES, normalizeSupportRules, SUPPORT_RULES_JSON, withSupportItems, type SupportRulesV1 } from "../../shared/support/SupportRules";
 import { ACADEMY_INHERIT_MARKS_JSON, configureAcademyInheritMarks, type AcademyInheritMarksConfig } from "../systems/nurture/AcademyInheritAndMarks";
@@ -240,6 +242,8 @@ export class ServiceLoader {
 
         this.battle.setEventSystem(this.event);
         this.game.setEventSystem(this.event);
+        // 戰場招式名走 i18n（battle.skill_name.<id>）；語系切換後 t() 即時反映
+        setBattleSkillNameTranslator((key) => this.i18n.t(key));
         this.effect.setup(this.pool);
         // ResourceManager 連動 MemoryManager，使所有資源載入/釋放都通報記憶體管理器
         this.resource.bindMemoryManager(this.memory);
@@ -561,6 +565,7 @@ export class ServiceLoader {
             loadSafe<Partial<AcademyEnrollRulesConfig>>(ACADEMY_ENROLL_RULES_JSON, configureAcademyEnrollRules),
             loadSafe<Partial<TroopLossRulesConfig>>(TROOP_LOSS_RULES_JSON, configureTroopLossRules),
             loadSafe<unknown>(STORY_CONFIG_JSON, (raw) => { this.storyConfig = normalizeStoryConfig(raw); this.localApi?.setStoryConfig(this.storyConfig); configureAcademyStories(this.storyConfig); }),
+            loadSafe<unknown>(FRIENDSHIP_ACTION_WEIGHTS_JSON, (raw) => { this.session.setFriendshipWeights(raw); }),
             loadSafe<unknown>(REWARD_CONFIG_JSON, (raw) => { this.rewardConfig = normalizeRewardConfig(raw); this.applyRewardConfig(); }),
             loadSafe<unknown>(QUEST_CONFIG_JSON, (raw) => { this.questConfig = normalizeQuestConfig(raw); this.localApi?.setQuestConfig(this.questConfig); }),
             loadSafe<unknown>(ITEM_CONFIG_JSON, (raw) => { this.itemConfig = normalizeItemConfig(raw); this.applyItemConfig(); }),

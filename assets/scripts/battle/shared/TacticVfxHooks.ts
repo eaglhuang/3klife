@@ -45,6 +45,39 @@ export function tacticVfxHooks(input: TacticVfxInput): TacticVfxHook[] {
     return hooks;
 }
 
+/** 水計戰法（格子水紋）：目前只有江潮列陣；戰法資料沒有 element 欄位，依 battleSkillId 對應。 */
+export const WATER_TACTIC_IDS: readonly string[] = Object.freeze(['sun-quan-tide']);
+
+/**
+ * 格子特效用的 vfx-block 組合（只用 vfx-block-registry 既有的 id，不新增資源）。
+ * 火：火環波＋爆發＋火焰粒子；水：衝擊環＋柔光。
+ */
+export const TACTIC_GRID_VFX_BLOCKS: Readonly<Record<TacticGridHookKind, readonly string[]>> = Object.freeze({
+    'grid-fire': Object.freeze(['fire_ringwave', 'fire_burst', 'fire_particles']),
+    'grid-water-ripple': Object.freeze(['impact_ring', 'mep_glow_soft_alt']),
+});
+
+export type TacticGridHookKind = 'grid-fire' | 'grid-water-ripple';
+
+/** 量測用（單元測試、探針讀取）：格子 hook 實際派發次數 */
+export const tacticGridVfxStats: Record<TacticGridHookKind, number> = { 'grid-fire': 0, 'grid-water-ripple': 0 };
+
+/**
+ * 戰法施放的元素：火攻類（profile.tags 含 fire）為 fire，水計清單內為 water，其餘為 null（不掛格子特效）。
+ */
+export function tacticElementOfSkill(battleSkillId: string, profileTags?: readonly string[]): TacticElement | null {
+    if (profileTags?.includes('fire')) return 'fire';
+    if (WATER_TACTIC_IDS.includes(battleSkillId)) return 'water';
+    return null;
+}
+
+/** 元素對應的格子 hook 種類；null 元素不掛。 */
+export function gridHookKindOfElement(element: TacticElement | null): TacticGridHookKind | null {
+    if (element === 'fire') return 'grid-fire';
+    if (element === 'water') return 'grid-water-ripple';
+    return null;
+}
+
 const SAFE_ID = /^[a-z0-9][a-z0-9-]*$/;
 
 /**

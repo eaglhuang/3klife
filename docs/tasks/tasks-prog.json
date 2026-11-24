@@ -3784,7 +3784,7 @@
       "scopePaths": [
         "artifacts/PROG-2-0160/**"
       ],
-      "notes": "2026-10-21 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+      "notes": "2026-10-21 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）；2026-11-24 | 備註: 戰場專家實機取證——BtnDelegate 實際位置為戰鬥右側 ControlBar（路徑 __safeArea>SidePanelRoot>ControlBar>BtnDelegate，72x72，頁面座標約 (1868,436)，opacity 130），非原文所寫的『部署面板功能按鈕區』；經使用者批准加註"
     },
     {
       "id": "PROG-2-0161",
@@ -17224,6 +17224,148 @@
       "notes": "2026-11-24 | 狀態: done | 驗證: tsc 0 錯誤；單元測試 ALL PASS 9445；compute-gate standard 通過（僅既有 import 邊界警告）；建置 EXIT 36；playtest-online 12/12 步通過（真滑鼠點右下角推進一季鈕換季成功，探針 back 世界座標 1696..1896×24..108、與底欄／許願祭壇／信箱零重疊）；截圖 side-session-notes/PROG-2-9953/08-lobby-bottom-right.png | 變更: back 移出頂欄改右下角 right24 bottom24 200x84、字級 30；頂欄資源列加 resource-row id，新手引導 fate 錨點改指 resource-row（pick children）；信箱入口改 right250 bottom38；測試與 playtest 探針更新 | 阻塞: none（信箱入口實跑無信不顯示，位置以單元測試幾何驗證）",
       "completed_at": "2026-11-24T21:00:00+08:00",
       "completed_by_agent": "ClaudeCode_claude-opus-5-5"
+    },
+    {
+      "id": "PROG-2-9954",
+      "title": "友誼值行為結算接進平常遊玩（第 8 框架實作）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "feature",
+      "phase": "M9",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-24T20:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "completed_at": "2026-11-24T21:30:00+08:00",
+      "completed_by_agent": "ClaudeCode_claude-opus-5-5",
+      "related": [
+        "PROG-2-9866"
+      ],
+      "depends": [
+        "PROG-2-9866"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "description": "權重表結算引擎與 FriendshipActionApplied 事件；出戰、請戰、建議、賞賜、剝奪、俘虜掛點；友誼依對象分記並存檔。",
+      "notes": "2026-11-24 | 狀態: done | 驗證: tsc 測試型別 0；單元測試 run-cli 全過（含 FriendshipActionEngine 12 項）；compute-gate standard 見 PR | 變更: FriendshipActionEngine、FriendshipService 配對表、GameSession 掛點（出戰／請戰／建議／賞賜／剝奪／俘虜）、存檔三欄位、權重表 status 改 active、規格書第 5 節 | 阻塞: 無；提親被拒由 Antigravity 呼叫 applyFriendshipAction"
+    },
+    {
+      "id": "PROG-2-9955",
+      "title": "武將武器欄位 weapon：資料化取代角色推算",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "feature",
+      "phase": "M9",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-24T20:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "related": [
+        "PROG-2-9400"
+      ],
+      "depends": [],
+      "acceptance": [
+        "generals.json 每位武將有 weapon 欄位（值域為 attack-vfx.json generalTemplates 鍵）",
+        "AttackVfxPlayer 優先讀 weapon，缺欄位才退回 profile／角色推算",
+        "單元測試證明：除校正項外，各武將攻擊風格與改前一致",
+        "tsc tsconfig.test.json 錯誤 0；單元測試全過；compute-gate quick 通過"
+      ],
+      "deliverables": [
+        "assets/resources/data/generals.json",
+        "assets/scripts/battle/views/AttackVfxPlayer.ts",
+        "tests/ 武器欄位單元測試",
+        "side-session-notes general-weapon-table-1124.md（對照表）"
+      ],
+      "description": "武將武器目前只靠角色推算（Combat→blade、Support→cast），張飛等應為長兵器卻變刀光。本卡為 generals.json 補 weapon 欄位（初版為現行推算結果），程式優先讀欄位；歷史典故校正項另列表。不改戰場核心規則。",
+      "notes": "2026-11-24 | 狀態: done | 驗證: tsc test 0 錯誤；單元測試 ALL PASS 9451（含新增 GeneralWeapon 7 項）；compute-gate quick 4/4；validate-generals-data 0 錯誤 | 變更: generals.json 每位武將補 weapon（初版＝現行推算，3 位典故校正：張飛 spear、趙雲 spear、黃忠 bow）；AttackVfxPlayer 優先讀 weapon 欄位、缺欄位退回 profile／角色推算；新增 battle/shared/GeneralWeapon.ts 純函式與測試；未動 UnitRenderer／BattleAudio／戰場核心規則 | 阻塞: 無；呂布方天畫戟因無戟模板暫維持 spear | 備註: 原擬卡號 9953 已被友誼卡（PR #2589）佔用，改用 9955",
+      "completed_at": "2026-11-24T20:30:00+08:00",
+      "completed_by_agent": "ClaudeCode_claude-opus-5-5"
+    },
+    {
+      "id": "PROG-2-9960",
+      "title": "補齊 23 個戰場招式名（走 i18n）並統一趙雲奧義名為「龍膽·破軍」",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P2",
+      "status": "in-progress",
+      "type": "feature",
+      "phase": "M9",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-24T12:04:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "description": "招式名 23 個原顯示英文 id；趙雲奧義名三處不一致。招式名改走 i18n battle.skill_name.<id>（四語系），趙雲奧義統一「龍膽·破軍」（定義、戰鬥表、skills.json、詳情文字、四語系 demo 文字）。新增 tests/BattleSkillNames.test.ts。名稱對照與典故見 side-session-notes/skill-names-1124.md。",
+      "notes": "2026-11-24 | 狀態: in-progress | 驗證: pending | 變更: 開卡並上鎖 | 阻塞: none"
+    },
+    {
+      "id": "PROG-2-9961",
+      "title": "火計／水計格子 VFX hook 接線（grid-fire、grid-water-ripple）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P2",
+      "status": "in-progress",
+      "type": "feature",
+      "phase": "M9",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-24T12:04:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "description": "TacticVfxHooks 定義了格子 hook 但遊戲內從未派發。改為：BattleSkillExecutor 在火攻類（tags fire）與江潮列陣（水計）命中後，對命中格送 TacticGridVfx 事件；BattleUIBridge 播既有 vfx-block 組合（不新增資源）。測試 tests/TacticGridVfx.test.ts。",
+      "notes": "2026-11-24 | 狀態: in-progress | 驗證: pending | 變更: 開卡並上鎖 | 阻塞: none"
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9956",
+      "title": "文件更正：PROG-2-0165 btnDelegate 位置補註（戰鬥 ControlBar）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "docs",
+      "phase": "M9",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-24T12:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [
+        "PROG-2-0165"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-24 | 狀態: done | 驗證: compute-gate quick 4/4 通過；diff 僅含 0165 notes 與本卡 | 變更: 為 PROG-2-0165 notes 追加位置更正（md 與 tasks-prog.json 同步）| 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     },
     {
       "doc_id": "",

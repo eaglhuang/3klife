@@ -4,6 +4,7 @@
  * Unity 對照：像角色沒有掛專屬大招的 ScriptableObject 時，技能列改塞一顆預設大招，而不是整列空白。
  */
 import { assert, TestSuite } from './TestRunner';
+import { useZhTwSkillNames } from './zhTwSkillNames';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
 import { BattleController } from '../assets/scripts/battle/controllers/BattleController';
 import { buildUltimateSkills } from '../assets/scripts/battle/views/BattleSceneLoader';
@@ -41,6 +42,7 @@ export function createGenericUltimateSuite(): TestSuite {
     });
 
     suite.test('通用奧義可施放：有 profile、不是殼、演出名稱與設定一致', () => {
+        useZhTwSkillNames();
         const profile = resolveBattleSkillProfile(GENERIC.skillId);
         assert.equals(GENERIC.coefficient, profile?.coefficient);
         assert.isTrue(isBattleSkillImplemented(GENERIC.skillId));
