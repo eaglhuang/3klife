@@ -28,6 +28,12 @@ export const BATTLE_AUDIO_CUE = {
   unitAttackShield: 'unit-attack-shield',
   generalHitCommon: 'general-hit-common',
   generalAttackCommon: 'general-attack-common',
+  /** 主將普攻依武器分開：刀、槍、劍、弓、法術 */
+  generalAttackBlade: 'general-attack-blade',
+  generalAttackSpear: 'general-attack-spear',
+  generalAttackSword: 'general-attack-sword',
+  generalAttackBow: 'general-attack-bow',
+  generalAttackCast: 'general-attack-cast',
   unitMove: 'unit-move',
   unitDeploy: 'unit-deploy',
   unitDie: 'unit-die',
@@ -73,6 +79,12 @@ export const BATTLE_AUDIO_CLIP_MAP: Record<BattleAudioCue, string> = {
   [BATTLE_AUDIO_CUE.unitAttackBow]: 'feijian',
   [BATTLE_AUDIO_CUE.generalHitCommon]: 'hurt',
   [BATTLE_AUDIO_CUE.generalAttackCommon]: 'weapon',
+  // 主將普攻分風格（現有音檔對應，未實機聽過）：刀=weapon、槍=bite、弓=feijian；劍暫借 weapon、法術暫借 skill2，待補專屬音檔
+  [BATTLE_AUDIO_CUE.generalAttackBlade]: 'weapon',
+  [BATTLE_AUDIO_CUE.generalAttackSpear]: 'bite',
+  [BATTLE_AUDIO_CUE.generalAttackSword]: 'weapon',
+  [BATTLE_AUDIO_CUE.generalAttackBow]: 'feijian',
+  [BATTLE_AUDIO_CUE.generalAttackCast]: 'skill2',
   [BATTLE_AUDIO_CUE.unitMove]: 'footstep',
   [BATTLE_AUDIO_CUE.unitDeploy]: 'start',
   [BATTLE_AUDIO_CUE.unitDie]: 'die',
@@ -150,8 +162,16 @@ export function resolveBattleUnitHitSfxKey(damageSource?: string): BattleAudioCu
     : BATTLE_AUDIO_CUE.unitHitCommon;
 }
 
-export function resolveBattleGeneralAttackSfxKey(): BattleAudioCue {
-  return BATTLE_AUDIO_CUE.generalAttackCommon;
+/** 主將普攻音效：依武器（刀／槍／劍／弓／法術）；未知或無武器回通用聲 */
+export function resolveBattleGeneralAttackSfxKey(weapon?: string | null): BattleAudioCue {
+  switch (weapon) {
+    case 'blade': return BATTLE_AUDIO_CUE.generalAttackBlade;
+    case 'spear': return BATTLE_AUDIO_CUE.generalAttackSpear;
+    case 'sword': return BATTLE_AUDIO_CUE.generalAttackSword;
+    case 'bow': return BATTLE_AUDIO_CUE.generalAttackBow;
+    case 'cast': return BATTLE_AUDIO_CUE.generalAttackCast;
+    default: return BATTLE_AUDIO_CUE.generalAttackCommon;
+  }
 }
 
 export function resolveBattleGeneralHitSfxKey(): BattleAudioCue {

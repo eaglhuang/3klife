@@ -114,6 +114,8 @@ export class GeneralUnit {
   public readonly terrainDefenseBonus: number;
   /** 戰場適性（兵種 / 地形 / 天氣，S~D）；沒有資料的維度視為 B（PROG-2-0071） */
   public readonly troopAptitude: Readonly<Record<string, string>>;
+  /** 角色定位（generals.json role：Combat／Support…）；只給武器推算（攻擊特效、攻擊音效）用，不影響戰鬥數值 */
+  public readonly role: string | null;
   /** 騎術等級（PROG-2-9738）：0 = 步行，1 = 騎術，2 = 精騎，3 = 神駒；有騎術的武將帶任何兵種都騎馬。資料由 generals.json 的 ridingTier 提供。 */
   public readonly ridingTier: number;
   public readonly terrainAptitude: Readonly<Record<string, string>>;
@@ -155,6 +157,7 @@ export class GeneralUnit {
     this.preferredTerrain = config.preferredTerrain ?? TerrainType.Plain;
     this.terrainDefenseBonus = config.terrainDefenseBonus ?? 0;
     this.troopAptitude = { ...(config.troopAptitude ?? {}) };
+    this.role = config.role ?? null;
     this.ridingTier = Math.max(0, Math.floor(config.ridingTier ?? 0));
     this.terrainAptitude = { ...(config.terrainAptitude ?? {}) };
     this.weatherAptitude = { ...(config.weatherAptitude ?? {}) };

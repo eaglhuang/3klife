@@ -12,6 +12,8 @@ export interface GeneralWeaponInput {
   weapon?: string | null;
   /** attack-vfx.json generalProfiles[id].weapon */
   profileWeapon?: string | null;
+  /** 兵種適性推算出的武器模板（弓／劍；見 weaponByAptitude） */
+  aptitudeWeapon?: string | null;
   /** 武將 role（Combat／Support…） */
   role?: string | null;
 }
@@ -26,6 +28,7 @@ export function resolveGeneralWeapon(input: GeneralWeaponInput, fallback: Weapon
   const known = (w: string | null | undefined): w is string => !!w && templateKeys.includes(w);
   if (known(input.weapon)) return input.weapon;
   if (known(input.profileWeapon)) return input.profileWeapon;
+  if (known(input.aptitudeWeapon)) return input.aptitudeWeapon;
   const byRole = input.role ? fallback.weaponByRole[input.role] : undefined;
   if (known(byRole)) return byRole;
   return fallback.defaultWeapon;
@@ -41,4 +44,33 @@ export function buildGeneralWeaponTable(
     if (g.id && g.weapon && templateKeys.includes(g.weapon)) table.set(g.id, g.weapon);
   }
   return table;
+}
+
+/** 推算規則（attack-vfx.json fallback.aptitudeRule）：支援型不看適性；弓兵適性最高且不低於 bowMinGrade → 弓 */
+export interface AptitudeWeaponRule {
+  skipRoles: readonly string[];
+  bowMinGrade: string;
+}
+
+/** 適性等級數值（越大越好）；未知等級視為 0 */
+const APT_GRADE: Readonly<Record<string, number>> = { 'S+': 10, S: 9, 'S-': 8, 'A+': 7, A: 6, 'A-': 5, 'B+': 4, B: 3, C: 2, D: 1 };
+
+function gradeOf(apt: Readonly<Record<string, string>>, troop: string): number {
+  return APT_GRADE[apt[troop] ?? ''] ?? 0;
+}
+
+/**
+ * 適性推算（generals.json 無 weapon 欄位的武將用）：弓兵適性為最高（並列也算）且不低於 bowMinGrade → 'bow'；
+ * 步兵適性為最高（並列也算）→ 'sword'（步兵符號即劍，見兵種符號裁決）；其餘回 null。
+ * 呼叫端先判斷 skipRoles（支援型不套用）。
+ */
+export function weaponByAptitude(rule: AptitudeWeaponRule | undefined, apt: Readonly<Record<string, string>> | undefined): string | null {
+  if (!rule || !apt) return null;
+  const keys = Object.keys(apt);
+  if (keys.length === 0) return null;
+  const best = Math.max(...keys.map(k => gradeOf(apt, k)));
+  if (best < (APT_GRADE.C ?? 0)) return null; // 最高適性低於 C（僅 D）不推算，避免把弱將誤判為劍／弓
+  if (gradeOf(apt, 'ARCHER') === best && gradeOf(apt, 'ARCHER') >= (APT_GRADE[rule.bowMinGrade] ?? 0)) return 'bow';
+  if (gradeOf(apt, 'INFANTRY') === best) return 'sword';
+  return null;
 }
