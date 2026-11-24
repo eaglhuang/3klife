@@ -66,7 +66,7 @@ import { BATTLE_RESULT_BEAT, battleResultBannerOf, shouldHoldBeforeResult } from
 import type { BattleResult } from '../BattleTypes';
 import { BattleSpecialActionTracker, specialActionDisplayName, toUnitHitObservation, type UnitDamagedPayload } from '../../core/systems/BattleSpecialActions';
 import { strategistHudViewOf } from '../shared/StrategistHudView';
-import { salvageLootTexts, tacticFlashOf, TACTIC_FLASH_TIMING } from '../shared/TacticVfxHooks';
+import { salvageLootTexts, tacticFlashOf, TACTIC_FLASH_TIMING, TACTIC_GRID_VFX_BLOCKS, tacticGridVfxStats, type TacticGridHookKind } from '../shared/TacticVfxHooks';
 import type { StageSalvageGainedEvent } from '../shared/StageSalvage';
 import { salvageGainItems } from '../../core/systems/StrategistHud';
 import { IBattleHUDLike, IBattleLogLike, IDuelChallengeLike, IResultPopupLike, IDeployRuntimeLike, IBattleScenePanelLike, IStrategistHudLike } from '../../shared/interfaces/IBattleUIComponents';
@@ -388,6 +388,7 @@ export class BattleUIBridge {
       svc.event.on(EVENT_NAMES.GeneralDamaged,          this._onGeneralDamaged.bind(this)),
       svc.event.on(EVENT_NAMES.GeneralSkillUsed,        this._onGeneralSkillUsed.bind(this)),
       svc.event.on(EVENT_NAMES.GeneralSkillUsed,        this._noteEnemySkillRevealed.bind(this)),
+      svc.event.on(EVENT_NAMES.TacticGridVfx,           this._onTacticGridVfx.bind(this)),
       svc.event.on(EVENT_NAMES.SelfBurstChanged,        this._onSelfBurstChanged.bind(this)),
       svc.event.on(EVENT_NAMES.StageSalvageGained, this._onStageSalvageGained.bind(this)),
       svc.event.on(EVENT_NAMES.TeamAuraChanged,         this._onTeamAuraChanged.bind(this)),
@@ -988,6 +989,16 @@ export class BattleUIBridge {
       this.refreshBattleViews();
       UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] general-damage end faction=${data.faction}`);
     });
+  }
+
+  /** 火計／水計格子 hook（PROG-2-9960）：在命中格播 vfx-block 組合；計數供探針驗證出現次數 */
+  private _onTacticGridVfx(data: { kind: TacticGridHookKind; lane: number; depth: number }): void {
+    const blocks = TACTIC_GRID_VFX_BLOCKS[data.kind];
+    if (!blocks) return;
+    tacticGridVfxStats[data.kind] += 1;
+    for (const blockId of blocks) {
+      playBattleFlowEffectAtCell(services().effect, this.ctx.boardRenderer, blockId, data.lane, data.depth, 1.0, 0.08);
+    }
   }
 
   private _onGeneralSkillUsed(data: { faction: Faction; skillId?: string; skillName?: string; sourceType?: SkillSourceType; generalName?: string }): void {

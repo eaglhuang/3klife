@@ -627,6 +627,8 @@ export class BattleSkillDispatcher {
         state.placeFireTile(cell.lane, cell.depth, damagePerTurn, BURN_CONFIG.fireTile.durationTurns, `skill-fire-${cell.lane}-${cell.depth}`, 'skill:hazard-cross');
       },
       addUnitBurn: (unit: TroopUnit) => igniteUnit(state, unit),
+      // 火計／水計的格子 hook（PROG-2-9960）：由 View 播 vfx-block 組合；純邏輯層只送事件
+      emitGridVfx: (kind, cell) => services().event.emit(EVENT_NAMES.TacticGridVfx, { kind, lane: cell.lane, depth: cell.depth }),
       applyDamage: (unit: TroopUnit, damage: number, casterFaction: Faction) => {
         const svc = services();
         combatResolver.applyUnitDamage(unit, damage, casterFaction, {

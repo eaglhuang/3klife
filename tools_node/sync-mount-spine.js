@@ -11,7 +11,7 @@
  *   --backup   覆蓋前把舊檔（內容不同者）備份到此目錄，保留相對路徑。預設不備份。
  *   --dry-run  只列出會做的事，不寫檔。
  *
- * 來源提交：spine-trial origin/main b752c6c（見卡 PROG-2-9957 notes）。
+ * 來源提交：spine-trial origin/main b752c6c（見卡 PROG-2-9959 notes）。
  * 只複製下列「騎馬成套」目錄的檔案；缺少 atlas／png 的組合會被略過並列出，不會半套複製。
  * 完成後逐檔比對 md5，任一不符即 exit 1。
  */
