@@ -17568,7 +17568,7 @@
       "title": "騎兵部署落下特效、敵方紅方騎兵骨架與趙雲騎術 2/3 級騎馬外觀",
       "owner": "ClaudeCode_claude-opus-5-5",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-24",
@@ -17583,7 +17583,7 @@
       "depends": [],
       "acceptance": [],
       "deliverables": [],
-      "notes": "2026-11-24 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "notes": "2026-11-25 | 狀態: done | 驗證: PR #2592 squash 合併（commit 2e28957b2731781d2713e6a3dd9718dbd60cc55f）；CI atm-governance／ucuf-core 全 SUCCESS；tsc 0、單元測試 9507 pass、compute-gate quick 4/4；playtest-online 12/12；戰場探針：敵方紅騎兵皮膚 soldier_cavalry_red__mount_horse_bay、趙雲騎術 1/2/3 級皮膚 zhao_v2 horse_bay/sheet/war、騎兵部署 dust_ring 每次 4 顆 | 變更: 騎兵敵方紅騎兵骨架、騎術一級 dust_ring、趙雲騎術 1/2/3 級 v2 騎馬、sync-mount-spine.js | 限制: 趙雲騎術等級為探針覆寫（非玩家實際升級）；取證建置非最終 HEAD（僅差 master 合併）；未加正式 QA hook | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
