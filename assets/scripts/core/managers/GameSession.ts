@@ -75,6 +75,8 @@ import type { LifespanCommand } from '../systems/LifespanCost';
 import type { LifecycleSettlement, SeasonLifecycle } from '../services/LegacyService';
 import type { SpiritCard } from '../models/SpiritCard';
 import type { MentorCard } from '../models/MentorCard';
+import { FriendshipService } from '../services/FriendshipService';
+import { FriendshipActionEngine, normalizeFriendshipActionTable, type FriendshipActionAppliedPayload, type FriendshipActionTable } from '../systems/FriendshipActionEngine';
 import { normalizeDeck, toggleDeckCard, DeckToggleOutcome } from '../services/PlayerDeckRules';
 import { SeededRandom, LEGACY_RANDOM_SEED } from '../systems/SeededRandom';
 import { applyAcademyGraduation, type AcademyGraduationResult } from '../systems/nurture/AcademyGraduation';
@@ -460,6 +462,8 @@ export const GAME_SESSION_EVENTS = {
     RivalSeasonEvents: 'game-session-rival-season-events',
     /** payload: UnveilingEvent（UI 在此播放血脈命鏡開獎演出，再讓玩家選宿命） */
     GeneralUnveiled: 'game-session-general-unveiled',
+    /** payload: FriendshipActionAppliedPayload（玩家行為經權重表結算友誼後發出；applied=false 代表被次數上限／冷卻擋下，PROG-2-9953） */
+    FriendshipActionApplied: 'game-session-friendship-action-applied',
     /** payload: MentorCard */
     GeneralRetired: 'game-session-general-retired',
     /** payload: { generalId, name, imprints }（退役或去世凝練生平印記，PROG-2-1794） */
@@ -855,6 +859,8 @@ export class GameSession implements AcademyRecordPort {
     public readonly dynamicRelations = new DynamicRelationBook();
     /** 武將心智（PROG-2-9146）：記憶、心情、台詞；大廳任務、戰後、換季結算點只呼叫 record／onTaskSettled／onSeasonSettle，隨存檔保存 */
     public readonly mind: IGeneralMindService = new OfflineGeneralMindService();
+    /** 友誼行為結算（PROG-2-9953）：權重表由 ServiceLoader 載入後 setFriendshipWeights；各功能掛點呼叫 applyFriendshipAction，結果以 FriendshipActionApplied 事件對外 */
+    private readonly _friendshipActions = new FriendshipActionEngine(() => FriendshipService.getInstance());
     /** 關係組合事件一次性紀錄（KIN-08，PROG-2-1412）：同季同對只播一次，隨存檔保存 */
     public readonly relationEvents = new RelationEventLedger();
     /** NPC 記憶擁有者 id 與 NPC_Memory read model（NPC-09）：新局由種子決定，讀檔缺欄位時補產 */
@@ -2185,14 +2191,22 @@ export class GameSession implements AcademyRecordPort {
     /** 穿戴一般裝備（PROG-2-1040）：可否放入由一般裝備定義表的槽位判斷；成功才寫回物件庫列 */
     public equipGear(gearUid: string, generalUid: string, slotId: EquipSlot): GearEquipResult {
         const result = equipGearFlow(this._inventoryRecords, gearUid, generalUid, slotId, (record, slot) => gearDefinitionOf(record.Gear_ID)?.slot === slot);
-        if (result.ok) this._inventoryRecords = result.records;
+        if (result.ok) {
+            this._inventoryRecords = result.records;
+            // 賞賜：替武將穿上裝備／寶物（PROG-2-9953）
+            this.applyFriendshipAction(slotId === 'TREASURE' ? 'reward_grant_treasure' : 'reward_grant_equipment', generalUid);
+        }
         return result;
     }
 
     /** 卸下武將指定格的一般裝備（PROG-2-1040）；裝備回到倉庫 */
     public unequipGear(generalUid: string, slotId: EquipSlot): GearEquipResult {
         const result = unequipGearFlow(this._inventoryRecords, generalUid, slotId);
-        if (result.ok) this._inventoryRecords = result.records;
+        if (result.ok) {
+            this._inventoryRecords = result.records;
+            // 剝奪：卸下武將身上的裝備／寶物（PROG-2-9953）
+            this.applyFriendshipAction(slotId === 'TREASURE' ? 'equipment_strip_treasure' : 'equipment_strip_gear', generalUid);
+        }
         return result;
     }
 
@@ -2960,6 +2974,9 @@ export class GameSession implements AcademyRecordPort {
         this.dynamicRelations.restore([]);
         this._mindWrite().reset();
         this.relationEvents.restore([]);
+        FriendshipService.getInstance().loadSnapshot();
+        FriendshipService.getInstance().loadPairs();
+        this._friendshipActions.restore(undefined);
         this._npcPlayerId = npcPlayerIdFromSeed(seed);
         this._npcMemory = createNpcMemory(this._npcPlayerId);
         this._tallyLoyalty = {};
@@ -3132,10 +3149,27 @@ export class GameSession implements AcademyRecordPort {
         );
         if (!record) return null;
         this._prison = { ...this._prison, pending: [...this._prison.pending, { record, target: { ...target }, ...(tallyId ? { tallyId } : {}) }] };
+        this._applyCaptureFriendship(target);
         if (this._autoSave && this._save) {
             await this.save();
         }
         return record;
+    }
+
+    /**
+     * 俘虜結算友誼（PROG-2-9953）：對每位名冊武將依「與被俘者的配對友誼」分類。
+     * 配對友誼 ≥ 20 視為同伴（扣分）、≤ −20 視為她的敵人（加分）；同陣營（nationId 相同）視為同陣營成員（扣分較輕）。
+     */
+    private _applyCaptureFriendship(target: GeneralConfig): void {
+        const service = FriendshipService.getInstance();
+        const nationOf = (g: object): string | undefined => (g as { nationId?: string }).nationId;
+        for (const member of this._roster.getAll()) {
+            if (member.id === target.id) continue;
+            const pair = service.getPair(member.id, target.id);
+            if (pair >= 20) this.applyFriendshipAction('capture_her_companion', member.id);
+            else if (pair <= -20) this.applyFriendshipAction('capture_enemy_of_her', member.id);
+            else if (nationOf(member) && nationOf(member) === nationOf(target)) this.applyFriendshipAction('capture_her_side_member', member.id);
+        }
     }
 
     /**
@@ -5436,7 +5470,30 @@ export class GameSession implements AcademyRecordPort {
         const req = this.mind.mailbox().find((r) => r.id === id);
         if (!req) return { ok: false, reply: '', events: [] };
         const result = this._mindWrite().resolveRequest(id, accept, this._mindContext(req.generalId));
+        if (result.ok) {
+            // 自告奮勇（請戰）與建議：答應／拒絕各對應權重表一項（PROG-2-9953）
+            if (req.kind === 'ASK_BATTLE') this.applyFriendshipAction(accept ? 'admin_volunteer_accepted' : 'admin_volunteer_rejected', req.generalId);
+            else if (req.kind === 'ADVISE') this.applyFriendshipAction(accept ? 'admin_advice_adopted' : 'admin_advice_ignored', req.generalId);
+        }
         if (result.ok && this._autoSave && this._save) await this.save();
+        return result;
+    }
+
+    /** 載入友誼行為權重表（friendship-action-weights.json 原始內容）；壞資料視為未載入，不拋例外 */
+    public setFriendshipWeights(raw: unknown): void {
+        this._friendshipActions.setTable(normalizeFriendshipActionTable(raw));
+    }
+
+    /**
+     * 結算一次玩家行為對武將的友誼（PROG-2-9953）：套性格倍率、每季上限與冷卻，寫入友誼表並發 FriendshipActionApplied。
+     * 省略 targetId＝玩家↔武將；帶 targetId＝武將↔武將配對（只該用在與我方有接觸的配對）。
+     * 其他系統（例如 Antigravity 的提親被拒 bonding_proposal_refused）直接呼叫此方法即可。
+     */
+    public applyFriendshipAction(actionId: string, generalId: string, targetId?: string): FriendshipActionAppliedPayload {
+        const general = this._roster.getAll().find((g) => g.id === generalId);
+        const personality = general ? personalityTypeOf(general as unknown as Parameters<typeof personalityTypeOf>[0]) : undefined;
+        const result = this._friendshipActions.apply({ actionId, generalId, ...(targetId ? { targetId } : {}), season: this._clock.state.totalSeasonsElapsed, ...(personality ? { personality } : {}) });
+        if (result.reason !== 'unknown-action') this._emit(GAME_SESSION_EVENTS.FriendshipActionApplied, result);
         return result;
     }
 
@@ -5460,6 +5517,9 @@ export class GameSession implements AcademyRecordPort {
         const ids = deployedIds.filter((id) => roster.some((g) => g.id === id));
         ids.forEach((generalId, index) => {
             this._mindWrite().record({ generalId, season, kind: 'BATTLE_RESULT', outcome: won ? 'SUCCESS' : 'FAIL', tags: ['battle'], label: '出征', isLead: index === 0 });
+            // 友誼：主將／編入出戰、同勝或同敗（PROG-2-9953）
+            this.applyFriendshipAction(index === 0 ? 'combat_main_commander' : 'combat_deploy_in_army', generalId);
+            this.applyFriendshipAction(won ? 'combat_victory_together' : 'combat_defeat_together', generalId);
         });
         for (const duel of options.duelOutcomes ?? []) {
             if (duel.tutorial) continue;
@@ -7496,8 +7556,15 @@ export class GameSession implements AcademyRecordPort {
         const withInventory = this._inventoryRecords.length > 0 ? { ...withHallMissions, inventoryRecords: normalizeInventoryRecords(this._inventoryRecords) } : withHallMissions;
         const relationEventKeys = this.relationEvents.snapshot();
         const mindSave = this.mind.snapshot();
+        const friendshipService = FriendshipService.getInstance();
+        const friendships = friendshipService.exportSnapshot();
+        const friendshipPairs = friendshipService.exportPairs();
+        const friendshipActionLog = this._friendshipActions.snapshot();
         return {
             ...withInventory,
+            ...(Object.keys(friendships).length > 0 ? { friendships } : {}),
+            ...(Object.keys(friendshipPairs).length > 0 ? { friendshipPairs } : {}),
+            ...(Object.keys(friendshipActionLog).length > 0 ? { friendshipActionLog } : {}),
             ...this.lifespanSaveFields(),
             ...(relationEventKeys.length > 0 ? { relationEventKeys } : {}),
             ...(this._npcPlayerId ? { npcPlayerId: this._npcPlayerId } : {}),
@@ -7772,6 +7839,9 @@ export class GameSession implements AcademyRecordPort {
         this._npcPlayerId = savedNpcPlayerId ?? npcPlayerIdFromSeed(Math.floor(Math.random() * 4294967296));
         this._npcMemory = normalizeNpcMemory(snapshot.npcMemory, this._npcPlayerId) ?? createNpcMemory(this._npcPlayerId);
         this._mindWrite().restore(snapshot.generalMind);
+        FriendshipService.getInstance().loadSnapshot(snapshot.friendships);
+        FriendshipService.getInstance().loadPairs(snapshot.friendshipPairs);
+        this._friendshipActions.restore(snapshot.friendshipActionLog);
         this._legacyCount = normalizeLegacyCount(snapshot.legacyCount);
         this._officerState = normalizeOfficerState(snapshot.officerState);
         this._officerTrial = normalizeOfficerTrial(snapshot.officerTrial);

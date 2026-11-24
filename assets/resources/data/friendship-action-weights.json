@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "status": "draft",
+  "status": "active",
   "owner": "PM 裁決 + 企劃自決（PROG-2-9866）",
   "description": "玩家行為對武將友誼值的統一權重表。每次玩家行為發生時，依 actionId 查 delta，經性格倍率與每日上限後，寫入友誼偏移量（走 friendship.add，伺服器權威）。",
   "range": {

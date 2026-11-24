@@ -17203,6 +17203,31 @@
       "deliverables": [],
       "description": "實測手動已選卡組選擇器無關閉鈕、Esc 無效；出征編組收起時未收 deck／lead host。",
       "notes": "2026-11-24 | 狀態: done | 驗證: 建置 EXIT 36（index.html 存在）；tsc 0 錯誤；單元測試 ALL PASS 9444；compute-gate quick 通過；playtest-online 12/12 步通過（console error 0、pageerror 0）；實跑探針：A 開選卡器、B 真點 btnDeckClose 關閉、C 重開後按 Esc 關閉、E 同開選卡與結緣後 _closeSortieSetup 收起兩者 host 皆 inactive（截圖在 side-session-notes/PROG-2-9952） | 變更: lobby-deck-select-main 新增 btnDeckClose；DeckSelectController 綁定關閉並 close()；LobbyScene Esc 清單納入 deck／lead host，_closeSortieSetup 收起兩者；DeckSelectController 測試更新 | 阻塞: none（出征編組實際開啟未在探針中走到，收起以直接呼叫 _closeSortieSetup 驗證）"
+    },
+    {
+      "id": "PROG-2-9953",
+      "title": "友誼值行為結算接進平常遊玩（第 8 框架實作）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "feature",
+      "phase": "M9",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-24T20:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "completed_at": "2026-11-24T21:30:00+08:00",
+      "completed_by_agent": "ClaudeCode_claude-opus-5-5",
+      "related": [
+        "PROG-2-9866"
+      ],
+      "depends": [
+        "PROG-2-9866"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "description": "權重表結算引擎與 FriendshipActionApplied 事件；出戰、請戰、建議、賞賜、剝奪、俘虜掛點；友誼依對象分記並存檔。",
+      "notes": "2026-11-24 | 狀態: done | 驗證: tsc 測試型別 0；單元測試 run-cli 全過（含 FriendshipActionEngine 12 項）；compute-gate standard 見 PR | 變更: FriendshipActionEngine、FriendshipService 配對表、GameSession 掛點（出戰／請戰／建議／賞賜／剝奪／俘虜）、存檔三欄位、權重表 status 改 active、規格書第 5 節 | 阻塞: 無；提親被拒由 Antigravity 呼叫 applyFriendshipAction"
     }
   ]
 }
