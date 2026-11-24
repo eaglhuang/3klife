@@ -4,147 +4,127 @@ import { SkillSourceType } from './SkillRuntimeContract';
 
 export interface BattleSkillPresentation {
   name: string;
+  /** 類別標籤（已翻譯，顯示用）；未掛 translator 時為繁中原文 */
   categoryTag: string;
+  /** 類別繁中原文（與語系無關），供 TileSkillCategory 等邏輯對照 */
+  categoryZh: string;
+  /** 效果說明（已翻譯，顯示用，含【類別】前綴） */
   effectStatus: string;
 }
 
-/** 招式名走 i18n：鍵為 battle.skill_name.<battleSkillId>，四語系都要有值（見 tests/BattleSkillNames.test.ts） */
-export type BattleSkillNameTranslate = (key: string) => string;
+/** i18n 查詢：鍵 + 可選 {0}{1} 佔位參數；缺條目時回傳鍵本身 */
+export type BattleSkillNameTranslate = (key: string, ...args: string[]) => string;
 
-let nameTranslate: BattleSkillNameTranslate | null = null;
+let translate: BattleSkillNameTranslate | null = null;
 
-/** 遊戲啟動時把 i18n 查詢掛上來；未掛上（例如純邏輯測試）時招式名退回 battleSkillId。 */
-export function setBattleSkillNameTranslator(translate: BattleSkillNameTranslate | null): void {
-  nameTranslate = translate;
+/** 遊戲啟動時把 i18n 查詢掛上來；未掛上（例如純邏輯測試）時退回繁中原文或 battleSkillId。 */
+export function setBattleSkillNameTranslator(fn: BattleSkillNameTranslate | null): void {
+  translate = fn;
 }
 
+/** 招式名鍵：battle.skill_name.<battleSkillId> */
 export function battleSkillNameKey(skillId: string): string {
   return `battle.skill_name.${skillId}`;
 }
 
-function resolveBattleSkillName(skillId: string): string {
-  if (!nameTranslate) return skillId;
-  const key = battleSkillNameKey(skillId);
-  const text = nameTranslate(key);
-  return text && text !== key ? text : skillId;
+/** 效果說明鍵：battle.skill_effect.<battleSkillId>（字串含【類別】前綴） */
+export function battleSkillEffectKey(skillId: string): string {
+  return `battle.skill_effect.${skillId}`;
 }
 
-type PresentationRow = Omit<BattleSkillPresentation, 'name'>;
+/** 類別標籤鍵：battle.skill_category.<categoryId>（categoryId 為英文小寫代號） */
+export function battleSkillCategoryKey(categoryId: string): string {
+  return `battle.skill_category.${categoryId}`;
+}
 
-const DEFAULT_PRESENTATION: PresentationRow = {
-  categoryTag: '戰術',
-  effectStatus: '【戰術】技能效果生效',
-};
+function translated(key: string, fallback: string, ...args: string[]): string {
+  if (!translate) return fallback;
+  const text = translate(key, ...args);
+  return text && text !== key ? text : fallback;
+}
 
+type PresentationRow = { categoryId: string; categoryZh: string };
+
+const DEFAULT_ROW: PresentationRow = { categoryId: 'tactic', categoryZh: '戰術' };
+
+/**
+ * 招式表：每個 battleSkillId 對應類別代號與繁中原文類別。
+ * 招式名、效果說明、類別標籤全部走 i18n（見 tests/BattleSkillNames.test.ts）。
+ */
 const PRESENTATION_BY_SKILL_ID: Record<string, PresentationRow> = {
   // 通用奧義；id 與名稱要和 GAME_CONFIG.genericUltimate 一致（共用層不引用 Constants，所以這裡寫字面值）
-  'generic-all-out-charge': {
-    categoryTag: '突擊',
-    effectStatus: '【突擊】全軍突擊：全軍齊攻，敵軍全體受創',
-  },
-  'zhang-fei-roar': {
-    categoryTag: '控制',
-    effectStatus: '【控制】震軍怒喝：敵軍全體暈眩，盾牆瓦解',
-  },
-  // 五位初始名將的第一階專屬奧義（PROG-2-9327）；效果文字照實際效果寫
-  'wei-yan-ziwu-raid': { categoryTag: '貫穿', effectStatus: '【貫穿】子午奇襲：直線三連刺，逐段增傷' },
-  'xiahou-dun-eye-devour': { categoryTag: '回復', effectStatus: '【回復】拔矢啖睛：全軍兵力回復' },
-  'zhang-he-adaptive-camp': { categoryTag: '再動', effectStatus: '【再動】巧變連營：一隊友軍立即再行動' },
-  'sun-ce-conqueror': { categoryTag: '橫掃', effectStatus: '【橫掃】小霸王之威：前方扇形敵軍受創' },
-  'gan-ning-night-raid': { categoryTag: '控制', effectStatus: '【控制】百騎劫營：敵軍最後排暈眩' },
-  'cao-cao-tactics': {
-    categoryTag: '破陣',
-    effectStatus: '【破陣】兵不厭詐：自動鎖定前線弱點',
-  },
-  'guan-yu-slash': {
-    categoryTag: '斬擊',
-    effectStatus: '【斬擊】月牙刀斬：最佳直線斬擊展開',
-  },
-  'lu-bu-rampage': {
-    categoryTag: '爆發',
-    effectStatus: '【爆發】天下無雙：最佳扇形壓制',
-  },
-  'zhao-yun-pierce': {
-    categoryTag: '突擊',
-    effectStatus: '【突擊】龍膽·破軍：自動貫穿最佳列',
-  },
-  'zhuge-liang-storm': {
-    categoryTag: '範圍',
-    effectStatus: '【範圍】諸葛風暴：自動選最大範圍',
-  },
-  'zhou-yu-inferno': {
-    categoryTag: '火攻',
-    effectStatus: '【火攻】周瑜炎陣：點燃敵軍所在格',
-  },
-  'sun-quan-tide': {
-    categoryTag: '陣列',
-    effectStatus: '【陣列】江潮列陣：掃蕩中心周邊',
-  },
-  'liu-bei-rally': {
-    categoryTag: '支援',
-    effectStatus: '【支援】仁德號召：全軍回復與士氣提振',
-  },
-  'diao-chan-charm': {
-    categoryTag: '魅惑',
-    effectStatus: '【魅惑】閉月傾城：敵軍全體受控',
-  },
-  'cao-zhi-verse': {
-    categoryTag: '文擊',
-    effectStatus: '【文擊】七步成章：最佳扇形文氣震擊',
-  },
-  'guo-jia-foresight': {
-    categoryTag: '奇策',
-    effectStatus: '【奇策】鬼謀先機：最佳範圍崩解',
-  },
-  'sima-yi-shadow': {
-    categoryTag: '壓制',
-    effectStatus: '【壓制】司馬影策：全敵範圍壓制',
-  },
-  'sow-discord': {
-    categoryTag: '離間',
-    effectStatus: '【離間】離間：敵軍倒戈互攻一回合',
-  },
+  'generic-all-out-charge': { categoryId: 'assault', categoryZh: '突擊' },
+  'zhang-fei-roar': { categoryId: 'control', categoryZh: '控制' },
+  // 五位初始名將的第一階專屬奧義（PROG-2-9327）
+  'wei-yan-ziwu-raid': { categoryId: 'pierce', categoryZh: '貫穿' },
+  'xiahou-dun-eye-devour': { categoryId: 'recover', categoryZh: '回復' },
+  'zhang-he-adaptive-camp': { categoryId: 'reaction', categoryZh: '再動' },
+  'sun-ce-conqueror': { categoryId: 'sweep', categoryZh: '橫掃' },
+  'gan-ning-night-raid': { categoryId: 'control', categoryZh: '控制' },
+  'cao-cao-tactics': { categoryId: 'breach', categoryZh: '破陣' },
+  'guan-yu-slash': { categoryId: 'slash', categoryZh: '斬擊' },
+  'lu-bu-rampage': { categoryId: 'burst', categoryZh: '爆發' },
+  'zhao-yun-pierce': { categoryId: 'assault', categoryZh: '突擊' },
+  'zhuge-liang-storm': { categoryId: 'range', categoryZh: '範圍' },
+  'zhou-yu-inferno': { categoryId: 'fire', categoryZh: '火攻' },
+  'sun-quan-tide': { categoryId: 'formation', categoryZh: '陣列' },
+  'liu-bei-rally': { categoryId: 'support', categoryZh: '支援' },
+  'diao-chan-charm': { categoryId: 'charm', categoryZh: '魅惑' },
+  'cao-zhi-verse': { categoryId: 'literary', categoryZh: '文擊' },
+  'guo-jia-foresight': { categoryId: 'stratagem', categoryZh: '奇策' },
+  'sima-yi-shadow': { categoryId: 'suppress', categoryZh: '壓制' },
+  'sow-discord': { categoryId: 'sow', categoryZh: '離間' },
   // 以下 23 個原本沒有招式名（顯示英文 id）；名稱取自 ultimate-definitions／tactic-library 的既有定名
-  'cao-cao-revelry': { categoryTag: '鼓舞', effectStatus: '【鼓舞】對酒當歌：全軍精力回復，攻速提升' },
-  'cao-cao-ult-control': { categoryTag: '控制', effectStatus: '【控制】挾天子令：敵將為我方行動 2 回合' },
-  'cao-cao-ult-revive': { categoryTag: '復活', effectStatus: '【復活】唯才是舉：陣亡友軍復活，恢復 50% 血量' },
-  'eight-formation': { categoryTag: '陣法', effectStatus: '【陣法】八陣圖：佈下八陣，增益本陣' },
-  'empty-fort': { categoryTag: '奇策', effectStatus: '【奇策】空城計：示弱誘敵，推開前方敵軍' },
-  'insp-combo-attack': { categoryTag: '連擊', effectStatus: '【連擊】連擊：連番出手，接連追擊' },
-  'insp-dragon-gall': { categoryTag: '單挑', effectStatus: '【單挑】龍膽：一對一決鬥，全力出擊' },
-  'insp-haste': { categoryTag: '疾行', effectStatus: '【疾行】疾行：加速行軍，搶先行動' },
-  'insp-lance-thrust': { categoryTag: '突擊', effectStatus: '【突擊】長槍突刺：直線貫穿，一擊到底' },
-  'insp-night-raid': { categoryTag: '夜襲', effectStatus: '【夜襲】夜襲：趁夜先制，突襲敵陣' },
-  'insp-shield': { categoryTag: '防禦', effectStatus: '【防禦】堅盾：舉盾固守，減少受傷' },
-  'insp-sworn-fury': { categoryTag: '突擊', effectStatus: '【突擊】結義之怒：兄弟同心，怒氣衝鋒' },
-  'insp-taunt': { categoryTag: '挑釁', effectStatus: '【挑釁】挑釁：激怒敵將，迫其暈眩' },
-  'lian-huan-chain': { categoryTag: '連環', effectStatus: '【連環】連環計：敵軍相連，一損皆損' },
-  'liu-bei-reset': { categoryTag: '重置', effectStatus: '【重置】漢室餘暉：召集援軍，重置友軍行動條' },
-  'medical-aid': { categoryTag: '醫療', effectStatus: '【醫療】醫療：救治友軍，回復兵力' },
-  'mentor-morale': { categoryTag: '鼓舞', effectStatus: '【鼓舞】鼓舞：提振士氣' },
-  'mentor-slow': { categoryTag: '緩速', effectStatus: '【緩速】緩速：拖慢敵軍行動' },
-  'tally-charge': { categoryTag: '衝鋒', effectStatus: '【衝鋒】騎兵衝鋒：騎兵突進，直撲敵陣' },
-  'tally-fire-chain': { categoryTag: '火攻', effectStatus: '【火攻】赤壁烈焰：火勢相連，焚燒敵軍' },
-  'tally-wei-zhen-hua-xia': { categoryTag: '威震', effectStatus: '【威震】威震華夏：一騎當千，震懾敵將' },
-  'tally-wushuang': { categoryTag: '衝陣', effectStatus: '【衝陣】單騎破陣：單騎突陣，撕開敵陣' },
-  'zhao-yun-immortal': { categoryTag: '無敵', effectStatus: '【無敵】白馬銀槍·不滅：全屏範圍攻擊，獲得 1 回合無敵，全體士氣拉滿' },
+  'cao-cao-revelry': { categoryId: 'morale', categoryZh: '鼓舞' },
+  'cao-cao-ult-control': { categoryId: 'control', categoryZh: '控制' },
+  'cao-cao-ult-revive': { categoryId: 'revive', categoryZh: '復活' },
+  'eight-formation': { categoryId: 'array', categoryZh: '陣法' },
+  'empty-fort': { categoryId: 'stratagem', categoryZh: '奇策' },
+  'insp-combo-attack': { categoryId: 'combo', categoryZh: '連擊' },
+  'insp-dragon-gall': { categoryId: 'duel', categoryZh: '單挑' },
+  'insp-haste': { categoryId: 'haste', categoryZh: '疾行' },
+  'insp-lance-thrust': { categoryId: 'assault', categoryZh: '突擊' },
+  'insp-night-raid': { categoryId: 'nightraid', categoryZh: '夜襲' },
+  'insp-shield': { categoryId: 'defense', categoryZh: '防禦' },
+  'insp-sworn-fury': { categoryId: 'assault', categoryZh: '突擊' },
+  'insp-taunt': { categoryId: 'taunt', categoryZh: '挑釁' },
+  'lian-huan-chain': { categoryId: 'chain', categoryZh: '連環' },
+  'liu-bei-reset': { categoryId: 'reset', categoryZh: '重置' },
+  'medical-aid': { categoryId: 'medic', categoryZh: '醫療' },
+  'mentor-morale': { categoryId: 'morale', categoryZh: '鼓舞' },
+  'mentor-slow': { categoryId: 'slow', categoryZh: '緩速' },
+  'tally-charge': { categoryId: 'charge', categoryZh: '衝鋒' },
+  'tally-fire-chain': { categoryId: 'fire', categoryZh: '火攻' },
+  'tally-wei-zhen-hua-xia': { categoryId: 'awe', categoryZh: '威震' },
+  'tally-wushuang': { categoryId: 'breakthrough', categoryZh: '衝陣' },
+  'zhao-yun-immortal': { categoryId: 'invincible', categoryZh: '無敵' },
 };
 
-/** 所有有招式表的 battleSkillId（測試用：每個可施放 id 都應能解出招式名） */
+/** 所有有招式表的 battleSkillId（測試用：每個可施放 id 都應能解出招式名與效果說明） */
 export function battleSkillPresentationIds(): string[] {
   return Object.keys(PRESENTATION_BY_SKILL_ID);
 }
 
+/** 所有出現過的類別代號（測試用：每個類別在四語系都要有標籤） */
+export function battleSkillCategoryIds(): string[] {
+  const ids = new Set<string>([DEFAULT_ROW.categoryId]);
+  for (const row of Object.values(PRESENTATION_BY_SKILL_ID)) ids.add(row.categoryId);
+  return Array.from(ids).sort();
+}
+
+function resolveBattleSkillName(skillId: string): string {
+  return translated(battleSkillNameKey(skillId), skillId);
+}
+
 export function getBattleSkillPresentation(skillId: string): BattleSkillPresentation {
-  const row = Object.prototype.hasOwnProperty.call(PRESENTATION_BY_SKILL_ID, skillId) ? PRESENTATION_BY_SKILL_ID[skillId] : null;
-  if (!row) {
-    return {
-      ...DEFAULT_PRESENTATION,
-      name: skillId,
-      effectStatus: `【戰術】${skillId} 生效`,
-    };
-  }
-  return { ...row, name: resolveBattleSkillName(skillId) };
+  const hasRow = Object.prototype.hasOwnProperty.call(PRESENTATION_BY_SKILL_ID, skillId);
+  const row = hasRow ? PRESENTATION_BY_SKILL_ID[skillId] : DEFAULT_ROW;
+  const categoryTag = translated(battleSkillCategoryKey(row.categoryId), row.categoryZh);
+  const name = resolveBattleSkillName(skillId);
+  const effectStatus = hasRow
+    ? translated(battleSkillEffectKey(skillId), `【${categoryTag}】${skillId}`)
+    : translated('battle.skill_effect.fallback', `【${categoryTag}】${skillId} 生效`, categoryTag, skillId);
+  return { name, categoryTag, categoryZh: row.categoryZh, effectStatus };
 }
 
 export function buildBattleSkillUsedMessage(

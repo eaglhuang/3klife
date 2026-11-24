@@ -17333,7 +17333,12 @@
       "created_by_agent": "ClaudeCode_claude-opus-5-5",
       "started_at": "2026-11-24T13:00:00+08:00",
       "started_by_agent": "ClaudeCode_claude-opus-5-5",
-      "related": ["HALL-15", "doc_spec_1178", "doc_spec_0454", "doc_spec_0455"],
+      "related": [
+        "HALL-15",
+        "doc_spec_1178",
+        "doc_spec_0454",
+        "doc_spec_0455"
+      ],
       "depends": [],
       "acceptance": [],
       "deliverables": [],
@@ -17352,7 +17357,9 @@
       "created_by_agent": "ClaudeCode_claude-opus-5-5",
       "started_at": "2026-11-24T13:00:00+08:00",
       "started_by_agent": "ClaudeCode_claude-opus-5-5",
-      "related": ["PROG-2-9954"],
+      "related": [
+        "PROG-2-9954"
+      ],
       "depends": [],
       "acceptance": [],
       "deliverables": [],
@@ -17578,12 +17585,158 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9959",
+      "title": "騎兵部署落下特效、敵方紅方騎兵骨架與趙雲騎術 2/3 級騎馬外觀",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-24T21:41:42+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "敵方騎兵改載 spine-trial 紅方騎馬骨架（缺檔退藍騎馬紅色調）；騎術一級 dust_ring 接騎兵落地；趙雲騎術 2/3 級掛 v2 騎馬",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-25 | 狀態: done | 驗證: PR #2592 squash 合併（commit 2e28957b2731781d2713e6a3dd9718dbd60cc55f）；CI atm-governance／ucuf-core 全 SUCCESS；tsc 0、單元測試 9507 pass、compute-gate quick 4/4；playtest-online 12/12；戰場探針：敵方紅騎兵皮膚 soldier_cavalry_red__mount_horse_bay、趙雲騎術 1/2/3 級皮膚 zhao_v2 horse_bay/sheet/war、騎兵部署 dust_ring 每次 4 顆 | 變更: 騎兵敵方紅騎兵骨架、騎術一級 dust_ring、趙雲騎術 1/2/3 級 v2 騎馬、sync-mount-spine.js | 限制: 趙雲騎術等級為探針覆寫（非玩家實際升級）；取證建置非最終 HEAD（僅差 master 合併）；未加正式 QA hook | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_3056",
+      "id": "PROG-2-9990",
+      "title": "任務卡號跨 worktree／PR／commit 預約防撞",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "tooling",
+      "phase": "M9",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-25T00:47:51+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "11/24～25 PROG-2-9953/9954/9955/9959/9962 被不同 Agent 重複開號。現有 task-id-guard 只看當前 worktree 的卡檔、tasks-atm 與 .task-locks，看不到 origin/master、其他 worktree、未合併分支／PR 與 commit 訊息。",
+      "related": [
+        "PROG-2-9953",
+        "PROG-2-9954",
+        "PROG-2-9955",
+        "PROG-2-9959",
+        "PROG-2-9962"
+      ],
+      "depends": [],
+      "acceptance": [
+        "預約時比對 origin/master、開著與近期的 PR（gh pr list --state all）、未合併分支與 commit 訊息、本機所有 worktree 共用預約表",
+        "預約表以原子寫入（wx lockfile）並有 TTL",
+        "指定卡號撞號時回傳下一個可用卡號（broker ticket），不只拒絕",
+        "docs/agent-briefs/Readme.md 鎖卡流程寫入新流程",
+        "單元測試覆蓋遠端占用、共用預約、撞號建議"
+      ],
+      "deliverables": [
+        "tools_node/lib/task-id-remote-occupancy.js",
+        "tools_node/lib/task-id-allocation-policy.json",
+        "tools_node/lib/task-id-guard.js",
+        "tools_node/task-lock.js",
+        "docs/agent-briefs/Readme.md",
+        "tools_node/test/task-id-remote-occupancy.test.js",
+        "tools_node/adapters/atm-3klife/lock-adapter.js",
+        "tools_node/adapters/atm-3klife/task-adapter.js",
+        "tools_node/task-card-opener.js",
+        "tools_node/test/task-id-guard-flow.test.js",
+        "tools_node/adapters/atm-3klife/governance-profile.json",
+        ".github/workflows/atm-governance.yml",
+        "package.json"
+      ],
+      "notes": "2026-11-25 | 狀態: done | 驗證: task-id-remote-occupancy.test 7 案、task-id-guard-flow、task-lock-cross-shard 全過；真實 repo 重放抓到 9953(base)/9962(unmerged commit)/9954(PR #2591/#2589)；CLI reserve 指定撞號自動改發下一號 | 變更: 新增跨 worktree/分支/PR/commit 卡號占用與 git common dir 共用預約表，撞號回傳下一個可用卡號，Readme 開卡/鎖卡流程更新，CI 加 Task ID reservation guard | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "id": "PROG-2-9962",
+      "title": "戰場招式效果說明與類別標籤走 i18n（effectStatus／categoryTag → battle.skill_effect／battle.skill_category）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "feature",
+      "phase": "M9",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-24T14:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "related": [
+        "PROG-2-9327",
+        "PROG-2-9955"
+      ],
+      "depends": [],
+      "acceptance": [
+        "zh-TW 顯示文字與改前一致",
+        "zh-CN／en／ja 皆補齊 battle.skill_effect.* 與 battle.skill_category.*，en 無漢字殘留",
+        "tests/BattleSkillNames.test.ts 鍵齊全與解析測試通過",
+        "tsc 錯誤數 0；單元測試全過",
+        "實跑 en／ja 截圖證明技能面板與橫幅不再中英混雜"
+      ],
+      "deliverables": [
+        "assets/scripts/shared/BattleSkillPresentation.ts",
+        "assets/resources/i18n/{zh-TW,zh-CN,en,ja}.json",
+        "tests/BattleSkillNames.test.ts"
+      ],
+      "description": "效果說明（effectStatus）與類別標籤（categoryTag）由繁中字面值改為 i18n 鍵：battle.skill_effect.<battleSkillId>、battle.skill_category.<categoryId>；招式名鍵沿用 battle.skill_name.<id>。四語系補齊（zh-TW 維持原文）。",
+      "notes": "2026-11-25 | 狀態: done | 驗證: tsc(tsconfig.test.json) 0；run-cli ALL PASS 9513 passed／3 skipped；CI atm-governance、ucuf-core pass；zh-TW playtest 12/12；ja playtest 12/12；en playtest 11/12（第08步頂欄季別字串 Year 1 與本卡無關）；戰鬥內技能面板與招式橫幅未拍到（自然觸發未達；window 注入 SkillUsed 事件後橫幅未出現）| 變更: 效果說明與類別標籤改 i18n，四語系補鍵，測試 | 阻塞: 證據缺口已列於 PR 本文；戰鬥 HUD 繁中殘留（部署提示、兵種名、計謀按鈕、攻×4）另開卡"
     }
   ],
   "summary": {
-    "done": 310,
-    "in_progress": 3,
+    "done": 315,
+    "in_progress": 2,
     "open": 86,
-    "total": 399
+    "total": 403
   }
 }

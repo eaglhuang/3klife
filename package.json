@@ -66,6 +66,7 @@
     "test:atm-kickoff-doctor-flow": "node tools_node/test/atm-kickoff-doctor-flow.integration.test.js",
     "test:legacy-h2u-first-win-regression": "node tools_node/test/legacy-h2u-first-win-regression.test.js",
     "test:atm-flow": "node tools_node/test/atm-flow.test.js",
+    "test:task-id-reservation": "node tools_node/test/task-id-guard-flow.test.js && node tools_node/test/task-id-remote-occupancy.test.js",
     "test:atm-atomize": "node tools_node/test/atm-atomize.test.js",
     "validate:atm-stability-closeout": "node tools_node/validate-atm-stability-closeout.js",
     "validate:usage-evidence-shadow": "node tools_node/validate-usage-evidence-shadow.js",
