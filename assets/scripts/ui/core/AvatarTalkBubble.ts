@@ -108,6 +108,12 @@ export function showAvatarTalk(anchor: Node, generalId: string): AvatarTalkResul
     return result;
 }
 
+/** 在任意節點旁顯示一句指定文字（任務派出等非「點頭像」的觸發點共用同一個泡泡；PROG-2-9966） */
+export function showAvatarBubbleText(anchor: Node, text: string): void {
+    if (!anchor.isValid || !text) return;
+    presentBubble(anchor, text);
+}
+
 /** 立刻關掉泡泡（離開畫面、開面板時可呼叫） */
 export function hideAvatarTalk(): void {
     _holdUntil = 0;

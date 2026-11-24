@@ -46,6 +46,7 @@ function normalizeInstance(raw: unknown): MissionInstance | null {
         reconCount: isNum(raw.reconCount) ? Math.max(0, Math.floor(raw.reconCount)) : 0, waited: raw.waited === true, status,
     };
     if (isStr(raw.chainFrom)) inst.chainFrom = raw.chainFrom;
+    if (isNum(raw.chainDepth) && raw.chainDepth >= 2) inst.chainDepth = Math.floor(raw.chainDepth);
     if (status === 'ACTIVE') {
         const d = raw.dispatch;
         if (!isObj(d) || !Array.isArray(d.generalIds) || d.generalIds.length === 0 || !isStr(d.branchId) || !isNum(d.returnSeason)) return null;
@@ -104,6 +105,7 @@ export function normalizeMissionSave(raw: unknown, recordLimit = 50): MissionSav
             defId: p.defId as string, atSeason: p.atSeason as number,
             ...(isNum(p.intel) ? { intel: p.intel } : {}), ...(isNum(p.expireSeasons) ? { expireSeasons: p.expireSeasons } : {}),
             ...(isStr(p.chainFrom) ? { chainFrom: p.chainFrom } : {}),
+            ...(isNum(p.chainDepth) && p.chainDepth >= 2 ? { chainDepth: Math.floor(p.chainDepth) } : {}),
         }));
     const maxSerial = missions.reduce((m, x) => { const n = Number(x.id.replace(/^\D+/, '')); return Number.isFinite(n) ? Math.max(m, n) : m; }, 0);
     return {

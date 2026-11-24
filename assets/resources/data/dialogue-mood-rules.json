@@ -196,7 +196,8 @@
     },
     {
       "contexts": [
-        "sortie-selected"
+        "sortie-selected",
+        "mission-dispatch"
       ],
       "low": "pride",
       "mid": "pride",
@@ -286,7 +287,8 @@
         "battle-victory",
         "duel-won",
         "capture-enemy",
-        "quest-report"
+        "quest-report",
+        "mission-return"
       ],
       "low": "pride",
       "mid": "pride",
@@ -372,7 +374,8 @@
     {
       "contexts": [
         "duel-lost",
-        "quest-failed"
+        "quest-failed",
+        "mission-return-bad"
       ],
       "low": "wronged",
       "mid": "wronged",
@@ -898,6 +901,27 @@
       "scenes": [
         "court",
         "lobby"
+      ]
+    },
+    "mission-dispatch": {
+      "interactionType": "order",
+      "scenes": [
+        "lobby",
+        "court"
+      ]
+    },
+    "mission-return": {
+      "interactionType": "request_reward",
+      "scenes": [
+        "lobby",
+        "court"
+      ]
+    },
+    "mission-return-bad": {
+      "interactionType": "other",
+      "scenes": [
+        "lobby",
+        "court"
       ]
     }
   }
