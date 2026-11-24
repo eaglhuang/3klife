@@ -17492,12 +17492,60 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9975",
+      "title": "武將武器欄位依最新立繪重建",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "data",
+      "phase": "M9",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-25T00:16:29+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "PROG-2-9955 的 weapon 欄位原由適性推算，與立繪不符（劍類 0 位）。改以最新立繪與文字來源重建，規則寫成 JSON 對照表。",
+      "related": [
+        "PROG-2-9955"
+      ],
+      "depends": [],
+      "acceptance": [
+        "generals.json weapon 依立繪重建；新增 general-weapon-rules.json（名將覆寫表＋定位預設表）；GeneralWeapon 測試驗證資料與規則表一致；tsc 0；單元測試全過；compute-gate quick 通過"
+      ],
+      "deliverables": [],
+      "notes": "2026-11-25 | 狀態: done | 驗證: tsc 測試型別 0；單元測試 run-cli 9489 全過；compute-gate quick 通過 | 變更: generals.json weapon 依最新立繪重建（舊 blade137/cast94/spear3/bow1/sword0 → 新 sword48/cast109/blade38/spear29/bow11，改 110 位）；新增 general-weapon-rules.json（名將覆寫表＋定位預設表）；GeneralWeapon.test 驗證資料與規則表一致；逐位表在 side-session-notes/general-weapon-redo-1124.md | 阻塞: 無；低信心 28 位待複核；枚舉缺雙劍/戟/扇建議後補",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
     "done": 310,
-    "in_progress": 2,
+    "in_progress": 3,
     "open": 86,
-    "total": 398
+    "total": 399
   }
 }

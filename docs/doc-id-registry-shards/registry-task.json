@@ -16918,5 +16918,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9963.md",
     "title": "[PROG-2-9963] 學府入學候選只算子嗣（親生、義子、家臣子），成年家臣不算",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3055",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9975.md",
+    "title": "[PROG-2-9975] 武將武器欄位依最新立繪重建",
+    "category": "task"
   }
 ]
