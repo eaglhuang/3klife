@@ -235,3 +235,12 @@
 | `doc_task_3001` | docs/agent-briefs/tasks/PROG/PROG-2-9865.md | [PROG-2-9865] 線上試玩腳本修正：重載等載入遮罩消失、商業任務銀兩檢查依情報度 |
 | `doc_task_3002` | docs/agent-briefs/tasks/PROG/PROG-2-9866.md | [PROG-2-9866] 玩家行為統一權重表（武將友誼值）資料與規格 |
 | `doc_task_3003` | docs/agent-briefs/tasks/PROG/PROG-2-9867.md | [PROG-2-9867] 友誼值範圍改為 -100～+100 |
+| `doc_task_3004` | docs/agent-briefs/tasks/PROG/PROG-2-9869.md | [PROG-2-9869] 十連結果卡片加寬（使用者：左右太瘦） |
+| `doc_task_3005` | docs/agent-briefs/tasks/PROG/PROG-2-9910.md | [PROG-2-9910] 戰前推薦編制純邏輯（卡 A） |
+| `doc_task_3006` | docs/agent-briefs/tasks/PROG/PROG-2-9911.md | [PROG-2-9911] 戰前編成視窗（卡 B） |
+| `doc_task_3007` | docs/agent-briefs/tasks/PROG/PROG-2-9912.md | [PROG-2-9912] 首戰教學戰接入編成（卡 C） |
+| `doc_task_3008` | docs/agent-briefs/tasks/PROG/PROG-2-9913.md | [PROG-2-9913] 戰前編成實機驗收合併（卡 D） |
+| `doc_task_3009` | docs/agent-briefs/tasks/PROG/PROG-2-9615.md | [PROG-2-9615] 首年引導接進畫面與實機視角驗收 |
+| `doc_task_3050` | docs/agent-briefs/tasks/PROG/PROG-2-9803.md | [PROG-2-9803] 首戰自動戰 QA 計數修正與教學戰參數調校（60–90 秒目標） |
+| `doc_task_3051` | docs/agent-briefs/tasks/PROG/PROG-2-9868.md | [PROG-2-9868] 藍軍騎兵改用騎乘版 Spine 骨架（mount_horse_bay） |
+| `doc_task_3052` | docs/agent-briefs/tasks/PROG/PROG-2-9871.md | [PROG-2-9871] 轉蛋抽到的教官支援卡進支援卡清單與培育選卡（物品庫存 → 教官卡橋接） |
