@@ -53,7 +53,7 @@ import { isUnitVisibleToPlayer } from "../shared/BattleVision";
 import { BoardRenderer } from "./BoardRenderer";
 import { ArrowShotView } from "./ArrowShotView";
 import { SlashShotView } from "./SlashShotView";
-import { AttackVfxPlayer } from "./AttackVfxPlayer";
+import { AttackVfxPlayer, generalWeaponOf, GeneralVfxInfo } from "./AttackVfxPlayer";
 import { attackVfxFor } from "../shared/AttackVfxMapping";
 import { attackStyleFor } from "../shared/AttackStyle";
 import { createMoveSfxThrottleState, moveBeatFor, tryAcquireMoveSfx } from "../shared/MoveFeedback";
@@ -733,7 +733,8 @@ export class UnitRenderer extends Component {
    * 致命一擊只閃白，不抖也不震畫面（接著要播倒地與 boom，疊起來會亂）。
    * 抖動只作用在 Spine 疊層的畫面偏移與 Visual 子節點，不動 worldNode 的移動 tween。
    */
-  public playHitAnimation(defenderId: string, _attackerId: string | null, opts?: { heavy?: boolean; lethal?: boolean }): void {
+  public playHitAnimation(defenderId: string, _attackerId: string | null, opts?: { heavy?: boolean; lethal?: boolean; crit?: boolean }): void {
+    if (opts?.crit) this.playCritAt(this.unitViews.get(defenderId)?.worldNode);
     this.spineUnits.play(defenderId, 'hit');
     this.markBadgeHit(defenderId);
     const defenderView = this.unitViews.get(defenderId);
@@ -818,7 +819,7 @@ export class UnitRenderer extends Component {
   public playDodgeAnimation(unitId: string): void { this.spineUnits.play(unitId, 'dodge'); }
   public playGeneralDodge(faction: Faction): void { this.spineUnits.play(this.generalSpineId(faction), 'dodge'); }
 
-  public async playHitAnimationAsync(defenderId: string, attackerId: string | null, opts?: { heavy?: boolean; lethal?: boolean }): Promise<void> {
+  public async playHitAnimationAsync(defenderId: string, attackerId: string | null, opts?: { heavy?: boolean; lethal?: boolean; crit?: boolean }): Promise<void> {
     this.playHitAnimation(defenderId, attackerId, opts);
     await this.waitSeconds(BATTLE_VISUAL_TIMING.hitAwaitSec);
   }
@@ -905,7 +906,8 @@ export class UnitRenderer extends Component {
    * 主將受擊。recoil 一律播（閃避時橋接層也呼叫它當等待節奏）；
    * 閃白與抖動只在真的受傷時播（silent = true 表示閃避，略過）。PROG-2-9401。
    */
-  public playGeneralHitAnimation(defenderFaction: Faction, _attackerId: string | null, opts?: { heavy?: boolean; lethal?: boolean; silent?: boolean }): void {
+  public playGeneralHitAnimation(defenderFaction: Faction, _attackerId: string | null, opts?: { heavy?: boolean; lethal?: boolean; silent?: boolean; crit?: boolean }): void {
+    if (opts?.crit) this.playCritAt(this.generalViews.get(defenderFaction)?.worldNode);
     const generalView = this.generalViews.get(defenderFaction);
     const defenderNode = generalView?.worldNode ?? null;
     if (!generalView || !defenderNode) return;
@@ -924,7 +926,7 @@ export class UnitRenderer extends Component {
     if (plan.screenShake) this.playHitScreenShake();
   }
 
-  public async playGeneralHitAnimationAsync(defenderFaction: Faction, attackerId: string | null, opts?: { heavy?: boolean; lethal?: boolean; silent?: boolean }): Promise<void> {
+  public async playGeneralHitAnimationAsync(defenderFaction: Faction, attackerId: string | null, opts?: { heavy?: boolean; lethal?: boolean; silent?: boolean; crit?: boolean }): Promise<void> {
     this.playGeneralHitAnimation(defenderFaction, attackerId, opts);
     await this.waitSeconds(BATTLE_VISUAL_TIMING.hitAwaitSec);
   }
@@ -1494,17 +1496,17 @@ export class UnitRenderer extends Component {
   }
 
   /** 攻擊特效試作掛鉤：武將走武器模板、小兵依風格；沒就緒或開關關閉回 false，呼叫端沿用舊特效 */
-  private tryAttackVfx(troopType: string, general: { id: string; role?: string; element?: string } | undefined, ax: number, ay: number, tx: number, ty: number, ratio: number, isArrow: boolean): boolean {
+  private tryAttackVfx(troopType: string, general: GeneralVfxInfo | undefined, ax: number, ay: number, tx: number, ty: number, ratio: number, isArrow: boolean): boolean {
     const style = attackStyleFor(troopType);
     const hit = troopType === 'general' && general ? this.attackVfx.playGeneral(general, ax, ay, tx, ty)
       : this.attackVfx.playTroop(style === 'generic' ? '' : style, ax, ay, tx, ty, ratio); // 槍／步／弓／盾／騎都走新特效，未知兵種退回舊特效
-    if (hit && isArrow) this.arrowShots.shoot(ax, ay, tx, ty);
+    if (hit && (isArrow || (troopType === 'general' && !!general && generalWeaponOf(general) === 'bow'))) this.arrowShots.shoot(ax, ay, tx, ty);
     return hit;
   }
 
-  private generalVfxInfo(faction: Faction): { id: string; role?: string; element?: string } | undefined {
-    const g = this.latestState?.getGeneral(faction) as unknown as { id: string; role?: string; element?: string } | undefined;
-    return g ? { id: g.id, role: g.role, element: g.element } : undefined;
+  private generalVfxInfo(faction: Faction): GeneralVfxInfo | undefined {
+    const g = this.latestState?.getGeneral(faction) as unknown as GeneralVfxInfo | undefined;
+    return g ? { id: g.id, role: g.role, element: g.element, troopAptitude: g.troopAptitude } : undefined;
   }
 
   /** 試作／QA：以指定武將 id 在場上兩位武將之間播一次攻擊（施法）特效，不動戰鬥狀態 */
@@ -1518,7 +1520,7 @@ export class UnitRenderer extends Component {
    * PROG-2-9353：攻擊特效。近戰播刀光（走 EffectSystem.playBlock，與受擊特效同一池）；弓兵飛箭（畫面層 Sprite 池）。
    * 一次攻擊最多一個特效；演出失敗不可影響戰鬥流程。
    */
-  private playAttackVfx(attackerNode: Node, troopType: string, targetPos: Vec3 | null, ratio = 0.67, general?: { id: string; role?: string; element?: string }): void {
+  private playAttackVfx(attackerNode: Node, troopType: string, targetPos: Vec3 | null, ratio = 0.67, general?: GeneralVfxInfo): void {
     if (!targetPos) return;
     try {
       const vfx = attackVfxFor(troopType);
@@ -1539,6 +1541,15 @@ export class UnitRenderer extends Component {
       const pos = new Vec3(from.x + (targetPos.x - from.x) * ratio, from.y + (targetPos.y - from.y) * ratio, from.z + (targetPos.z - from.z) * ratio);
       services().effect.playBlock(vfx.effectId, pos, undefined, 0.6);
     } catch (error) { console.warn('[UnitRenderer] 攻擊特效略過', error); }
+  }
+
+  /** 暴擊命中光：金色較大星形閃光畫在畫面層；沒就緒或特效關閉就略過，不影響戰鬥流程 */
+  private playCritAt(node: Node | null | undefined): void {
+    if (!node) return;
+    try {
+      const p = this.overlayPoint(node.worldPosition);
+      if (p) this.attackVfx.playCrit(p.x, p.y);
+    } catch (error) { console.warn('[UnitRenderer] 暴擊特效略過', error); }
   }
 
   /** 武將中招（閃避不呼叫）：Spine 武將播一次受擊後退 */
