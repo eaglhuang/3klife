@@ -243,6 +243,8 @@ export const EVENT_NAMES = {
   /** 主將精力變化（PROG-2-9432）：payload { faction, vitality, maxVitality, before }，HUD 即時刷新精力條 */
   GeneralVitalityChanged: "general-vitality-changed",
   GeneralSkillUsed:  "general-skill-used",
+  /** 火計／水計格子 hook（PROG-2-9960）：payload { kind: grid-fire | grid-water-ripple, lane, depth } */
+  TacticGridVfx: "tactic-grid-vfx",
   LastSpurtEntered: "last-spurt-entered",
   StaminaExhausted: "stamina-exhausted",
   TallySpiritInserted: "tally-spirit-inserted",

@@ -46,7 +46,7 @@ export const SKILL_DISPLAY_NAME: Record<string, string> = {
     'guan-yu-slash': '月牙刀斬（自動選最佳直線）',
     'lu-bu-rampage': '天下無雙（自動選最佳扇形）',
     'cao-cao-tactics': '兵不厭詐（自動鎖定前線）',
-    'zhao-yun-pierce': '龍魂突刺（自動貫穿最佳列）',
+    'zhao-yun-pierce': '龍膽·破軍（自動貫穿最佳列）',
     'zhuge-liang-storm': '諸葛風暴（自動選最大範圍）',
     'zhou-yu-inferno': '周瑜炎陣（自動點燃敵軍所在格）',
     'sun-quan-tide': '江潮列陣（自動掃蕩中心周邊）',

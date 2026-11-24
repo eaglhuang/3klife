@@ -79,6 +79,7 @@ import { evaluateInsight, type InsightDecision } from "../dialogue/NpcDialogueCa
 import { FriendshipService } from "../services/FriendshipService";
 import { DEFAULT_STORY_CONFIG, normalizeStoryConfig, STORY_CONFIG_JSON, type StoryConfigV1 } from "../../shared/story/StoryConfig";
 import { ITEM_CONFIG_JSON, normalizeItemConfig, DEFAULT_ITEM_CONFIG, type ItemConfigV1 } from "../../shared/item/ItemConfig";
+import { setBattleSkillNameTranslator } from "../../shared/BattleSkillPresentation";
 import { DEFAULT_SUPPORT_CARDS_CONFIG, normalizeSupportCards, SUPPORT_CARDS_JSON, type SupportCardsConfigV1 } from "../../shared/support/SupportCardConfig";
 import { DEFAULT_SUPPORT_RULES, normalizeSupportRules, SUPPORT_RULES_JSON, withSupportItems, type SupportRulesV1 } from "../../shared/support/SupportRules";
 import { ACADEMY_INHERIT_MARKS_JSON, configureAcademyInheritMarks, type AcademyInheritMarksConfig } from "../systems/nurture/AcademyInheritAndMarks";
@@ -240,6 +241,8 @@ export class ServiceLoader {
 
         this.battle.setEventSystem(this.event);
         this.game.setEventSystem(this.event);
+        // 戰場招式名走 i18n（battle.skill_name.<id>）；語系切換後 t() 即時反映
+        setBattleSkillNameTranslator((key) => this.i18n.t(key));
         this.effect.setup(this.pool);
         // ResourceManager 連動 MemoryManager，使所有資源載入/釋放都通報記憶體管理器
         this.resource.bindMemoryManager(this.memory);
