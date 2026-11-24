@@ -11,6 +11,7 @@ const {
   releaseReservedTaskId,
   reserveNextTaskId,
   reserveTaskId,
+  reserveTaskIdOrNext,
 } = require('../../lib/task-id-guard');
 const { createLockAdapter } = require('./lock-adapter');
 const { createLockAdapterConfig } = require('./lock-adapter-config');
@@ -65,8 +66,12 @@ class TaskAdapter {
     return reserveTaskId(this.projectRoot, taskId, agentName);
   }
 
-  releaseReservedTaskId(taskId, agentName) {
-    return releaseReservedTaskId(this.projectRoot, taskId, agentName);
+  reserveTaskIdOrNext(taskId, agentName) {
+    return reserveTaskIdOrNext(this.projectRoot, taskId, agentName);
+  }
+
+  releaseReservedTaskId(taskId, agentName, options = {}) {
+    return releaseReservedTaskId(this.projectRoot, taskId, agentName, options);
   }
 
   inspectTaskId(taskId) {

@@ -16924,5 +16924,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9975.md",
     "title": "[PROG-2-9975] 武將武器欄位依最新立繪重建",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3056",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9990.md",
+    "title": "[PROG-2-9990] 任務卡號跨 worktree／PR／commit 預約防撞",
+    "category": "task"
   }
 ]

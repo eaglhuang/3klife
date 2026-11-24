@@ -4,6 +4,9 @@
 const fs = require('fs');
 const path = require('path');
 
+// Local-flow test: keep remote/shared-ledger occupancy out of the real clone.
+process.env.TASK_ID_REMOTE_CHECK = '0';
+
 const projectRoot = path.resolve(__dirname, '..', '..');
 const tempRoot = path.join(projectRoot, 'temp', 'task-id-guard-flow');
 const taskCardDir = path.join(tempRoot, 'docs', 'agent-briefs', 'tasks');
