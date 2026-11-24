@@ -17385,6 +17385,119 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9739",
+      "title": "戰場攻擊特效：主將普攻依武器分音效、暴擊命中光、劍弓武將映射",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-24T20:49:08+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "(1) 主將普攻音效依刀／槍／劍／弓／法術分開，法術不再播刀聲；(2) 暴擊命中用金色較大星形閃光（critBurst 參數變體）加微頓幀；(3) 武將劍／弓模板依兵種適性推算映射（不新增 generals.json weapon 欄位）。不改戰場核心規則。",
+      "related": [
+        "PROG-2-9737"
+      ],
+      "depends": [],
+      "acceptance": [
+        "主將五種武器音效鍵各不相同；法術普攻不播 weapon（單元測試）",
+        "暴擊命中呼叫 playCrit 並帶微頓幀；探針截圖證明暴擊出現且與普通命中可區分，出現次數有記錄",
+        "武將推算可得劍與弓，全部武器都有模板；generals.json 無 weapon 欄位",
+        "tsc test 0 錯、單元測試通過、compute-gate quick、實跑建置與 playtest-online 通過"
+      ],
+      "deliverables": [
+        "assets/resources/data/attack-vfx.json",
+        "assets/scripts/battle/shared/GeneralWeapon.ts",
+        "assets/scripts/battle/shared/BattleAudio.ts",
+        "assets/scripts/battle/views/AttackVfxPlayer.ts",
+        "assets/scripts/battle/views/UnitRenderer.ts",
+        "assets/scripts/battle/views/BattleUIBridge.ts",
+        "assets/scripts/battle/views/BattlePresentationTiming.ts",
+        "assets/scripts/core/models/GeneralUnit.ts",
+        "tests/cc.mock.ts",
+        "tests/GeneralWeaponVfx.test.ts",
+        "tests/GeneralAttackSfx.test.ts"
+      ],
+      "notes": "2026-11-24 | 狀態: done | 驗證: 合併 origin/master 後 tsc 0、單元測試全過、compute-gate quick 通過、建置成功、playtest 12/12；暴擊實測 1 次（同場 7 次攻擊特效），截圖在 side-session-notes/crit-vfx-1124 | 變更: 暴擊命中光＋微頓幀、普攻依武器分音（刀槍弓法術）、劍弓模板接線；武器來源以 generals.json weapon 欄位（PROG-2-9955）為準，適性推算僅作缺欄位備援；目前 weapon 欄位全部 235 位都有值，劍實際 0 位、弓 1 位，需總PM複核 | 阻塞: 待補音檔（劍揮音、法術音）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9963",
+      "title": "學府入學候選只算子嗣（親生、義子、家臣子），成年家臣不算",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "bugfix",
+      "phase": "M9",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "LobbyScene._openAcademyFlow 的 candidateAges 取自全名冊，成年家臣讓導流媒人路徑走不到。改為純函式 academyEnrollCandidateAges，依家族登記表（FamilyService，非 spouse 成員）與結緣出生紀錄（breedingBirthRecords）篩子嗣，排除已歿與被俘。測試加在 tests/AcademyEmptyGuardView.test.ts。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-24 | 狀態: done | 驗證: tsc 0 錯 / run-cli 9488 全過 / compute-gate quick 4/4 | 變更: 新增 academyEnrollCandidateAges，LobbyScene 只改 candidateAges 幾行；親生子嗣未登記家族表，以出生紀錄補 | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
-  ]
+  ],
+  "summary": {
+    "done": 310,
+    "in_progress": 2,
+    "open": 86,
+    "total": 398
+  }
 }
