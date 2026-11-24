@@ -18,6 +18,8 @@ import { BattleSystem } from "../systems/BattleSystem";
 import { NetworkService } from "../systems/NetworkService";
 import { SyncManager } from "../systems/SyncManager";
 import { NpcMemoryAdapter } from "../dialogue/NpcMemoryAdapter";
+import { DialogueSystem } from "../dialogue/DialogueSystem";
+import { DIALOGUE_MOOD_RULES_JSON } from "../dialogue/DialogueContextBuilder";
 import { SceneManager } from "./SceneManager";
 import { GameManager } from "./GameManager";
 import { GameSession, InMemoryRosterStore } from "./GameSession";
@@ -188,6 +190,8 @@ export class ServiceLoader {
     public readonly npcDialogue = new NpcDialogueService();
     /** 玩家-武將互動記憶回寫 adapter：訂閱全域事件後 fire-and-forget 寫回 npc-brain。 */
     public readonly npcMemory = new NpcMemoryAdapter();
+    /** 武將台詞 v2：推導參數、本機快取、友誼事件反應（PROG-2-9964）；前端只呼叫中台，不碰 AI 金鑰 */
+    public readonly dialogue = new DialogueSystem();
     /** 音效系統：BGM、SFX、循環音效，含 50ms 防重複播放 */
     public readonly audio = new AudioSystem();
     /** 多國語系系統：t(key) 字串查詢 + 語系字型懶載入 / 卸載 */
@@ -263,6 +267,10 @@ export class ServiceLoader {
         this.network.setup(this.event);
         this.sync.setup(this.event, this.network);
         this.npcMemory.setup(this.event, this.npcDialogue, this.sync);
+        this.dialogue.setup(this.event, this.session, this.npcDialogue, () => this.sync.getMemorySaveId(), (generalId, text) => {
+            const name = this.session.roster.find((g) => g.id === generalId)?.name ?? generalId;
+            this.event.emit("SHOW_TOAST", { message: `${name}：${text}`, duration: 4 });
+        });
 
         // 長局主迴圈：名冊沿用 PlayerRosterService，存檔後端依平台選擇
         this.session.setEventEmitter(this.event);
@@ -565,6 +573,7 @@ export class ServiceLoader {
             loadSafe<Partial<AcademyEnrollRulesConfig>>(ACADEMY_ENROLL_RULES_JSON, configureAcademyEnrollRules),
             loadSafe<Partial<TroopLossRulesConfig>>(TROOP_LOSS_RULES_JSON, configureTroopLossRules),
             loadSafe<unknown>(STORY_CONFIG_JSON, (raw) => { this.storyConfig = normalizeStoryConfig(raw); this.localApi?.setStoryConfig(this.storyConfig); configureAcademyStories(this.storyConfig); }),
+            loadSafe<unknown>(DIALOGUE_MOOD_RULES_JSON, (raw) => { this.dialogue.setRules(raw); }),
             loadSafe<unknown>(FRIENDSHIP_ACTION_WEIGHTS_JSON, (raw) => { this.session.setFriendshipWeights(raw); }),
             loadSafe<unknown>(REWARD_CONFIG_JSON, (raw) => { this.rewardConfig = normalizeRewardConfig(raw); this.applyRewardConfig(); }),
             loadSafe<unknown>(QUEST_CONFIG_JSON, (raw) => { this.questConfig = normalizeQuestConfig(raw); this.localApi?.setQuestConfig(this.questConfig); }),

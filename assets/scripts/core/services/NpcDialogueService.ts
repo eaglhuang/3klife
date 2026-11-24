@@ -91,6 +91,14 @@ export interface NpcDialogueRequest {
     maxChars?: number;
     saveId?: string;
     memoryContext?: NpcGeneralMemoryContext | null;
+    /** v2（中台台詞庫）：schemaVersion=2 時以下欄位必須全部填齊，缺了中台回 422；由 DialogueContextBuilder 產生 */
+    schemaVersion?: number;
+    personality?: string;
+    mood?: string;
+    relationBucket?: number;
+    worldPhase?: string;
+    scene?: string;
+    interaction?: Record<string, unknown>;
 }
 
 export interface NpcDialogueResponse {
@@ -182,6 +190,15 @@ export class NpcDialogueService {
             maxChars: request.maxChars ?? 90,
             saveId: request.saveId,
             memoryContext: request.memoryContext ?? undefined,
+            ...(request.schemaVersion && request.schemaVersion >= 2 ? {
+                schemaVersion: request.schemaVersion,
+                personality: request.personality,
+                mood: request.mood,
+                relationBucket: request.relationBucket,
+                worldPhase: request.worldPhase,
+                scene: request.scene,
+                interaction: request.interaction,
+            } : {}),
         };
         UCUFLogger.info(LogCategory.DATA, '[NpcDialogueService] requestDialogue', payload);
         const response = await this._requestJson<NpcDialogueResponse>('POST', '/v1/npc/dialogue', payload);

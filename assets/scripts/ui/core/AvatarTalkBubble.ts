@@ -50,7 +50,8 @@ let _holdUntil = 0;
 
 const _picker = new AvatarTalkPicker({
     provider: () => _provider,
-    cacheLine: (generalId) => sharedNpcDialogueCache.latestFor(generalId, services().i18n.currentLocale),
+    // 先用中台 v2 台詞（心情、好感、天下大勢吻合的那句），沒有才退回舊的 AI 快取（PROG-2-9964）
+    cacheLine: (generalId) => services().dialogue.cachedLine(generalId, 'avatar-tap') ?? sharedNpcDialogueCache.latestFor(generalId, services().i18n.currentLocale),
     friendship: (generalId) => FriendshipService.getInstance().get(generalId),
     translate: (key) => services().i18n.t(key),
     random: () => services().session.randomSource(),
@@ -98,6 +99,7 @@ export function showAvatarTalk(anchor: Node, generalId: string): AvatarTalkResul
     ensureProvider();
     const result = _picker.speak(generalId);
     if (result.kind === 'cooldown') return result;
+    services().dialogue.prefetch(generalId, 'avatar-tap');
     const name = services().session.roster.find((general) => general.id === generalId)?.name;
     const text = name ? services().i18n.t('ui.avatarTalk.format', name, result.text) : result.text;
     presentBubble(anchor, text);

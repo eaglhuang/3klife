@@ -1,0 +1,712 @@
+{
+  "_comment": "PROG-2-9975 武將武器規則表。解析順序：overrides（名將覆寫，依最新立繪或演義名兵器）→ roleDefaults（定位預設）。generals.json 的 weapon 欄位為此表展開結果，GeneralWeapon.test.ts 驗證兩者一致。值域為 attack-vfx.json generalTemplates 鍵；雙劍→sword、戟→spear、扇／琴／笛／杖→cast、斧／錘／鞭→blade（模板尚缺 dual_sword／halberd／fan）。立繪與演義名兵器衝突時以立繪為準並記錄於 basis。",
+  "version": 1,
+  "roleDefaults": {
+    "Combat": "blade",
+    "Support": "cast"
+  },
+  "overrides": {
+    "cao-cao": {
+      "name": "曹操",
+      "weapon": "sword",
+      "basis": "立繪 v3：單長劍（持於身側，另一手空）",
+      "confidence": "中"
+    },
+    "liu-bei": {
+      "name": "劉備",
+      "weapon": "sword",
+      "basis": "文字：目錄：雙劍",
+      "confidence": "高"
+    },
+    "sun-quan": {
+      "name": "孫權",
+      "weapon": "sword",
+      "basis": "文字：目錄：直劍",
+      "confidence": "高"
+    },
+    "zhou-yu": {
+      "name": "周瑜",
+      "weapon": "sword",
+      "basis": "立繪 v2：單長劍（持劍與劍鞘）",
+      "confidence": "高"
+    },
+    "zhang-fei": {
+      "name": "張飛",
+      "weapon": "spear",
+      "basis": "文字：目錄：丈八蛇矛",
+      "confidence": "高"
+    },
+    "zhao-yun": {
+      "name": "趙雲",
+      "weapon": "spear",
+      "basis": "文字：目錄：長槍",
+      "confidence": "高"
+    },
+    "lu-bu": {
+      "name": "呂布",
+      "weapon": "spear",
+      "basis": "文字：目錄/色票：方天畫戟(戟→spear)",
+      "confidence": "高"
+    },
+    "dian-wei": {
+      "name": "典韋",
+      "weapon": "spear",
+      "basis": "文字：目錄：雙鐵戟(雙戟→spear)",
+      "confidence": "高"
+    },
+    "huang-zhong": {
+      "name": "黃忠",
+      "weapon": "bow",
+      "basis": "文字：目錄：弓手",
+      "confidence": "高"
+    },
+    "ma-chao": {
+      "name": "馬超",
+      "weapon": "spear",
+      "basis": "文字：目錄：長槍",
+      "confidence": "高"
+    },
+    "lu-xun": {
+      "name": "陸遜",
+      "weapon": "sword",
+      "basis": "文字：目錄：直劍",
+      "confidence": "高"
+    },
+    "taishi-ci": {
+      "name": "太史慈",
+      "weapon": "bow",
+      "basis": "總PM裁決：演義名將弓箭（立繪 v3 手持長槍、背弓，兩者並見）",
+      "confidence": "中"
+    },
+    "zhang-he": {
+      "name": "張郃",
+      "weapon": "spear",
+      "basis": "文字：目錄 v0004：長槍(色票舊稿為雙刀)",
+      "confidence": "中"
+    },
+    "yu-jin": {
+      "name": "于禁",
+      "weapon": "spear",
+      "basis": "立繪 v2：長槍",
+      "confidence": "高"
+    },
+    "cao-ang": {
+      "name": "曹昂",
+      "weapon": "sword",
+      "basis": "立繪 v2：單長劍",
+      "confidence": "高"
+    },
+    "xiahou-dun": {
+      "name": "夏侯惇",
+      "weapon": "spear",
+      "basis": "文字：目錄/色票：長槍",
+      "confidence": "高"
+    },
+    "xiahou-yuan": {
+      "name": "夏侯淵",
+      "weapon": "bow",
+      "basis": "立繪 v2：長弓，背箭袋",
+      "confidence": "高"
+    },
+    "jiang-wei": {
+      "name": "姜維",
+      "weapon": "spear",
+      "basis": "文字：目錄：直槍",
+      "confidence": "高"
+    },
+    "zhong-hui": {
+      "name": "鍾會",
+      "weapon": "sword",
+      "basis": "文字：目錄：直劍",
+      "confidence": "高"
+    },
+    "cheng-pu": {
+      "name": "程普",
+      "weapon": "spear",
+      "basis": "立繪 v2：蛇矛類長槍",
+      "confidence": "高"
+    },
+    "zhou-tai": {
+      "name": "周泰",
+      "weapon": "spear",
+      "basis": "立繪 v2：長槍",
+      "confidence": "高"
+    },
+    "xu-sheng": {
+      "name": "徐盛",
+      "weapon": "spear",
+      "basis": "文字：色票：長槍",
+      "confidence": "高"
+    },
+    "sun-ce": {
+      "name": "孫策",
+      "weapon": "spear",
+      "basis": "立繪 v2：長槍",
+      "confidence": "高"
+    },
+    "dong-zhuo": {
+      "name": "董卓",
+      "weapon": "blade",
+      "basis": "立繪 v2：大彎刀",
+      "confidence": "高"
+    },
+    "yuan-shao": {
+      "name": "袁紹",
+      "weapon": "cast",
+      "basis": "立繪 v2：金色令杖／權杖，腰佩劍",
+      "confidence": "低"
+    },
+    "ma-teng": {
+      "name": "馬騰",
+      "weapon": "bow",
+      "basis": "立繪 v2：長弓，背箭袋",
+      "confidence": "高"
+    },
+    "gongsun-zan": {
+      "name": "公孫瓚",
+      "weapon": "spear",
+      "basis": "立繪 v2：長槍",
+      "confidence": "高"
+    },
+    "liu-zhang": {
+      "name": "劉璋",
+      "weapon": "cast",
+      "basis": "立繪 v2：攤開卷軸",
+      "confidence": "高"
+    },
+    "han-sui": {
+      "name": "韓遂",
+      "weapon": "sword",
+      "basis": "立繪 v2：腰間佩劍，持物不明顯",
+      "confidence": "低"
+    },
+    "yuan-shu": {
+      "name": "袁術",
+      "weapon": "cast",
+      "basis": "立繪 v2：手持玉璽，另持短杖／令杖",
+      "confidence": "低"
+    },
+    "liu-yan": {
+      "name": "劉焉",
+      "weapon": "cast",
+      "basis": "立繪 v2：手持簡牘，文臣",
+      "confidence": "高"
+    },
+    "cao-pi": {
+      "name": "曹丕",
+      "weapon": "sword",
+      "basis": "複核立繪 v2：手持卷軸，腰佩長劍；目錄戰鬥圖為持劍斜斬",
+      "confidence": "低"
+    },
+    "cao-xiu": {
+      "name": "曹休",
+      "weapon": "sword",
+      "basis": "立繪 v2：佩劍，手按劍鞘",
+      "confidence": "中"
+    },
+    "sima-zhao": {
+      "name": "司馬昭",
+      "weapon": "sword",
+      "basis": "立繪 v2：佩劍，手持鞘柄",
+      "confidence": "中"
+    },
+    "sima-shi": {
+      "name": "司馬師",
+      "weapon": "cast",
+      "basis": "立繪 v2：持卷軸，腰有佩劍",
+      "confidence": "低"
+    },
+    "ma-zhong": {
+      "name": "馬忠",
+      "weapon": "bow",
+      "basis": "立繪 v2：手持弓，背後另有佩刀劍",
+      "confidence": "中"
+    },
+    "liu-feng": {
+      "name": "劉封",
+      "weapon": "sword",
+      "basis": "立繪 v2：單長劍（拔出握於手中）",
+      "confidence": "高"
+    },
+    "meng-da": {
+      "name": "孟達",
+      "weapon": "cast",
+      "basis": "立繪 v2：手持卷軸，另佩劍鞘",
+      "confidence": "低"
+    },
+    "zhang-yi": {
+      "name": "張嶷",
+      "weapon": "cast",
+      "basis": "立繪 v2：持卷軸，腰有佩劍",
+      "confidence": "低"
+    },
+    "cao-hong": {
+      "name": "曹洪",
+      "weapon": "sword",
+      "basis": "立繪 v2：腰間佩劍加圓盾，持物不明顯",
+      "confidence": "低"
+    },
+    "cao-zhang": {
+      "name": "曹彰",
+      "weapon": "sword",
+      "basis": "立繪 v2：手持劍／短杖類，並持卷軸狀物，不明顯",
+      "confidence": "低"
+    },
+    "man-chong": {
+      "name": "滿寵",
+      "weapon": "cast",
+      "basis": "立繪 v2：持卷軸文臣",
+      "confidence": "高"
+    },
+    "guo-huai": {
+      "name": "郭淮",
+      "weapon": "spear",
+      "basis": "立繪 v2：長槍",
+      "confidence": "高"
+    },
+    "chen-tai": {
+      "name": "陳泰",
+      "weapon": "sword",
+      "basis": "立繪 v2：腰間配劍，另手持卷軸",
+      "confidence": "低"
+    },
+    "wen-pin": {
+      "name": "文聘",
+      "weapon": "bow",
+      "basis": "立繪 v2：弩",
+      "confidence": "高"
+    },
+    "li-dian": {
+      "name": "李典",
+      "weapon": "sword",
+      "basis": "立繪 v2：長劍",
+      "confidence": "中"
+    },
+    "cheng-yu": {
+      "name": "程昱",
+      "weapon": "blade",
+      "basis": "立繪 v3：手持短棍／錘，依據是右手握粗短棒",
+      "confidence": "低"
+    },
+    "zhu-jun": {
+      "name": "朱治",
+      "weapon": "sword",
+      "basis": "立繪 v2：短彎刀／劍",
+      "confidence": "中"
+    },
+    "sun-huan": {
+      "name": "孫桓",
+      "weapon": "sword",
+      "basis": "立繪 v2：長劍",
+      "confidence": "高"
+    },
+    "sun-jun": {
+      "name": "孫峻",
+      "weapon": "sword",
+      "basis": "立繪 v2：腰佩短劍，武器不顯著",
+      "confidence": "低"
+    },
+    "lu-kang": {
+      "name": "陸抗",
+      "weapon": "sword",
+      "basis": "立繪 v2：雙手各持物，似短劍與劍鞘",
+      "confidence": "低"
+    },
+    "zhu-huan": {
+      "name": "朱桓",
+      "weapon": "sword",
+      "basis": "立繪 v2：彎刃劍",
+      "confidence": "中"
+    },
+    "han-xuan": {
+      "name": "韓玄",
+      "weapon": "cast",
+      "basis": "立繪 v2：持卷軸文臣",
+      "confidence": "高"
+    },
+    "jin-xuan": {
+      "name": "金旋",
+      "weapon": "cast",
+      "basis": "立繪 v2：持卷軸文臣",
+      "confidence": "中"
+    },
+    "liu-du": {
+      "name": "劉度",
+      "weapon": "cast",
+      "basis": "立繪 v2：持簡牘文臣",
+      "confidence": "高"
+    },
+    "wen-chou": {
+      "name": "文醜",
+      "weapon": "spear",
+      "basis": "立繪 v2：長槍",
+      "confidence": "高"
+    },
+    "zhang-bao-enemy": {
+      "name": "張寶",
+      "weapon": "cast",
+      "basis": "立繪 v2：法杖（錘頭杖）與符令",
+      "confidence": "中"
+    },
+    "zhang-liang-enemy": {
+      "name": "張梁",
+      "weapon": "spear",
+      "basis": "立繪 v2：長槍",
+      "confidence": "高"
+    },
+    "xu-shu": {
+      "name": "徐庶",
+      "weapon": "sword",
+      "basis": "立繪 v2：長劍（持劍下垂）",
+      "confidence": "高"
+    },
+    "zhang-xiu": {
+      "name": "張繡",
+      "weapon": "spear",
+      "basis": "立繪 v2：長槍",
+      "confidence": "高"
+    },
+    "zhang-xian": {
+      "name": "張羨",
+      "weapon": "cast",
+      "basis": "立繪 v2：持簡牘文臣",
+      "confidence": "高"
+    },
+    "liu-bao": {
+      "name": "劉豹",
+      "weapon": "bow",
+      "basis": "立繪 v2：長弓",
+      "confidence": "高"
+    },
+    "ke-bi-neng": {
+      "name": "軻比能",
+      "weapon": "bow",
+      "basis": "立繪 v2：長弓",
+      "confidence": "高"
+    },
+    "meng-huo": {
+      "name": "孟獲",
+      "weapon": "sword",
+      "basis": "立繪 v2：腰佩雙刀劍，背後可見，武器不顯著",
+      "confidence": "低"
+    },
+    "zhu-rong": {
+      "name": "祝融",
+      "weapon": "spear",
+      "basis": "立繪 v2：長槍",
+      "confidence": "高"
+    },
+    "dong-tu-na": {
+      "name": "董荼那",
+      "weapon": "spear",
+      "basis": "立繪 v2：長槍",
+      "confidence": "高"
+    },
+    "yuan-tan": {
+      "name": "袁譚",
+      "weapon": "sword",
+      "basis": "立繪 v2：長劍",
+      "confidence": "高"
+    },
+    "yuan-shang": {
+      "name": "袁尚",
+      "weapon": "sword",
+      "basis": "立繪 v2：腰佩劍，武器不顯著",
+      "confidence": "低"
+    },
+    "yuan-xi": {
+      "name": "袁熙",
+      "weapon": "sword",
+      "basis": "立繪 v2：腰佩劍",
+      "confidence": "中"
+    },
+    "gao-lan": {
+      "name": "高覽",
+      "weapon": "sword",
+      "basis": "立繪 v2：腰佩劍",
+      "confidence": "中"
+    },
+    "gao-gan": {
+      "name": "高幹",
+      "weapon": "sword",
+      "basis": "立繪 v2：腰佩劍",
+      "confidence": "中"
+    },
+    "shen-pei": {
+      "name": "審配",
+      "weapon": "sword",
+      "basis": "立繪 v2：腰佩劍",
+      "confidence": "中"
+    },
+    "han-hao": {
+      "name": "韓浩",
+      "weapon": "sword",
+      "basis": "立繪 v2：腰佩劍",
+      "confidence": "中"
+    },
+    "wang-yi": {
+      "name": "王異",
+      "weapon": "sword",
+      "basis": "立繪 v3：長劍",
+      "confidence": "高"
+    },
+    "huo-yi": {
+      "name": "霍弋",
+      "weapon": "sword",
+      "basis": "立繪 v2：腰佩劍",
+      "confidence": "中"
+    },
+    "luo-xian": {
+      "name": "羅憲",
+      "weapon": "sword",
+      "basis": "立繪 v2：腰佩劍，另手持小物",
+      "confidence": "低"
+    },
+    "gou-fu": {
+      "name": "句扶",
+      "weapon": "sword",
+      "basis": "立繪 v2：短彎刀／劍",
+      "confidence": "中"
+    },
+    "liu-chen": {
+      "name": "劉諶",
+      "weapon": "sword",
+      "basis": "立繪 v2：持鞘劍",
+      "confidence": "中"
+    },
+    "zhu-bao": {
+      "name": "朱褒",
+      "weapon": "spear",
+      "basis": "立繪 v2：長槍／矛",
+      "confidence": "高"
+    },
+    "li-hui": {
+      "name": "李恢",
+      "weapon": "cast",
+      "basis": "立繪 v2：持地圖卷軸文臣",
+      "confidence": "高"
+    },
+    "zhang-yi-shu": {
+      "name": "張翼（蜀）",
+      "weapon": "sword",
+      "basis": "立繪 v2：腰側持劍鞘／短劍，手持木牌",
+      "confidence": "低"
+    },
+    "ma-liang": {
+      "name": "馬良",
+      "weapon": "cast",
+      "basis": "立繪 v2：文臣持地圖卷與羽毛筆",
+      "confidence": "高"
+    },
+    "guan-suo": {
+      "name": "關索",
+      "weapon": "sword",
+      "basis": "立繪 v2：雙刀／雙彎刃（雙持，近似雙劍）",
+      "confidence": "中"
+    },
+    "chen-wu": {
+      "name": "陳武",
+      "weapon": "spear",
+      "basis": "立繪 v2：長柄叉槍加圓盾",
+      "confidence": "中"
+    },
+    "sun-yi": {
+      "name": "孫翊",
+      "weapon": "spear",
+      "basis": "立繪 v2：長槍",
+      "confidence": "高"
+    },
+    "zhu-ji": {
+      "name": "朱績",
+      "weapon": "sword",
+      "basis": "立繪 v2：手持書冊，背後／腰側長劍或刀鞘",
+      "confidence": "低"
+    },
+    "quan-cong": {
+      "name": "全琮",
+      "weapon": "sword",
+      "basis": "立繪 v2：腰側佩劍，另一手持小物",
+      "confidence": "中"
+    },
+    "lv-dai": {
+      "name": "呂岱",
+      "weapon": "blade",
+      "basis": "立繪 v2：大刀／長刀，拄地",
+      "confidence": "中"
+    },
+    "hu-zun": {
+      "name": "胡遵",
+      "weapon": "spear",
+      "basis": "立繪 v2：長戟／長柄槍，另一手持旗",
+      "confidence": "高"
+    },
+    "wang-ji": {
+      "name": "王基",
+      "weapon": "cast",
+      "basis": "立繪 v2：文官持書信，腰間佩劍",
+      "confidence": "低"
+    },
+    "sun-li": {
+      "name": "孫禮",
+      "weapon": "bow",
+      "basis": "文字：色票：短弓",
+      "confidence": "高"
+    },
+    "wang-hun": {
+      "name": "王渾",
+      "weapon": "cast",
+      "basis": "文字：色票：短節杖",
+      "confidence": "高"
+    },
+    "gongsun-yuan": {
+      "name": "公孫淵",
+      "weapon": "sword",
+      "basis": "複核立繪 v2：手持小印信，腰佩劍",
+      "confidence": "低"
+    },
+    "mu-lu-da-wang": {
+      "name": "木鹿大王",
+      "weapon": "cast",
+      "basis": "複核立繪 v2：象頭令杖（權杖）",
+      "confidence": "中"
+    },
+    "e-huan": {
+      "name": "鄂煥",
+      "weapon": "spear",
+      "basis": "文字：色票：窄刃短槍",
+      "confidence": "高"
+    },
+    "tian-chou": {
+      "name": "田疇",
+      "weapon": "cast",
+      "basis": "文字：色票：短木杖",
+      "confidence": "高"
+    },
+    "zhang-nan": {
+      "name": "張南",
+      "weapon": "spear",
+      "basis": "文字：色票：長槍",
+      "confidence": "高"
+    },
+    "fu-shou": {
+      "name": "傅肜",
+      "weapon": "sword",
+      "basis": "文字：色票：直刃長劍",
+      "confidence": "高"
+    },
+    "zhu-yi": {
+      "name": "朱異",
+      "weapon": "sword",
+      "basis": "複核立繪 v2：雙手空、腰佩雙劍／鞘（持刀以劍近似）",
+      "confidence": "中"
+    },
+    "chen-dao": {
+      "name": "陳到",
+      "weapon": "sword",
+      "basis": "複核立繪 v2：短直劍加方盾",
+      "confidence": "高"
+    },
+    "wu-ban": {
+      "name": "吳班",
+      "weapon": "bow",
+      "basis": "文字：色票：短反曲弓",
+      "confidence": "高"
+    },
+    "sun-hao": {
+      "name": "孫皓",
+      "weapon": "cast",
+      "basis": "立繪 v2：帝王持玉圭，無武器",
+      "confidence": "高"
+    },
+    "zhen-ji": {
+      "name": "甄姬",
+      "weapon": "sword",
+      "basis": "複核立繪 v4：手持細長劍垂下（色票舊稿竹笛被推翻）",
+      "confidence": "高"
+    },
+    "sun-shang-xiang": {
+      "name": "孫尚香",
+      "weapon": "bow",
+      "basis": "複核立繪 v6：金鳳長弓（色票舊稿直劍；v6 為 review-pending）",
+      "confidence": "中"
+    },
+    "zhang-chun-hua": {
+      "name": "張春華",
+      "weapon": "sword",
+      "basis": "立繪 v3：細長劍（持於身側，較不明顯）",
+      "confidence": "中"
+    },
+    "lu-ling-qi": {
+      "name": "呂玲綺",
+      "weapon": "spear",
+      "basis": "文字：目錄 v0004：戟類兵器(戟→spear；色票舊稿為直劍)",
+      "confidence": "中"
+    },
+    "ma-yun-lu": {
+      "name": "馬雲騄",
+      "weapon": "spear",
+      "basis": "立繪 v2：長槍",
+      "confidence": "高"
+    },
+    "dong-bai": {
+      "name": "董白",
+      "weapon": "blade",
+      "basis": "立繪 v2：流星錘／鏈錘（鏈球）",
+      "confidence": "中"
+    },
+    "sun-lu-ban": {
+      "name": "孫魯班",
+      "weapon": "cast",
+      "basis": "立繪 v2：持小盒／胭脂，無武器",
+      "confidence": "中"
+    },
+    "zhao-e": {
+      "name": "趙娥",
+      "weapon": "sword",
+      "basis": "立繪 v2：單手短刀／彎刀，近似單劍",
+      "confidence": "中"
+    },
+    "zhu-rong-furen": {
+      "name": "祝融夫人",
+      "weapon": "sword",
+      "basis": "立繪 v2：雙手飛刀／短彎刃（雙持，近似雙劍）",
+      "confidence": "低"
+    },
+    "bao-san-niang": {
+      "name": "鮑三娘",
+      "weapon": "spear",
+      "basis": "立繪 v2：長槍",
+      "confidence": "高"
+    },
+    "hua-man": {
+      "name": "花鬘",
+      "weapon": "blade",
+      "basis": "立繪 v3：雙彎鉤刃（雙持彎刀／輪刃）",
+      "confidence": "中"
+    },
+    "cai-shi": {
+      "name": "蔡氏",
+      "weapon": "cast",
+      "basis": "立繪 v2：手持毛筆／細棒，無武器",
+      "confidence": "低"
+    },
+    "cao-hua": {
+      "name": "曹華",
+      "weapon": "cast",
+      "basis": "立繪 v2：手持團扇／銅鏡",
+      "confidence": "中"
+    },
+    "cao-xian": {
+      "name": "曹憲",
+      "weapon": "cast",
+      "basis": "立繪 v3：摺扇",
+      "confidence": "高"
+    },
+    "xu-shi": {
+      "name": "徐氏",
+      "weapon": "sword",
+      "basis": "立繪 v2：手持一束飛刀／細針狀物，不明顯",
+      "confidence": "低"
+    }
+  }
+}
