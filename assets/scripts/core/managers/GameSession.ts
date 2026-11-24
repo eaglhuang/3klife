@@ -2593,7 +2593,7 @@ export class GameSession implements AcademyRecordPort {
         });
     }
 
-    /** 求親遭拒或冷落時寫入心智記憶（裁決 66：不扣忠誠或資源） */
+    /** 求親遭拒或冷落時寫入心智記憶（裁決 66：不扣忠誠或資源）並觸發友誼權重扣分（PROG-2-9955） */
     public recordMarriageRejected(generalId: string, partnerId?: string): void {
         recordMarriageRejectedMindEvent({
             mind: this._mindWrite(),
@@ -2601,6 +2601,7 @@ export class GameSession implements AcademyRecordPort {
             partnerId,
             season: this._clock.state.totalSeasonsElapsed,
         });
+        this.applyFriendshipAction('bonding_proposal_refused', generalId);
     }
 
     /** 世家系統是否已解鎖：第一位子嗣誕生後為真；讀取舊檔時有出生紀錄也視為已解鎖。 */
