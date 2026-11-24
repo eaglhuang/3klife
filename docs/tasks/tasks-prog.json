@@ -17789,6 +17789,44 @@
       ],
       "description": "效果說明（effectStatus）與類別標籤（categoryTag）由繁中字面值改為 i18n 鍵：battle.skill_effect.<battleSkillId>、battle.skill_category.<categoryId>；招式名鍵沿用 battle.skill_name.<id>。四語系補齊（zh-TW 維持原文）。",
       "notes": "2026-11-25 | 狀態: done | 驗證: tsc(tsconfig.test.json) 0；run-cli ALL PASS 9513 passed／3 skipped；CI atm-governance、ucuf-core pass；zh-TW playtest 12/12；ja playtest 12/12；en playtest 11/12（第08步頂欄季別字串 Year 1 與本卡無關）；戰鬥內技能面板與招式橫幅未拍到（自然觸發未達；window 注入 SkillUsed 事件後橫幅未出現）| 變更: 效果說明與類別標籤改 i18n，四語系補鍵，測試 | 阻塞: 證據缺口已列於 PR 本文；戰鬥 HUD 繁中殘留（部署提示、兵種名、計謀按鈕、攻×4）另開卡"
+    },
+    {
+      "doc_id": "doc_task_9972",
+      "id": "PROG-2-9972",
+      "title": "格子火焰 VFX 不播修正：格子 hook 改用有 prefab 的積木",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "bugfix",
+      "phase": "M0",
+      "created": "2026-11-25",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-25T03:21:21+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "戰場格子火計／水計特效實機不播。TacticVfxHooks 的格子 hook 所用積木只有 texPath、沒有 prefabPath，戰場預熱不會放進 PoolSystem，playBlock 回 null。修正：火改用 p3d_cfxr_fire_circle／p3d_cfxr_fire_crisp／p3d_fire，水暫代 p3d_cfxr_bubble／p3d_bubble_green（水紋積木尚無 prefab，待美術）。新增測試防回歸。",
+      "related": [
+        "PROG-2-9966"
+      ],
+      "depends": [],
+      "acceptance": [
+        "格子 hook 的 vfx-block 都有 prefabPath（測試覆蓋）",
+        "實機格子火焰特效可見（grid-vfx-1124 證據）"
+      ],
+      "deliverables": [
+        "TacticVfxHooks.ts 改用有 prefab 的積木",
+        "TacticGridVfx.test.ts 新增 prefabPath 回歸測試",
+        "PR #2603（e2fefcb19）"
+      ],
+      "notes": "2026-11-25 | 狀態: done | 驗證: 新增測試「格子 hook 的 vfx-block 都有 prefabPath」；PR #2603 已合併 (e2fefcb19)；實機證據 grid-vfx-1124 筆記夾 r3-fire-fire2-enemy-infantry-3@450-t450.png | 變更: 火計／水計格子 hook 改用有 prefab 的積木 | 阻塞: 水紋積木尚無 prefab，待美術提供後換回",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "doc": "docs/agent-briefs/tasks/PROG/PROG-2-9972.md"
+      }
     }
   ],
   "summary": {
