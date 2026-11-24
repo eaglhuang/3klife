@@ -17303,6 +17303,25 @@
       "notes": "2026-11-24 | 狀態: in-progress | 驗證: pending | 變更: 開卡並上鎖 | 阻塞: none"
     },
     {
+      "id": "PROG-2-9966",
+      "title": "大廳任務驚喜與期待感：派出泡泡台詞、季末回報卡疊、牆上進行中置頂、連鎖任務標示",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "feature",
+      "phase": "M9",
+      "created": "2026-11-25",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-25T10:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "related": ["HALL-15", "doc_spec_1178", "PROG-2-9965", "PROG-2-9964"],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "description": "接 9965 第二輪：派出時武將頭像旁冒台詞泡泡、返回結算彈任務回報卡（頭像、結果標籤、獎勵、友誼、台詞，大成功小特效；每季合併一疊可逐張點或一鍵略過）；台詞走台詞系統新增 mission_dispatch／mission_return 觸發點，中台不通退本機預設；牆上置頂最多 3 件進行中任務（頭像＋剩餘季數，超過 +N）；連鎖任務卡標「連續任務 n/m」，完成整串季報特別標出。",
+      "notes": "2026-11-25 | 狀態: in-progress | 驗證: pending | 變更: 開卡並上鎖 | 阻塞: none"
+    },
+    {
       "id": "PROG-2-9965",
       "title": "大廳任務補到規格樂趣：點牆直開詳情、結算接友誼、季報成敗標籤、情報解鎖提示",
       "owner": "ClaudeCode_claude-opus-5-5",
