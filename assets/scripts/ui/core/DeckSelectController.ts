@@ -37,11 +37,19 @@ export class DeckSelectController<H extends MentorHoldingsHostLike> {
     }
 
     public async mount(): Promise<void> {
-        this._host = await this._deps.mountHost(Array.from({ length: DECK_SELECT_SLOTS }, (_, slot) => ({
-            buttonId: `btnDeckCard${slot}`,
-            handler: () => { void this.clickCard(slot); },
-        })));
+        this._host = await this._deps.mountHost([
+            ...Array.from({ length: DECK_SELECT_SLOTS }, (_, slot) => ({
+                buttonId: `btnDeckCard${slot}`,
+                handler: () => { void this.clickCard(slot); },
+            })),
+            { buttonId: 'btnDeckClose', handler: () => { this.close(); } },
+        ]);
         this.refresh();
+    }
+
+    /** 關閉選卡視窗（關閉鈕、Esc、收起出征編組時共用） */
+    public close(): void {
+        if (this._host) this._host.node.active = false;
     }
 
     public refresh(): void {
