@@ -17226,6 +17226,31 @@
       "completed_by_agent": "ClaudeCode_claude-opus-5-5"
     },
     {
+      "id": "PROG-2-9954",
+      "title": "友誼值行為結算接進平常遊玩（第 8 框架實作）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "feature",
+      "phase": "M9",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-24T20:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "completed_at": "2026-11-24T21:30:00+08:00",
+      "completed_by_agent": "ClaudeCode_claude-opus-5-5",
+      "related": [
+        "PROG-2-9866"
+      ],
+      "depends": [
+        "PROG-2-9866"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "description": "權重表結算引擎與 FriendshipActionApplied 事件；出戰、請戰、建議、賞賜、剝奪、俘虜掛點；友誼依對象分記並存檔。",
+      "notes": "2026-11-24 | 狀態: done | 驗證: tsc 測試型別 0；單元測試 run-cli 全過（含 FriendshipActionEngine 12 項）；compute-gate standard 見 PR | 變更: FriendshipActionEngine、FriendshipService 配對表、GameSession 掛點（出戰／請戰／建議／賞賜／剝奪／俘虜）、存檔三欄位、權重表 status 改 active、規格書第 5 節 | 阻塞: 無；提親被拒由 Antigravity 呼叫 applyFriendshipAction"
+    },
+    {
       "doc_id": "",
       "id": "PROG-2-9955",
       "title": "騎兵部署落下特效、敵方紅方騎兵骨架與趙雲騎術 2/3 級騎馬外觀",
@@ -17236,7 +17261,7 @@
       "phase": "M0",
       "created": "2026-11-24",
       "created_by_agent": "ClaudeCode_claude-opus-5-5",
-      "started_at": "2026-11-24T20:52:51+08:00",
+      "started_at": "2026-11-24T21:17:25+08:00",
       "started_by_agent": "ClaudeCode_claude-opus-5-5",
       "chain_id": "",
       "chain_step": "",
@@ -17271,9 +17296,9 @@
     }
   ],
   "summary": {
-    "done": 305,
+    "done": 306,
     "in_progress": 1,
     "open": 86,
-    "total": 392
+    "total": 393
   }
 }
