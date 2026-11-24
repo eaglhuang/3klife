@@ -16888,5 +16888,29 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9913.md",
     "title": "[PROG-2-9913] 戰前編成實機驗收合併（卡 D）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3009",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9615.md",
+    "title": "[PROG-2-9615] 首年引導接進畫面與實機視角驗收",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3050",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9803.md",
+    "title": "[PROG-2-9803] 首戰自動戰 QA 計數修正與教學戰參數調校（60–90 秒目標）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3051",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9868.md",
+    "title": "[PROG-2-9868] 藍軍騎兵改用騎乘版 Spine 骨架（mount_horse_bay）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3052",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9871.md",
+    "title": "[PROG-2-9871] 轉蛋抽到的教官支援卡進支援卡清單與培育選卡（物品庫存 → 教官卡橋接）",
+    "category": "task"
   }
 ]

@@ -168,6 +168,8 @@ import { parseQaAcademyParams } from '../core/AcademyQaFastForward';
 import { fastForwardFamily, parseQaFamilyParams } from '../core/FamilyQaFastForward';
 import { AcademyApiClient } from '../core/AcademyApi';
 import { ancestralInheritToastText, newAncestralInheritViews } from '../core/AcademyInheritView';
+import { buildAcademyEmptyGuardViewState } from '../core/AcademyEmptyGuardView';
+import { academyEnrollRules } from '../../core/systems/nurture/AcademyEnrollRules';
 import { ClanShrineController } from '../core/ClanShrineController';
 import { OpeningOfferPopupController } from '../core/OpeningOfferPopupController';
 import { SeasonEventPopupController } from '../core/SeasonEventPopupController';
@@ -1795,6 +1797,34 @@ export class LobbyScene extends Component {
     private _openAcademyFlow(): void {
         const flow = this._academyFlow;
         if (!flow?.enrollHost) { this._showNotOpenYet(); return; }
+
+        const session = services().session;
+        const candidateAges = session.roster
+            .filter((g) => (g.status ?? '').toLowerCase() !== 'dead' && !g.captivity)
+            .map((g) => Math.floor(g.age ?? 0));
+        const minEnrollAge = academyEnrollRules().minEnrollAge;
+        const guard = buildAcademyEmptyGuardViewState({ candidateAges, minEnrollAge });
+
+        if (!guard.canOpenEnrollView) {
+            let message = guard.messageKey ? services().i18n.t(guard.messageKey, guard.messageParams?.minAge ?? minEnrollAge) : '學府尚未招募及冠門生';
+            if (guard.messageKey === 'ui.academy.empty_guard.too_young_desc') {
+                message = services().i18n.t(guard.messageKey, guard.messageParams?.currentAge ?? 0, guard.messageParams?.minAge ?? minEnrollAge, guard.messageParams?.yearsRemaining ?? 1);
+            }
+            services().event.emit('SHOW_TOAST', { message, duration: 3.5 });
+
+            if (guard.actionRedirectRoute === 'matchmaker') {
+                const offer = session.matchmakerOffer();
+                if (offer.open) {
+                    this._enqueueMatchmakerGuide({
+                        promptType: 'first-visit',
+                        candidates: offer.candidates,
+                        remaining: offer.remaining,
+                    });
+                }
+            }
+            return;
+        }
+
         void flow.openFromMenu();
     }
 

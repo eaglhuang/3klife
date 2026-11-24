@@ -1,34 +1,4 @@
 {
-  "audit_source": "artifacts/ui-source/button-family-screen-audit-2026-03-31.csv",
-  "id_schema": "{domain}-{agent}-{serial4}",
-  "task_template": {
-    "status": "所有任務都必須明確標示狀態、owner 與 type。",
-    "workflow": "新增或調整任務時，需同步 keep、brief、相關規格與 audit 證據來源。",
-    "started_at": "進入 in-progress 時必填 RFC3339 時間戳記。",
-    "started_by_agent": "進入 in-progress 時必填實際接手的 Agent 名稱。",
-    "lock_rule": "任務一旦標為 in-progress，必須同步補上 started_at / started_by_agent，避免重複接手。",
-    "notes_template": "YYYY-MM-DD | 狀態: <done|in-progress|blocked> | 驗證: <command/result> | 變更: <summary> | 阻塞: <none or reason>",
-    "commit_rule": "若 commit 僅處理單一 bug，請使用 bug commit 格式；其他工作維持一般提交訊息。",
-    "bug_commit_format": "[bug][模組] Bug修正: 摘要 [AgentX]",
-    "ui_workflow_rule": "For new UI work, default to: choose template family -> fill content contract -> apply skin fragment -> run smoke/preview -> backwrite formal docs.",
-    "ui_task_card_template_path": "docs/agent-briefs/UI-task-card-template.md",
-    "ui_checklist_fields": [
-      "template_family",
-      "content_contract",
-      "skin_fragments",
-      "smoke_route",
-      "docs_backwritten"
-    ],
-    "ui_notes_rule": "UI task notes should mention template family, content contract, skin fragment, smoke route, and formal docs backwrite status."
-  },
-  "shard": "PROG",
-  "generated": "2026-04-06",
-  "summary": {
-    "done": 296,
-    "in_progress": 0,
-    "open": 89,
-    "total": 385
-  },
   "tasks": [
     {
       "id": "PROG-1-0001",
@@ -17213,6 +17183,5 @@
       ],
       "notes": "2026-11-24 | 狀態: in-progress（目標未達，未合併） | 驗證: 基準 20 場 55%（11/20）平均 77.6 秒；第一輪 HP0.3 8隊 65%（13/20）平均 73.6 秒；第二輪 HP0.3 6隊 100%（20/20）平均 78.2 秒（最候選）；第三輪 HP0.15 6隊 95%（19/20）平均 90.9 秒。時長皆約 8～9 秒／回合，勝場多跑滿 10 回合，40～60 秒未達 | 變更: Constants.tutorialEnemyDeployByTurn 8隊→6隊 [0,1,1,1,1,1,1]、tutorialEnemyGeneralHpRatio 0.5→0.3（encounters.json 未改）；未開 PR、未合併 | 阻塞: 40～60 秒目標需總PM 裁決：縮短教學回合上限（規則／節奏變更）或加快推進演出；數據見 side-session-notes/first-battle-tuning-1124.md"
     }
-  ],
-  "updated": "2026-11-23T16:27:44.175Z"
+  ]
 }
