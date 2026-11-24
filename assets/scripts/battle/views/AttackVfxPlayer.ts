@@ -28,6 +28,7 @@
  * Unity 對照：一個以程式繪製、Additive 材質的 LineRenderer／Mesh 特效管理器；attack-vfx.json 即 ScriptableObject。
  */
 import { Color, gfx, Graphics, JsonAsset, Material, Node, resources } from 'cc';
+import { buildGeneralWeaponTable, resolveGeneralWeapon, weaponTemplateKeys } from '../shared/GeneralWeapon';
 
 export interface AtkPalette { main: string; glow: string; core: string; accent: string }
 type Params = Record<string, number | string | AtkPalette>;
@@ -67,7 +68,7 @@ export interface AttackVfxConfig {
   fallback: { weaponByRole: Record<string, string>; defaultWeapon: string; elementPalettes: Record<string, AtkPalette>; defaultPalette: AtkPalette };
 }
 export type AttackVfxTroop = 'slash' | 'thrust' | 'bow' | 'shield' | 'charge';
-export interface GeneralVfxInfo { id: string; role?: string; element?: string }
+export interface GeneralVfxInfo { id: string; role?: string; element?: string; weapon?: string }
 
 /** 量測用：效能報告與單元測試讀取（也掛在 globalThis.__ATK_VFX_STATS__） */
 export const attackVfxStats = { activeFx: 0, particles: 0, peakFx: 0, peakParticles: 0, primitives: 0, drawOps: 0, peakDrawOps: 0, played: 0, skipped: 0 };
@@ -127,12 +128,30 @@ export function isAttackVfxEnabled(cfg: AttackVfxConfig | null): boolean {
   return cfg.enabled;
 }
 
-/** 依 profile → 角色 → 元素解析武將的武器模板、代表色與獨特細節（量產：沒設定的武將自動有一套） */
+/** 武器表（generals.json weapon 欄位，id → 武器模板鍵）；讀到前為空表，呼叫端退回 profile／角色推算 */
+const generalWeaponById = new Map<string, string>();
+let generalWeaponsLoading = false;
+/** 讀 resources/data/generals.json 建武器表（只做一次；武將設定本來就由戰場載入，沿用快取不另佔記憶體） */
+function ensureGeneralWeapons(cfg: AttackVfxConfig): void {
+  if (generalWeaponsLoading || generalWeaponById.size > 0) return;
+  generalWeaponsLoading = true;
+  resources.load('data/generals', JsonAsset, (err, asset) => {
+    if (err || !asset || !Array.isArray(asset.json)) { generalWeaponsLoading = false; return; }
+    const table = buildGeneralWeaponTable(asset.json as Array<{ id?: string; weapon?: string | null }>, weaponTemplateKeys(cfg.generalTemplates));
+    table.forEach((w, id) => generalWeaponById.set(id, w));
+  });
+}
+
+/** 依 weapon 欄位 → profile → 角色推算解析武將的武器模板；代表色與獨特細節仍走 profile／元素（量產：沒設定的武將自動有一套） */
 export function resolveGeneralVfx(cfg: AttackVfxConfig, g: GeneralVfxInfo): { weapon: string; palette: AtkPalette; signature: string } {
   const prof = cfg.generalProfiles[g.id];
-  if (prof) return { weapon: prof.weapon, palette: prof.palette, signature: prof.signature ?? '' };
+  const weapon = resolveGeneralWeapon(
+    { weapon: g.weapon, profileWeapon: prof?.weapon, role: g.role },
+    cfg.fallback,
+    weaponTemplateKeys(cfg.generalTemplates),
+  );
+  if (prof) return { weapon, palette: prof.palette, signature: prof.signature ?? '' };
   const fb = cfg.fallback;
-  const weapon = (g.role && fb.weaponByRole[g.role]) || fb.defaultWeapon;
   return { weapon, palette: (g.element && fb.elementPalettes[g.element]) || fb.defaultPalette, signature: '' };
 }
 
@@ -214,7 +233,8 @@ export class AttackVfxPlayer {
   public playGeneral(info: GeneralVfxInfo, ax: number, ay: number, bx: number, by: number): boolean {
     const cfg = getAttackVfxConfig();
     if (!cfg || !isAttackVfxEnabled(cfg)) return false;
-    const r = resolveGeneralVfx(cfg, info);
+    ensureGeneralWeapons(cfg);
+    const r = resolveGeneralVfx(cfg, { ...info, weapon: info.weapon ?? generalWeaponById.get(info.id) });
     const tpl = cfg.generalTemplates[r.weapon];
     if (!tpl) return false;
     const sig = r.signature ? cfg.signatures[r.signature] ?? null : null;
