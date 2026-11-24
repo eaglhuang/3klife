@@ -1,13 +1,14 @@
 // @spec-source → 新手開場規格書.md §6、§7.2、§8
 import type { GeneralConfig } from '../models/GeneralUnit';
 import type { StarterYouthConfig } from './StarterYouthService';
+import { isOpeningHeroChoiceId, type OpeningHeroChoiceId } from './StarterHeroChoiceService';
 
 export const STARTER_GENERAL_IDS = ['zhang-fei', 'wei-yan', 'xiahou-dun', 'zhang-he', 'sun-ce', 'gan-ning'] as const;
 export type StarterGeneralId = typeof STARTER_GENERAL_IDS[number];
 /** 預設核心（沒指定時）：張飛是真實資料中六人唯一 legendary(SSR)，保留原數值與因子。 */
 export const STARTER_CORE_GENERAL_ID: StarterGeneralId = 'zhang-fei';
 export interface StarterRosterOptions {
-    coreGeneralId?: StarterGeneralId;
+    coreGeneralId?: StarterGeneralId | OpeningHeroChoiceId;
     /** 開局紅顏（OpeningBeauty 抽出）：排在六位名將之後入名冊，讓第一次結緣有母方。 */
     beautyGeneralId?: string;
     /** 宿命轉蛋抽到的整包武將；沒給時沿用六位初始名將。必須包含核心主將 */
@@ -33,9 +34,17 @@ function copyValue<T>(value: T): T {
 /** 只選資料表既有角色並深複製；缺角色／必要欄位時報錯，不補數字、因子或祖先。 */
 export function buildStarterRoster(generals: readonly GeneralConfig[], options: StarterRosterOptions = {}): GeneralConfig[] {
     const coreId = options.coreGeneralId ?? STARTER_CORE_GENERAL_ID;
-    if (!STARTER_GENERAL_IDS.some(id => id === coreId)) throw new Error('[StarterRoster] 核心主將不在六位初始名將內');
+    const isStarter = STARTER_GENERAL_IDS.some(id => id === coreId);
+    const isOpeningChoice = isOpeningHeroChoiceId(coreId);
+    if (!isStarter && !isOpeningChoice) throw new Error('[StarterRoster] 核心主將不在六位初始名將或開局三選一清單內');
     const ids: string[] = [...(options.rosterIds ?? STARTER_GENERAL_IDS)];
-    if (!ids.includes(coreId)) throw new Error('[StarterRoster] 核心主將不在這次的名冊內');
+    if (!ids.includes(coreId)) {
+        if (isOpeningChoice) {
+            ids.unshift(coreId);
+        } else {
+            throw new Error('[StarterRoster] 核心主將不在這次的名冊內');
+        }
+    }
     if (options.beautyGeneralId && !ids.includes(options.beautyGeneralId)) ids.push(options.beautyGeneralId);
     const roster = ids.map(id => {
         const matches = generals.filter(general => general.id === id);

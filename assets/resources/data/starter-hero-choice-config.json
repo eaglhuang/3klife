@@ -1,0 +1,17 @@
+{
+  "defaultPickId": "zhao-yun",
+  "candidates": [
+    {
+      "id": "zhao-yun",
+      "roleTag": "勇武衝鋒"
+    },
+    {
+      "id": "guan-yu",
+      "roleTag": "義氣猛將"
+    },
+    {
+      "id": "zhuge-liang",
+      "roleTag": "神機妙算"
+    }
+  ]
+}
