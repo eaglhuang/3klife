@@ -17897,6 +17897,45 @@
         "summary": "",
         "doc": "docs/agent-briefs/tasks/PROG/PROG-2-9997.md"
       }
+    },
+    {
+      "doc_id": "doc_task_9995",
+      "id": "PROG-2-9995",
+      "title": "戰場單位倒下／被擊殺演出（漫畫式、無血腥）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "feature",
+      "phase": "M0",
+      "created": "2026-11-25",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-25T04:10:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "小兵與武將倒下時播漫畫式演出（白煙、小星星、衝擊線、短字樣），武將略強；只加表現層，不改戰鬥結算。AttackVfxPlayer 新增 defeatBurst，UnitRenderer.playDeath 掛接，i18n 四語。",
+      "related": [
+        "PROG-2-9972"
+      ],
+      "depends": [],
+      "acceptance": [
+        "小兵與武將倒下實機看得到煙與星（含出現次數）",
+        "tsc 0 錯、run-cli 全過、compute-gate quick"
+      ],
+      "deliverables": [
+        "AttackVfxPlayer defeatBurst／playDefeat",
+        "UnitRenderer.playDefeatComic",
+        "i18n 四語 battle.defeat.*",
+        "tests/DefeatVfx.test.ts"
+      ],
+      "notes": "2026-11-25 | 狀態: done | 驗證: tsc(tsconfig.test.json) 0；run-cli ALL PASS 9535 passed／3 skipped；compute-gate quick 4/4；工作樹 web build（exit 36）＋playtest-online＋探針：小兵倒下 4 次，每次探針普查見「撲通！」字樣與 AttackVfx 節點，衝擊線 24、小星星 12 條記錄；武將分支因場上無主將化身單位，改直接呼叫 playDefeatComic，記錄星 6、衝擊線、白煙節點 cfxr_smoke_white 1、字樣「敗退！」；截圖在筆記夾 defeat-vfx-1125 | 變更: AttackVfxPlayer 新增 defeatBurst／playDefeat、UnitRenderer.playDefeatComic、FloatText defeat、i18n 四語 battle.defeat.*、tests/DefeatVfx.test.ts | 阻塞: 武將截圖時機沒對準效果、星星在白光下不明顯，待調；playtest 的 lobby 任務板／季報遮罩擋點（非本卡）需探針暫時隱藏 HallMissionReportStack／SeasonChronicleHost 才能進戰場；第 06／07／11 步仍失敗（大廳既有問題）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "doc": "docs/agent-briefs/tasks/PROG/PROG-2-9995.md"
+      }
     }
   ],
   "summary": {

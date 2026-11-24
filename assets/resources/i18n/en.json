@@ -1286,5 +1286,7 @@
   "battle.skill_category.charge": "Charge",
   "battle.skill_category.awe": "Awe",
   "battle.skill_category.breakthrough": "Breakthrough",
-  "battle.skill_category.invincible": "Invincible"
+  "battle.skill_category.invincible": "Invincible",
+  "battle.defeat.troop": "Poof!",
+  "battle.defeat.general": "Defeated!"
 }
