@@ -17303,6 +17303,25 @@
       "notes": "2026-11-24 | 狀態: in-progress | 驗證: pending | 變更: 開卡並上鎖 | 阻塞: none"
     },
     {
+      "id": "PROG-2-9966",
+      "title": "大廳任務驚喜與期待感：派出泡泡台詞、季末回報卡疊、牆上進行中置頂、連鎖任務標示",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "feature",
+      "phase": "M9",
+      "created": "2026-11-25",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-25T10:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "related": ["HALL-15", "doc_spec_1178", "PROG-2-9965", "PROG-2-9964"],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "description": "接 9965 第二輪：派出時武將頭像旁冒台詞泡泡、返回結算彈任務回報卡（頭像、結果標籤、獎勵、友誼、台詞，大成功小特效；每季合併一疊可逐張點或一鍵略過）；台詞走台詞系統新增 mission_dispatch／mission_return 觸發點，中台不通退本機預設；牆上置頂最多 3 件進行中任務（頭像＋剩餘季數，超過 +N）；連鎖任務卡標「連續任務 n/m」，完成整串季報特別標出。",
+      "notes": "2026-11-25 | 狀態: done | 驗證: tsc 測試設定 0 錯、單元測試 9517 全過、compute-gate quick/standard 通過、網頁建置實點（派出泡泡、牆上置頂、回報卡一疊、下一張／全部略過）| 變更: 派出台詞泡泡、季末回報卡一疊、牆上進行中置頂、連續任務標記與完結標示；新增台詞情境 mission-dispatch／mission-return／mission-return-bad | 阻塞: none"
+    },
+    {
       "id": "PROG-2-9965",
       "title": "大廳任務補到規格樂趣：點牆直開詳情、結算接友誼、季報成敗標籤、情報解鎖提示",
       "owner": "ClaudeCode_claude-opus-5-5",
@@ -17738,6 +17757,38 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "id": "PROG-2-9962",
+      "title": "戰場招式效果說明與類別標籤走 i18n（effectStatus／categoryTag → battle.skill_effect／battle.skill_category）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "feature",
+      "phase": "M9",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-24T14:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "related": [
+        "PROG-2-9327",
+        "PROG-2-9955"
+      ],
+      "depends": [],
+      "acceptance": [
+        "zh-TW 顯示文字與改前一致",
+        "zh-CN／en／ja 皆補齊 battle.skill_effect.* 與 battle.skill_category.*，en 無漢字殘留",
+        "tests/BattleSkillNames.test.ts 鍵齊全與解析測試通過",
+        "tsc 錯誤數 0；單元測試全過",
+        "實跑 en／ja 截圖證明技能面板與橫幅不再中英混雜"
+      ],
+      "deliverables": [
+        "assets/scripts/shared/BattleSkillPresentation.ts",
+        "assets/resources/i18n/{zh-TW,zh-CN,en,ja}.json",
+        "tests/BattleSkillNames.test.ts"
+      ],
+      "description": "效果說明（effectStatus）與類別標籤（categoryTag）由繁中字面值改為 i18n 鍵：battle.skill_effect.<battleSkillId>、battle.skill_category.<categoryId>；招式名鍵沿用 battle.skill_name.<id>。四語系補齊（zh-TW 維持原文）。",
+      "notes": "2026-11-25 | 狀態: done | 驗證: tsc(tsconfig.test.json) 0；run-cli ALL PASS 9513 passed／3 skipped；CI atm-governance、ucuf-core pass；zh-TW playtest 12/12；ja playtest 12/12；en playtest 11/12（第08步頂欄季別字串 Year 1 與本卡無關）；戰鬥內技能面板與招式橫幅未拍到（自然觸發未達；window 注入 SkillUsed 事件後橫幅未出現）| 變更: 效果說明與類別標籤改 i18n，四語系補鍵，測試 | 阻塞: 證據缺口已列於 PR 本文；戰鬥 HUD 繁中殘留（部署提示、兵種名、計謀按鈕、攻×4）另開卡"
     }
   ],
   "summary": {

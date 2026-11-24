@@ -54,6 +54,28 @@ export class DialogueSystem {
         return { kind: 'DISPOSABLE_CACHE', generalId, text, evidenceRefs: [], fallbackUsed: false, provider: 'dialogue-v2', model: null, cachedAtMs: Date.now() };
     }
 
+    /**
+     * 任務派出／返回的台詞（PROG-2-9966）：本機快取有就立即回；沒有才問中台，最多等 timeoutMs。
+     * 中台不通、參數推不齊、逾時一律回 null，由呼叫端靜默退回本機預設台詞。
+     */
+    public async missionLine(generalId: string, contextKey: string, timeoutMs: number, scene = 'lobby'): Promise<string | null> {
+        const requester = this._requester;
+        if (!requester) return null;
+        const input = { generalId, contextKey, scene };
+        try {
+            const cached = requester.peek(input);
+            if (cached) return cached;
+            let timer: ReturnType<typeof setTimeout> | undefined;
+            const result = await Promise.race([
+                requester.fetch(input),
+                new Promise<null>((resolve) => { timer = setTimeout(() => resolve(null), timeoutMs); }),
+            ]).finally(() => { if (timer) clearTimeout(timer); });
+            return result && result.kind === 'line' && result.text.trim() ? result.text.trim() : null;
+        } catch {
+            return null;
+        }
+    }
+
     /** 背景向中台補句（快取已滿或參數不齊時什麼都不做），供「下次點擊才用」的觸發點 */
     public prefetch(generalId: string, contextKey: string, scene?: string): void {
         this._requester?.prefetch({ generalId, contextKey, ...(scene ? { scene } : {}) });

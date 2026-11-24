@@ -49,12 +49,14 @@ export function tacticVfxHooks(input: TacticVfxInput): TacticVfxHook[] {
 export const WATER_TACTIC_IDS: readonly string[] = Object.freeze(['sun-quan-tide']);
 
 /**
- * 格子特效用的 vfx-block 組合（只用 vfx-block-registry 既有的 id，不新增資源）。
- * 火：火環波＋爆發＋火焰粒子；水：衝擊環＋柔光。
+ * 格子特效用的 vfx-block 組合。必須是「有 prefabPath」的積木：戰場預熱只把有 prefab 的積木放進 PoolSystem，
+ * 只有 texPath 的積木（fire_ringwave 等）在 playBlock 會回 null、格子特效不播（PROG-2-9972 根因）。
+ * 火：三款火焰粒子 prefab（CFXR 火圈／清晰火焰、火焰 fire01）。
+ * 水：暫代（待美術確認）——目前用氣泡 prefab 代替水紋；水紋積木尚無 prefab。
  */
 export const TACTIC_GRID_VFX_BLOCKS: Readonly<Record<TacticGridHookKind, readonly string[]>> = Object.freeze({
-    'grid-fire': Object.freeze(['fire_ringwave', 'fire_burst', 'fire_particles']),
-    'grid-water-ripple': Object.freeze(['impact_ring', 'mep_glow_soft_alt']),
+    'grid-fire': Object.freeze(['p3d_cfxr_fire_circle', 'p3d_cfxr_fire_crisp', 'p3d_fire']),
+    'grid-water-ripple': Object.freeze(['p3d_cfxr_bubble', 'p3d_bubble_green']),
 });
 
 export type TacticGridHookKind = 'grid-fire' | 'grid-water-ripple';

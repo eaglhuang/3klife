@@ -21,6 +21,7 @@ export interface SpawnInput {
     /** 連鎖指定期限（季數，覆寫 timing.expireSeasons） */
     expireSeasons?: number;
     chainFrom?: string;
+    chainDepth?: number;
 }
 
 export function createMissionInstance(input: SpawnInput, _balance: MissionBalance = DEFAULT_MISSION_BALANCE): MissionInstance {
@@ -37,6 +38,7 @@ export function createMissionInstance(input: SpawnInput, _balance: MissionBalanc
         intel, reconCount: 0, waited: false, status: 'OPEN',
     };
     if (input.chainFrom) inst.chainFrom = input.chainFrom;
+    if (input.chainDepth !== undefined && input.chainDepth >= 2) inst.chainDepth = Math.floor(input.chainDepth);
     return inst;
 }
 

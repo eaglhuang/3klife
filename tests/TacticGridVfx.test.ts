@@ -111,5 +111,15 @@ export function createTacticGridVfxSuite(): TestSuite {
         }
     });
 
+    suite.test('格子 hook 的 vfx-block 都有 prefabPath（只有 texPath 的積木不會進 PoolSystem，playBlock 會回 null）', () => {
+        const byId = new Map(VFX_BLOCK_REGISTRY.map((block) => [block.id, block] as const));
+        for (const kind of Object.keys(TACTIC_GRID_VFX_BLOCKS) as (keyof typeof TACTIC_GRID_VFX_BLOCKS)[]) {
+            for (const id of TACTIC_GRID_VFX_BLOCKS[kind]) {
+                const block = byId.get(id);
+                assert.isTrue(!!block && !!block.prefabPath, `${kind} 的 ${id} 沒有 prefabPath，格子特效不會播出`);
+            }
+        }
+    });
+
     return suite;
 }

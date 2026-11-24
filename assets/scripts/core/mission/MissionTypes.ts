@@ -221,6 +221,8 @@ export interface MissionInstance {
     status: 'OPEN' | 'ACTIVE';
     dispatch?: MissionDispatchLock;
     chainFrom?: string;
+    /** 連鎖第幾段（連鎖生出的任務才有；由上一段 +1；沒有＝不是連鎖，或舊存檔） */
+    chainDepth?: number;
     /** 舊存檔（v1）進行中任務遷移而來：結算走「依舊成功率、舊固定獎勵」的相容分支，不重擲新結果樹 */
     legacy?: MissionLegacyFlat;
 }
@@ -242,6 +244,7 @@ export interface MissionPendingSpawn {
     intel?: number;
     expireSeasons?: number;
     chainFrom?: string;
+    chainDepth?: number;
 }
 
 /** 武將被任務結果影響的狀態：到該季之前不可派 */

@@ -16,3 +16,5 @@ export * from './MissionSave';
 export * from './service/MissionPorts';
 export * from './service/OfflineMissionService';
 export * from './MissionMemory';
+export * from './MissionChain';
+export * from './MissionReactionCards';
