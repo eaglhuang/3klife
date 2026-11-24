@@ -17205,6 +17205,27 @@
       "notes": "2026-11-24 | 狀態: done | 驗證: 建置 EXIT 36（index.html 存在）；tsc 0 錯誤；單元測試 ALL PASS 9444；compute-gate quick 通過；playtest-online 12/12 步通過（console error 0、pageerror 0）；實跑探針：A 開選卡器、B 真點 btnDeckClose 關閉、C 重開後按 Esc 關閉、E 同開選卡與結緣後 _closeSortieSetup 收起兩者 host 皆 inactive（截圖在 side-session-notes/PROG-2-9952） | 變更: lobby-deck-select-main 新增 btnDeckClose；DeckSelectController 綁定關閉並 close()；LobbyScene Esc 清單納入 deck／lead host，_closeSortieSetup 收起兩者；DeckSelectController 測試更新 | 阻塞: none（出征編組實際開啟未在探針中走到，收起以直接呼叫 _closeSortieSetup 驗證）"
     },
     {
+      "id": "PROG-2-9953",
+      "title": "「推進一季」鈕移到大廳右下角（手機拇指位置，X-01 裁決）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "feature",
+      "phase": "M9",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-24T20:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "description": "使用者裁決 X-01：推進一季鈕放大廳右下角；信箱入口讓位到其左側。",
+      "notes": "2026-11-24 | 狀態: done | 驗證: tsc 0 錯誤；單元測試 ALL PASS 9445；compute-gate standard 通過（僅既有 import 邊界警告）；建置 EXIT 36；playtest-online 12/12 步通過（真滑鼠點右下角推進一季鈕換季成功，探針 back 世界座標 1696..1896×24..108、與底欄／許願祭壇／信箱零重疊）；截圖 side-session-notes/PROG-2-9953/08-lobby-bottom-right.png | 變更: back 移出頂欄改右下角 right24 bottom24 200x84、字級 30；頂欄資源列加 resource-row id，新手引導 fate 錨點改指 resource-row（pick children）；信箱入口改 right250 bottom38；測試與 playtest 探針更新 | 阻塞: none（信箱入口實跑無信不顯示，位置以單元測試幾何驗證）",
+      "completed_at": "2026-11-24T21:00:00+08:00",
+      "completed_by_agent": "ClaudeCode_claude-opus-5-5"
+    },
+    {
       "id": "PROG-2-9955",
       "title": "武將武器欄位 weapon：資料化取代角色推算",
       "owner": "ClaudeCode_claude-opus-5-5",
