@@ -17183,6 +17183,35 @@
         "metrics_summary": []
       },
       "completed_at": "2026-11-23"
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9951",
+      "title": "首戰（encounter-001）新手穩贏調整",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "balance",
+      "phase": "M0",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-24T10:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "首戰教學戰實測勝率不足（8對8約7勝1敗），目標新手穩贏：勝率約95%以上、單場約40～60秒。純資料調整 encounter-001，不改戰場核心規則。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "調整前後各20場 playtest-online 數據",
+        "勝率約95%以上且單場約40～60秒"
+      ],
+      "deliverables": [
+        "encounter-001 資料調整 PR",
+        "side-session-notes/first-battle-tuning-1124.md"
+      ],
+      "notes": "2026-11-24 | 狀態: in-progress | 驗證: pending | 變更: 開卡並上鎖 | 阻塞: 無"
     }
   ],
   "updated": "2026-11-23T16:27:44.175Z"
