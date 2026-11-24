@@ -17155,12 +17155,12 @@
       "completed_at": "2026-11-23"
     },
     {
-      "id": "PROG-2-9951",
+      "id": "PROG-2-9953",
       "title": "O-02 開局名將三選一（趙雲／關羽／諸葛亮）並作為首戰推薦主將",
-      "status": "in-progress",
+      "status": "done",
       "priority": "P0",
       "owner": "Antigravity",
-      "brief": "docs/agent-briefs/tasks/PROG/PROG-2-9951.md"
+      "brief": "docs/agent-briefs/tasks/PROG/PROG-2-9953.md"
     }
   ]
 }
