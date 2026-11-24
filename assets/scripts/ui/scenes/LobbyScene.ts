@@ -119,7 +119,13 @@ import { FAST_FORWARD_MAX_SEASONS, FAST_FORWARD_REASON_TEXT, fastForwardSeasons 
 import { BREEDING_MIN_AGE } from '../../core/systems/BreedingSystem';
 import { RECRUIT_ROWS_PER_PAGE, RecruitHallController } from '../core/RecruitHallController';
 import { loadGeneralAvatar, loadGeneralPortrait } from '../core/GeneralAvatarLoader';
-import { bindAvatarTalk, setAvatarTalkProvider } from '../core/AvatarTalkBubble';
+import { bindAvatarTalk, setAvatarTalkProvider, showAvatarBubbleText } from '../core/AvatarTalkBubble';
+import { HallMissionReportStack } from '../components/HallMissionReportStack';
+import {
+    buildPinnedMissions, fallbackLineKey, missionContextKey, resolveCardLines, MISSION_LINE_TIMEOUT_MS,
+    type HallMissionReportCard, type HallMissionReportCardWithLine,
+} from '../../core/mission/MissionReactionCards';
+import { chainTagText } from '../../core/mission/MissionChain';
 import { applyGeneralNameTags, loadGeneralNameTagStyle } from '../components/GeneralNameTag';
 import { setPlaceholderBackdropVisible } from '../core/PlaceholderBackdrop';
 import { RELATION_GRAPH_SLOTS, RelationGraphController } from '../core/RelationGraphController';
@@ -4273,6 +4279,14 @@ export class LobbyScene extends Component {
         return services().session.gameTime.totalSeasonsElapsed;
     }
 
+    /** 派出當下：武將在牆上置頂的頭像旁說一句（台詞系統「mission_dispatch」，不通用本機預設；PROG-2-9966） */
+    private async _showDispatchBubble(missionId: string, generalId: string | undefined): Promise<void> {
+        if (!generalId) return;
+        const text = await this._missionLineText('dispatch', generalId, undefined, this._hallSeason() + missionId.length);
+        const anchor = this._lobbyHall?.activeChipOf(missionId);
+        if (anchor) showAvatarBubbleText(anchor, text);
+    }
+
     /**
      * 派出任務（執行／委任／任務牆接取共用）：成功時顯示明確的派出提示，失敗時顯示原因並回傳 false。
      * generalId 為 null 表示委任（系統依武將記憶選人）。
@@ -4308,6 +4322,8 @@ ${spent}`,
         });
         this._lobbyHall?.reactToDispatch((card?.difficulty ?? 'EASY') as Parameters<NonNullable<typeof this._lobbyHall>['reactToDispatch']>[0]);
         this._refreshLobbyHallTopbar();
+        this._refreshLobbyHallWalls();
+        void this._showDispatchBubble(missionId, v.generalIds[0]);
         return true;
     }
 
@@ -4589,6 +4605,8 @@ ${spent}`,
             // 牆上每張任務卡開對應任務、頁尾開整面牆（PROG-2-9123）
             onWallRow: (wall, rowIndex) => this._onClickLobbyWallRow(wall, rowIndex),
             onWallExpand: (wall) => this._openHallBoard(this._hallBoardOfWall(wall)),
+            // 牆下緣置頂的進行中任務：點晶片開該任務詳情（PROG-2-9966）
+            onWallActive: (missionId) => this._openHallDetailById(missionId),
             // Q 版武將人群（UI-2-0150）：只有毛遂自薦者與輪替的 2~3 位我方武將會在場（Issue #2135）
             stage: stageLayout && stageDecor
                 ? {
@@ -4821,11 +4839,49 @@ ${spent}`,
             const open = rows.filter((row) => this._hallRowStatus(row.taskId).length === 0);
             const activeCount = rows.length - open.length;
             this._lobbyWallOpenIds[key === 'Military' ? 'wall-left' : 'wall-right'] = open.map((row) => row.taskId);
-            const wall = buildLobbyHallWallView(open, HALL_BOARD_MAX_ROWS);
+            const wall = buildLobbyHallWallView(open, HALL_BOARD_MAX_ROWS, (row) => this._chainTagOf(row.taskId));
             return { ...wall, countText: activeCount > 0 ? `未接取 ${open.length}・進行中 ${activeCount} 件` : `未接取 ${open.length}` };
         };
         this._lobbyHall.setWall('wall-left', view('Military'));
         this._lobbyHall.setWall('wall-right', view('Domestic'));
+        // 進行中的任務置頂在牆下緣：小頭像＋還有 N 季，最多 3 個、其餘「+N」（doc_spec_1178 §7.3(5)，PROG-2-9966）
+        const boardView = session.missionService?.getBoard();
+        const cards = boardView && boardView.ok ? boardView.value.missions : [];
+        const wallOf = this._wallOfTheme();
+        const season = this._hallSeason();
+        this._lobbyHall.setActiveMissions('wall-left', buildPinnedMissions(cards.filter((c) => wallOf(c.theme) === 'Military'), season));
+        this._lobbyHall.setActiveMissions('wall-right', buildPinnedMissions(cards.filter((c) => wallOf(c.theme) !== 'Military'), season));
+    }
+
+    /** 任務若是連鎖生出的，回「連續任務 2/3」，否則空字串（牆上列、詳情共用） */
+    private _chainTagOf(missionId: string): string {
+        const board = services().session.missionService?.getBoard();
+        const card = board && board.ok ? findCard(board.value, missionId) : undefined;
+        return card?.chain ? chainTagText(card.chain.depth, card.chain.total, (key, ...args) => services().i18n.t(key, ...args)) : '';
+    }
+
+    private readonly _hallReportStack = new HallMissionReportStack();
+
+    /** 任務回報／派出台詞：先問台詞系統（本機快取或中台，限時），不通就用本機預設（i18n），玩家看不出差別 */
+    private _missionLineText(kind: 'dispatch' | 'return', generalId: string, tier: HallMissionReportCard['tier'] | undefined, pick: number): Promise<string> {
+        const t = (key: string) => services().i18n.t(key);
+        const fallback = t(fallbackLineKey(kind, tier, pick));
+        return services().dialogue.missionLine(generalId, missionContextKey(kind, tier), MISSION_LINE_TIMEOUT_MS)
+            .then((line) => line ?? fallback)
+            .catch(() => fallback);
+    }
+
+    /** 把這一季（或快轉累積）的回報卡合成一疊顯示，看完或全部略過才回來 */
+    private async _showMissionReportStack(cards: readonly HallMissionReportCard[]): Promise<void> {
+        if (cards.length === 0 || !this.node?.isValid) return;
+        const fetcher = (card: HallMissionReportCard) => services().dialogue.missionLine(card.generalId, missionContextKey('return', card.tier), MISSION_LINE_TIMEOUT_MS);
+        const lines: HallMissionReportCardWithLine[] = await resolveCardLines(
+            cards, fetcher,
+            (card, index) => services().i18n.t(fallbackLineKey('return', card.tier, index + card.missionId.length)),
+        );
+        if (!this.node?.isValid) return;
+        const host = this.node.scene?.getComponentInChildren(Canvas)?.node ?? this.node;
+        await this._hallReportStack.show(host, lines);
     }
 
     /** 同步幕府大廳頂列的資源數、官職主將與年季晝夜 */
@@ -6231,11 +6287,13 @@ ${spent}`,
                 .map((g) => g.id));
             let adults = adultIds();
             const hall = { settled: 0, succeeded: 0, grain: 0, gold: 0, silver: 0, generalExp: 0 };
+            const hallCards: HallMissionReportCard[] = [];
             const result = await fastForwardSeasons(async () => {
                 const payload = await this._advanceSeasonWithSalaries();
                 const report = payload.hallMissionReport;
                 if (report) {
                     hall.settled += report.settled; hall.succeeded += report.succeeded;
+                    hallCards.push(...report.cards);
                     hall.grain += report.gains.grain; hall.gold += report.gains.gold; hall.silver += report.gains.silver; hall.generalExp += report.gains.generalExp;
                 }
                 return payload;
@@ -6264,6 +6322,8 @@ ${spent}`,
             }
             this._refreshLobbyHallTopbar();
             this._refreshHallBoard();
+            // 快轉期間累積的回報卡合成一疊，最後一次看（逐季不彈窗；PROG-2-9966）
+            await this._showMissionReportStack(hallCards);
         } finally {
             this._fastForwarding = false;
             this._refreshDomestic();
@@ -6358,6 +6418,8 @@ ${spent}`,
             this._refreshLobbyHallTopbar();
             this._refreshHallBoard();
             const hallLines = hallMissionReport?.lines ?? [];
+            // 本季所有任務回報合成一疊卡片：逐張點或全部略過，看完才開季報（PROG-2-9966）
+            await this._showMissionReportStack(hallMissionReport?.cards ?? []);
             const followUps = (): void => {
                 this._openSeasonChronicle('season-advance');
                 this._syncSeasonEventPopup();

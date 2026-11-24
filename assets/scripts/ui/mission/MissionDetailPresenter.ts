@@ -8,6 +8,7 @@
  *  - 完美獎勵在情報不足時是 ???，並附說明「情報 100 才會揭曉」。
  *  - 派遣後顯示鎖定狀態（情報、分支、成功率凍結）與預計回報季。
  */
+import { chainTagText } from '../../core/mission/MissionChain';
 import type { DetailActionKey } from '../core/HallDetailActionStates';
 import { SEASONS_PER_YEAR, formatSeasonLabel } from '../../core/systems/GameClock';
 import type { MissionDetailView } from '../../core/mission/MissionTypes';
@@ -215,7 +216,8 @@ export function buildMissionDialogState(service: IMissionService, missionId: str
                 : `情報 ${d.intel}%，再探或等待可提高${intelUnlockNote(d.intel, ctx.intelBands)}`;
 
     return {
-        missionTypeLabel: `${MISSION_WALL_NAME[wallOfTheme(d.theme)] ?? ''}・${MISSION_DIFFICULTY_NAME[d.difficulty] ?? d.difficulty}`,
+        // 連鎖任務多帶一個「連續任務 2/3」標記（PROG-2-9966）
+        missionTypeLabel: `${MISSION_WALL_NAME[wallOfTheme(d.theme)] ?? ''}・${MISSION_DIFFICULTY_NAME[d.difficulty] ?? d.difficulty}${card?.chain ? `・${chainTagText(card.chain.depth, card.chain.total)}` : ''}`,
         missionTitle: d.title,
         missionBrief: d.brief,
         intelRevealPercent: d.intel,

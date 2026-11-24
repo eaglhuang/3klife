@@ -199,6 +199,7 @@ import { shouldShowVolunteerEvent } from '../systems/HallVolunteer';
 import { MISSION_DIFFICULTIES } from '../mission/MissionBalance';
 import { MISSION_TIER_TEXT, type MissionBlock, type MissionGeneralFacts, type MissionLedgerEntry, type MissionStatKey } from '../mission/MissionTypes';
 import { hashText } from '../mission/MissionRng';
+import type { HallMissionReportCard } from '../mission/MissionReactionCards';
 import { affinityFromLedger, memoryHintFromLedger, type MemoryLedgerLike } from '../mission/MissionMemory';
 import { migrateLegacyHallMissions, normalizeMissionSave } from '../mission/MissionSave';
 import type { MissionSaveV2 } from '../mission/MissionTypes';
@@ -566,6 +567,8 @@ export interface HallMissionSeasonReport {
     succeeded: number;
     /** 這次結算實際入帳的總量（已截斷）；快轉合併提示與頂欄對帳用 */
     gains: { grain: number; gold: number; silver: number; generalExp: number };
+    /** 每件任務一張回報卡（PROG-2-9966）：武將、結果、獎勵、友誼、連鎖；畫面把同一季的卡合成一疊 */
+    cards: HallMissionReportCard[];
 }
 
 export interface MatchmakerOfferNotice {
@@ -5317,15 +5320,30 @@ export class GameSession implements AcademyRecordPort {
             const story = s.narratives.length > 0 ? s.narratives[s.narratives.length - 1] : '';
             const friend = this._missionSettleFriendship.get(s.missionId) ?? 0;
             // 成敗標籤放最前面，玩家一眼看得出大成功或大失敗；故事另起一行縮排
-            const head = `【${MISSION_TIER_TEXT[s.tier]}】${s.generalName}・「${s.title}」${gained ? `　${gained}` : ''}${friend !== 0 ? `　友誼 ${friend > 0 ? '+' : ''}${friend}` : ''}`;
+            const chainTag = s.chain ? `　（連續任務 ${s.chain.depth}/${s.chain.total}）` : '';
+            const head = `【${MISSION_TIER_TEXT[s.tier]}】${s.generalName}・「${s.title}」${chainTag}${gained ? `　${gained}` : ''}${friend !== 0 ? `　友誼 ${friend > 0 ? '+' : ''}${friend}` : ''}`;
             return story ? `${head}
 　${story}` : head;
+        });
+        // 整串連鎖任務走到底（成功收尾、沒再生出下一段）：另起一行特別標出（PROG-2-9966）
+        for (const s of settled) {
+            if (s.chain?.completed) lines.push(`★ 連續任務完結：「${s.title}」（${s.generalName}走完了這一串，共 ${s.chain.depth} 段）`);
+        }
+        const cards: HallMissionReportCard[] = settled.map((s) => {
+            const mine = this._missionSettleByMission.get(s.missionId);
+            return {
+                missionId: s.missionId, title: s.title, generalId: s.generalId, generalName: s.generalName, tier: s.tier,
+                gains: { grain: mine?.grain ?? 0, gold: mine?.gold ?? 0, silver: mine?.silver ?? 0, generalExp: mine?.generalExp ?? 0 },
+                friendship: this._missionSettleFriendship.get(s.missionId) ?? 0,
+                ...(s.chain ? { chain: { ...s.chain } } : {}),
+            };
         });
         return {
             lines,
             settled: settled.length,
             succeeded: settled.filter((s) => s.tier === 'critical' || s.tier === 'success').length,
             gains: { ...this._missionSettleGains },
+            cards,
         };
     }
 

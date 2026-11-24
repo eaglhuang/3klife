@@ -17307,7 +17307,7 @@
       "title": "大廳任務驚喜與期待感：派出泡泡台詞、季末回報卡疊、牆上進行中置頂、連鎖任務標示",
       "owner": "ClaudeCode_claude-opus-5-5",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "feature",
       "phase": "M9",
       "created": "2026-11-25",
@@ -17319,7 +17319,7 @@
       "acceptance": [],
       "deliverables": [],
       "description": "接 9965 第二輪：派出時武將頭像旁冒台詞泡泡、返回結算彈任務回報卡（頭像、結果標籤、獎勵、友誼、台詞，大成功小特效；每季合併一疊可逐張點或一鍵略過）；台詞走台詞系統新增 mission_dispatch／mission_return 觸發點，中台不通退本機預設；牆上置頂最多 3 件進行中任務（頭像＋剩餘季數，超過 +N）；連鎖任務卡標「連續任務 n/m」，完成整串季報特別標出。",
-      "notes": "2026-11-25 | 狀態: in-progress | 驗證: pending | 變更: 開卡並上鎖 | 阻塞: none"
+      "notes": "2026-11-25 | 狀態: done | 驗證: tsc 測試設定 0 錯、單元測試 9517 全過、compute-gate quick/standard 通過、網頁建置實點（派出泡泡、牆上置頂、回報卡一疊、下一張／全部略過）| 變更: 派出台詞泡泡、季末回報卡一疊、牆上進行中置頂、連續任務標記與完結標示；新增台詞情境 mission-dispatch／mission-return／mission-return-bad | 阻塞: none"
     },
     {
       "id": "PROG-2-9965",

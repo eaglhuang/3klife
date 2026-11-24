@@ -23,6 +23,8 @@ import { LOBBY_HALL_WALL_PIN_TEXT, type LobbyHallWallView } from '../../core/sys
 import type { LobbyHallAltarView } from './LobbyHallAltarView';
 import type { HallStageDecor } from '../../core/systems/HallStageCrowdPose';
 import type { HallStageLayout } from '../../core/systems/HallStagePlanner';
+import { HallActiveMissionStrip } from '../components/HallActiveMissionStrip';
+import type { PinnedMissionView } from '../../core/mission/MissionReactionCards';
 import { HallMapTurnPlayer } from '../components/HallMapTurnPlayer';
 import { HallSeasonFxLayer } from '../components/HallSeasonFxLayer';
 import { HallStageCrowd } from '../components/HallStageCrowd';
@@ -95,6 +97,8 @@ export interface LobbyHallScreenDeps {
     readonly onWallRow?: (wall: LobbyHallWallId, rowIndex: number) => void;
     /** 點牆底的「展開軍務牆／內政牆」 */
     readonly onWallExpand?: (wall: LobbyHallWallId) => void;
+    /** 點牆下緣置頂的進行中任務晶片（PROG-2-9966）：開該任務詳情 */
+    readonly onWallActive?: (missionId: string) => void;
     /** 人群設定；設定檔沒載到時為 null，不建人群層 */
     readonly stage?: LobbyHallStageDepsInput | null;
     /** 勢力圖三態版面；沒載到時為 null，不掛地圖播放 */
@@ -304,6 +308,29 @@ export class LobbyHallScreenBinder {
                 if (row.pinned) setText(pin, LOBBY_HALL_WALL_PIN_TEXT);
             }
         });
+    }
+
+    private readonly _strips = new Map<LobbyHallWallId, HallActiveMissionStrip>();
+
+    /** 牆下緣置頂進行中任務（小頭像＋剩餘季數，最多 3 個，其餘「+N」；PROG-2-9966） */
+    setActiveMissions(id: LobbyHallWallId, view: PinnedMissionView): void {
+        let strip = this._strips.get(id);
+        if (!strip) {
+            const wall = findUcufNode(this._screenRoot, `lobby-hall-screen.${id}`);
+            if (!wall) return;
+            strip = new HallActiveMissionStrip(wall, (missionId) => this._deps.onWallActive?.(missionId));
+            this._strips.set(id, strip);
+        }
+        strip.set(view);
+    }
+
+    /** 某任務在牆上置頂的晶片節點（派出泡泡定位用）；沒有回 null */
+    activeChipOf(missionId: string): Node | null {
+        for (const strip of this._strips.values()) {
+            const node = strip.chipNodeOf(missionId);
+            if (node) return node;
+        }
+        return null;
     }
 
     /** 任務資料就緒前的牆面：隱藏所有任務列（含設計稿的範例列），計數處顯示載入字樣 */

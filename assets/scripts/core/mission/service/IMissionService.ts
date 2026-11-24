@@ -44,7 +44,11 @@ export interface MissionCardView {
     reward: Revealable;
     /** 進行中：負責的武將與預計回報季 */
     executorName?: string;
+    /** 進行中：負責武將代號（牆上置頂顯示頭像用；PROG-2-9966） */
+    executorId?: string;
     returnSeason?: number;
+    /** 連鎖任務：目前第幾段／最多幾段（只有連鎖生出的任務才有；PROG-2-9966） */
+    chain?: { depth: number; total: number };
 }
 
 export interface MissionBoardView { revision: number; season: number; missions: MissionCardView[] }
@@ -98,6 +102,8 @@ export interface SettledMissionView {
     narratives: string[];
     /** 結算過程（查看過程／稽核用） */
     traceText: string[];
+    /** 連鎖任務：這是第幾段／最多幾段；completed＝成功且沒有再生出下一段（整串完成，PROG-2-9966） */
+    chain?: { depth: number; total: number; completed: boolean };
 }
 export interface SeasonSettlementView {
     season: number;

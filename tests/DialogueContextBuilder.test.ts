@@ -172,7 +172,12 @@ export function createDialogueContextBuilderSuite(): TestSuite {
 
     suite.test('規則檔與中台情境登錄一致：互動類型、場景合法，覆寫與反應用到的情境都已登錄', () => {
         const ctxKeys = Object.keys(RULES.contexts);
-        assert.equals(49, ctxKeys.length);
+        assert.equals(52, ctxKeys.length);
+        // 任務派出／返回三個觸發點（PROG-2-9966）：都已登錄，且不掛 actionContexts（不然友誼事件會多彈一次台詞）
+        for (const k of ['mission-dispatch', 'mission-return', 'mission-return-bad']) {
+            assert.isTrue(!!RULES.contexts[k], `${k} 未登錄`);
+            assert.isTrue(!Object.values(RULES.actionContexts).includes(k), `${k} 不應掛在友誼事件反應上`);
+        }
         for (const k of ctxKeys) {
             const c = RULES.contexts[k];
             assert.isTrue((DIALOGUE_INTERACTION_TYPES as readonly string[]).includes(c.interactionType), `${k} interactionType`);
