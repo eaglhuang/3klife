@@ -17373,7 +17373,7 @@
       "title": "戰場攻擊特效：主將普攻依武器分音效、暴擊命中光、劍弓武將映射",
       "owner": "ClaudeCode_claude-opus-5-5",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-24",
@@ -17407,7 +17407,7 @@
         "tests/GeneralWeaponVfx.test.ts",
         "tests/GeneralAttackSfx.test.ts"
       ],
-      "notes": "2026-11-24 | 狀態: in-progress | 驗證: pending | 變更: 開卡並實作三項（工作樹 feat/battle-weapon-vfx-1124）；待補音檔：劍揮音（暫借 weapon）、法術音（暫借 skill2） | 阻塞: 無",
+      "notes": "2026-11-24 | 狀態: done | 驗證: 合併 origin/master 後 tsc 0、單元測試全過、compute-gate quick 通過、建置成功、playtest 12/12；暴擊實測 1 次（同場 7 次攻擊特效），截圖在 side-session-notes/crit-vfx-1124 | 變更: 暴擊命中光＋微頓幀、普攻依武器分音（刀槍弓法術）、劍弓模板接線；武器來源以 generals.json weapon 欄位（PROG-2-9955）為準，適性推算僅作缺欄位備援；目前 weapon 欄位全部 235 位都有值，劍實際 0 位、弓 1 位，需總PM複核 | 阻塞: 待補音檔（劍揮音、法術音）",
       "brief": {
         "style": "classic",
         "label": "",
