@@ -91,6 +91,20 @@ export const DEPLOY_LANDING_PUFFS: ReadonlyArray<{ dx: number; driftFacing: 1 | 
 ];
 
 /**
+ * 騎術落下特效（data/riding-tiers.json 的 tiers[].deployDrop，PROG-2-9953）：
+ * fx 'dust_ring' → 騎兵落地時腳下外圍再加一圈塵團（比基本塵團更寬）；其他 fx 目前沒有素材，不出。
+ * sfx 'horse_snort' 目前沒有鼻息素材，由騎兵落地蹄聲代替（deployLandingThud 已是騎兵雙蹄）。
+ */
+export interface RiderDeployDrop { fx?: string; sfx?: string; }
+export const DUST_RING_PUFFS: ReadonlyArray<{ dx: number; driftFacing: 1 | -1 }> = [
+  { dx: -46, driftFacing: 1 }, { dx: -34, driftFacing: 1 }, { dx: 34, driftFacing: -1 }, { dx: 46, driftFacing: -1 },
+];
+/** 依騎術落下設定取要額外放的塵圈位置；騎兵以外或沒有 dust_ring 就回空陣列。 */
+export function riderDeployRingPuffs(troopType: TroopType | string | null | undefined, drop: RiderDeployDrop | null | undefined): ReadonlyArray<{ dx: number; driftFacing: 1 | -1 }> {
+  return troopType === TroopType.Cavalry && drop?.fx === 'dust_ring' ? DUST_RING_PUFFS : [];
+}
+
+/**
  * 落地聲：沿用該兵種的腳步聲（騎兵兩聲蹄響），音量約 1.6 倍但不超過腳步音量上限。
  * 目前沒有專用落地聲；之後有了只改這裡的 cue。
  */

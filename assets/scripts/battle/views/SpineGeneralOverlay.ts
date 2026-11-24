@@ -51,6 +51,12 @@ export type LandingListener = (id: string, x: number, y: number, isLeader: boole
  */
 const HIT_FLASH_TINT = { r: 255, g: 120, b: 110 };
 
+/** 骨架基礎色：一般單位白色（不染）；設了 tint 的骨架（敵方騎兵暫代紅色）用該色，閃色也在它上面疊。 */
+function baseColorOf(config: UnitSpineConfig): Color {
+  const t = config.tint;
+  return t ? new Color(t.r, t.g, t.b, 255) : Color.WHITE;
+}
+
 /**
  * PROG-2-9412：受擊閃白材質（resources/effects/spine-hit-flash）。全部單位共用一份 Material，
  * 引擎會替每具骨架另建材質實例，所以各自的閃白強度互不影響。載入失敗就維持 null，閃色退回相乘暖色。
@@ -452,7 +458,7 @@ export class SpineUnitOverlay {
       // pos 已含抖動偏移與帶頭者起伏；起伏換成隊員自己相位的，才是錯開的集體走路
       const followerBob = walking ? stepBobOffset(entry.stepClock, slot.phase * state.clip.duration, gait.bobPx, gait.footfallIntervalSec) - leaderBob : 0;
       follower.setPosition(pos.x - slot.x * state.facing, pos.y + slot.y + followerBob - landing.dy + memberLanding.dy, 0);
-      if (flashChanged) this.setSkeletonFlash(followerSkel, flash);
+      if (flashChanged) this.setSkeletonFlash(followerSkel, flash, baseColorOf(entry.config));
       follower.setScale(entry.config.displayScale * state.facing * memberLanding.scaleX, entry.config.displayScale * memberLanding.scaleY, 1);
       if (skinChanged) followerSkel.setSkin(skin);
       if (clipChanged && hasClip) {
@@ -530,12 +536,12 @@ export class SpineUnitOverlay {
   /** 把閃色強度畫到帶頭者骨架上；強度沒變就不動。回傳是否有變，讓 apply 的隊員迴圈跟著畫。 */
   private paintFlash(skeleton: sp.Skeleton, entry: Entry, strength: number): boolean {
     if (strength === entry.flashPainted) return false;
-    this.setSkeletonFlash(skeleton, strength);
+    this.setSkeletonFlash(skeleton, strength, baseColorOf(entry.config));
     entry.flashPainted = strength;
     return true;
   }
 
-  private setSkeletonFlash(skeleton: sp.Skeleton, strength: number): void {
+  private setSkeletonFlash(skeleton: sp.Skeleton, strength: number, base: Color = Color.WHITE): void {
     // PROG-2-9412：閃白材質已套上時，直接改 shader 的閃白強度（真正的白光）；
     // 每具骨架依混合模式各有自己的材質實例，逐一寫入。材質還沒載好才退回下面的相乘暖色。
     if (hitFlashMaterial && skeleton.customMaterial === hitFlashMaterial) {
@@ -545,7 +551,8 @@ export class SpineUnitOverlay {
       return;
     }
     const t = HIT_FLASH_TINT;
-    this.flashColor.set(255 - (255 - t.r) * strength, 255 - (255 - t.g) * strength, 255 - (255 - t.b) * strength, 255);
+    this.flashColor.set(base.r * (255 - (255 - t.r) * strength) / 255, base.g * (255 - (255 - t.g) * strength) / 255,
+      base.b * (255 - (255 - t.b) * strength) / 255, 255);
     skeleton.color = this.flashColor;
   }
 
@@ -577,6 +584,11 @@ export class SpineUnitOverlay {
       for (let i = 0; i < (entry.config.squad?.length ?? 0); i += 1) {
         entry.followers.push(this.createNode(entry.config.path, parent, `SpineUnit_${id}_m${i + 1}`, data));
       }
+      // 基礎染色（敵方騎兵紅色調）：池內節點取出時已被重設成白，這裡改回本單位的基礎色
+      for (const n of [node, ...entry.followers]) {
+        const skel = n.isValid ? n.getComponent(sp.Skeleton) : null;
+        if (skel) skel.color = baseColorOf(entry.config);
+      }
       // 受擊閃白材質：載好就套到帶頭者與隊員；閃色強度歸零重畫，避免先前寫過的相乘暖色殘留
       ensureHitFlashMaterial(() => {
         // 單位已移除（節點可能已回收給別的單位）就不要再碰，否則會誤改別人的顏色
@@ -585,7 +597,7 @@ export class SpineUnitOverlay {
           const skel = n.isValid ? n.getComponent(sp.Skeleton) : null;
           if (!skel) continue;
           if (skel.customMaterial !== hitFlashMaterial) skel.customMaterial = hitFlashMaterial; // 池內重用的節點已套過，不重設以免重建材質實例
-          skel.color = Color.WHITE;
+          skel.color = baseColorOf(entry.config);
         }
         entry.flashPainted = -1;
       });

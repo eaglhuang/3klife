@@ -17224,6 +17224,56 @@
       "notes": "2026-11-24 | 狀態: done | 驗證: tsc 0 錯誤；單元測試 ALL PASS 9445；compute-gate standard 通過（僅既有 import 邊界警告）；建置 EXIT 36；playtest-online 12/12 步通過（真滑鼠點右下角推進一季鈕換季成功，探針 back 世界座標 1696..1896×24..108、與底欄／許願祭壇／信箱零重疊）；截圖 side-session-notes/PROG-2-9953/08-lobby-bottom-right.png | 變更: back 移出頂欄改右下角 right24 bottom24 200x84、字級 30；頂欄資源列加 resource-row id，新手引導 fate 錨點改指 resource-row（pick children）；信箱入口改 right250 bottom38；測試與 playtest 探針更新 | 阻塞: none（信箱入口實跑無信不顯示，位置以單元測試幾何驗證）",
       "completed_at": "2026-11-24T21:00:00+08:00",
       "completed_by_agent": "ClaudeCode_claude-opus-5-5"
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9955",
+      "title": "騎兵部署落下特效、敵方紅方騎兵骨架與趙雲騎術 2/3 級騎馬外觀",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-24T20:52:51+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "敵方騎兵改載 spine-trial 紅方騎馬骨架（缺檔退藍騎馬紅色調）；騎術一級 dust_ring 接騎兵落地；趙雲騎術 2/3 級掛 v2 騎馬",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-24 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
-  ]
+  ],
+  "summary": {
+    "done": 305,
+    "in_progress": 1,
+    "open": 86,
+    "total": 392
+  }
 }

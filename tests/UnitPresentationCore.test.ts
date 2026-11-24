@@ -114,7 +114,7 @@ assert.equal(soldierSpineConfig(false).path, 'spine/soldiers/soldier_spear_blue/
 assert.equal(soldierSpineConfig(false, true).path, 'spine/soldiers/soldier_spear_red/soldier_spear_red');
 assert.equal(soldierSpineConfig(true, true).path, 'spine/soldiers/soldier_bow_red/soldier_bow_red');
 assert.equal(soldierSpineConfig(true, false).path, 'spine/soldiers/soldier_bow_blue/soldier_bow_blue');
-import { troopSpineConfig } from '../assets/scripts/battle/shared/UnitPresentationConfig';
+import { ENEMY_CAVALRY_TINT, troopSpineConfig } from '../assets/scripts/battle/shared/UnitPresentationConfig';
 assert.equal(troopSpineConfig('medic', true).path, 'spine/soldiers/soldier_medic_red/soldier_medic_red');
 // PROG-2-9408：我方騎兵改用騎手＋馬合成骨架；前進播 gallop、蹄聲依 gallop 半週期同拍；敵方暫時沿用紅色槍兵
 const cavalry = troopSpineConfig('cavalry');
@@ -129,8 +129,7 @@ assert.equal(cavalry.clips.retreat.name, 'retreat');
 assert.equal(generalSpineConfig('zhao-yun')?.path, 'spine/generals/zhao_yun/zhao_v2');
 const mountedZhao = generalSpineConfig('zhao-yun', null, 1);
 assert.equal(mountedZhao?.path, 'spine/generals/zhao_yun_mounted/zhao__mount_horse_bay');
-// 精騎、神駒尚無專屬外觀：沿用等級 1 外觀（取不超過該等級的最高一套）
-assert.equal(generalSpineConfig('zhao-yun', null, 3)?.path, mountedZhao?.path);
+// 精騎、神駒已有 v2 外觀（見下方測試）
 assert.equal(mountedZhao?.clips.move.name, 'gallop');
 assert.equal(generalSpineConfig('zhao-yun', null, 2, p => p.includes('zhao_yun_mounted'))?.path, 'spine/generals/zhao_yun/zhao_v2');
 // 天生騎術：資料欄位與表格取高者；表格未讀到時只看欄位
@@ -142,7 +141,12 @@ assert.equal(generalSpineConfig('guan-yu', null, 3)?.path, generalSpineConfig('g
 assert.equal(cavalry.bobPx, 0);
 assert.ok(Math.abs((cavalry.footfallIntervalSec ?? 0) - cavalry.clips.move.duration / 2) < 1e-6);
 assert.ok(cavalry.displayScale > 0 && cavalry.displayScale < troopSpineConfig('infantry').displayScale); // 合成骨架騎手已放大 1.54 倍
-assert.equal(troopSpineConfig('cavalry', true).path, 'spine/soldiers/soldier_spear_red/soldier_spear_red');
+// PROG-2-9953：敵方騎兵用 spine-trial 紅方騎馬骨架（獨立資料夾），不染色；我方藍騎兵不染色
+const enemyCavalry = troopSpineConfig('cavalry', true);
+assert.equal(enemyCavalry.path, 'spine/soldiers/soldier_cavalry_red/soldier_cavalry_red__mount_horse_bay');
+assert.equal(enemyCavalry.tint, undefined);
+assert.equal(enemyCavalry.clips.move.name, 'gallop');
+assert.equal(troopSpineConfig('cavalry').tint, undefined);
 // 實機量到兩格多、每秒約 144 單位：gallop 倍率約 1.15，不會撞到 2.2 上限而打滑
 const cavalryCore = new UnitPresentationCore(cavalry, { x: 0, y: 0 });
 cavalryCore.follow({ x: 144, y: 0 }, true, 1);
@@ -168,6 +172,13 @@ assert.equal(rosterGeneral.templateId, 'zhao-yun');
 assert.equal(generalSpineConfig(rosterGeneral.id, rosterGeneral.templateId)?.path, 'spine/generals/zhao_yun/zhao_v2');
 assert.equal(generalSpineConfig('guan-yu', 'unknown')?.path, 'spine/generals/guan_yu/guan_yu');
 import { troopSpineConfigWithFallback } from '../assets/scripts/battle/shared/UnitPresentationConfig';
+import { DUST_RING_PUFFS, riderDeployRingPuffs } from '../assets/scripts/battle/shared/DeployLanding';
+import { TroopType } from '../assets/scripts/shared/CommonEnums';
+// PROG-2-9953：騎術落下 fx = dust_ring 只對騎兵加外圍塵圈；其他兵種與其他 fx 不加
+assert.equal(riderDeployRingPuffs(TroopType.Cavalry, { fx: 'dust_ring', sfx: 'horse_snort' }), DUST_RING_PUFFS);
+assert.equal(riderDeployRingPuffs(TroopType.Infantry, { fx: 'dust_ring' }).length, 0);
+assert.equal(riderDeployRingPuffs(TroopType.Cavalry, { fx: 'armor_spark' }).length, 0);
+assert.equal(riderDeployRingPuffs(TroopType.Cavalry, null).length, 0);
 // 素材載不起來時逐層退回：精銳 → 兵種 → 槍兵；全好時用精銳
 const eliteBlue = 'spine/soldiers/soldier_elite_infantry_blue/soldier_elite_infantry_blue';
 const infantryBlue = 'spine/soldiers/soldier_infantry_blue/soldier_infantry_blue';
@@ -182,7 +193,17 @@ const legacyCavalryPath = 'spine/soldiers/soldier_cavalry_blue/soldier_cavalry_b
 assert.equal(troopSpineConfigWithFallback('cavalry', false, null, () => false).path, cavalryMounted);
 assert.equal(troopSpineConfigWithFallback('cavalry', false, null, path => path === cavalryMounted).path, legacyCavalryPath);
 assert.equal(troopSpineConfigWithFallback('cavalry', false, null, path => path !== 'spine/soldiers/soldier_spear_blue/soldier_spear_blue').path, 'spine/soldiers/soldier_spear_blue/soldier_spear_blue');
-assert.equal(troopSpineConfigWithFallback('cavalry', true, null, () => false).path, 'spine/soldiers/soldier_spear_red/soldier_spear_red');
+// 敵方騎兵：紅方骨架缺檔 → 藍騎兵騎馬骨架染紅 → 藍無馬版染紅；全失敗才退槍兵
+assert.equal(troopSpineConfigWithFallback('cavalry', true, null, () => false).path, 'spine/soldiers/soldier_cavalry_red/soldier_cavalry_red__mount_horse_bay');
+const redMissing = (p: string) => p.startsWith('spine/soldiers/soldier_cavalry_red/');
+assert.equal(troopSpineConfigWithFallback('cavalry', true, null, redMissing).path, 'spine/soldiers/soldier_cavalry_blue/soldier_cavalry_blue__mount_horse_bay');
+assert.deepEqual(troopSpineConfigWithFallback('cavalry', true, null, redMissing).tint, ENEMY_CAVALRY_TINT);
+assert.equal(troopSpineConfigWithFallback('cavalry', true, null, p => p.includes('soldier_cavalry_')).path, 'spine/soldiers/soldier_spear_red/soldier_spear_red');
+// 趙雲騎術 2／3 級（精騎、神駒）載入 v2 騎馬骨架；缺圖回退步行
+assert.equal(generalSpineConfig('zhao_yun', null, 1)?.path, 'spine/generals/zhao_yun_mounted/zhao__mount_horse_bay');
+assert.equal(generalSpineConfig('zhao_yun', null, 2)?.path, 'spine/generals/zhao_yun_mounted/v2_horse_sheet/zhao_v2__mount_horse_sheet');
+assert.equal(generalSpineConfig('zhao_yun', null, 3)?.path, 'spine/generals/zhao_yun_mounted/v2_horse_war/zhao_v2__mount_horse_war');
+assert.equal(generalSpineConfig('zhao_yun', null, 2, p => p.includes('v2_horse_sheet'))?.path, 'spine/generals/zhao_yun/zhao_v2');
 assert.equal(troopSpineConfigWithFallback('cavalry', false, null, path => path === cavalryMounted).clips.move.name, 'gallop');
 
 // PROG-2-9366：單挑退場走回場邊後，朝向要恢復成退場前的方向。

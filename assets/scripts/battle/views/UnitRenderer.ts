@@ -57,7 +57,7 @@ import { AttackVfxPlayer } from "./AttackVfxPlayer";
 import { attackVfxFor } from "../shared/AttackVfxMapping";
 import { attackStyleFor } from "../shared/AttackStyle";
 import { createMoveSfxThrottleState, moveBeatFor, tryAcquireMoveSfx } from "../shared/MoveFeedback";
-import { DEPLOY_LANDING_PUFFS, deployLandingDust, deployLandingThud } from "../shared/DeployLanding";
+import { DEPLOY_LANDING_PUFFS, RiderDeployDrop, deployLandingDust, deployLandingThud, riderDeployRingPuffs } from "../shared/DeployLanding";
 import { playBattleAudio, playBattleFootstep } from "../shared/BattleAudio";
 import { MoveDustEmitter } from "./MoveDustEmitter";
 import { SpineUnitOverlay } from "./SpineGeneralOverlay";
@@ -551,6 +551,8 @@ export class UnitRenderer extends Component {
     const beat = moveBeatFor(unit.type, this.latestState?.getCell(unit.lane, unit.depth)?.terrain);
     const dust = deployLandingDust(beat.dust);
     if (dust.kind !== 'none') for (const puff of DEPLOY_LANDING_PUFFS) this.moveDust.emit(x + puff.dx, y, puff.driftFacing, dust, isLeader);
+    // 騎術落下（riding-tiers.json deployDrop.fx = dust_ring）：騎兵落地再加外圍一圈塵，只由帶頭者出，避免小隊疊三圈
+    if (isLeader && dust.kind !== 'none') for (const puff of riderDeployRingPuffs(unit.type, this.riderDeployDrop)) this.moveDust.emit(x + puff.dx, y, puff.driftFacing, dust, true);
     if (!isLeader) return;
     const thud = deployLandingThud(beat.footstep, unit.type);
     for (let i = 0; i < thud.beats; i++) {
@@ -2444,9 +2446,14 @@ export class UnitRenderer extends Component {
     this.innateRidingLoading = true;
     resources.load('data/riding-tiers', JsonAsset, (err, asset) => {
       if (err || !asset) return;
-      this.innateRidingTiers = (asset.json as { acquire?: { innate?: Record<string, number> } })?.acquire?.innate ?? {};
+      const json = asset.json as { acquire?: { innate?: Record<string, number> }; tiers?: Array<{ tier?: number; deployDrop?: RiderDeployDrop }> };
+      this.innateRidingTiers = json?.acquire?.innate ?? {};
+      // 騎術一級的落下特效（騎兵部署）；讀不到就沒有落下特效，不影響落地本身
+      this.riderDeployDrop = json?.tiers?.find(t => t.tier === 1)?.deployDrop ?? null;
     });
   }
+  /** 騎術一級的落下特效設定（data/riding-tiers.json tiers[tier=1].deployDrop）；讀到前為 null。 */
+  private riderDeployDrop: RiderDeployDrop | null = null;
 
   private generalSpine(general: { id: string; templateId?: string | null; ridingTier?: number }, _faction: Faction) {
     this.loadInnateRidingTiers();
