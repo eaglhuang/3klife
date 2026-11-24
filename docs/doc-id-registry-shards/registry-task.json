@@ -16912,5 +16912,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9871.md",
     "title": "[PROG-2-9871] 轉蛋抽到的教官支援卡進支援卡清單與培育選卡（物品庫存 → 教官卡橋接）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3053",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9963.md",
+    "title": "[PROG-2-9963] 學府入學候選只算子嗣（親生、義子、家臣子），成年家臣不算",
+    "category": "task"
   }
 ]
