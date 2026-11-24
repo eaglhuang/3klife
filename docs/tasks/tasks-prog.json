@@ -17366,6 +17366,38 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "id": "PROG-2-9962",
+      "title": "戰場招式效果說明與類別標籤走 i18n（effectStatus／categoryTag → battle.skill_effect／battle.skill_category）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P2",
+      "status": "in-progress",
+      "type": "feature",
+      "phase": "M9",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-24T14:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "related": [
+        "PROG-2-9327",
+        "PROG-2-9955"
+      ],
+      "depends": [],
+      "acceptance": [
+        "zh-TW 顯示文字與改前一致",
+        "zh-CN／en／ja 皆補齊 battle.skill_effect.* 與 battle.skill_category.*，en 無漢字殘留",
+        "tests/BattleSkillNames.test.ts 鍵齊全與解析測試通過",
+        "tsc 錯誤數 0；單元測試全過",
+        "實跑 en／ja 截圖證明技能面板與橫幅不再中英混雜"
+      ],
+      "deliverables": [
+        "assets/scripts/shared/BattleSkillPresentation.ts",
+        "assets/resources/i18n/{zh-TW,zh-CN,en,ja}.json",
+        "tests/BattleSkillNames.test.ts"
+      ],
+      "description": "效果說明（effectStatus）與類別標籤（categoryTag）由繁中字面值改為 i18n 鍵：battle.skill_effect.<battleSkillId>、battle.skill_category.<categoryId>；招式名鍵沿用 battle.skill_name.<id>。四語系補齊（zh-TW 維持原文）。",
+      "notes": "2026-11-24 | 狀態: in-progress | 驗證: pending | 變更: 開卡並上鎖；效果說明與類別標籤改 i18n 鍵 | 阻塞: none"
     }
   ]
 }

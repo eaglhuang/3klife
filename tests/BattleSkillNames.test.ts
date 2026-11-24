@@ -9,11 +9,16 @@
  */
 import { assert, TestSuite } from './TestRunner';
 import {
+    battleSkillCategoryIds,
+    battleSkillCategoryKey,
+    battleSkillEffectKey,
     battleSkillNameKey,
     battleSkillPresentationIds,
     getBattleSkillPresentation,
     setBattleSkillNameTranslator,
 } from '../assets/scripts/shared/BattleSkillPresentation';
+
+const CJK_IDEOGRAPH = /[一-鿿]/;
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const fs = require('fs') as typeof import('fs');
@@ -98,6 +103,67 @@ export function createBattleSkillNamesSuite(): TestSuite {
     suite.test('未掛上 translator 時招式名退回 battleSkillId（不拋錯）', () => {
         setBattleSkillNameTranslator(null);
         assert.equals('zhou-yu-inferno', getBattleSkillPresentation('zhou-yu-inferno').name);
+    });
+
+    suite.test('效果說明與類別標籤鍵四語系齊全（含 fallback）', () => {
+        for (const locale of LOCALES) {
+            const table = localeTable(locale);
+            for (const id of battleSkillPresentationIds()) {
+                const key = battleSkillEffectKey(id);
+                assert.isTrue(typeof table[key] === 'string' && table[key].length > 0, `${locale} 缺 ${key}`);
+            }
+            for (const cat of battleSkillCategoryIds()) {
+                const key = battleSkillCategoryKey(cat);
+                assert.isTrue(typeof table[key] === 'string' && table[key].length > 0, `${locale} 缺 ${key}`);
+            }
+            assert.isTrue(typeof table['battle.skill_effect.fallback'] === 'string', `${locale} 缺 battle.skill_effect.fallback`);
+        }
+    });
+
+    suite.test('四語系效果說明與類別標籤都解得出；zh-CN／en／ja 效果不同於 zh-TW；en 無漢字殘留', () => {
+        const zh = localeTable('zh-TW');
+        for (const locale of LOCALES) {
+            const table = localeTable(locale);
+            setBattleSkillNameTranslator((key) => table[key] ?? key);
+            try {
+                for (const id of battleSkillPresentationIds()) {
+                    const p = getBattleSkillPresentation(id);
+                    assert.isTrue(p.effectStatus.length > 0 && p.categoryTag.length > 0, `${locale} ${id} 效果或類別為空`);
+                    if (locale !== 'zh-TW') {
+                        assert.isTrue(p.effectStatus !== zh[battleSkillEffectKey(id)], `${locale} ${id} 效果與 zh-TW 相同`);
+                    }
+                    if (locale === 'en') {
+                        assert.isTrue(!CJK_IDEOGRAPH.test(p.effectStatus), `en ${id} 效果殘留漢字：${p.effectStatus}`);
+                        assert.isTrue(!CJK_IDEOGRAPH.test(p.categoryTag), `en ${id} 類別殘留漢字：${p.categoryTag}`);
+                    }
+                }
+            } finally {
+                setBattleSkillNameTranslator(null);
+            }
+        }
+    });
+
+    suite.test('zh-TW 效果說明與類別維持原文（顯示不變）', () => {
+        const zh = localeTable('zh-TW');
+        setBattleSkillNameTranslator((key) => zh[key] ?? key);
+        try {
+            const inferno = getBattleSkillPresentation('zhou-yu-inferno');
+            assert.equals('火攻', inferno.categoryTag);
+            assert.equals('【火攻】周瑜炎陣：點燃敵軍所在格', inferno.effectStatus);
+            assert.equals('【無敵】白馬銀槍·不滅：全屏範圍攻擊，獲得 1 回合無敵，全體士氣拉滿', getBattleSkillPresentation('zhao-yun-immortal').effectStatus);
+        } finally {
+            setBattleSkillNameTranslator(null);
+        }
+    });
+
+    suite.test('未掛上 translator 時類別與效果退回繁中原文（純邏輯測試不受影響）', () => {
+        setBattleSkillNameTranslator(null);
+        const p = getBattleSkillPresentation('sow-discord');
+        assert.equals('離間', p.categoryTag);
+        assert.equals('離間', p.categoryZh);
+        const unknown = getBattleSkillPresentation('no-such-skill');
+        assert.equals('【戰術】no-such-skill 生效', unknown.effectStatus);
+        assert.equals('戰術', unknown.categoryZh);
     });
 
     return suite;
