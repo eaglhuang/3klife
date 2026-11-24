@@ -58,7 +58,7 @@
   },
   {
     "id": "zhao-yun-pierce",
-    "label": "龍魂突刺",
+    "label": "龍膽·破軍",
     "description": "趙雲化身青龍貫穿敵陣，對單體造成 2.5 倍極高傷害，並機率性施加破防效果。",
     "costSp": 100,
     "steps": [
@@ -69,7 +69,7 @@
       { "type": "audio",     "clip": "feijian",        "atTime": 0.4 },
       { "type": "vfx",       "blockId": "impact_shock", "target": "targets", "atTime": 0.5 },
       { "type": "damage",    "multiplier": 2.5, "target": "single",        "atTime": 0.55 },
-      { "type": "floatText", "text": "龍魂突刺！", "target": "targets", "atTime": 0.55 }
+      { "type": "floatText", "text": "龍膽·破軍！", "target": "targets", "atTime": 0.55 }
     ]
   },
   {

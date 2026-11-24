@@ -4,6 +4,7 @@
  * Unity 對照：像檢查五個角色的 ScriptableObject 都掛上了大招，且每個大招指到的效果腳本真的存在、可施放。
  */
 import * as fs from 'fs';
+import { useZhTwSkillNames } from './zhTwSkillNames';
 import * as path from 'path';
 import { assert, TestSuite } from './TestRunner';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
@@ -38,6 +39,7 @@ export function createStarterGeneralUltimatesSuite(): TestSuite {
     const generals = readJson<GeneralConfig[]>('generals.json');
 
     suite.test('資料：五位武將第 1 格奧義指到存在的定義，招名、技能、可施放都對得上', () => {
+        useZhTwSkillNames();
         for (const [generalId, [name, skillId]] of Object.entries(STARTERS)) {
             const general = generals.find((g) => g.id === generalId);
             assert.isDefined(general, generalId);
