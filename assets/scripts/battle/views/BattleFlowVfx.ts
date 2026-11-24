@@ -15,6 +15,32 @@ export const BATTLE_FLOW_FX = {
   battleDraw: 'battle_draw',
 } as const;
 
+/**
+ * 單位倒下的漫畫式演出（無血腥）：白煙＋小星星＋衝擊線＋短字樣，小兵與武將皆有，武將較大。
+ * 白煙：小兵走既有 battle_death_vanish（BattleUIBridge）；武將另補一團放大的白煙（積木必須有 prefabPath，playBlock 才不會回空）。
+ * 星星／衝擊線：AttackVfxPlayer.playDefeat；短字樣：FloatText 'defeat'，文案走 i18n 四語。
+ */
+export const DEFEAT_VFX = {
+  smokeBlock: 'p3d_cfxr_smoke_white',
+  generalSmokeScale: 1.5,
+  generalSmokeSec: 1.6,
+  /** 世界座標往上抬一點，讓星星從單位身體中段冒出而不是腳下 */
+  liftWorldY: 0.25,
+  textKey: { troop: 'battle.defeat.troop', general: 'battle.defeat.general' },
+} as const;
+
+/** 玩家與敵方的主將化身單位 id 前綴（與 UnitRenderer.isGeneralAvatarUnit 同一規則） */
+export function isGeneralAvatarUnitId(unitId: string): boolean {
+  return unitId.startsWith('player-general-') || unitId.startsWith('enemy-general-');
+}
+
+export function defeatTextKeyOf(isGeneral: boolean): string {
+  return isGeneral ? DEFEAT_VFX.textKey.general : DEFEAT_VFX.textKey.troop;
+}
+
+/** 量測用（QA 探針讀 globalThis.__DEFEAT_VFX_STATS__）：各演出元件實際播出的次數 */
+export const defeatVfxStats = { troop: 0, general: 0, smoke: 0, text: 0, burst: 0 };
+
 export interface BattleFlowEffectSystem {
   getEffectDef(effectKey: string): unknown;
   playFullEffect(effectKey: string, position: Vec3): void;

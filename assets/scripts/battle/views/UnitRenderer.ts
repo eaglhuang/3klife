@@ -88,6 +88,7 @@ import { BADGE_HIT_PRIORITY_SEC, badgeRectFromExtent, easePlateOffset, stackBadg
 import { buildUnitStatusContext, computeUnitStatusIcons, gainedTones, newlyGainedKinds, type StatusIconKind } from "../shared/UnitStatusIcons";
 import { services } from "../../core/managers/ServiceLoader";
 import { FLOAT_MISS_TEXT, FloatTextType } from "../../core/systems/FloatTextStyle";
+import { DEFEAT_VFX, defeatTextKeyOf, defeatVfxStats, isGeneralAvatarUnitId } from "./BattleFlowVfx";
 import { vitalityRingView, type VitalityRingView } from "../../core/systems/VitalityBarView";
 import { GeneralVitalityStrip } from "./GeneralVitalityStrip";
 import {
@@ -646,6 +647,7 @@ export class UnitRenderer extends Component {
     if (!view) return;
 
     this.dyingUnits.add(unitId);
+    this.playDefeatComic(unitId, view.worldNode.worldPosition);
     if (this.spineUnits.play(unitId, 'fall')) this.scheduleOnce(() => this.spineUnits.remove(unitId), 1.8);
 
     // 死亡消融特效 (Tier 2 Instancing Dissolve)
@@ -677,6 +679,30 @@ export class UnitRenderer extends Component {
 
   public markDyingUnit(unitId: string): void {
     this.dyingUnits.add(unitId);
+  }
+
+  /**
+   * 倒下的漫畫式演出（只加表現層，不碰戰鬥結算）：小星星＋衝擊線（畫面層 Graphics）、短字樣（FloatText 池）；
+   * 武將另補一團放大的白煙。小兵的白煙由 BattleUIBridge 既有的 battle_death_vanish 負責。任何一環失敗都只 warn，不影響死亡流程。
+   */
+  private playDefeatComic(unitId: string, unitWorldPos: Vec3): void {
+    try {
+      const isGeneral = isGeneralAvatarUnitId(unitId);
+      const pos = unitWorldPos.clone();
+      pos.y += DEFEAT_VFX.liftWorldY;
+      const p = this.overlayPoint(pos);
+      if (p && this.attackVfx.playDefeat(p.x, p.y, isGeneral)) defeatVfxStats.burst++;
+      if (isGeneral) {
+        defeatVfxStats.general++;
+        const smoke = services().effect.playBlock(DEFEAT_VFX.smokeBlock, pos, { sizeScale: DEFEAT_VFX.generalSmokeScale }, DEFEAT_VFX.generalSmokeSec);
+        if (smoke) defeatVfxStats.smoke++;
+      } else {
+        defeatVfxStats.troop++;
+      }
+      this.spawnFloatText(services().i18n.t(defeatTextKeyOf(isGeneral)), 'defeat', pos, unitId);
+      defeatVfxStats.text++;
+      (globalThis as { __DEFEAT_VFX_STATS__?: unknown }).__DEFEAT_VFX_STATS__ = defeatVfxStats;
+    } catch (error) { console.warn('[UnitRenderer] 倒下演出略過', error); }
   }
 
   public async playDeathAsync(unitId: string): Promise<void> {
@@ -2485,7 +2511,7 @@ export class UnitRenderer extends Component {
   }
 
   private isGeneralAvatarUnit(unit: TroopUnit): boolean {
-    return unit.id.startsWith("player-general-") || unit.id.startsWith("enemy-general-");
+    return isGeneralAvatarUnitId(unit.id);
   }
 
   private createBadgeSegment(

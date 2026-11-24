@@ -31,7 +31,8 @@ export type FloatTextType =
     | 'status_control' // 控制狀態（紫）
     | 'poison'      // 毒箭上身（紫綠，PROG-2-9731；數值由 data/battle-ui-feedback.json 覆蓋）
     | 'hint'        // 場景提示 / Debug 用（半透明白）
-    | 'loot';       // 掠奪資源（金色，戰法系統 §H-3）
+    | 'loot'        // 掠奪資源（金色，戰法系統 §H-3）
+    | 'defeat';     // 單位倒下的漫畫式短字（白字深描邊，系統字型；小兵／武將共用）
 
 /** 純資料色彩（避免依賴 cc.Color，才能在單元測試直接比對）。 */
 export interface FloatRgba { r: number; g: number; b: number; a: number }
@@ -119,6 +120,10 @@ export const FLOAT_TEXT_STYLES: Readonly<Record<FloatTextType, FloatTextStyle>> 
         outlineColor: { r: 70, g: 20, b: 100, a: 255 }, outlineWidth: 3 },
     loot: { color: { r: 255, g: 215, b: 0, a: 255 }, fontSize: 32, isBold: true, durationMs: 1400, risePixels: 100,
         ...legacyPop(1.2), maxConcurrent: 10, randomOffsetX: 12, outlineColor: OUTLINE_DARK, outlineWidth: 2 },
+    // 單位倒下短字：白字、小幅彈出、停留短；無血腥，只是漫畫式「啪」一聲
+    defeat: { color: { r: 255, g: 255, b: 255, a: 255 }, fontSize: 44, isBold: true, durationMs: 850, risePixels: 70,
+        startScale: 0.5, peakScale: 1.5, popInSec: 0.08, settleSec: 0.12, maxConcurrent: 6, randomOffsetX: 10,
+        outlineColor: { r: 40, g: 40, b: 70, a: 255 }, outlineWidth: 4 },
     hint: { color: { r: 255, g: 255, b: 200, a: 150 }, fontSize: 22, isBold: false, durationMs: 2000, risePixels: 40,
         ...legacyPop(1.0), maxConcurrent: 6, randomOffsetX: 0, outlineColor: { r: 20, g: 20, b: 30, a: 150 }, outlineWidth: 1 },
 };
