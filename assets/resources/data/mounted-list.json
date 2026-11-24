@@ -1,0 +1,85 @@
+{
+  "generals": {
+    "lu_bu": {
+      "bay": {
+        "animations": {
+          "attack_bow": "attack_bow",
+          "attack_shield": "attack_shield",
+          "attack_spear": "attack_spear",
+          "cast": "cast",
+          "charge": "charge",
+          "dodge": "dodge",
+          "fall": "fall",
+          "gallop": "gallop",
+          "hit": "hit",
+          "idle": "idle",
+          "retreat": "retreat",
+          "walk": "walk"
+        },
+        "mirror_skin": "hand_mirror",
+        "skeleton": "spine/generals/lu_bu_mounted/lu_bu__mount_horse_bay.json",
+        "skin": "default"
+      }
+    },
+    "zhao": {
+      "bay": {
+        "animations": {
+          "attack_bow": "attack_bow",
+          "attack_shield": "attack_shield",
+          "attack_spear": "attack_spear",
+          "cast": "cast",
+          "charge": "charge",
+          "dodge": "dodge",
+          "fall": "fall",
+          "gallop": "gallop",
+          "hit": "hit",
+          "idle": "idle",
+          "retreat": "retreat",
+          "walk": "walk"
+        },
+        "mirror_skin": "hand_mirror",
+        "skeleton": "spine/generals/zhao_mounted/zhao__mount_horse_bay.json",
+        "skin": "default"
+      },
+      "sheet": {
+        "animations": {
+          "attack_bow": "attack_bow",
+          "attack_shield": "attack_shield",
+          "attack_spear": "attack_spear",
+          "cast": "cast",
+          "charge": "charge",
+          "dodge": "dodge",
+          "fall": "fall",
+          "gallop": "gallop",
+          "hit": "hit",
+          "idle": "idle",
+          "retreat": "retreat",
+          "walk": "walk"
+        },
+        "mirror_skin": "hand_mirror",
+        "skeleton": "spine/generals/zhao_mounted/zhao__mount_horse_sheet.json",
+        "skin": "default"
+      },
+      "war": {
+        "animations": {
+          "attack_bow": "attack_bow",
+          "attack_shield": "attack_shield",
+          "attack_spear": "attack_spear",
+          "cast": "cast",
+          "charge": "charge",
+          "dodge": "dodge",
+          "fall": "fall",
+          "gallop": "gallop",
+          "hit": "hit",
+          "idle": "idle",
+          "retreat": "retreat",
+          "walk": "walk"
+        },
+        "mirror_skin": "hand_mirror",
+        "skeleton": "spine/generals/zhao_mounted/zhao__mount_horse_war.json",
+        "skin": "default"
+      }
+    }
+  },
+  "schema_version": 1
+}
