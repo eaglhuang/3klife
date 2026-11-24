@@ -462,7 +462,7 @@ export const GAME_SESSION_EVENTS = {
     RivalSeasonEvents: 'game-session-rival-season-events',
     /** payload: UnveilingEvent（UI 在此播放血脈命鏡開獎演出，再讓玩家選宿命） */
     GeneralUnveiled: 'game-session-general-unveiled',
-    /** payload: FriendshipActionAppliedPayload（玩家行為經權重表結算友誼後發出；applied=false 代表被次數上限／冷卻擋下，PROG-2-9953） */
+    /** payload: FriendshipActionAppliedPayload（玩家行為經權重表結算友誼後發出；applied=false 代表被次數上限／冷卻擋下，PROG-2-9954） */
     FriendshipActionApplied: 'game-session-friendship-action-applied',
     /** payload: MentorCard */
     GeneralRetired: 'game-session-general-retired',
@@ -859,7 +859,7 @@ export class GameSession implements AcademyRecordPort {
     public readonly dynamicRelations = new DynamicRelationBook();
     /** 武將心智（PROG-2-9146）：記憶、心情、台詞；大廳任務、戰後、換季結算點只呼叫 record／onTaskSettled／onSeasonSettle，隨存檔保存 */
     public readonly mind: IGeneralMindService = new OfflineGeneralMindService();
-    /** 友誼行為結算（PROG-2-9953）：權重表由 ServiceLoader 載入後 setFriendshipWeights；各功能掛點呼叫 applyFriendshipAction，結果以 FriendshipActionApplied 事件對外 */
+    /** 友誼行為結算（PROG-2-9954）：權重表由 ServiceLoader 載入後 setFriendshipWeights；各功能掛點呼叫 applyFriendshipAction，結果以 FriendshipActionApplied 事件對外 */
     private readonly _friendshipActions = new FriendshipActionEngine(() => FriendshipService.getInstance());
     /** 關係組合事件一次性紀錄（KIN-08，PROG-2-1412）：同季同對只播一次，隨存檔保存 */
     public readonly relationEvents = new RelationEventLedger();
@@ -2193,7 +2193,7 @@ export class GameSession implements AcademyRecordPort {
         const result = equipGearFlow(this._inventoryRecords, gearUid, generalUid, slotId, (record, slot) => gearDefinitionOf(record.Gear_ID)?.slot === slot);
         if (result.ok) {
             this._inventoryRecords = result.records;
-            // 賞賜：替武將穿上裝備／寶物（PROG-2-9953）
+            // 賞賜：替武將穿上裝備／寶物（PROG-2-9954）
             this.applyFriendshipAction(slotId === 'TREASURE' ? 'reward_grant_treasure' : 'reward_grant_equipment', generalUid);
         }
         return result;
@@ -2204,7 +2204,7 @@ export class GameSession implements AcademyRecordPort {
         const result = unequipGearFlow(this._inventoryRecords, generalUid, slotId);
         if (result.ok) {
             this._inventoryRecords = result.records;
-            // 剝奪：卸下武將身上的裝備／寶物（PROG-2-9953）
+            // 剝奪：卸下武將身上的裝備／寶物（PROG-2-9954）
             this.applyFriendshipAction(slotId === 'TREASURE' ? 'equipment_strip_treasure' : 'equipment_strip_gear', generalUid);
         }
         return result;
@@ -3157,7 +3157,7 @@ export class GameSession implements AcademyRecordPort {
     }
 
     /**
-     * 俘虜結算友誼（PROG-2-9953）：對每位名冊武將依「與被俘者的配對友誼」分類。
+     * 俘虜結算友誼（PROG-2-9954）：對每位名冊武將依「與被俘者的配對友誼」分類。
      * 配對友誼 ≥ 20 視為同伴（扣分）、≤ −20 視為她的敵人（加分）；同陣營（nationId 相同）視為同陣營成員（扣分較輕）。
      */
     private _applyCaptureFriendship(target: GeneralConfig): void {
@@ -5471,7 +5471,7 @@ export class GameSession implements AcademyRecordPort {
         if (!req) return { ok: false, reply: '', events: [] };
         const result = this._mindWrite().resolveRequest(id, accept, this._mindContext(req.generalId));
         if (result.ok) {
-            // 自告奮勇（請戰）與建議：答應／拒絕各對應權重表一項（PROG-2-9953）
+            // 自告奮勇（請戰）與建議：答應／拒絕各對應權重表一項（PROG-2-9954）
             if (req.kind === 'ASK_BATTLE') this.applyFriendshipAction(accept ? 'admin_volunteer_accepted' : 'admin_volunteer_rejected', req.generalId);
             else if (req.kind === 'ADVISE') this.applyFriendshipAction(accept ? 'admin_advice_adopted' : 'admin_advice_ignored', req.generalId);
         }
@@ -5485,7 +5485,7 @@ export class GameSession implements AcademyRecordPort {
     }
 
     /**
-     * 結算一次玩家行為對武將的友誼（PROG-2-9953）：套性格倍率、每季上限與冷卻，寫入友誼表並發 FriendshipActionApplied。
+     * 結算一次玩家行為對武將的友誼（PROG-2-9954）：套性格倍率、每季上限與冷卻，寫入友誼表並發 FriendshipActionApplied。
      * 省略 targetId＝玩家↔武將；帶 targetId＝武將↔武將配對（只該用在與我方有接觸的配對）。
      * 其他系統（例如 Antigravity 的提親被拒 bonding_proposal_refused）直接呼叫此方法即可。
      */
@@ -5517,7 +5517,7 @@ export class GameSession implements AcademyRecordPort {
         const ids = deployedIds.filter((id) => roster.some((g) => g.id === id));
         ids.forEach((generalId, index) => {
             this._mindWrite().record({ generalId, season, kind: 'BATTLE_RESULT', outcome: won ? 'SUCCESS' : 'FAIL', tags: ['battle'], label: '出征', isLead: index === 0 });
-            // 友誼：主將／編入出戰、同勝或同敗（PROG-2-9953）
+            // 友誼：主將／編入出戰、同勝或同敗（PROG-2-9954）
             this.applyFriendshipAction(index === 0 ? 'combat_main_commander' : 'combat_deploy_in_army', generalId);
             this.applyFriendshipAction(won ? 'combat_victory_together' : 'combat_defeat_together', generalId);
         });
