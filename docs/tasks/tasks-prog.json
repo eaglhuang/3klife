@@ -17182,6 +17182,14 @@
         "side-session-notes/first-battle-tuning-1124.md"
       ],
       "notes": "2026-11-24 | 狀態: done（已合併；總PM 核准，使用者裁決維持約 78 秒，不改回合上限與演出節奏，40～60 秒目標不採用） | 驗證: 基準 20 場 55%（11/20）平均 77.6 秒；第一輪 HP0.3 8隊 65%（13/20）平均 73.6 秒；第二輪 HP0.3 6隊 100%（20/20）平均 78.2 秒（採用版）；第三輪 HP0.15 6隊 95%（19/20）平均 90.9 秒（未採用）。CI ATM Governance / UCUF Validation 全 SUCCESS | 變更: Constants.tutorialEnemyDeployByTurn 8隊→6隊 [0,1,1,1,1,1,1]、tutorialEnemyGeneralHpRatio 0.5→0.3（encounters.json 未改）；PR #2586 squash 合併 | 阻塞: 無；數據見 side-session-notes/first-battle-tuning-1124.md"
+    },
+    {
+      "id": "PROG-2-9952",
+      "title": "G-01 轉蛋首抽（首抽免費、十連 1500 玉璧）",
+      "status": "in-progress",
+      "priority": "P0",
+      "owner": "Antigravity",
+      "brief": "docs/agent-briefs/tasks/PROG/PROG-2-9952.md"
     }
   ]
 }

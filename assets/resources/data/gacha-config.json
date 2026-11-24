@@ -32,7 +32,7 @@
     "firstPickOnly": true,
     "confirmRequired": false,
     "currencyType": "gem",
-    "singlePullCost": 1000,
+    "singlePullCost": 160,
     "presentation": {
       "title": "單抽",
       "tenTitle": "十連抽",
@@ -40,7 +40,9 @@
       "repull": "paid",
       "heroReveal": "side",
       "inventory": "roster"
-    }
+    },
+    "firstPullFree": true,
+    "tenPullCost": 1500
   },
   {
     "poolId": "limited-pool",
