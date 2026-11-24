@@ -17827,6 +17827,41 @@
         "summary": "",
         "doc": "docs/agent-briefs/tasks/PROG/PROG-2-9972.md"
       }
+    },
+    {
+      "doc_id": "doc_task_9973",
+      "id": "PROG-2-9973",
+      "title": "戰鬥 HUD 與出陣畫面多語殘留（en／ja）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P2",
+      "status": "open",
+      "type": "bugfix",
+      "phase": "M0",
+      "created": "2026-11-25",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "en 戰鬥 HUD 殘留繁中：部署提示說明框、兵種名（虎豹騎／陷陣營／大戟士／連弩手）、計謀按鈕「計謀 35點」、攻×4 等標示、頂欄季別字串 Year 1, 3 · 夜。ja 出陣編成夾雜繁中（主将、戦闘、既定）。另加探針：戰鬥內招式橫幅與技能面板的 en／ja 實機截圖（注入 _onGeneralSkillUsed 不會出橫幅，需真正推進戰鬥佇列）。前置 PR #2594 已合併。",
+      "related": [
+        "PROG-2-9966"
+      ],
+      "depends": [],
+      "acceptance": [
+        "en／ja 戰鬥 HUD 與出陣畫面無繁中殘留（實機截圖）",
+        "招式橫幅與技能面板 en／ja 實機截圖"
+      ],
+      "deliverables": [
+        "i18n 鍵補齊（en／ja）",
+        "en／ja 實機截圖證據"
+      ],
+      "notes": "2026-11-25 | 狀態: open | 驗證: pending | 變更: 開卡，未上鎖 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "doc": "docs/agent-briefs/tasks/PROG/PROG-2-9973.md"
+      }
     }
   ],
   "summary": {
