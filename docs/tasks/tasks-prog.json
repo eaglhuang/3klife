@@ -17303,6 +17303,25 @@
       "notes": "2026-11-24 | 狀態: in-progress | 驗證: pending | 變更: 開卡並上鎖 | 阻塞: none"
     },
     {
+      "id": "PROG-2-9964",
+      "title": "武將台詞人性化：v2 參數推導器＋觸發點接線（DialogueContextBuilder）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "feature",
+      "phase": "M9",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-24T13:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "related": ["PROG-2-9954"],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "description": "遊戲端 DialogueContextBuilder：依 MindMood、對說話對象的好感度（relationBucket）、情境推導 10 種情緒，帶齊 v2 參數（personality／mood／relationBucket／worldPhase／scene／interaction.type／contextKey）；缺任何一項不送請求。規則放 data/dialogue-mood-rules.json。接線：頭像點擊、大廳點武將、友誼事件反應（含戰後）。本機快取同情境不重複請求。測試 tests/DialogueContextBuilder.test.ts。",
+      "notes": "2026-11-24 | 狀態: done | 驗證: tests/DialogueContextBuilder.test.ts 18 項、tsc 0 錯、compute-gate standard 通過 | 變更: DialogueContextBuilder／Requester／ReactionHub／DialogueSystem、data/dialogue-mood-rules.json；接線頭像點擊、大廳點武將、友誼事件反應（含戰後）；GameSession.mindMoodOf | 阻塞: none；未做：吃醋旁觀者主動觸發、武將對武將觸發點、本機快取不持久化"
+    },
+    {
       "id": "PROG-2-9961",
       "title": "火計／水計格子 VFX hook 接線（grid-fire、grid-water-ripple）",
       "owner": "ClaudeCode_claude-opus-5-5",

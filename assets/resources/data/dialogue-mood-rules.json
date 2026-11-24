@@ -1,0 +1,904 @@
+{
+  "_note": "武將台詞 v2 參數推導規則（PROG-2-9964）。心情＝MindMood × 對說話對象的好感 bucket × 情境；改規則只改此檔。對照中台 data/dialogue/daily-contexts.json 的情境登錄表。",
+  "version": 1,
+  "bucketMaxScores": [
+    -60,
+    -20,
+    19,
+    59
+  ],
+  "bands": {
+    "low": [
+      0,
+      1
+    ],
+    "mid": [
+      2
+    ],
+    "high": [
+      3,
+      4
+    ]
+  },
+  "defaultMatrix": {
+    "EAGER": [
+      "anger",
+      "pride",
+      "pride",
+      "joy",
+      "joy"
+    ],
+    "HIGH": [
+      "anger",
+      "calm",
+      "joy",
+      "joy",
+      "joy"
+    ],
+    "NORMAL": [
+      "anger",
+      "calm",
+      "calm",
+      "calm",
+      "joy"
+    ],
+    "LOW": [
+      "anger",
+      "sorrow",
+      "sorrow",
+      "sorrow",
+      "calm"
+    ]
+  },
+  "contextOverrides": [
+    {
+      "contexts": [
+        "gift-received"
+      ],
+      "low": "calm",
+      "mid": "grateful",
+      "high": "grateful",
+      "adjust": [
+        {
+          "mindMoods": [
+            "EAGER",
+            "HIGH"
+          ],
+          "bands": [
+            "high"
+          ],
+          "mood": "joy"
+        }
+      ]
+    },
+    {
+      "contexts": [
+        "praised"
+      ],
+      "low": "calm",
+      "mid": "pride",
+      "high": "shy",
+      "adjust": [
+        {
+          "mindMoods": [
+            "LOW"
+          ],
+          "bands": [
+            "low",
+            "mid",
+            "high"
+          ],
+          "mood": "grateful"
+        },
+        {
+          "mindMoods": [
+            "EAGER"
+          ],
+          "bands": [
+            "low"
+          ],
+          "mood": "pride"
+        }
+      ]
+    },
+    {
+      "contexts": [
+        "rejected",
+        "volunteer-rejected",
+        "advice-rejected"
+      ],
+      "low": "anger",
+      "mid": "wronged",
+      "high": "wronged",
+      "adjust": [
+        {
+          "mindMoods": [
+            "LOW"
+          ],
+          "bands": [
+            "low",
+            "mid",
+            "high"
+          ],
+          "mood": "sorrow"
+        }
+      ]
+    },
+    {
+      "contexts": [
+        "equipment-revoked"
+      ],
+      "low": "anger",
+      "mid": "anger",
+      "high": "wronged",
+      "adjust": []
+    },
+    {
+      "contexts": [
+        "advice-adopted"
+      ],
+      "low": "pride",
+      "mid": "pride",
+      "high": "joy",
+      "adjust": []
+    },
+    {
+      "contexts": [
+        "request-reward"
+      ],
+      "low": "calm",
+      "mid": "joy",
+      "high": "joy",
+      "adjust": [
+        {
+          "mindMoods": [
+            "EAGER",
+            "HIGH"
+          ],
+          "bands": [
+            "low",
+            "mid",
+            "high"
+          ],
+          "mood": "pride"
+        }
+      ]
+    },
+    {
+      "contexts": [
+        "comfort"
+      ],
+      "low": "calm",
+      "mid": "calm",
+      "high": "calm",
+      "adjust": [
+        {
+          "mindMoods": [
+            "LOW"
+          ],
+          "bands": [
+            "high"
+          ],
+          "mood": "grateful"
+        }
+      ]
+    },
+    {
+      "contexts": [
+        "matchmaking-proposal",
+        "bond-formed",
+        "marriage"
+      ],
+      "low": "calm",
+      "mid": "shy",
+      "high": "shy",
+      "adjust": []
+    },
+    {
+      "contexts": [
+        "sortie-selected"
+      ],
+      "low": "pride",
+      "mid": "pride",
+      "high": "pride",
+      "adjust": [
+        {
+          "mindMoods": [
+            "NORMAL"
+          ],
+          "bands": [
+            "low",
+            "mid",
+            "high"
+          ],
+          "mood": "joy"
+        },
+        {
+          "mindMoods": [
+            "LOW"
+          ],
+          "bands": [
+            "low",
+            "mid",
+            "high"
+          ],
+          "mood": "fear"
+        }
+      ]
+    },
+    {
+      "contexts": [
+        "sortie-benched"
+      ],
+      "low": "anger",
+      "mid": "calm",
+      "high": "wronged",
+      "adjust": [
+        {
+          "mindMoods": [
+            "EAGER"
+          ],
+          "bands": [
+            "low",
+            "mid",
+            "high"
+          ],
+          "mood": "wronged"
+        }
+      ]
+    },
+    {
+      "contexts": [
+        "pre-battle",
+        "siege-defense"
+      ],
+      "low": "calm",
+      "mid": "calm",
+      "high": "calm",
+      "adjust": [
+        {
+          "mindMoods": [
+            "EAGER",
+            "HIGH"
+          ],
+          "bands": [
+            "low",
+            "mid",
+            "high"
+          ],
+          "mood": "pride"
+        },
+        {
+          "mindMoods": [
+            "LOW"
+          ],
+          "bands": [
+            "low",
+            "mid",
+            "high"
+          ],
+          "mood": "fear"
+        }
+      ]
+    },
+    {
+      "contexts": [
+        "battle-victory",
+        "duel-won",
+        "capture-enemy",
+        "quest-report"
+      ],
+      "low": "pride",
+      "mid": "pride",
+      "high": "joy",
+      "adjust": [
+        {
+          "mindMoods": [
+            "LOW"
+          ],
+          "bands": [
+            "low",
+            "mid",
+            "high"
+          ],
+          "mood": "joy"
+        }
+      ]
+    },
+    {
+      "contexts": [
+        "battle-defeat",
+        "siege-defense-fallen"
+      ],
+      "low": "anger",
+      "mid": "sorrow",
+      "high": "sorrow",
+      "adjust": [
+        {
+          "mindMoods": [
+            "EAGER"
+          ],
+          "bands": [
+            "low",
+            "mid",
+            "high"
+          ],
+          "mood": "anger"
+        }
+      ]
+    },
+    {
+      "contexts": [
+        "captured"
+      ],
+      "low": "anger",
+      "mid": "anger",
+      "high": "anger",
+      "adjust": [
+        {
+          "mindMoods": [
+            "LOW"
+          ],
+          "bands": [
+            "low",
+            "mid",
+            "high"
+          ],
+          "mood": "fear"
+        }
+      ]
+    },
+    {
+      "contexts": [
+        "duel-challenge"
+      ],
+      "low": "pride",
+      "mid": "pride",
+      "high": "pride",
+      "adjust": [
+        {
+          "mindMoods": [
+            "LOW"
+          ],
+          "bands": [
+            "low",
+            "mid",
+            "high"
+          ],
+          "mood": "fear"
+        }
+      ]
+    },
+    {
+      "contexts": [
+        "duel-lost",
+        "quest-failed"
+      ],
+      "low": "wronged",
+      "mid": "wronged",
+      "high": "wronged",
+      "adjust": [
+        {
+          "mindMoods": [
+            "EAGER"
+          ],
+          "bands": [
+            "low",
+            "mid",
+            "high"
+          ],
+          "mood": "anger"
+        },
+        {
+          "mindMoods": [
+            "LOW"
+          ],
+          "bands": [
+            "low",
+            "mid",
+            "high"
+          ],
+          "mood": "sorrow"
+        }
+      ]
+    },
+    {
+      "contexts": [
+        "promoted",
+        "rank-up"
+      ],
+      "low": "joy",
+      "mid": "joy",
+      "high": "grateful",
+      "adjust": []
+    },
+    {
+      "contexts": [
+        "gacha-drawn",
+        "recruited"
+      ],
+      "low": "pride",
+      "mid": "pride",
+      "high": "joy",
+      "adjust": [
+        {
+          "mindMoods": [
+            "LOW"
+          ],
+          "bands": [
+            "low",
+            "mid",
+            "high"
+          ],
+          "mood": "calm"
+        }
+      ]
+    },
+    {
+      "contexts": [
+        "gacha-duplicate",
+        "child-born",
+        "academy-graduate"
+      ],
+      "low": "joy",
+      "mid": "joy",
+      "high": "joy",
+      "adjust": []
+    },
+    {
+      "contexts": [
+        "retirement",
+        "farewell"
+      ],
+      "low": "calm",
+      "mid": "calm",
+      "high": "grateful",
+      "adjust": [
+        {
+          "mindMoods": [
+            "EAGER"
+          ],
+          "bands": [
+            "low",
+            "mid",
+            "high"
+          ],
+          "mood": "pride"
+        }
+      ]
+    }
+  ],
+  "recentEvents": {
+    "withinSeasons": 2,
+    "rules": [
+      {
+        "actionIds": [
+          "admin_volunteer_rejected",
+          "admin_advice_ignored",
+          "bonding_proposal_refused",
+          "personnel_demote",
+          "personnel_dismiss",
+          "dialogue_choice_harsh",
+          "diplomacy_envoy_failure_blame"
+        ],
+        "mood": "wronged"
+      },
+      {
+        "actionIds": [
+          "equipment_strip_gear",
+          "equipment_strip_treasure",
+          "capture_her_companion"
+        ],
+        "mood": "anger"
+      },
+      {
+        "actionIds": [
+          "combat_defeat_together"
+        ],
+        "mood": "sorrow"
+      },
+      {
+        "actionIds": [
+          "reward_grant_equipment",
+          "reward_grant_treasure",
+          "reward_silver_large",
+          "personnel_promote",
+          "bonding_matchmaker_gift"
+        ],
+        "mood": "grateful"
+      },
+      {
+        "actionIds": [
+          "combat_victory_together",
+          "admin_advice_adopted",
+          "reward_public_praise"
+        ],
+        "mood": "joy"
+      }
+    ]
+  },
+  "jealousy": {
+    "contexts": [
+      "gift-received",
+      "bond-formed",
+      "promoted",
+      "sortie-selected"
+    ],
+    "minBucket": 3,
+    "calmWhenWitnessBucketAtLeast": 3,
+    "calmMood": "joy"
+  },
+  "worldPhase": {
+    "unificationShare": 0.6,
+    "tripartiteTopShare": 0.2,
+    "tripartiteTopSum": 0.75,
+    "crisisRivalShare": 0.4,
+    "crisisRivalRatio": 1.5
+  },
+  "actionContexts": {
+    "reward_grant_equipment": "gift-received",
+    "reward_grant_treasure": "gift-received",
+    "reward_silver_large": "gift-received",
+    "reward_silver_small": "gift-received",
+    "reward_public_praise": "praised",
+    "equipment_strip_gear": "equipment-revoked",
+    "equipment_strip_treasure": "equipment-revoked",
+    "admin_volunteer_rejected": "volunteer-rejected",
+    "admin_advice_adopted": "advice-adopted",
+    "admin_advice_ignored": "advice-rejected",
+    "personnel_promote": "promoted",
+    "combat_victory_together": "battle-victory",
+    "combat_defeat_together": "battle-defeat",
+    "bonding_proposal_refused": "rejected",
+    "bonding_matchmaker_gift": "bond-formed"
+  },
+  "reaction": {
+    "burstWindowMs": 1500,
+    "maxPerBurst": 1,
+    "minIntervalMs": 8000,
+    "sceneOverrides": {
+      "battle-victory": "camp",
+      "battle-defeat": "camp"
+    }
+  },
+  "cache": {
+    "linesPerKey": 3,
+    "failureCooldownMs": 60000
+  },
+  "contexts": {
+    "lobby-idle": {
+      "interactionType": "encounter",
+      "scenes": [
+        "lobby"
+      ],
+      "avatarTalk": true
+    },
+    "avatar-tap": {
+      "interactionType": "encounter",
+      "scenes": [
+        "lobby",
+        "court",
+        "camp"
+      ],
+      "avatarTalk": true
+    },
+    "greeting": {
+      "interactionType": "greeting",
+      "scenes": [
+        "lobby",
+        "court",
+        "private"
+      ]
+    },
+    "daily-chat": {
+      "interactionType": "daily_chat",
+      "scenes": [
+        "lobby",
+        "private",
+        "camp"
+      ]
+    },
+    "volunteer": {
+      "interactionType": "order",
+      "scenes": [
+        "lobby",
+        "court"
+      ]
+    },
+    "volunteer-rejected": {
+      "interactionType": "rejected",
+      "scenes": [
+        "lobby",
+        "court"
+      ]
+    },
+    "season-change": {
+      "interactionType": "daily_chat",
+      "scenes": [
+        "lobby"
+      ]
+    },
+    "year-end": {
+      "interactionType": "memory_recall",
+      "scenes": [
+        "lobby",
+        "court"
+      ]
+    },
+    "gacha-drawn": {
+      "interactionType": "greeting",
+      "scenes": [
+        "lobby"
+      ]
+    },
+    "gacha-duplicate": {
+      "interactionType": "daily_chat",
+      "scenes": [
+        "lobby"
+      ]
+    },
+    "recruit-hall": {
+      "interactionType": "greeting",
+      "scenes": [
+        "court",
+        "lobby"
+      ]
+    },
+    "recruited": {
+      "interactionType": "greeting",
+      "scenes": [
+        "court"
+      ]
+    },
+    "academy-enroll": {
+      "interactionType": "daily_chat",
+      "scenes": [
+        "private",
+        "court"
+      ]
+    },
+    "academy-graduate": {
+      "interactionType": "daily_chat",
+      "scenes": [
+        "private",
+        "court"
+      ]
+    },
+    "tutoring-class": {
+      "interactionType": "daily_chat",
+      "scenes": [
+        "private"
+      ]
+    },
+    "tutoring-classmate": {
+      "interactionType": "encounter",
+      "scenes": [
+        "private"
+      ]
+    },
+    "matchmaking-proposal": {
+      "interactionType": "other",
+      "scenes": [
+        "private",
+        "lobby"
+      ]
+    },
+    "marriage": {
+      "interactionType": "other",
+      "scenes": [
+        "private"
+      ]
+    },
+    "child-born": {
+      "interactionType": "other",
+      "scenes": [
+        "private"
+      ]
+    },
+    "bond-formed": {
+      "interactionType": "other",
+      "scenes": [
+        "private",
+        "lobby"
+      ]
+    },
+    "gift-received": {
+      "interactionType": "gift_received",
+      "scenes": [
+        "lobby",
+        "court",
+        "private"
+      ]
+    },
+    "gift": {
+      "interactionType": "gift",
+      "scenes": [
+        "lobby",
+        "court"
+      ]
+    },
+    "equipment-revoked": {
+      "interactionType": "rejected",
+      "scenes": [
+        "lobby",
+        "camp"
+      ]
+    },
+    "praised": {
+      "interactionType": "praised",
+      "scenes": [
+        "lobby",
+        "court",
+        "camp"
+      ]
+    },
+    "rejected": {
+      "interactionType": "rejected",
+      "scenes": [
+        "lobby",
+        "court"
+      ]
+    },
+    "request-reward": {
+      "interactionType": "request_reward",
+      "scenes": [
+        "lobby",
+        "court"
+      ]
+    },
+    "comfort": {
+      "interactionType": "comfort",
+      "scenes": [
+        "lobby",
+        "private",
+        "camp"
+      ]
+    },
+    "farewell": {
+      "interactionType": "farewell",
+      "scenes": [
+        "lobby",
+        "camp"
+      ]
+    },
+    "advice-adopted": {
+      "interactionType": "meeting",
+      "scenes": [
+        "court"
+      ]
+    },
+    "advice-rejected": {
+      "interactionType": "rejected",
+      "scenes": [
+        "court"
+      ]
+    },
+    "promoted": {
+      "interactionType": "praised",
+      "scenes": [
+        "court",
+        "lobby"
+      ]
+    },
+    "rank-up": {
+      "interactionType": "praised",
+      "scenes": [
+        "lobby",
+        "camp"
+      ]
+    },
+    "sortie-selected": {
+      "interactionType": "order",
+      "scenes": [
+        "camp"
+      ]
+    },
+    "sortie-benched": {
+      "interactionType": "rejected",
+      "scenes": [
+        "camp",
+        "lobby"
+      ]
+    },
+    "pre-battle": {
+      "interactionType": "battle_start",
+      "scenes": [
+        "battlefield",
+        "camp"
+      ]
+    },
+    "battle-victory": {
+      "interactionType": "battle_victory",
+      "scenes": [
+        "battlefield",
+        "camp"
+      ]
+    },
+    "battle-defeat": {
+      "interactionType": "battle_defeat",
+      "scenes": [
+        "battlefield",
+        "camp"
+      ]
+    },
+    "captured": {
+      "interactionType": "battle_defeat",
+      "scenes": [
+        "battlefield"
+      ]
+    },
+    "capture-enemy": {
+      "interactionType": "battle_victory",
+      "scenes": [
+        "battlefield",
+        "camp"
+      ]
+    },
+    "duel-challenge": {
+      "interactionType": "battle_start",
+      "scenes": [
+        "battlefield"
+      ]
+    },
+    "duel-won": {
+      "interactionType": "battle_victory",
+      "scenes": [
+        "battlefield"
+      ]
+    },
+    "duel-lost": {
+      "interactionType": "battle_defeat",
+      "scenes": [
+        "battlefield"
+      ]
+    },
+    "siege-defense": {
+      "interactionType": "battle_start",
+      "scenes": [
+        "battlefield"
+      ]
+    },
+    "siege-defense-fallen": {
+      "interactionType": "battle_defeat",
+      "scenes": [
+        "battlefield"
+      ]
+    },
+    "quest-report": {
+      "interactionType": "order",
+      "scenes": [
+        "court",
+        "lobby"
+      ]
+    },
+    "quest-failed": {
+      "interactionType": "order",
+      "scenes": [
+        "court",
+        "lobby"
+      ]
+    },
+    "event-reaction": {
+      "interactionType": "memory_recall",
+      "scenes": [
+        "lobby",
+        "court"
+      ],
+      "requiresEventId": true
+    },
+    "world-news": {
+      "interactionType": "meeting",
+      "scenes": [
+        "lobby",
+        "court"
+      ]
+    },
+    "retirement": {
+      "interactionType": "farewell",
+      "scenes": [
+        "court",
+        "lobby"
+      ]
+    }
+  }
+}

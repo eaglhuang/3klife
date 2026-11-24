@@ -5447,6 +5447,12 @@ export class GameSession implements AcademyRecordPort {
         return this.mind.barkFor(generalId, 'LOBBY', seed, this._mindContext(generalId));
     }
 
+    /** 武將此刻的心情（EAGER／HIGH／NORMAL／LOW）；武將不在名冊回 undefined。台詞系統推導情緒用（PROG-2-9964） */
+    public mindMoodOf(generalId: string): 'EAGER' | 'HIGH' | 'NORMAL' | 'LOW' | undefined {
+        if (!this._rosterRead().some((g) => g.id === generalId)) return undefined;
+        return this.mind.moodOf(generalId, this._mindContext(generalId));
+    }
+
     /** 武將信箱（主動請求、請罪、進言、抗命信）：未回應在前；PROG-2-9150 */
     public mindMailbox(): MindRequest[] {
         return this.mind.mailbox();
