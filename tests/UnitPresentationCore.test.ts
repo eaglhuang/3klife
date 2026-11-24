@@ -137,7 +137,9 @@ assert.equal(resolveRidingTier('zhao_yun', 0, { 'zhao-yun': 2 }), 2);
 assert.equal(resolveRidingTier('zhao-yun', 3, { 'zhao-yun': 2 }), 3);
 assert.equal(resolveRidingTier('zhao-yun', 0, null), 0);
 assert.equal(resolveRidingTier('liu-bei', 0, { 'zhao-yun': 2 }), 0);
-assert.equal(generalSpineConfig('guan-yu', null, 3)?.path, generalSpineConfig('guan-yu')?.path);
+// PROG-2-9993：關羽 export/game 尚未發佈，目前走舊 export/mount 包（沒有的武將如張飛仍步行）
+assert.equal(generalSpineConfig('guan-yu', null, 3)?.path, 'spine/generals/guan_yu_mounted/guan_yu__mount_horse_bay');
+assert.equal(generalSpineConfig('zhang-fei', null, 3)?.path, generalSpineConfig('zhang-fei')?.path);
 assert.equal(cavalry.bobPx, 0);
 assert.ok(Math.abs((cavalry.footfallIntervalSec ?? 0) - cavalry.clips.move.duration / 2) < 1e-6);
 assert.ok(cavalry.displayScale > 0 && cavalry.displayScale < troopSpineConfig('infantry').displayScale); // 合成骨架騎手已放大 1.54 倍

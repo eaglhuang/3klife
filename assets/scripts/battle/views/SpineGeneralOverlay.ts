@@ -241,6 +241,17 @@ export class SpineUnitOverlay {
     return true;
   }
 
+  /** 施法：骨架有專屬施法動作（config.castClip，騎乘包的通用 cast）就播它，否則沿用通用攻擊動作（PROG-2-9993）。 */
+  public playCast(id: string): boolean {
+    const entry = this.entries.get(id);
+    const cast = entry?.config.castClip;
+    if (entry?.node?.isValid && cast) {
+      const runtime = entry.node.getComponent(sp.Skeleton)?.skeletonData?.getRuntimeData();
+      if (runtime?.findAnimation(cast.name)) { entry.core.play('attack', cast); return true; }
+    }
+    return this.play(id, 'attack');
+  }
+
   /**
    * 受擊回饋：閃色 + 左右抖動（PROG-2-9401）。抖動是畫面位置上的暫時偏移，每幀由 apply 疊加在移動位置上，
    * 所以不會打斷移動、也不會把單位拉回舊位置；結束時偏移自然歸零。

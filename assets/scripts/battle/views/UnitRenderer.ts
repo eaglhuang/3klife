@@ -62,7 +62,7 @@ import { playBattleAudio, playBattleFootstep } from "../shared/BattleAudio";
 import { MoveDustEmitter } from "./MoveDustEmitter";
 import { SpineUnitOverlay } from "./SpineGeneralOverlay";
 import { GeneralPortraitStandee, STANDEE_HEIGHT_PX, needsStandeeFallback } from "./GeneralPortraitStandee";
-import { generalSpineConfig, resolveRidingTier, squadMemberCount, troopSpineConfigWithFallback } from '../shared/UnitPresentationConfig';
+import { generalSpineConfig, resolveRidingTier, setMountedList, squadMemberCount, troopSpineConfigWithFallback } from '../shared/UnitPresentationConfig';
 import { DuelExchange } from '../shared/DuelPresentationCore';
 import { BATTLE_VISUAL_TIMING, buildHitShakeSteps, hitScaleNeighborDepth, planHitFeedback, planMoveSegment } from "./BattlePresentationTiming";
 import { BuffGainEffectPool } from "./effects/BuffGainEffectPool";
@@ -361,6 +361,7 @@ export class UnitRenderer extends Component {
 
   public initialize(boardRenderer: BoardRenderer | null, worldCamera: Camera | null, canvasNode: Node | null): void {
     this.loadInnateRidingTiers();
+    this.loadMountedList();
     this.boardRenderer = boardRenderer;
     this.worldCamera = worldCamera;
     this.canvasNode = canvasNode;
@@ -1490,7 +1491,7 @@ export class UnitRenderer extends Component {
   }
 
   public playGeneralAttackPose(faction: Faction): void {
-    this.spineUnits.play(this.generalSpineId(faction), 'attack');
+    this.spineUnits.playCast(this.generalSpineId(faction));
     // PROG-2-9353：沒有目標位置，朝對方武將方向在自身前方播刀光；任何一方不在場就略過
     const self = this.generalViews.get(faction)?.worldNode;
     const foe = this.generalViews.get(faction === Faction.Player ? Faction.Enemy : Faction.Player)?.worldNode;
@@ -2466,7 +2467,18 @@ export class UnitRenderer extends Component {
   /** 騎術一級的落下特效設定（data/riding-tiers.json tiers[tier=1].deployDrop）；讀到前為 null。 */
   private riderDeployDrop: RiderDeployDrop | null = null;
 
+  /** 騎乘對照表（data/mounted-list.json，spine-trial 產生）載入一次；讀到前騎乘退回舊包。 */
+  private mountedListLoading = false;
+  private loadMountedList(): void {
+    if (this.mountedListLoading) return;
+    this.mountedListLoading = true;
+    resources.load('data/mounted-list', JsonAsset, (err, asset) => {
+      if (!err && asset) setMountedList(asset.json);
+    });
+  }
+
   private generalSpine(general: { id: string; templateId?: string | null; ridingTier?: number }, _faction: Faction) {
+    this.loadMountedList();
     this.loadInnateRidingTiers();
     const tier = resolveRidingTier(general.id, general.ridingTier ?? 0, this.innateRidingTiers);
     return generalSpineConfig(general.id, general.templateId, tier, path => this.spineUnits.hasFailed(path));

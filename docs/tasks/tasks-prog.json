@@ -17701,6 +17701,64 @@
       }
     },
     {
+      "doc_id": "",
+      "id": "PROG-2-9993",
+      "title": "接 spine-trial 騎乘輸出：manifest 同步工具、mounted-list 資料驅動、趙雲/呂布/關羽騎乘",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-25T02:01:30+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "spine-trial export/game（manifest.json v2、mounted-list.json v1）改為 3KL 騎乘素材單一來源：sync-mount-spine.js 讀 manifest 逐檔驗 md5 並同步 spine/generals/*_mounted；UnitPresentationConfig 改讀 data/mounted-list.json，舊包保留為 fallback。",
+      "related": [
+        "PROG-2-9959"
+      ],
+      "depends": [],
+      "acceptance": [
+        "sync 工具依 manifest 驗 md5、失敗非零 exit",
+        "MOUNTED_GENERALS 不再手寫",
+        "趙雲 tier1/2/3、呂布騎乘接上",
+        "有 cast 的武將騎乘施法用 cast",
+        "單元測試、tsc、compute-gate 過",
+        "實機截圖證據"
+      ],
+      "deliverables": [
+        "tools_node/sync-mount-spine.js",
+        "assets/resources/data/mounted-list.json",
+        "assets/scripts/battle/shared/UnitPresentationConfig.ts",
+        "tests"
+      ],
+      "notes": "2026-11-24 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
       "id": "PROG-2-9962",
       "title": "戰場招式效果說明與類別標籤走 i18n（effectStatus／categoryTag → battle.skill_effect／battle.skill_category）",
       "owner": "ClaudeCode_claude-opus-5-5",
@@ -17735,8 +17793,8 @@
   ],
   "summary": {
     "done": 315,
-    "in_progress": 2,
+    "in_progress": 3,
     "open": 86,
-    "total": 403
+    "total": 404
   }
 }
