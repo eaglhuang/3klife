@@ -17,6 +17,8 @@ export interface UnitSpineConfig extends UnitPresentationConfig {
   footfallIntervalSec?: number;
   /** 整隊走路起伏（畫面像素）；不設 = MOVE_GAIT_TUNING.bobPx。骨架自己有起伏的（騎兵的馬）設 0。 */
   bobPx?: number;
+  /** 骨架整體染色（相乘，白 = 不變）。敵方騎兵沿用藍騎兵骨架時用紅色調暫代，見 ENEMY_CAVALRY_TINT。 */
+  tint?: { r: number; g: number; b: number };
 }
 /** 小兵一隊最多 3 人：帶頭者在前，兩名隊員在後方上下錯開。站位以 0.18 顯示縮放（人寬約 58 像素）、格寬約 144 像素抓：要看得出是三個人，又不能站出自己的格子。 */
 export const SOLDIER_SQUAD_SLOTS: ReadonlyArray<{ x: number; y: number; phase: number }> = [
@@ -55,10 +57,11 @@ const generals: Record<string, { name: string; footX: number }> = {
  * 騎術三級（1 騎術／2 精騎／3 神駒，見 data/riding-tiers.json）換坐騎外觀：looks 以等級為鍵，
  * 取「不超過該等級的最高一套」，沒有更高等級的外觀時沿用較低一套。
  * 騎馬版素材（騎手＋馬合成骨架）來自 spine-trial，私有、不進倉庫；缺素材時由 hasFailed 退回步行版。
- * 目前只有趙雲有騎馬骨架（horse_bay，等級 1 外觀），精騎、神駒外觀待 spine-trial 補。
+ * 趙雲：等級 1 騎術、2 精騎 horse_sheet、3 神駒 horse_war 一律用 spine-trial 趙雲 v2 騎馬（與步行版同一套造型）（子資料夾 v2_horse_*，見 tools_node/sync-mount-spine.js）。
+ * 缺圖時 hasFailed 為真，generalSpineConfig 直接退回步行版。
  */
 const MOUNTED_GENERALS: Record<string, { dir: string; looks: Record<number, string>; footX: number }> = {
-  zhao_yun: { dir: 'zhao_yun_mounted', looks: { 1: 'zhao__mount_horse_bay' }, footX: 0 },
+  zhao_yun: { dir: 'zhao_yun_mounted', looks: { 1: 'v2_horse_bay/zhao_v2__mount_horse_bay', 2: 'v2_horse_sheet/zhao_v2__mount_horse_sheet', 3: 'v2_horse_war/zhao_v2__mount_horse_war' }, footX: 0 },
 };
 const mountedCache = new Map<string, UnitSpineConfig>();
 function mountedGeneralConfig(key: string, ridingTier: number): UnitSpineConfig | null {
@@ -130,33 +133,41 @@ const ELITE_ART: Record<string, { troop: string; art: string }> = {
  * - 隊形比步兵拉開：馬身寬，用步兵站位三匹馬會疊成一團。
  * - gallop 週期 0.567 秒（橫向襲步：後遠→後近→前遠→前近→騰空），揚塵與蹄聲取每半週期一拍（每拍兩聲蹄響）；馬骨架本身有起伏，不再加整隊起伏。
  * - 合成骨架 v2（PROG-2-9738，50 個動作）已有 attack_spear／dodge／fall／retreat；舊骨架缺這些動作時由 fallback 退回 thrust／hit／gallop。
- * - 只有藍色版：敵方騎兵沿用紅色槍兵，待換色版。
+ * - 敵方（PROG-2-9959）：沒有紅騎兵骨架，沿用藍騎兵騎馬骨架加 ENEMY_CAVALRY_TINT 紅色調暫代，不再退回紅方步矛兵。
  */
 const CAVALRY_GALLOP_PERIOD_SEC = 0.5667;
 const CAVALRY_NAME = 'soldier_cavalry_blue';
+/**
+ * 敵方騎兵紅方骨架（spine-trial PR #11，export/mount/soldier_cavalry_red/horse_bay）：獨立資料夾 soldier_cavalry_red，動作與藍版相同。
+ * 紅方骨架缺檔時的後備：沿用藍騎兵騎馬骨架、以紅色相乘染色（藍甲會偏暗，只剩輪廓，所以只當後備）。
+ */
+export const ENEMY_CAVALRY_TINT = { r: 255, g: 96, b: 96 } as const;
+const CAVALRY_RED_NAME = 'soldier_cavalry_red';
+const CAVALRY_RED_MOUNTED_NAME = `${CAVALRY_RED_NAME}__mount_horse_bay`;
 /** 騎乘版骨架檔名（PROG-2-9868）：騎手騎在栗色馬上，動作名稱與舊合成骨架相同；缺圖時退回 CAVALRY_NAME。 */
 const CAVALRY_MOUNTED_NAME = `${CAVALRY_NAME}__mount_horse_bay`;
 const CAVALRY_SQUAD_SLOTS: ReadonlyArray<{ x: number; y: number; phase: number }> = [
   { x: 30, y: 24, phase: 0.35 },
   { x: 48, y: -22, phase: 0.7 },
 ];
-function cavalrySpineConfig(mounted = true): UnitSpineConfig {
-  const skeleton = mounted ? CAVALRY_MOUNTED_NAME : CAVALRY_NAME;
-  const cached = soldierCache.get(skeleton);
+function cavalrySpineConfig(mounted = true, tint?: UnitSpineConfig['tint'], dir = CAVALRY_NAME, mountedName = CAVALRY_MOUNTED_NAME): UnitSpineConfig {
+  const skeleton = mounted ? mountedName : dir;
+  const cacheKey = `${dir}/${skeleton}${tint ? `#${tint.r},${tint.g},${tint.b}` : ''}`;
+  const cached = soldierCache.get(cacheKey);
   if (cached) return cached;
-  const config: UnitSpineConfig = { path: `spine/soldiers/${CAVALRY_NAME}/${skeleton}`, displayScale: 0.1, labelToFoot: 150, footOffset: { x: 0, y: 0 },
+  const config: UnitSpineConfig = { path: `spine/soldiers/${dir}/${skeleton}`, displayScale: 0.1, labelToFoot: 150, footOffset: { x: 0, y: 0 },
     walkGroundSpeed: 1251.14, speedMultiplier: 2, maxAnimationSpeed: MAX_WALK_ANIMATION_SPEED, mirrorSkin: 'hand_mirror', squad: CAVALRY_SQUAD_SLOTS,
-    footfallIntervalSec: CAVALRY_GALLOP_PERIOD_SEC / 2, bobPx: 0,
+    footfallIntervalSec: CAVALRY_GALLOP_PERIOD_SEC / 2, bobPx: 0, ...(tint ? { tint } : {}),
     clips: {
       idle: clip('idle', 1.6, true), move: clip('gallop', CAVALRY_GALLOP_PERIOD_SEC, true, 'trot'), retreat: clip('retreat', 1.2, true, 'gallop'),
       attack: clip('attack_spear', 1.2, false, 'thrust'), hit: clip('hit', 0.8), dodge: clip('dodge', 0.9, false, 'hit'), fall: clip('fall', 1.8, false, 'hit'),
     } };
-  soldierCache.set(skeleton, config);
+  soldierCache.set(cacheKey, config);
   return config;
 }
 /** 兵種（TroopType 的字串值）選素材；連弩手等尚無專屬素材者沿用槍兵／弓兵；騎兵目前只有我方藍色版。 */
 export function troopSpineConfig(troop: string, isEnemy = false, tallyTemplateId?: string | null): UnitSpineConfig {
-  if (troop === 'cavalry' && !isEnemy) return cavalrySpineConfig();
+  if (troop === 'cavalry') return isEnemy ? cavalrySpineConfig(true, undefined, CAVALRY_RED_NAME, CAVALRY_RED_MOUNTED_NAME) : cavalrySpineConfig();
   const elite = tallyTemplateId ? ELITE_ART[tallyTemplateId] : undefined;
   const key = elite && elite.troop === troop ? elite.art : SOLDIER_ART[troop] ? troop : 'pikeman';
   const art = SOLDIER_ART[key];
@@ -177,8 +188,9 @@ export function troopSpineConfig(troop: string, isEnemy = false, tallyTemplateId
  */
 export function troopSpineConfigWithFallback(troop: string, isEnemy: boolean, tallyTemplateId: string | null | undefined,
   hasFailed: (path: string) => boolean): UnitSpineConfig {
-  // 我方騎兵：騎乘版載不起來時先退回原步行版骨架，再退槍兵
-  const legacyCavalry = troop === 'cavalry' && !isEnemy ? [cavalrySpineConfig(false)] : [];
+  // 騎兵：敵方紅騎兵缺檔時退回藍騎兵騎馬骨架染紅（再退無馬版），我方退無馬版；最後才退槍兵，不會退成紅方步矛兵
+  const legacyCavalry = troop !== 'cavalry' ? []
+    : isEnemy ? [cavalrySpineConfig(true, ENEMY_CAVALRY_TINT), cavalrySpineConfig(false, ENEMY_CAVALRY_TINT)] : [cavalrySpineConfig(false)];
   const candidates = [troopSpineConfig(troop, isEnemy, tallyTemplateId), troopSpineConfig(troop, isEnemy), ...legacyCavalry,
     troopSpineConfig(troop === 'archer' ? 'archer' : 'pikeman', isEnemy)];
   return candidates.find(config => !hasFailed(config.path)) ?? candidates[candidates.length - 1];

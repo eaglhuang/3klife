@@ -3,7 +3,7 @@ import { TestSuite, assert } from '../TestRunner';
 import type { MissionDetailView, Revealable } from '../../assets/scripts/core/mission/MissionTypes';
 import type { CandidateView, IMissionService, MissionCardView, MissionResult } from '../../assets/scripts/core/mission/service/IMissionService';
 import {
-    MISSION_PERFECT_REVEAL_NOTE, buildMissionDialogState, candidateOptions, intelGainFloatText, labeled, lockedStatusText,
+    MISSION_PERFECT_REVEAL_NOTE, buildMissionDialogState, candidateOptions, intelGainFloatText, intelUnlockNote, labeled, lockedStatusText,
     perfectRewardLabel, returnSeasonText, seasonCodeLabel, stripLabel,
 } from '../../assets/scripts/ui/mission/MissionDetailPresenter';
 
@@ -149,6 +149,17 @@ export function createMissionDetailPresenterSuite(): TestSuite {
         assert.isTrue((poor.actionBlockedText['re-scout'] ?? '').includes('糧草不足'));
         assert.equals('此任務已等待過', poor.actionBlockedText.wait);
         assert.isTrue(poor.costFoodValueLabel.includes('不足，現有 10'));
+    });
+
+    suite.test('情報提示寫出下一段能多看到什麼（取捨可見，PROG-2-9965）', () => {
+        const bands = { vague: 30, clear: 60, full: 90 };
+        assert.isTrue(intelUnlockNote(10, bands).includes('30%'));
+        assert.isTrue(intelUnlockNote(35, bands).includes('60%'));
+        assert.isTrue(intelUnlockNote(70, bands).includes('90%'));
+        assert.equals('', intelUnlockNote(95, bands));
+        assert.equals('', intelUnlockNote(10));
+        const s = buildMissionDialogState(fake(detail({ intel: 35 }), [cand('a')]), 'M1', wall, { ...ctx(), intelBands: bands })!;
+        assert.isTrue(s.intelHintLabel.includes('到 60% 可看到成功率區間'));
     });
 
     suite.test('沒有該任務回傳 null；presenter 只讀不寫（不呼叫任何動作）', () => {

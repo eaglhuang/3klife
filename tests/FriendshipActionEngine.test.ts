@@ -1,7 +1,7 @@
 /**
  * FriendshipActionEngine.test.ts — 友誼行為結算（PROG-2-9954，權重表 PROG-2-9866）
  *
- * 鎖住：權重表 36 項可解析、delta 結算與性格倍率（半數遠離 0）、每季次數上限與冷卻、
+ * 鎖住：權重表 39 項可解析、delta 結算與性格倍率（半數遠離 0）、每季次數上限與冷卻、
  * 玩家↔武將與武將↔武將配對分記、−100～100 夾制、事件 payload、存檔來回，
  * 以及 GameSession 掛點（穿戴賞賜、卸下剝奪）會發 FriendshipActionApplied。
  */
@@ -31,10 +31,10 @@ function newEngine() {
 export function createFriendshipActionEngineSuite(): TestSuite {
     const suite = new TestSuite('FriendshipActionEngine (友誼行為結算 PROG-2-9954)');
 
-    suite.test('權重表可解析：36 項、delta 整數且在 ±30 內', () => {
+    suite.test('權重表可解析：39 項、delta 整數且在 ±30 內', () => {
         const { table } = loadTable();
         const defs = Object.values(table.actions);
-        assert.equals(defs.length, 36);
+        assert.equals(defs.length, 39);
         assert.isTrue(defs.every((d) => Number.isInteger(d.delta) && Math.abs(d.delta) <= 30));
     });
 

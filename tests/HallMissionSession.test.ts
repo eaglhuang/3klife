@@ -8,6 +8,7 @@ import { join } from 'path';
 import { sys } from 'cc';
 import { GameSession, InMemoryRosterStore, type HallMissionWallet } from '../assets/scripts/core/managers/GameSession';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
+import { FriendshipService } from '../assets/scripts/core/services/FriendshipService';
 import { PlayerSaveService } from '../assets/scripts/core/services/PlayerSaveService';
 import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
@@ -219,6 +220,28 @@ export function createHallMissionSessionSuite(): TestSuite {
         assert.isTrue(Object.keys(ledger.byTag).some((t) => t.startsWith('t:')), '成敗等級進了標籤');
         assert.isFalse(session.hallBusyGeneralIds().includes('zhang'));
         assert.equals(12, openCards(session).length);
+    });
+
+    suite.test('換季結算：季報行帶成敗標籤；成功類結果加友誼、一般失敗不扣（PROG-2-9965）', async () => {
+        FriendshipService.resetInstance();
+        const session = await newSession();
+        session.setFriendshipWeights(readData('friendship-action-weights.json'));
+        session.bindMissionData(bundle, wallet());
+        const card = openCards(session)[0];
+        const r = await session.missionService!.dispatch({ requestId: rid(), missionId: card.id, generalIds: ['zhang'] });
+        if (!r.ok) throw new Error(r.text);
+        let lines: string[] = [];
+        for (let i = 0; i < 5 && lines.length === 0; i += 1) lines = (await session.advanceSeason()).hallMissionReport?.lines ?? [];
+        assert.equals(1, lines.length, '到期要結算一筆');
+        const tag = /^【(大成功|成功|失敗|大失敗)】/.exec(lines[0]);
+        assert.isTrue(tag !== null, `成敗標籤在行首：${lines[0]}`);
+        const friendship = FriendshipService.getInstance().get('zhang');
+        if (tag && (tag[1] === '大成功' || tag[1] === '成功')) {
+            assert.isTrue(friendship > 0, '成功類結果要加友誼');
+            assert.isTrue(/友誼 \+\d+/.test(lines[0]), '季報行尾顯示友誼變化');
+        }
+        if (tag && tag[1] === '失敗') assert.isTrue(friendship <= 0, '一般失敗不加友誼');
+        FriendshipService.resetInstance();
     });
 
     suite.test('存讀檔：任務與進行中狀態完整還原（v2）；讀檔後不重新產生', async () => {
