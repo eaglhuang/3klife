@@ -17862,12 +17862,47 @@
         "summary": "",
         "doc": "docs/agent-briefs/tasks/PROG/PROG-2-9973.md"
       }
+    },
+    {
+      "doc_id": "doc_task_9997",
+      "id": "PROG-2-9997",
+      "title": "戰場 vfx-block 必須有 prefabPath 防回歸（skills.json 路徑盤點）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P2",
+      "status": "in-progress",
+      "type": "bugfix",
+      "phase": "M0",
+      "created": "2026-11-25",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "靜態盤點發現 vfx-block-registry 83 塊只有 texPath 沒有 prefabPath，playBlock 找不到池回 null。skills.json 的 14 技能 28 步用到 7 種此類積木。追蹤確認戰場內無人呼叫 ActionSystem.playSkill（只讀 label／costSp），戰場實際走 vfx-effects.json battle_*／格子特效／攻擊刀光，皆有 prefab。故只加防回歸測試。",
+      "related": [
+        "PROG-2-9972"
+      ],
+      "depends": [],
+      "acceptance": [
+        "戰場實際引用的 vfx-block 皆有 prefabPath 的測試",
+        "戰場呼叫 playSkill 時 skills.json 積木必須有 prefabPath 的守門測試"
+      ],
+      "deliverables": [
+        "tests/BattleVfxPrefabGuard.test.ts"
+      ],
+      "notes": "2026-11-25 | 狀態: in-progress | 驗證: pending | 變更: 開卡並上鎖 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "doc": "docs/agent-briefs/tasks/PROG/PROG-2-9997.md"
+      }
     }
   ],
   "summary": {
     "done": 315,
-    "in_progress": 3,
+    "in_progress": 4,
     "open": 86,
-    "total": 404
+    "total": 405
   }
 }
