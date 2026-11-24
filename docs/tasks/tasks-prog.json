@@ -17366,6 +17366,14 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "id": "PROG-2-9958",
+      "title": "年末排行榜大廳看板掛載、年終頒獎典禮佇列演出與提親被拒接線",
+      "status": "done",
+      "priority": "P0",
+      "owner": "Antigravity",
+      "brief": "docs/agent-briefs/tasks/PROG/PROG-2-9958.md"
     }
   ]
 }
