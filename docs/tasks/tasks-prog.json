@@ -17203,6 +17203,39 @@
       "deliverables": [],
       "description": "實測手動已選卡組選擇器無關閉鈕、Esc 無效；出征編組收起時未收 deck／lead host。",
       "notes": "2026-11-24 | 狀態: done | 驗證: 建置 EXIT 36（index.html 存在）；tsc 0 錯誤；單元測試 ALL PASS 9444；compute-gate quick 通過；playtest-online 12/12 步通過（console error 0、pageerror 0）；實跑探針：A 開選卡器、B 真點 btnDeckClose 關閉、C 重開後按 Esc 關閉、E 同開選卡與結緣後 _closeSortieSetup 收起兩者 host 皆 inactive（截圖在 side-session-notes/PROG-2-9952） | 變更: lobby-deck-select-main 新增 btnDeckClose；DeckSelectController 綁定關閉並 close()；LobbyScene Esc 清單納入 deck／lead host，_closeSortieSetup 收起兩者；DeckSelectController 測試更新 | 阻塞: none（出征編組實際開啟未在探針中走到，收起以直接呼叫 _closeSortieSetup 驗證）"
+    },
+    {
+      "id": "PROG-2-9955",
+      "title": "武將武器欄位 weapon：資料化取代角色推算",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "feature",
+      "phase": "M9",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-24T20:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "related": [
+        "PROG-2-9400"
+      ],
+      "depends": [],
+      "acceptance": [
+        "generals.json 每位武將有 weapon 欄位（值域為 attack-vfx.json generalTemplates 鍵）",
+        "AttackVfxPlayer 優先讀 weapon，缺欄位才退回 profile／角色推算",
+        "單元測試證明：除校正項外，各武將攻擊風格與改前一致",
+        "tsc tsconfig.test.json 錯誤 0；單元測試全過；compute-gate quick 通過"
+      ],
+      "deliverables": [
+        "assets/resources/data/generals.json",
+        "assets/scripts/battle/views/AttackVfxPlayer.ts",
+        "tests/ 武器欄位單元測試",
+        "side-session-notes general-weapon-table-1124.md（對照表）"
+      ],
+      "description": "武將武器目前只靠角色推算（Combat→blade、Support→cast），張飛等應為長兵器卻變刀光。本卡為 generals.json 補 weapon 欄位（初版為現行推算結果），程式優先讀欄位；歷史典故校正項另列表。不改戰場核心規則。",
+      "notes": "2026-11-24 | 狀態: done | 驗證: tsc test 0 錯誤；單元測試 ALL PASS 9451（含新增 GeneralWeapon 7 項）；compute-gate quick 4/4；validate-generals-data 0 錯誤 | 變更: generals.json 每位武將補 weapon（初版＝現行推算，3 位典故校正：張飛 spear、趙雲 spear、黃忠 bow）；AttackVfxPlayer 優先讀 weapon 欄位、缺欄位退回 profile／角色推算；新增 battle/shared/GeneralWeapon.ts 純函式與測試；未動 UnitRenderer／BattleAudio／戰場核心規則 | 阻塞: 無；呂布方天畫戟因無戟模板暫維持 spear | 備註: 原擬卡號 9953 已被友誼卡（PR #2589）佔用，改用 9955",
+      "completed_at": "2026-11-24T20:30:00+08:00",
+      "completed_by_agent": "ClaudeCode_claude-opus-5-5"
     }
   ]
 }
