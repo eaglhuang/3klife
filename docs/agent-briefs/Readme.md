@@ -68,7 +68,12 @@
 
 1. 先走 `task-card-opener` skill，決定主資料面與是否需要 Markdown 卡，並以名詞定義文件決定任務卡 ID / 子系統編號。
 2. 若流程判定要建立 Markdown 卡，再在 `docs/agent-briefs/tasks/<系統前綴>/` 新增任務卡；系統前綴以 task id 的第一段為準。
-3. 指派唯一 ID、owner、priority、status、related、depends。
+3. 指派唯一 ID、owner、priority、status、related、depends。卡號一律先預約，不可自己看本地 master 挑「最大號 +1」：
+   - 取下一個空號：`node tools_node/task-lock.js reserve <系統代號>-<子系統> <AgentName>`（例如 `PROG-2`），或開卡時直接用 `task-card-opener --next-id-prefix PROG-2`。
+   - 指定卡號：`node tools_node/task-lock.js reserve PROG-2-9990 <AgentName>`；若該號已被占用，工具會**直接改保留下一個可用卡號**並印出撞號來源，請改用它。
+   - 預約會比對：`origin/master`（自動 fetch）、本機與遠端所有未合併分支的 commit 訊息與檔名、`gh pr list --state all --search <prefix>` 的 PR 標題／分支／內文，以及存在 git common dir 的共用預約表 `task-id-reservations.json`（同一台機器所有 worktree 共用，原子寫入，TTL 168 小時，卡號落地 master 後自動清除）。
+   - 同一個 Agent 開兩個 worktree 也視為不同持有者，不會共用同一號。
+   - `gh` 不可用或離線時只會警告並退回其他來源；這時請先 `git fetch origin` 再預約。規則參數在 `tools_node/lib/task-id-allocation-policy.json`。
 4. 在卡片寫清楚：開單原因、完整描述、驗證方式、是否需要測試。
 5. 同步更新對應 shard / manifest；若屬於 UI task shard，更新後執行 `node tools_node/build-ui-task-manifest.js`。
 6. 同步更新 [tasks_index.md](C:\Users\User\3KLife\docs\agent-briefs\tasks_index.md (doc_task_0002)) (doc_task_0002) 與 [CheckList.md](C:\Users\User\3KLife\docs\agent-briefs\CheckList.md (doc_ai_0022)) (doc_ai_0022)。
@@ -78,7 +83,7 @@
 
 ## 鎖卡流程
 
-1. 確認這張卡目前沒有被其他 Agent 鎖定。
+1. 確認這張卡目前沒有被其他 Agent 鎖定；新卡必須先完成上方「卡號預約」（`task-lock.js reserve`），預約結果的卡號才是可用卡號。
 2. 任務卡 frontmatter 更新：
    - `status: in-progress`
    - `started_at: <RFC3339>`
