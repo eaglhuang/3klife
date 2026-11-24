@@ -156,6 +156,33 @@
       "cooldownSeasons": 0
     },
     {
+      "actionId": "admin_mission_critical",
+      "label": "奉命辦成大廳任務，大成功",
+      "tag": "admin",
+      "delta": 7,
+      "personalityAffected": true,
+      "perSeasonCap": 1,
+      "cooldownSeasons": 0
+    },
+    {
+      "actionId": "admin_mission_success",
+      "label": "奉命辦成大廳任務",
+      "tag": "admin",
+      "delta": 4,
+      "personalityAffected": true,
+      "perSeasonCap": 1,
+      "cooldownSeasons": 0
+    },
+    {
+      "actionId": "admin_mission_disaster",
+      "label": "奉命辦大廳任務卻大失敗",
+      "tag": "admin",
+      "delta": -3,
+      "personalityAffected": true,
+      "perSeasonCap": 1,
+      "cooldownSeasons": 0
+    },
+    {
       "actionId": "reward_silver_small",
       "label": "賞賜銀兩（小額）",
       "tag": "reward",

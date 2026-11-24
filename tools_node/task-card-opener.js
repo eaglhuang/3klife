@@ -241,13 +241,14 @@ function canReuseExistingTaskId(inspection, currentAgentName, mdPath) {
   const hasTaskCard = inspection.taskCards.length > 0;
   const hasStoreEntry = inspection.taskStoreCount > 0;
   const hasForeignLock = inspection.locks.some((entry) => entry.agentName && entry.agentName !== normalizedAgentName);
+  const hasRemoteOccupant = Array.isArray(inspection.remoteSources) && inspection.remoteSources.length > 0;
   const ownsReservationOnly = inspection.locks.length > 0 && inspection.locks.every((entry) => entry.agentName === normalizedAgentName && entry.reservationOnly);
   const mdPathMatchesExistingTaskCard = Boolean(mdPath) && fs.existsSync(mdPath) && path.basename(mdPath, '.md') === inspection.taskId;
 
   if (hasForeignLock) {
     return false;
   }
-  if (ownsReservationOnly && !hasTaskCard && !hasStoreEntry) {
+  if (ownsReservationOnly && !hasTaskCard && !hasStoreEntry && !hasRemoteOccupant) {
     return true;
   }
   return mdPathMatchesExistingTaskCard;
@@ -667,7 +668,7 @@ function cleanupPendingTaskIdReservation() {
     return;
   }
   if (pendingTaskIdReservation.cleanupOnError) {
-    taskAdapter.releaseReservedTaskId(pendingTaskIdReservation.taskId, pendingTaskIdReservation.agentName);
+    taskAdapter.releaseReservedTaskId(pendingTaskIdReservation.taskId, pendingTaskIdReservation.agentName, { dropShared: true });
   }
   clearTaskIdReservation();
 }
@@ -824,7 +825,15 @@ async function main(options = {}, runtime = {}) {
   const inspection = taskAdapter.inspectTaskId(id);
   if (inspection.occupied && !allowExistingId && !canReuseExistingTaskId(inspection, owner, mdPath)) {
     const prefixHint = inferTaskIdPrefix(id) || nextIdPrefix;
-    const suggestion = prefixHint ? ` 改用 --next-id-prefix ${prefixHint} 可原子保留下一個空號。` : '';
+    let nextFree = '';
+    try {
+      nextFree = prefixHint ? taskAdapter.previewNextTaskId(prefixHint) : '';
+    } catch {
+      nextFree = '';
+    }
+    const suggestion = prefixHint
+      ? ` 下一個可用卡號：${nextFree || '(無法計算)'}；改用 --next-id-prefix ${prefixHint} 可原子保留下一個空號。`
+      : '';
     throw new Error(`task id "${id}" 已被佔用：${taskAdapter.formatTaskIdInspection(inspection)}。${suggestion}`.trim());
   }
 

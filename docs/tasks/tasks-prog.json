@@ -17303,6 +17303,51 @@
       "notes": "2026-11-24 | 狀態: in-progress | 驗證: pending | 變更: 開卡並上鎖 | 阻塞: none"
     },
     {
+      "id": "PROG-2-9965",
+      "title": "大廳任務補到規格樂趣：點牆直開詳情、結算接友誼、季報成敗標籤、情報解鎖提示",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "feature",
+      "phase": "M9",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-24T13:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "related": [
+        "HALL-15",
+        "doc_spec_1178",
+        "doc_spec_0454",
+        "doc_spec_0455"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "description": "盤點大廳任務對照規格的落差並補齊：點牆上任務卡直接開詳情窗（不再先開任務牆）；結算接友誼行為（大成功+7、成功+4、大失敗-3、自告奮勇+6）；季報大廳任務加【大成功】等標籤與友誼變化；情報提示寫出到幾 % 解鎖成功率區間。",
+      "notes": "2026-11-25 | 狀態: done | 驗證: 單元測試與網頁建置實玩截圖 | 變更: LobbyScene、GameSession、MissionDetailPresenter、友誼權重表 | 阻塞: none（待裁決見 scratchpad/lobby-mission-questions.md：牆上進行中置頂、接取鈕合併、紀錄入口、低情報數字）"
+    },
+    {
+      "id": "PROG-2-9964",
+      "title": "武將台詞人性化：v2 參數推導器＋觸發點接線（DialogueContextBuilder）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "feature",
+      "phase": "M9",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-24T13:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "related": [
+        "PROG-2-9954"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "description": "遊戲端 DialogueContextBuilder：依 MindMood、對說話對象的好感度（relationBucket）、情境推導 10 種情緒，帶齊 v2 參數（personality／mood／relationBucket／worldPhase／scene／interaction.type／contextKey）；缺任何一項不送請求。規則放 data/dialogue-mood-rules.json。接線：頭像點擊、大廳點武將、友誼事件反應（含戰後）。本機快取同情境不重複請求。測試 tests/DialogueContextBuilder.test.ts。",
+      "notes": "2026-11-24 | 狀態: done | 驗證: tests/DialogueContextBuilder.test.ts 18 項、tsc 0 錯、compute-gate standard 通過 | 變更: DialogueContextBuilder／Requester／ReactionHub／DialogueSystem、data/dialogue-mood-rules.json；接線頭像點擊、大廳點武將、友誼事件反應（含戰後）；GameSession.mindMoodOf | 阻塞: none；未做：吃醋旁觀者主動觸發、武將對武將觸發點、本機快取不持久化"
+    },
+    {
       "id": "PROG-2-9961",
       "title": "火計／水計格子 VFX hook 接線（grid-fire、grid-water-ripple）",
       "owner": "ClaudeCode_claude-opus-5-5",
@@ -17431,6 +17476,212 @@
       }
     },
     {
+      "doc_id": "",
+      "id": "PROG-2-9963",
+      "title": "學府入學候選只算子嗣（親生、義子、家臣子），成年家臣不算",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "bugfix",
+      "phase": "M9",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "LobbyScene._openAcademyFlow 的 candidateAges 取自全名冊，成年家臣讓導流媒人路徑走不到。改為純函式 academyEnrollCandidateAges，依家族登記表（FamilyService，非 spouse 成員）與結緣出生紀錄（breedingBirthRecords）篩子嗣，排除已歿與被俘。測試加在 tests/AcademyEmptyGuardView.test.ts。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-24 | 狀態: done | 驗證: tsc 0 錯 / run-cli 9488 全過 / compute-gate quick 4/4 | 變更: 新增 academyEnrollCandidateAges，LobbyScene 只改 candidateAges 幾行；親生子嗣未登記家族表，以出生紀錄補 | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9975",
+      "title": "武將武器欄位依最新立繪重建",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "data",
+      "phase": "M9",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-25T00:16:29+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "PROG-2-9955 的 weapon 欄位原由適性推算，與立繪不符（劍類 0 位）。改以最新立繪與文字來源重建，規則寫成 JSON 對照表。",
+      "related": [
+        "PROG-2-9955"
+      ],
+      "depends": [],
+      "acceptance": [
+        "generals.json weapon 依立繪重建；新增 general-weapon-rules.json（名將覆寫表＋定位預設表）；GeneralWeapon 測試驗證資料與規則表一致；tsc 0；單元測試全過；compute-gate quick 通過"
+      ],
+      "deliverables": [],
+      "notes": "2026-11-25 | 狀態: done | 驗證: tsc 測試型別 0；單元測試 run-cli 9489 全過；compute-gate quick 通過 | 變更: generals.json weapon 依最新立繪重建（舊 blade137/cast94/spear3/bow1/sword0 → 新 sword48/cast109/blade38/spear29/bow11，改 110 位）；新增 general-weapon-rules.json（名將覆寫表＋定位預設表）；GeneralWeapon.test 驗證資料與規則表一致；逐位表在 side-session-notes/general-weapon-redo-1124.md | 阻塞: 無；低信心 28 位待複核；枚舉缺雙劍/戟/扇建議後補",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9959",
+      "title": "騎兵部署落下特效、敵方紅方騎兵骨架與趙雲騎術 2/3 級騎馬外觀",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-24T21:41:42+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "敵方騎兵改載 spine-trial 紅方騎馬骨架（缺檔退藍騎馬紅色調）；騎術一級 dust_ring 接騎兵落地；趙雲騎術 2/3 級掛 v2 騎馬",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-25 | 狀態: done | 驗證: PR #2592 squash 合併（commit 2e28957b2731781d2713e6a3dd9718dbd60cc55f）；CI atm-governance／ucuf-core 全 SUCCESS；tsc 0、單元測試 9507 pass、compute-gate quick 4/4；playtest-online 12/12；戰場探針：敵方紅騎兵皮膚 soldier_cavalry_red__mount_horse_bay、趙雲騎術 1/2/3 級皮膚 zhao_v2 horse_bay/sheet/war、騎兵部署 dust_ring 每次 4 顆 | 變更: 騎兵敵方紅騎兵骨架、騎術一級 dust_ring、趙雲騎術 1/2/3 級 v2 騎馬、sync-mount-spine.js | 限制: 趙雲騎術等級為探針覆寫（非玩家實際升級）；取證建置非最終 HEAD（僅差 master 合併）；未加正式 QA hook | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_3056",
+      "id": "PROG-2-9990",
+      "title": "任務卡號跨 worktree／PR／commit 預約防撞",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "tooling",
+      "phase": "M9",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-25T00:47:51+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "11/24～25 PROG-2-9953/9954/9955/9959/9962 被不同 Agent 重複開號。現有 task-id-guard 只看當前 worktree 的卡檔、tasks-atm 與 .task-locks，看不到 origin/master、其他 worktree、未合併分支／PR 與 commit 訊息。",
+      "related": [
+        "PROG-2-9953",
+        "PROG-2-9954",
+        "PROG-2-9955",
+        "PROG-2-9959",
+        "PROG-2-9962"
+      ],
+      "depends": [],
+      "acceptance": [
+        "預約時比對 origin/master、開著與近期的 PR（gh pr list --state all）、未合併分支與 commit 訊息、本機所有 worktree 共用預約表",
+        "預約表以原子寫入（wx lockfile）並有 TTL",
+        "指定卡號撞號時回傳下一個可用卡號（broker ticket），不只拒絕",
+        "docs/agent-briefs/Readme.md 鎖卡流程寫入新流程",
+        "單元測試覆蓋遠端占用、共用預約、撞號建議"
+      ],
+      "deliverables": [
+        "tools_node/lib/task-id-remote-occupancy.js",
+        "tools_node/lib/task-id-allocation-policy.json",
+        "tools_node/lib/task-id-guard.js",
+        "tools_node/task-lock.js",
+        "docs/agent-briefs/Readme.md",
+        "tools_node/test/task-id-remote-occupancy.test.js",
+        "tools_node/adapters/atm-3klife/lock-adapter.js",
+        "tools_node/adapters/atm-3klife/task-adapter.js",
+        "tools_node/task-card-opener.js",
+        "tools_node/test/task-id-guard-flow.test.js",
+        "tools_node/adapters/atm-3klife/governance-profile.json",
+        ".github/workflows/atm-governance.yml",
+        "package.json"
+      ],
+      "notes": "2026-11-25 | 狀態: done | 驗證: task-id-remote-occupancy.test 7 案、task-id-guard-flow、task-lock-cross-shard 全過；真實 repo 重放抓到 9953(base)/9962(unmerged commit)/9954(PR #2591/#2589)；CLI reserve 指定撞號自動改發下一號 | 變更: 新增跨 worktree/分支/PR/commit 卡號占用與 git common dir 共用預約表，撞號回傳下一個可用卡號，Readme 開卡/鎖卡流程更新，CI 加 Task ID reservation guard | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
       "id": "PROG-2-9962",
       "title": "戰場招式效果說明與類別標籤走 i18n（effectStatus／categoryTag → battle.skill_effect／battle.skill_category）",
       "owner": "ClaudeCode_claude-opus-5-5",
@@ -17462,5 +17713,11 @@
       "description": "效果說明（effectStatus）與類別標籤（categoryTag）由繁中字面值改為 i18n 鍵：battle.skill_effect.<battleSkillId>、battle.skill_category.<categoryId>；招式名鍵沿用 battle.skill_name.<id>。四語系補齊（zh-TW 維持原文）。",
       "notes": "2026-11-24 | 狀態: in-progress | 驗證: pending | 變更: 開卡並上鎖；效果說明與類別標籤改 i18n 鍵 | 阻塞: none"
     }
-  ]
+  ],
+  "summary": {
+    "done": 315,
+    "in_progress": 2,
+    "open": 86,
+    "total": 403
+  }
 }
