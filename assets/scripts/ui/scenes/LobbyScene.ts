@@ -4220,10 +4220,13 @@ export class LobbyScene extends Component {
         return wall === 'wall-left' ? 'Military' : 'Domestic';
     }
 
-    /** 大廳牆面第 rowIndex 張任務卡：開該牆並直接開出同一個任務的詳情（PROG-2-9123） */
+    /**
+     * 大廳牆面第 rowIndex 張任務卡：直接開出同一個任務的詳情（PROG-2-9123、PROG-2-9965）。
+     * 不再先開全螢幕任務牆面板：牆上已列出任務，多一層只是重複；要看總覽按「展開軍務牆／內政牆」。
+     */
     private _onClickLobbyWallRow(wall: LobbyHallWallId, rowIndex: number): void {
         if (!this._hallBoard || !this._hallBoardHost) { this._showNotOpenYet(); return; }
-        this._openHallBoard(this._hallBoardOfWall(wall));
+        this._hallBoard.switchBoard(this._hallBoardOfWall(wall));
         // 牆上只列未接取任務，列號和任務板的列號不同：用牆上記下的任務代號開詳情
         const missionId = this._lobbyWallOpenIds[wall]?.[rowIndex];
         if (missionId) this._openHallDetailById(missionId); else this._onClickHallDetail(rowIndex);
@@ -4325,6 +4328,7 @@ ${spent}`,
             reconGrainCost: data.balance.recon.grainCost,
             reconCap: data.balance.recon.cap,
             hiddenRevealIntel: data.balance.hiddenRevealIntel,
+            intelBands: data.balance.intelBands,
             selectedGeneralId,
         });
     }
