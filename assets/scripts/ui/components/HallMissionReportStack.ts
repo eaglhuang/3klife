@@ -60,6 +60,8 @@ export class HallMissionReportStack {
     private _quote!: Label;
     private _progress!: Label;
     private _next!: Label;
+    /** 卡片下方的操作提示：點任意處看下一張／最後一張點了收起 */
+    private _tapHint!: Label;
     private _skip!: Node;
     private _skipLabel!: Label;
     private _backs: Node[] = [];
@@ -100,7 +102,8 @@ export class HallMissionReportStack {
         mask.rect(-size.width / 2, -size.height / 2, size.width, size.height);
         mask.fill();
         // 遮罩吃掉點擊，避免點穿到大廳
-        root.on(Node.EventType.TOUCH_END, (event?: StopEvent) => { if (event) event.propagationStopped = true; });
+        // 點卡片外面也翻下一張；最後一張點了就收起（_advance 處理）
+        root.on(Node.EventType.TOUCH_END, (event?: StopEvent) => { if (event) event.propagationStopped = true; this._advance(); });
 
         // 疊在後面的卡背（最多露出兩張），暗示還有幾張
         for (let i = 2; i >= 1; i -= 1) {
@@ -152,6 +155,8 @@ export class HallMissionReportStack {
         this._next = this._button(card, 'Next', 150, 46, CARD_W / 2 - 24 - 75, -top + 14 + 23, () => this._advance());
         this._skipLabel = this._button(card, 'Skip', 150, 46, CARD_W / 2 - 24 - 75 - 166, -top + 14 + 23, () => this.dispose());
         this._skip = this._skipLabel.node.parent as Node;
+        // 提示放在卡片下方的遮罩上，不隨卡片彈動
+        this._tapHint = makeLabel(root, 'TapHint', 24, SUB, CARD_W, 32, 0, -CARD_H / 2 - 56, Label.HorizontalAlign.CENTER);
         card.on(Node.EventType.TOUCH_END, (event?: StopEvent) => { if (event) event.propagationStopped = true; this._advance(); });
         host.addChild(root);
         root.setSiblingIndex(host.children.length - 1);
@@ -202,6 +207,7 @@ export class HallMissionReportStack {
         this._next.string = remain > 0 ? t('ui.hallMission.report.next') : t('ui.hallMission.report.done');
         this._skipLabel.string = t('ui.hallMission.report.skipAll');
         this._skip.active = remain > 0;
+        this._tapHint.string = t(remain > 0 ? 'ui.hallMission.report.tapNext' : 'ui.hallMission.report.tapClose');
         if (this._backs[1]) this._backs[1].active = remain >= 1;
         if (this._backs[2]) this._backs[2].active = remain >= 2;
         this._avatar.spriteFrame = null;

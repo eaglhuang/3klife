@@ -9,6 +9,7 @@
  */
 import { _decorator, Button, Layout, ScrollView, UITransform } from 'cc';
 import { CompositePanel } from '../core/CompositePanel';
+import { services } from '../../core/managers/ServiceLoader';
 import type { UITemplateBinder } from '../core/UITemplateBinder';
 import {
     buildSeasonReportPanelRows,
@@ -91,7 +92,7 @@ export class SeasonReportComposite extends CompositePanel {
         if (!payload) return;
         const hallLines = payload.hallMissionLines ?? [];
         const sections = payload.sections ?? [];
-        const texts = buildSeasonReportPanelTexts(payload.seasonLabel, payload.reports, hallLines, payload.rankPreviewLine ?? '', sections);
+        const texts = buildSeasonReportPanelTexts(payload.seasonLabel, payload.reports, hallLines, payload.rankPreviewLine ?? '', sections, (key, ...args) => services().i18n.t(key, ...args));
         const binder = this._templateBinder;
         binder?.setTextsByPath(texts);
         if (!binder) return;

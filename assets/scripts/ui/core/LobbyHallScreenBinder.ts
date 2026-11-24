@@ -611,7 +611,11 @@ export class LobbyHallScreenBinder {
         const ping = findUcufNode(this._screenRoot, 'lobby-hall-screen.map-ping');
         const labels = ping ? ping.children.map((c) => c.getComponent(Label)).filter((l): l is Label => !!l) : [];
         // 掛在沙盤的父節點：hidden 模式會關掉視窗節點，元件不能跟著停
-        const player = (viewport.parent ?? this._screenRoot).addComponent(HallMapTurnPlayer);
+        const playerHost = viewport.parent ?? this._screenRoot;
+        // 同上：保留下來的畫面上已有舊場景的播放元件，先移除再加，避免換季動畫重複播
+        const stalePlayer = playerHost.getComponent(HallMapTurnPlayer);
+        if (stalePlayer) stalePlayer.destroy();
+        const player = playerHost.addComponent(HallMapTurnPlayer);
         player.viewport = viewport;
         // 設計稿沙盤沒有內層地圖圖層，content 留空：只縮放視窗、落事件標記（暫定）
         player.content = null;
@@ -655,6 +659,13 @@ export class LobbyHallScreenBinder {
     private _insertAfterSandbox(node: Node): void {
         const sandbox = findUcufNode(this._screenRoot, 'lobby-hall-screen.sandbox-group');
         const parent = sandbox?.parent ?? this._screenRoot;
+        // 大廳畫面會跨場景保留（換季、戰鬥回來都沿用同一個 host）：舊場景留下的同名人群／粒子層還掛在樹上，
+        // 它的點擊回呼綁著已銷毀的 LobbyScene（欄位被引擎清成 null，點小人會拋 reading 'peek'，PROG-2-9994），
+        // 還會讓小人疊成好幾份。建新層之前先把同名舊層摘掉。
+        for (const stale of parent.children.filter((child) => child !== node && child.name === node.name)) {
+            stale.removeFromParent();
+            stale.destroy();
+        }
         parent.addChild(node);
         if (sandbox && sandbox.parent) {
             // 人群、粒子依建立順序排在沙盤之後：後建者在上

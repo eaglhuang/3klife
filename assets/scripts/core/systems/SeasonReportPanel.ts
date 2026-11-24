@@ -38,12 +38,35 @@ export function seasonReportLabelHeight(text: string): number {
 /** 空列占位文字，與排行榜一致 */
 const EMPTY_ROW_TEXT = '—';
 
-/** 結緣建議門檻說明；數字沿用 RetireReviewCopy 的暫定值 */
-const BOND_THRESHOLD_HINT = '結緣建議門檻：精力 50% 以上（暫定）';
+/** 文字查表函式（等同 services().i18n.t）；查不到時回傳 key 本身 */
+export type SeasonReportTextLookup = (key: string, ...args: string[]) => string;
+
+/** 精力列的文案：key 與 zh-TW 預設（語系表有就用語系表，PROG-2-9994） */
+export const SEASON_REPORT_VITALITY_TEXTS = Object.freeze({
+    /** 精力 80% 以上 */
+    high: { key: 'ui.season_report.vitality.high', fallback: '{0} 精神飽滿，隨時可以去結緣' },
+    /** 精力過半但不到 80% */
+    mid: { key: 'ui.season_report.vitality.mid', fallback: '{0} 還撐得住，要結緣也行' },
+    /** 底部提示：結緣門檻 */
+    hint: { key: 'ui.season_report.vitality.hint', fallback: '武將精力 ・ 精力過半才排進結緣名單' },
+    /** 底部提示：還有幾位沒列出 */
+    hintMore: { key: 'ui.season_report.vitality.hint_more', fallback: '另有 {0} 位精力也夠 ・ 武將精力過半才排進結緣名單' },
+});
+
+/** 「精神飽滿」的精力下限（%） */
+export const SEASON_REPORT_VITALITY_HIGH_PCT = 80;
+
+function reportText(lookup: SeasonReportTextLookup | undefined, entry: { key: string; fallback: string }, ...args: string[]): string {
+    const localized = lookup ? lookup(entry.key, ...args) : entry.key;
+    if (localized !== entry.key) return localized;
+    return entry.fallback.replace(/\{(\d+)\}/g, (_match, index: string) => args[Number(index)] ?? '');
+}
 
 export interface SeasonReportPanelRow {
     readonly rank: number;
-    /** 劇本句，例如「本季戰報：趙雲 精力剩 90%，可進行結緣。」 */
+    /** 精力百分比，顯示在列首，例如「90%」 */
+    readonly vitalityPct: number;
+    /** 武將精力一句話，例如「趙雲 精神飽滿，隨時可以去結緣」 */
     readonly lineText: string;
 }
 
@@ -51,8 +74,14 @@ export interface SeasonReportPanelRow {
 export function buildSeasonReportPanelRows(
     reports: readonly QuarterlyBattleReportRow[],
     limit: number = SEASON_REPORT_PANEL_ROWS,
+    lookup?: SeasonReportTextLookup,
 ): SeasonReportPanelRow[] {
-    return reports.filter((report) => report.bondRecommended).slice(0, limit).map((report, index) => ({ rank: index + 1, lineText: report.scriptLine }));
+    return reports.filter((report) => report.bondRecommended).slice(0, limit).map((report, index) => {
+        const entry = report.vitalityPct >= SEASON_REPORT_VITALITY_HIGH_PCT
+            ? SEASON_REPORT_VITALITY_TEXTS.high
+            : SEASON_REPORT_VITALITY_TEXTS.mid;
+        return { rank: index + 1, vitalityPct: report.vitalityPct, lineText: reportText(lookup, entry, report.generalName) };
+    });
 }
 
 /**
@@ -65,8 +94,9 @@ export function buildSeasonReportPanelTexts(
     hallMissionLines: readonly string[] = [],
     rankPreviewLine: string = '',
     sections: readonly SeasonReportSection[] = [],
+    lookup?: SeasonReportTextLookup,
 ): Record<string, string> {
-    const rows = buildSeasonReportPanelRows(reports);
+    const rows = buildSeasonReportPanelRows(reports, SEASON_REPORT_PANEL_ROWS, lookup);
     const qualified = reports.filter((report) => report.bondRecommended).length;
     const hidden = Math.max(0, qualified - rows.length);
     const nothingToReport = rows.length === 0 && hallMissionLines.length === 0 && sections.length === 0;
@@ -85,12 +115,14 @@ export function buildSeasonReportPanelTexts(
         [SEASON_REPORT_HALL_LABEL_PATH]: hallMissionLines.length > 0 ? ['大廳任務', ...hallMissionLines].join('\n') : '',
         'DialogCard/FooterBar/HintLabel': rows.length === 0
             ? ''
-            : hidden > 0 ? `另有 ${hidden} 位武將未列出 ・ ${BOND_THRESHOLD_HINT}` : BOND_THRESHOLD_HINT,
+            : hidden > 0
+                ? reportText(lookup, SEASON_REPORT_VITALITY_TEXTS.hintMore, String(hidden))
+                : reportText(lookup, SEASON_REPORT_VITALITY_TEXTS.hint),
     };
     for (let i = 0; i < SEASON_REPORT_PANEL_ROWS; i += 1) {
         const row = rows[i];
         const base = `DialogCard/ScrollView/ScrollContent/Row${i}`;
-        texts[`${base}/RankLabel`] = row ? String(row.rank) : EMPTY_ROW_TEXT;
+        texts[`${base}/RankLabel`] = row ? `${row.vitalityPct}%` : EMPTY_ROW_TEXT;
         texts[`${base}/LineLabel`] = row ? row.lineText : EMPTY_ROW_TEXT;
     }
     return texts;

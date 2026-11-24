@@ -878,6 +878,10 @@ async function main() {
         };
         /** 換季後可能出現的彈窗，一個 kind 對應一組點擊規格；同一 kind 重複出現時依序換下一組規格（例如三國季報第一個選項資源不足，改選第二個） */
         const SEASON_POPUPS = [
+            // 任務回報卡一疊（PROG-2-9966）：換季後先出現、全螢幕吃點擊，會擋住後面所有步驟；有「全部略過」就按它，
+            // 只剩最後一張（沒有略過鈕）就按「完成」。兩者都是普通節點（TOUCH_END），不是 cc.Button，所以不加 button
+            { kind: 'mission-report-skip', specs: [{ name: '^Skip$', under: '^HallMissionReportStack$' }] },
+            { kind: 'mission-report-done', specs: [{ name: '^Next$', under: '^HallMissionReportStack$' }] },
             // 官職晉升解鎖彈窗（PROG-2-9151）：升官時蓋住整個大廳，要先按「知道了」
             { kind: 'rank-unlock', specs: [{ name: '^BtnRankUnlockOk$' }] },
             { kind: 'season-report', specs: [{ name: '^BtnClose$', under: '^SeasonReportComposite$' }] },
@@ -1022,17 +1026,19 @@ async function main() {
             await delay(800);
             const head1 = (await rm.textOfUcuf(WALL_LEFT)) || '';
             const cards1 = (await rm.wallCards(WALL_LEFT)) || [];
-            const statusTexts = await waitUntil(async () => { const t = await rm.texts('進行中，還有 \\d+ 季'); return t.length ? t : null; }, 6000, '').catch(() => []);
+            const statusTexts = await waitUntil(async () => { const t = await rm.texts('還有 \\d+ 季'); return t.length ? t : null; }, 6000, '').catch(() => []);
             rec.detail.wallHeadAfterDispatch = head1;
             rec.detail.activeStatusTexts = statusTexts;
             await shot(rec, 'loop-after-dispatch');
             if (!dispatched) throw new Error(`執行後頂欄糧草／兵源沒有同時減少（執行前 ${JSON.stringify(topNow)}，執行後 ${JSON.stringify(top1)}）`);
             if (!/進行中\s*\d+\s*件/.test(head1)) throw new Error(`執行後左牆牆頭沒有「進行中 N 件」：${head1}`);
             if (cards1.some((c) => String(c.title).includes(title))) throw new Error(`執行後「${title}」仍在左牆的未接取列上`);
-            if (!statusTexts.length) throw new Error('執行後任務板上看不到「進行中，還有 N 季」的列狀態文字');
-            const remain = Math.min(3, Math.max(1, ...statusTexts.map((t) => Number((/還有\s*(\d+)\s*季/.exec(t) || [])[1]) || 1)));
+            if (!statusTexts.length) throw new Error('執行後任務板上看不到「還有 N 季」的列狀態文字');
+            const remain = Math.min(3, Math.max(1, ...statusTexts.map((t) => Number((/(?:還有|剩餘期限)\s*(\d+)\s*季/.exec(t) || [])[1]) || 1)));
             // 3b. 武將佔用：派出武將 A 之後，再開另一個任務，A 不可選、顯示「出任務中」、預設人物不是 A（用真滑鼠點）
-            const busyName = ((/・([^（\s]+)/.exec(statusTexts[0]) || [])[1] || '').trim();
+            let busyName = (statusTexts.filter((t) => !/預計第|風險/.test(t)).map((t) => (/^([^\n・（\s]+)\s*\n\s*還有/.exec(t) || /・([^（\s]+)/.exec(t) || [])[1]).find((n) => n) || '').trim();
+            // 任務牆下緣的進行中列在詳情窗開著時可能讀不到：退而讀詳情窗「行動人物」欄位（派出的就是他）
+            if (!busyName) busyName = String((await rm.textOfNodeName('SelectedGeneralLabel')) || '').trim();
             rec.detail.busyGeneral = busyName;
             if (!busyName) throw new Error(`讀不到派出的武將名（列狀態：${statusTexts.join(' / ')}）`);
             await closeMissionLayers();
@@ -1166,13 +1172,13 @@ async function main() {
             if (!dialogTexts.some((t) => SILVER_REWARD.test(t))) throw new Error(`商業任務詳情窗沒有「銀兩」報酬標示（再探 ${rec.detail.reconClicks} 次後；文字：${dialogTexts.slice(0, 20).join(' / ')}）`);
             await waitToastGone();
             await rm.click({ name: '^BtnExecute$', under: MISSION_DIALOG }, '執行商業任務');
-            const statusTexts = await waitUntil(async () => { const t = await rm.texts('進行中，還有 \\d+ 季'); return t.length ? t : null; }, 8000, '').catch(() => []);
+            const statusTexts = await waitUntil(async () => { const t = await rm.texts('還有 \\d+ 季'); return t.length ? t : null; }, 8000, '').catch(() => []);
             rec.detail.activeStatusTexts = statusTexts;
             await shot(rec, 'commerce-after-dispatch');
-            if (!statusTexts.length) throw new Error('派出商業任務後任務板看不到「進行中，還有 N 季」');
+            if (!statusTexts.length) throw new Error('派出商業任務後任務板看不到「還有 N 季」');
             await closeMissionLayers();
             await waitToastGone();
-            const remain = Math.min(3, Math.max(1, ...statusTexts.map((t) => Number((/還有\s*(\d+)\s*季/.exec(t) || [])[1]) || 1)));
+            const remain = Math.min(3, Math.max(1, ...statusTexts.map((t) => Number((/(?:還有|剩餘期限)\s*(\d+)\s*季/.exec(t) || [])[1]) || 1)));
             const reports = [];
             for (let i = 0; i < remain; i++) {
                 await requireLobby();

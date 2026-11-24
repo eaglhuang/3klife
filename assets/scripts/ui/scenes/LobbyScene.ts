@@ -4696,6 +4696,8 @@ ${spent}`,
      * 其餘是聊天，依友誼挑一句，連點不重複同一句。
      */
     private _onHallActorTap(generalId: string): HallActorTapView | null {
+        // 場景已銷毀（引擎會把欄位清成 null）就不處理；正常不會走到，是保留畫面殘留舊回呼的最後防線（PROG-2-9994）
+        if (!this.isValid) return null;
         const session = services().session;
         const profile = session.hallStageProfile(generalId);
         if (!profile) return null;
@@ -6127,6 +6129,7 @@ ${spent}`,
         // 守方 = 大廳開戰用的當前關卡敵將（與開戰時取的 _currentEncounter() 同一來源）
         const sortie = new SortieSetupController({
             session: services().session,
+            isTutorialBattle: () => isTutorialBattle(services().session.clearedStageIds),
             getEnemyGeneral: () => {
                 const enemyId = this._currentEncounter()?.enemyGeneralId;
                 return enemyId ? this._generals.find((g) => g.id === enemyId) ?? null : null;

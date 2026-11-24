@@ -19,3 +19,16 @@ export function toastHoldSec(duration?: number): number {
     if (duration === undefined || !Number.isFinite(duration)) return TOAST_DEFAULT_HOLD_SEC;
     return Math.max(TOAST_MIN_HOLD_SEC, duration);
 }
+
+/** 彈窗開著時，提示條貼著畫面底緣放，距底緣的留白（像素） */
+export const TOAST_MODAL_BOTTOM_MARGIN_PX = 48;
+
+/**
+ * 提示條中心的 y（相對全螢幕容器中心，向上為正）。
+ * 平常放在設計稿位置（畫面上方）；有彈窗開著就改貼底緣，避免蓋住彈窗標題（PROG-2-9994）。
+ * 容器高度無效時退回設計稿位置。
+ */
+export function toastCenterY(designY: number, modalOpen: boolean, containerHeight: number, toastHeight: number): number {
+    if (!modalOpen || !Number.isFinite(containerHeight) || containerHeight <= 0) return designY;
+    return -containerHeight / 2 + toastHeight / 2 + TOAST_MODAL_BOTTOM_MARGIN_PX;
+}
