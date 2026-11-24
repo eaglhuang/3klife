@@ -17333,7 +17333,9 @@
       "created_by_agent": "ClaudeCode_claude-opus-5-5",
       "started_at": "2026-11-24T13:00:00+08:00",
       "started_by_agent": "ClaudeCode_claude-opus-5-5",
-      "related": ["PROG-2-9954"],
+      "related": [
+        "PROG-2-9954"
+      ],
       "depends": [],
       "acceptance": [],
       "deliverables": [],
@@ -17538,6 +17540,50 @@
       ],
       "deliverables": [],
       "notes": "2026-11-25 | 狀態: done | 驗證: tsc 測試型別 0；單元測試 run-cli 9489 全過；compute-gate quick 通過 | 變更: generals.json weapon 依最新立繪重建（舊 blade137/cast94/spear3/bow1/sword0 → 新 sword48/cast109/blade38/spear29/bow11，改 110 位）；新增 general-weapon-rules.json（名將覆寫表＋定位預設表）；GeneralWeapon.test 驗證資料與規則表一致；逐位表在 side-session-notes/general-weapon-redo-1124.md | 阻塞: 無；低信心 28 位待複核；枚舉缺雙劍/戟/扇建議後補",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9959",
+      "title": "騎兵部署落下特效、敵方紅方騎兵骨架與趙雲騎術 2/3 級騎馬外觀",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-24T21:41:42+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "敵方騎兵改載 spine-trial 紅方騎馬骨架（缺檔退藍騎馬紅色調）；騎術一級 dust_ring 接騎兵落地；趙雲騎術 2/3 級掛 v2 騎馬",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-24 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
