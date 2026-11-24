@@ -247,7 +247,7 @@ export class ServiceLoader {
         this.battle.setEventSystem(this.event);
         this.game.setEventSystem(this.event);
         // 戰場招式名走 i18n（battle.skill_name.<id>）；語系切換後 t() 即時反映
-        setBattleSkillNameTranslator((key) => this.i18n.t(key));
+        setBattleSkillNameTranslator((key, ...args) => this.i18n.t(key, ...args));
         this.effect.setup(this.pool);
         // ResourceManager 連動 MemoryManager，使所有資源載入/釋放都通報記憶體管理器
         this.resource.bindMemoryManager(this.memory);
