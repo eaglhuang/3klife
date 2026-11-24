@@ -394,6 +394,10 @@ export interface PlayerSaveSnapshot {
     annualRanking?: AnnualRankingSaveData;
     /** 武將友誼值（PROG-2-9601 PR3 第8框架種子，稀疏儲存）：武將 ID → 友誼點數 (-100~100，負值為敵意區間；舊存檔皆 ≥0 故相容) */
     friendships?: Record<string, number>;
+    /** 武將↔武將配對友誼（PROG-2-9954，只存與我方接觸者）：鍵為兩 id 排序後以 | 相接 */
+    friendshipPairs?: Record<string, number>;
+    /** 友誼行為每季次數與冷卻紀錄（PROG-2-9954） */
+    friendshipActionLog?: Record<string, { season: number; count: number; last: number }>;
 }
 
 /** 讀回編制預設：只保留格式正確的條目；缺欄位、非物件一律丟棄（舊存檔視為空） */
@@ -789,6 +793,8 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.legendaryMentoringUsedIds !== undefined ? { legendaryMentoringUsedIds: normalizeLegendaryMentoringUsedIds(snapshot.legendaryMentoringUsedIds) } : {}),
         ...(snapshot.annualRanking !== undefined ? { annualRanking: snapshot.annualRanking } : {}),
         ...(snapshot.friendships !== undefined ? { friendships: snapshot.friendships } : {}),
+        ...(snapshot.friendshipPairs !== undefined ? { friendshipPairs: snapshot.friendshipPairs } : {}),
+        ...(snapshot.friendshipActionLog !== undefined ? { friendshipActionLog: snapshot.friendshipActionLog } : {}),
     };
 }
 

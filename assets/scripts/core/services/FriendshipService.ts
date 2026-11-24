@@ -31,6 +31,8 @@ export class FriendshipService implements IFriendshipService {
     private static _instance: FriendshipService | null = null;
 
     private _friendships: Map<string, number> = new Map();
+    /** 武將↔武將配對友誼（只存與我方接觸者）；鍵為兩 id 排序後以 | 相接 */
+    private _pairs: Map<string, number> = new Map();
     private _listeners: Set<FriendshipChangeListener> = new Set();
     private _maxCap: number = 100;
     private _minCap: number = -100;
@@ -85,6 +87,36 @@ export class FriendshipService implements IFriendshipService {
         }
 
         return newValue;
+    }
+
+    private static _pairKey(a: string, b: string): string {
+        return a < b ? `${a}|${b}` : `${b}|${a}`;
+    }
+
+    /** 武將↔武將配對友誼值（無記錄回 0，與順序無關） */
+    public getPair(a: string, b: string): number {
+        if (!a || !b || a === b) return 0;
+        return this._pairs.get(FriendshipService._pairKey(a, b)) ?? 0;
+    }
+
+    /** 增減配對友誼（夾制於 [-100, 100]），回傳新值；不發玩家友誼變更事件 */
+    public addPair(a: string, b: string, delta: number, _reason: string): number {
+        if (!a || !b || a === b || !Number.isFinite(delta) || delta === 0) return this.getPair(a, b);
+        const next = Math.max(this._minCap, Math.min(this._maxCap, this.getPair(a, b) + delta));
+        this._pairs.set(FriendshipService._pairKey(a, b), next);
+        return next;
+    }
+
+    public exportPairs(): Record<string, number> {
+        return Object.fromEntries(this._pairs.entries());
+    }
+
+    public loadPairs(data?: Record<string, number>): void {
+        this._pairs.clear();
+        if (!data || typeof data !== 'object') return;
+        for (const [key, val] of Object.entries(data)) {
+            if (typeof val === 'number' && Number.isFinite(val)) this._pairs.set(key, Math.max(this._minCap, Math.min(this._maxCap, val)));
+        }
     }
 
     /**
