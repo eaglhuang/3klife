@@ -74,6 +74,7 @@ import { IBattleHUDLike, IBattleLogLike, IDuelChallengeLike, IResultPopupLike, I
 import { isHeavyHit, BATTLE_TURN_FLOW_TIMING, BATTLE_VISUAL_TIMING } from './BattlePresentationTiming';
 import { ATTACK_IMPACT_SEC } from '../shared/AttackShotStyle';
 import { attackStyleFor } from '../shared/AttackStyle';
+import { generalWeaponOf } from './AttackVfxPlayer';
 import { buildBattleSkillUsedMessage, getBattleSkillPresentation } from '../../shared/BattleSkillPresentation';
 import { quickViewSkillLines } from '../../shared/QuickViewSkillLines';
 import { SkillSourceType } from '../../shared/SkillRuntimeContract';
@@ -700,14 +701,14 @@ export class BattleUIBridge {
         ensureAudioLayersConfig();
         const attackSfxDelay = attackPlayed && attackerUnit ? attackSfxDelaySec(impactSec, attackStyleFor(attackerUnit.type), battleAudioLayers) : 0;
         const attackAudioPromise = data.attackerId && attackerUnit && !isRiverBoundaryDamage
-          ? this._scheduleBattleAudio(resolveBattleUnitAttackSfxKey(attackerUnit.type), attackSfxDelay)
+          ? this._scheduleBattleAudio(this._attackSfxKeyOf(data.attackerId, attackerUnit.type), attackSfxDelay)
           : Promise.resolve();
         const heavy = isHeavyHit(shieldFb.hpLoss, unit.getEffectiveMaxHp(), data.isCrit ?? false);
         const impactPromise = (async () => {
           if (impactSec > 0) await new Promise<void>(resolve => this.scene.scheduleOnce(() => resolve(), impactSec));
           const hitPromise = isRiverBoundaryDamage
             ? (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] boundary-spin unit=${data.unitId}`), c.unitRenderer?.playBoundaryDamageSpinAsync(data.unitId) ?? Promise.resolve())
-            : (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] defender-hit unit=${data.unitId}`), c.unitRenderer?.playHitAnimationAsync(data.unitId, data.attackerId, { heavy: heavy, lethal: data.hp <= 0 }) ?? Promise.resolve());
+            : (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] defender-hit unit=${data.unitId}`), c.unitRenderer?.playHitAnimationAsync(data.unitId, data.attackerId, { heavy: heavy, lethal: data.hp <= 0, crit: data.isCrit === true }) ?? Promise.resolve());
 
           const valuePromise = shieldFb.hpLoss > 0
             ? (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] damage-float unit=${data.unitId} hp=${data.hp}`), c.unitRenderer?.playValueChangeAsync(unit, shieldFb.hpLoss, 'damage', data.isCrit ?? false, heavy, data.damageSource) ?? Promise.resolve())
@@ -728,6 +729,8 @@ export class BattleUIBridge {
             ? this._scheduleBattleAudio(BATTLE_AUDIO_CUE.critHit)
             : Promise.resolve();
           await Promise.all([hitPromise, valuePromise, hitFeedbackPromise, critAudioPromise]);
+          // 暴擊微頓幀：命中後多停一小段，金色暴擊光與跳字看得清楚（只影響演出節奏）
+          if (data.isCrit) await new Promise<void>(resolve => this.scene.scheduleOnce(() => resolve(), BATTLE_VISUAL_TIMING.critHitStopSec));
         })();
 
         await Promise.all([attackPromise, impactPromise, attackAudioPromise]);
@@ -926,6 +929,23 @@ export class BattleUIBridge {
     });
   }
 
+  /** 攻擊方是主將化身時回傳其武器（刀／槍／劍／弓／法術）；小兵或未知回 null */
+  private _generalWeaponSfxOf(attackerId: string | null | undefined): string | null {
+    const ctrl = this.ctx.ctrl;
+    const state = ctrl?.state;
+    if (!attackerId || !state) return null;
+    const faction = attackerId === ctrl?.playerGeneralUnitId ? Faction.Player : attackerId === ctrl?.enemyGeneralUnitId ? Faction.Enemy : null;
+    if (faction === null) return null;
+    const g = state.getGeneral(faction);
+    return g ? generalWeaponOf({ id: g.id, role: g.role ?? undefined, troopAptitude: g.troopAptitude }) : null;
+  }
+
+  /** 攻擊音效鍵：主將化身依武器選，小兵依兵種選 */
+  private _attackSfxKeyOf(attackerId: string, troopType: Parameters<typeof resolveBattleUnitAttackSfxKey>[0]): ReturnType<typeof resolveBattleUnitAttackSfxKey> {
+    const weapon = this._generalWeaponSfxOf(attackerId);
+    return weapon !== null ? resolveBattleGeneralAttackSfxKey(weapon) : resolveBattleUnitAttackSfxKey(troopType);
+  }
+
   private _onGeneralDamaged(data: { faction: Faction; hp: number; damage?: number; attackerId?: string | null; isCrit?: boolean; wasDodged?: boolean }): void {
     if (this.duelCapture) { this.duelCapture.hits.push(data); return; }
     const c = this.ctx;
@@ -962,13 +982,13 @@ export class BattleUIBridge {
       const attackPromise = data.attackerId
         ? (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] attacker-lunge-general attacker=${data.attackerId} targetFaction=${data.faction}`), c.unitRenderer?.playAttackGeneralAnimationAsync(data.attackerId, data.faction) ?? Promise.resolve())
         : Promise.resolve();
-      const hitPromise = (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] general-hit faction=${data.faction}`), c.unitRenderer?.playGeneralHitAnimationAsync(data.faction, data.attackerId || null, { heavy: isHeavyHit(data.damage ?? 0, maxHp, data.isCrit ?? false), lethal: data.hp <= 0 }) ?? Promise.resolve());
+      const hitPromise = (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] general-hit faction=${data.faction}`), c.unitRenderer?.playGeneralHitAnimationAsync(data.faction, data.attackerId || null, { heavy: isHeavyHit(data.damage ?? 0, maxHp, data.isCrit ?? false), lethal: data.hp <= 0, crit: data.isCrit === true }) ?? Promise.resolve());
       const valuePromise = data.damage && data.damage > 0
         ? (UCUFLogger.debug(LogCategory.LIFECYCLE, `[BattleUIBridge][CombatVisual] general-damage-float faction=${data.faction} hp=${data.hp}`), c.unitRenderer?.playGeneralValueChangeAsync(data.faction, data.damage, data.isCrit ?? false) ?? Promise.resolve())
         : Promise.resolve();
 
       const attackAudioPromise = data.attackerId && attackerUnit
-        ? this._scheduleBattleAudio(resolveBattleGeneralAttackSfxKey())
+        ? this._scheduleBattleAudio(resolveBattleGeneralAttackSfxKey(this._generalWeaponSfxOf(data.attackerId)))
         : Promise.resolve();
       const hitAudioPromise = this._scheduleBattleAudio(resolveBattleGeneralHitSfxKey(), BATTLE_VISUAL_TIMING.recoilStartDelaySec);
       // 主將受擊特效：照單位受擊的 battle_hit_default，位置用主將化身單位所在格

@@ -28,6 +28,7 @@
  * Unity 對照：一個以程式繪製、Additive 材質的 LineRenderer／Mesh 特效管理器；attack-vfx.json 即 ScriptableObject。
  */
 import { Color, gfx, Graphics, JsonAsset, Material, Node, resources } from 'cc';
+import { AptitudeWeaponRule, weaponOfGeneral } from '../shared/GeneralWeapon';
 
 export interface AtkPalette { main: string; glow: string; core: string; accent: string }
 type Params = Record<string, number | string | AtkPalette>;
@@ -62,15 +63,17 @@ export interface AttackVfxConfig {
   budget: { maxEffects: number; maxParticles: number; minLinePx: number };
   troops: Record<string, Params & { kind: string; palette: AtkPalette }>;
   generalTemplates: Record<string, Params & { kind: string }>;
+  /** 暴擊命中光（參數變體：金色、較大的星形閃光；不新增資源） */
+  critBurst: Params & { kind: string; palette: AtkPalette };
   signatures: Record<string, Params>;
   generalProfiles: Record<string, { weapon: string; signature?: string; palette: AtkPalette }>;
-  fallback: { weaponByRole: Record<string, string>; defaultWeapon: string; elementPalettes: Record<string, AtkPalette>; defaultPalette: AtkPalette };
+  fallback: { weaponByRole: Record<string, string>; aptitudeRule?: AptitudeWeaponRule; defaultWeapon: string; elementPalettes: Record<string, AtkPalette>; defaultPalette: AtkPalette };
 }
 export type AttackVfxTroop = 'slash' | 'thrust' | 'bow' | 'shield' | 'charge';
-export interface GeneralVfxInfo { id: string; role?: string; element?: string }
+export interface GeneralVfxInfo { id: string; role?: string; element?: string; troopAptitude?: Readonly<Record<string, string>> }
 
 /** 量測用：效能報告與單元測試讀取（也掛在 globalThis.__ATK_VFX_STATS__） */
-export const attackVfxStats = { activeFx: 0, particles: 0, peakFx: 0, peakParticles: 0, primitives: 0, drawOps: 0, peakDrawOps: 0, played: 0, skipped: 0 };
+export const attackVfxStats = { activeFx: 0, particles: 0, peakFx: 0, peakParticles: 0, primitives: 0, drawOps: 0, peakDrawOps: 0, played: 0, skipped: 0, crit: 0 };
 
 interface Fx {
   active: boolean; kind: string; t: number; seed: number;
@@ -127,12 +130,18 @@ export function isAttackVfxEnabled(cfg: AttackVfxConfig | null): boolean {
   return cfg.enabled;
 }
 
+/** 武將武器（推算規則見 shared/GeneralWeapon.ts）：有 profile 用 profile，沒有就依適性與角色推算；音效與弓箭演出共用 */
+export function generalWeaponOf(g: GeneralVfxInfo): string | null {
+  const cfg = getAttackVfxConfig();
+  return cfg ? resolveGeneralVfx(cfg, g).weapon : null;
+}
+
 /** 依 profile → 角色 → 元素解析武將的武器模板、代表色與獨特細節（量產：沒設定的武將自動有一套） */
 export function resolveGeneralVfx(cfg: AttackVfxConfig, g: GeneralVfxInfo): { weapon: string; palette: AtkPalette; signature: string } {
   const prof = cfg.generalProfiles[g.id];
   if (prof) return { weapon: prof.weapon, palette: prof.palette, signature: prof.signature ?? '' };
   const fb = cfg.fallback;
-  const weapon = (g.role && fb.weaponByRole[g.role]) || fb.defaultWeapon;
+  const weapon = weaponOfGeneral(fb, g);
   return { weapon, palette: (g.element && fb.elementPalettes[g.element]) || fb.defaultPalette, signature: '' };
 }
 
@@ -208,6 +217,14 @@ export class AttackVfxPlayer {
     if (!this.handles(style)) return false;
     const cfg = getAttackVfxConfig()!; const spec = cfg.troops[style];
     return this.spawn(cfg, spec.kind, spec, spec.palette, null, '', ax, ay, bx, by, ratio);
+  }
+
+  /** 暴擊命中光：金色、較大的星形閃光（JSON critBurst，同一套閃光參數的變體）；回傳是否已播出 */
+  public playCrit(bx: number, by: number): boolean {
+    const cfg = getAttackVfxConfig();
+    if (!cfg || !isAttackVfxEnabled(cfg) || !cfg.critBurst) return false;
+    attackVfxStats.crit++;
+    return this.spawn(cfg, cfg.critBurst.kind, cfg.critBurst, cfg.critBurst.palette, null, '', bx, by, bx, by, 1);
   }
 
   /** 武將攻擊／施法特效：武器模板＋代表色＋名將獨特細節 */
@@ -296,6 +313,7 @@ export class AttackVfxPlayer {
         case 'castOrb': prims += this.drawCast(g, f, t, u); break;
         case 'shieldWave': prims += this.drawShield(g, f, t, u); break;
         case 'chargeRush': prims += this.drawCharge(g, f, t, u); break;
+        case 'critBurst': prims += this.flash(g, f, f.bx, f.by, clamp01(t / GL.flash.sec), opt(f.p, 'flashScale', 1)); break;
       }
     }
     curAlphaMul = 1;

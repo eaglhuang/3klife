@@ -125,6 +125,8 @@ export const BATTLE_VISUAL_TIMING = {
   attackBumpForwardSec: 0.08,
   /** 一般攻擊命中頓幀秒數。 */
   attackHitStopSec: 0.08,
+  /** 暴擊命中額外頓幀秒數（微頓幀）：命中後多停這麼久，讓金色暴擊光與跳字看得清楚。 */
+  critHitStopSec: 0.04,
   /** 一般攻擊回位秒數。 */
   attackRecoverSec: 0.12,
   /** 受擊開始延遲秒數，確保攻擊方先撞上來。 */
