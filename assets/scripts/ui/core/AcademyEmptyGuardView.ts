@@ -79,3 +79,32 @@ export function buildAcademyEmptyGuardViewState(query: AcademyEmptyGuardQuery): 
         actionRedirectRoute: 'lobby',
     };
 }
+/** 名冊中判斷入學候選所需的最小欄位 */
+export interface AcademyRosterEntry {
+    id: string;
+    age?: number;
+    status?: string;
+    captivity?: unknown;
+}
+
+export interface AcademyEnrollCandidateInput {
+    roster: readonly AcademyRosterEntry[];
+    /** 家族登記表成員（FamilyService.members()）：親生、義子（含開局義子）、家臣子嗣；配偶不可入學 */
+    familyMembers: readonly { personId: string; kind: string }[];
+    /** 結緣出生紀錄的子嗣 id（BreedingBirthRecord.child.UID），親生子嗣尚未登記家族表時以此補上 */
+    birthChildIds: readonly string[];
+}
+
+/**
+ * 學府入學候選年齡（裁決 11/21：只收子嗣，含親生、義子、家臣子；成年家臣武將與配偶不算）。
+ * 子嗣＝家族登記表中 kind 非 spouse 的成員，或結緣出生紀錄中的子嗣；再排除已歿與被俘者。
+ */
+export function academyEnrollCandidateAges(input: AcademyEnrollCandidateInput): number[] {
+    const offspringIds = new Set<string>(input.birthChildIds);
+    for (const member of input.familyMembers) {
+        if (member.kind !== 'spouse') offspringIds.add(member.personId);
+    }
+    return input.roster
+        .filter((g) => offspringIds.has(g.id) && (g.status ?? '').toLowerCase() !== 'dead' && !g.captivity)
+        .map((g) => Math.floor(g.age ?? 0));
+}
