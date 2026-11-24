@@ -17182,6 +17182,27 @@
         "side-session-notes/first-battle-tuning-1124.md"
       ],
       "notes": "2026-11-24 | 狀態: done（已合併；總PM 核准，使用者裁決維持約 78 秒，不改回合上限與演出節奏，40～60 秒目標不採用） | 驗證: 基準 20 場 55%（11/20）平均 77.6 秒；第一輪 HP0.3 8隊 65%（13/20）平均 73.6 秒；第二輪 HP0.3 6隊 100%（20/20）平均 78.2 秒（採用版）；第三輪 HP0.15 6隊 95%（19/20）平均 90.9 秒（未採用）。CI ATM Governance / UCUF Validation 全 SUCCESS | 變更: Constants.tutorialEnemyDeployByTurn 8隊→6隊 [0,1,1,1,1,1,1]、tutorialEnemyGeneralHpRatio 0.5→0.3（encounters.json 未改）；PR #2586 squash 合併 | 阻塞: 無；數據見 side-session-notes/first-battle-tuning-1124.md"
+    },
+    {
+      "id": "PROG-2-9952",
+      "title": "大廳選卡器（手動已選）缺關閉鈕與 Esc，出征編組收起時殘留",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "bug",
+      "phase": "M9",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-24T12:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "completed_at": "2026-11-24T19:45:00+08:00",
+      "completed_by_agent": "ClaudeCode_claude-opus-5-5",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "description": "實測手動已選卡組選擇器無關閉鈕、Esc 無效；出征編組收起時未收 deck／lead host。",
+      "notes": "2026-11-24 | 狀態: done | 驗證: 建置 EXIT 36（index.html 存在）；tsc 0 錯誤；單元測試 ALL PASS 9444；compute-gate quick 通過；playtest-online 12/12 步通過（console error 0、pageerror 0）；實跑探針：A 開選卡器、B 真點 btnDeckClose 關閉、C 重開後按 Esc 關閉、E 同開選卡與結緣後 _closeSortieSetup 收起兩者 host 皆 inactive（截圖在 side-session-notes/PROG-2-9952） | 變更: lobby-deck-select-main 新增 btnDeckClose；DeckSelectController 綁定關閉並 close()；LobbyScene Esc 清單納入 deck／lead host，_closeSortieSetup 收起兩者；DeckSelectController 測試更新 | 阻塞: none（出征編組實際開啟未在探針中走到，收起以直接呼叫 _closeSortieSetup 驗證）"
     }
   ]
 }
