@@ -196,6 +196,54 @@ function testNonToplevelRootSkipsRemoteChecks() {
   });
 }
 
+// Regression (2026-11-25 PM report): an id already landed on origin/master but
+// absent from a stale local checkout, while a same-named agent still holds a
+// shared reservation elsewhere, must never be handed out again.
+function testLandedIdWithSameNameReservationIsNotReissued() {
+  withRepo(({ base, root }) => {
+    const second = path.join(base, 'second');
+    git(root, 'worktree', 'add', '-q', '-b', 'second', second);
+    occupancy.recordSharedReservation(root, { taskId: `${PREFIX}-0002`, agentName: 'ClaudeCode' });
+    writeCard(root, `${PREFIX}-0002`);
+    git(root, 'add', '-A');
+    git(root, 'commit', '-q', '-m', 'land 0002');
+    git(root, 'update-ref', 'refs/remotes/origin/master', 'HEAD');
+    occupancy.invalidateOccupancyCache();
+
+    // second worktree is stale (no 0002 card locally) and uses the same name.
+    assert.equal(fs.existsSync(path.join(second, 'docs', 'agent-briefs', 'tasks', 'PROG', `${PREFIX}-0002.md`)), false);
+    const ticket = guard.reserveNextTaskId(second, PREFIX, 'ClaudeCode');
+    assert.notEqual(ticket.taskId, `${PREFIX}-0002`);
+    assert.equal(ticket.taskId, `${PREFIX}-0003`);
+    const explicit = guard.reserveTaskIdOrNext(second, `${PREFIX}-0002`, 'ClaudeCode');
+    assert.equal(explicit.reassigned, true);
+    assert.notEqual(explicit.taskId, `${PREFIX}-0002`);
+  });
+}
+
+// Regression (2026-11-25 PM report): task-lock reserve with a full id must
+// reserve that id (or the next free one), never treat it as a prefix and
+// mint "<id>-0001".
+function testLockAdapterReserveFullIdIsNotAPrefix() {
+  withRepo(({ root }) => {
+    const { LockAdapter } = require('../adapters/atm-3klife/lock-adapter');
+    const adapter = new LockAdapter({ projectRoot: root });
+    const log = console.log;
+    console.log = () => {};
+    try {
+      const free = adapter.reserve(`${PREFIX}-0040`, 'ClaudeCode');
+      assert.equal(free.taskId, `${PREFIX}-0040`);
+      const taken = adapter.reserve(`${PREFIX}-0001`, 'ClaudeCode');
+      assert.equal(taken.reassigned, true);
+      assert.equal(taken.taskId, `${PREFIX}-0041`, 'next free id after the highest occupied one');
+      for (const id of [free.taskId, taken.taskId]) assert.ok(!/-d{4,}-d{4,}$/.test(id), id);
+      assert.ok(!fs.existsSync(path.join(root, '.task-locks', `${PREFIX}-0040-0001.lock.json`)));
+    } finally {
+      console.log = log;
+    }
+  });
+}
+
 testBaseRefCardsInvisibleLocallyAreOccupied();
 testUnmergedBranchCommitMessageIsOccupied();
 testPullRequestOccupancy();
@@ -203,4 +251,6 @@ testSharedLedgerAcrossWorktreesAndSameAgent();
 testExplicitCollisionReturnsNextFreeId();
 testLedgerTtlAndLandedPrune();
 testNonToplevelRootSkipsRemoteChecks();
+testLandedIdWithSameNameReservationIsNotReissued();
+testLockAdapterReserveFullIdIsNotAPrefix();
 console.log('[task-id-remote-occupancy.test] ok');
