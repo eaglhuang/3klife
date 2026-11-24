@@ -17869,7 +17869,7 @@
       "title": "戰場 vfx-block 必須有 prefabPath 防回歸（skills.json 路徑盤點）",
       "owner": "ClaudeCode_claude-opus-5-5",
       "priority": "P2",
-      "status": "in-progress",
+      "status": "done",
       "type": "bugfix",
       "phase": "M0",
       "created": "2026-11-25",
@@ -17890,7 +17890,7 @@
       "deliverables": [
         "tests/BattleVfxPrefabGuard.test.ts"
       ],
-      "notes": "2026-11-25 | 狀態: in-progress | 驗證: pending | 變更: 開卡並上鎖 | 阻塞: 無",
+      "notes": "2026-11-25 | 狀態: done | 驗證: tsc 0 錯、run-cli 全過、compute-gate quick 通過；未實機驗證（戰場無人呼叫 playSkill，無資料變更） | 變更: 新增 tests/BattleVfxPrefabGuard.test.ts | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
@@ -17900,8 +17900,8 @@
     }
   ],
   "summary": {
-    "done": 315,
-    "in_progress": 4,
+    "done": 316,
+    "in_progress": 3,
     "open": 86,
     "total": 405
   }
