@@ -128,7 +128,7 @@ assert.equal(cavalry.clips.retreat.name, 'retreat');
 // 騎馬武將（PROG-2-9738）：ridingTier > 0 才騎馬；缺素材退回步行版；沒有騎馬骨架的武將不受影響
 assert.equal(generalSpineConfig('zhao-yun')?.path, 'spine/generals/zhao_yun/zhao_v2');
 const mountedZhao = generalSpineConfig('zhao-yun', null, 1);
-assert.equal(mountedZhao?.path, 'spine/generals/zhao_yun_mounted/zhao__mount_horse_bay');
+assert.equal(mountedZhao?.path, 'spine/generals/zhao_yun_mounted/v2_horse_bay/zhao_v2__mount_horse_bay');
 // 精騎、神駒已有 v2 外觀（見下方測試）
 assert.equal(mountedZhao?.clips.move.name, 'gallop');
 assert.equal(generalSpineConfig('zhao-yun', null, 2, p => p.includes('zhao_yun_mounted'))?.path, 'spine/generals/zhao_yun/zhao_v2');
@@ -200,7 +200,7 @@ assert.equal(troopSpineConfigWithFallback('cavalry', true, null, redMissing).pat
 assert.deepEqual(troopSpineConfigWithFallback('cavalry', true, null, redMissing).tint, ENEMY_CAVALRY_TINT);
 assert.equal(troopSpineConfigWithFallback('cavalry', true, null, p => p.includes('soldier_cavalry_')).path, 'spine/soldiers/soldier_spear_red/soldier_spear_red');
 // 趙雲騎術 2／3 級（精騎、神駒）載入 v2 騎馬骨架；缺圖回退步行
-assert.equal(generalSpineConfig('zhao_yun', null, 1)?.path, 'spine/generals/zhao_yun_mounted/zhao__mount_horse_bay');
+assert.equal(generalSpineConfig('zhao_yun', null, 1)?.path, 'spine/generals/zhao_yun_mounted/v2_horse_bay/zhao_v2__mount_horse_bay');
 assert.equal(generalSpineConfig('zhao_yun', null, 2)?.path, 'spine/generals/zhao_yun_mounted/v2_horse_sheet/zhao_v2__mount_horse_sheet');
 assert.equal(generalSpineConfig('zhao_yun', null, 3)?.path, 'spine/generals/zhao_yun_mounted/v2_horse_war/zhao_v2__mount_horse_war');
 assert.equal(generalSpineConfig('zhao_yun', null, 2, p => p.includes('v2_horse_sheet'))?.path, 'spine/generals/zhao_yun/zhao_v2');

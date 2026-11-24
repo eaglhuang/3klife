@@ -57,11 +57,11 @@ const generals: Record<string, { name: string; footX: number }> = {
  * 騎術三級（1 騎術／2 精騎／3 神駒，見 data/riding-tiers.json）換坐騎外觀：looks 以等級為鍵，
  * 取「不超過該等級的最高一套」，沒有更高等級的外觀時沿用較低一套。
  * 騎馬版素材（騎手＋馬合成骨架）來自 spine-trial，私有、不進倉庫；缺素材時由 hasFailed 退回步行版。
- * 趙雲：等級 1 用 v1 horse_bay；等級 2 精騎 horse_sheet、等級 3 神駒 horse_war 用 spine-trial 趙雲 v2 騎馬（子資料夾 v2_horse_*，見 tools_node/sync-mount-spine.js）。
+ * 趙雲：等級 1 騎術、2 精騎 horse_sheet、3 神駒 horse_war 一律用 spine-trial 趙雲 v2 騎馬（與步行版同一套造型）（子資料夾 v2_horse_*，見 tools_node/sync-mount-spine.js）。
  * 缺圖時 hasFailed 為真，generalSpineConfig 直接退回步行版。
  */
 const MOUNTED_GENERALS: Record<string, { dir: string; looks: Record<number, string>; footX: number }> = {
-  zhao_yun: { dir: 'zhao_yun_mounted', looks: { 1: 'zhao__mount_horse_bay', 2: 'v2_horse_sheet/zhao_v2__mount_horse_sheet', 3: 'v2_horse_war/zhao_v2__mount_horse_war' }, footX: 0 },
+  zhao_yun: { dir: 'zhao_yun_mounted', looks: { 1: 'v2_horse_bay/zhao_v2__mount_horse_bay', 2: 'v2_horse_sheet/zhao_v2__mount_horse_sheet', 3: 'v2_horse_war/zhao_v2__mount_horse_war' }, footX: 0 },
 };
 const mountedCache = new Map<string, UnitSpineConfig>();
 function mountedGeneralConfig(key: string, ridingTier: number): UnitSpineConfig | null {
