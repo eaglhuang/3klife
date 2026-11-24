@@ -168,7 +168,7 @@ import { parseQaAcademyParams } from '../core/AcademyQaFastForward';
 import { fastForwardFamily, parseQaFamilyParams } from '../core/FamilyQaFastForward';
 import { AcademyApiClient } from '../core/AcademyApi';
 import { ancestralInheritToastText, newAncestralInheritViews } from '../core/AcademyInheritView';
-import { buildAcademyEmptyGuardViewState } from '../core/AcademyEmptyGuardView';
+import { buildAcademyEmptyGuardViewState, academyEnrollCandidateAges } from '../core/AcademyEmptyGuardView';
 import { academyEnrollRules } from '../../core/systems/nurture/AcademyEnrollRules';
 import { ClanShrineController } from '../core/ClanShrineController';
 import { OpeningOfferPopupController } from '../core/OpeningOfferPopupController';
@@ -1799,9 +1799,11 @@ export class LobbyScene extends Component {
         if (!flow?.enrollHost) { this._showNotOpenYet(); return; }
 
         const session = services().session;
-        const candidateAges = session.roster
-            .filter((g) => (g.status ?? '').toLowerCase() !== 'dead' && !g.captivity)
-            .map((g) => Math.floor(g.age ?? 0));
+        const candidateAges = academyEnrollCandidateAges({
+            roster: session.roster,
+            familyMembers: session.familyHost.service.members(),
+            birthChildIds: session.breedingBirthRecords().map((r) => r.child.UID),
+        });
         const minEnrollAge = academyEnrollRules().minEnrollAge;
         const guard = buildAcademyEmptyGuardViewState({ candidateAges, minEnrollAge });
 

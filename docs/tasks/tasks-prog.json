@@ -17436,22 +17436,22 @@
       "title": "學府入學候選只算子嗣（親生、義子、家臣子），成年家臣不算",
       "owner": "ClaudeCode_claude-opus-5-5",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "bugfix",
       "phase": "M9",
       "created": "2026-11-24",
       "created_by_agent": "ClaudeCode_claude-opus-5-5",
-      "started_at": "2026-11-24T23:29:41+08:00",
-      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
       "chain_id": "",
       "chain_step": "",
       "sensor_triggered_by": "",
-      "description": "LobbyScene._openAcademyFlow 的 candidateAges 取自全名冊，成年家臣讓導流媒人路徑走不到。改為純函式 academyEnrollCandidateAges，依家族登記表（FamilyService，canEnroll）與結緣出生紀錄篩子嗣。測試 tests/AcademyEnrollCandidates.test.ts。",
+      "description": "LobbyScene._openAcademyFlow 的 candidateAges 取自全名冊，成年家臣讓導流媒人路徑走不到。改為純函式 academyEnrollCandidateAges，依家族登記表（FamilyService，非 spouse 成員）與結緣出生紀錄（breedingBirthRecords）篩子嗣，排除已歿與被俘。測試加在 tests/AcademyEmptyGuardView.test.ts。",
       "related": [],
       "depends": [],
       "acceptance": [],
       "deliverables": [],
-      "notes": "2026-11-24 | 狀態: in-progress | 驗證: pending | 變更: 開卡並上鎖 | 阻塞: none",
+      "notes": "2026-11-24 | 狀態: done | 驗證: tsc 0 錯 / run-cli 9488 全過 / compute-gate quick 4/4 | 變更: 新增 academyEnrollCandidateAges，LobbyScene 只改 candidateAges 幾行；親生子嗣未登記家族表，以出生紀錄補 | 阻塞: none",
       "brief": {
         "style": "classic",
         "label": "",
@@ -17476,8 +17476,8 @@
     }
   ],
   "summary": {
-    "done": 309,
-    "in_progress": 3,
+    "done": 310,
+    "in_progress": 2,
     "open": 86,
     "total": 398
   }
