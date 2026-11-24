@@ -4728,6 +4728,10 @@ ${spent}`,
         // 武將心智（PROG-2-9146）：有可說的記憶或心情就先說，引用玩家過去的決定；沒什麼特別想說才走一般閒聊
         const bark = session.hallMindBark(generalId, this._mindBarkTaps++);
         if (bark.text) return { name: profile.name, text: bark.text };
+        // 中台 v2 台詞：本機快取有符合目前心情與好感的句子就說；同時背景補句給下次（PROG-2-9964）
+        const v2 = services().dialogue.cachedLine(generalId, 'lobby-idle');
+        services().dialogue.prefetch(generalId, 'lobby-idle');
+        if (v2) return { name: profile.name, text: v2.text };
         const text = this._speakLobby(generalId, 'tap', {});
         return text === null ? null : { name: profile.name, text };
     }
