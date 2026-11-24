@@ -507,8 +507,8 @@
     "auto.lobby-hall-screen.lobbyhallscreen_span_5": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 20,
-      "lineHeight": 28,
+      "fontSize": 30,
+      "lineHeight": 40,
       "letterSpacing": 0,
       "color": "secondaryLight",
       "outlineColor": "colorOutlineDark",

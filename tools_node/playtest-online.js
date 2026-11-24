@@ -1080,7 +1080,7 @@ async function main() {
                 await requireLobby();
                 await backToLobbyBar();
                 await closeMissionLayers();
-                await rm.click({ ucuf: 'lobby-hall-screen.back' }, '右上「推進一季」');
+                await rm.click({ ucuf: 'lobby-hall-screen.back' }, '右下「推進一季」');
                 const popups = await runSeasonPopups(rec, `loop-advance${i + 1}`, reports);
                 rec.detail.advances.push(popups.map((p) => p.kind));
             }
@@ -1178,7 +1178,7 @@ async function main() {
                 await requireLobby();
                 await backToLobbyBar();
                 await closeMissionLayers();
-                await rm.click({ ucuf: 'lobby-hall-screen.back' }, '右上「推進一季」');
+                await rm.click({ ucuf: 'lobby-hall-screen.back' }, '右下「推進一季」');
                 await runSeasonPopups(rec, `commerce-advance${i + 1}`, reports);
             }
             const hallReport = reports.find((r) => (r.texts || []).some((t) => t.includes('大廳任務')));
@@ -1200,7 +1200,22 @@ async function main() {
             const before = await readSeason();
             rec.detail.seasonBefore = before.text;
             if (before.ordinal === null) throw new Error(`頂欄讀不到季別（lobby-hall-screen.hall-time 文字：${before.text || '無'}）`);
-            await rm.click({ ucuf: 'lobby-hall-screen.back' }, '右上「推進一季」');
+            // PROG-2-9953：推進一季鈕在右下角（手機拇指位置），且與底欄／世家面板／信箱入口／許願祭壇不重疊
+            rec.detail.bottomRight = await page.evaluate(() => {
+                const find = (pred) => { let hit = null; const walk = (n) => { if (hit || !n.activeInHierarchy) return; if (pred(n)) { hit = n; return; } n.children.forEach(walk); }; walk(window.cc.director.getScene()); return hit; };
+                const rect = (n) => { const t = n && n.getComponent('cc.UITransform'); if (!t) return null; const r = t.getBoundingBoxToWorld(); return { l: Math.round(r.x), b: Math.round(r.y), r: Math.round(r.x + r.width), t: Math.round(r.y + r.height) }; };
+                const ids = { back: 'lobby-hall-screen.back', dock: 'lobby-hall-screen.dock', clan: 'lobby-hall-screen.clan', altar: 'lobby-hall-screen.altar' };
+                const out = {};
+                for (const k of Object.keys(ids)) out[k] = rect(find((n) => n._ucufId === ids[k]));
+                out.mailbox = rect(find((n) => n.name === 'BtnMindMailbox'));
+                const hit = (a, b) => !!a && !!b && a.l < b.r && b.l < a.r && a.b < b.t && b.b < a.t;
+                out.overlaps = Object.keys(out).filter((k) => k !== 'back' && hit(out.back, out[k]));
+                out.mailboxOverlaps = Object.keys(out).filter((k) => k !== 'mailbox' && k !== 'overlaps' && hit(out.mailbox, out[k]));
+                return out;
+            });
+            await shot(rec, 'lobby-bottom-right');
+            if (rec.detail.bottomRight.overlaps.length) throw new Error(`推進一季鈕與 ${rec.detail.bottomRight.overlaps.join('、')} 重疊`);
+            await rm.click({ ucuf: 'lobby-hall-screen.back' }, '右下「推進一季」');
             const popups = (rec.detail.popups = await runSeasonPopups(rec, 'popup'));
             await delay(1000);
             // 驗證 1：頂欄季別前進一季（最多等 5 秒讓畫面刷新）
@@ -2142,7 +2157,7 @@ async function main() {
                     rec.detail.topBefore = await readTopbar();
                     const reports = [];
                     const popupLog = [];
-                    await rm.click({ ucuf: 'lobby-hall-screen.back' }, '右上「推進一季」');
+                    await rm.click({ ucuf: 'lobby-hall-screen.back' }, '右下「推進一季」');
                     const popups = await runSeasonPopups(rec, 'adv', reports, popupLog);
                     // 第 1 年末換季會自動進「年終守城」戰場（PROG-2-9431）：打到結算回大廳再處理戰後彈窗；機器忙時戰場與彈窗會晚到，季別沒變就多清幾輪
                     const clearYearEnd = async (tagSuffix) => {
@@ -2418,7 +2433,7 @@ async function main() {
                     await closeMissionLayers();
                     const cur = await readSeason();
                     if (cur.ordinal !== null && cur.ordinal >= ACADEMY_ENROLL_SEASON) break;
-                    await rm.click({ ucuf: 'lobby-hall-screen.back' }, '右上「推進一季」');
+                    await rm.click({ ucuf: 'lobby-hall-screen.back' }, '右下「推進一季」');
                     await runSeasonPopups(rec, `adv${i + 1}`);
                     // 第 1 年末換季會自動進「年終守城」戰場：打到結算回大廳，再處理戰後彈窗
                     for (let b = 0; b < 2 && (await scene()) === 'BattleScene'; b++) {
