@@ -3784,7 +3784,7 @@
       "scopePaths": [
         "artifacts/PROG-2-0160/**"
       ],
-      "notes": "2026-10-21 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）"
+      "notes": "2026-10-21 | 狀態: open | 驗證: pending | 變更: 正式登錄 | 阻塞: TASK-TEAM-0088 未解（派信時暫擱）；2026-11-24 | 備註: 戰場專家實機取證——BtnDelegate 實際位置為戰鬥右側 ControlBar（路徑 __safeArea>SidePanelRoot>ControlBar>BtnDelegate，72x72，頁面座標約 (1868,436)，opacity 130），非原文所寫的『部署面板功能按鈕區』；經使用者批准加註"
     },
     {
       "id": "PROG-2-0161",
@@ -17249,6 +17249,52 @@
       "deliverables": [],
       "description": "權重表結算引擎與 FriendshipActionApplied 事件；出戰、請戰、建議、賞賜、剝奪、俘虜掛點；友誼依對象分記並存檔。",
       "notes": "2026-11-24 | 狀態: done | 驗證: tsc 測試型別 0；單元測試 run-cli 全過（含 FriendshipActionEngine 12 項）；compute-gate standard 見 PR | 變更: FriendshipActionEngine、FriendshipService 配對表、GameSession 掛點（出戰／請戰／建議／賞賜／剝奪／俘虜）、存檔三欄位、權重表 status 改 active、規格書第 5 節 | 阻塞: 無；提親被拒由 Antigravity 呼叫 applyFriendshipAction"
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9956",
+      "title": "文件更正：PROG-2-0165 btnDelegate 位置補註（戰鬥 ControlBar）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "docs",
+      "phase": "M9",
+      "created": "2026-11-24",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-24T12:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [
+        "PROG-2-0165"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-24 | 狀態: done | 驗證: compute-gate quick 4/4 通過；diff 僅含 0165 notes 與本卡 | 變更: 為 PROG-2-0165 notes 追加位置更正（md 與 tasks-prog.json 同步）| 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ]
 }
