@@ -17436,7 +17436,7 @@
       "title": "武將武器欄位依最新立繪重建",
       "owner": "ClaudeCode_claude-opus-5-5",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "data",
       "phase": "M9",
       "created": "2026-11-24",
@@ -17455,7 +17455,7 @@
         "generals.json weapon 依立繪重建；GeneralWeapon 測試斷言劍類武將存在；tsc 0；單元測試全過；compute-gate quick 通過"
       ],
       "deliverables": [],
-      "notes": "2026-11-24 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "notes": "2026-11-25 | 狀態: done | 驗證: tsc 測試型別 0；單元測試 run-cli 9484 全過；compute-gate quick 通過 | 變更: generals.json weapon 依最新立繪重建（舊 blade137/cast94/spear3/bow1/sword0 → 新 sword48/cast109/blade38/spear30/bow10，改 110 位）；GeneralWeapon.test 改斷言代表武將與持劍女將；逐位表在 side-session-notes/general-weapon-redo-1124.md | 阻塞: 無；低信心 28 位待美術複核；枚舉缺雙劍/戟/扇建議後補",
       "brief": {
         "style": "classic",
         "label": "",

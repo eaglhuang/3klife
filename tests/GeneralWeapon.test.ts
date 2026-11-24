@@ -1,6 +1,6 @@
 /**
- * GeneralWeapon.test.ts — PROG-2-9955 武將武器欄位：generals.json weapon 齊全且合法、
- * 除校正項外與改前（profile → 角色推算）一致、解析優先序與缺欄位退回。
+ * GeneralWeapon.test.ts — PROG-2-9955／9970 武將武器欄位：generals.json weapon 齊全且合法、
+ * 代表武將與最新立繪一致、解析優先序與缺欄位退回。
  */
 import { readFileSync } from 'fs';
 import { join } from 'path';
@@ -8,23 +8,23 @@ import { buildGeneralWeaponTable, resolveGeneralWeapon, weaponTemplateKeys } fro
 import { TestSuite, assert } from './TestRunner';
 
 const root = join(__dirname, '..');
-const generals = JSON.parse(readFileSync(join(root, 'assets/resources/data/generals.json'), 'utf8')) as Array<{ id: string; name: string; role?: string; weapon?: string }>;
+const generals = JSON.parse(readFileSync(join(root, 'assets/resources/data/generals.json'), 'utf8')) as Array<{ id: string; name: string; role?: string; gender?: string; weapon?: string }>;
 const vfx = JSON.parse(readFileSync(join(root, 'assets/resources/data/attack-vfx.json'), 'utf8'));
 const templateKeys = weaponTemplateKeys(vfx.generalTemplates);
 const fallback = vfx.fallback as { weaponByRole: Record<string, string>; defaultWeapon: string };
 
-/** 改前的推算：profile → 角色 → defaultWeapon（與舊版 resolveGeneralVfx 相同） */
-function legacyWeapon(id: string, role?: string): string {
-    const prof = vfx.generalProfiles[id];
-    if (prof) return prof.weapon;
-    return (role && fallback.weaponByRole[role]) || fallback.defaultWeapon;
-}
-
-/** PROG-2-9955 校正項：歷史典故改武器，其餘一律維持改前推算 */
-const CORRECTIONS: Record<string, string> = {
+/** PROG-2-9970：依最新立繪（與目錄／色票文字）核定的高信心代表武將；其餘不寫死，避免之後換圖就測壞 */
+const EXPECTED: Record<string, string> = {
+    'guan-yu': 'blade', // 青龍偃月刀
     'zhang-fei': 'spear', // 丈八蛇矛
     'zhao-yun': 'spear', // 長槍
-    'huang-zhong': 'bow', // 黃忠以弓箭聞名
+    'lu-bu': 'spear', // 方天畫戟（戟尚無模板，以槍近似）
+    'huang-zhong': 'bow', // 弓
+    'zhuge-liang': 'cast', // 羽扇
+    'liu-bei': 'sword', // 雙劍（雙劍尚無模板，以劍近似）
+    'sun-quan': 'sword', // 直劍
+    'zhen-ji': 'sword', // 女將，細長劍
+    'xiao-qiao': 'cast', // 雙扇（扇尚無模板，以法術近似）
 };
 
 export function createGeneralWeaponSuite(): TestSuite {
@@ -37,21 +37,21 @@ export function createGeneralWeaponSuite(): TestSuite {
         assert.equals(0, bad.length, `不在模板表內：${bad.slice(0, 5).join(', ')}`);
     });
 
-    suite.test('除校正項外，每位武將的武器與改前推算一致（攻擊風格不變）', () => {
-        const diffs: string[] = [];
-        for (const g of generals) {
-            const expected = CORRECTIONS[g.id] ?? legacyWeapon(g.id, g.role);
-            if (g.weapon !== expected) diffs.push(`${g.id}: ${g.weapon} != ${expected}`);
-        }
-        assert.equals(0, diffs.length, `非校正項有差異：${diffs.join('; ')}`);
-    });
-
-    suite.test('校正項存在於資料，且確實改為指定武器', () => {
-        for (const [id, weapon] of Object.entries(CORRECTIONS)) {
+    suite.test('代表武將的武器與最新立繪一致', () => {
+        for (const [id, weapon] of Object.entries(EXPECTED)) {
             const g = generals.find(x => x.id === id);
             assert.isTrue(!!g, `找不到 ${id}`);
-            assert.equals(weapon, g!.weapon as string, `${id} 校正後武器`);
+            assert.equals(weapon, g!.weapon as string, `${id} 武器`);
         }
+    });
+
+    suite.test('五種武器都有武將使用；劍類（含女將）不再為 0，且不是全員同一兩種', () => {
+        for (const key of templateKeys) {
+            assert.isTrue(generals.some(g => g.weapon === key), `沒有任何武將使用 ${key}`);
+        }
+        assert.isTrue(generals.some(g => g.weapon === 'sword' && g.gender === '女'), '應有持劍女將');
+        const used = new Set(generals.map(g => g.weapon));
+        assert.isTrue(used.size >= 5, '武器種類不足');
     });
 
     suite.test('關羽、諸葛亮、呂布維持 profile 既有武器', () => {
