@@ -245,6 +245,8 @@
       "appliesToSkins": [
         "lobby-mission-detail-dialog-default",
         "extreme-task-screen.skin",
+        "bonding-proposal-screen.skin",
+        "jealousy-popup-screen.skin",
         "result-popup-default"
       ],
       "slotRoles": {
@@ -270,6 +272,16 @@
         "et.button.bg": "buttonGold",
         "et.label.title": "labelTitle",
         "et.label.body": "labelValue",
+        "bp.card.bg": "panel",
+        "bp.button.bg": "buttonGold",
+        "bp.label.title": "labelTitle",
+        "bp.label.body": "labelValue",
+        "bp.label.button": "labelButton",
+        "jp.card.bg": "panel",
+        "jp.button.bg": "buttonGold",
+        "jp.label.title": "labelTitle",
+        "jp.label.body": "labelValue",
+        "jp.label.button": "labelButton",
         "popup.detail.bg": "inset",
         "popup.avatar.ring": "avatarRing",
         "mission.dialog.dropdown.btn": "buttonDark",

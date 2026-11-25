@@ -1610,6 +1610,16 @@ export class GameSession implements AcademyRecordPort {
         return out.ok || out.reason === 'duplicate' ? { ...out, generalId: spouse.id } : out;
     }
 
+    /** 結緣好感（0~100）的唯讀查詢；提親機率面板與吃醋彈窗用（PROG-2-10043） */
+    public bondAffinityOf(generalId: string): number {
+        return this._bondAffinityOf(generalId);
+    }
+
+    /** 家族配偶的武將 id 清單（入族順序） */
+    public spouseIds(): string[] {
+        return this._family.members('spouse').map((m) => m.personId);
+    }
+
     /** 結緣好感（0~100）：送禮好感欄與傭兵好感取高者（規格：沿用結緣系統好感欄；PROG-2-9583） */
     private _bondAffinityOf(generalId: string): number {
         const gift = this._femaleSystem.giftAffection[generalId] ?? 0;

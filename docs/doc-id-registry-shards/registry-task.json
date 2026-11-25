@@ -17200,5 +17200,23 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10035.md",
     "title": "[PROG-2-10035] 大廳任務類視窗套用戰場結算風格（settle 皮膚家族）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3105",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10037.md",
+    "title": "PROG-2-10037 結緣公式分項與小名三段揭曉可玩 UI 元件",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3106",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10038.md",
+    "title": "PROG-2-10038 吃醋三選項彈窗 UI 與 10033 i18n 補鍵",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3107",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10043.md",
+    "title": "PROG-2-10043 結緣提親機率面板與吃醋彈窗掛進遊戲",
+    "category": "task"
   }
 ]
