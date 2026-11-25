@@ -17314,7 +17314,12 @@
       "created_by_agent": "ClaudeCode_claude-opus-5-5",
       "started_at": "2026-11-25T10:00:00+08:00",
       "started_by_agent": "ClaudeCode_claude-opus-5-5",
-      "related": ["HALL-15", "doc_spec_1178", "PROG-2-9965", "PROG-2-9964"],
+      "related": [
+        "HALL-15",
+        "doc_spec_1178",
+        "PROG-2-9965",
+        "PROG-2-9964"
+      ],
       "depends": [],
       "acceptance": [],
       "deliverables": [],
@@ -17791,7 +17796,7 @@
       "notes": "2026-11-25 | 狀態: done | 驗證: tsc(tsconfig.test.json) 0；run-cli ALL PASS 9513 passed／3 skipped；CI atm-governance、ucuf-core pass；zh-TW playtest 12/12；ja playtest 12/12；en playtest 11/12（第08步頂欄季別字串 Year 1 與本卡無關）；戰鬥內技能面板與招式橫幅未拍到（自然觸發未達；window 注入 SkillUsed 事件後橫幅未出現）| 變更: 效果說明與類別標籤改 i18n，四語系補鍵，測試 | 阻塞: 證據缺口已列於 PR 本文；戰鬥 HUD 繁中殘留（部署提示、兵種名、計謀按鈕、攻×4）另開卡"
     },
     {
-      "doc_id": "doc_task_9972",
+      "doc_id": "doc_task_3065",
       "id": "PROG-2-9972",
       "title": "格子火焰 VFX 不播修正：格子 hook 改用有 prefab 的積木",
       "owner": "ClaudeCode_claude-opus-5-5",
@@ -17829,7 +17834,7 @@
       }
     },
     {
-      "doc_id": "doc_task_9973",
+      "doc_id": "doc_task_3066",
       "id": "PROG-2-9973",
       "title": "戰鬥 HUD 與出陣畫面多語殘留（en／ja）",
       "owner": "ClaudeCode_claude-opus-5-5",
@@ -17864,7 +17869,7 @@
       }
     },
     {
-      "doc_id": "doc_task_9997",
+      "doc_id": "doc_task_3070",
       "id": "PROG-2-9997",
       "title": "戰場 vfx-block 必須有 prefabPath 防回歸（skills.json 路徑盤點）",
       "owner": "ClaudeCode_claude-opus-5-5",
@@ -17899,7 +17904,7 @@
       }
     },
     {
-      "doc_id": "doc_task_9995",
+      "doc_id": "doc_task_3069",
       "id": "PROG-2-9995",
       "title": "戰場單位倒下／被擊殺演出（漫畫式、無血腥）",
       "owner": "ClaudeCode_claude-opus-5-5",
@@ -17984,12 +17989,77 @@
         "summary": "",
         "doc": "docs/agent-briefs/tasks/PROG/PROG-2-9989.md"
       }
+    },
+    {
+      "doc_id": "doc_task_3057",
+      "id": "PROG-2-10001",
+      "title": "doc_id 不得沿用卡號與任務卡身分覆寫守門",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "governance",
+      "phase": "M0",
+      "created": "2026-11-25",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-25T09:48:50+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "doc_task 並未用滿（登記表最大 3056，空號約 7169）；13 張卡以 --doc-id 自填 doc_task_<卡號> 未登記，重建登記表時會把下一號推到 9998→9999 後報滿。另 9f3e7ed58 把既有卡 PROG-2-9973 改寫成另一件工作（刪 doc_id/created/created_by_agent、換標題）。本卡：CI 擋未登記 doc_id 與卡片身分覆寫、opener --doc-id 驗證、13 張卡 doc_id 改配登記號。",
+      "related": [
+        "PROG-2-9990",
+        "PROG-2-9973",
+        "PROG-2-10000"
+      ],
+      "depends": [],
+      "acceptance": [
+        "新 doc_id 未在登記表登記到同一路徑時 CI 失敗",
+        "既有任務卡 created/created_by_agent/doc_id 被刪改或標題被換時 CI 失敗",
+        "13 張卡 doc_id 改為登記號且登記表一致"
+      ],
+      "deliverables": [
+        "tools_node/lib/task-card-identity-guard.js",
+        "tools_node/lib/task-card-identity-policy.json",
+        "tools_node/validate-task-card-identity.js",
+        "tools_node/test/task-card-identity-guard.test.js",
+        "tools_node/lib/doc-id-allocation-guard.js",
+        "tools_node/lib/doc-id-allocation-policy.json",
+        "tools_node/test/doc-id-allocation-guard.test.js",
+        "tools_node/task-card-opener.js",
+        "tools_node/adapters/atm-3klife/governance-profile.json",
+        ".github/workflows/atm-governance.yml",
+        "docs/agent-briefs/Readme.md",
+        "package.json"
+      ],
+      "notes": "2026-11-25 | 狀態: done | 驗證: task-card-identity-guard.test 6 案、doc-id-allocation-guard.test（含自填 doc_id 回歸）、task-id 兩組測試全過；重放 9f3e7ed58 擋下 8 項違規；掃描 master 最近 250 個合併提交只標出 1 筆真實身分改寫（#2512 改他卡 created_by_agent） | 變更: 新增任務卡身分守門＋CI 步驟、Doc ID gate 擋任務卡未登記 doc_id、opener --doc-id 驗證與 --assign-doc-id 回填 tasks JSON、13 張卡 doc_task_99xx 改配 3058–3070、Readme 規則 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
-    "done": 317,
-    "in_progress": 3,
-    "open": 86,
-    "total": 406
+    "done": 324,
+    "in_progress": 2,
+    "open": 87,
+    "total": 413
   }
 }

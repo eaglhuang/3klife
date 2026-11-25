@@ -110,6 +110,23 @@ jobs:
           node tools_node/test/task-id-guard-flow.test.js
           node tools_node/test/task-id-remote-occupancy.test.js
 
+      - name: Task card identity guard
+        shell: bash
+        run: |
+          set -euo pipefail
+          node tools_node/test/task-card-identity-guard.test.js
+          if [[ "${GITHUB_EVENT_NAME}" == "pull_request" ]]; then
+            git fetch --quiet --no-tags origin "${{ github.base_ref }}"
+            base_ref="origin/${{ github.base_ref }}"
+          else
+            base_ref="${{ github.event.before }}"
+            if [[ -z "${base_ref}" || "${base_ref}" =~ ^0+$ ]]; then
+              echo "No previous commit for this push; skipping task card identity guard."
+              exit 0
+            fi
+          fi
+          node tools_node/validate-task-card-identity.js --base "${base_ref}"
+
       - name: Bootstrap CI task locks
         shell: bash
         run: |

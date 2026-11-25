@@ -1,5 +1,5 @@
 {
-  "_note": "Policy for doc_id allocation across parallel agents. Allocation floor = max(local registry, base ref registry, active local reservations) + 1. CI rejects doc_ids newly colliding with the base ref.",
+  "_note": "Policy for doc_id allocation across parallel agents. Allocation floor = max(local registry, base ref registry, active local reservations) + 1. CI rejects doc_ids newly colliding with the base ref. registeredInjectionPathPatterns: within these paths a doc_id marker added by a change must be assigned to that doc by the registry (hand-written ids such as doc_task_<task number> are rejected).",
   "baseRef": "origin/master",
   "fetchRemote": "origin",
   "fetchBranch": "master",
@@ -14,5 +14,8 @@
     ".github/skills",
     ".cursor/rules/skills",
     ".gemini/skills"
+  ],
+  "registeredInjectionPathPatterns": [
+    "^docs/agent-briefs/tasks/"
   ]
 }
