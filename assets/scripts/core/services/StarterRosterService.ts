@@ -6,6 +6,22 @@ export const STARTER_GENERAL_IDS = ['zhang-fei', 'wei-yan', 'xiahou-dun', 'zhang
 export type StarterGeneralId = typeof STARTER_GENERAL_IDS[number];
 /** 預設核心（沒指定時）：張飛是真實資料中六人唯一 legendary(SSR)，保留原數值與因子。 */
 export const STARTER_CORE_GENERAL_ID: StarterGeneralId = 'zhang-fei';
+
+/**
+ * 起始主將挑選（PROG-2-10008／10009）：優先 preferredId（目前主將，須在清單內），其次預設核心（張飛），
+ * 最後統率最高者；清單為空回傳 null。清單請傳「可出戰」的武將，主將被派去任務時用來改選替補。
+ */
+export function pickStartingLead(candidates: readonly GeneralConfig[], preferredId: string | null = null): GeneralConfig | null {
+    const preferred = preferredId ? candidates.find((g) => g.id === preferredId) : undefined;
+    if (preferred) return preferred;
+    const core = candidates.find((g) => g.id === STARTER_CORE_GENERAL_ID);
+    if (core) return core;
+    const leaOf = (g: GeneralConfig): number => g.lea ?? g.stats?.lea ?? 0;
+    let best: GeneralConfig | null = null;
+    for (const g of candidates) if (!best || leaOf(g) > leaOf(best)) best = g;
+    return best;
+}
+
 export interface StarterRosterOptions {
     coreGeneralId?: StarterGeneralId;
     /** 開局紅顏（OpeningBeauty 抽出）：排在六位名將之後入名冊，讓第一次結緣有母方。 */

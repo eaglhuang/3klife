@@ -17967,7 +17967,7 @@
       }
     },
     {
-      "doc_id": "",
+      "doc_id": "doc_task_3081",
       "id": "PROG-2-10008",
       "title": "首戰主將不在名冊時還原起始主將，不再設為空（總PM 裁決方案①）",
       "owner": "ClaudeCode_claude-opus-5-5",
@@ -18152,7 +18152,31 @@
       }
     },
     {
-      "doc_id": "doc_task_3081",
+      "doc_id": "doc_task_3080",
+      "id": "PROG-2-10009",
+      "title": "主將被派去大廳任務時改選其他可出戰武將並提示",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "bugfix",
+      "phase": "M0",
+      "created": "2026-11-25",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-25T13:10:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "description": "第二場起主將在大廳任務中（on-hall-mission）不可出戰，戰場退回名冊外的關卡指定主將，沒有出征帳本、自動代打不出兵。總PM 方案①：改選可出戰武將（起始主將／統率最高）並提示「主將○○任務中，已改由△△出戰」。",
+      "related": ["PROG-2-10008"],
+      "depends": [],
+      "notes": "2026-11-25 | 狀態: done | 驗證: tsc 測試設定 0 錯、run-cli 9562 通過、compute-gate quick 4/4；web-desktop 建置成功，實機 playtest-online --year --no-set-lead：主將 夏侯惇 在大廳任務中（on-hall-mission），第一季兩場出征都有出征軍勢（結算 出征軍勢 2030、城市兵源 2030→1530），自動代打有出兵，第二場勝利；舊行為為無出征帳本不出兵、敗北。證據筆記夾 qa-fix/lead-busy-1125/（年循環第二場並未開編成視窗，只有首戰教學戰才開，提示走 Toast，Toast 單元測試驗文案、實機未截到畫面）| 變更: GameSession.leadSubstitution／resolveLeadGeneralId 主將不能出戰改選替補、StarterRosterService.pickStartingLead、SortieSetupController.recommend 主將任務中改選並於 sortieNotice 提示、LobbyScene 出戰時 Toast、四語 sortie.leadBusy、tests/HallMissionSession.test.ts 兩案 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "doc": "docs/agent-briefs/tasks/PROG/PROG-2-10009.md"
+      }
+    },
+    {
+      "doc_id": "doc_task_3082",
       "id": "PROG-2-10010",
       "title": "首戰實玩探針：記錄天氣、試放計謀、量格子特效",
       "owner": "ClaudeCode_claude-opus-5-5",
@@ -18167,7 +18191,7 @@
       "description": "playtest-online 首戰流程加檢查：戰鬥天氣、嘗試施放計謀（火計優先，天氣不符改放第一個可放的）、格子特效數，寫進 report.battles 與摘要行。",
       "related": ["PROG-2-10005", "PROG-2-9989"],
       "depends": [],
-      "notes": "2026-11-25 | 狀態: done | 驗證: tsc 0 錯、run-cli 9563 通過、compute-gate quick 4/4；實跑 playtest-online（線上版）12 步，首戰「首戰天氣 WINDY；計謀 tactic-fire-scheme 成功；格子特效 7（hook 1）」，第一次實跑 10 次嘗試都未套用（原因不明），改加 TP／SP 診斷並放寬到 30 次嘗試，第二次第 27 次嘗試施放成功，證據筆記夾 playtest-first-battle-1125/ | 變更: playtest-online.js 新增 castTacticProbe 探針、battleState 加 weather、report.battles、--no-tactic-probe；playtest-year-summary.js 新增 formatFirstBattleLine；PlaytestYearSummary.test.ts 加 3 組；順手補 PROG-2-10005 doc_id=doc_task_3071 | 阻塞: 無",
+      "notes": "2026-11-25 | 狀態: done | 驗證: tsc 0 錯、run-cli 9563 通過、compute-gate quick 4/4；實跑 playtest-online（線上版）12 步，首戰「首戰天氣 WINDY；計謀 tactic-fire-scheme 成功；格子特效 7（hook 1）」，第一次實跑 10 次嘗試都未套用（原因不明），改加 TP／SP 診斷並放寬到 30 次嘗試，第二次第 27 次嘗試施放成功，證據筆記夾 playtest-first-battle-1125/ | 變更: playtest-online.js 新增 castTacticProbe 探針、battleState 加 weather、report.battles、--no-tactic-probe；playtest-year-summary.js 新增 formatFirstBattleLine；PlaytestYearSummary.test.ts 加 3 組；順手補 PROG-2-10008 doc_id | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
@@ -18177,9 +18201,9 @@
     }
   ],
   "summary": {
-    "done": 326,
+    "done": 327,
     "in_progress": 2,
     "open": 87,
-    "total": 415
+    "total": 416
   }
 }

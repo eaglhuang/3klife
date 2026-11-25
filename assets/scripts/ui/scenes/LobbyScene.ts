@@ -262,7 +262,7 @@ import { buildLobbyScout, ScoutPanelController } from '../core/ScoutPanelControl
 import type { TacticCounterTagTable } from '../../core/systems/LoadoutCheck';
 import { spiritSlotViewOf } from '../../core/systems/SpiritSlotState';
 import { DestinyShopController } from '../core/DestinyShopController';
-import { SortieSetupController, type SortieDeckCardInfo, type SortieRole } from '../core/SortieSetupController';
+import { LEAD_BUSY_NOTICE_KEY, SortieSetupController, type SortieDeckCardInfo, type SortieRole } from '../core/SortieSetupController';
 import { parsePreBattleWeights, type PreBattleWeights } from '../../core/systems/PreBattleRecommend';
 import type { PowDecision } from '../../core/systems/PrisonerOfWar';
 import { OracleCouple, SageOracleController } from '../core/SageOracleController';
@@ -1546,6 +1546,11 @@ export class LobbyScene extends Component {
         if (firstBattleOpensLoadout(services().session.clearedStageIds, !!encounter)) {
             void this._openFirstBattleLoadout();
             return;
+        }
+        // 主將被派去大廳任務等不能出戰：戰場改由其他可出戰武將出戰（resolveLeadGeneralId），跳提示說明（PROG-2-10009）
+        const substitution = services().session.leadSubstitution();
+        if (substitution) {
+            services().event.emit('SHOW_TOAST', { message: services().i18n.t(LEAD_BUSY_NOTICE_KEY, substitution.lead.name, substitution.substitute.name), duration: 3 });
         }
         const popup = this._quickSortiePopup;
         if (!encounter || !popup?.host || isTutorialBattle(services().session.clearedStageIds)) {

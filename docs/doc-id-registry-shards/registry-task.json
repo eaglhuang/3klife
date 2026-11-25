@@ -17070,7 +17070,19 @@
     "category": "task"
   },
   {
+    "id": "doc_task_3080",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10009.md",
+    "title": "[PROG-2-10009] 主將被派去大廳任務時改選其他可出戰武將並提示",
+    "category": "task"
+  },
+  {
     "id": "doc_task_3081",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10008.md",
+    "title": "[PROG-2-10008] 首戰主將不在名冊時還原起始主將，不再設為空（總PM 裁決方案①）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3082",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10010.md",
     "title": "[PROG-2-10010] 首戰實玩探針：記錄天氣、試放計謀、量格子特效",
     "category": "task"

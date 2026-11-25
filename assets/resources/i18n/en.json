@@ -1127,6 +1127,7 @@
   "sortie.recommend.line": "{0}: {1} ({2})",
   "sortie.recommend.unavailable": "Recommendation data is not loaded",
   "sortie.recommend.failed": "Recommendation failed, please try again",
+  "sortie.leadBusy": "{0} is on a mission; {1} will lead the sortie instead",
   "sortie.confirm": "Confirm Sortie",
   "prebattle.issue.NO_COMMANDER": "No commander available",
   "prebattle.issue.NO_STRATEGIST": "No strategist available",

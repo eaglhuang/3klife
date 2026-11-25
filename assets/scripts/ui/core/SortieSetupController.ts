@@ -15,7 +15,7 @@
  * Unity 對照：隊伍編成畫面的 Presenter，Support Slot 的左右切換只改 session 狀態，再整頁刷新。
  */
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
-import type { SortieSupport, SortieSupportSummary } from '../../core/managers/GameSession';
+import type { LeadSubstitution, SortieSupport, SortieSupportSummary } from '../../core/managers/GameSession';
 import type { MilitaryReserve } from '../../core/systems/MilitaryReserve';
 import type { PendingSceneGambit } from '../../core/systems/HallSceneGambit';
 import { sceneGambitToggleText } from './HallSceneGambitText';
@@ -39,7 +39,7 @@ import {
     type PreBattleWeights,
 } from '../../core/systems/PreBattleRecommend';
 import { PLAYER_DECK_MAX_SIZE } from '../../core/services/PlayerDeckRules';
-import { STARTER_CORE_GENERAL_ID } from '../../core/services/StarterRosterService';
+import { pickStartingLead } from '../../core/services/StarterRosterService';
 
 export type SortieRole = 'strategist' | 'deputy';
 
@@ -79,6 +79,8 @@ export interface SortieSetupDeps {
         setSortieSupport(strategistUid: string | null, deputyUid: string | null, commanderUid?: string | null): SortieLoadoutCheck;
         getSortieSupportSummary(commanderUid: string): SortieSupportSummary;
         getSortieInput(generalId: string): CreateSortieInput | null;
+        /** 主將在名冊但不能出戰（例：大廳任務中）時的替補；未提供或沒有替補時當作主將正常（PROG-2-10009） */
+        leadSubstitution?(): LeadSubstitution | null;
         setLeadGeneral(generalId: string | null): Promise<boolean>;
         setDeck(ids: readonly string[], catalogIds?: readonly string[]): Promise<string[]>;
     };
@@ -110,6 +112,9 @@ const TACTIC_POINTS_NOTE_KEY = 'sortie.strategist.note';
 
 /** 名冊外指定主將時，主將還原成起始主將的理由文案 key（PROG-2-10008） */
 const STARTING_LEAD_REASON_KEY = 'prebattle.reason.commander.startingLead';
+
+/** 主將被派去任務等不能出戰，改由別人出戰的提示 key（{0}=原主將名、{1}=改選者名，PROG-2-10009） */
+export const LEAD_BUSY_NOTICE_KEY = 'sortie.leadBusy';
 
 function statOf(g: GeneralConfig, key: 'str' | 'int' | 'pol' | 'lea'): number {
     return Math.floor(g[key] ?? g.stats?.[key] ?? 0);
@@ -356,7 +361,9 @@ export class SortieSetupController {
             pol: statOf(g, 'pol'),
             bloodlineId: g.bloodlineId,
         });
-        const fixed = this._deps.fixedCommander?.() ?? null;
+        // 主將在名冊但不能出戰（任務中等）：改選可出戰武將，不採用名冊外的關卡指定主將（PROG-2-10009）
+        const busy = this._deps.session.leadSubstitution?.() ?? null;
+        const fixed = busy ? null : this._deps.fixedCommander?.() ?? null;
         const commanderPool = generals.map(toCandidate);
         if (fixed && !generals.some((g) => g.id === fixed.id)) commanderPool.push(toCandidate(fixed));
         const roster: PreBattleRosterInput = {
@@ -381,7 +388,7 @@ export class SortieSetupController {
         // 還原成起始主將；名冊裡完全沒有可出戰武將時才維持空
         const recommendedId = rec.commander.id;
         const outsideRoster = !generals.some((g) => g.id === recommendedId);
-        const leadTarget = outsideRoster ? this._startingLeadId(generals) : recommendedId;
+        const leadTarget = busy ? busy.substitute.id : outsideRoster ? this._startingLeadId(generals) : recommendedId;
         if (this._deps.session.leadGeneralId !== leadTarget && !(await this._deps.session.setLeadGeneral(leadTarget))) {
             this._notice = t('sortie.recommend.failed');
             return false;
@@ -390,7 +397,7 @@ export class SortieSetupController {
         // 還原的主將已是主將，不能再兼參謀官 / 後勤官
         const strategist = rec.strategist && rec.strategist.id !== commanderId ? rec.strategist : null;
         const deputy = rec.deputy && rec.deputy.id !== commanderId ? rec.deputy : null;
-        const commanderReason = outsideRoster && leadTarget ? STARTING_LEAD_REASON_KEY : rec.commander.reasonKey;
+        const commanderReason = (outsideRoster || busy) && leadTarget ? STARTING_LEAD_REASON_KEY : rec.commander.reasonKey;
         this._reasonLines.push(line(t('prebattle.role.commander'), nameOf(commanderId), commanderReason));
         const check = this._deps.session.setSortieSupport(strategist?.id ?? null, deputy?.id ?? null, commanderId);
         if (strategist) this._reasonLines.push(line(t('prebattle.role.strategist'), nameOf(strategist.id), strategist.reasonKey));
@@ -402,7 +409,8 @@ export class SortieSetupController {
         }
         const supportIssue = check.ok ? '' : check.issues.map((i) => this._t(SORTIE_LOADOUT_ISSUE_KEY[i])).join('、');
         const gaps = [issueText, supportIssue].filter((s) => s.length > 0).join('、');
-        this._notice = gaps ? `${t('sortie.recommend.done')}（${gaps}）` : t('sortie.recommend.done');
+        const done = gaps ? `${t('sortie.recommend.done')}（${gaps}）` : t('sortie.recommend.done');
+        this._notice = busy ? `${t(LEAD_BUSY_NOTICE_KEY, busy.lead.name, busy.substitute.name)}；${done}` : done;
         return true;
     }
 
@@ -411,12 +419,7 @@ export class SortieSetupController {
      * 優先目前主將（開局指定的核心主將），其次張飛（預設核心），最後退回統率最高的可出戰武將；沒有可出戰武將回傳 null。
      */
     private _startingLeadId(generals: readonly GeneralConfig[]): string | null {
-        const current = this._deps.session.leadGeneralId;
-        if (current && generals.some((g) => g.id === current)) return current;
-        if (generals.some((g) => g.id === STARTER_CORE_GENERAL_ID)) return STARTER_CORE_GENERAL_ID;
-        let best: GeneralConfig | null = null;
-        for (const g of generals) if (!best || statOf(g, 'lea') > statOf(best, 'lea')) best = g;
-        return best?.id ?? null;
+        return pickStartingLead(generals, this._deps.session.leadGeneralId)?.id ?? null;
     }
 
     /** 把目前的參謀官 / 後勤官存成這位主將的編制預設（DEP-14）；沒有預設儲存時回傳 false */
