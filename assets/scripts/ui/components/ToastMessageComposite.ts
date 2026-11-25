@@ -3,10 +3,12 @@
  * ToastMessageComposite — 全域吐司提示系統（Composite 版）
  * Wave 2 migration from ToastMessage - temporary floating notifications
  */
-import { _decorator, Color, Label, Tween, tween, UIOpacity, Widget } from 'cc';
+import { _decorator, Canvas, Color, Label, Node, Tween, tween, UIOpacity, UITransform, Vec3, view, Widget } from 'cc';
+import { BATTLE_BANNER_LAYOUT } from '../../core/data/BattleBannerLayoutData';
+import { bannerCenterOffset } from '../../core/systems/BannerPlacement';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
-import { BATTLE_TOAST_TOP_PX, battleToastHoldSeconds, dropStaleToasts, isToastStale, mergeHeldToasts, ToastQueue } from '../core/ToastQueue';
+import { battleToastHoldSeconds, dropStaleToasts, isToastStale, mergeHeldToasts, ToastQueue } from '../core/ToastQueue';
 
 const { ccclass, property } = _decorator;
 
@@ -147,6 +149,7 @@ export class ToastMessageComposite extends CompositePanel {
         }
 
         this.node.active = true;
+        this._placeToastRoot();
         const opacity = this.node.getComponent(UIOpacity) ?? this.node.addComponent(UIOpacity);
 
         if (this._hideTween) {
@@ -185,11 +188,26 @@ export class ToastMessageComposite extends CompositePanel {
     protected override _onAfterBuildReady(binder: UITemplateBinder): void {
         this._binder = binder;
         this._messageLabel = binder.getLabel('Message');
-        // 戰場提示條上移到標題列之下、棋盤之上（layout 預設 top=120 會落在棋盤上緣）
+        // 戰場提示條改依錨點＋比例規則放（BattleBannerLayoutData）：關掉 Widget，避免被父節點尺寸帶偏
         const widget = this.node.getChildByName('ToastRoot')?.getComponent(Widget);
-        if (widget) {
-            widget.top = BATTLE_TOAST_TOP_PX;
-            widget.updateAlignment();
-        }
+        if (widget) widget.enabled = false;
+        this._placeToastRoot();
+    }
+
+    /**
+     * 依規則把 ToastRoot 放到標題列之下的空帶。
+     * 以所在 Canvas 的尺寸與世界位置為基準（父節點 Toast 只有 400x60 且被別處搬動，不能當基準）。
+     */
+    private _placeToastRoot(): void {
+        const root = this.node.getChildByName('ToastRoot');
+        if (!root) return;
+        let canvasNode: Node | null = this.node;
+        while (canvasNode && !canvasNode.getComponent(Canvas)) canvasNode = canvasNode.parent;
+        const cu = canvasNode?.getComponent(UITransform);
+        const size = cu ? cu.contentSize : view.getVisibleSize();
+        const origin = canvasNode ? canvasNode.worldPosition : new Vec3();
+        const ui = root.getComponent(UITransform);
+        const o = bannerCenterOffset(BATTLE_BANNER_LAYOUT.toast, size.width, size.height, ui?.height ?? 0);
+        root.setWorldPosition(origin.x + o.x, origin.y + o.y, 0);
     }
 }

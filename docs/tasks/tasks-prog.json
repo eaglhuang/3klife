@@ -18511,6 +18511,14 @@
       "priority": "P0",
       "owner": "Antigravity",
       "brief": "docs/agent-briefs/tasks/PROG/PROG-2-10000.md"
+    },
+    {
+      "id": "PROG-2-10025",
+      "title": "戰場單挑勝利／計謀橫幅不蓋 HUD 資訊",
+      "status": "done",
+      "priority": "P1",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "brief": "docs/agent-briefs/tasks/PROG/PROG-2-10025.md"
     }
   ],
   "summary": {
