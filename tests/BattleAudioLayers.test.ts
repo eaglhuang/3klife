@@ -7,6 +7,8 @@ import {
     DieBoomStagger,
     attackSfxDelaySec,
     createFootstepCapState,
+    createHitSfxState,
+    tryAcquireHitSfx,
     footstepClipFor,
     footstepDelayMs,
     jitterFootstepVolume,
@@ -44,6 +46,41 @@ export function createBattleAudioLayersSuite(): TestSuite {
         assert.isTrue(pickHitSfx('light', CFG, () => 0).clip !== pickHitSfx('light', CFG, () => 0.99).clip);
     });
 
+    suite.test('PROG-2-10021 輕擊池 4 檔，輪播不連續兩次相同（任何亂數序列）', () => {
+        assert.isTrue(CFG.hit.tiers.light.clips.length >= 4);
+        const st = createHitSfxState();
+        let last = '';
+        for (let i = 0; i < 400; i++) {
+            const r = ((i * 37) % 101) / 100;
+            const clip = pickHitSfx('light', CFG, () => r, st).clip;
+            assert.isTrue(clip !== last, 'repeat at ' + i + ':' + clip);
+            last = clip;
+        }
+        // 借音檔音量壓低
+        const weapon = pickHitSfx('light', CFG, () => 0.5, createHitSfxState());
+        assert.isTrue(weapon.volume <= 0.9);
+    });
+
+    suite.test('PROG-2-10021 輕擊節流：視窗內最多 2 聲，過視窗恢復；其他層不節流', () => {
+        const st = createHitSfxState();
+        assert.isTrue(tryAcquireHitSfx(st, 'light', 1000, CFG));
+        assert.isTrue(tryAcquireHitSfx(st, 'light', 1010, CFG));
+        assert.isFalse(tryAcquireHitSfx(st, 'light', 1020, CFG));
+        assert.isTrue(tryAcquireHitSfx(st, 'light', 1100, CFG));
+        for (let i = 0; i < 5; i++) assert.isTrue(tryAcquireHitSfx(st, 'heavy', 1100, CFG));
+    });
+
+    suite.test('PROG-2-10021 池為空或只有一檔不崩', () => {
+        const empty = { ...CFG, hit: { ...CFG.hit, tiers: { ...CFG.hit.tiers, light: { clips: [], volume: [0.7, 0.9] as const } } } };
+        assert.equals('', pickHitSfx('light', empty, () => 0.3, createHitSfxState()).clip);
+        const one = { ...CFG, hit: { ...CFG.hit, tiers: { ...CFG.hit.tiers, light: { clips: ['hurt'], volume: [0.7, 0.9] as const } } } };
+        const st = createHitSfxState();
+        assert.equals('hurt', pickHitSfx('light', one, () => 0, st).clip);
+        assert.equals('hurt', pickHitSfx('light', one, () => 0, st).clip);
+        const parsed = parseBattleAudioLayersConfig({ hit: { tiers: { light: { clips: [] } } } });
+        assert.isTrue(parsed.hit.tiers.light.clips.length >= 4);
+    });
+
     suite.test('clipSource 開關：預設 cc0；cc0 把金屬擊打／肉體悶擊／單拍馬蹄換成 CC0 檔，pitched 回到變調代用版', () => {
         assert.equals('cc0', CFG.clipSource);
         assert.equals('cc0_hit_metal', pickHitSfx('block', CFG, () => 0).clip);
@@ -76,12 +113,14 @@ export function createBattleAudioLayersSuite(): TestSuite {
 
     suite.test('受擊音量落在各層範圍內，且隨機值不同', () => {
         for (const t of ['light', 'heavy', 'block', 'lethal'] as const) {
-            const [lo, hi] = CFG.hit.tiers[t].volume;
+            const sc = Object.values(CFG.hit.tiers[t].clipVolumeScale ?? {});
+            const lo = CFG.hit.tiers[t].volume[0] * Math.min(1, ...sc);
+            const hi = CFG.hit.tiers[t].volume[1];
             for (const r of [0, 0.3, 0.7, 1]) {
                 const v = pickHitSfx(t, CFG, () => r).volume;
                 assert.isTrue(v >= lo - 1e-9 && v <= hi + 1e-9, `${t} ${v}`);
             }
-            assert.isTrue(pickHitSfx(t, CFG, () => 0).volume < pickHitSfx(t, CFG, () => 1).volume);
+            assert.isTrue(pickHitSfx(t, CFG, () => 0.2).volume !== pickHitSfx(t, CFG, () => 0.21).volume);
         }
     });
 
