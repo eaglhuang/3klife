@@ -17086,5 +17086,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10010.md",
     "title": "[PROG-2-10010] 首戰實玩探針：記錄天氣、試放計謀、量格子特效",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3083",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10014.md",
+    "title": "[PROG-2-10014] playtest-online 火計探針細分失敗原因、時間上限、已知環境錯誤白名單",
+    "category": "task"
   }
 ]

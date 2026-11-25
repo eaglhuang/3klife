@@ -18198,12 +18198,58 @@
         "summary": "",
         "doc": "docs/agent-briefs/tasks/PROG/PROG-2-10010.md"
       }
+    },
+    {
+      "doc_id": "doc_task_3083",
+      "id": "PROG-2-10014",
+      "title": "playtest-online 火計探針細分失敗原因、時間上限、已知環境錯誤白名單",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-25",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-25T14:45:26+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依火計 CAST_NOT_APPLIED 診斷：castTacticProbe 失敗回報細分原因（存活敵軍、受傷我方、SP、TP、blockedReason）；只在場上有存活敵軍才試放；嘗試上限改約 60 秒；NPC brain 本機網路存取檢查擋下的三種 console error 在線上版不計入錯誤數，另列已知環境錯誤。純測試工具。",
+      "related": [
+        "PROG-2-10010"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-25 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
-    "done": 327,
-    "in_progress": 2,
+    "done": 330,
+    "in_progress": 3,
     "open": 87,
-    "total": 416
+    "total": 420
   }
 }

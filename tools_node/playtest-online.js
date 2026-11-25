@@ -23,6 +23,13 @@
  * pageerror（未捕捉例外）視為該步失敗；console error 只記錄、不單獨判失敗。
  * 本工具不改遊戲程式；發現的問題只寫進報告。
  *
+ * 已知環境錯誤（PROG-2-10014）：線上 HTTPS 網頁版連本機 NPC brain（POST http://127.0.0.1:8765/v1/npc/dialogue）
+ * 會被 Chrome 本機網路存取檢查擋下，出現 ERR_BLOCKED_BY_LOCAL_NETWORK_ACCESS_CHECKS、ERR_FAILED、CORS loopback 三種錯誤。
+ * 這屬預期環境錯誤，觸發點在大廳端（LobbyScene、AvatarTalkBubble），不是戰場。線上版不計入 console error，
+ * 報告另列 knownEnvErrors，結尾輸出「已知環境錯誤：N 筆」；判斷函式 isKnownEnvError 在 playtest-year-summary.js。本機建置目錄（--dir）不套用白名單。
+ * 【暫時性白名單】線上版本來應打 Render 中台、不該打 127.0.0.1，待線上版改打中台後移除此白名單（isKnownEnvError 與 knownEnvErrors）。
+ * 白名單只認 127.0.0.1:8765 的 NPC 對話網址；打其他網址的 NPC 錯誤仍照常計入 console error，且「已知環境錯誤：N 筆」永遠另列、不隱藏。
+ *
  * 用法：
  *   node tools_node/playtest-online.js
  *   node tools_node/playtest-online.js --url https://eaglhuang.github.io/3klife-play/
@@ -69,13 +76,15 @@ const path = require('path');
 const { execFileSync } = require('child_process');
 const { createRealMouse } = require('./playtest-real-mouse');
 const { decideEndTurnAction } = require('./playtest-end-turn-fallback');
-const { formatYearQuarterLine, formatFirstBattleLine } = require('./playtest-year-summary');
+const { formatYearQuarterLine, formatFirstBattleLine, isKnownEnvError } = require('./playtest-year-summary');
 
 const projectRoot = path.resolve(__dirname, '..');
 const DEFAULT_URL = 'https://eaglhuang.github.io/3klife-play/';
 const DEFAULT_VIEWPORT = '1920x1080';
 const DEFAULT_STUCK_MS = 120000;
 const BATTLE_LIMIT_MS = 120000;
+/** 首戰計謀探針的嘗試時間窗（PROG-2-10014）：從第一個可放招空檔起算，超過就不再試 */
+const TACTIC_PROBE_WINDOW_MS = 60000;
 
 /** 已知無害的 console 噪音（與 run-web-smoke.js 一致） */
 const IGNORED_CONSOLE_PATTERNS = [/favicon\.ico/i];
@@ -350,6 +359,17 @@ function installPageHelpers() {
             const general = ctrl.state.playerGeneral;
             const slots = ((general && general.tacticSlots) || []).map((x) => x.tacticId).filter(Boolean);
             out.slots = slots;
+            // 場上診斷（PROG-2-10014）：施放被擋時，區分「沒有存活敵軍」「我方全員滿血（補血沒對象）」「SP／TP 不足」
+            const livingOf = (faction) => Array.from(ctrl.state.units.values()).filter((u) => u.faction === faction && u.currentHp > 0);
+            const woundedOf = (units) => units.filter((u) => { try { return u.currentHp < u.getEffectiveMaxHp(); } catch (e) { return false; } }).length;
+            const snapshotField = () => {
+                const enemies = livingOf('enemy');
+                const allies = livingOf('player');
+                return { enemyAlive: enemies.length, allyAlive: allies.length, allyWounded: woundedOf(allies), sp: general ? general.currentSp : null, maxSp: general ? general.maxSp : null };
+            };
+            out.field = snapshotField();
+            // 火計要有存活敵軍才有目標：場上沒敵軍就不試放（避免白白落空），由呼叫端等到敵軍出現再試
+            if (out.field.enemyAlive === 0) { out.reason = 'NO_ENEMY_ALIVE（場上沒有存活敵軍，未試放；我方受傷 ' + out.field.allyWounded + '/' + out.field.allyAlive + '、SP ' + out.field.sp + '/' + out.field.maxSp + '）'; out.noEnemy = true; return out; }
             if (!ctrl.canUsePlayerSkills()) { out.reason = 'NOT_PLAYER_PHASE（現在不是我方可放招的階段）'; return out; }
             const candidates = [];
             if (preferId) candidates.push(preferId);
@@ -367,8 +387,20 @@ function installPageHelpers() {
                 if (!ctrl.canAffordTactic(id)) { out.skipped.push({ id, why: 'TP_SHORT（計謀點 ' + (tp ? tp.current + '/' + tp.max : '?') + '）' }); continue; }
                 if (ctrl.seedTacticNeedsSp() && general && !general.canUseSkill()) { out.skipped.push({ id, why: 'SP_NOT_FULL（' + general.currentSp + '/' + general.maxSp + '）' }); continue; }
                 let applied = false;
-                try { applied = Boolean(ctrl.triggerPlayerBattleSkill(def.battleSkillId, 'seed-tactic', { targetMode: def.targetMode, tacticId: id })); } catch (e) { out.skipped.push({ id, why: 'THROW:' + String(e && e.message || e) }); continue; }
-                if (!applied) { out.skipped.push({ id, why: 'CAST_NOT_APPLIED（可能場上沒有目標）' }); continue; }
+                // 攔下結算器回傳，取得 blockedReason（探針只有布林看不到原因）；施放後立刻還原
+                const dispatcher = ctrl.skillDispatcher;
+                const origSeed = dispatcher.dispatchSeedTactic;
+                let lastResult = null;
+                dispatcher.dispatchSeedTactic = function (...args) { lastResult = origSeed.apply(this, args); return lastResult; };
+                try { applied = Boolean(ctrl.triggerPlayerBattleSkill(def.battleSkillId, 'seed-tactic', { targetMode: def.targetMode, tacticId: id })); } catch (e) { dispatcher.dispatchSeedTactic = origSeed; out.skipped.push({ id, why: 'THROW:' + String(e && e.message || e) }); continue; }
+                dispatcher.dispatchSeedTactic = origSeed;
+                if (!applied) {
+                    const f = snapshotField();
+                    const blocked = lastResult && lastResult.blockedReason ? lastResult.blockedReason : null;
+                    out.blockedReason = blocked;
+                    out.skipped.push({ id, why: 'CAST_NOT_APPLIED（存活敵軍 ' + f.enemyAlive + '、我方受傷 ' + f.allyWounded + '/' + f.allyAlive + '、SP ' + f.sp + '/' + f.maxSp + '、TP ' + (tp && Number.isFinite(tp.current) ? tp.current + '/' + tp.max : '免扣') + '、blockedReason ' + (blocked || '無') + '）' });
+                    continue;
+                }
                 out.ok = true;
                 out.tacticId = id;
                 out.battleSkillId = def.battleSkillId;
@@ -513,16 +545,18 @@ async function main() {
 
     /** 把 console error／pageerror／失敗請求收進 collector（主頁與 qa 第二情境共用） */
     function attachCollectors(p) {
+        const isOnline = !staticServer; // 線上版才套用已知環境錯誤白名單（本機建置目錄連得到本機 NPC brain）
         p.on('console', (message) => {
             const text = message.text();
             if (message.type() !== 'error') return;
             if (DUPLICATE_RESOURCE_ERROR.test(text) || IGNORED_CONSOLE_PATTERNS.some((re) => re.test(text))) return;
-            collector.push('console-error', text);
+            collector.push(isOnline && isKnownEnvError(text) ? 'known-env-error' : 'console-error', text);
         });
         p.on('pageerror', (error) => collector.push('pageerror', (error && error.stack) || error));
         p.on('requestfailed', (request) => {
             if (IGNORED_CONSOLE_PATTERNS.some((re) => re.test(request.url()))) return;
-            collector.push('request-failed', `${request.url()} (${request.failure() && request.failure().errorText})`);
+            const failedText = `${request.method()} ${request.url()} (${request.failure() && request.failure().errorText})`;
+            collector.push(isOnline && isKnownEnvError(failedText) ? 'known-env-error' : 'request-failed', failedText);
         });
         p.on('response', (response) => {
             if (response.status() >= 400 && !IGNORED_CONSOLE_PATTERNS.some((re) => re.test(response.url()))) {
@@ -1533,16 +1567,20 @@ async function main() {
             // 首戰探針（PROG-2-10010）：記錄戰鬥天氣，並在我方可放招時試放一次計謀（火計優先，天氣不符改放第一個可放的），量格子特效
             let tacticProbe = null;
             let tacticAttempts = 0;
+            let noEnemyPolls = 0;
+            let probeStartedAt = null;
             const firstBattle = { weather: null, tactic: null };
             rec.detail.firstBattle = firstBattle;
             while (!settled) {
                 if (opts.probeTactic && !tacticProbe) {
                     const st = await page.evaluate(() => window.__pt.battleState()).catch(() => null);
                     if (st && st.weather && !firstBattle.weather) firstBattle.weather = st.weather;
-                    if (st && !st.advancing && !st.ultCutin && !st.duelPanel && !st.battleEnded && tacticAttempts < 30) {
-                        tacticAttempts += 1;
+                    if (st && !st.advancing && !st.ultCutin && !st.duelPanel && !st.battleEnded && (probeStartedAt === null || Date.now() - probeStartedAt < TACTIC_PROBE_WINDOW_MS)) {
+                        // 嘗試上限改依時間（PROG-2-10014）：從第一個空檔起算約 60 秒；沒有存活敵軍的取樣不算嘗試次數
+                        if (probeStartedAt === null) probeStartedAt = Date.now();
                         const probe = await page.evaluate((id) => window.__pt.castTacticProbe(id), 'tactic-fire-scheme').catch((e) => ({ ok: false, reason: 'PROBE_ERROR:' + String(e && e.message || e) }));
-                        firstBattle.tactic = { ...probe, attempts: tacticAttempts };
+                        if (probe.noEnemy) noEnemyPolls += 1; else tacticAttempts += 1;
+                        firstBattle.tactic = { ...probe, attempts: tacticAttempts, noEnemyPolls };
                         if (probe.weather && !firstBattle.weather) firstBattle.weather = probe.weather;
                         if (probe.ok) tacticProbe = probe;
                     }
@@ -1579,7 +1617,7 @@ async function main() {
             rec.detail.battleMs = Date.now() - battleT0;
             if (opts.probeTactic) {
                 const fb = rec.detail.firstBattle;
-                if (!fb.tactic) fb.tactic = { ok: false, reason: 'NEVER_ATTEMPTED（戰鬥期間沒有出現我方可放招的時機）', attempts: tacticAttempts };
+                if (!fb.tactic) fb.tactic = { ok: false, reason: 'NEVER_ATTEMPTED（戰鬥期間沒有出現我方可放招的時機）', attempts: tacticAttempts, noEnemyPolls };
                 fb.line = formatFirstBattleLine(fb);
                 report.battles.push({ step: rec.name, result: null, weather: fb.weather, tactic: fb.tactic, gridVfx: { nodes: fb.tactic.nodes ?? null, hooks: fb.tactic.hooks ?? null }, line: fb.line });
                 console.log(`[playtest] ${fb.line}`);
@@ -2869,7 +2907,8 @@ async function main() {
         console.error(`[playtest] 致命錯誤：${report.fatal}`);
     } finally {
         report.passed = report.steps.length > 0 && report.steps.every((s) => s.ok) && !report.fatal;
-        report.consoleErrors = collector.entries.filter((e) => e.kind !== 'pageerror').map((e) => e.detail);
+        report.consoleErrors = collector.entries.filter((e) => e.kind !== 'pageerror' && e.kind !== 'known-env-error').map((e) => e.detail);
+        report.knownEnvErrors = collector.entries.filter((e) => e.kind === 'known-env-error').map((e) => e.detail);
         report.pageErrors = collector.entries.filter((e) => e.kind === 'pageerror').map((e) => e.detail);
         fs.writeFileSync(path.join(outDir, 'report.json'), JSON.stringify(report, null, 2), 'utf8');
         if (page) await page.close().catch(() => undefined);
@@ -2880,7 +2919,7 @@ async function main() {
     }
 
     const passCount = report.steps.filter((s) => s.ok).length;
-    console.log(`[playtest] 結果：${passCount}/${report.steps.length} 步通過，console error ${report.consoleErrors.length} 筆，pageerror ${report.pageErrors.length} 筆`);
+    console.log(`[playtest] 結果：${passCount}/${report.steps.length} 步通過，console error ${report.consoleErrors.length} 筆，pageerror ${report.pageErrors.length} 筆，已知環境錯誤：${report.knownEnvErrors.length} 筆`);
     console.log(`[playtest] 報告 ${path.join(outDir, 'report.json')}`);
     return exitCode;
 }
