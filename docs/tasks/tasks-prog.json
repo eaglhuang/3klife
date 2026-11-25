@@ -17943,7 +17943,7 @@
       "title": "戰場體驗修正：提示條與教學鈕離開棋盤、長坂坡敵我同色、血條不重疊（QA 11/25）",
       "owner": "ClaudeCode_claude-opus-5-5",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-25",
@@ -17953,7 +17953,7 @@
       "description": "發版前 QA 體驗 4、5、6：戰場提示條與教學鈕、長坂坡敵我同色、血條重疊。",
       "related": [],
       "depends": [],
-      "notes": "2026-11-25 | 狀態: in-progress | 驗證: pending | 變更: 開卡 | 阻塞: 無",
+      "notes": "2026-11-25 | 狀態: done | 驗證: tsc 0 錯、run-cli 9533 通過、compute-gate quick 通過、CI 全綠（PR #2612）| 變更: 提示條限時淡出與上移、教學頁籤避血條、敵軍防禦性染色；敵軍同綠根因未重現、血條重疊實測無法重現 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
@@ -17963,8 +17963,8 @@
     }
   ],
   "summary": {
-    "done": 316,
-    "in_progress": 4,
+    "done": 317,
+    "in_progress": 3,
     "open": 86,
     "total": 406
   }
