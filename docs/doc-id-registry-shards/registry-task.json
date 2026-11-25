@@ -17014,5 +17014,59 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9997.md",
     "title": "[PROG-2-9997] 戰場 vfx-block 必須有 prefabPath 防回歸",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3071",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10005.md",
+    "title": "[PROG-2-10005] 虎牢關之戰固定起風（首戰張飛火計放得出來）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3072",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10003.md",
+    "title": "[PROG-2-10003] playtest 年循環「戰鬥 失敗；錯誤 1」根因與修正（QA 11/25）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3073",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9739.md",
+    "title": "[PROG-2-9739] 戰場攻擊特效：主將普攻依武器分音效、暴擊命中光、劍弓武將映射",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3074",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9956.md",
+    "title": "[PROG-2-9956] 文件更正：PROG-2-0165 btnDelegate 位置補註（戰鬥 ControlBar）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3075",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9959.md",
+    "title": "[PROG-2-9959] 騎兵部署落下特效、敵方紅方騎兵骨架與趙雲騎術 2/3 級騎馬外觀",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3076",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9993.md",
+    "title": "[PROG-2-9993] 接 spine-trial 騎乘輸出：manifest 同步工具、mounted-list 資料驅動、趙雲/呂布/關羽騎乘",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3077",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9998.md",
+    "title": "[PROG-2-9998] 戰場體驗修正：提示條與教學鈕離開棋盤、長坂坡敵我同色、血條不重疊（QA 11/25）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3078",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9999.md",
+    "title": "[PROG-2-9999] playtest-online --year 學府入學畫面找不到：查根因並修復（QA 11/25）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3079",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10007.md",
+    "title": "[PROG-2-10007] 推進一季 releaseNameplateFade 讀 null 崩潰",
+    "category": "task"
   }
 ]

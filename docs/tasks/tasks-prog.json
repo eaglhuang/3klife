@@ -18126,6 +18126,30 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-10005",
+      "title": "虎牢關之戰固定起風（首戰張飛火計放得出來）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "bugfix",
+      "phase": "M0",
+      "created": "2026-11-25",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-25T11:20:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "description": "總PM 裁決劇情關固定天氣：虎牢關（encounter-001）weather 由 SUNNY 改 WINDY，首戰張飛火計佈陣的施放條件「起風」自然達成。",
+      "related": ["PROG-2-9989"],
+      "depends": [],
+      "notes": "2026-11-25 | 狀態: done | 驗證: tsc 0 錯、run-cli 全過、compute-gate quick 4/4；網頁建置實機（?qaBattle=1 真滑鼠）首戰張飛，關卡資料自然 WINDY（未改頁面 JS），第 3 回合點「計謀 35點」施放成功，格子火焰節點 cfxr_fire_circle／cfxr_fire_crisp／fire01 各 1，「燃燒」字樣出現 1 次，單位頭上燃×2，證據筆記夾 qa-fix/hugulao-wind-1125/ | 變更: encounters.json encounter-001 weather SUNNY→WINDY；tests/BattleWeatherRoll.test.ts 新增虎牢關 WINDY、戰前文字單行、火計條件達成；其他關不動 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "doc": "docs/agent-briefs/tasks/PROG/PROG-2-10005.md"
+      }
     }
   ],
   "summary": {

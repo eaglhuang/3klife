@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-11-23
+> 生成日期: 2026-11-25
 > 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 15/15 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -244,3 +244,29 @@
 | `doc_task_3050` | docs/agent-briefs/tasks/PROG/PROG-2-9803.md | [PROG-2-9803] 首戰自動戰 QA 計數修正與教學戰參數調校（60–90 秒目標） |
 | `doc_task_3051` | docs/agent-briefs/tasks/PROG/PROG-2-9868.md | [PROG-2-9868] 藍軍騎兵改用騎乘版 Spine 骨架（mount_horse_bay） |
 | `doc_task_3052` | docs/agent-briefs/tasks/PROG/PROG-2-9871.md | [PROG-2-9871] 轉蛋抽到的教官支援卡進支援卡清單與培育選卡（物品庫存 → 教官卡橋接） |
+| `doc_task_3053` | docs/agent-briefs/tasks/PROG/PROG-2-9963.md | [PROG-2-9963] 學府入學候選只算子嗣（親生、義子、家臣子），成年家臣不算 |
+| `doc_task_3055` | docs/agent-briefs/tasks/PROG/PROG-2-9975.md | [PROG-2-9975] 武將武器欄位依最新立繪重建 |
+| `doc_task_3056` | docs/agent-briefs/tasks/PROG/PROG-2-9990.md | [PROG-2-9990] 任務卡號跨 worktree／PR／commit 預約防撞 |
+| `doc_task_3057` | docs/agent-briefs/tasks/PROG/PROG-2-10001.md | [PROG-2-10001] doc_id 不得沿用卡號與任務卡身分覆寫守門 |
+| `doc_task_3058` | docs/agent-briefs/tasks/PROG/PROG-2-9951.md | [PROG-2-9951] 首戰（encounter-001）新手穩贏調整 |
+| `doc_task_3059` | docs/agent-briefs/tasks/PROG/PROG-2-9952.md | [PROG-2-9952] 大廳選卡器（手動已選）缺關閉鈕與 Esc，出征編組收起時殘留 |
+| `doc_task_3060` | docs/agent-briefs/tasks/PROG/PROG-2-9953.md | [PROG-2-9953] 「推進一季」鈕移到大廳右下角（手機拇指位置，X-01 裁決） |
+| `doc_task_3061` | docs/agent-briefs/tasks/PROG/PROG-2-9954.md | [PROG-2-9954] 友誼值行為結算接進平常遊玩（第 8 框架實作） |
+| `doc_task_3062` | docs/agent-briefs/tasks/PROG/PROG-2-9960.md | [PROG-2-9960] 補齊 23 個戰場招式名（走 i18n）並統一趙雲奧義名為「龍膽·破軍」 |
+| `doc_task_3063` | docs/agent-briefs/tasks/PROG/PROG-2-9961.md | [PROG-2-9961] 火計／水計格子 VFX hook 接線（grid-fire、grid-water-ripple） |
+| `doc_task_3064` | docs/agent-briefs/tasks/PROG/PROG-2-9962.md | [PROG-2-9962] 戰場招式效果說明與類別標籤走 i18n |
+| `doc_task_3065` | docs/agent-briefs/tasks/PROG/PROG-2-9972.md | [PROG-2-9972] 格子火焰 VFX 不播修正：格子 hook 改用有 prefab 的積木 |
+| `doc_task_3066` | docs/agent-briefs/tasks/PROG/PROG-2-9973.md | [PROG-2-9973] 戰鬥 HUD 與出陣畫面多語殘留（en／ja） |
+| `doc_task_3067` | docs/agent-briefs/tasks/PROG/PROG-2-9989.md | [PROG-2-9989] 計謀放不出來：沒起風時按鈕看似可按、點了只跳「發動失敗」 |
+| `doc_task_3068` | docs/agent-briefs/tasks/PROG/PROG-2-9994.md | [PROG-2-9994] 11/25 發版前 QA 修正 |
+| `doc_task_3069` | docs/agent-briefs/tasks/PROG/PROG-2-9995.md | [PROG-2-9995] 戰場單位倒下／被擊殺演出（漫畫式、無血腥） |
+| `doc_task_3070` | docs/agent-briefs/tasks/PROG/PROG-2-9997.md | [PROG-2-9997] 戰場 vfx-block 必須有 prefabPath 防回歸 |
+| `doc_task_3071` | docs/agent-briefs/tasks/PROG/PROG-2-10005.md | [PROG-2-10005] 虎牢關之戰固定起風（首戰張飛火計放得出來） |
+| `doc_task_3072` | docs/agent-briefs/tasks/PROG/PROG-2-10003.md | [PROG-2-10003] playtest 年循環「戰鬥 失敗；錯誤 1」根因與修正（QA 11/25） |
+| `doc_task_3073` | docs/agent-briefs/tasks/PROG/PROG-2-9739.md | [PROG-2-9739] 戰場攻擊特效：主將普攻依武器分音效、暴擊命中光、劍弓武將映射 |
+| `doc_task_3074` | docs/agent-briefs/tasks/PROG/PROG-2-9956.md | [PROG-2-9956] 文件更正：PROG-2-0165 btnDelegate 位置補註（戰鬥 ControlBar） |
+| `doc_task_3075` | docs/agent-briefs/tasks/PROG/PROG-2-9959.md | [PROG-2-9959] 騎兵部署落下特效、敵方紅方騎兵骨架與趙雲騎術 2/3 級騎馬外觀 |
+| `doc_task_3076` | docs/agent-briefs/tasks/PROG/PROG-2-9993.md | [PROG-2-9993] 接 spine-trial 騎乘輸出：manifest 同步工具、mounted-list 資料驅動、趙雲/呂布/關羽騎乘 |
+| `doc_task_3077` | docs/agent-briefs/tasks/PROG/PROG-2-9998.md | [PROG-2-9998] 戰場體驗修正：提示條與教學鈕離開棋盤、長坂坡敵我同色、血條不重疊（QA 11/25） |
+| `doc_task_3078` | docs/agent-briefs/tasks/PROG/PROG-2-9999.md | [PROG-2-9999] playtest-online --year 學府入學畫面找不到：查根因並修復（QA 11/25） |
+| `doc_task_3079` | docs/agent-briefs/tasks/PROG/PROG-2-10007.md | [PROG-2-10007] 推進一季 releaseNameplateFade 讀 null 崩潰 |
