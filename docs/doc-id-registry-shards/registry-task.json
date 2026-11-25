@@ -17100,21 +17100,33 @@
     "category": "task"
   },
   {
-    "id": "doc_task_3087",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10019.md",
-    "title": "[PROG-2-10019] 年終守城玩家引導：進場提示、部署階段橫幅、未部署警告（四語 i18n）",
-    "category": "task"
-  },
-  {
     "id": "doc_task_3085",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10016.md",
     "title": "[PROG-2-10016] 武將詳情技能預覽只播音效與浮字（方案 C）",
     "category": "task"
   },
   {
+    "id": "doc_task_3087",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10019.md",
+    "title": "[PROG-2-10019] 年終守城玩家引導：進場提示、部署階段橫幅、未部署警告（四語 i18n）",
+    "category": "task"
+  },
+  {
     "id": "doc_task_3088",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10018.md",
     "title": "[PROG-2-10018] 大廳小人臉部色彩變體與名牌防疊",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3089",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10021.md",
+    "title": "[PROG-2-10021] 戰場受擊音效 light 層補變體：輪播避免連續重複、同幀節流",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3090",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10022.md",
+    "title": "[PROG-2-10022] 首年四季全程實玩腳本 playtest-online --full-year（逐季斷言）",
     "category": "task"
   }
 ]

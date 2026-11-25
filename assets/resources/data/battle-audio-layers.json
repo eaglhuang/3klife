@@ -7,11 +7,12 @@
     "critIsHeavy": true,
     "shieldTroopBlocks": true,
     "tiers": {
-      "light": { "clips": ["hit_light", "hurt"], "volume": [0.7, 0.9] },
+      "light": { "clips": ["hit_light", "hurt", "weapon", "bat"], "volume": [0.7, 0.9], "clipVolumeScale": { "weapon": 0.6, "bat": 0.6 } },
       "heavy": { "clips": ["hit_heavy"], "volume": [0.9, 1.0] },
       "block": { "clips": ["hit_block"], "volume": [0.8, 1.0] },
       "lethal": { "clips": ["hit_lethal"], "volume": [0.95, 1.0] }
-    }
+    },
+    "lightThrottle": { "windowMs": 60, "maxPerWindow": 2 }
   },
   "footstep": {
     "clips": {
