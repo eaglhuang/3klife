@@ -39,6 +39,7 @@ import {
     type PreBattleWeights,
 } from '../../core/systems/PreBattleRecommend';
 import { PLAYER_DECK_MAX_SIZE } from '../../core/services/PlayerDeckRules';
+import { STARTER_CORE_GENERAL_ID } from '../../core/services/StarterRosterService';
 
 export type SortieRole = 'strategist' | 'deputy';
 
@@ -106,6 +107,9 @@ export interface SortieSetupDeps {
 
 /** 計謀點已進戰場（PROG-2-0084）：上限與開局補點會套進本場帳本；文案 key */
 const TACTIC_POINTS_NOTE_KEY = 'sortie.strategist.note';
+
+/** 名冊外指定主將時，主將還原成起始主將的理由文案 key（PROG-2-10008） */
+const STARTING_LEAD_REASON_KEY = 'prebattle.reason.commander.startingLead';
 
 function statOf(g: GeneralConfig, key: 'str' | 'int' | 'pol' | 'lea'): number {
     return Math.floor(g[key] ?? g.stats?.[key] ?? 0);
@@ -373,18 +377,24 @@ export class SortieSetupController {
         const nameOf = (id: string): string => (fixed?.id === id ? fixed.name : generals.find((g) => g.id === id)?.name) ?? id;
         const line = (role: string, name: string, reasonKey: string): string => t('sortie.recommend.line', role, name, t(reasonKey));
 
-        // 名冊外的指定主將：lead 設為空，戰場 fallback 到關卡指定主將（PROG-2-9913）
-        const commanderId = rec.commander.id;
-        const outsideRoster = !generals.some((g) => g.id === commanderId);
-        const leadTarget = outsideRoster ? null : commanderId;
+        // 名冊外的指定主將：出戰主將不設為空（空會讓戰場退回名冊外主將、沒有出征帳本，PROG-2-10008），
+        // 還原成起始主將；名冊裡完全沒有可出戰武將時才維持空
+        const recommendedId = rec.commander.id;
+        const outsideRoster = !generals.some((g) => g.id === recommendedId);
+        const leadTarget = outsideRoster ? this._startingLeadId(generals) : recommendedId;
         if (this._deps.session.leadGeneralId !== leadTarget && !(await this._deps.session.setLeadGeneral(leadTarget))) {
             this._notice = t('sortie.recommend.failed');
             return false;
         }
-        this._reasonLines.push(line(t('prebattle.role.commander'), nameOf(rec.commander.id), rec.commander.reasonKey));
-        const check = this._deps.session.setSortieSupport(rec.strategist?.id ?? null, rec.deputy?.id ?? null, commanderId);
-        if (rec.strategist) this._reasonLines.push(line(t('prebattle.role.strategist'), nameOf(rec.strategist.id), rec.strategist.reasonKey));
-        if (rec.deputy) this._reasonLines.push(line(t('prebattle.role.deputy'), nameOf(rec.deputy.id), rec.deputy.reasonKey));
+        const commanderId = leadTarget ?? recommendedId;
+        // 還原的主將已是主將，不能再兼參謀官 / 後勤官
+        const strategist = rec.strategist && rec.strategist.id !== commanderId ? rec.strategist : null;
+        const deputy = rec.deputy && rec.deputy.id !== commanderId ? rec.deputy : null;
+        const commanderReason = outsideRoster && leadTarget ? STARTING_LEAD_REASON_KEY : rec.commander.reasonKey;
+        this._reasonLines.push(line(t('prebattle.role.commander'), nameOf(commanderId), commanderReason));
+        const check = this._deps.session.setSortieSupport(strategist?.id ?? null, deputy?.id ?? null, commanderId);
+        if (strategist) this._reasonLines.push(line(t('prebattle.role.strategist'), nameOf(strategist.id), strategist.reasonKey));
+        if (deputy) this._reasonLines.push(line(t('prebattle.role.deputy'), nameOf(deputy.id), deputy.reasonKey));
         if (rec.tallyCards.length > 0) {
             const names = rec.tallyCards.map((p) => cards.find((c) => c.cardId === p.cardId)?.name ?? p.cardId);
             await this._deps.session.setDeck(rec.tallyCards.map((p) => p.cardId), cards.map((c) => c.cardId));
@@ -394,6 +404,19 @@ export class SortieSetupController {
         const gaps = [issueText, supportIssue].filter((s) => s.length > 0).join('、');
         this._notice = gaps ? `${t('sortie.recommend.done')}（${gaps}）` : t('sortie.recommend.done');
         return true;
+    }
+
+    /**
+     * 起始主將（PROG-2-10008）：名冊外的指定主將不能當出戰主將時，出戰主將還原成這個人。
+     * 優先目前主將（開局指定的核心主將），其次張飛（預設核心），最後退回統率最高的可出戰武將；沒有可出戰武將回傳 null。
+     */
+    private _startingLeadId(generals: readonly GeneralConfig[]): string | null {
+        const current = this._deps.session.leadGeneralId;
+        if (current && generals.some((g) => g.id === current)) return current;
+        if (generals.some((g) => g.id === STARTER_CORE_GENERAL_ID)) return STARTER_CORE_GENERAL_ID;
+        let best: GeneralConfig | null = null;
+        for (const g of generals) if (!best || statOf(g, 'lea') > statOf(best, 'lea')) best = g;
+        return best?.id ?? null;
     }
 
     /** 把目前的參謀官 / 後勤官存成這位主將的編制預設（DEP-14）；沒有預設儲存時回傳 false */

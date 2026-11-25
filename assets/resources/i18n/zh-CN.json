@@ -1088,6 +1088,7 @@
   "prebattle.role.deputy": "后勤官（副将）",
   "prebattle.reason.commander.statBlend": "统御与武力综合最高",
   "prebattle.reason.commander.encounterFixed": "本关指定主将",
+  "prebattle.reason.commander.startingLead": "起始主将",
   "prebattle.reason.strategist.intPol": "智力与政治综合最高",
   "prebattle.reason.deputy.leaPol": "统御与政治综合最高",
   "prebattle.reason.tally.rarityDiversity": "稀有度高且兵种不重复",
