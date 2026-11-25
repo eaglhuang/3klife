@@ -17152,5 +17152,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10025.md",
     "title": "[PROG-2-10025] 戰場單挑勝利／計謀橫幅不蓋 HUD 資訊",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3096",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10032.md",
+    "title": "[PROG-2-10032] 線上整年驗收開機步驟改輪詢開始鈕並失敗即中止",
+    "category": "task"
   }
 ]
