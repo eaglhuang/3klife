@@ -15,6 +15,10 @@ import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 import { emptyHallMissionState, parseHallMissionBalance, parseHallMissionTemplates } from '../assets/scripts/core/systems/HallMissionData';
 import { refillHallBoards } from '../assets/scripts/core/systems/HallMissionGenerator';
 import { dispatchHallMission as dispatchLegacy } from '../assets/scripts/core/systems/HallMissionLoop';
+import { SortieSetupController, type SortiePrebattleDeps } from '../assets/scripts/ui/core/SortieSetupController';
+import { buildTallyCardCatalog } from '../assets/scripts/core/config/TallyCardCatalog';
+import { parsePreBattleWeights } from '../assets/scripts/core/systems/PreBattleRecommend';
+import { zhTwLookup } from './SortieZhTwLookup';
 import { boardToHub } from '../assets/scripts/ui/mission/MissionBoardPresenter';
 import { buildMissionDialogState, candidateOptions, MISSION_NO_CANDIDATE_TEXT } from '../assets/scripts/ui/mission/MissionDetailPresenter';
 import type { MissionCardView } from '../assets/scripts/core/mission/service/IMissionService';
@@ -166,6 +170,54 @@ export function createHallMissionSessionSuite(): TestSuite {
         if (!cands.ok) throw new Error('cands');
         assert.isTrue(cands.value.find((c) => c.generalId === 'zhang')!.block.length > 0);
         assert.equals(0, cands.value.find((c) => c.generalId === 'guan')!.block.length);
+    });
+
+    suite.test('主將被派去任務（PROG-2-10009）：改選其他可出戰武將、有出征帳本、提示帶原主將與改選者；主將可出戰時行為不變', async () => {
+        const session = await newSession(undefined, [general('guan-yu', { lea: 99 }), general('zhang-fei', { lea: 80 }), general('lu-su', { lea: 70 })]);
+        session.bindMissionData(bundle, wallet());
+        assert.isTrue(await session.setLeadGeneral('guan-yu'));
+        assert.equals(null, session.leadSubstitution(), '主將可出戰 → 沒有替補');
+        assert.equals('guan-yu', session.resolveLeadGeneralId('cao-cao'));
+        const weights = parsePreBattleWeights(JSON.parse(readFileSync(join(__dirname, '..', 'assets/resources/data/prebattle-recommend-weights.json'), 'utf8')));
+        const prebattle: SortiePrebattleDeps = {
+            weights,
+            encounters: () => [{ id: 'enc-2', playerGeneralId: 'cao-cao' }],
+            currentEncounterId: () => 'enc-2',
+            cards: () => Array.from(buildTallyCardCatalog().entries()).map(([cardId, card]) => ({ cardId, name: card.unitName, unitType: card.unitType, rarity: card.rarity })),
+        };
+        const ctrl = new SortieSetupController({ session, lookup: zhTwLookup(), prebattle });
+        assert.isTrue(await ctrl.recommend());
+        assert.equals('guan-yu', session.leadGeneralId, '主將可出戰：recommend 不換人');
+        assert.isFalse(ctrl.getView().texts.sortieNotice.includes('任務中'));
+
+        const svc = session.missionService!;
+        const card = openCards(session)[0];
+        const sent = await svc.dispatch({ requestId: rid(), missionId: card.id, generalIds: ['guan-yu'] });
+        assert.isTrue(sent.ok, sent.ok ? '' : sent.text);
+        assert.isTrue(session.checkDeployable('guan-yu').reasons.includes('on-hall-mission'));
+
+        const sub = session.leadSubstitution();
+        assert.equals('guan-yu', sub?.lead.id ?? '');
+        assert.equals('zhang-fei', sub?.substitute.id ?? '', '起始主將（張飛）優先於統率最高');
+        assert.equals('zhang-fei', session.resolveLeadGeneralId('cao-cao'), '戰場不再退回名冊外的關卡主將');
+        assert.isTrue(session.getSortieInput('zhang-fei') !== null, '出征帳本不為 null');
+
+        assert.isTrue(await ctrl.recommend());
+        assert.equals('zhang-fei', session.leadGeneralId);
+        assert.equals('zhang-fei', ctrl.getView().commanderId ?? '');
+        const notice = ctrl.getView().texts.sortieNotice;
+        assert.isTrue(notice.includes('主將guan-yu任務中，已改由zhang-fei出戰'), notice);
+        assert.isTrue(session.getSortieInput(session.resolveLeadGeneralId('cao-cao')) !== null);
+    });
+
+    suite.test('主將被派去任務但名冊沒有其他人可出戰：維持原有 fallback，不崩潰（PROG-2-10009）', async () => {
+        const session = await newSession(undefined, [general('guan-yu')]);
+        session.bindMissionData(bundle, wallet());
+        assert.isTrue(await session.setLeadGeneral('guan-yu'));
+        const sent = await session.missionService!.dispatch({ requestId: rid(), missionId: openCards(session)[0].id, generalIds: ['guan-yu'] });
+        assert.isTrue(sent.ok, sent.ok ? '' : sent.text);
+        assert.equals(null, session.leadSubstitution());
+        assert.equals('cao-cao', session.resolveLeadGeneralId('cao-cao'));
     });
 
     suite.test('資源不足：整筆不動，沒有扣任何資源也沒有佔用武將', async () => {
