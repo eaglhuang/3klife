@@ -17188,5 +17188,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10029.md",
     "title": "PROG-2-10029 實作血統天賦小名與成長拆解表",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3102",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10036.md",
+    "title": "PROG-2-10036 結緣公式分項 UI 與小名三段揭曉 ViewModel",
+    "category": "task"
   }
 ]
