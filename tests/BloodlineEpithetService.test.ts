@@ -4,19 +4,31 @@ import { BloodlineEpithetService } from '../assets/scripts/core/systems/Bloodlin
 export function createBloodlineEpithetServiceSuite(): TestSuite {
     const suite = new TestSuite('BloodlineEpithetService');
 
-    suite.test('天賦小名池共有 48 個且出生抽取正確', () => {
+    suite.test('天賦小名池共有 48 個、i18n 鍵與語意屬性正確', () => {
         const pool = BloodlineEpithetService.getPool();
         if (pool.length !== 48) {
             throw new Error(`預期 48 個天賦小名，實際 ${pool.length}`);
         }
-        const drawn = BloodlineEpithetService.drawBirthEpithet(0);
-        if (drawn.name !== '小霸王' || drawn.hiddenBonus !== 2) {
-            throw new Error(`出生抽取結果異常: ${JSON.stringify(drawn)}`);
+        const strongMan = pool.find((p) => p.name === '舉鼎小力士');
+        const listener = pool.find((p) => p.name === '愛聽里長講古');
+        const popular = pool.find((p) => p.name === '街坊人氣王');
+        if (!strongMan || strongMan.statKey !== 'str' || !strongMan.nameKey) {
+            throw new Error('舉鼎小力士應為 str 且具 nameKey');
+        }
+        if (!listener || listener.statKey !== 'pol') {
+            throw new Error('愛聽里長講古應為 pol');
+        }
+        if (!popular || popular.statKey !== 'cha') {
+            throw new Error('街坊人氣王應為 cha');
+        }
+        const quirkyCount = pool.filter((p) => p.tier === 'quirky').length;
+        if (quirkyCount < 14 || quirkyCount > 18) {
+            throw new Error(`搞笑/偏弱但有別的玩法價值比例應約 1/3，實際 ${quirkyCount}/48`);
         }
     });
 
     suite.test('8 / 12 / 15 歲揭曉階段正確切換', () => {
-        const ep = BloodlineEpithetService.drawBirthEpithet(1);
+        const ep = BloodlineEpithetService.drawBirthEpithet(0);
         const s7 = BloodlineEpithetService.getRevealStateAtAge(7, ep);
         const s8 = BloodlineEpithetService.getRevealStateAtAge(8, ep);
         const s12 = BloodlineEpithetService.getRevealStateAtAge(12, ep);

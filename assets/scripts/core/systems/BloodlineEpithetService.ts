@@ -4,9 +4,11 @@ export type BloodlineStatKey = 'str' | 'int' | 'lea' | 'pol' | 'cha';
 
 export interface BloodlineEpithetDef {
     id: string;
+    nameKey: string;
     name: string;
     statKey: BloodlineStatKey;
-    hiddenBonus: number; // 由資料檔設定（固定 +2），且只算一次
+    hiddenBonus: number; // 由資料檔每筆明寫（固定 +2），且只算一次
+    tier: 'strong' | 'quirky';
     omen8: string;
     trait12: string;
     reveal15: string;
@@ -26,25 +28,26 @@ export interface GrowthBreakdown {
     note: string;
 }
 
-const STAT_KEYS: BloodlineStatKey[] = ['str', 'int', 'lea', 'pol', 'cha'];
-
-export const BLOODLINE_EPITHET_POOL_48: BloodlineEpithetDef[] = epithetConfig.epithets.map((name, idx) => {
-    const statKey = STAT_KEYS[idx % STAT_KEYS.length];
-    const bonus = epithetConfig.hiddenBonusPerEpithet;
+export const BLOODLINE_EPITHET_POOL_48: BloodlineEpithetDef[] = epithetConfig.epithets.map((item) => {
+    const statKey = item.attribute as BloodlineStatKey;
+    const bonus = item.hiddenBonus;
+    const ages = epithetConfig.revealAges;
     return {
-        id: `epithet_${String(idx + 1).padStart(2, '0')}`,
-        name,
+        id: item.id,
+        nameKey: item.nameKey,
+        name: item.nameZhTW,
         statKey,
         hiddenBonus: bonus,
-        omen8: `${epithetConfig.revealAges.omen}歲徵兆：舉止隱約有「${name}」之氣韻。`,
-        trait12: `${epithetConfig.revealAges.trait}歲顯露：在同儕中展現「${name}」的天賦傾向（${statKey.toUpperCase()}）。`,
-        reveal15: `${epithetConfig.revealAges.awakened}歲揭曉：正式覺醒天賦小名「${name}」（${statKey.toUpperCase()} +${bonus}，只算一次）。`,
+        tier: item.tier as 'strong' | 'quirky',
+        omen8: `${ages.omen}歲徵兆：舉止隱約有「${item.nameZhTW}」之氣韻。`,
+        trait12: `${ages.trait}歲顯露：在同儕中展現「${item.nameZhTW}」的天賦傾向（${statKey.toUpperCase()}）。`,
+        reveal15: `${ages.awakened}歲揭曉：正式覺醒天賦小名「${item.nameZhTW}」（${statKey.toUpperCase()} +${bonus}，只算一次）。`,
     };
 });
 
 /**
  * 血統天賦小名與成長拆解服務（PROG-2-10029）
- * 數值與 48 池皆從 assets/resources/data/master/bloodline-epithets-config.json 讀取。
+ * 每筆小名之 i18n 鍵、語意屬性 (attribute)、hiddenBonus 與 tier 皆從 bloodline-epithets-config.json 讀取。
  */
 export class BloodlineEpithetService {
     public static getPool(): readonly BloodlineEpithetDef[] {
@@ -106,7 +109,7 @@ export class BloodlineEpithetService {
             baseTotal: baseStatValue,
             epithetBonusApplied: bonus,
             finalTotal: baseStatValue + bonus,
-            note: `小名隱藏 +${epithetConfig.hiddenBonusPerEpithet} 只算一次（不重複疊加）`,
+            note: `小名隱藏 +${epithet.hiddenBonus} 只算一次（不重複疊加）`,
         };
     }
 }

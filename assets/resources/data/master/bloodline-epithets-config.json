@@ -1,16 +1,61 @@
 {
-  "hiddenBonusPerEpithet": 2,
   "revealAges": {
     "omen": 8,
     "trait": 12,
     "awakened": 15
   },
   "epithets": [
-    "小霸王", "玉麒麟", "小諸葛", "白馬兒", "錦帆兒", "虎痴兒", "鳳雛兒", "臥龍兒",
-    "鐵壁郎", "神算子", "飛將兒", "美周郎", "常勝兒", "忠義郎", "驍勇兒", "奇謀兒",
-    "鎮岳郎", "清流兒", "仁德郎", "梟雄兒", "鬼才兒", "毒士兒", "儒將兒", "國士兒",
-    "先登兒", "陷陣兒", "無雙兒", "神射兒", "破軍兒", "七星兒", "天機兒", "經世郎",
-    "濟民郎", "安邦兒", "定國兒", "扶漢兒", "江東郎", "西涼兒", "荊襄兒", "巴蜀兒",
-    "河北郎", "關中兒", "中原郎", "南蠻兒", "青龍兒", "白虎兒", "朱雀兒", "玄武兒"
+    { "id": "epithet_01", "nameKey": "bloodline.epithet.01", "nameZhTW": "舉鼎小力士", "attribute": "str", "hiddenBonus": 2, "tier": "strong" },
+    { "id": "epithet_02", "nameKey": "bloodline.epithet.02", "nameZhTW": "小霸王", "attribute": "str", "hiddenBonus": 2, "tier": "strong" },
+    { "id": "epithet_03", "nameKey": "bloodline.epithet.03", "nameZhTW": "虎痴兒", "attribute": "str", "hiddenBonus": 2, "tier": "strong" },
+    { "id": "epithet_04", "nameKey": "bloodline.epithet.04", "nameZhTW": "飛將兒", "attribute": "str", "hiddenBonus": 2, "tier": "strong" },
+    { "id": "epithet_05", "nameKey": "bloodline.epithet.05", "nameZhTW": "驍勇兒", "attribute": "str", "hiddenBonus": 2, "tier": "strong" },
+    { "id": "epithet_06", "nameKey": "bloodline.epithet.06", "nameZhTW": "先登兒", "attribute": "str", "hiddenBonus": 2, "tier": "strong" },
+    { "id": "epithet_07", "nameKey": "bloodline.epithet.07", "nameZhTW": "陷陣兒", "attribute": "str", "hiddenBonus": 2, "tier": "strong" },
+    { "id": "epithet_08", "nameKey": "bloodline.epithet.08", "nameZhTW": "無雙兒", "attribute": "str", "hiddenBonus": 2, "tier": "strong" },
+    { "id": "epithet_09", "nameKey": "bloodline.epithet.09", "nameZhTW": "神射兒", "attribute": "str", "hiddenBonus": 2, "tier": "strong" },
+    { "id": "epithet_10", "nameKey": "bloodline.epithet.10", "nameZhTW": "破軍兒", "attribute": "str", "hiddenBonus": 2, "tier": "strong" },
+
+    { "id": "epithet_11", "nameKey": "bloodline.epithet.11", "nameZhTW": "小諸葛", "attribute": "int", "hiddenBonus": 2, "tier": "strong" },
+    { "id": "epithet_12", "nameKey": "bloodline.epithet.12", "nameZhTW": "鳳雛兒", "attribute": "int", "hiddenBonus": 2, "tier": "strong" },
+    { "id": "epithet_13", "nameKey": "bloodline.epithet.13", "nameZhTW": "臥龍兒", "attribute": "int", "hiddenBonus": 2, "tier": "strong" },
+    { "id": "epithet_14", "nameKey": "bloodline.epithet.14", "nameZhTW": "神算子", "attribute": "int", "hiddenBonus": 2, "tier": "strong" },
+    { "id": "epithet_15", "nameKey": "bloodline.epithet.15", "nameZhTW": "奇謀兒", "attribute": "int", "hiddenBonus": 2, "tier": "strong" },
+    { "id": "epithet_16", "nameKey": "bloodline.epithet.16", "nameZhTW": "鬼才兒", "attribute": "int", "hiddenBonus": 2, "tier": "strong" },
+    { "id": "epithet_17", "nameKey": "bloodline.epithet.17", "nameZhTW": "毒士兒", "attribute": "int", "hiddenBonus": 2, "tier": "strong" },
+    { "id": "epithet_18", "nameKey": "bloodline.epithet.18", "nameZhTW": "七星兒", "attribute": "int", "hiddenBonus": 2, "tier": "strong" },
+    { "id": "epithet_19", "nameKey": "bloodline.epithet.19", "nameZhTW": "天機兒", "attribute": "int", "hiddenBonus": 2, "tier": "strong" },
+    { "id": "epithet_20", "nameKey": "bloodline.epithet.20", "nameZhTW": "竹簡書蟲", "attribute": "int", "hiddenBonus": 2, "tier": "quirky" },
+
+    { "id": "epithet_21", "nameKey": "bloodline.epithet.21", "nameZhTW": "白馬兒", "attribute": "lea", "hiddenBonus": 2, "tier": "strong" },
+    { "id": "epithet_22", "nameKey": "bloodline.epithet.22", "nameZhTW": "錦帆兒", "attribute": "lea", "hiddenBonus": 2, "tier": "strong" },
+    { "id": "epithet_23", "nameKey": "bloodline.epithet.23", "nameZhTW": "鐵壁郎", "attribute": "lea", "hiddenBonus": 2, "tier": "strong" },
+    { "id": "epithet_24", "nameKey": "bloodline.epithet.24", "nameZhTW": "常勝兒", "attribute": "lea", "hiddenBonus": 2, "tier": "strong" },
+    { "id": "epithet_25", "nameKey": "bloodline.epithet.25", "nameZhTW": "鎮岳郎", "attribute": "lea", "hiddenBonus": 2, "tier": "strong" },
+    { "id": "epithet_26", "nameKey": "bloodline.epithet.26", "nameZhTW": "儒將兒", "attribute": "lea", "hiddenBonus": 2, "tier": "strong" },
+    { "id": "epithet_27", "nameKey": "bloodline.epithet.27", "nameZhTW": "國士兒", "attribute": "lea", "hiddenBonus": 2, "tier": "strong" },
+    { "id": "epithet_28", "nameKey": "bloodline.epithet.28", "nameZhTW": "點兵小隊長", "attribute": "lea", "hiddenBonus": 2, "tier": "quirky" },
+    { "id": "epithet_29", "nameKey": "bloodline.epithet.29", "nameZhTW": "木馬將軍", "attribute": "lea", "hiddenBonus": 2, "tier": "quirky" },
+    { "id": "epithet_30", "nameKey": "bloodline.epithet.30", "nameZhTW": "紙上談兵童", "attribute": "lea", "hiddenBonus": 2, "tier": "quirky" },
+
+    { "id": "epithet_31", "nameKey": "bloodline.epithet.31", "nameZhTW": "愛聽里長講古", "attribute": "pol", "hiddenBonus": 2, "tier": "quirky" },
+    { "id": "epithet_32", "nameKey": "bloodline.epithet.32", "nameZhTW": "算盤小掌櫃", "attribute": "pol", "hiddenBonus": 2, "tier": "quirky" },
+    { "id": "epithet_33", "nameKey": "bloodline.epithet.33", "nameZhTW": "糧倉守門童", "attribute": "pol", "hiddenBonus": 2, "tier": "quirky" },
+    { "id": "epithet_34", "nameKey": "bloodline.epithet.34", "nameZhTW": "經世郎", "attribute": "pol", "hiddenBonus": 2, "tier": "strong" },
+    { "id": "epithet_35", "nameKey": "bloodline.epithet.35", "nameZhTW": "濟民郎", "attribute": "pol", "hiddenBonus": 2, "tier": "strong" },
+    { "id": "epithet_36", "nameKey": "bloodline.epithet.36", "nameZhTW": "安邦兒", "attribute": "pol", "hiddenBonus": 2, "tier": "strong" },
+    { "id": "epithet_37", "nameKey": "bloodline.epithet.37", "nameZhTW": "定國兒", "attribute": "pol", "hiddenBonus": 2, "tier": "strong" },
+    { "id": "epithet_38", "nameKey": "bloodline.epithet.38", "nameZhTW": "田埂巡查員", "attribute": "pol", "hiddenBonus": 2, "tier": "quirky" },
+    { "id": "epithet_39", "nameKey": "bloodline.epithet.39", "nameZhTW": "稅單小書吏", "attribute": "pol", "hiddenBonus": 2, "tier": "quirky" },
+
+    { "id": "epithet_40", "nameKey": "bloodline.epithet.40", "nameZhTW": "街坊人氣王", "attribute": "cha", "hiddenBonus": 2, "tier": "quirky" },
+    { "id": "epithet_41", "nameKey": "bloodline.epithet.41", "nameZhTW": "茶館說書迷", "attribute": "cha", "hiddenBonus": 2, "tier": "quirky" },
+    { "id": "epithet_42", "nameKey": "bloodline.epithet.42", "nameZhTW": "糖葫蘆外交官", "attribute": "cha", "hiddenBonus": 2, "tier": "quirky" },
+    { "id": "epithet_43", "nameKey": "bloodline.epithet.43", "nameZhTW": "玉麒麟", "attribute": "cha", "hiddenBonus": 2, "tier": "strong" },
+    { "id": "epithet_44", "nameKey": "bloodline.epithet.44", "nameZhTW": "美周郎", "attribute": "cha", "hiddenBonus": 2, "tier": "strong" },
+    { "id": "epithet_45", "nameKey": "bloodline.epithet.45", "nameZhTW": "清流兒", "attribute": "cha", "hiddenBonus": 2, "tier": "strong" },
+    { "id": "epithet_46", "nameKey": "bloodline.epithet.46", "nameZhTW": "仁德郎", "attribute": "cha", "hiddenBonus": 2, "tier": "strong" },
+    { "id": "epithet_47", "nameKey": "bloodline.epithet.47", "nameZhTW": "笑面小福星", "attribute": "cha", "hiddenBonus": 2, "tier": "quirky" },
+    { "id": "epithet_48", "nameKey": "bloodline.epithet.48", "nameZhTW": "府中睡神候補", "attribute": "cha", "hiddenBonus": 2, "tier": "quirky" }
   ]
 }
