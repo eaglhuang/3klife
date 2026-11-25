@@ -23,6 +23,7 @@ import { UIContentBinder, type ContentContractSchema } from '../core/UIContentBi
 import type { ContentContractRef } from '../core/UISpecTypes';
 import type { UITemplateBinder } from '../core/UITemplateBinder';
 import { SolidBackground } from './SolidBackground';
+import type { ThemeService } from '../core/ThemeService';
 
 const { ccclass } = _decorator;
 
@@ -181,6 +182,14 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
     private _scrollContentLayout: Layout | null = null;
     private _scrollContentBaseHeight = 1120;
     private _dialogCard: Node | null = null;
+    /** 主題服務：下拉選單與警示色取 settle.* token（結算風格家族）；取不到用預設色 */
+    private _theme: ThemeService | null = null;
+
+    /** 讀 settle.* 顏色 token（#RRGGBB）；缺值回 fallback。 */
+    private _tok(key: string, fallback: Color): Color {
+        const hex = this._theme?.token<string>(key);
+        return hex ? new Color().fromHEX(hex) : fallback;
+    }
     private _dialogCardOpacity: UIOpacity | null = null;
     private _aiDelegateToggle: Toggle | null = null;
     private _actionButtons: Record<LobbyMissionActionKey, Button | null> = {
@@ -231,6 +240,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
             this._isMounted = true;
         }
 
+        this._theme = await services().specLoader.getThemeService().catch(() => null);
         await this._ensureContentAssets();
 
         this._onActionSelected = payload?.onActionSelected ?? null;
@@ -533,7 +543,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
             const orig = this._shortageOrigColors.get(label);
             if (short) {
                 if (!orig) this._shortageOrigColors.set(label, label.color.clone());
-                label.color = new Color(255, 96, 84, 255);
+                label.color = this._tok('settle.text.alert', new Color(179, 38, 30, 255));
             } else if (orig) {
                 label.color = orig;
                 this._shortageOrigColors.delete(label);
@@ -547,7 +557,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         const label = this._templateBinder?.getLabelByPath('DialogCard/ScrollView/ScrollContent/IntelPanel/IntelFogMask/IntelFogLabel');
         if (!label) return;
         if (!this._lockedHintOrigColor) this._lockedHintOrigColor = label.color.clone();
-        label.color = locked ? new Color(250, 204, 94, 255) : this._lockedHintOrigColor;
+        label.color = locked ? this._tok('settle.text.accent', new Color(154, 91, 16, 255)) : this._lockedHintOrigColor;
     }
 
     /**
@@ -718,7 +728,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         transform.setContentSize(this._scrollContentTransform?.width ?? 760, 120);
 
         const background = panel.addComponent(SolidBackground);
-        background.color = new Color(18, 24, 34, 232);
+        background.color = this._tok('settle.dropdown.bg', new Color(43, 39, 36, 240));
 
         const layout = panel.addComponent(Layout);
         layout.type = Layout.Type.VERTICAL;
@@ -815,7 +825,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         const label = titleNode.addComponent(Label);
         label.string = title;
         label.fontSize = 18;
-        label.color = new Color(239, 228, 201, 255);
+        label.color = this._tok('settle.dropdown.text', new Color(255, 243, 214, 255));
         label.horizontalAlign = Label.HorizontalAlign.LEFT;
         label.verticalAlign = Label.VerticalAlign.CENTER;
         label.overflow = Label.Overflow.CLAMP;
@@ -833,8 +843,8 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         const rowBg = rowNode.addComponent(SolidBackground);
         const isSelected = option.label === this._selectedGeneralLabel;
         rowBg.color = isSelected
-            ? new Color(40, 67, 92, 235)
-            : new Color(24, 32, 44, 228);
+            ? this._tok('settle.dropdown.selected', new Color(110, 78, 34, 245))
+            : this._tok('settle.dropdown.row', new Color(60, 52, 46, 235));
 
         const button = rowNode.addComponent(Button);
         button.transition = Button.Transition.NONE;
@@ -860,7 +870,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
             nameWidth,
             option.label,
             16,
-            new Color(236, 239, 244, 255),
+            this._tok('settle.dropdown.text', new Color(255, 243, 214, 255)),
             Label.HorizontalAlign.LEFT,
         );
         if (hasHint) {
@@ -871,7 +881,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
                 Math.max(120, rowWidth - nameWidth - 150 - 44),
                 option.memoryHint ?? '',
                 14,
-                new Color(150, 196, 226, 255),
+                this._tok('settle.dropdown.hint', new Color(232, 200, 140, 255)),
                 Label.HorizontalAlign.LEFT,
             );
         }
@@ -883,7 +893,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
             option.blockedText ? 150 : 110,
             option.blockedText ?? '毛遂自薦',
             14,
-            option.blockedText ? new Color(230, 90, 80, 255) : new Color(250, 204, 94, 255),
+            option.blockedText ? this._tok('settle.dropdown.blocked', new Color(255, 138, 122, 255)) : this._tok('settle.dropdown.badge', new Color(255, 210, 122, 255)),
             Label.HorizontalAlign.RIGHT,
         );
         badgeNode.active = badgeVisible;

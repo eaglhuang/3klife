@@ -38,6 +38,8 @@ export interface SkinStyleTokens {
     slotRoles?: Record<string, string>;
     /** 不套主題的 slot；結尾為 * 表示前綴比對，否則為完整 slot id（例如共用的 pg.* 肖像牆） */
     skipSlots?: string[];
+    /** 家族綁定用：只動 slotRoles 指到的 slot，其餘一律原樣（不套標題／內文通用規則） */
+    onlyForced?: boolean;
     roles: Record<string, SkinStyleRole>;
 }
 
@@ -70,6 +72,7 @@ export function restyleSlot<T extends object>(slot: T, tokens: SkinStyleTokens, 
         if (s.kind === 'label-style') return restyleSectionLabel(s, tokens, forced) as unknown as T;
         if (typeof s.kind === 'string' && PANEL_KINDS.has(s.kind)) return applyPanelRole(s, forced) as unknown as T;
     }
+    if (tokens.onlyForced) return slot;
     if (s.kind === 'label-style') return restyleLabel(s, tokens) as unknown as T;
     if (typeof s.kind === 'string' && PANEL_KINDS.has(s.kind)) return restylePanel(s, tokens) as unknown as T;
     return slot;

@@ -60,6 +60,18 @@ export interface ThemeStyleBinding {
     skipSlots?: string[];
 }
 
+/**
+ * 風格家族綁定（結算視窗家族 settle 等）：與 styleBinding 平行的另一組套用規則。
+ * roles 的欄位值若以 @ 開頭，代表引用主題 token（如 "@settle.panel.bg"），季節／節慶主題覆寫 token 即整套換色。
+ */
+export interface ThemeFamilyBinding {
+    appliesToSkins: string[];
+    /** slot id（完整 id 或後綴，最長者優先）→ 角色名 */
+    slotRoles: Record<string, string>;
+    /** 角色名 → 樣式欄位（值可為 @token 引用或字面值） */
+    roles: Record<string, Record<string, string | number>>;
+}
+
 export interface ThemeRegistry {
     id: string;
     version: number;
@@ -67,6 +79,8 @@ export interface ThemeRegistry {
     /** 疊加順序（前者在下） */
     layerOrder: string[];
     styleBinding: ThemeStyleBinding;
+    /** 風格家族綁定（可選）；key 為家族名，例如 settle（戰場結算風格，大廳任務視窗共用） */
+    familyBindings?: Record<string, ThemeFamilyBinding>;
     themes: Record<string, UITheme>;
     rules: ThemeRule[];
 }
@@ -226,5 +240,33 @@ export function buildSkinStyle(tokens: TokenMap, binding: Readonly<ThemeStyleBin
             labelBody: defined({ color: str(tokens, 'text.body') }),
             labelButton: defined({ color: str(tokens, 'text.button') }),
         },
+    };
+}
+
+/** 家族綁定 → skin 套用用的風格角色表；@token 引用在此展開，缺 token 的欄位略過（沿用 slot 原值）。 */
+export function buildFamilyStyle(tokens: TokenMap, binding: Readonly<ThemeFamilyBinding>, familyId: string): SkinStyleTokens {
+    const roles: Record<string, SkinStyleRole> = {};
+    for (const [name, spec] of Object.entries(binding.roles)) {
+        const role: Record<string, unknown> = {};
+        for (const [field, raw] of Object.entries(spec)) {
+            if (typeof raw === 'string' && raw.startsWith('@')) {
+                const v = tokens[raw.slice(1)];
+                if (v !== undefined) role[field] = v;
+            } else {
+                role[field] = raw;
+            }
+        }
+        roles[name] = role as SkinStyleRole;
+    }
+    return {
+        id: `theme-family-${familyId}`,
+        version: 1,
+        appliesToSkins: binding.appliesToSkins,
+        fillRoles: {},
+        slotRoles: binding.slotRoles,
+        onlyForced: true,
+        font: str(tokens, 'text.font') ?? '',
+        titleMinFontSize: 9999,
+        roles,
     };
 }
