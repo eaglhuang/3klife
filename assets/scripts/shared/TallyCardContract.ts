@@ -66,6 +66,8 @@ export interface TallyCardData {
     targetMode?: BattleSkillTargetMode;
     timing?: BattleSkillTiming;
     isDisabled?: boolean;
+    /** 守城保底券可用於這張卡（卡面顯示「保」小標；PROG-2-10041） */
+    guardTicket?: boolean;
     rarityLabel?: string;
     stars?: string;
     artResource?: string;
