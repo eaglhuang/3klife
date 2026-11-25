@@ -17,6 +17,7 @@ import { _decorator, Color, Component, Label, LabelOutline, Node, resources, Spr
 import { services } from '../../core/managers/ServiceLoader';
 import type { HallStagePlacement } from '../../core/systems/HallStagePlanner';
 import { HallMarkStyle, HallStageDecor, hallStageCrowdPose } from '../../core/systems/HallStageCrowdPose';
+import { crowdTintFor, smoothToward, staggerTagRows, type TagBox } from '../../core/systems/HallCrowdVariant';
 import type { HallCrowdReaction } from '../../core/systems/HallCrowdReaction';
 import { HallWander, WANDER_ANIMS, type WanderActorState } from '../../shared/lobby/wanderCore';
 import {
@@ -37,6 +38,9 @@ const CONTENT_TAG = 'lobby-hall-crowd';
 const TAG_COLOR = new Color(255, 233, 176, 255);
 const MARK_COLOR = new Color(255, 224, 136, 255);
 /** Spine 骨架高度（單位）：點擊判定框與名牌高度用，與 SpineGeneralOverlay 的 1300px 骨架一致 */
+/** 名牌防疊：每列錯開高度與最多列數 */
+const TAG_ROW_HEIGHT = 20;
+const TAG_MAX_ROWS = 4;
 const SKELETON_BOX = { width: 420, height: 1300 };
 
 /** 場上的一位武將：Spine 武將會走動（skeleton 非 null），靜態小人固定站著當障礙物 */
@@ -57,6 +61,8 @@ interface CrowdActor {
     /** 靜態小人的通用步態用：站位姿態的縮放（正值，翻面由走動方向決定）與兩個累計時鐘 */
     baseScaleX: number;
     baseScaleY: number;
+    /** 名牌防疊：目前往下錯開的距離（px，平滑後） */
+    tagDy?: number;
     /** 站立呼吸的相位時鐘（秒） */
     breathSec: number;
     /** 這一段連續走動已走了幾秒（落腳節奏的相位），停下就歸零 */
@@ -178,7 +184,29 @@ export class HallStageCrowd extends Component {
         const step = clampWanderDt(dt, data.maxStepSec);
         const states = wander.step(step);
         states.forEach((state, order) => this._applyState(state, order, data, step));
+        this._staggerTags(step);
         wander.drainRemoved().forEach(id => this._dispose(id));
+    }
+
+    /** 名牌防疊：位置相近的名牌分到不同列往下錯開，平滑移動；由場上實際位置算，不寫死座標（名牌基準位置每幀由走動更新重設，這裡只疊加偏移） */
+    private _staggerTags(dt: number): void {
+        const decor = this._decor;
+        if (!decor || !this._tagsVisible) return;
+        const boxes: TagBox[] = [];
+        this._actors.forEach((a) => {
+            if (!a.tag.isValid || !a.tag.active) return;
+            const w = a.tag.getComponent(UITransform)?.width ?? 80;
+            boxes.push({ id: a.id, x: a.tag.position.x, y: a.tag.position.y, width: w });
+        });
+        const rowHeight = TAG_ROW_HEIGHT;
+        const rows = staggerTagRows(boxes, { rowHeight, maxRows: TAG_MAX_ROWS });
+        this._actors.forEach((a) => {
+            if (!a.tag.isValid || !a.tag.active) return;
+            const target = (rows.get(a.id) ?? 0) * rowHeight;
+            const cur = smoothToward(a.tagDy ?? 0, target, dt);
+            a.tagDy = cur;
+            a.tag.setPosition(a.tag.position.x, a.tag.position.y - cur, 0);
+        });
     }
 
     /** 集體反應（大廳 §E-5，PROG-2-1740）：在場每位武將頭上短暫跳出字，時間到自動移除；人群為空時不動 */
@@ -232,13 +260,19 @@ export class HallStageCrowd extends Component {
         sprite.sizeMode = Sprite.SizeMode.RAW;
         this.node.addChild(body);
 
-        const frame = await this._loadFirst(placement.spriteCandidates);
+        const loaded = await this._loadFirst(placement.spriteCandidates);
+        const frame = loaded.frame;
         if (token !== this._showToken || !body.isValid) {
             if (body.isValid) body.destroy();
             return null;
         }
         if (frame) {
             sprite.spriteFrame = frame;
+            // 沒有專屬圖（退到最後一個候選＝通用素體）時，依武將 id 乘一組色調，避免全員同一張臉；重用同一張貼圖
+            if (placement.spriteCandidates.length > 1 && loaded.index === placement.spriteCandidates.length - 1) {
+                const t = crowdTintFor(placement.generalId);
+                sprite.color = new Color(t.r, t.g, t.b, 255);
+            }
             const origW = frame.originalSize.width;
             const origH = frame.originalSize.height;
             const targetH = placement.height;
@@ -508,15 +542,16 @@ export class HallStageCrowd extends Component {
         return node;
     }
 
-    private async _loadFirst(paths: readonly string[]): Promise<SpriteFrame | null> {
-        for (const path of paths) {
+    private async _loadFirst(paths: readonly string[]): Promise<{ frame: SpriteFrame | null; index: number }> {
+        for (let index = 0; index < paths.length; index++) {
+            const path = paths[index];
             const frame = await services().resource.loadSpriteFrame(path, {
                 tags: [CONTENT_TAG],
                 preferTextureFallback: true,
             }).catch(() => null);
-            if (frame) return frame;
+            if (frame) return { frame, index };
         }
-        return null;
+        return { frame: null, index: -1 };
     }
 
     private _playIdle(body: Node, scaleX: number, scaleY: number, delaySec: number, decor: HallStageDecor): void {
