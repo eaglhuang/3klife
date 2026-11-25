@@ -17068,5 +17068,17 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10007.md",
     "title": "[PROG-2-10007] 推進一季 releaseNameplateFade 讀 null 崩潰",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3080",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10009.md",
+    "title": "[PROG-2-10009] 主將被派去大廳任務時改選其他可出戰武將並提示",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3081",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10008.md",
+    "title": "[PROG-2-10008] 首戰主將不在名冊時還原起始主將，不再設為空（總PM 裁決方案①）",
+    "category": "task"
   }
 ]
