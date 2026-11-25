@@ -65,6 +65,8 @@ export interface AttackVfxConfig {
   generalTemplates: Record<string, Params & { kind: string }>;
   /** 暴擊命中光（參數變體：金色、較大的星形閃光；不新增資源） */
   critBurst: Params & { kind: string; palette: AtkPalette };
+  /** 單位倒下的漫畫式演出（衝擊線＋小星星）；troop=小兵、general=武將（較大較多）。沒設定就不播，不影響戰鬥流程 */
+  defeatBurst?: { kind: string; delaySec: number; alphaMul: number; palette: AtkPalette; troop: Params; general: Params };
   signatures: Record<string, Params>;
   generalProfiles: Record<string, { weapon: string; signature?: string; palette: AtkPalette }>;
   fallback: { weaponByRole: Record<string, string>; aptitudeRule?: AptitudeWeaponRule; defaultWeapon: string; elementPalettes: Record<string, AtkPalette>; defaultPalette: AtkPalette };
@@ -73,7 +75,7 @@ export type AttackVfxTroop = 'slash' | 'thrust' | 'bow' | 'shield' | 'charge';
 export interface GeneralVfxInfo { id: string; role?: string; element?: string; weapon?: string; troopAptitude?: Readonly<Record<string, string>> }
 
 /** 量測用：效能報告與單元測試讀取（也掛在 globalThis.__ATK_VFX_STATS__） */
-export const attackVfxStats = { activeFx: 0, particles: 0, peakFx: 0, peakParticles: 0, primitives: 0, drawOps: 0, peakDrawOps: 0, played: 0, skipped: 0, crit: 0 };
+export const attackVfxStats = { activeFx: 0, particles: 0, peakFx: 0, peakParticles: 0, primitives: 0, drawOps: 0, peakDrawOps: 0, played: 0, skipped: 0, crit: 0, defeatTroop: 0, defeatGeneral: 0, defeatStars: 0, defeatLines: 0 };
 
 interface Fx {
   active: boolean; kind: string; t: number; seed: number;
@@ -250,6 +252,26 @@ export class AttackVfxPlayer {
     return this.spawn(cfg, cfg.critBurst.kind, cfg.critBurst, cfg.critBurst.palette, null, '', bx, by, bx, by, 1);
   }
 
+  /**
+   * 單位倒下：衝擊線＋小星星往上飄散（漫畫式、無血腥）。strong=true 是武將（較大較多）。
+   * 座標為畫面層（uiRoot）；回傳是否已排進播放（預算滿時視為已處理）。
+   */
+  public playDefeat(bx: number, by: number, strong: boolean): boolean {
+    const cfg = getAttackVfxConfig();
+    const d = cfg?.defeatBurst;
+    if (!cfg || !d || !isAttackVfxEnabled(cfg)) return false;
+    const p: Params = { delaySec: d.delaySec, alphaMul: d.alphaMul, ...(strong ? d.general : d.troop) };
+    const before = attackVfxStats.played;
+    const ok = this.spawn(cfg, d.kind, p, d.palette, null, '', bx, by, bx, by, 1);
+    if (ok && attackVfxStats.played > before) {
+      if (strong) attackVfxStats.defeatGeneral++; else attackVfxStats.defeatTroop++;
+      attackVfxStats.defeatStars += num(p, 'starCount');
+      attackVfxStats.defeatLines += num(p, 'impactLines');
+      (globalThis as { __ATK_VFX_STATS__?: unknown }).__ATK_VFX_STATS__ = attackVfxStats;
+    }
+    return ok;
+  }
+
   /** 武將攻擊／施法特效：武器模板＋代表色＋名將獨特細節 */
   public playGeneral(info: GeneralVfxInfo, ax: number, ay: number, bx: number, by: number): boolean {
     const cfg = getAttackVfxConfig();
@@ -298,6 +320,7 @@ export class AttackVfxPlayer {
     let n = (p.sparkCount as number | undefined) ?? 0;
     if (kind === 'thrustLine' || kind === 'chargeRush') n += num(p, 'speedLines');
     if (kind === 'arrowTrail') n += num(p, 'glints');
+    if (kind === 'defeatBurst') n = num(p, 'impactLines') + num(p, 'starCount');
     if (kind === 'castOrb') n = num(p, 'burstRays') + num(p, 'spiralArms');
     if (sig?.motes) n += num(sig, 'motes');
     if (sig?.featherArcs) n += num(sig, 'featherArcs');
@@ -337,6 +360,7 @@ export class AttackVfxPlayer {
         case 'castOrb': prims += this.drawCast(g, f, t, u); break;
         case 'shieldWave': prims += this.drawShield(g, f, t, u); break;
         case 'chargeRush': prims += this.drawCharge(g, f, t, u); break;
+        case 'defeatBurst': prims += this.drawDefeat(g, f, t, u); break;
         case 'critBurst': prims += this.flash(g, f, f.bx, f.by, clamp01(t / GL.flash.sec), opt(f.p, 'flashScale', 1)); break;
       }
     }
@@ -482,6 +506,28 @@ export class AttackVfxPlayer {
     }
     if (ringPx > 0) {
       this.ring(g, f, x, y, ringPx * 0.3 + ringPx * 0.7 * easeOut(k), ringPx * 0.3 + ringPx * 0.7 * easeOut(k), 4, fade * 0.9); prims++;
+    }
+    return prims;
+  }
+
+  // ───────────── defeatBurst（單位倒下） ─────────────
+  /** 衝擊線（前 0.24 秒由中心炸開）＋小星星（四芒閃星，朝上方扇形飄散、漸隱）。不用任何貼圖。 */
+  private drawDefeat(g: Graphics, f: Fx, t: number, u: number): number {
+    const p = f.p; let prims = 0;
+    const kLine = clamp01(t / 0.24);
+    if (kLine < 1) prims += this.burst(g, f, f.bx, f.by, kLine, num(p, 'impactLines'), num(p, 'impactLenPx'), num(p, 'impactWidthPx'), num(p, 'ringPx'), 0, Math.PI * 2);
+    const n = num(p, 'starCount'), size = num(p, 'starSizePx'), rise = num(p, 'riseOutPx');
+    const fade = 1 - u * u, e = easeOut(u);
+    for (let i = 0; i < n; i++) {
+      const ang = Math.PI / 2 + ((n === 1 ? 0 : i / (n - 1) - 0.5) * Math.PI * 0.95) + (hash(f.seed + i * 5.1) - 0.5) * 0.4;
+      const dist = rise * (0.55 + 0.45 * hash(f.seed + i * 2.3)) * e;
+      const sx = f.bx + Math.cos(ang) * dist, sy = f.by + Math.sin(ang) * dist + rise * 0.3 * u;
+      const s = size * (0.7 + 0.3 * hash(f.seed + i * 9.7)) * (1 - 0.4 * u) * (0.85 + 0.15 * Math.sin(t * 16 + i * 2));
+      const alt = (i & 1) === 1;
+      this.line(g, f, sx - s, sy, sx + s, sy, 2.4, fade, alt);
+      this.line(g, f, sx, sy - s, sx, sy + s, 2.4, fade, alt);
+      this.dot(g, f, sx, sy, s * 0.22, fade);
+      prims += 3;
     }
     return prims;
   }

@@ -276,6 +276,15 @@
     "flashScale": 2.2,
     "palette": { "main": "#FFD23A", "glow": "#FF9A00", "core": "#FFFBE0", "accent": "#FFF0A0" }
   },
+  "defeatBurst": {
+    "_comment": "單位倒下的漫畫式演出（無血腥）：衝擊線＋小星星往上飄散，白煙走 vfx-effects.json 的 battle_death_vanish；troop=小兵、general=武將（較大較多）。只在 UnitRenderer.playDeath 呼叫 playDefeat。",
+    "kind": "defeatBurst",
+    "delaySec": 0,
+    "alphaMul": 1,
+    "palette": { "main": "#FFFFFF", "glow": "#BFD8FF", "core": "#FFFFFF", "accent": "#FFE680" },
+    "troop":   { "durationSec": 0.55, "impactLines": 6,  "impactLenPx": 46, "impactWidthPx": 3.2, "ringPx": 0,  "starCount": 3, "starSizePx": 9,  "riseOutPx": 46 },
+    "general": { "durationSec": 0.8,  "impactLines": 10, "impactLenPx": 82, "impactWidthPx": 4.6, "ringPx": 54, "starCount": 6, "starSizePx": 13, "riseOutPx": 78 }
+  },
   "generalProfiles": {
     "_comment": "武器類型與代表色。generals.json 沒有武器欄位也沒有代表色，這裡先填試作值（待企劃確認）；沒列到的武將走 fallback。",
     "guan-yu": {

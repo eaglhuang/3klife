@@ -1289,5 +1289,7 @@
   "battle.skill_category.charge": "衝鋒",
   "battle.skill_category.awe": "威震",
   "battle.skill_category.breakthrough": "衝陣",
-  "battle.skill_category.invincible": "無敵"
+  "battle.skill_category.invincible": "無敵",
+  "battle.defeat.troop": "撲通！",
+  "battle.defeat.general": "敗退！"
 }
