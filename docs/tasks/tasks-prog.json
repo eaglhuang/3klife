@@ -18511,6 +18511,56 @@
       "priority": "P0",
       "owner": "Antigravity",
       "brief": "docs/agent-briefs/tasks/PROG/PROG-2-10000.md"
+    },
+    {
+      "doc_id": "doc_task_3092",
+      "id": "PROG-2-10024",
+      "title": "playtest-online --full-year 殘留浮層遮罩收窗與實跑驗證",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-25",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-25T18:19:09+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "任務詳情窗關閉鈕沒收掉時殘留 OverlayMask 擋住真滑鼠，--full-year 第 1 季推進失敗；closeMissionLayers 加通用收窗（點浮層自身 OverlayMask／Escape）並實跑整年。",
+      "related": [
+        "PROG-2-10022"
+      ],
+      "depends": [],
+      "acceptance": [
+        "node --check 通過",
+        "tsc 測試型別 0 錯誤",
+        "--full-year 實跑輸出 full-year-report.json"
+      ],
+      "deliverables": [],
+      "notes": "2026-11-25 | 狀態: done | 驗證: tsc 0 錯、compute-gate quick 4/4；線上版 playtest-online --full-year 實跑 22/22 通過，第 1 年冬年終守城 1 場、換年到第 2 年春、放招 1 次；7456 編輯器預覽任務詳情窗關閉會因 ServiceLoader chunk 載入失敗而殘留遮罩（預覽環境問題，線上建置無此狀況） | 變更: closeMissionLayers 殘留浮層時點自身 OverlayMask／Escape 收窗；baselineQuarters 補原第 7 步；開年前首戰的放招與進戰場計入整年；新增單元測試 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {

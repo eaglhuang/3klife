@@ -9,7 +9,7 @@ const { formatYearQuarterLine, battleResultLabel, formatFirstBattleLine, isKnown
     battleResultLabel: (battle: { ok: boolean; result: string | null }) => string;
     formatFirstBattleLine: (info: { weather?: string | null; tactic?: { ok?: boolean; tacticId?: string | null; reason?: string | null; fallbackFrom?: string | null; fallbackReason?: string | null; nodes?: number | null; hooks?: number | null; attempts?: number; noEnemyPolls?: number } | null }) => string;
     isKnownEnvError: (text: string) => boolean;
-    evaluateFullYear: (input: { startOrdinal: number | null; baselineAdvances: number; endOrdinal: number | null; quarters: Array<Record<string, unknown>>; config?: Record<string, number> }) => { ok: boolean; checks: Array<{ name: string; ok: boolean; reason: string | null }>; lines: string[] };
+    evaluateFullYear: (input: { startOrdinal: number | null; baselineAdvances: number; baselineCasts?: number; baselineBattles?: number; endOrdinal: number | null; quarters: Array<Record<string, unknown>>; config?: Record<string, number> }) => { ok: boolean; checks: Array<{ name: string; ok: boolean; reason: string | null }>; lines: string[] };
 };
 
 export function createPlaytestYearSummarySuite(): TestSuite {
@@ -78,6 +78,13 @@ export function createPlaytestYearSummarySuite(): TestSuite {
         assert.equals(false, r.ok); // 沒放招
         const r2 = evaluateFullYear({ startOrdinal: 5, baselineAdvances: 1, endOrdinal: 8, quarters: [q(5, { battles: [{ ok: true, result: '勝利', tactic: { ok: true } }] }), q(6), q(7)] });
         assert.equals(true, r2.ok);
+    });
+
+    suite.test('全年斷言：開年前已打的首戰放招與進戰場一併計入', () => {
+        const q = (o: number) => ({ ordinal: o, seasonAfterOrdinal: o + 1, season: 's' + o, battles: [{ ok: true, result: '勝利', tactic: { ok: false } }], yearEndBattles: o === 7 ? 1 : 0, errors: [] });
+        const r = evaluateFullYear({ startOrdinal: 7, baselineAdvances: 3, baselineCasts: 1, baselineBattles: 1, endOrdinal: 8, quarters: [q(7)] });
+        assert.equals(true, r.ok);
+        assert.equals(false, evaluateFullYear({ startOrdinal: 7, baselineAdvances: 3, baselineCasts: 0, endOrdinal: 8, quarters: [q(7)] }).ok);
     });
 
     suite.test('全年斷言：沒換年／沒進年終守城時失敗並說明哪一步', () => {
