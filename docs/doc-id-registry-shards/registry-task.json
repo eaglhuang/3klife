@@ -17134,5 +17134,17 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10023.md",
     "title": "[PROG-2-10023] 年終守城保底步兵卡與自動代打放行（AI 代為部署）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3092",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10000.md",
+    "title": "PROG-2-10000: 親生子嗣登記缺口修補",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3093",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10026.md",
+    "title": "PROG-2-10026: 結緣透明加法、誠意累積與紅娘叩門保底",
+    "category": "task"
   }
 ]
