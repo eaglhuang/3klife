@@ -26,4 +26,26 @@ function formatYearQuarterLine(yq) {
   return `年循環 ${yq.season} → ${yq.seasonAfter || '?'}：戰鬥 ${labels}；步驟失敗 ${yq.errors.length}（戰鬥輸贏不算在內）`;
 }
 
-module.exports = { battleResultLabel, formatYearQuarterLine };
+/**
+ * 首戰探針摘要行（PROG-2-10010）：天氣、計謀施放成敗、格子特效數。
+ * 例：首戰天氣 WINDY；計謀 tactic-fire-scheme 成功；格子特效 3（hook 1）
+ * 火計天氣不符改放別的：首戰天氣 SUNNY；計謀 X 成功（火計 tactic-fire-scheme 改放：CONDITION_UNMET）；格子特效 0（hook 0）
+ * 全部失敗：首戰天氣 SUNNY；計謀 失敗（原因）；格子特效 無
+ *
+ * @param {{ weather?: string|null, tactic?: { ok?: boolean, tacticId?: string|null, reason?: string|null, fallbackFrom?: string|null, fallbackReason?: string|null, nodes?: number|null, hooks?: number|null }|null }} info
+ * @returns {string}
+ */
+function formatFirstBattleLine(info) {
+  const weather = (info && info.weather) || '?';
+  const t = (info && info.tactic) || null;
+  if (!t || !t.ok) {
+    const reason = (t && t.reason) || '未嘗試';
+    return `首戰天氣 ${weather}；計謀 失敗（${reason}）；格子特效 無`;
+  }
+  const fallback = t.fallbackFrom ? `（${t.fallbackFrom} 改放：${t.fallbackReason || '未達施放條件'}）` : '';
+  const nodes = Number.isFinite(t.nodes) ? t.nodes : '?';
+  const hooks = Number.isFinite(t.hooks) ? `（hook ${t.hooks}）` : '';
+  return `首戰天氣 ${weather}；計謀 ${t.tacticId || '?'} 成功${fallback}；格子特效 ${nodes}${hooks}`;
+}
+
+module.exports = { battleResultLabel, formatYearQuarterLine, formatFirstBattleLine };

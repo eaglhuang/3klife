@@ -18128,7 +18128,7 @@
       }
     },
     {
-      "doc_id": "",
+      "doc_id": "doc_task_3071",
       "id": "PROG-2-10005",
       "title": "虎牢關之戰固定起風（首戰張飛火計放得出來）",
       "owner": "ClaudeCode_claude-opus-5-5",
@@ -18149,6 +18149,30 @@
         "label": "",
         "summary": "",
         "doc": "docs/agent-briefs/tasks/PROG/PROG-2-10005.md"
+      }
+    },
+    {
+      "doc_id": "doc_task_3081",
+      "id": "PROG-2-10010",
+      "title": "首戰實玩探針：記錄天氣、試放計謀、量格子特效",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-25",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-25T13:30:54+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "description": "playtest-online 首戰流程加檢查：戰鬥天氣、嘗試施放計謀（火計優先，天氣不符改放第一個可放的）、格子特效數，寫進 report.battles 與摘要行。",
+      "related": ["PROG-2-10005", "PROG-2-9989"],
+      "depends": [],
+      "notes": "2026-11-25 | 狀態: done | 驗證: tsc 0 錯、run-cli 9563 通過、compute-gate quick 4/4；實跑 playtest-online（線上版）12 步，首戰「首戰天氣 WINDY；計謀 tactic-fire-scheme 成功；格子特效 7（hook 1）」，第一次實跑 10 次嘗試都未套用（原因不明），改加 TP／SP 診斷並放寬到 30 次嘗試，第二次第 27 次嘗試施放成功，證據筆記夾 playtest-first-battle-1125/ | 變更: playtest-online.js 新增 castTacticProbe 探針、battleState 加 weather、report.battles、--no-tactic-probe；playtest-year-summary.js 新增 formatFirstBattleLine；PlaytestYearSummary.test.ts 加 3 組；順手補 PROG-2-10005 doc_id=doc_task_3071 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "doc": "docs/agent-briefs/tasks/PROG/PROG-2-10010.md"
       }
     }
   ],

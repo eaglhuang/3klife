@@ -4,9 +4,10 @@
  */
 import { TestSuite, assert } from './TestRunner';
 
-const { formatYearQuarterLine, battleResultLabel } = require('../tools_node/playtest-year-summary') as {
+const { formatYearQuarterLine, battleResultLabel, formatFirstBattleLine } = require('../tools_node/playtest-year-summary') as {
     formatYearQuarterLine: (yq: { season: string | null; seasonAfter?: string | null; battles: Array<{ ok: boolean; result: string | null }>; errors: string[] }) => string;
     battleResultLabel: (battle: { ok: boolean; result: string | null }) => string;
+    formatFirstBattleLine: (info: { weather?: string | null; tactic?: { ok?: boolean; tacticId?: string | null; reason?: string | null; fallbackFrom?: string | null; fallbackReason?: string | null; nodes?: number | null; hooks?: number | null } | null }) => string;
 };
 
 export function createPlaytestYearSummarySuite(): TestSuite {
@@ -36,6 +37,21 @@ export function createPlaytestYearSummarySuite(): TestSuite {
     suite.test('沒打戰鬥顯示無；沒讀到換季後季別顯示 ?', () => {
         const line = formatYearQuarterLine({ season: '第 1 年 1 季', battles: [], errors: [] });
         assert.equals('年循環 第 1 年 1 季 → ?：戰鬥 無；步驟失敗 0（戰鬥輸贏不算在內）', line);
+    });
+
+    suite.test('首戰摘要：火計成功，寫出天氣、計謀與格子特效數', () => {
+        const line = formatFirstBattleLine({ weather: 'WINDY', tactic: { ok: true, tacticId: 'tactic-fire-scheme', nodes: 3, hooks: 1 } });
+        assert.equals('首戰天氣 WINDY；計謀 tactic-fire-scheme 成功；格子特效 3（hook 1）', line);
+    });
+
+    suite.test('首戰摘要：天氣不符改放別的計謀，如實記錄原因', () => {
+        const line = formatFirstBattleLine({ weather: 'SUNNY', tactic: { ok: true, tacticId: 'tactic-morale-rally', fallbackFrom: 'tactic-fire-scheme', fallbackReason: 'CONDITION_UNMET', nodes: 0, hooks: 0 } });
+        assert.equals('首戰天氣 SUNNY；計謀 tactic-morale-rally 成功（tactic-fire-scheme 改放：CONDITION_UNMET）；格子特效 0（hook 0）', line);
+    });
+
+    suite.test('首戰摘要：施放失敗寫原因，沒有格子特效；沒讀到天氣顯示 ?', () => {
+        assert.equals('首戰天氣 SUNNY；計謀 失敗（TP_SHORT）；格子特效 無', formatFirstBattleLine({ weather: 'SUNNY', tactic: { ok: false, reason: 'TP_SHORT' } }));
+        assert.equals('首戰天氣 ?；計謀 失敗（未嘗試）；格子特效 無', formatFirstBattleLine({ weather: null, tactic: null }));
     });
 
     return suite;

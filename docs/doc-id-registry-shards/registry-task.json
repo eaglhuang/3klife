@@ -17068,5 +17068,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10007.md",
     "title": "[PROG-2-10007] 推進一季 releaseNameplateFade 讀 null 崩潰",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3081",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10010.md",
+    "title": "[PROG-2-10010] 首戰實玩探針：記錄天氣、試放計謀、量格子特效",
+    "category": "task"
   }
 ]
