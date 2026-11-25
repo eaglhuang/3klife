@@ -18233,7 +18233,7 @@
       "title": "playtest-online 火計探針細分失敗原因、時間上限、已知環境錯誤白名單",
       "owner": "ClaudeCode_claude-opus-5-5",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-25",
@@ -18250,7 +18250,7 @@
       "depends": [],
       "acceptance": [],
       "deliverables": [],
-      "notes": "2026-11-25 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "notes": "2026-11-25 | 狀態: done | 驗證: tsc 0 錯、run-cli 9567 通過、compute-gate quick 4/4；線上版實跑 playtest-online 12/12 步通過，首戰「天氣 WINDY；計謀 tactic-fire-scheme 成功；格子特效 7（hook 1）」，console error 0 筆、已知環境錯誤 6 筆（另列），證據 artifacts/playtest-online/cast-probe-10014/report.json | 變更: castTacticProbe 失敗細分原因（存活敵軍、受傷我方、SP、TP、blockedReason）、無存活敵軍不試放、嘗試窗約 60 秒；isKnownEnvError 暫時白名單（待線上版改打中台後移除）；docs/web-playtest-online.md 說明 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
@@ -18275,8 +18275,8 @@
     }
   ],
   "summary": {
-    "done": 328,
-    "in_progress": 3,
+    "done": 329,
+    "in_progress": 2,
     "open": 87,
     "total": 418
   }
