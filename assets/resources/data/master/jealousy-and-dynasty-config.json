@@ -1,0 +1,27 @@
+{
+  "jealousy": {
+    "optionA": {
+      "label": "誠懇安撫",
+      "favorDelta": 5,
+      "goldCost": 0
+    },
+    "optionB": {
+      "label": "厚禮賠罪",
+      "basePrice": 200,
+      "yearlyScale": 0.25,
+      "favorDelta": 15
+    },
+    "optionC": {
+      "label": "裝傻打混",
+      "favorDelta": -5,
+      "caughtThresholdForTitle": 3,
+      "unlockedTitle": "府中睡神"
+    }
+  },
+  "dynastyBadge": {
+    "badgeId": "badge_tianxia_mingmen",
+    "badgeTitle": "天下名門",
+    "requiredConsecutiveFirstPlace": 3,
+    "neverTriggersInYearOne": true
+  }
+}

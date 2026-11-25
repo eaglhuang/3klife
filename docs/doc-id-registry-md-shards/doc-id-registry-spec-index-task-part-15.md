@@ -286,3 +286,5 @@
 | `doc_task_3095` | docs/agent-briefs/tasks/PROG/PROG-2-10025.md | [PROG-2-10025] 戰場單挑勝利／計謀橫幅不蓋 HUD 資訊 |
 | `doc_task_3096` | docs/agent-briefs/tasks/PROG/PROG-2-10026.md | PROG-2-10026: 結緣透明加法、誠意累積與紅娘叩門保底 |
 | `doc_task_3097` | docs/agent-briefs/tasks/PROG/PROG-2-10000.md | PROG-2-10000: 親生子嗣登記缺口修補 |
+| `doc_task_3098` | docs/agent-briefs/tasks/PROG/PROG-2-10032.md | [PROG-2-10032] 線上整年驗收開機步驟改輪詢開始鈕並失敗即中止 |
+| `doc_task_3099` | docs/agent-briefs/tasks/PROG/PROG-2-10033.md | PROG-2-10033 吃醋三選項與三連霸「天下名門」徽章 |

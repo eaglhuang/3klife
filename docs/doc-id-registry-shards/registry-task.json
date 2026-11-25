@@ -17170,5 +17170,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10032.md",
     "title": "[PROG-2-10032] 線上整年驗收開機步驟改輪詢開始鈕並失敗即中止",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3099",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10033.md",
+    "title": "PROG-2-10033 吃醋三選項與三連霸「天下名門」徽章",
+    "category": "task"
   }
 ]
