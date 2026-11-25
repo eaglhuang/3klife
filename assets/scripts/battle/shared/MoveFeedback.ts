@@ -138,20 +138,21 @@ export function dustCountFor(spec: MoveDustSpec, isLeader: boolean, rand: () => 
 export const DUST_COLOR_LIGHT = { r: 196, g: 164, b: 106 } as const;
 export const DUST_COLOR_DARK = { r: 170, g: 140, b: 90 } as const;
 /** 塵粒起始不透明度（0～1），之後線性淡到 0。 */
-export const DUST_START_ALPHA = 0.75;
+export const DUST_START_ALPHA = 1.0;
 
 /**
  * 塵粒參數範圍（畫面像素／秒）。11/25 實跑發現舊值（粒徑 16～24、放大 1.8～2.5 倍）柔邊圓點互相疊成一整塊平的沙色團，
  * 改成較小的顆粒、較少放大、較高的上揚與較寬的散布，讓一顆顆塵粒分得開；疊層根節點縮放約 0.6，螢幕像素約為此值 ×0.6。
+ * 11/25 第二輪：正常縮放仍看不見，粒徑與不透明度各放大約 1.3～1.4 倍（粒徑 16～24（再加大一次，實跑正常縮放只見淡淡小塊）、起始不透明度 1.0、壽命拉長），散布同步加寬維持離散。
  */
 export const DUST_PARTICLE_RANGES = {
-  startSize: [9, 14],
+  startSize: [16, 24],
   endScale: [1.3, 1.9],
   rise: [40, 75],
   drift: [15, 45],
-  jitterX: 14,
+  jitterX: 24,
   jitterY: 5,
-  lifeSec: [0.6, 0.9],
+  lifeSec: [0.7, 1.05],
 } as const;
 
 export interface DustParticleParams {

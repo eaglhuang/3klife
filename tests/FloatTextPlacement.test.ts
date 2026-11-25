@@ -33,6 +33,11 @@ export function createFloatTextPlacementSuite(): TestSuite {
         assert.equals(lootTextPlacement(1).y, lootTextPlacement(1.9).y);
     });
 
+    suite.test('掠奪跳字：相鄰兩項垂直間距至少 1.3 倍字級（11/25 放大後）', () => {
+        const gap = lootTextPlacement(0, 32).y - lootTextPlacement(1, 32).y;
+        assert.isTrue(gap >= 1.3 * 32, `間距 ${gap}`);
+    });
+
     suite.test('位移隨字級縮放（不寫死像素）', () => {
         assert.equals(lootTextPlacement(1, 64).y, lootTextPlacement(1, 32).y * 2);
         assert.equals(defeatTextOffsetOf('a', 88).y, defeatTextOffsetOf('a', 44).y * 2);

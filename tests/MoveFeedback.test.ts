@@ -120,7 +120,7 @@ export function createMoveFeedbackSuite(): TestSuite {
             assert.isTrue(p.drift >= R.drift[0] && p.drift <= R.drift[1]);
             assert.isTrue(p.lifeSec >= R.lifeSec[0] && p.lifeSec <= R.lifeSec[1]);
             // 單顆終端大小（粒徑 × 放大）要小於 1 倍粒徑上限的 2 倍，避免又糊成一整塊
-            assert.isTrue(p.startSize * p.endScale <= 14 * 1.9 + 1e-6, '終端粒徑不得過大');
+            assert.isTrue(p.startSize * p.endScale <= R.startSize[1] * R.endScale[1] + 1e-6, '終端粒徑不得過大');
             assert.isTrue(p.color.r <= DUST_COLOR_LIGHT.r && p.color.r >= DUST_COLOR_DARK.r);
             assert.isTrue(p.color.g <= DUST_COLOR_LIGHT.g && p.color.g >= DUST_COLOR_DARK.g);
             assert.isTrue(p.color.b <= DUST_COLOR_LIGHT.b && p.color.b >= DUST_COLOR_DARK.b);
