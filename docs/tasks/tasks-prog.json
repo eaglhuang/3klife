@@ -17943,7 +17943,7 @@
       "title": "playtest 年循環「戰鬥 失敗；錯誤 1」根因與修正（QA 11/25）",
       "owner": "ClaudeCode_claude-opus-5-5",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "bugfix",
       "phase": "M0",
       "created": "2026-11-25",
@@ -17953,7 +17953,7 @@
       "description": "年循環戰鬥敗北與步驟失敗混在一行；主將未定導致自動代打不出兵。",
       "related": [],
       "depends": [],
-      "notes": "2026-11-25 | 狀態: in-progress | 驗證: pending | 變更: 開卡 | 阻塞: 無",
+      "notes": "2026-11-25 | 狀態: done | 驗證: tsc 0 錯、run-cli 9552 通過、compute-gate quick 通過、實機 --year 勝利/勝利（主將未定→已指定）、CI 全綠（PR #2619）| 變更: 摘要行分開敗北與步驟失敗、年循環戰前指定主將；產品面首戰後主將未定待 PM 裁決 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
