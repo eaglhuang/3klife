@@ -9,6 +9,7 @@
  */
 import { TestRunner } from './TestRunner';
 import { createDeprecatedApiSuite } from './DeprecatedApiScanner';
+import { createBondingAndEpithetViewModelSuite } from './BondingAndEpithetViewModel.test';
 import { createYearEndRankingServiceSuite } from './YearEndRankingService.test';
 import { createBondingSuccessServiceSuite } from './BondingSuccessService.test';
 
@@ -76,6 +77,8 @@ if (typeof window === 'undefined') {
 
     runner.register(createYearEndRankingServiceSuite());
     runner.register(createBondingSuccessServiceSuite());
+
+    runner.register(createBondingAndEpithetViewModelSuite());
 
     const summary = await runner.runAll(layerFilter);
 

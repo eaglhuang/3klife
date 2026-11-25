@@ -18681,12 +18681,20 @@
       "priority": "P1",
       "owner": "antigravity",
       "file": "docs/agent-briefs/tasks/PROG/PROG-2-10027.md"
+    },
+    {
+      "id": "PROG-2-10036",
+      "title": "結緣成功率公式分項 UI 與小名 8/12/15 歲三段揭曉 ViewModel 與相對比例配置",
+      "status": "done",
+      "priority": "P1",
+      "owner": "antigravity",
+      "file": "docs/agent-briefs/tasks/PROG/PROG-2-10036.md"
     }
   ],
   "summary": {
-    "done": 343,
+    "done": 344,
     "in_progress": 3,
     "open": 87,
-    "total": 433
+    "total": 434
   }
 }
