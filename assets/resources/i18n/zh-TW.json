@@ -1128,6 +1128,7 @@
   "sortie.recommend.line": "{0}：{1}（{2}）",
   "sortie.recommend.unavailable": "目前沒有推薦資料",
   "sortie.recommend.failed": "推薦編制失敗，請稍後再試",
+  "sortie.leadBusy": "主將{0}任務中，已改由{1}出戰",
   "sortie.confirm": "確認出戰",
   "prebattle.issue.NO_COMMANDER": "沒有可出戰的主將",
   "prebattle.issue.NO_STRATEGIST": "沒有可派的參謀官",

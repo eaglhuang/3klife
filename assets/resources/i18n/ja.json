@@ -1059,6 +1059,7 @@
   "sortie.recommend.line": "{0}：{1}（{2}）",
   "sortie.recommend.unavailable": "推薦データがありません",
   "sortie.recommend.failed": "推薦に失敗しました",
+  "sortie.leadBusy": "主将{0}は任務中のため、{1}が代わりに出陣します",
   "sortie.confirm": "出陣を確定",
   "prebattle.issue.NO_COMMANDER": "出陣できる主将がいません",
   "prebattle.issue.NO_STRATEGIST": "配置できる参謀官がいません",
