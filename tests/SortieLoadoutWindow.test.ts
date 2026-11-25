@@ -91,25 +91,58 @@ export function createSortieLoadoutWindowSuite(): TestSuite {
         assert.equals('cao-ren', session.leadGeneralId);
     });
 
-    suite.test('首戰指定主將不在名冊：仍推薦為主將、lead 留空交戰場 fallback，理由為本關指定主將（PROG-2-9913）', async () => {
-        const session = await sessionWith(roster(), null);
-        const zhangFei = officer('zhang-fei', '張飛', { lea: 90, str: 95 });
+    function outsideSetup(session: GameSession, zhangFei: GeneralConfig): SortieSetupController {
         const prebattle: SortiePrebattleDeps = {
             weights: weights(),
             encounters: () => [{ id: 'enc-outside', playerGeneralId: 'zhang-fei' }],
             currentEncounterId: () => 'enc-outside',
             cards: cardInfos,
         };
-        const ctrl = new SortieSetupController({ session, lookup: zhTwLookup(), prebattle, fixedCommander: () => zhangFei });
+        return new SortieSetupController({ session, lookup: zhTwLookup(), prebattle, fixedCommander: () => zhangFei });
+    }
+
+    suite.test('首戰指定主將不在名冊（沒有起始主將）：出戰主將還原成名冊內統率最高者，不設為空，理由為起始主將（PROG-2-10008）', async () => {
+        const session = await sessionWith(roster(), null);
+        const ctrl = outsideSetup(session, officer('zhang-fei', '張飛', { lea: 90, str: 95 }));
         assert.equals('zhang-fei', ctrl.commander()?.id ?? '');
         assert.isTrue(await ctrl.recommend());
-        assert.equals('zhang-fei', ctrl.getView().commanderId ?? '');
-        assert.equals(null, session.leadGeneralId);
-        assert.isTrue(session.sortieSupport.strategistUid !== null, '名冊外主將仍能存參謀官');
+        assert.equals('cao-cao', session.leadGeneralId, '主將不為空，還原成統率最高的名冊武將');
+        assert.equals('cao-cao', ctrl.getView().commanderId ?? '');
+        assert.isTrue(session.sortieSupport.strategistUid !== null, '仍能存參謀官');
+        assert.isTrue(session.sortieSupport.strategistUid !== 'cao-cao', '參謀官不是主將');
         assert.isFalse(ctrl.getView().texts.sortieNotice.includes('尚未選定主將'), ctrl.getView().texts.sortieNotice);
-        assert.isTrue(ctrl.getView().texts.recommendReasonLabel.includes('張飛'), ctrl.getView().texts.recommendReasonLabel);
-        assert.isTrue(ctrl.getView().texts.recommendReasonLabel.includes('本關指定主將'), ctrl.getView().texts.recommendReasonLabel);
-        assert.isFalse(ctrl.getView().texts.sortieNotice.includes('不能出戰'), ctrl.getView().texts.sortieNotice);
+        assert.isTrue(ctrl.getView().texts.recommendReasonLabel.includes('曹操'), ctrl.getView().texts.recommendReasonLabel);
+        assert.isTrue(ctrl.getView().texts.recommendReasonLabel.includes('起始主將'), ctrl.getView().texts.recommendReasonLabel);
+        assert.isFalse(ctrl.getView().texts.recommendReasonLabel.includes('張飛'), '名冊外的指定主將不再顯示為主將');
+    });
+
+    suite.test('首戰指定主將不在名冊：已有起始主將就維持，出征帳本不為 null、委任可用（canDelegate 取決於出征帳本）', async () => {
+        const session = await sessionWith(roster(), 'cao-ren');
+        const ctrl = outsideSetup(session, officer('zhang-fei', '張飛', { lea: 90, str: 95 }));
+        assert.isTrue(await ctrl.recommend());
+        assert.equals('cao-ren', session.leadGeneralId, '還原成起始主將，不被推薦結果換掉');
+        const battleLead = session.resolveLeadGeneralId('zhang-fei');
+        assert.equals('cao-ren', battleLead, '戰場不再退回名冊外的關卡指定主將');
+        assert.isTrue(session.getSortieInput(battleLead) !== null, '出征帳本不為 null');
+        assert.equals(null, session.getSortieInput('zhang-fei'), '對照：名冊外的張飛沒有出征帳本（舊行為的根因）');
+    });
+
+    suite.test('首戰（含主將不在名冊）結束後，大廳主將不能是未定', async () => {
+        for (const startLead of [null, 'cao-ren'] as const) {
+            const session = await sessionWith(roster(), startLead);
+            const ctrl = outsideSetup(session, officer('zhang-fei', '張飛', { lea: 90, str: 95 }));
+            assert.isTrue(await ctrl.recommend());
+            await session.recordBattle([session.resolveLeadGeneralId('zhang-fei')], 'player-win');
+            assert.isTrue(session.leadGeneralId !== null, `首戰結束後主將未定（起始主將 ${startLead}）`);
+            assert.isTrue(session.getDeployableGenerals().some((g) => g.id === session.leadGeneralId), '主將在可出戰名冊內');
+        }
+    });
+
+    suite.test('名冊外主將但名冊沒有任何可出戰武將：維持空，推薦仍不報錯（無人可還原）', async () => {
+        const session = await sessionWith([], null);
+        const ctrl = outsideSetup(session, officer('zhang-fei', '張飛'));
+        await ctrl.recommend();
+        assert.equals(null, session.leadGeneralId);
     });
 
     suite.test('非首戰（沒有 fixedCommander）：指定主將不在名冊時不自動當主將，行為與舊版相同', async () => {

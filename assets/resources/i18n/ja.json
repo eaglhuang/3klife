@@ -1013,6 +1013,7 @@
   "prebattle.role.deputy": "兵站官（副将）",
   "prebattle.reason.commander.statBlend": "統率と武力の総合が最も高い",
   "prebattle.reason.commander.encounterFixed": "この戦闘で指定された主将",
+  "prebattle.reason.commander.startingLead": "初期主将",
   "prebattle.reason.strategist.intPol": "知力と政治の総合が最も高い",
   "prebattle.reason.deputy.leaPol": "統率と政治の総合が最も高い",
   "prebattle.reason.tally.rarityDiversity": "レア度が高く兵種が重複しない",

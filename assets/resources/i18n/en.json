@@ -1088,6 +1088,7 @@
   "prebattle.role.deputy": "Quartermaster (Deputy)",
   "prebattle.reason.commander.statBlend": "Highest combined Leadership and Strength",
   "prebattle.reason.commander.encounterFixed": "Fixed commander for this battle",
+  "prebattle.reason.commander.startingLead": "Starting commander",
   "prebattle.reason.strategist.intPol": "Highest combined Intelligence and Politics",
   "prebattle.reason.deputy.leaPol": "Highest combined Leadership and Politics",
   "prebattle.reason.tally.rarityDiversity": "Higher rarity, unique troop type",

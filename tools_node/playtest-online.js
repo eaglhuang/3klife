@@ -1519,18 +1519,19 @@ async function main() {
         };
 
         /** 出戰主將未定（首戰編成把主將設為空）就指定第一位可出戰武將，回傳 { before, after, set }；已有主將不動 */
-        const ensureLeadGeneral = () => page.evaluate(async () => {
+        const ensureLeadGeneral = (apply = true) => page.evaluate(async (applyFlag) => {
             const loader = await window.System.import('chunks:///_virtual/ServiceLoader.ts');
             const session = loader.services().session;
             const before = session.leadGeneralId;
             const deployable = session.getDeployableGenerals();
+            const check = before ? session.checkDeployable(before) : null;
             let set = null;
-            if (!before || !deployable.some((g) => g.id === before)) {
+            if (applyFlag && (!before || !deployable.some((g) => g.id === before))) {
                 const pick = deployable[0];
                 if (pick && await session.setLeadGeneral(pick.id)) set = pick.id;
             }
-            return { before, after: session.leadGeneralId, set };
-        }).catch((e) => ({ error: String(e && e.message || e) }));
+            return { before, after: session.leadGeneralId, set, eligible: check ? check.eligible : null, reasons: check ? check.reasons : null };
+        }, apply).catch((e) => ({ error: String(e && e.message || e) }));
 
         const runBattle = async (rec, opts = {}) => {
             // 回到大廳
@@ -2119,7 +2120,7 @@ async function main() {
                         rec.detail.topBefore = await readTopbar();
                         // 主將未定時戰場會退回關卡指定的名冊外主將，沒有出征帳本，自動代打只會結束回合不出兵（PROG-2-10003）；
                         // 跟玩家一樣先指定一位可出戰武將當主將。--no-set-lead 可保留未定狀態重現
-                        if (!args['no-set-lead']) rec.detail.lead = await ensureLeadGeneral();
+                        rec.detail.lead = await ensureLeadGeneral(!args['no-set-lead']);
                         const d = await runBattle(rec, { shotTag: 'battle-settle', quick: b === 1 });
                         rec.detail.topAfter = await readTopbarSettled();
                         return d;
