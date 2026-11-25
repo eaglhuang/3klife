@@ -32,7 +32,7 @@ function playerUnits(ctrl: BattleController): number {
     ctrl.state.units.forEach(u => { if (u.faction === Faction.Player) n += 1; });
     return n;
 }
-import { DEFENSE_GUIDE_TEXT_FALLBACK_ZH_TW, defenseBannerKey, fallbackDefenseGuideText, isDefenseDeployBlocked, withDefenseGuideFallback } from '../assets/scripts/core/systems/DefenseGuide';
+import { DEFENSE_GUIDE_TEXT_FALLBACK_ZH_TW, defenseBannerKey, fallbackDefenseGuideText, guardTicketApplies, guardTicketJustUsed, isDefenseDeployBlocked, withDefenseGuideFallback } from '../assets/scripts/core/systems/DefenseGuide';
 
 export function createDefenseGuideSuite(): TestSuite {
     const suite = new TestSuite('DefenseGuide');
@@ -129,6 +129,26 @@ export function createDefenseGuideSuite(): TestSuite {
         assert.isTrue(bridge.includes('this.autoPlay.active);'), '閘門讀取自動代打狀態');
         assert.isTrue(scene.includes('new DefenseDeployGuide(') && scene.includes("'ui.battle.defense.entry'"));
         assert.isTrue(scene.includes('grantDefenseGuardInfantry()') && scene.includes("'ui.battle.defense.guard_granted'"));
+    });
+
+    suite.test('保底券標示（PROG-2-10041）：Toast 指明兵種、卡面小標與用券提示走四語 key', () => {
+        for (const lang of langs) {
+            const table = JSON.parse(fs.readFileSync(`assets/resources/i18n/${lang}.json`, 'utf8')) as Record<string, string>;
+            assert.isTrue((table['ui.battle.defense.guard_badge'] ?? '').length > 0, `${lang} guard_badge`);
+            assert.isTrue((table['ui.battle.defense.guard_used'] ?? '').length > 0, `${lang} guard_used`);
+        }
+        assert.isTrue(fallbackDefenseGuideText('ui.battle.defense.guard_granted', '步兵').includes('保底券：只能用在步兵卡'));
+        assert.equals('已使用保底券', fallbackDefenseGuideText('ui.battle.defense.guard_used'));
+        assert.isTrue(guardTicketApplies('infantry', 'infantry'));
+        assert.isFalse(guardTicketApplies('infantry', 'archer'), '只有步兵卡有小標');
+        assert.isFalse(guardTicketApplies(null, 'infantry'), '沒券不標');
+        assert.isTrue(guardTicketJustUsed(true, false));
+        assert.isFalse(guardTicketJustUsed(true, true));
+        assert.isFalse(guardTicketJustUsed(false, false));
+        const scene = fs.readFileSync('assets/scripts/battle/views/BattleScene.ts', 'utf8');
+        const tally = fs.readFileSync('assets/scripts/ui/components/TigerTallyComposite.ts', 'utf8');
+        assert.isTrue(scene.includes('setGuardTicket?.(TroopType.Infantry)') && scene.includes("'ui.battle.defense.guard_used'"));
+        assert.isTrue(tally.includes('GuardTicketBadge') && tally.includes('isAbsoluteTop = false'), '小標用相對錨點');
     });
 
     return suite;

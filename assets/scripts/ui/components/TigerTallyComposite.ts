@@ -10,7 +10,7 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
  *   3. 點擊卡片 → emit CardSelected 事件
  *   4. 冷卻卡片只顯示遮罩，點擊仍可查看資訊
  */
-import { _decorator, Button, Color, EventTouch, Label, Node, Sprite, SpriteFrame } from 'cc';
+import { _decorator, Button, Color, EventTouch, Label, Node, Sprite, SpriteFrame, UITransform, Widget } from 'cc';
 import { services } from '../../core/managers/ServiceLoader';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
@@ -119,6 +119,7 @@ const TALLY_TIER_STYLE: Record<TallyCardData['rarity'], {
 };
 
 import { TallyCardData } from '../../shared/TallyCardContract';
+import { guardTicketApplies, withDefenseGuideFallback } from '../../core/systems/DefenseGuide';
 export type { TallyCardData } from '../../shared/TallyCardContract';
 
 /** 卡面數字前綴（#2107-5）：攻擊、生命、糧草費 */
@@ -128,6 +129,7 @@ export const TALLY_STAT_PREFIX = { atk: '攻', hp: '命', cost: '糧' } as const
 export class TigerTallyComposite extends CompositePanel {
     private _templateBinder: UITemplateBinder | null = null;
     private _cards: TallyCardData[] = [];
+    private _guardTicketType: string | null = null;
     private _cardNodes: Node[] = [];
     private _isMounted = false;
     private readonly _cardLoadSeq = [0, 0, 0, 0];
@@ -165,6 +167,43 @@ export class TigerTallyComposite extends CompositePanel {
     public setCards(cards: TallyCardData[]): void {
         this._cards = cards;
         this._populateCards();
+    }
+
+    /** 守城保底券（PROG-2-10041）：持券兵種（null＝沒券）；符合的卡面顯示「保」小標，文字走 i18n */
+    public setGuardTicket(unitType: string | null): void {
+        this._guardTicketType = unitType;
+        this._populateCards();
+    }
+
+    /** 卡面「保」小標：模板有 GuardTicketBadge{slot} 就用，否則在卡右上角以錨點（相對比例）建一個，不寫死座標 */
+    private _applyGuardTicketBadge(cardNode: Node, slot: number, data: TallyCardData): void {
+        const name = `GuardTicketBadge${slot}`;
+        let badge = this._templateBinder?.getNode(name) ?? cardNode.getChildByName(name);
+        const show = guardTicketApplies(this._guardTicketType, data.unitType);
+        if (!badge && !show) return;
+        if (!badge) {
+            badge = new Node(name);
+            badge.layer = cardNode.layer;
+            badge.addComponent(UITransform).setContentSize(40, 28);
+            const label = badge.addComponent(Label);
+            label.fontSize = 22;
+            label.lineHeight = 26;
+            label.isBold = true;
+            label.overflow = Label.Overflow.SHRINK;
+            label.color = new Color(255, 214, 90, 255);
+            const widget = badge.addComponent(Widget);
+            widget.isAlignTop = true;
+            widget.isAlignRight = true;
+            widget.isAbsoluteTop = false;
+            widget.isAbsoluteRight = false;
+            widget.top = 0.02;
+            widget.right = 0.04;
+            cardNode.addChild(badge);
+        }
+        const label = badge.getComponent(Label);
+        if (label) label.string = withDefenseGuideFallback((k, ...a) => services().i18n.t(k, ...a))('ui.battle.defense.guard_badge');
+        badge.setSiblingIndex(cardNode.children.length - 1);
+        badge.active = show;
     }
 
     public getCards(): TallyCardData[] {
@@ -242,6 +281,7 @@ export class TigerTallyComposite extends CompositePanel {
                 starsLabel.color = this._resolveRarityTextColor(data.rarity);
             }
             useBitmapCacheForCardLabels(cardNode);
+            this._applyGuardTicketBadge(cardNode, slot, data);
 
             const loadSeq = ++this._cardLoadSeq[slot - 1];
             void this._applyShellFamily(cardNode, slot, data, loadSeq);

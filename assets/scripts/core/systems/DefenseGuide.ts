@@ -12,7 +12,9 @@ export const DEFENSE_GUIDE_TEXT_FALLBACK_ZH_TW: Readonly<Record<string, string>>
     'ui.battle.defense.banner_deploy': '守城備戰：從左側兵種卡拖到我方底線的格子部署部隊；部署後按「結束回合」開戰',
     'ui.battle.defense.banner_ready': '部隊已就位：按「結束回合」開戰，守住城寨',
     'ui.battle.defense.blocked_end_turn': '尚未部署部隊，不能開戰！先把兵種卡拖到我方底線格子',
-    'ui.battle.defense.guard_granted': '兵力或糧草不足，發給你一張保底{0}卡（不扣糧草），拖到底線格子就能部署',
+    'ui.battle.defense.guard_granted': '保底券：只能用在{0}卡（不扣糧草），拖到底線格子就能部署',
+    'ui.battle.defense.guard_badge': '保',
+    'ui.battle.defense.guard_used': '已使用保底券',
 };
 
 export function fallbackDefenseGuideText(key: string, ...args: string[]): string {
@@ -40,4 +42,14 @@ export function isDefenseDeployBlocked(isPlayerDefending: boolean, playerTroopCo
 /** 引導橫幅文字鍵：未部署顯示部署說明，部署後改顯示開戰說明 */
 export function defenseBannerKey(playerTroopCount: number): string {
     return playerTroopCount > 0 ? 'ui.battle.defense.banner_ready' : 'ui.battle.defense.banner_deploy';
+}
+
+/** 這張卡是不是能用保底券：持券（ticketType 非空）且卡的兵種相同（卡面「保」小標依此顯示） */
+export function guardTicketApplies(ticketType: string | null | undefined, cardUnitType: string): boolean {
+    return !!ticketType && ticketType === cardUnitType;
+}
+
+/** 用券後要不要提示：部署前持券、部署後券已用掉 */
+export function guardTicketJustUsed(heldBefore: boolean, heldNow: boolean): boolean {
+    return heldBefore && !heldNow;
 }
