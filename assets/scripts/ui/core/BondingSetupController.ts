@@ -832,7 +832,7 @@ function parentTexts(side: 'father' | 'mother', general: BreedingGeneral | null,
 }
 
 /**
- * PROG-2-10037 結緣公式分項與小名揭曉入口（供提親流程呼叫）
+ * PROG-2-10037 結緣公式分項與小名揭曉入口（供提親流程呼叫，無寫死中文與 require）
  */
 export function getBondingBreakdownEntry(
     compatibilityK: number,
@@ -841,20 +841,23 @@ export function getBondingBreakdownEntry(
     matchmakerBonus: number = 0,
 ): { finalRate: number; lines: string[] } {
     const { BondingSuccessService } = require('../../core/systems/BondingSuccessService');
+    const { I18nSystem } = require('../../core/systems/I18nSystem');
+    const i18n = I18nSystem.instance;
     const bd = BondingSuccessService.calculateBondingProbability({
         compatibilityK,
         favorF,
         sincerityBonus,
         matchmakerBonus,
     });
+    const signed = (n: number) => (n >= 0 ? `+${n}` : `${n}`);
     return {
         finalRate: bd.finalRate,
         lines: [
-            `基礎：${bd.base}%`,
-            `相性：${bd.compatibility >= 0 ? '+' : ''}${bd.compatibility}%`,
-            `好感：${bd.favor >= 0 ? '+' : ''}${bd.favor}%`,
-            `誠意：+${bd.sincerity}%`,
-            `媒人：+${bd.matchmaker}%`,
+            i18n.t('ui.bonding.breakdown.base', String(bd.base)),
+            i18n.t('ui.bonding.breakdown.compatibility', signed(bd.compatibility)),
+            i18n.t('ui.bonding.breakdown.favor', signed(bd.favor)),
+            i18n.t('ui.bonding.breakdown.sincerity', signed(bd.sincerity)),
+            i18n.t('ui.bonding.breakdown.matchmaker', signed(bd.matchmaker)),
         ],
     };
 }

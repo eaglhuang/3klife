@@ -7,10 +7,10 @@ import { ThemeService } from '../core/ThemeService';
 const { ccclass, property } = _decorator;
 
 /**
- * 結緣公式分項與小名 8/12/15 歲三段揭曉可玩 UI 元件（PROG-2-10037）
- * - 使用 Widget 相對比例錨點，保留直式／手機橫式彈性，不寫死絕對座標。
- * - 透過 ThemeService 實際讀取 settle.* token（不寫死色碼）。
- * - 透過 I18nSystem.instance.t() 實際翻譯並格式化四語系鍵值。
+ * 結緣公式分項與小名 8/12/15 歲三段揭曉 UI 元件（PROG-2-10037）
+ * - 使用 Widget 相對比例錨點，保留直式／手機橫式彈性。
+ * - 透過 ThemeService 實際讀取 master 現有 settle.text.title / settle.text.value token。
+ * - 透過 I18nSystem.instance.t() 翻譯四語系鍵值，並由呼叫端傳入真實配偶與好感資料。
  */
 @ccclass('BondingAndEpithetPanel')
 export class BondingAndEpithetPanel extends Component {
@@ -37,7 +37,8 @@ export class BondingAndEpithetPanel extends Component {
         hasPartner: false,
     };
 
-    private _epithet: BloodlineEpithetDef = BloodlineEpithetService.drawBirthEpithet(0);
+    private _compatibilityK: number = 1.0;
+    private _epithet: BloodlineEpithetDef | null = null;
     private _currentAge: number = 8;
 
     protected onLoad(): void {
@@ -47,8 +48,21 @@ export class BondingAndEpithetPanel extends Component {
     }
 
     /**
-     * 套用相對比例錨點（保留直式／手機橫式彈性）
+     * 由外部（提親流程／人物頁）傳入真實配偶與子嗣資料
      */
+    public bindProposalData(
+        state: BondingProposalState,
+        compatibilityK: number,
+        epithet: BloodlineEpithetDef,
+        age: number = 8,
+    ): void {
+        this._proposalState = { ...state };
+        this._compatibilityK = compatibilityK;
+        this._epithet = epithet;
+        this._currentAge = age;
+        this.refreshDisplay();
+    }
+
     public applyResponsiveAnchors(): void {
         const widget = this.node.getComponent(Widget) ?? this.node.addComponent(Widget);
         widget.isAlignLeft = true;
@@ -63,29 +77,29 @@ export class BondingAndEpithetPanel extends Component {
     }
 
     /**
-     * 透過 ThemeService 實際讀取 settle.* token 並套用至 Label 顏色
+     * 透過 ThemeService 實際讀取 master 現有 settle.text.title / settle.text.value（深色文字配淺紙底）
      */
     public applySettleThemeTokens(): void {
         const theme = ThemeService.instance;
-        const titleHex = String(theme.getToken('settle.text.title') ?? theme.getToken('text.title') ?? '#f5e8c7');
-        const bodyHex = String(theme.getToken('settle.text.body') ?? theme.getToken('text.body') ?? '#d6c9b0');
+        const titleHex = String(theme.getToken('settle.text.title') ?? '#8A1C1C');
+        const valueHex = String(theme.getToken('settle.text.value') ?? '#3B2A1A');
 
         if (this.titleLabel) {
             this.titleLabel.color = new Color().fromHEX(titleHex);
         }
         if (this.breakdownLabel) {
-            this.breakdownLabel.color = new Color().fromHEX(bodyHex);
+            this.breakdownLabel.color = new Color().fromHEX(valueHex);
         }
         if (this.epithetStageLabel) {
-            this.epithetStageLabel.color = new Color().fromHEX(bodyHex);
+            this.epithetStageLabel.color = new Color().fromHEX(valueHex);
         }
     }
 
-    public onClickPropose(rollPercent: number = 99): void {
+    public onClickPropose(year: number, season: number, rollPercent: number): void {
         const res = BondingSuccessService.attemptBondingProposal(this._proposalState, {
-            year: 1,
-            season: 1,
-            compatibilityK: 1.0,
+            year,
+            season,
+            compatibilityK: this._compatibilityK,
             rollPercent,
         });
         this._proposalState = res.nextState;
@@ -106,12 +120,13 @@ export class BondingAndEpithetPanel extends Component {
         const i18n = I18nSystem.instance;
         const sincerity = BondingSuccessService.getSincerityBonus(this._proposalState.rejectCount);
         const bd = BondingSuccessService.calculateBondingProbability({
-            compatibilityK: 1.0,
+            compatibilityK: this._compatibilityK,
             favorF: this._proposalState.favorF,
             sincerityBonus: sincerity,
             matchmakerBonus: 0,
         });
-        const reveal = BloodlineEpithetService.getRevealStateAtAge(this._currentAge, this._epithet);
+        const epithet = this._epithet ?? BloodlineEpithetService.drawBirthEpithet(0);
+        const reveal = BloodlineEpithetService.getRevealStateAtAge(this._currentAge, epithet);
 
         const signed = (n: number) => (n >= 0 ? `+${n}` : `${n}`);
 
