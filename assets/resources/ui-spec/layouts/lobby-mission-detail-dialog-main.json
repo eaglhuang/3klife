@@ -272,6 +272,7 @@
                         "type": "panel",
                         "name": "EnvScoutPanel",
                         "id": "envScoutPanel",
+                        "skinSlot": "mission.dialog.env.bg",
                         "width": "100%",
                         "height": 122,
                         "_doc": "環境偵察（PROG-2-0403）：事實（一條一行，最多四行）與風險／期限一行，位於情報區最下方。PROG-2-9152 把事實行加高，長事實會換行而不是縮成小字。",

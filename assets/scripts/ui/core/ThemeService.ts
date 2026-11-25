@@ -8,7 +8,7 @@
  * Unity 對照：像 ThemeManager 單例；onThemeChanged ≈ 主題切換事件，release ≈ Addressables.Release。
  */
 import {
-    buildSkinStyle, mergeThemes, resolveActiveTheme,
+    buildFamilyStyle, buildSkinStyle, mergeThemes, resolveActiveTheme,
     type ResolvedTheme, type ThemeAssetRef, type ThemeContext, type ThemeRegistry, type ThemeTokenValue,
 } from './UIThemeResolver';
 import type { SkinStyleTokens } from './ThemeSkinRestyle';
@@ -28,6 +28,7 @@ export class ThemeService {
     private _registry: ThemeRegistry | null = null;
     private _resolved: ResolvedTheme | null = null;
     private _skinStyle: SkinStyleTokens | null = null;
+    private _familyStyles: SkinStyleTokens[] = [];
     private _handlers: Array<(e: ThemeChangeEvent) => void> = [];
 
     constructor(private readonly _releaseAsset: ThemeAssetReleaser = () => undefined) {}
@@ -86,6 +87,12 @@ export class ThemeService {
     /** 目前主題對應的 skin 風格角色表（快取，主題切換時重建） */
     skinStyle(): SkinStyleTokens | null { return this._skinStyle; }
 
+    /** 某個 skin 該套哪一組風格（大廳主風格或家族綁定，例如 settle 結算風格）；都不適用回 null。 */
+    skinStyleFor(skinId: string): SkinStyleTokens | null {
+        if (this.appliesToSkin(skinId)) return this._skinStyle;
+        return this._familyStyles.find(f => f.appliesToSkins.includes(skinId)) ?? null;
+    }
+
     /** 訂閱主題切換；回傳取消訂閱函式，請在畫面 onDestroy 呼叫。 */
     onThemeChanged(handler: (e: ThemeChangeEvent) => void): () => void {
         this._handlers.push(handler);
@@ -95,5 +102,7 @@ export class ThemeService {
     private _apply(resolved: ResolvedTheme): void {
         this._resolved = resolved;
         this._skinStyle = buildSkinStyle(resolved.tokens, this._registry!.styleBinding);
+        const families = this._registry!.familyBindings ?? {};
+        this._familyStyles = Object.keys(families).map(id => buildFamilyStyle(resolved.tokens, families[id], id));
     }
 }
