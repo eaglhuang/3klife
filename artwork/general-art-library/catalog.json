@@ -1453,7 +1453,7 @@
         ]
       },
       "smallAvatar": {
-        "activeVersion": "0001",
+        "activeVersion": "0003",
         "status": "review-pending",
         "history": [
           {
@@ -3581,8 +3581,19 @@
             "canvas": "1024x1536 RGBA",
             "alpha16BBox": "x=109,y=68,w=804,h=1425",
             "note": "B 姿勢重繪候選：三分之四側身向鏡頭，羽扇前伸施策；完整人物，透明背景，畫面寬度略收，待使用者審核。"
+          },
+          {
+            "version": "0003",
+            "file": "battle/xun_yu__荀彧__battle_0003.png",
+            "status": "review-pending",
+            "poseSelection": "B",
+            "sha256": "4448BC4758ADE159E4D19E80F590A4049209118674159520F899CCC248F476C2",
+            "canvas": "1024x1536 RGBA",
+            "alpha16BBox": "x=128,y=192,w=768,h=1152",
+            "note": "沿用荀彧施策羽扇戰鬥動作候選，等比縮入中央75%寬與上下安全區；依最新 bust 保持無鬚臉、官帽、魏藍／象牙／青玉服色，待總 PM 審核。"
           }
-        ]
+        ],
+        "activeVersion": "0003"
       },
       "standing": {
         "status": "integrated",
@@ -3590,10 +3601,21 @@
           {
             "version": "0002",
             "file": "standing/xun_yu__荀彧__standing_0002.png",
-            "status": "integrated"
+            "status": "superseded"
+          },
+          {
+            "version": "0003",
+            "file": "standing/xun_yu__荀彧__standing_0003.png",
+            "status": "review-pending",
+            "sha256": "C56E0D04F3227AD51CE6BAADCE2013BDC5EFE1795A09C269622D3F09ADDB9CFF",
+            "canvas": "1024x1536 RGBA",
+            "alpha16BBox": "x=149,y=192,w=737,h=1152",
+            "source": "artwork/temp/xun-yu-v7-rebuild-20261123/xun_yu__荀彧__standing_0003.png",
+            "note": "沿用最新荀彧設計，等比縮入中央75%寬及上下安全區；待總 PM 審核。"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003",
+        "status": "review-pending"
       },
       "avatar": {
         "status": "integrated",
@@ -3601,10 +3623,22 @@
           {
             "version": "0002",
             "file": "avatars/xun_yu__荀彧__avatar_0002.png",
-            "status": "integrated"
+            "status": "superseded"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/xun_yu__荀彧__avatar_0003.png",
+            "status": "review-pending",
+            "sha256": "826ab0c1ff27207f51a930f5af318943b2ce77700e2790ad80468301940d3245",
+            "canvas": "1254x1254 RGBA",
+            "source": "standing/xun_yu__荀彧__standing_0003.png",
+            "crop": "complete-chest-bust",
+            "cropBox": "x=399,y=192,w=388,h=388",
+            "note": "由最新站姿直接裁切，臉置中、完整保留帽冠與胸甲，下緣不含腰腹；待總 PM 審核。"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003",
+        "status": "review-pending"
       },
       "smallAvatar": {
         "activeVersion": "0001",
@@ -3613,13 +3647,24 @@
           {
             "version": "0001",
             "file": "small_avatars/xun_yu__荀彧__small_avatar_0001.png",
-            "status": "review-pending",
+            "status": "superseded",
             "sha256": "365718eee03aad24529b4a94b4af4295ac54064db36ce81bdfcf8fb236d1928b",
             "canvas": "1254x1254 RGBA",
             "source": "standing/xun_yu__荀彧__standing_0002.png",
             "crop": "shoulder-line",
             "cropBox": "x=380,y=0,w=420,h=420",
             "qc": "125px preview: direct crop from approved standing art; broad scholar hat, face and chin visible, face visually centered, shoulders at lower edge."
+          },
+          {
+            "version": "0003",
+            "file": "small_avatars/xun_yu__荀彧__small_avatar_0003.png",
+            "status": "review-pending",
+            "sha256": "109048140fcce4209461862e6b7c664defeac76b0c63fa678f7ec79012fed325",
+            "canvas": "1254x1254 RGBA",
+            "source": "standing/xun_yu__荀彧__standing_0003.png",
+            "crop": "shoulder-line",
+            "cropBox": "x=463,y=192,w=260,h=260",
+            "qc": "125px preview: crown and chin complete, face centered, head approx. 70-75% target, shoulder tops visible; pending PM review."
           }
         ]
       }
