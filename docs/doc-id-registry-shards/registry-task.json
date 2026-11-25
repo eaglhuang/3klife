@@ -17176,5 +17176,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10027.md",
     "title": "PROG-2-10027 實作年末榜單頒獎服務",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3100",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10035.md",
+    "title": "[PROG-2-10035] 大廳任務類視窗套用戰場結算風格（settle 皮膚家族）",
+    "category": "task"
   }
 ]
