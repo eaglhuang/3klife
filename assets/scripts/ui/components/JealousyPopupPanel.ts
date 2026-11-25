@@ -9,9 +9,9 @@ const { ccclass, property } = _decorator;
 
 /**
  * 吃醋三選項彈窗 UI 元件（PROG-2-10038）
- * - 使用 Widget 相對比例錨點，保留直式／手機橫式彈性，不寫死絕對座標。
- * - 透過 ThemeService 實際讀取 settle.* token（不寫死色碼）。
- * - 透過 I18nSystem.instance.t() 實際翻譯並以 config 數值參數化。
+ * - 使用 Widget 相對比例錨點，保留直式／手機橫式彈性。
+ * - 透過 ThemeService 實際讀取 master 現有 settle.text.value / settle.text.accent token。
+ * - 由呼叫端傳入真實配偶／玩家資料（bindJealousyState），透過 I18nSystem.instance.t() 翻譯。
  */
 @ccclass('JealousyPopupPanel')
 export class JealousyPopupPanel extends Component {
@@ -41,6 +41,14 @@ export class JealousyPopupPanel extends Component {
         this.refreshDisplay();
     }
 
+    /**
+     * 由外部事件呼叫端傳入真實玩家與配偶狀態
+     */
+    public bindJealousyState(state: JealousyState): void {
+        this._state = { ...state };
+        this.refreshDisplay();
+    }
+
     public applyResponsiveAnchors(): void {
         const widget = this.node.getComponent(Widget) ?? this.node.addComponent(Widget);
         widget.isAlignLeft = true;
@@ -54,16 +62,19 @@ export class JealousyPopupPanel extends Component {
         widget.updateAlignment();
     }
 
+    /**
+     * 透過 ThemeService 讀取 master 現有 settle.text.value / settle.text.accent（深色字配淺紙底）
+     */
     public applySettleThemeTokens(): void {
         const theme = ThemeService.instance;
-        const bodyHex = String(theme.getToken('settle.text.body') ?? theme.getToken('text.body') ?? '#d6c9b0');
-        const badgeHex = String(theme.getToken('settle.badge.text') ?? theme.getToken('settle.text.title') ?? '#f5e8c7');
+        const valueHex = String(theme.getToken('settle.text.value') ?? '#3B2A1A');
+        const accentHex = String(theme.getToken('settle.text.accent') ?? '#8A1C1C');
 
         if (this.bodyLabel) {
-            this.bodyLabel.color = new Color().fromHEX(bodyHex);
+            this.bodyLabel.color = new Color().fromHEX(valueHex);
         }
         if (this.titleUnlockedLabel) {
-            this.titleUnlockedLabel.color = new Color().fromHEX(badgeHex);
+            this.titleUnlockedLabel.color = new Color().fromHEX(accentHex);
         }
     }
 
