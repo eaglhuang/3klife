@@ -890,6 +890,12 @@ async function main() {
                 if (!hit) break;
                 await delay(900);
             }
+            // 通用保險：浮層（詳情窗）關閉鈕沒收掉時，點它自己的全螢幕遮罩（OverlayMask）收窗，
+            // 否則殘留的透明遮罩會擋住後面所有真滑鼠點擊（推進一季、底欄都點不到）
+            for (let i = 0; i < 3 && (await rm.present({ name: MISSION_DIALOG })); i++) {
+                if (!(await rm.tryClick({ name: '^OverlayMask$', under: MISSION_DIALOG }))) await page.keyboard.press('Escape');
+                await delay(900);
+            }
         };
         /** 點左牆第一張任務卡，等詳情窗出現，核對任務名稱。回傳 { title, dialogTexts } */
         const openFirstWallCard = async (rec, wall = WALL_LEFT) => {
@@ -2143,10 +2149,14 @@ async function main() {
             const stepByName = (n) => report.steps.find((x) => x.name === n);
             const loopStep = stepByName('lobby-mission-loop');
             const advStep = stepByName('lobby-advance-season');
+            const commerceStep = stepByName('lobby-commerce-silver');
+            const battleStep = stepByName('battle-to-settlement');
             yearReport.baselineQuarters = [
                 loopStep && { via: 'lobby-mission-loop（原第 6 步）', ok: loopStep.ok, popups: loopStep.detail.advances, reportTexts: (loopStep.detail.reportCaptures || []).map((c) => c.texts), topBefore: loopStep.detail.topBefore, topAfter: loopStep.detail.topAfterAdvance, wallHeadAfter: loopStep.detail.wallHeadAfterSettle },
-                advStep && { via: 'lobby-advance-season（原第 7 步）', ok: advStep.ok, popups: (advStep.detail.popups || []).map((p) => p.kind), seasonBefore: advStep.detail.seasonBefore, seasonAfter: advStep.detail.seasonAfter },
+                commerceStep && { via: 'lobby-commerce-silver（原第 7 步，派任務後推進一季）', ok: commerceStep.ok },
+                advStep && { via: 'lobby-advance-season（原第 8 步）', ok: advStep.ok, popups: (advStep.detail.popups || []).map((p) => p.kind), seasonBefore: advStep.detail.seasonBefore, seasonAfter: advStep.detail.seasonAfter },
             ].filter(Boolean);
+            yearReport.baselineBattle = battleStep ? { ok: battleStep.ok, castOk: Boolean(battleStep.detail && battleStep.detail.firstBattle && battleStep.detail.firstBattle.tactic && battleStep.detail.firstBattle.tactic.ok) } : null;
             // 起點：目前季別；跑到「第 2 年春」（序數 8）為止，最多 6 季保險
             const endOrdinal = Number(args['year-end-ordinal'] || 8);
             for (let q = 0; q < 6; q++) {
@@ -2377,6 +2387,8 @@ async function main() {
                 const verdict = evaluateFullYear({
                     startOrdinal: (yearReport.quarters[0] || {}).ordinal ?? null,
                     baselineAdvances: yearReport.baselineQuarters.filter((x) => x.ok).length,
+                    baselineCasts: yearReport.baselineBattle && yearReport.baselineBattle.castOk ? 1 : 0,
+                    baselineBattles: yearReport.baselineBattle && yearReport.baselineBattle.ok ? 1 : 0,
                     endOrdinal: endSeasonNow.ordinal,
                     quarters: yearReport.quarters,
                     config: { minCasts: Number(args['min-casts'] || 1) },
