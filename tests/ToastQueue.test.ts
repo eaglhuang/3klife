@@ -4,7 +4,7 @@
  * Unity 對照：EditMode Test，只驗排隊規則，不開 Scene。
  */
 import { assert, TestSuite } from './TestRunner';
-import { MAX_PENDING, mergeHeldToasts, MIN_READ_SECONDS, QUEUED_MAX_HOLD_SECONDS, ToastQueue, toastHoldSeconds } from '../assets/scripts/ui/core/ToastQueue';
+import { BATTLE_TOAST_MAX_HOLD_SEC, BATTLE_TOAST_STALE_SEC, battleToastHoldSeconds, dropStaleToasts, isToastStale, MAX_PENDING, mergeHeldToasts, MIN_READ_SECONDS, QUEUED_MAX_HOLD_SECONDS, ToastQueue, toastHoldSeconds } from '../assets/scripts/ui/core/ToastQueue';
 import { turnBannerVisibleSeconds } from '../assets/scripts/ui/core/TurnBannerTiming';
 
 function toast(message: string): { message: string } {
@@ -94,6 +94,24 @@ export function createToastQueueSuite(): TestSuite {
         assert.isTrue(turnBannerVisibleSeconds(1.4) > 1.4, '比排定時間多留掛載餘裕');
         assert.isTrue(turnBannerVisibleSeconds(1.4) < 2, '不會拖太久');
         assert.isTrue(turnBannerVisibleSeconds(0.2) >= 0.8, '短橫幅仍有淡入＋最短停留＋淡出');
+    });
+
+    suite.test('戰場提示單句停留有上限，排隊時仍縮短（QA 11/25）', () => {
+        assert.equals(BATTLE_TOAST_MAX_HOLD_SEC, battleToastHoldSeconds(5, 0), '呼叫端傳 5 秒也只停上限');
+        assert.equals(1.2, battleToastHoldSeconds(1.2, 0), '短提示不被拉長');
+        assert.equals(QUEUED_MAX_HOLD_SECONDS, battleToastHoldSeconds(5, 2), '有人排隊用較短的上限');
+    });
+
+    suite.test('排太久的提示視為過期，不補播（QA 11/25）', () => {
+        const now = 100000;
+        assert.isFalse(isToastStale(now - 1000, now));
+        assert.isTrue(isToastStale(now - BATTLE_TOAST_STALE_SEC * 1000 - 1, now));
+        const kept = dropStaleToasts([
+            { message: '舊', queuedAtMs: now - 9000 },
+            { message: '新', queuedAtMs: now - 500 },
+            { message: '沒時間戳' },
+        ], now);
+        assert.equals('新,沒時間戳', kept.map((t) => t.message).join(','));
     });
 
     return suite;

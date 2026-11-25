@@ -74,3 +74,30 @@ export function mergeHeldToasts<T extends { message: string }>(earlier: readonly
     }
     return out.length > MAX_PENDING ? out.slice(out.length - MAX_PENDING) : out;
 }
+
+/**
+ * 戰場提示條（QA 11/25）：長提示條停在棋盤中央好幾回合，壓住單位與血條。
+ * 兩道限制（數值集中在這裡，改這兩個常數即可調整）：
+ * - 單句最長停留 BATTLE_TOAST_MAX_HOLD_SEC（呼叫端傳 5 秒也只停這麼久）。
+ * - 排隊或被回合橫幅暫存的提示超過 BATTLE_TOAST_STALE_SEC 還沒播，就視為過期丟掉：
+ *   過了好幾秒的提示講的是上一回合的事，補播只會讓玩家以為提示一直在。
+ */
+export const BATTLE_TOAST_MAX_HOLD_SEC = 3.5;
+export const BATTLE_TOAST_STALE_SEC = 4;
+/** 提示條上緣距畫面頂端（設計解析度 1920×1080）；標題列 ~86 之下、棋盤上緣之上，不壓棋盤主要區域 */
+export const BATTLE_TOAST_TOP_PX = 92;
+
+/** 戰場提示實際停留秒數：先套排隊縮短規則，再套單句上限 */
+export function battleToastHoldSeconds(requestedSeconds: number, pendingCount: number): number {
+    return Math.min(toastHoldSeconds(requestedSeconds, pendingCount), BATTLE_TOAST_MAX_HOLD_SEC);
+}
+
+/** 這句提示從排進去到現在是否已過期 */
+export function isToastStale(queuedAtMs: number, nowMs: number, staleSec: number = BATTLE_TOAST_STALE_SEC): boolean {
+    return nowMs - queuedAtMs > staleSec * 1000;
+}
+
+/** 濾掉過期的提示（保留順序）；queuedAtMs 缺值的視為剛排進去 */
+export function dropStaleToasts<T extends { queuedAtMs?: number }>(toasts: readonly T[], nowMs: number, staleSec: number = BATTLE_TOAST_STALE_SEC): T[] {
+    return toasts.filter((toast) => toast.queuedAtMs === undefined || !isToastStale(toast.queuedAtMs, nowMs, staleSec));
+}

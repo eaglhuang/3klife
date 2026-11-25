@@ -417,6 +417,8 @@
   "ui.ultimate.unassigned_toast": "No castable ultimate assigned yet",
   "ui.battle.skill.source_tactic": "Tactic",
   "ui.battle.skill.charging": "{0} charging, not enough SP",
+  "ui.battle.autoplay.no_sortie": "No sortie force in this battle: Auto-play will only end turns automatically",
+  "ui.battle.delegate.unavailable": "No sortie force in this battle: delegation unavailable",
   "ui.battle.last_spurt.entered": "Turn {0} · Last Spurt!",
   "ui.battle.stamina.exhausted_player": "Our general is exhausted: Last Spurt lost",
   "ui.battle.stamina.exhausted_enemy": "Enemy general is exhausted: Last Spurt lost",
