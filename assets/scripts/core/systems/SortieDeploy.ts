@@ -708,6 +708,21 @@ export function applyDeploy(state: SortieState, unitId: string, request: DeployR
     };
 }
 
+/**
+ * 保底兵登記（PROG-2-10023）：不扣軍勢與糧草，只在帳本登記該隊（troopCost 0，陣亡或撤退不返還兵力）。
+ * 只給守城「確實無法部署」時的保底步兵卡用；不改任何一般部署的扣費規則。
+ */
+export function applyFreeDeploy(state: SortieState, unitId: string, request: DeployRequest): SortieState {
+    if (state.units[unitId]) return state;
+    return {
+        ...state,
+        units: {
+            ...state.units,
+            [unitId]: { unitId, troopCost: 0, currentTroops: 0, isElite: false, retired: false, isSiegeEngine: isSiegeEngineRequest(request) },
+        },
+    };
+}
+
 /** 依血量比例換算該隊剩餘兵力（Current_Troops 即分隊生命） */
 export function troopsFromHp(troopCost: number, currentHp: number, maxHp: number): number {
     if (!(maxHp > 0)) return 0;

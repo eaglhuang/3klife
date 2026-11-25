@@ -17128,5 +17128,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10022.md",
     "title": "[PROG-2-10022] 首年四季全程實玩腳本 playtest-online --full-year（逐季斷言）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3091",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10023.md",
+    "title": "[PROG-2-10023] 年終守城保底步兵卡與自動代打放行（AI 代為部署）",
+    "category": "task"
   }
 ]

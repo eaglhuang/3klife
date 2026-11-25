@@ -513,6 +513,10 @@ export class BattleScene extends Component {
       if (!battleParams.tutorial && this.ctrl?.state.siegeDefender === Faction.Player) {
         const lookup = withDefenseGuideFallback((key, ...args) => services().i18n.t(key, ...args));
         this.deployRuntime?.showToast(lookup('ui.battle.defense.entry', String(this.ctrl.defenseBattle.turnLimit)), 5);
+        // 保底兵（PROG-2-10023）：沒卡或糧草不足以部署任何兵種時發一張步兵卡，閘門才不會卡死
+        if (this.ctrl.grantDefenseGuardInfantry()) {
+          this.deployRuntime?.showToast(lookup('ui.battle.defense.guard_granted', services().i18n.t('ui.general.aptitude.troop_infantry')), 5);
+        }
         this.defenseGuide = new DefenseDeployGuide(services().event, lookup, hint => services().event.emit('first-battle-guide', hint), 0);
       }
 

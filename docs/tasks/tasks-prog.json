@@ -18456,10 +18456,57 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_3091",
+      "id": "PROG-2-10023",
+      "title": "年終守城保底步兵卡與自動代打放行（AI 代為部署）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-25",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-25T17:11:06+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "守城開戰前無可部署兵種卡或糧草不足以部署時，自動發一張保底步兵卡（免糧草免軍勢、每場一次、四語 Toast）；自動代打改由 AI 部署，閘門只擋手動結束回合。不改戰場規則與數值。",
+      "related": [
+        "PROG-2-10019",
+        "PROG-2-9707"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-25 | 狀態: done | 驗證: tsc 測試設定 0 錯、run-cli 9590 通過、compute-gate quick 4/4；未做實機截圖 | 變更: BattleController 新增 grantDefenseGuardInfantry／保底步兵券（免軍勢免糧草、每場一次、只換步兵，AI 代打也會用）、SortieDeploy.applyFreeDeploy 只登記帳本不扣費；BattleScene 進場發券並 Toast（四語 guard_granted，{0}=兵種名）；自動代打移出閘門（AI 沿用既有委任部署，守城本來就會部署），閘門只擋手動結束回合；tests/DefenseGuide.test.ts 補 5 組 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
-    "done": 331,
+    "done": 332,
     "in_progress": 4,
     "open": 87,
     "total": 422
