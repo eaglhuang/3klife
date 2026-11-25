@@ -16,6 +16,8 @@ import {
     type BattleWeatherSeasonTable,
 } from '../assets/scripts/core/systems/BattleWeatherRoll';
 import { weatherPreBattleLine } from '../assets/scripts/core/systems/WeatherEffectText';
+import { evaluateTacticConditions, type TacticCondition } from '../assets/scripts/core/systems/TacticCondition';
+import { TroopType } from '../assets/scripts/core/config/Constants';
 
 const TABLE = validateBattleWeatherSeasonTable(JSON.parse(
     fs.readFileSync(path.join(__dirname, '../assets/resources/data/battle-weather-season.json'), 'utf8'),
@@ -109,6 +111,26 @@ export function createBattleWeatherRollSuite(): TestSuite {
         assert.equals('天氣：晴天', weatherPreBattleLine(Weather.Clear));
         assert.isTrue(weatherPreBattleLine(Weather.Windy).includes('火計傷害 ×2'));
         assert.isTrue(weatherPreBattleLine(Weather.Windy).includes('遠程射程 -2'));
+    });
+
+    suite.test('虎牢關之戰（首戰）固定大風：天氣為 WINDY、戰前文字只有一行、火計條件達成（總PM 裁決）', () => {
+        const encounters = JSON.parse(fs.readFileSync(path.join(__dirname, '../assets/resources/data/encounters.json'), 'utf8')).encounters as Array<{ id: string; weather?: string; playerGeneralId?: string }>;
+        const hugulao = encounters.find((e) => e.id === 'encounter-001')!;
+        assert.equals('WINDY', hugulao.weather);
+        // 其他劇情關天氣不受影響
+        assert.equals('FOG', encounters.find((e) => e.id === 'encounter-002')!.weather);
+        const rolled = rollBattleWeather({ season: 1, table: TABLE, encounter: hugulao, rng: () => 0.99 });
+        assert.equals(Weather.Windy, rolled.weather);
+        assert.equals('fixed', rolled.source);
+        // 戰前顯示：一行，只出現一次「天氣：」，大風火計×2、射程-2
+        const line = weatherPreBattleLine(rolled.weather);
+        assert.equals('天氣：大風（遠程射程 -2、火計傷害 ×2）', line);
+        assert.equals(1, line.split('天氣：').length - 1);
+        // 張飛首格戰法（火計佈陣）的條件：大風可發動
+        const lib = JSON.parse(fs.readFileSync(path.join(__dirname, '../assets/resources/data/master/tactic-library.json'), 'utf8')).data as Array<{ id: string; tcond?: TacticCondition[] }>;
+        const fire = lib.find((t) => t.id === 'tactic-fire-scheme')!;
+        const ctx = { casterTroopType: TroopType.Infantry, weather: rolled.weather, adjacentAllies: 0, adjacentEnemies: 0 };
+        assert.isTrue(evaluateTacticConditions(fire.tcond, ctx).ok);
     });
 
     return suite;

@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — 其它類
 
-> 生成日期: 2026-11-23
+> 生成日期: 2026-11-25
 > 這是 `doc-id-registry.md` 的「其它類」分片，第 7/7 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-other.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -268,3 +268,4 @@
 | `doc_other_4238` | docs/ui-vibe-pipeline-shards/ui-pipeline-tail.md | UI Vibe Pipeline — 量產與管線（§10–§16） |
 | `doc_other_4239` | docs/ui-vibe-pipeline-shards/ui-skill-ops.md | UI Vibe Pipeline — Skill 與分工（§7 · When to Use · Procedure · References · §8–§9） |
 | `doc_other_4240` | docs/web-playtest-online.md | 線上試玩版無頭實玩驗收（playtest-online） |
+| `doc_other_4241` | docs/reports/q4-generals-bow-rule-and-route-1125.md | Q4 武將：持弓驗收規則 與 下一輪做法（11/25） |

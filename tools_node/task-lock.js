@@ -36,6 +36,10 @@ function main(argv = process.argv.slice(2), adapter = new LockAdapter(createLock
   const taskIdOrPrefix = rawArgs[1];
   const explicitAgentName = rawArgs[2] && !String(rawArgs[2]).startsWith('--') ? rawArgs[2] : '';
   const agentName = explicitAgentName || adapter.getDefaultAgentName();
+  if (!explicitAgentName && agentName && ['lock', 'reserve', 'unlock'].includes(command)) {
+    const source = typeof adapter.getDefaultAgentSource === 'function' ? adapter.getDefaultAgentSource() : '';
+    console.error(`ℹ️ 未傳入 agent-name，改用預設身分 "${agentName}"${source ? `（來源：${source}）` : ''}；若不是你，請在卡號後面直接傳入你的 agent-name。`);
+  }
   const files = parseFiles(rawArgs);
 
   switch (command) {

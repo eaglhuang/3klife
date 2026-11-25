@@ -11,6 +11,7 @@ const {
     reserveNextTaskId,
     reserveTaskIdOrNext,
 } = require('../../lib/task-id-guard');
+const { dropSharedReservation } = require('../../lib/task-id-remote-occupancy');
 const { createLockAdapterConfig } = require('./lock-adapter-config');
 
 let yamlParser = null;
@@ -90,6 +91,12 @@ class LockAdapter {
 
     buildScopeFingerprint(files) {
         return handoffDiff.buildScopeFingerprint(this.projectRoot, files);
+    }
+
+    getDefaultAgentSource() {
+        const derived = deriveAgentIdentity({ cwd: this.projectRoot });
+        const labels = { env: 'AGENT_IDENTITY 環境變數', 'claude-code-env': 'Claude Code 環境', originator: 'Codex originator', 'git-config': 'git user.name' };
+        return derived && derived.ok ? (labels[derived.source] || derived.source || '') : '';
     }
 
     getDefaultAgentName() {
@@ -486,6 +493,12 @@ class LockAdapter {
             return;
         }
         fs.unlinkSync(lp);
+        // A reservation that never became a card is abandoned: release the
+        // shared claim too, so other worktrees can use the id again.
+        const abandonedReservation = existing.reservationOnly && !findTaskCardPath(this.projectRoot, taskId);
+        const sharedReleased = abandonedReservation
+            ? dropSharedReservation(this.projectRoot, { taskId, agentName: existing.agentName })
+            : false;
         this.appendTrace({
             command: 'unlock',
             outcome: 'success',
@@ -495,6 +508,7 @@ class LockAdapter {
             files: Array.isArray(existing.files) ? existing.files : [],
             scopeFingerprint: String(existing.scopeFingerprint || '').trim(),
             humanOverride,
+            sharedReleased,
         });
         if (humanOverride) {
             console.log(`🔓 已由人類 "${agentName}" 覆寫解鎖 "${taskId}"（原鎖定者: "${existing.agentName}"）`);
