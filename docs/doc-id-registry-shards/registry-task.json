@@ -17104,5 +17104,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10019.md",
     "title": "[PROG-2-10019] 年終守城玩家引導：進場提示、部署階段橫幅、未部署警告（四語 i18n）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3085",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10016.md",
+    "title": "[PROG-2-10016] 武將詳情技能預覽只播音效與浮字（方案 C）",
+    "category": "task"
   }
 ]
