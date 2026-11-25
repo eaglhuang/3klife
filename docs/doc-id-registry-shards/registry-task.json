@@ -17140,5 +17140,17 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10024.md",
     "title": "[PROG-2-10024] playtest-online --full-year 殘留浮層遮罩收窗與實跑驗證",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3093",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10000.md",
+    "title": "PROG-2-10000: 親生子嗣登記缺口修補",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3094",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10027.md",
+    "title": "PROG-2-10027 實作年末榜單頒獎服務",
+    "category": "task"
   }
 ]

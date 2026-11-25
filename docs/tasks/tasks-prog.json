@@ -18561,12 +18561,20 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "id": "PROG-2-10027",
+      "title": "實作年末榜單頒獎服務：NPC 補位至 4 人、名次獎勵、驚喜獎與第 2~5 年曲線",
+      "status": "done",
+      "priority": "P1",
+      "owner": "antigravity",
+      "file": "docs/agent-briefs/tasks/PROG/PROG-2-10027.md"
     }
   ],
   "summary": {
-    "done": 333,
+    "done": 334,
     "in_progress": 4,
     "open": 87,
-    "total": 423
+    "total": 424
   }
 }
