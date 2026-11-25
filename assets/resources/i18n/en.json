@@ -1360,14 +1360,15 @@
   "bloodline.epithet.46": "Benevolent Lad",
   "bloodline.epithet.47": "Smiling Little Lucky Star",
   "bloodline.epithet.48": "Mansion Nap Champion Hopeful",
-  "ui.bonding.breakdown.base": "Base",
-  "ui.bonding.breakdown.compatibility": "Compatibility",
-  "ui.bonding.breakdown.favor": "Favor",
-  "ui.bonding.breakdown.sincerity": "Sincerity",
-  "ui.bonding.breakdown.matchmaker": "Matchmaker",
+  "ui.bonding.breakdown.base": "Base: {0}%",
+  "ui.bonding.breakdown.compatibility": "Affinity: {0}%",
+  "ui.bonding.breakdown.favor": "Favor: {0}%",
+  "ui.bonding.breakdown.sincerity": "Sincerity: {0}%",
+  "ui.bonding.breakdown.matchmaker": "Matchmaker: {0}%",
   "ui.bloodline.stage.omen_8": "Age 8: First Hint",
   "ui.bloodline.stage.trait_12": "Age 12: Trait Emerges",
   "ui.bloodline.stage.revealed_15": "Age 15: Epithet Revealed",
   "ui.bloodline.epithet.title": "Epithet",
-  "ui.bloodline.stage.hidden": "Not Yet Revealed"
+  "ui.bloodline.stage.hidden": "Not Yet Revealed",
+  "ui.bonding.title": "Bonding Rate: {0}%"
 }

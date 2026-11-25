@@ -1292,14 +1292,15 @@
   "bloodline.epithet.46": "仁徳坊や",
   "bloodline.epithet.47": "にこにこ小福星",
   "bloodline.epithet.48": "屋敷の居眠り王候補",
-  "ui.bonding.breakdown.base": "基礎",
-  "ui.bonding.breakdown.compatibility": "相性",
-  "ui.bonding.breakdown.favor": "好感",
-  "ui.bonding.breakdown.sincerity": "誠意",
-  "ui.bonding.breakdown.matchmaker": "仲人",
+  "ui.bonding.breakdown.base": "基礎：{0}%",
+  "ui.bonding.breakdown.compatibility": "相性：{0}%",
+  "ui.bonding.breakdown.favor": "好感：{0}%",
+  "ui.bonding.breakdown.sincerity": "誠意：{0}%",
+  "ui.bonding.breakdown.matchmaker": "仲人：{0}%",
   "ui.bloodline.stage.omen_8": "8歳・兆し",
   "ui.bloodline.stage.trait_12": "12歳・資質の顕現",
   "ui.bloodline.stage.revealed_15": "15歳・通り名の公開",
   "ui.bloodline.epithet.title": "通り名",
-  "ui.bloodline.stage.hidden": "未公開"
+  "ui.bloodline.stage.hidden": "未公開",
+  "ui.bonding.title": "縁組成功率：{0}%"
 }
