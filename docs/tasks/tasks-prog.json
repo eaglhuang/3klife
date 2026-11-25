@@ -18617,12 +18617,20 @@
       "priority": "P1",
       "owner": "ClaudeCode_claude-opus-5-5",
       "brief": "docs/agent-briefs/tasks/PROG/PROG-2-10025.md"
+    },
+    {
+      "id": "PROG-2-10026",
+      "title": "結緣透明加法公式、誠意累積（+12%/次）與第1年第3季紅娘叩門保底",
+      "status": "done",
+      "priority": "P0",
+      "owner": "Antigravity",
+      "brief": "docs/agent-briefs/tasks/PROG/PROG-2-10026.md"
     }
   ],
   "summary": {
-    "done": 338,
+    "done": 339,
     "in_progress": 4,
     "open": 87,
-    "total": 429
+    "total": 430
   }
 }

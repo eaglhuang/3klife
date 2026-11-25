@@ -17152,5 +17152,17 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10025.md",
     "title": "[PROG-2-10025] 戰場單挑勝利／計謀橫幅不蓋 HUD 資訊",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3096",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10026.md",
+    "title": "PROG-2-10026: 結緣透明加法、誠意累積與紅娘叩門保底",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3097",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10000.md",
+    "title": "PROG-2-10000: 親生子嗣登記缺口修補",
+    "category": "task"
   }
 ]
