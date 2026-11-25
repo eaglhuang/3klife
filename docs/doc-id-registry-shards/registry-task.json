@@ -17146,5 +17146,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10028.md",
     "title": "[PROG-2-10028] 戰場手感修正：揚塵粒子分散、掠奪跳字依序錯開、倒下擬聲字偏移",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3095",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10025.md",
+    "title": "[PROG-2-10025] 戰場單挑勝利／計謀橫幅不蓋 HUD 資訊",
+    "category": "task"
   }
 ]
