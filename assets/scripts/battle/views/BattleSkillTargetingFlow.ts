@@ -11,6 +11,7 @@ import {
 } from '../../shared/BattleSkillPresentation';
 import { BattleSkillTargetMode, SkillSourceType } from '../../shared/SkillRuntimeContract';
 import { WEATHER_RESTRICTION_TOAST, checkTacticWeather } from '../../core/systems/WeatherTacticRestriction';
+import { describeTacticCondition } from '../../core/systems/TacticCondition';
 import { Faction, GAME_CONFIG } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
 
@@ -89,6 +90,15 @@ export class BattleSkillTargetingFlow {
     if (!weatherCheck.allowed) {
       this.ctx.showToast(weatherCheck.reason ?? WEATHER_RESTRICTION_TOAST, 1.5);
       return;
+    }
+
+    // 戰法自己的施放條件（例如火計要起風）沒達成：講出條件，不要等施放失敗只丟一句「發動失敗」（PROG-2-9989）
+    if (sourceType === SkillSourceType.SeedTactic) {
+      const unmet = ctrl.getPlayerSeedTacticUnmetCondition();
+      if (unmet) {
+        this.ctx.showToast(services().i18n.t('ui.battle.skill.condition_unmet', sourceLabel, describeTacticCondition(unmet).full), 2);
+        return;
+      }
     }
 
     // 再次點選同一技能 → 取消
