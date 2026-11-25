@@ -9,6 +9,9 @@ import {
     buildAcademyEmptyGuardViewState,
     academyEnrollCandidateAges,
 } from '../assets/scripts/ui/core/AcademyEmptyGuardView';
+import { fillI18nArgs } from '../assets/scripts/core/systems/I18nSystem';
+import * as fs from 'fs';
+import * as path from 'path';
 
 export function createAcademyEmptyGuardViewSuite(): TestSuite {
     const suite = new TestSuite('AcademyEmptyGuardView (PROG-2-9614)');
@@ -78,6 +81,17 @@ export function createAcademyEmptyGuardViewSuite(): TestSuite {
         const members = [{ personId: 'adoptee', kind: 'adopted' }, { personId: 'dead_kid', kind: 'biological' }, { personId: 'captive_kid', kind: 'retainerChild' }];
         assert.isTrue(guardFor(roster, members, []).canOpenEnrollView, '滿 15 歲義子應可入學');
         assert.isFalse(guardFor(roster.filter((g) => g.id !== 'adoptee'), members, []).canOpenEnrollView, '已歿與被俘者不算候選');
+    });
+
+    suite.test('守衛提示字串四語系都用 {0}{1}{2} 位置佔位符，LobbyScene 代入後不殘留大括號（QA 11/25）', () => {
+        for (const locale of ['zh-TW', 'zh-CN', 'en', 'ja']) {
+            const strings = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'assets', 'resources', 'i18n', `${locale}.json`), 'utf8'));
+            const young = fillI18nArgs(strings['ui.academy.empty_guard.too_young_desc'], ['12', '15', '3']);
+            assert.isFalse(/\{[^}]*\}/.test(young), `${locale} too_young_desc 殘留佔位符：${young}`);
+            assert.isTrue(young.includes('12') && young.includes('15') && young.includes('3'), `${locale} too_young_desc 應代入年齡、門檻、差距`);
+            const none = fillI18nArgs(strings['ui.academy.empty_guard.no_child_desc'], ['15']);
+            assert.isFalse(/\{[^}]*\}/.test(none), `${locale} no_child_desc 殘留佔位符：${none}`);
+        }
     });
 
     return suite;
