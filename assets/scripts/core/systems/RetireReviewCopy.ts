@@ -38,6 +38,10 @@ export interface QuarterlyBattleReport {
     readonly reportLine: string;
     /** 劇本句：本季戰報：{Name} 精力剩 X%，不建議進行結緣。 */
     readonly scriptLine: string;
+    /** 武將名字（精力列的句子要用） */
+    readonly generalName: string;
+    /** 精力百分比（0~100），季度戰報的精力列直接顯示（PROG-2-9994） */
+    readonly vitalityPct: number;
     /** 是否建議結緣；精力在高區（> 50%）才建議（暫定） */
     readonly bondRecommended: boolean;
 }
@@ -52,6 +56,8 @@ export function quarterlyBattleReport(name: string, vitalityPct: number): Quarte
     return {
         reportLine: `戰損報告：精力 ${pct}%`,
         scriptLine: `本季戰報：${name} 精力剩 ${pct}%，${bondRecommended ? '可進行結緣。' : '不建議進行結緣。'}`,
+        generalName: name,
+        vitalityPct: pct,
         bondRecommended,
     };
 }

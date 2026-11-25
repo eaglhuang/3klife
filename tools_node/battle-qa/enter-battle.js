@@ -48,7 +48,7 @@ window.__enterBattle = 'running';
     // 所以不寫死順序：每輪看畫面上有哪個就點哪個，直到進入戰場。
     for (let i = 0; i < 40 && !b.battle(); i += 1) {
       let hit = null;
-      for (const text of ['親自指揮', '強行出征', '戰場']) { if (b.findLabels(text).length) { b.tapLabel(text, 0); hit = text; break; } }
+      for (const text of ['確認出戰', '親自指揮', '強行出征', '戰場']) { if (b.findLabels(text).length) { b.tapLabel(text, 0); hit = text; break; } }
       if (!hit && b.findLabels('戰前偵查').length) { const h = b.findLabels('出征'); if (h.length) { b.tapNode(h[h.length - 1]); hit = '戰前偵查出征'; } }
       if (!hit && i === 3) { b.tapLabel('出征', -1); hit = '出征（重試）'; }
       if (hit) mark(hit);

@@ -174,13 +174,13 @@
                     "type": "panel",
                     "name": "Row0",
                     "width": "100%",
-                    "height": 72,
+                    "height": 48,
                     "skinSlot": "season-report.row.bg",
                     "layout": {
                       "type": "horizontal",
                       "spacing": 12,
-                      "paddingTop": 8,
-                      "paddingBottom": 8,
+                      "paddingTop": 4,
+                      "paddingBottom": 4,
                       "paddingLeft": 20,
                       "paddingRight": 20
                     },
@@ -189,7 +189,7 @@
                         "type": "label",
                         "name": "RankLabel",
                         "width": 80,
-                        "height": 56,
+                        "height": 40,
                         "styleSlot": "season-report.text.primary",
                         "text": "-"
                       },
@@ -197,7 +197,7 @@
                         "type": "label",
                         "name": "LineLabel",
                         "width": 600,
-                        "height": 56,
+                        "height": 40,
                         "styleSlot": "season-report.text.secondary",
                         "text": "-"
                       }
@@ -207,13 +207,13 @@
                     "type": "panel",
                     "name": "Row1",
                     "width": "100%",
-                    "height": 72,
+                    "height": 48,
                     "skinSlot": "season-report.row.bg",
                     "layout": {
                       "type": "horizontal",
                       "spacing": 12,
-                      "paddingTop": 8,
-                      "paddingBottom": 8,
+                      "paddingTop": 4,
+                      "paddingBottom": 4,
                       "paddingLeft": 20,
                       "paddingRight": 20
                     },
@@ -222,7 +222,7 @@
                         "type": "label",
                         "name": "RankLabel",
                         "width": 80,
-                        "height": 56,
+                        "height": 40,
                         "styleSlot": "season-report.text.primary",
                         "text": "-"
                       },
@@ -230,7 +230,7 @@
                         "type": "label",
                         "name": "LineLabel",
                         "width": 600,
-                        "height": 56,
+                        "height": 40,
                         "styleSlot": "season-report.text.secondary",
                         "text": "-"
                       }
@@ -240,13 +240,13 @@
                     "type": "panel",
                     "name": "Row2",
                     "width": "100%",
-                    "height": 72,
+                    "height": 48,
                     "skinSlot": "season-report.row.bg",
                     "layout": {
                       "type": "horizontal",
                       "spacing": 12,
-                      "paddingTop": 8,
-                      "paddingBottom": 8,
+                      "paddingTop": 4,
+                      "paddingBottom": 4,
                       "paddingLeft": 20,
                       "paddingRight": 20
                     },
@@ -255,7 +255,7 @@
                         "type": "label",
                         "name": "RankLabel",
                         "width": 80,
-                        "height": 56,
+                        "height": 40,
                         "styleSlot": "season-report.text.primary",
                         "text": "-"
                       },
@@ -263,7 +263,7 @@
                         "type": "label",
                         "name": "LineLabel",
                         "width": 600,
-                        "height": 56,
+                        "height": 40,
                         "styleSlot": "season-report.text.secondary",
                         "text": "-"
                       }
@@ -273,13 +273,13 @@
                     "type": "panel",
                     "name": "Row3",
                     "width": "100%",
-                    "height": 72,
+                    "height": 48,
                     "skinSlot": "season-report.row.bg",
                     "layout": {
                       "type": "horizontal",
                       "spacing": 12,
-                      "paddingTop": 8,
-                      "paddingBottom": 8,
+                      "paddingTop": 4,
+                      "paddingBottom": 4,
                       "paddingLeft": 20,
                       "paddingRight": 20
                     },
@@ -288,7 +288,7 @@
                         "type": "label",
                         "name": "RankLabel",
                         "width": 80,
-                        "height": 56,
+                        "height": 40,
                         "styleSlot": "season-report.text.primary",
                         "text": "-"
                       },
@@ -296,7 +296,7 @@
                         "type": "label",
                         "name": "LineLabel",
                         "width": 600,
-                        "height": 56,
+                        "height": 40,
                         "styleSlot": "season-report.text.secondary",
                         "text": "-"
                       }
@@ -306,13 +306,13 @@
                     "type": "panel",
                     "name": "Row4",
                     "width": "100%",
-                    "height": 72,
+                    "height": 48,
                     "skinSlot": "season-report.row.bg",
                     "layout": {
                       "type": "horizontal",
                       "spacing": 12,
-                      "paddingTop": 8,
-                      "paddingBottom": 8,
+                      "paddingTop": 4,
+                      "paddingBottom": 4,
                       "paddingLeft": 20,
                       "paddingRight": 20
                     },
@@ -321,7 +321,7 @@
                         "type": "label",
                         "name": "RankLabel",
                         "width": 80,
-                        "height": 56,
+                        "height": 40,
                         "styleSlot": "season-report.text.primary",
                         "text": "-"
                       },
@@ -329,7 +329,7 @@
                         "type": "label",
                         "name": "LineLabel",
                         "width": 600,
-                        "height": 56,
+                        "height": 40,
                         "styleSlot": "season-report.text.secondary",
                         "text": "-"
                       }
@@ -339,13 +339,13 @@
                     "type": "panel",
                     "name": "Row5",
                     "width": "100%",
-                    "height": 72,
+                    "height": 48,
                     "skinSlot": "season-report.row.bg",
                     "layout": {
                       "type": "horizontal",
                       "spacing": 12,
-                      "paddingTop": 8,
-                      "paddingBottom": 8,
+                      "paddingTop": 4,
+                      "paddingBottom": 4,
                       "paddingLeft": 20,
                       "paddingRight": 20
                     },
@@ -354,7 +354,7 @@
                         "type": "label",
                         "name": "RankLabel",
                         "width": 80,
-                        "height": 56,
+                        "height": 40,
                         "styleSlot": "season-report.text.primary",
                         "text": "-"
                       },
@@ -362,7 +362,7 @@
                         "type": "label",
                         "name": "LineLabel",
                         "width": 600,
-                        "height": 56,
+                        "height": 40,
                         "styleSlot": "season-report.text.secondary",
                         "text": "-"
                       }
