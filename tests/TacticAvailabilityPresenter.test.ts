@@ -1,12 +1,17 @@
 /**
  * TacticAvailabilityPresenter — 戰法可用狀態與原因（PROG-2-0408）的純邏輯測試
  */
+import * as fs from 'fs';
+import * as path from 'path';
 import { TestSuite, assert } from './TestRunner';
+import { allFriendliesFullHp, castFailedToastKey } from '../assets/scripts/battle/views/BattleSkillTargetingFlow';
+import { Faction } from '../assets/scripts/core/config/Constants';
 import {
     buildTacticAvailability,
     TACTIC_REASON_NO_POINTS,
     TACTIC_REASON_NO_SP,
     TACTIC_REASON_WEATHER,
+    tacticReasonText,
 } from '../assets/scripts/ui/core/TacticAvailabilityPresenter';
 import { Weather } from '../assets/scripts/core/config/Constants';
 
@@ -40,6 +45,43 @@ export function createTacticAvailabilityPresenterSuite(): TestSuite {
 
     suite.test('沒有戰法時回傳空陣列', () => {
         assert.equals(0, buildTacticAvailability([], READY).length);
+    });
+
+    suite.test('三種灰色提示走 i18n 鍵：reason 是翻譯結果、reasonKey 是鍵（PROG-2-10015）', () => {
+        const noPoints = buildTacticAvailability([FIRE], { ...READY, tacticPointEnabled: false })[0];
+        assert.equals('ui.battle.skill.reason.no_points', noPoints.reasonKey ?? '');
+        assert.equals(tacticReasonText(TACTIC_REASON_NO_POINTS), noPoints.reason ?? '');
+        const noSp = buildTacticAvailability([FIRE], { ...READY, generalCanUseSkill: false })[0];
+        assert.equals(TACTIC_REASON_NO_SP, noSp.reasonKey ?? '');
+        assert.equals(tacticReasonText(TACTIC_REASON_NO_SP), noSp.reason ?? '');
+        const weather = buildTacticAvailability([FIRE], { ...READY, weather: Weather.Rain })[0];
+        assert.equals(TACTIC_REASON_WEATHER, weather.reasonKey ?? '');
+        assert.equals(tacticReasonText(TACTIC_REASON_WEATHER), weather.reason ?? '');
+    });
+
+    suite.test('四語 i18n 鍵齊全：三個灰色提示與沒人要補血', () => {
+        const keys = [TACTIC_REASON_NO_POINTS, TACTIC_REASON_NO_SP, TACTIC_REASON_WEATHER, 'ui.battle.skill.cast_failed_no_wounded'];
+        for (const locale of ['zh-TW', 'zh-CN', 'en', 'ja']) {
+            const file = path.join(__dirname, '..', 'assets', 'resources', 'i18n', `${locale}.json`);
+            const table = JSON.parse(fs.readFileSync(file, 'utf8')) as Record<string, string>;
+            for (const key of keys) assert.isTrue(typeof table[key] === 'string' && table[key].length > 0, `${locale} 缺 ${key}`);
+        }
+    });
+
+    suite.test('Presenter 原始碼不再寫死三句中文', () => {
+        const src = fs.readFileSync(path.join(__dirname, '..', 'assets', 'scripts', 'ui', 'core', 'TacticAvailabilityPresenter.ts'), 'utf8');
+        for (const text of ['計謀點不足', 'SP 不足', '天氣禁用']) assert.isFalse(src.replace(/\/\/.*$/gm, '').includes(text), text);
+    });
+
+    suite.test('補血招式：我方全員滿血改提示沒有需要補血的部隊，有人受傷才用原句', () => {
+        const unit = (faction: Faction, hp: number, max: number, dead = false) =>
+            ({ faction, isDead: () => dead, currentHp: hp, getEffectiveMaxHp: () => max });
+        assert.isTrue(allFriendliesFullHp([unit(Faction.Player, 100, 100), unit(Faction.Enemy, 10, 100)]));
+        assert.isTrue(allFriendliesFullHp([unit(Faction.Player, 0, 100, true)]), '陣亡的不算受傷');
+        assert.isFalse(allFriendliesFullHp([unit(Faction.Player, 99, 100)]));
+        assert.equals('ui.battle.skill.cast_failed_no_wounded', castFailedToastKey(true, true));
+        assert.equals('ui.battle.skill.cast_failed', castFailedToastKey(true, false));
+        assert.equals('ui.battle.skill.cast_failed_no_enemy', castFailedToastKey(false));
     });
 
     return suite;

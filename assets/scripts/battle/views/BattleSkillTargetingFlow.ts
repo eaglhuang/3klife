@@ -14,6 +14,7 @@ import { WEATHER_RESTRICTION_TOAST, checkTacticWeather } from '../../core/system
 import { describeTacticCondition } from '../../core/systems/TacticCondition';
 import { Faction, GAME_CONFIG } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
+import { TACTIC_REASON_NO_POINTS, tacticReasonText } from '../../ui/core/TacticAvailabilityPresenter';
 
 /** 待確認目標的技能狀態 */
 export interface PendingSkillTargeting {
@@ -31,8 +32,22 @@ export function hasEnemyOnBoard(units: Iterable<{ faction: Faction; isDead(): bo
   return false;
 }
 
-/** 不用選目標的招式發動失敗時的提示字：場上沒有敵軍就說沒有目標，其餘維持原句 */
-export function castFailedToastKey(enemyOnBoard: boolean): string {
+/** 我方是否人人滿血（陣亡的不算）；補血類招式在這時一定補不到人（PROG-2-10015） */
+export function allFriendliesFullHp(
+  units: Iterable<{ faction: Faction; isDead(): boolean; currentHp: number; getEffectiveMaxHp(): number }>,
+): boolean {
+  for (const unit of units) {
+    if (unit.faction === Faction.Player && !unit.isDead() && unit.currentHp < unit.getEffectiveMaxHp()) return false;
+  }
+  return true;
+}
+
+/**
+ * 不用選目標的招式發動失敗時的提示字：補血招式遇到全員滿血就說沒人要補，
+ * 場上沒有敵軍就說沒有目標，其餘維持原句
+ */
+export function castFailedToastKey(enemyOnBoard: boolean, healNoWounded = false): string {
+  if (healNoWounded) return 'ui.battle.skill.cast_failed_no_wounded';
   return enemyOnBoard ? 'ui.battle.skill.cast_failed' : 'ui.battle.skill.cast_failed_no_enemy';
 }
 
@@ -76,7 +91,7 @@ export class BattleSkillTargetingFlow {
     if (!ctrl) return;
 
     if (sourceType === SkillSourceType.SeedTactic && !ctrl.getPlayerTacticPointState().enabled) {
-      this.ctx.showToast('計謀點不足', 1.5);
+      this.ctx.showToast(tacticReasonText(TACTIC_REASON_NO_POINTS), 1.5);
       return;
     }
     const general = ctrl.state.playerGeneral;
@@ -117,7 +132,8 @@ export class BattleSkillTargetingFlow {
         this.ctx.refreshBattleViews();
       } else {
         // 自動瞄準的招式在場上沒有敵軍時一定打不出去（例如第 1 回合的火攻），把原因講清楚（PROG-2-9342）
-        this.ctx.showToast(services().i18n.t(castFailedToastKey(hasEnemyOnBoard(ctrl.state.units.values())), sourceLabel), 2);
+        const healNoWounded = resolveBattleSkillProfile(skillId)?.effectKind === 'heal' && allFriendliesFullHp(ctrl.state.units.values());
+        this.ctx.showToast(services().i18n.t(castFailedToastKey(hasEnemyOnBoard(ctrl.state.units.values()), healNoWounded), sourceLabel), 2);
       }
       return;
     }
