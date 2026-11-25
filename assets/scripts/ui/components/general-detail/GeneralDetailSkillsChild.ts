@@ -124,7 +124,10 @@ export class GeneralDetailSkillsChild extends ChildPanelBase {
 
         const demoSkillId = this._resolveDemoSkillId(cfg);
         if (demoSkillId) {
-            this._set(this._lNote, `${noteDisplay}\n點擊此卡可預覽：${SKILL_DISPLAY_NAME[demoSkillId] ?? demoSkillId}`);
+            // 暫不顯示「點擊預覽」提示：預覽目前只播音效與浮字（見 _bindSkillDemo 的 previewOnly）。
+            // 待 7 個缺 prefab 的積木（fire_burst、impact_ring、trail_slash_w、impact_shock、fire_ringwave、
+            // ring_addatk、glow_soft）完成（美術佇列，方案 A）後，再恢復特效與提示文字。
+            this._set(this._lNote, noteDisplay);
             this._bindSkillDemo(cfg, demoSkillId);
         } else {
             this._set(this._lNote, noteDisplay);
@@ -175,6 +178,7 @@ export class GeneralDetailSkillsChild extends ChildPanelBase {
                 casterNode: this.hostNode,
                 targetUnitIds: ['dummy-target'],
                 targetPositions: [{ x: 500, y: 0, z: 0 }],
+                previewOnly: true, // 只播音效與浮字，不取尚無 prefab 的特效積木
             });
         }, this);
     }

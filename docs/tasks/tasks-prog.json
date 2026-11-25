@@ -18279,7 +18279,7 @@
       "title": "武將詳情技能預覽只播音效與浮字（方案 C）",
       "owner": "ClaudeCode_claude-opus-5-5",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-25",
@@ -18294,7 +18294,7 @@
       "depends": [],
       "acceptance": [],
       "deliverables": [],
-      "notes": "2026-11-25 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "notes": "2026-11-25 | 狀態: done | 驗證: tsc 測試設定 0 錯、run-cli 9573 通過、compute-gate quick 4/4；未做實機（本機無可點開詳情的建置，僅單元測試驗證） | 變更: ActionContext.previewOnly，doVfx 預覽略過；GeneralDetailSkillsChild 預覽傳 previewOnly、移除點擊預覽提示（該字串為寫死中文，無 i18n 鍵、無孤兒鍵）、註解待 7 積木 prefab（方案 A）再恢復；tests/ActionSystem.test.ts 兩案 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
@@ -18319,8 +18319,8 @@
     }
   ],
   "summary": {
-    "done": 329,
-    "in_progress": 3,
+    "done": 330,
+    "in_progress": 2,
     "open": 87,
     "total": 419
   }
