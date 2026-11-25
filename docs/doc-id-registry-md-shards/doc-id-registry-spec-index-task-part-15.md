@@ -288,4 +288,6 @@
 | `doc_task_3097` | docs/agent-briefs/tasks/PROG/PROG-2-10000.md | PROG-2-10000: 親生子嗣登記缺口修補 |
 | `doc_task_3098` | docs/agent-briefs/tasks/PROG/PROG-2-10032.md | [PROG-2-10032] 線上整年驗收開機步驟改輪詢開始鈕並失敗即中止 |
 | `doc_task_3099` | docs/agent-briefs/tasks/PROG/PROG-2-10027.md | PROG-2-10027 實作年末榜單頒獎服務 |
-| `doc_task_3100` | docs/agent-briefs/tasks/PROG/PROG-2-10036.md | PROG-2-10036 結緣公式分項 UI 與小名三段揭曉 ViewModel |
+| `doc_task_3100` | docs/agent-briefs/tasks/PROG/PROG-2-10033.md | PROG-2-10033 吃醋三選項與三連霸「天下名門」徽章 |
+| `doc_task_3101` | docs/agent-briefs/tasks/PROG/PROG-2-10029.md | PROG-2-10029 實作血統天賦小名與成長拆解表 |
+| `doc_task_3102` | docs/agent-briefs/tasks/PROG/PROG-2-10036.md | PROG-2-10036 結緣公式分項 UI 與小名三段揭曉 ViewModel |

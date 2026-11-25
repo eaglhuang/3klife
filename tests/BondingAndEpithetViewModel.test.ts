@@ -1,4 +1,5 @@
 import { TestSuite } from './TestRunner';
+import { BondingSuccessService } from '../assets/scripts/core/systems/BondingSuccessService';
 import { BondingAndEpithetViewModel } from '../assets/scripts/ui/viewmodels/BondingAndEpithetViewModel';
 
 export function createBondingAndEpithetViewModelSuite(): TestSuite {
@@ -31,6 +32,18 @@ export function createBondingAndEpithetViewModelSuite(): TestSuite {
         });
         if (vm.stageKey !== 'ui.bloodline.stage.revealed_15' || !vm.isBonusActive) {
             throw new Error('15 歲揭曉狀態異常');
+        }
+    });
+
+    suite.test('ViewModel 與 BondingSuccessService 公式一致：K=1 起算、每次被拒好感 -12，第 1/2/3 次為 34/40/46%', () => {
+        const rates = [0, 1, 2].map(n => {
+            const b = BondingSuccessService.calculateBondingProbability({
+                compatibilityK: 1.0, favorF: -12 * n, sincerityBonus: BondingSuccessService.getSincerityBonus(n),
+            });
+            return BondingAndEpithetViewModel.buildBondingBreakdownVM(b).totalRateText;
+        });
+        if (rates.join('/') !== '34%/40%/46%') {
+            throw new Error(`預期 34%/40%/46%，實際 ${rates.join('/')}`);
         }
     });
 
