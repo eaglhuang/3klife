@@ -17194,5 +17194,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10036.md",
     "title": "PROG-2-10036 結緣公式分項 UI 與小名三段揭曉 ViewModel",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3103",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10038.md",
+    "title": "PROG-2-10038 吃醋三選項彈窗 UI 與 10033 i18n 補鍵",
+    "category": "task"
   }
 ]

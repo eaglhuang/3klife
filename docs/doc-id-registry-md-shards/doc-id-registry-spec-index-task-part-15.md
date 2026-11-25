@@ -291,3 +291,4 @@
 | `doc_task_3100` | docs/agent-briefs/tasks/PROG/PROG-2-10033.md | PROG-2-10033 吃醋三選項與三連霸「天下名門」徽章 |
 | `doc_task_3101` | docs/agent-briefs/tasks/PROG/PROG-2-10029.md | PROG-2-10029 實作血統天賦小名與成長拆解表 |
 | `doc_task_3102` | docs/agent-briefs/tasks/PROG/PROG-2-10036.md | PROG-2-10036 結緣公式分項 UI 與小名三段揭曉 ViewModel |
+| `doc_task_3103` | docs/agent-briefs/tasks/PROG/PROG-2-10038.md | PROG-2-10038 吃醋三選項彈窗 UI 與 10033 i18n 補鍵 |

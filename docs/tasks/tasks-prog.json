@@ -18705,12 +18705,20 @@
       "priority": "P1",
       "owner": "antigravity",
       "file": "docs/agent-briefs/tasks/PROG/PROG-2-10036.md"
+    },
+    {
+      "id": "PROG-2-10038",
+      "title": "實作吃醋三選項彈窗 UI（補齊 10033 i18n 鍵與第 1/2/3 次抓包三段台詞）",
+      "status": "done",
+      "priority": "P1",
+      "owner": "antigravity",
+      "file": "docs/agent-briefs/tasks/PROG/PROG-2-10038.md"
     }
   ],
   "summary": {
-    "done": 346,
+    "done": 347,
     "in_progress": 3,
     "open": 87,
-    "total": 436
+    "total": 437
   }
 }
