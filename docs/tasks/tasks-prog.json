@@ -17972,7 +17972,7 @@
       "title": "首戰主將不在名冊時還原起始主將，不再設為空（總PM 裁決方案①）",
       "owner": "ClaudeCode_claude-opus-5-5",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "bugfix",
       "phase": "M0",
       "created": "2026-11-25",
@@ -17982,7 +17982,7 @@
       "description": "首戰編成視窗在指定主將不在名冊時把出戰主將設為空，首戰後大廳主將未定、戰場無出征帳本、自動不部署。",
       "related": [],
       "depends": ["PROG-2-9913", "PROG-2-10003"],
-      "notes": "2026-11-25 | 狀態: in-progress | 驗證: pending | 變更: 開卡 | 阻塞: 無",
+      "notes": "2026-11-25 | 狀態: done | 驗證: tsc 測試設定 0 錯、run-cli 9556 通過、compute-gate quick 4/4、web-desktop 建置 exit 36 且 index.html 存在、實機 playtest-online --year --no-set-lead：首戰主將 魏延（起始主將）大廳不再顯示未定、首戰勝利且有出征軍勢 5000；第二場因主將在大廳任務中（on-hall-mission）不可出戰仍退回名冊外的關卡主將而無出征帳本（另案，非本卡範圍）| 變更: SortieSetupController 名冊外主將還原起始主將、四語 i18n、tests/SortieLoadoutWindow.test.ts、playtest-online 年循環記錄主將可出戰狀態 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
@@ -18129,8 +18129,8 @@
     }
   ],
   "summary": {
-    "done": 325,
-    "in_progress": 3,
+    "done": 326,
+    "in_progress": 2,
     "open": 87,
     "total": 415
   }
