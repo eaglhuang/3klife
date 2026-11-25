@@ -31,6 +31,8 @@ import { BattleSceneFlow } from './BattleSceneFlow';
 import { validateBattleStateReadModel, validateSortieLoadoutReadModel } from '../../core/systems/ReadModelValidators';
 import { getEliteDeployCap, scenePresetIdOf } from '../../core/systems/SortieDeploy';
 import { BattleTutorialHint } from './BattleTutorialHint';
+import { DefenseDeployGuide } from './DefenseDeployGuide';
+import { withDefenseGuideFallback } from '../../core/systems/DefenseGuide';
 import { BattleUIBridge, createBattleSceneContext } from './BattleUIBridge';
 import { TurnFlowManager } from './TurnFlowManager';
 import { setupCameraForBoard, initSceneBackground, addBackgroundSwitchUI, resolveSceneBackgroundId } from './BattleSceneSetup';
@@ -130,6 +132,7 @@ export class BattleScene extends Component {
   private sceneBackground: SceneBackground | null = null;
   private deployRuntime: IDeployRuntimeLike | null = null;
   private tutorialHint: BattleTutorialHint | null = null;
+  private defenseGuide: DefenseDeployGuide | null = null;
   private skillTargetingFlow: BattleSkillTargetingFlow | null = null;
   private readonly sceneContext = createBattleSceneContext();
   private battleUIBridge: BattleUIBridge | null = null;
@@ -506,6 +509,12 @@ export class BattleScene extends Component {
           hint => services().event.emit('first-battle-guide', hint),
           () => ({ current: this.ctrl!.state.playerGeneral?.currentSp ?? 0, max: this.ctrl!.state.playerGeneral?.maxSp ?? 0 }));
       }
+      // 年終守城玩家引導（PROG-2-10019）：進場提示＋部署階段橫幅；未部署的開戰閘門在 TurnFlowManager／BattleUIBridge
+      if (!battleParams.tutorial && this.ctrl?.state.siegeDefender === Faction.Player) {
+        const lookup = withDefenseGuideFallback((key, ...args) => services().i18n.t(key, ...args));
+        this.deployRuntime?.showToast(lookup('ui.battle.defense.entry', String(this.ctrl.defenseBattle.turnLimit)), 5);
+        this.defenseGuide = new DefenseDeployGuide(services().event, lookup, hint => services().event.emit('first-battle-guide', hint), 0);
+      }
 
       if (this.hud && !(await this.hud.waitUntilReady(15000))) {
         throw new Error('戰鬥 HUD 初始化逾時');
@@ -555,6 +564,8 @@ export class BattleScene extends Component {
     this.sceneContext.isDuelPanelActive = false;
     this.skillTargetingFlow?.cancelPendingSkillTargeting(false);
     this.battleUIBridge?.unsubscribeEvents();
+    this.defenseGuide?.dispose();
+    this.defenseGuide = null;
     this.tutorialHint?.dispose();
     this.tutorialHint = null;
     this.sceneContext.skillTargetingFlow = null;
