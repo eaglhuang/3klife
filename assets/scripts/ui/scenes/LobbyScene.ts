@@ -3429,12 +3429,12 @@ export class LobbyScene extends Component {
         }
         const session = services().session;
         const motherId = bonding.motherId;
-        const mother = motherId ? session.findGeneral(motherId) : undefined;
+        const mother = motherId ? session.roster.find((g) => g.id === motherId) : undefined;
         if (!motherId || !mother) {
             this._showToast(this._panelT('ui.bonding.proposal.none'));
             return;
         }
-        const father = bonding.fatherId ? session.findGeneral(bonding.fatherId) : undefined;
+        const father = bonding.fatherId ? session.roster.find((g) => g.id === bonding.fatherId) : undefined;
         this._bondingProposalTargetId = motherId;
         const state = this._bondingJealousy.proposalStateFor(motherId, session.bondAffinityOf(motherId), session.isSpouse(motherId));
         const k = pairSynergyK(session.familySynergy, father as { familyUid?: string } | undefined, mother as { familyUid?: string });
@@ -3459,7 +3459,7 @@ export class LobbyScene extends Component {
         const targetId = this._bondingProposalTargetId;
         if (!panel || !host || !targetId) return;
         const session = services().session;
-        const name = session.findGeneral(targetId)?.name ?? targetId;
+        const name = session.roster.find((g) => g.id === targetId)?.name ?? targetId;
         const setMessage = (text: string): void => host.binder.setTexts({ bpMessage: text });
         if (session.isSpouse(targetId)) {
             setMessage(this._panelT('ui.bonding.proposal.result.partner', name));
@@ -3531,7 +3531,7 @@ export class LobbyScene extends Component {
         const panel = this._jealousyPanel;
         if (!host || !panel) return;
         const session = services().session;
-        const name = session.findGeneral(spouseId)?.name ?? spouseId;
+        const name = session.roster.find((g) => g.id === spouseId)?.name ?? spouseId;
         this._jealousySpouseId = spouseId;
         panel.setSpouseName(name);
         panel.bindJealousyState(this._jealousyRealState(spouseId));
@@ -5439,7 +5439,7 @@ ${spent}`,
                 const res = session.enrollMatchmakerSpouse(pickIndex);
                 if (res.ok) {
                     services().event.emit('SHOW_TOAST', {
-                        message: `良緣締結！${res.generalId ? (session.findGeneral(res.generalId)?.name ?? '') : ''}已成為主公家眷。`,
+                        message: `良緣締結！${res.generalId ? (session.roster.find((g) => g.id === res.generalId)?.name ?? '') : ''}已成為主公家眷。`,
                         duration: 3,
                     });
                     this._refreshWalletPreviewState();
