@@ -17086,5 +17086,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10010.md",
     "title": "[PROG-2-10010] 首戰實玩探針：記錄天氣、試放計謀、量格子特效",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3084",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10015.md",
+    "title": "[PROG-2-10015] 計謀鈕與招式失敗提示走四語 i18n；軍心鼓舞全員滿血改提示沒有需要補血",
+    "category": "task"
   }
 ]
