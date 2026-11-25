@@ -1359,14 +1359,15 @@
   "bloodline.epithet.46": "仁德郎",
   "bloodline.epithet.47": "笑面小福星",
   "bloodline.epithet.48": "府中睡神候補",
-  "ui.bonding.breakdown.base": "基礎",
-  "ui.bonding.breakdown.compatibility": "相性",
-  "ui.bonding.breakdown.favor": "好感",
-  "ui.bonding.breakdown.sincerity": "誠意",
-  "ui.bonding.breakdown.matchmaker": "媒人",
+  "ui.bonding.breakdown.base": "基礎：{0}%",
+  "ui.bonding.breakdown.compatibility": "相性：{0}%",
+  "ui.bonding.breakdown.favor": "好感：{0}%",
+  "ui.bonding.breakdown.sincerity": "誠意：{0}%",
+  "ui.bonding.breakdown.matchmaker": "媒人：{0}%",
   "ui.bloodline.stage.omen_8": "8 歲・初現端倪",
   "ui.bloodline.stage.trait_12": "12 歲・特質漸顯",
   "ui.bloodline.stage.revealed_15": "15 歲・小名揭曉",
   "ui.bloodline.epithet.title": "小名",
-  "ui.bloodline.stage.hidden": "尚未揭曉"
+  "ui.bloodline.stage.hidden": "尚未揭曉",
+  "ui.bonding.title": "結緣成功率：{0}%"
 }
