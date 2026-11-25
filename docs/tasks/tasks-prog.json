@@ -18683,6 +18683,14 @@
       "file": "docs/agent-briefs/tasks/PROG/PROG-2-10027.md"
     },
     {
+      "id": "PROG-2-10033",
+      "title": "實作吃醋三選項（B 價格縮放、C 抓包 3 次解鎖府中睡神）與三連霸天下名門徽章",
+      "status": "done",
+      "priority": "P1",
+      "owner": "antigravity",
+      "file": "docs/agent-briefs/tasks/PROG/PROG-2-10033.md"
+    },
+    {
       "id": "PROG-2-10029",
       "title": "實作血統天賦小名 48 池、出生抽取、8/12/15 歲揭曉與成長拆解表",
       "status": "done",
@@ -18692,9 +18700,9 @@
     }
   ],
   "summary": {
-    "done": 344,
+    "done": 345,
     "in_progress": 3,
     "open": 87,
-    "total": 434
+    "total": 435
   }
 }
