@@ -144,9 +144,32 @@ function testAllocationFloorUsesBaseAndReservations() {
   }
 }
 
+// PROG-2-10001: a task card that writes its own doc_id (e.g. copying the task
+// number) instead of taking one from the registry must fail; a registered id
+// passes, and the suggestion ignores hand-written outliers.
+function testHandWrittenTaskCardDocIdFails() {
+  const root = setupRepo();
+  try {
+    const card = 'docs/agent-briefs/tasks/PROG/PROG-2-9998.md';
+    writeDoc(root, card, 'doc_task_9998');
+    let report = guard.checkCollisions(root, 'origin/master', policy);
+    assert.equal(report.ok, false);
+    assert.ok(report.errors.some((message) => message.includes('registry does not assign it')), report.errors.join('\n'));
+    assert.deepEqual(report.suggestions, ['doc_task_0002'], 'outlier must not drive the suggestion');
+
+    writeDoc(root, card, 'doc_task_0002');
+    writeRegistry(root, [['doc_task_0001', 'docs/a.md'], ['doc_task_0002', card]]);
+    report = guard.checkCollisions(root, 'origin/master', policy);
+    assert.equal(report.ok, true, report.errors.join('\n'));
+  } finally {
+    fs.rmSync(root, { recursive: true, force: true });
+  }
+}
+
 testBranchCollisionAgainstAdvancedMaster();
 testMergedTreeKeepsBothEntries();
 testCleanChangeAndLegacyDuplicatesPass();
 testMirrorCopiesAreNotCollisions();
 testAllocationFloorUsesBaseAndReservations();
+testHandWrittenTaskCardDocIdFails();
 console.log('[doc-id-allocation-guard.test] ok');

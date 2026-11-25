@@ -41,6 +41,7 @@
  *   --jade      選用：玉的用途（商店看玉、許願祭壇用玉買加速卡，PROG-2-9149）
  *   --year      選用：原步驟後接一年循環（每季內政／任務牆／戰鬥／抽卡／培育／推進一季），輸出 year-report.json（PROG-2-9141）
  *   --battles-per-season  --year 時每季出征場數（預設 2）
+ *   --no-set-lead  --year 時不替玩家指定出戰主將（主將未定時戰場無出征帳本、自動代打不出兵，會打輸；用來重現）
  *   --no-auto-play  戰鬥改逐回合手按結束回合（預設開場按一次「自動」走自動代打，PROG-2-9711）
  *   --academy   選用：學府實玩（PROG-2-9192）：推進到第 2 年第 1 季 → 入學潁川（核對入學令 −1）→ 36 回合 → 結業彈窗 → 回大廳；
  *               另在複製存檔的第二情境用 ?qaAcademy=11 驗快進入口。輸出 academy-report.json（回合數、打斷、評級、前後季數、節點數、
@@ -67,6 +68,7 @@ const path = require('path');
 const { execFileSync } = require('child_process');
 const { createRealMouse } = require('./playtest-real-mouse');
 const { decideEndTurnAction } = require('./playtest-end-turn-fallback');
+const { formatYearQuarterLine } = require('./playtest-year-summary');
 
 const projectRoot = path.resolve(__dirname, '..');
 const DEFAULT_URL = 'https://eaglhuang.github.io/3klife-play/';
@@ -1516,6 +1518,20 @@ async function main() {
             return rec.detail;
         };
 
+        /** 出戰主將未定（首戰編成把主將設為空）就指定第一位可出戰武將，回傳 { before, after, set }；已有主將不動 */
+        const ensureLeadGeneral = () => page.evaluate(async () => {
+            const loader = await window.System.import('chunks:///_virtual/ServiceLoader.ts');
+            const session = loader.services().session;
+            const before = session.leadGeneralId;
+            const deployable = session.getDeployableGenerals();
+            let set = null;
+            if (!before || !deployable.some((g) => g.id === before)) {
+                const pick = deployable[0];
+                if (pick && await session.setLeadGeneral(pick.id)) set = pick.id;
+            }
+            return { before, after: session.leadGeneralId, set };
+        }).catch((e) => ({ error: String(e && e.message || e) }));
+
         const runBattle = async (rec, opts = {}) => {
             // 回到大廳
             for (let i = 0; i < 6 && (await scene()) !== 'LobbyScene'; i++) {
@@ -2101,12 +2117,15 @@ async function main() {
                 for (let b = 0; b < battlesPerSeason; b++) {
                     const okB = await ys(`battle${b + 1}`, async (rec) => {
                         rec.detail.topBefore = await readTopbar();
+                        // 主將未定時戰場會退回關卡指定的名冊外主將，沒有出征帳本，自動代打只會結束回合不出兵（PROG-2-10003）；
+                        // 跟玩家一樣先指定一位可出戰武將當主將。--no-set-lead 可保留未定狀態重現
+                        if (!args['no-set-lead']) rec.detail.lead = await ensureLeadGeneral();
                         const d = await runBattle(rec, { shotTag: 'battle-settle', quick: b === 1 });
                         rec.detail.topAfter = await readTopbarSettled();
                         return d;
                     });
                     const brec = yq.steps[`battle${b + 1}`];
-                    yq.battles.push({ ok: okB, result: brec.detail.result || null, reason: brec.reason, rounds: brec.detail.lastRound, ms: brec.detail.battleMs, topBefore: brec.detail.topBefore, topAfter: brec.detail.topAfter, screenshot: brec.screenshot });
+                    yq.battles.push({ ok: okB, result: brec.detail.result || null, lead: brec.detail.lead || null, reason: brec.reason, rounds: brec.detail.lastRound, ms: brec.detail.battleMs, topBefore: brec.detail.topBefore, topAfter: brec.detail.topAfter, screenshot: brec.screenshot });
                     if (!okB) break; // 一場失敗就不連打下一場，避免卡在壞狀態
                 }
                 // 4. 轉蛋：單抽一次（免費次數或資源足夠就會成功；結果畫面關掉）
@@ -2208,7 +2227,7 @@ async function main() {
                     return { tier: o.currentTier, exp: o.officerExp };
                 }).catch(() => null);
                 writeYearReport();
-                console.log(`[playtest] 年循環 ${yq.season} → ${yq.seasonAfter || '?'}：戰鬥 ${yq.battles.map((b) => b.result || (b.ok ? '?' : '失敗')).join('/') || '無'}；錯誤 ${yq.errors.length}`);
+                console.log(`[playtest] ${formatYearQuarterLine(yq)}`);
             }
             yearReport.finishedAt = new Date().toISOString();
             yearReport.endSeason = (await readSeason().catch(() => ({ text: null }))).text;

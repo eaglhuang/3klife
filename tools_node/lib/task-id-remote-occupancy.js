@@ -269,10 +269,16 @@ function isExpired(entry, policy, now) {
   return now - reservedAt > Number(policy.reservationTtlHours || 168) * 3600 * 1000;
 }
 
+function worktreeGone(entry, policy) {
+  if (policy.pruneMissingWorktreeReservations === false || !entry.worktree) return false;
+  return !fs.existsSync(entry.worktree);
+}
+
 function pruneLedger(reservations, policy, now, landedIds) {
   return reservations.filter((entry) => entry && entry.taskId
     && !isExpired(entry, policy, now)
-    && !(landedIds && landedIds.has(entry.taskId)));
+    && !(landedIds && landedIds.has(entry.taskId))
+    && !worktreeGone(entry, policy));
 }
 
 function listSharedReservations(root, policy = DEFAULT_POLICY, options = {}) {
