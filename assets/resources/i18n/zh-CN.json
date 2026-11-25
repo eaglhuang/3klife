@@ -1369,5 +1369,15 @@
   "ui.bloodline.stage.trait_12": "12 岁・特质渐显",
   "ui.bloodline.stage.revealed_15": "15 岁・小名揭晓",
   "ui.bloodline.epithet.title": "小名",
-  "ui.bloodline.stage.hidden": "尚未揭晓"
+  "ui.bloodline.stage.hidden": "尚未揭晓",
+  "ui.ceremony.skip": "跳过典礼",
+  "ui.ceremony.act1.intro": "岁末敲锣！今年共 4 位名门同台较劲：{0}，谁能抱走金榜玉璧，马上揭晓！",
+  "ui.ceremony.act2.top3": "恭喜本府荣登第 {0} 名！赏银 {1} 两、玉璧 {2} 颗！",
+  "ui.ceremony.roast.1": "评审团擦了擦眼镜：「差一点点就上台领玉璧了，明年记得多带几个娃来撑场面！」",
+  "ui.ceremony.roast.2": "今年先拿 500 银两压压惊，隔壁老陈已经在偷笑了，明年讨回来！",
+  "ui.ceremony.roast.3": "虽未进前三，但本府气势不输人！明年榜首等着你！",
+  "ui.ceremony.surprise.dark_horse.1": "黑马杀出！本府今年分数暴冲，获颁年度黑马奖，再赏 {0} 银两！",
+  "ui.ceremony.surprise.dark_horse.2": "爆冷夺下「年度黑马奖」！评审团直呼看走眼，{0} 银两双手奉上！",
+  "ui.ceremony.surprise.spoiled.1": "子嗣嘴甜得连评审都融化了，颁发「最会撒娇奖」＋{0} 银两！",
+  "ui.ceremony.surprise.spoiled.2": "全场最会撒娇非本府莫属，{0} 银两拿去买糖吃！"
 }

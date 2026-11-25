@@ -1369,5 +1369,15 @@
   "ui.bloodline.stage.trait_12": "Age 12: Trait Emerges",
   "ui.bloodline.stage.revealed_15": "Age 15: Epithet Revealed",
   "ui.bloodline.epithet.title": "Epithet",
-  "ui.bloodline.stage.hidden": "Not Yet Revealed"
+  "ui.bloodline.stage.hidden": "Not Yet Revealed",
+  "ui.ceremony.skip": "Skip Ceremony",
+  "ui.ceremony.act1.intro": "Year-End Gong! 4 Noble Houses compete: {0}. Who claims the Jade?",
+  "ui.ceremony.act2.top3": "Rank #{0}! Awarded {1} Silver and {2} Jade!",
+  "ui.ceremony.roast.1": "Judges wiped their glasses: So close! Bring more heirs next year!",
+  "ui.ceremony.roast.2": "Take 500 Silver for comfort; neighbors are grinning, win it back next year!",
+  "ui.ceremony.roast.3": "Missed top 3, but spirit is high! Aim for #1 next year!",
+  "ui.ceremony.surprise.dark_horse.1": "Dark Horse! Huge score surge wins {0} bonus Silver!",
+  "ui.ceremony.surprise.dark_horse.2": "Upset victory! Judges were amazed - {0} Silver awarded!",
+  "ui.ceremony.surprise.spoiled.1": "Heirs charmed the judges! Most Adorable Award +{0} Silver!",
+  "ui.ceremony.surprise.spoiled.2": "Sweetest house in town! Take {0} Silver for treats!"
 }

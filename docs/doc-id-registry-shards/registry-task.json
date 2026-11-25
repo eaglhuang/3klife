@@ -17200,5 +17200,23 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10035.md",
     "title": "[PROG-2-10035] 大廳任務類視窗套用戰場結算風格（settle 皮膚家族）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3105",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10031.md",
+    "title": "[PROG-2-10031] 揚塵再加大加深與獎勵跳字間距略放大",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3106",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10041.md",
+    "title": "[PROG-2-10041] 保底步兵券標示與弓兵放箭時機",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3107",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10044.md",
+    "title": "PROG-2-10044 年終頒獎典禮三幕式 UI 元件",
+    "category": "task"
   }
 ]

@@ -1301,5 +1301,15 @@
   "ui.bloodline.stage.trait_12": "12歳・資質の顕現",
   "ui.bloodline.stage.revealed_15": "15歳・通り名の公開",
   "ui.bloodline.epithet.title": "通り名",
-  "ui.bloodline.stage.hidden": "未公開"
+  "ui.bloodline.stage.hidden": "未公開",
+  "ui.ceremony.skip": "式典をスキップ",
+  "ui.ceremony.act1.intro": "年末の銅鑼！今年は4つの名門が競う：{0}。玉璧を掴むのは誰だ！",
+  "ui.ceremony.act2.top3": "第{0}位おめでとう！銀両{1}・玉璧{2}を獲得！",
+  "ui.ceremony.roast.1": "審査員も惜しがった！来年はもっと子息を連れてこよう！",
+  "ui.ceremony.roast.2": "今年は慰労の銀両500で我慢、来年は必ず雪辱しよう！",
+  "ui.ceremony.roast.3": "トップ3は逃したが勢いは十分！来年こそ首位だ！",
+  "ui.ceremony.surprise.dark_horse.1": "ダークホース登場！年間急上昇賞で銀両{0}を追加獲得！",
+  "ui.ceremony.surprise.dark_horse.2": "大番狂わせ！審査員も驚きの銀両{0}を進呈！",
+  "ui.ceremony.surprise.spoiled.1": "甘え上手賞！審査員もメロメロで銀両{0}を獲得！",
+  "ui.ceremony.surprise.spoiled.2": "会場一の愛嬌！おやつ代の銀両{0}をどうぞ！"
 }
