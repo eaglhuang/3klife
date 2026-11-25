@@ -17098,5 +17098,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10015.md",
     "title": "[PROG-2-10015] 計謀鈕與招式失敗提示走四語 i18n；軍心鼓舞全員滿血改提示沒有需要補血",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3085",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10016_task.md",
+    "title": "[PROG-2-10016] 武將詳情技能預覽只播音效與浮字（方案 C）",
+    "category": "task"
   }
 ]
