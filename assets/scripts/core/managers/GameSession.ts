@@ -2580,6 +2580,11 @@ export class GameSession implements AcademyRecordPort {
     /** 出生紀錄以子嗣 UID 去重並複製；結緣確認流程會在此之後呼叫既有 save。 */
     public recordBreedingBirth(record: BreedingBirthRecord): void {
         this._breedingBirthRecords = normalizeBreedingBirthRecords([...this._breedingBirthRecords, record]);
+        this._family.recordBiologicalChild(
+            record.child.UID,
+            [record.session.Father_UID, record.session.Mother_UID],
+            this._clock.state.totalSeasonsElapsed,
+        );
         this._familySystemUnlockedFlag = true;
         this.recordPlayerLog('GENERAL_BORN');
         this._recordEventJournal('GENERAL_BORN', this._journalSubjects([record.session.Father_UID, record.session.Mother_UID]));

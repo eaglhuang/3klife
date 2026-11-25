@@ -1310,5 +1310,5 @@
   "ui.battle.defense.banner_deploy": "守城備戰：從左側兵種卡拖到我方底線的格子部署部隊；部署後按「結束回合」開戰",
   "ui.battle.defense.banner_ready": "部隊已就位：按「結束回合」開戰，守住城寨",
   "ui.battle.defense.blocked_end_turn": "尚未部署部隊，不能開戰！先把兵種卡拖到我方底線格子",
-  "ui.battle.defense.blocked_auto": "尚未部署部隊，不能自動代打！先把兵種卡拖到我方底線格子"
+  "ui.battle.defense.guard_granted": "兵力或糧草不足，發給你一張保底{0}卡（不扣糧草），拖到底線格子就能部署"
 }

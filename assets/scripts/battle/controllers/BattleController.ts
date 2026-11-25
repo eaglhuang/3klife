@@ -100,6 +100,7 @@ import {
   type SortieDeployBlockReason,
   type SortieState,
   type SortieSummary,
+  applyFreeDeploy,
 } from '../../core/systems/SortieDeploy';
 import {
   delegateAiIqOf,
@@ -203,6 +204,9 @@ export class BattleController {
   /** 出征軍勢 / 糧草帳本；null = 舊版 demo 戰鬥（不扣軍勢） */
   private sortie: SortieState | null = null;
   private previewSortie = false;
+  /** 守城保底步兵券（PROG-2-10023）：本場剩餘張數；已發過就不再發（每場一次） */
+  private defenseGuardCharge = 0;
+  private defenseGuardGranted = false;
   /** 委任 AI 品質（PROG-2-0908）；null 為未開委任 */
   private delegateQuality: DelegateQuality | null = null;
 
@@ -336,6 +340,8 @@ export class BattleController {
     this.pendingEnemyTurnResult = null;
     this.sortie = null;
     this.previewSortie = false;
+    this.defenseGuardCharge = 0;
+    this.defenseGuardGranted = false;
     services().buff.clearAll(); // 清除上一場的狀態效果
     services().battle.beginBattle();
     this.applyTutorialRules();
@@ -488,6 +494,9 @@ export class BattleController {
     if (this.sortie) {
       this.syncSortieWithField();
       const check = checkDeploy(this.sortie, { troopType: type, militia: options.militia });
+      if (!check.ok && this.canUseDefenseGuardDeploy(type, options.militia, check.reasons)) {
+        return this.deployDefenseGuardInfantry(lane, unitName);
+      }
       if (!check.ok) {
         const reasons = check.reasons.map((reason) => SORTIE_BLOCK_TO_FAIL_REASON[reason]);
         const suggestion = suggestLowCostDeploy(this.sortie, type, DEPLOY_SUGGESTION_CANDIDATES);
@@ -512,6 +521,42 @@ export class BattleController {
       this.sortie = applied.state;
       services().battle.spendFood(applied.check.cost.foodCost);
     }
+    return { ok: true, unit };
+  }
+
+  /** 守城保底步兵券還在嗎（測試與 UI 讀取） */
+  public get hasDefenseGuardInfantry(): boolean { return this.defenseGuardCharge > 0; }
+
+  /**
+   * 守城保底兵（PROG-2-10023，使用者 11/25 裁決）：進入部署階段時呼叫一次。
+   * 玩家守城、有出征帳本，而且五種兵種卡一張都部署不了（沒軍勢或糧草不足）才發一張保底步兵券；
+   * 已有可部署的卡、非守城、已發過都不發。券只免這一隊的軍勢與糧草，其他規則照舊。回傳是否發了。
+   */
+  public grantDefenseGuardInfantry(): boolean {
+    if (this.state.siegeDefender !== Faction.Player || this.defenseGuardGranted || !this.sortie) return false;
+    this.syncSortieWithField();
+    const sortie = this.sortie;
+    const anyDeployable = DEPLOY_SUGGESTION_CANDIDATES.some((troopType) => checkDeploy(sortie, { troopType }).ok);
+    if (anyDeployable) return false;
+    this.defenseGuardGranted = true;
+    this.defenseGuardCharge = 1;
+    return true;
+  }
+
+  /** 正常檢查沒過、要部署的是步兵、持有保底券、且不是場上名額滿才走保底；militia 民兵不算 */
+  private canUseDefenseGuardDeploy(type: TroopType, militia: boolean | undefined, reasons: readonly string[]): boolean {
+    return this.defenseGuardCharge > 0 && type === TroopType.Infantry && !militia && !reasons.includes('FIELD_UNIT_LIMIT');
+  }
+
+  private deployDefenseGuardInfantry(lane: number, unitName?: string): DeployOutcome {
+    const unit = this.unitSpawner.spawnUnit(TroopType.Infantry, Faction.Player, lane, 0, unitName, {});
+    unit.factorGenes = this.state.getGeneral(Faction.Player)?.genes ?? [];
+    unit.factorEffects = factorBattleEffectsOf(unit.factorGenes, this.factorEffectMap);
+    this.turnManager.notePlayerDeployment();
+    this.turnManager.markUnitDeployed(unit.id);
+    this.checkBattleRelationEvents();
+    this.defenseGuardCharge = 0;
+    if (this.sortie) this.sortie = applyFreeDeploy(this.sortie, unit.id, { troopType: TroopType.Infantry });
     return { ok: true, unit };
   }
 
@@ -581,10 +626,12 @@ export class BattleController {
     this.syncSortieWithField();
     const candidates = sortDelegateCandidates(this.sortie, DEPLOY_SUGGESTION_CANDIDATES);
     const pick = delegatePickDeploy(this.sortie, candidates, this.delegateQuality, situation);
-    if (pick.troopType === null) return null;
+    // 守城保底券：一般兵種都部署不了時由 AI 用保底步兵（PROG-2-10023）
+    const troopType = pick.troopType ?? (this.defenseGuardCharge > 0 ? TroopType.Infantry : null);
+    if (troopType === null) return null;
     const lane = this.pickDelegateLane();
     if (lane < 0) return null;
-    return this.tryDeployTroop(pick.troopType as TroopType, lane);
+    return this.tryDeployTroop(troopType as TroopType, lane);
   }
 
   /**
