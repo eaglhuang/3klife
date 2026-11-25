@@ -140,6 +140,20 @@ export const DUST_COLOR_DARK = { r: 170, g: 140, b: 90 } as const;
 /** 塵粒起始不透明度（0～1），之後線性淡到 0。 */
 export const DUST_START_ALPHA = 0.75;
 
+/**
+ * 塵粒參數範圍（畫面像素／秒）。11/25 實跑發現舊值（粒徑 16～24、放大 1.8～2.5 倍）柔邊圓點互相疊成一整塊平的沙色團，
+ * 改成較小的顆粒、較少放大、較高的上揚與較寬的散布，讓一顆顆塵粒分得開；疊層根節點縮放約 0.6，螢幕像素約為此值 ×0.6。
+ */
+export const DUST_PARTICLE_RANGES = {
+  startSize: [9, 14],
+  endScale: [1.3, 1.9],
+  rise: [40, 75],
+  drift: [15, 45],
+  jitterX: 14,
+  jitterY: 5,
+  lifeSec: [0.6, 0.9],
+} as const;
+
 export interface DustParticleParams {
   /** 起始粒徑（畫面像素，6～10 × 塵粒大小倍率） */
   startSize: number;
@@ -162,15 +176,15 @@ export function rollDustParticle(spec: MoveDustSpec, rand: () => number = Math.r
   const between = (lo: number, hi: number): number => lo + (hi - lo) * rand();
   const t = rand();
   const lerp = (a: number, b: number): number => Math.round(a + (b - a) * t);
+  const r = DUST_PARTICLE_RANGES;
   return {
-    // 實機量測（11/19）：疊層根節點縮放約 0.6，6～10 只剩 4～6 螢幕像素，看不到；放大到 16～24（約 10～15 螢幕像素）
-    startSize: between(16, 24) * spec.scale,
-    endScale: between(1.8, 2.5),
-    rise: between(25, 45),
-    drift: between(15, 40),
-    jitterX: between(-10, 10),
-    jitterY: between(-4, 4),
-    lifeSec: between(0.6, 0.9),
+    startSize: between(r.startSize[0], r.startSize[1]) * spec.scale,
+    endScale: between(r.endScale[0], r.endScale[1]),
+    rise: between(r.rise[0], r.rise[1]),
+    drift: between(r.drift[0], r.drift[1]),
+    jitterX: between(-r.jitterX, r.jitterX),
+    jitterY: between(-r.jitterY, r.jitterY),
+    lifeSec: between(r.lifeSec[0], r.lifeSec[1]),
     color: { r: lerp(DUST_COLOR_LIGHT.r, DUST_COLOR_DARK.r), g: lerp(DUST_COLOR_LIGHT.g, DUST_COLOR_DARK.g), b: lerp(DUST_COLOR_LIGHT.b, DUST_COLOR_DARK.b) },
   };
 }
