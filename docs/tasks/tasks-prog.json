@@ -18697,12 +18697,20 @@
       "priority": "P1",
       "owner": "antigravity",
       "file": "docs/agent-briefs/tasks/PROG/PROG-2-10029.md"
+    },
+    {
+      "id": "PROG-2-10037",
+      "title": "實作結緣公式分項與小名 8/12/15 歲三段揭曉可玩 UI 元件",
+      "status": "done",
+      "priority": "P1",
+      "owner": "antigravity",
+      "file": "docs/agent-briefs/tasks/PROG/PROG-2-10037.md"
     }
   ],
   "summary": {
-    "done": 345,
+    "done": 346,
     "in_progress": 3,
     "open": 87,
-    "total": 435
+    "total": 436
   }
 }
