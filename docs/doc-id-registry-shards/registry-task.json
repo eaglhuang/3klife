@@ -17122,5 +17122,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10021.md",
     "title": "[PROG-2-10021] 戰場受擊音效 light 層補變體：輪播避免連續重複、同幀節流",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3090",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10022.md",
+    "title": "[PROG-2-10022] 首年四季全程實玩腳本 playtest-online --full-year（逐季斷言）",
+    "category": "task"
   }
 ]
