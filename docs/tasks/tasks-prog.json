@@ -18563,6 +18563,126 @@
       }
     },
     {
+      "doc_id": "doc_task_3094",
+      "id": "PROG-2-10028",
+      "title": "戰場手感修正：揚塵粒子分散、掠奪跳字依序錯開、倒下擬聲字偏移",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-25",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-25T19:04:22+08:00",
+      "started_by_agent": "codex-gpt-5.4-mini",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "11/25 實跑：騎兵揚塵糊成一塊平沙團；獎勵跳字上下疊並壓橫幅；倒下擬聲字蓋住暴擊傷害與 +SP。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "tsc 測試型別 0 錯",
+        "單元測試通過",
+        "實機截圖前後對照"
+      ],
+      "deliverables": [],
+      "notes": "2026-11-25 | 狀態: done | 驗證: tsc 0 錯、單元測試 9603 通過、compute-gate quick 4/4；實機網頁版截圖揚塵明顯變輕散；倒下擬聲字／獎勵跳字截圖未抓到清楚畫面 | 變更: 揚塵粒徑縮小上揚加高、部署落地塵倍率 1.6→1.15；掠奪跳字依序錯開（em 相對位移）；倒下擬聲字延後 0.15 秒側上偏移（em） | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "id": "PROG-2-10025",
+      "title": "戰場單挑勝利／計謀橫幅不蓋 HUD 資訊",
+      "status": "done",
+      "priority": "P1",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "brief": "docs/agent-briefs/tasks/PROG/PROG-2-10025.md"
+    },
+    {
+      "id": "PROG-2-10026",
+      "title": "結緣透明加法公式、誠意累積（+12%/次）與第1年第3季紅娘叩門保底",
+      "status": "done",
+      "priority": "P0",
+      "owner": "Antigravity",
+      "brief": "docs/agent-briefs/tasks/PROG/PROG-2-10026.md"
+    },
+    {
+      "doc_id": "doc_task_3098",
+      "id": "PROG-2-10032",
+      "title": "線上整年驗收開機步驟改輪詢開始鈕並失敗即中止",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "bugfix",
+      "phase": "M0",
+      "created": "2026-11-25",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "boot-login-lobby 原固定等 12 秒，冷載入時找不到開始遊戲；改輪詢（上限 stuckMs），開機失敗即 boot-abort 不再跑後續步驟",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "輪詢開始遊戲",
+        "boot 失敗中止並輸出 boot-abort",
+        "單元測試通過"
+      ],
+      "deliverables": [],
+      "notes": "2026-11-25 | 狀態: done | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "id": "PROG-2-10027",
+      "title": "實作年末榜單頒獎服務：NPC 補位至 4 人、名次獎勵、驚喜獎與第 2~5 年曲線",
+      "status": "done",
+      "priority": "P1",
+      "owner": "antigravity",
+      "file": "docs/agent-briefs/tasks/PROG/PROG-2-10027.md"
+    },
+    {
       "id": "PROG-2-10029",
       "title": "實作血統天賦小名 48 池、出生抽取、8/12/15 歲揭曉與成長拆解表",
       "status": "done",
@@ -18572,9 +18692,9 @@
     }
   ],
   "summary": {
-    "done": 334,
-    "in_progress": 4,
+    "done": 344,
+    "in_progress": 3,
     "open": 87,
-    "total": 424
+    "total": 434
   }
 }

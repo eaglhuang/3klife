@@ -27,7 +27,23 @@ export const DEFEAT_VFX = {
   /** 世界座標往上抬一點，讓星星從單位身體中段冒出而不是腳下 */
   liftWorldY: 0.25,
   textKey: { troop: 'battle.defeat.troop', general: 'battle.defeat.general' },
+  /**
+   * 11/25 實跑：倒下擬聲字與暴擊傷害數字（-163）、「+20 SP」同時出現在同一點會互蓋。
+   * 擬聲字延後 0.15 秒、往側上方（UI 像素）偏移，傷害與 SP 先讀完、擬聲字仍保留原大小與彈出強度。
+   */
+  textDelaySec: 0.15,
+  /** 偏移以「字級倍數」表示（不寫死畫面像素／寬高），日後直式或手機橫式只需調這裡 */
+  textOffsetEmX: 1.3,
+  textOffsetEmY: 0.8,
 } as const;
+
+/** 擬聲字偏移的方向：依單位 id 奇偶左右交錯，兩側同時倒下的單位字不會又疊在一起。純函式。 */
+export function defeatTextOffsetOf(unitId: string, fontSize = 44): { x: number; y: number } {
+  let h = 0;
+  for (let i = 0; i < unitId.length; i++) h = (h * 31 + unitId.charCodeAt(i)) | 0;
+  const side = (h & 1) === 0 ? 1 : -1;
+  return { x: side * DEFEAT_VFX.textOffsetEmX * fontSize, y: DEFEAT_VFX.textOffsetEmY * fontSize };
+}
 
 /** 玩家與敵方的主將化身單位 id 前綴（與 UnitRenderer.isGeneralAvatarUnit 同一規則） */
 export function isGeneralAvatarUnitId(unitId: string): boolean {

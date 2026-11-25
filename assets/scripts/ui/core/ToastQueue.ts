@@ -84,9 +84,6 @@ export function mergeHeldToasts<T extends { message: string }>(earlier: readonly
  */
 export const BATTLE_TOAST_MAX_HOLD_SEC = 3.5;
 export const BATTLE_TOAST_STALE_SEC = 4;
-/** 提示條上緣距畫面頂端（設計解析度 1920×1080）；標題列 ~86 之下、棋盤上緣之上，不壓棋盤主要區域 */
-export const BATTLE_TOAST_TOP_PX = 92;
-
 /** 戰場提示實際停留秒數：先套排隊縮短規則，再套單句上限 */
 export function battleToastHoldSeconds(requestedSeconds: number, pendingCount: number): number {
     return Math.min(toastHoldSeconds(requestedSeconds, pendingCount), BATTLE_TOAST_MAX_HOLD_SEC);
