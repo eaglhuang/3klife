@@ -17981,7 +17981,10 @@
       "started_by_agent": "ClaudeCode_claude-opus-5-5",
       "description": "首戰編成視窗在指定主將不在名冊時把出戰主將設為空，首戰後大廳主將未定、戰場無出征帳本、自動不部署。",
       "related": [],
-      "depends": ["PROG-2-9913", "PROG-2-10003"],
+      "depends": [
+        "PROG-2-9913",
+        "PROG-2-10003"
+      ],
       "notes": "2026-11-25 | 狀態: done | 驗證: tsc 測試設定 0 錯、run-cli 9556 通過、compute-gate quick 4/4、web-desktop 建置 exit 36 且 index.html 存在、實機 playtest-online --year --no-set-lead：首戰主將 魏延（起始主將）大廳不再顯示未定、首戰勝利且有出征軍勢 5000；第二場因主將在大廳任務中（on-hall-mission）不可出戰仍退回名冊外的關卡主將而無出征帳本（另案，非本卡範圍）| 變更: SortieSetupController 名冊外主將還原起始主將、四語 i18n、tests/SortieLoadoutWindow.test.ts、playtest-online 年循環記錄主將可出戰狀態 | 阻塞: 無",
       "brief": {
         "style": "classic",
@@ -18141,7 +18144,9 @@
       "started_at": "2026-11-25T11:20:00+08:00",
       "started_by_agent": "ClaudeCode_claude-opus-5-5",
       "description": "總PM 裁決劇情關固定天氣：虎牢關（encounter-001）weather 由 SUNNY 改 WINDY，首戰張飛火計佈陣的施放條件「起風」自然達成。",
-      "related": ["PROG-2-9989"],
+      "related": [
+        "PROG-2-9989"
+      ],
       "depends": [],
       "notes": "2026-11-25 | 狀態: done | 驗證: tsc 0 錯、run-cli 全過、compute-gate quick 4/4；網頁建置實機（?qaBattle=1 真滑鼠）首戰張飛，關卡資料自然 WINDY（未改頁面 JS），第 3 回合點「計謀 35點」施放成功，格子火焰節點 cfxr_fire_circle／cfxr_fire_crisp／fire01 各 1，「燃燒」字樣出現 1 次，單位頭上燃×2，證據筆記夾 qa-fix/hugulao-wind-1125/ | 變更: encounters.json encounter-001 weather SUNNY→WINDY；tests/BattleWeatherRoll.test.ts 新增虎牢關 WINDY、戰前文字單行、火計條件達成；其他關不動 | 阻塞: 無",
       "brief": {
@@ -18165,7 +18170,9 @@
       "started_at": "2026-11-25T13:10:00+08:00",
       "started_by_agent": "ClaudeCode_claude-opus-5-5",
       "description": "第二場起主將在大廳任務中（on-hall-mission）不可出戰，戰場退回名冊外的關卡指定主將，沒有出征帳本、自動代打不出兵。總PM 方案①：改選可出戰武將（起始主將／統率最高）並提示「主將○○任務中，已改由△△出戰」。",
-      "related": ["PROG-2-10008"],
+      "related": [
+        "PROG-2-10008"
+      ],
       "depends": [],
       "notes": "2026-11-25 | 狀態: done | 驗證: tsc 測試設定 0 錯、run-cli 9562 通過、compute-gate quick 4/4；web-desktop 建置成功，實機 playtest-online --year --no-set-lead：主將 夏侯惇 在大廳任務中（on-hall-mission），第一季兩場出征都有出征軍勢（結算 出征軍勢 2030、城市兵源 2030→1530），自動代打有出兵，第二場勝利；舊行為為無出征帳本不出兵、敗北。證據筆記夾 qa-fix/lead-busy-1125/（年循環第二場並未開編成視窗，只有首戰教學戰才開，提示走 Toast，Toast 單元測試驗文案、實機未截到畫面）| 變更: GameSession.leadSubstitution／resolveLeadGeneralId 主將不能出戰改選替補、StarterRosterService.pickStartingLead、SortieSetupController.recommend 主將任務中改選並於 sortieNotice 提示、LobbyScene 出戰時 Toast、四語 sortie.leadBusy、tests/HallMissionSession.test.ts 兩案 | 阻塞: 無",
       "brief": {
@@ -18189,7 +18196,10 @@
       "started_at": "2026-11-25T13:30:54+08:00",
       "started_by_agent": "ClaudeCode_claude-opus-5-5",
       "description": "playtest-online 首戰流程加檢查：戰鬥天氣、嘗試施放計謀（火計優先，天氣不符改放第一個可放的）、格子特效數，寫進 report.battles 與摘要行。",
-      "related": ["PROG-2-10005", "PROG-2-9989"],
+      "related": [
+        "PROG-2-10005",
+        "PROG-2-9989"
+      ],
       "depends": [],
       "notes": "2026-11-25 | 狀態: done | 驗證: tsc 0 錯、run-cli 9563 通過、compute-gate quick 4/4；實跑 playtest-online（線上版）12 步，首戰「首戰天氣 WINDY；計謀 tactic-fire-scheme 成功；格子特效 7（hook 1）」，第一次實跑 10 次嘗試都未套用（原因不明），改加 TP／SP 診斷並放寬到 30 次嘗試，第二次第 27 次嘗試施放成功，證據筆記夾 playtest-first-battle-1125/ | 變更: playtest-online.js 新增 castTacticProbe 探針、battleState 加 weather、report.battles、--no-tactic-probe；playtest-year-summary.js 新增 formatFirstBattleLine；PlaytestYearSummary.test.ts 加 3 組；順手補 PROG-2-10008 doc_id | 阻塞: 無",
       "brief": {
@@ -18331,7 +18341,11 @@
       "started_at": "2026-11-25T16:00:00+08:00",
       "started_by_agent": "ClaudeCode_claude-opus-5-5",
       "description": "QA 體驗 9：年終守城缺玩家引導。進場 Toast、部署階段橫幅、未部署時阻擋結束回合與自動代打並跳警告；只動戰前流程與 UI，不動戰場規則與數值。",
-      "related": ["PROG-2-9425", "PROG-2-9426", "PROG-2-9707"],
+      "related": [
+        "PROG-2-9425",
+        "PROG-2-9426",
+        "PROG-2-9707"
+      ],
       "depends": [],
       "notes": "2026-11-25 | 狀態: done | 驗證: tsc 0 錯、run-cli 9577 通過、compute-gate quick；未做實機截圖 | 變更: 新增 DefenseGuide／DefenseDeployGuide，BattleScene 進場掛提示與橫幅，TurnFlowManager／BattleUIBridge 未部署閘門，四語 i18n 五鍵 | 阻塞: 無",
       "brief": {
@@ -18340,12 +18354,63 @@
         "summary": "",
         "doc": "docs/agent-briefs/tasks/PROG/PROG-2-10019.md"
       }
+    },
+    {
+      "doc_id": "doc_task_3090",
+      "id": "PROG-2-10022",
+      "title": "首年四季全程實玩腳本 playtest-online --full-year（逐季斷言）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P2",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-25",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-25T16:44:45+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "擴充 playtest-online.js 新增 --full-year：四季各推進、戰鬥試放計謀、年終守城、換年斷言，輸出 full-year-report.json；失敗列出哪一步與原因",
+      "related": [
+        "PROG-2-10019",
+        "PROG-2-9141"
+      ],
+      "depends": [],
+      "acceptance": [
+        "node --check 通過",
+        "tsc 測試型別 0 錯誤",
+        "evaluateFullYear 單元測試通過"
+      ],
+      "deliverables": [],
+      "notes": "2026-11-25 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
-    "done": 331,
-    "in_progress": 2,
+    "done": 334,
+    "in_progress": 3,
     "open": 87,
-    "total": 420
+    "total": 424
   }
 }

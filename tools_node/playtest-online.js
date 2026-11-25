@@ -48,6 +48,8 @@
  *   --jade      選用：玉的用途（商店看玉、許願祭壇用玉買加速卡，PROG-2-9149）
  *   --year      選用：原步驟後接一年循環（每季內政／任務牆／戰鬥／抽卡／培育／推進一季），輸出 year-report.json（PROG-2-9141）
  *   --battles-per-season  --year 時每季出征場數（預設 2）
+ *   --full-year  選用：隱含 --year；每季首場戰鬥試放計謀並逐季斷言（推進、玉／銀兩、放招、年終守城、換年），輸出 full-year-report.json，失敗列出哪一步與原因
+ *   --skill-prefer <id>  --full-year 優先放的計謀（預設 tactic-fire-scheme，需 WINDY）；--min-casts <n> 整年最少放招次數（預設 1）
  *   --no-set-lead  --year 時不替玩家指定出戰主將（主將未定時戰場無出征帳本、自動代打不出兵，會打輸；用來重現）
  *   --no-tactic-probe  不做首戰計謀探針（預設首戰記錄天氣、試放一次計謀並量格子特效，輸出在 report.battles，PROG-2-10010）
  *   --no-auto-play  戰鬥改逐回合手按結束回合（預設開場按一次「自動」走自動代打，PROG-2-9711）
@@ -76,7 +78,7 @@ const path = require('path');
 const { execFileSync } = require('child_process');
 const { createRealMouse } = require('./playtest-real-mouse');
 const { decideEndTurnAction } = require('./playtest-end-turn-fallback');
-const { formatYearQuarterLine, formatFirstBattleLine, isKnownEnvError } = require('./playtest-year-summary');
+const { formatYearQuarterLine, formatFirstBattleLine, isKnownEnvError, evaluateFullYear } = require('./playtest-year-summary');
 
 const projectRoot = path.resolve(__dirname, '..');
 const DEFAULT_URL = 'https://eaglhuang.github.io/3klife-play/';
@@ -1064,6 +1066,8 @@ async function main() {
             gold: readNum(await rm.textOfNodeName('LobbyHallScreen_span_1')),
             food: readNum(await rm.textOfNodeName('LobbyHallScreen_span_3')),
             troops: readNum(await rm.textOfNodeName('LobbyHallScreen_span_4')),
+            jade: readNum(await rm.textOfNodeName('LobbyHallScreen_span_2')),
+            silver: readNum(await rm.textOfNodeName('LobbyHallScreen_silver_value')),
         });
         await step('lobby-mission-loop', async (rec) => {
             await requireLobby();
@@ -1578,7 +1582,7 @@ async function main() {
                     if (st && !st.advancing && !st.ultCutin && !st.duelPanel && !st.battleEnded && (probeStartedAt === null || Date.now() - probeStartedAt < TACTIC_PROBE_WINDOW_MS)) {
                         // 嘗試上限改依時間（PROG-2-10014）：從第一個空檔起算約 60 秒；沒有存活敵軍的取樣不算嘗試次數
                         if (probeStartedAt === null) probeStartedAt = Date.now();
-                        const probe = await page.evaluate((id) => window.__pt.castTacticProbe(id), 'tactic-fire-scheme').catch((e) => ({ ok: false, reason: 'PROBE_ERROR:' + String(e && e.message || e) }));
+                        const probe = await page.evaluate((id) => window.__pt.castTacticProbe(id), opts.preferTactic || 'tactic-fire-scheme').catch((e) => ({ ok: false, reason: 'PROBE_ERROR:' + String(e && e.message || e) }));
                         if (probe.noEnemy) noEnemyPolls += 1; else tacticAttempts += 1;
                         firstBattle.tactic = { ...probe, attempts: tacticAttempts, noEnemyPolls };
                         if (probe.weather && !firstBattle.weather) firstBattle.weather = probe.weather;
@@ -2061,7 +2065,8 @@ async function main() {
         }
 
         // ── 9. 一年循環（--year，選用）：從目前季節起每季內政＋任務牆派將＋出征戰鬥＋抽卡／培育＋推進一季，直到第 1 年第 4 季結束（PROG-2-9141）──
-        if (args.year) {
+        if (args.year || args['full-year']) {
+            const fullYear = Boolean(args['full-year']);
             const battlesPerSeason = Number(args['battles-per-season'] || 2);
             const yearReport = { tool: 'tools_node/playtest-online.js --year', startedAt: new Date().toISOString(), battlesPerSeason, quarters: [] };
             const writeYearReport = () => fs.writeFileSync(path.join(outDir, 'year-report.json'), JSON.stringify(yearReport, null, 2), 'utf8');
@@ -2253,12 +2258,12 @@ async function main() {
                         // 主將未定時戰場會退回關卡指定的名冊外主將，沒有出征帳本，自動代打只會結束回合不出兵（PROG-2-10003）；
                         // 跟玩家一樣先指定一位可出戰武將當主將。--no-set-lead 可保留未定狀態重現
                         rec.detail.lead = await ensureLeadGeneral(!args['no-set-lead']);
-                        const d = await runBattle(rec, { shotTag: 'battle-settle', quick: b === 1 });
+                        const d = await runBattle(rec, { shotTag: 'battle-settle', quick: b === 1, probeTactic: fullYear && b !== 1, preferTactic: args['skill-prefer'] });
                         rec.detail.topAfter = await readTopbarSettled();
                         return d;
                     });
                     const brec = yq.steps[`battle${b + 1}`];
-                    yq.battles.push({ ok: okB, result: brec.detail.result || null, lead: brec.detail.lead || null, reason: brec.reason, rounds: brec.detail.lastRound, ms: brec.detail.battleMs, topBefore: brec.detail.topBefore, topAfter: brec.detail.topAfter, screenshot: brec.screenshot });
+                    yq.battles.push({ ok: okB, tactic: (brec.detail.firstBattle && brec.detail.firstBattle.tactic) || null, weather: (brec.detail.firstBattle && brec.detail.firstBattle.weather) || null, result: brec.detail.result || null, lead: brec.detail.lead || null, reason: brec.reason, rounds: brec.detail.lastRound, ms: brec.detail.battleMs, topBefore: brec.detail.topBefore, topAfter: brec.detail.topAfter, screenshot: brec.screenshot });
                     if (!okB) break; // 一場失敗就不連打下一場，避免卡在壞狀態
                 }
                 // 4. 轉蛋：單抽一次（免費次數或資源足夠就會成功；結果畫面關掉）
@@ -2340,6 +2345,7 @@ async function main() {
                     rec.detail.popups = popups.map((p) => p.kind);
                     rec.detail.popupTexts = popupLog;
                     yq.popups = popups.map((p) => p.kind);
+                    yq.yearEndBattles = rec.detail.yearEndBattles || 0;
                     yq.popupTexts = popupLog;
                     yq.reportTexts = reports.map((r) => r.texts);
                     await delay(1000);
@@ -2349,7 +2355,7 @@ async function main() {
                     rec.detail.topAfter = await readTopbar();
                     rec.detail.topSpansAfter = await readSpans();
                     await shot(rec, 'lobby-after');
-                    yq.topAfter = rec.detail.topAfter; yq.topSpansAfter = rec.detail.topSpansAfter; yq.seasonAfter = after.text;
+                    yq.topAfter = rec.detail.topAfter; yq.topSpansAfter = rec.detail.topSpansAfter; yq.seasonAfter = after.text; yq.seasonAfterOrdinal = after.ordinal;
                     if (cur.ordinal !== null && after.ordinal !== cur.ordinal + 1) throw new Error(`季別沒有前進：「${cur.text}」→「${after.text || '讀不到'}」`);
                     return rec.detail;
                 });
@@ -2363,8 +2369,26 @@ async function main() {
                 console.log(`[playtest] ${formatYearQuarterLine(yq)}`);
             }
             yearReport.finishedAt = new Date().toISOString();
-            yearReport.endSeason = (await readSeason().catch(() => ({ text: null }))).text;
+            const endSeasonNow = await readSeason().catch(() => ({ text: null, ordinal: null }));
+            yearReport.endSeason = endSeasonNow.text;
             writeYearReport();
+            if (fullYear) {
+                // 逐季斷言：失敗寫出哪一步與原因，不只 timeout
+                const verdict = evaluateFullYear({
+                    startOrdinal: (yearReport.quarters[0] || {}).ordinal ?? null,
+                    baselineAdvances: yearReport.baselineQuarters.filter((x) => x.ok).length,
+                    endOrdinal: endSeasonNow.ordinal,
+                    quarters: yearReport.quarters,
+                    config: { minCasts: Number(args['min-casts'] || 1) },
+                });
+                fs.writeFileSync(path.join(outDir, 'full-year-report.json'), JSON.stringify({ tool: 'tools_node/playtest-online.js --full-year', ...verdict }, null, 2), 'utf8');
+                verdict.lines.forEach((l) => console.log('[playtest] ' + l));
+                await step('full-year-verdict', async (rec) => {
+                    rec.detail = { checks: verdict.checks, lines: verdict.lines };
+                    if (!verdict.ok) throw new Error(verdict.checks.filter((c) => !c.ok).map((c) => '【' + c.name + '】' + c.reason).join('；'));
+                    return rec.detail;
+                });
+            }
         }
 
         // ── 9b. 配偶上場實玩（--family，選用；PROG-2-9582 F11）：把目前存檔複製到全新情境，網址帶 qaFamily=spouse／nursing，
