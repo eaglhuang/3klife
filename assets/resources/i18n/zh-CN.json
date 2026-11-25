@@ -1367,5 +1367,13 @@
   "ui.bloodline.stage.trait_12": "12 岁・特质渐显",
   "ui.bloodline.stage.revealed_15": "15 岁・小名揭晓",
   "ui.bloodline.epithet.title": "小名",
-  "ui.bloodline.stage.hidden": "尚未揭晓"
+  "ui.bloodline.stage.hidden": "尚未揭晓",
+  "ui.jealousy.optionA.label": "诚恳安抚（免费，{0}% +{1} / {2}% {3}）",
+  "ui.jealousy.optionB.label": "厚礼赔罪（{0} 银两换 +{1} 好感）",
+  "ui.jealousy.optionC.label": "装傻打混（免费，{0}% 精力 +{1} / {2}% 抓包 {3}）",
+  "ui.jealousy.title.sleep_god": "府中睡神",
+  "ui.dynasty.badge.tianxia_mingmen.desc": "连续三年名列榜首，私塾 +{0}%、俸禄 +{1}%",
+  "ui.jealousy.caught.1": "第 1 次抓包：你假装在背《出师表》，结果口水流在竹简上被抓个正着！",
+  "ui.jealousy.caught.2": "第 2 次抓包：你躲在屏风后打呼，还把呼声说成是在练狮子吼！",
+  "ui.jealousy.caught.3": "第 3 次抓包：你连枕头都带来书房了，配偶无奈赐号「府中睡神」！"
 }

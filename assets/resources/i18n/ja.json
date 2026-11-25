@@ -1299,5 +1299,13 @@
   "ui.bloodline.stage.trait_12": "12歳・資質の顕現",
   "ui.bloodline.stage.revealed_15": "15歳・通り名の公開",
   "ui.bloodline.epithet.title": "通り名",
-  "ui.bloodline.stage.hidden": "未公開"
+  "ui.bloodline.stage.hidden": "未公開",
+  "ui.jealousy.optionA.label": "誠意の慰め（無料、{0}% +{1} / {2}% {3}）",
+  "ui.jealousy.optionB.label": "豪華な贈り物（銀両 {0} で好感 +{1}）",
+  "ui.jealousy.optionC.label": "とぼける（無料、{0}% 精力 +{1} / {2}% 発覚 {3}）",
+  "ui.jealousy.title.sleep_god": "屋敷の眠り神",
+  "ui.dynasty.badge.tianxia_mingmen.desc": "3年連続首位：私塾 +{0}%、俸禄 +{1}%",
+  "ui.jealousy.caught.1": "発覚1回目：出師表を暗唱するふりをして竹簡によだれを垂らした！",
+  "ui.jealousy.caught.2": "発覚2回目：衝立の後ろでいびきをかき、獅子吼の修行だと言い張った！",
+  "ui.jealousy.caught.3": "発覚3回目：書斎に枕まで持ち込み、「屋敷の眠り神」の称号を得た！"
 }
