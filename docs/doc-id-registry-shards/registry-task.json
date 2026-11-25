@@ -17142,13 +17142,31 @@
     "category": "task"
   },
   {
-    "id": "doc_task_3093",
+    "id": "doc_task_3094",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10028.md",
+    "title": "[PROG-2-10028] 戰場手感修正：揚塵粒子分散、掠奪跳字依序錯開、倒下擬聲字偏移",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3095",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10025.md",
+    "title": "[PROG-2-10025] 戰場單挑勝利／計謀橫幅不蓋 HUD 資訊",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3096",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10026.md",
+    "title": "PROG-2-10026: 結緣透明加法、誠意累積與紅娘叩門保底",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3097",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10000.md",
     "title": "PROG-2-10000: 親生子嗣登記缺口修補",
     "category": "task"
   },
   {
-    "id": "doc_task_3094",
+    "id": "doc_task_3098",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10027.md",
     "title": "PROG-2-10027 實作年末榜單頒獎服務",
     "category": "task"

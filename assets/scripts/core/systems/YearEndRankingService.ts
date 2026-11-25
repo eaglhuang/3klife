@@ -82,7 +82,7 @@ export class YearEndRankingService {
             const npc = pool[fillIndex];
             const ratio = npcRatioProvider
                 ? Math.max(rankingConfig.npcFillMinRatio, Math.min(rankingConfig.npcFillMaxRatio, npcRatioProvider(fillIndex)))
-                : [0.85, 0.95, 1.02, 1.1][fillIndex % 4];
+                : rankingConfig.npcFillDefaultRatios[fillIndex % rankingConfig.npcFillDefaultRatios.length];
             list.push({
                 id: `${npc.id}_y${year}`,
                 name: npc.name,

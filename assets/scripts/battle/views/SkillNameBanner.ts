@@ -2,18 +2,18 @@
 /**
  * SkillNameBanner — 武將放招時畫面中央偏上的招式名橫幅（PROG-2-9410）。
  *
- * 位置：棋盤上方、標題列下方；寬度只佔畫面中段並略往左偏，不碰右側戰報與控制列，也不壓在棋盤中央的命中特效上。
+ * 位置：由 BattleBannerLayoutData 的錨點＋比例規則決定（標題列正下方、教學頁籤之上的空帶），不蓋 HUD 保留區。
  * 排隊／合併規則在 SkillBannerQueue（純邏輯）；這裡只負責畫與淡入淡出。
  * 全程只用一個節點（重複使用，不每次 new），淡入淡出走 tween，跟著戰場時間（x2 加速、QA 慢動作）一起變。
  */
-import { Color, Graphics, Label, Node, Tween, UIOpacity, UITransform, tween } from 'cc';
+import { Color, Graphics, Label, Node, Tween, UIOpacity, UITransform, tween, view } from 'cc';
+import { BATTLE_BANNER_LAYOUT } from '../../core/data/BattleBannerLayoutData';
+import { bannerCenterOffset } from '../../core/systems/BannerPlacement';
 import { SKILL_CAST_TIMING, SkillBannerItem, SkillBannerQueue, skillBannerText } from '../shared/SkillCastPresentation';
 
 const BANNER_NODE = 'SkillNameBanner';
 const BANNER_WIDTH = 760;
 const BANNER_HEIGHT = 96;
-/** 相對畫面中心的位置：往上 300（標題列下方、棋盤上方），往左 60（避開右側戰報與控制列） */
-const BANNER_OFFSET = { x: -60, y: 300 } as const;
 const SIDE_COLORS: Record<SkillBannerItem['side'], { text: Color; edge: Color }> = {
   player: { text: new Color(255, 226, 140, 255), edge: new Color(90, 160, 255, 255) },
   enemy: { text: new Color(255, 170, 150, 255), edge: new Color(230, 70, 60, 255) },
@@ -77,10 +77,17 @@ export class SkillNameBanner {
     label.outlineWidth = 3;
     this.label = label;
     node.addChild(textNode);
-    node.setPosition(BANNER_OFFSET.x, BANNER_OFFSET.y, 0);
     parent.addChild(node);
+    this.place(node);
     this.node = node;
     return true;
+  }
+
+  /** 依規則重算位置（每次顯示都算，畫面尺寸變了也跟著動） */
+  private place(node: Node): void {
+    const size = view.getVisibleSize();
+    const o = bannerCenterOffset(BATTLE_BANNER_LAYOUT.skillBanner, size.width, size.height, BANNER_HEIGHT);
+    node.setPosition(o.x, o.y, 0);
   }
 
   private render(item: SkillBannerItem): void {
@@ -105,6 +112,7 @@ export class SkillNameBanner {
     const node = this.node;
     if (!fade || !node?.isValid) return;
     Tween.stopAllByTarget(fade);
+    this.place(node);
     node.setSiblingIndex(node.parent ? node.parent.children.length - 1 : 0);
     const t = SKILL_CAST_TIMING;
     if (!fresh) fade.opacity = 255;

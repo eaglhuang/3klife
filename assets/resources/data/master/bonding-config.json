@@ -1,0 +1,19 @@
+{
+  "baseRate": 25,
+  "compatibilityBase": 0.8,
+  "compatibilityMultiplier": 45,
+  "favorDivisor": 2,
+  "sincerityPerReject": 12,
+  "sincerityMax": 36,
+  "rejectFavorDelta": -12,
+  "minRate": 15,
+  "maxRate": 95,
+  "matchmakerFallback": {
+    "year": 1,
+    "season": 3,
+    "guaranteedRate": 80,
+    "deductFavorOnReject": false,
+    "enterCooldownOnReject": false,
+    "maxTriggersPerSave": 1
+  }
+}

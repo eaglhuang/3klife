@@ -77,9 +77,11 @@ export function landingCrossed(prev: number, now: number, tuning: DeployLandingT
  * 落地揚塵：一圈往兩側吹開的塵團（實機 11/19：只在腳下出一團、往身後飄，藍色地格上幾乎看不到）。
  * 每團粒子數同走路一步、粒子放大 1.6 倍；沒有塵（水軍、河流格）就照樣不出。
  */
+/** 落地塵粒相對走路的大小倍率；粒徑已縮小（MoveFeedback.DUST_PARTICLE_RANGES），舊的 1.6 倍加上 6 團疊在一起會糊成一整塊沙團，改 1.15。 */
+export const DEPLOY_DUST_SCALE = 1.15;
 export function deployLandingDust(walk: MoveDustSpec): MoveDustSpec {
   if (walk.kind === 'none') return { ...walk };
-  return { ...walk, scale: walk.scale * 1.6 };
+  return { ...walk, scale: walk.scale * DEPLOY_DUST_SCALE };
 }
 
 /**

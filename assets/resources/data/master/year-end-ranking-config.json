@@ -5,6 +5,7 @@
     { "id": "npc_fill_3", "name": "審配" },
     { "id": "npc_fill_4", "name": "沮授" }
   ],
+  "npcFillDefaultRatios": [0.85, 0.95, 1.02, 1.1],
   "npcFillMinRatio": 0.85,
   "npcFillMaxRatio": 1.1,
   "minRosterSize": 4,
