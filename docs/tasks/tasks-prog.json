@@ -18683,34 +18683,42 @@
       "file": "docs/agent-briefs/tasks/PROG/PROG-2-10027.md"
     },
     {
-      "doc_id": "doc_task_3100",
+      "id": "PROG-2-10033",
+      "title": "實作吃醋三選項（B 價格縮放、C 抓包 3 次解鎖府中睡神）與三連霸天下名門徽章",
+      "status": "done",
+      "priority": "P1",
+      "owner": "antigravity",
+      "file": "docs/agent-briefs/tasks/PROG/PROG-2-10033.md"
+    },
+    {
+      "doc_id": "doc_task_3101",
       "id": "PROG-2-10035",
       "title": "大廳任務類視窗套用戰場結算風格（settle 皮膚家族）",
       "owner": "ClaudeCode_claude-opus-5-5",
       "priority": "P1",
-      "status": "open",
+      "status": "in-progress",
       "type": "feature",
       "phase": "M0",
       "created": "2026-11-25",
       "created_by_agent": "ClaudeCode_claude-opus-5-5",
-      "started_at": "",
-      "started_by_agent": "",
+      "started_at": "2026-11-26T00:42:03+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
       "chain_id": "",
       "chain_step": "",
       "sensor_triggered_by": "",
-      "description": "把戰場勝利結算窗的樣式抽成主題 familyBindings.settle，任務詳情窗與極限任務窗改套，結算窗明細色改走 settle token。",
+      "description": "把戰場勝利結算窗樣式抽成主題 familyBindings.settle，任務詳情窗與極限任務窗改套，結算窗明細色改走 settle token。",
       "related": [],
       "depends": [],
       "acceptance": [
-        "tsc 測試型別 0 錯；run-cli 全過；compute-gate quick；實跑逐窗截圖看到新風格"
+        "tsc 0；run-cli 全過；compute-gate quick；實跑截圖"
       ],
       "deliverables": [
         "theme-registry familyBindings.settle",
         "ThemeService.skinStyleFor",
         "skin 調整",
-        "tests/ThemeSystem 家族測試"
+        "tests/ThemeSystem"
       ],
-      "notes": "2026-11-25 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "notes": "2026-11-25 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
@@ -18735,9 +18743,9 @@
     }
   ],
   "summary": {
-    "done": 343,
-    "in_progress": 3,
-    "open": 88,
-    "total": 434
+    "done": 344,
+    "in_progress": 4,
+    "open": 87,
+    "total": 435
   }
 }
