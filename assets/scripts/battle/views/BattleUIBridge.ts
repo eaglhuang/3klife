@@ -457,7 +457,11 @@ export class BattleUIBridge {
 
   // ── 公開 UI 更新 API（供 TurnFlowManager 呼叫）────────────────────────────
 
-  public refreshBattleViews(): void {
+  /**
+   * 計謀鈕的可用狀態與原因（PROG-2-0408／9333）：Presenter 判定，這裡只套用。
+   * BattleScene 的視圖刷新也呼叫這裡，避免它用「只看計謀點」的舊判斷把「待風」等條件蓋回成可按。
+   */
+  public refreshTacticSummary(): void {
     const c = this.ctx;
     if (!c.ctrl) return;
     const state = c.ctrl.state;
@@ -481,6 +485,13 @@ export class BattleUIBridge {
       const duelBlock = c.ctrl.generalDuelBlockReason();
       c.battleScenePanel?.setDuelLocked?.(duelBlock !== null, duelBlock === 'already-deployed' ? '已出陣' : undefined);
     }
+  }
+
+  public refreshBattleViews(): void {
+    const c = this.ctx;
+    if (!c.ctrl) return;
+    const state = c.ctrl.state;
+    this.refreshTacticSummary();
     // 棋盤格狀態與兵種渲染（對應原 BattleScene.refreshBattleViews）
     c.boardRenderer?.renderState(state);
     c.unitRenderer?.renderState(state);

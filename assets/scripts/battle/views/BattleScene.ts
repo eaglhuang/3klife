@@ -776,8 +776,11 @@ export class BattleScene extends Component {
     if (!this.ctrl) return;
 
     const currentGeneral = this.ctrl.state.playerGeneral;
-    if (currentGeneral) this.battleScenePanel?.setTacticSummary(
-      buildTacticSummary(currentGeneral).label, this.ctrl.getPlayerTacticPointState());
+    // 計謀鈕狀態交給 UI Bridge 的 Presenter 判定（含「待風」等施放條件）；只看計謀點會把灰掉的鈕蓋回可按（PROG-2-9989）
+    if (currentGeneral) {
+      if (this.battleUIBridge) this.battleUIBridge.refreshTacticSummary();
+      else this.battleScenePanel?.setTacticSummary(buildTacticSummary(currentGeneral).label, this.ctrl.getPlayerTacticPointState());
+    }
     this.hud?.setPlayerTallySetLabels?.(this.ctrl.activePlayerTallySetLabels);
     if (currentGeneral) this.hud?.setPlayerVitality?.(currentGeneral.vitality, currentGeneral.maxVitality);
     this.updateGridDebug();

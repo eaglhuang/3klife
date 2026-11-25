@@ -425,6 +425,7 @@
   "ui.battle.skill.cast_failed_target": "{0} failed to activate, please choose another target",
   "ui.battle.skill.cast_failed_cell": "{0} failed to activate, please choose another tile",
   "ui.battle.skill.cast_failed_no_enemy": "No enemy on the field: {0} has no target",
+  "ui.battle.skill.condition_unmet": "{0} condition not met: {1}",
   "ui.battle.skill.pick_enemy": "Select an enemy unit as the {0} target",
   "ui.battle.skill.aim.enemy": "Select an enemy unit to cast {0}, Esc to cancel",
   "ui.battle.skill.aim.line": "Select the enemy anchor on the line to cast {0}, Esc to cancel",

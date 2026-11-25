@@ -415,6 +415,7 @@
   "ui.battle.skill.cast_failed_target": "{0}の発動に失敗、別の対象を選んでください",
   "ui.battle.skill.cast_failed_cell": "{0}の発動に失敗、別のマスを選んでください",
   "ui.battle.skill.cast_failed_no_enemy": "戦場に敵軍がいないため、{0}の対象がありません",
+  "ui.battle.skill.condition_unmet": "{0}の発動条件を満たしていません：{1}",
   "ui.battle.skill.pick_enemy": "{0}の対象となる敵ユニットを選んでください",
   "ui.battle.skill.aim.enemy": "{0}を発動する敵ユニットを選んでください（Escでキャンセル）",
   "ui.battle.skill.aim.line": "{0}を発動する直線上の敵のアンカーを選んでください（Escでキャンセル）",

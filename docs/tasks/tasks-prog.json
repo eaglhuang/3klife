@@ -17936,6 +17936,30 @@
         "summary": "",
         "doc": "docs/agent-briefs/tasks/PROG/PROG-2-9995.md"
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9989",
+      "title": "計謀放不出來：沒起風時按鈕看似可按、點了只跳發動失敗（手打補驗 11/25）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P0",
+      "status": "in-progress",
+      "type": "bugfix",
+      "phase": "M0",
+      "created": "2026-11-25",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-25T11:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "description": "火計要起風，BattleScene 刷新把待風灰顯蓋回可按，失敗只丟泛用提示。",
+      "related": [],
+      "depends": [],
+      "notes": "",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "doc": "docs/agent-briefs/tasks/PROG/PROG-2-9989.md"
+      }
     }
   ],
   "summary": {
