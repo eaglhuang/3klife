@@ -9,6 +9,7 @@
  */
 import { TestRunner } from './TestRunner';
 import { createDeprecatedApiSuite } from './DeprecatedApiScanner';
+import { createYearEndRankingServiceSuite } from './YearEndRankingService.test';
 import { createBondingSuccessServiceSuite } from './BondingSuccessService.test';
 
 /**
@@ -73,6 +74,7 @@ if (typeof window === 'undefined') {
         if (n === 1 || n === 2 || n === 3) layerFilter = n;
     }
 
+    runner.register(createYearEndRankingServiceSuite());
     runner.register(createBondingSuccessServiceSuite());
 
     const summary = await runner.runAll(layerFilter);
