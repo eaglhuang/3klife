@@ -64,15 +64,15 @@ export interface MoveDustSpec {
 
 const DUST_NONE: MoveDustSpec = { kind: 'none', scale: 0, particleMin: 0, particleMax: 0 };
 
-/** 各兵種揚塵：基準為「中等」（每次落腳 4～7 顆），騎兵較大較多（7～10 顆）、輕裝較小。 */
+/** 各兵種揚塵：基準為「中等」（每次落腳 8～12 顆），騎兵較大較多（12～16 顆）、輕裝較小。 */
 const DUST_TABLE: Record<TroopType, MoveDustSpec> = {
-  [TroopType.Infantry]: { kind: 'dust', scale: 1.0, particleMin: 4, particleMax: 7 },
-  [TroopType.Pikeman]: { kind: 'dust', scale: 1.0, particleMin: 4, particleMax: 7 },
-  [TroopType.Shield]: { kind: 'dust', scale: 1.1, particleMin: 5, particleMax: 7 },
-  [TroopType.Archer]: { kind: 'dust', scale: 0.85, particleMin: 4, particleMax: 6 },
-  [TroopType.Cavalry]: { kind: 'dust', scale: 1.35, particleMin: 7, particleMax: 10 },
-  [TroopType.Engineer]: { kind: 'dust', scale: 1.1, particleMin: 4, particleMax: 7 },
-  [TroopType.Medic]: { kind: 'dust', scale: 0.85, particleMin: 4, particleMax: 6 },
+  [TroopType.Infantry]: { kind: 'dust', scale: 1.0, particleMin: 8, particleMax: 12 },
+  [TroopType.Pikeman]: { kind: 'dust', scale: 1.0, particleMin: 8, particleMax: 12 },
+  [TroopType.Shield]: { kind: 'dust', scale: 1.1, particleMin: 9, particleMax: 12 },
+  [TroopType.Archer]: { kind: 'dust', scale: 0.85, particleMin: 8, particleMax: 11 },
+  [TroopType.Cavalry]: { kind: 'dust', scale: 1.35, particleMin: 12, particleMax: 16 },
+  [TroopType.Engineer]: { kind: 'dust', scale: 1.1, particleMin: 8, particleMax: 12 },
+  [TroopType.Medic]: { kind: 'dust', scale: 0.85, particleMin: 8, particleMax: 11 },
   // 水軍在水上，不出塵
   [TroopType.Navy]: DUST_NONE,
 };
@@ -138,20 +138,22 @@ export function dustCountFor(spec: MoveDustSpec, isLeader: boolean, rand: () => 
 export const DUST_COLOR_LIGHT = { r: 196, g: 164, b: 106 } as const;
 export const DUST_COLOR_DARK = { r: 170, g: 140, b: 90 } as const;
 /** 塵粒起始不透明度（0～1），之後線性淡到 0。 */
-export const DUST_START_ALPHA = 0.75;
+export const DUST_START_ALPHA = 1.0;
 
 /**
  * 塵粒參數範圍（畫面像素／秒）。11/25 實跑發現舊值（粒徑 16～24、放大 1.8～2.5 倍）柔邊圓點互相疊成一整塊平的沙色團，
  * 改成較小的顆粒、較少放大、較高的上揚與較寬的散布，讓一顆顆塵粒分得開；疊層根節點縮放約 0.6，螢幕像素約為此值 ×0.6。
+ * 11/25 第三輪：放大後仍成一片糊團，改走「小而銳、多顆、散得開」：粒徑縮回 12～18 且邊緣銳利（貼圖只留細軟邊）、幾乎不放大、數量加倍、散布與上揚拉寬、壽命縮短，粒子間留得出空隙。
+ * 11/25 第二輪（已被第三輪取代）：正常縮放仍看不見，粒徑與不透明度各放大約 1.3～1.4 倍（粒徑 16～24（再加大一次，實跑正常縮放只見淡淡小塊）、起始不透明度 1.0、壽命拉長），散布同步加寬維持離散。
  */
 export const DUST_PARTICLE_RANGES = {
-  startSize: [9, 14],
-  endScale: [1.3, 1.9],
-  rise: [40, 75],
-  drift: [15, 45],
-  jitterX: 14,
-  jitterY: 5,
-  lifeSec: [0.6, 0.9],
+  startSize: [12, 18],
+  endScale: [1.0, 1.2],
+  rise: [30, 70],
+  drift: [40, 110],
+  jitterX: 58,
+  jitterY: 14,
+  lifeSec: [0.5, 0.8],
 } as const;
 
 export interface DustParticleParams {

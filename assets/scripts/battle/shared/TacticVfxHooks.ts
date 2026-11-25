@@ -123,7 +123,7 @@ export function salvageLootTexts(source: SalvageLootSource, resources: readonly 
  * 字會上下疊在一起並爬進畫面上方的橫幅區。改成依序錯開：每項延遲 delaySec、起點往下 stepY 並左右交錯，
  * 整組先下移 baseDropY，讓往上飄的距離不會碰到上方橫幅。純函式；位移以字級倍數（em）表示，乘上 fontSize 才是像素，不寫死畫面尺寸。
  */
-export const LOOT_TEXT_LAYOUT = { delaySec: 0.5, stepEm: 1.2, offsetEmX: 1.05, baseDropEm: -0.75, maxSlots: 5 } as const;
+export const LOOT_TEXT_LAYOUT = { delaySec: 0.5, stepEm: 1.4, offsetEmX: 1.05, baseDropEm: -0.75, maxSlots: 5 } as const;
 
 export function lootTextPlacement(index: number, fontSize = 32): { delaySec: number; x: number; y: number } {
     const i = Math.max(0, Math.floor(index)) % LOOT_TEXT_LAYOUT.maxSlots;
