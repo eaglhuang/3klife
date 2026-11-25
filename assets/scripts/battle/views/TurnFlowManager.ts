@@ -65,6 +65,7 @@ export class TurnFlowManager {
       return;
     }
     if (!c.ctrl.canAdvanceBattleTurn()) return;
+    if (this.bridge.blockIfDefenseUndeployed?.('end_turn')) return;
 
     c.battleLogPanel?.append('執行回合推進');
     c.isAdvancingTurn = true;

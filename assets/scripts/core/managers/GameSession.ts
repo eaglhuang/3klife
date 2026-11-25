@@ -2573,7 +2573,7 @@ export class GameSession implements AcademyRecordPort {
     public recordBreedingBirth(record: BreedingBirthRecord): void {
         this._breedingBirthRecords = normalizeBreedingBirthRecords([...this._breedingBirthRecords, record]);
         this._family.recordBiologicalChild(
-            record.child.uid,
+            record.child.UID,
             [record.session.Father_UID, record.session.Mother_UID],
             this._clock.state.totalSeasonsElapsed,
         );

@@ -24,6 +24,7 @@ import { overrideFloatTextStyle } from '../../core/systems/FloatTextStyle';
 import { BLOCK_FLOAT_TEXT, shieldHitFeedback, type DamageBlockReason } from '../shared/BlockFeedback';
 import { StatusCueThrottle, statusFloatTypeOf, statusMakesTargetFlinch, statusPolarityOf, statusWaveDelaySec } from '../shared/StatusApplyFeedback';
 import { salvageSummaryLines } from '../../core/systems/StageSalvageSettlement';
+import { isDefenseDeployBlocked, withDefenseGuideFallback } from '../../core/systems/DefenseGuide';
 import { AUTO_PLAY_OFF_LINE, AUTO_PLAY_ON_LINE, AUTO_PLAY_SKIP_LINE, AutoPlayState, delegateToggleStopsAutoPlay } from '../../core/systems/AutoPlay';
 import { DELEGATE_OFF_LINE, delegateOnLine, FOOD_EMPTY_LINE } from '../../core/systems/SortieDeployScripts';
 import { wisdomMeterText, WISDOM_SURGE_LOG } from '../shared/WisdomMeter';
@@ -237,6 +238,7 @@ export class BattleUIBridge {
   private onBoardPlacement: ((screenX: number, screenY: number) => void) | null = null;
   /** 自動代打剛開啟時通知回合流程排程第一次結束回合（PROG-2-9707） */
   private onAutoPlayStarted: (() => void) | null = null;
+  private _defenseGateOpen = false;
   /** 自動鈕的自動代打狀態（PROG-2-9707） */
   private readonly autoPlay = new AutoPlayState();
   /** 奧義漫畫分鏡 cut-in（Issue #2139）：一場戰鬥一個，「第二次施放走重播」以單場為界 */
@@ -342,6 +344,7 @@ export class BattleUIBridge {
     this.onBoardPlacement = externalHandlers.onBoardPlacement ?? null;
     this.onAutoPlayStarted = externalHandlers.onAutoPlayStarted ?? null;
     this.autoPlay.stop();
+    this._defenseGateOpen = false;
     this.specialActions.reset();
     this.performance.reset();
     this.duelOutcomes = [];
@@ -1174,6 +1177,26 @@ export class BattleUIBridge {
     c.battleLogPanel?.setDelegateActive?.(c.ctrl?.isDelegateEnabled() ?? false);
   }
 
+
+  /** 年終守城：我方場上還沒部署任何部隊就不得開戰／自動代打（PROG-2-10019，使用者 11/25 裁決） */
+  public isDefenseDeployBlocked(): boolean {
+    const state = this.ctx.ctrl?.state;
+    if (!state || this._defenseGateOpen) return false;
+    let troops = 0;
+    state.units.forEach(u => { if (u.faction === Faction.Player && u.currentHp > 0) troops += 1; });
+    const blocked = isDefenseDeployBlocked(state.siegeDefender === Faction.Player, troops);
+    // 部署過一次就放行到本場結束：中途部隊全滅不能卡死自動代打與回合推進
+    if (!blocked) this._defenseGateOpen = true;
+    return blocked;
+  }
+
+  /** 被閘門擋下時跳四語警告；回傳 true 表示已擋下 */
+  public blockIfDefenseUndeployed(kind: 'end_turn' | 'auto'): boolean {
+    if (!this.isDefenseDeployBlocked()) return false;
+    const lookup = withDefenseGuideFallback((key, ...args) => services().i18n.t(key, ...args));
+    this.ctx.deployRuntime?.showToast(lookup(`ui.battle.defense.blocked_${kind}`), 3);
+    return true;
+  }
   /** 自動代打中（TurnFlowManager 據此在每回合開始後自動結束回合，PROG-2-9707） */
   public get isAutoPlayActive(): boolean { return this.autoPlay.active; }
 
@@ -1186,6 +1209,7 @@ export class BattleUIBridge {
     const c = this.ctx;
     const state = c.ctrl?.state;
     if (!c.ctrl || !state || state.battleEndAnnounced) return;
+    if (this.blockIfDefenseUndeployed('auto')) return;
     // 自動代打中再按＝跳過演出：先過極速決戰可用條件（PROG-2-9709），不可用就提示原因、維持自動代打
     if (this.autoPlay.active) {
       const gate = this._quickResolveGate();
