@@ -17182,5 +17182,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10033.md",
     "title": "PROG-2-10033 吃醋三選項與三連霸「天下名門」徽章",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3101",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10029.md",
+    "title": "PROG-2-10029 實作血統天賦小名與成長拆解表",
+    "category": "task"
   }
 ]
