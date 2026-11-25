@@ -830,3 +830,31 @@ function parentTexts(side: 'father' | 'mother', general: BreedingGeneral | null,
         }),
     };
 }
+
+/**
+ * PROG-2-10037 結緣公式分項與小名揭曉入口（供提親流程呼叫）
+ */
+export function getBondingBreakdownEntry(
+    compatibilityK: number,
+    favorF: number,
+    sincerityBonus: number,
+    matchmakerBonus: number = 0,
+): { finalRate: number; lines: string[] } {
+    const { BondingSuccessService } = require('../../core/systems/BondingSuccessService');
+    const bd = BondingSuccessService.calculateBondingProbability({
+        compatibilityK,
+        favorF,
+        sincerityBonus,
+        matchmakerBonus,
+    });
+    return {
+        finalRate: bd.finalRate,
+        lines: [
+            `基礎：${bd.base}%`,
+            `相性：${bd.compatibility >= 0 ? '+' : ''}${bd.compatibility}%`,
+            `好感：${bd.favor >= 0 ? '+' : ''}${bd.favor}%`,
+            `誠意：+${bd.sincerity}%`,
+            `媒人：+${bd.matchmaker}%`,
+        ],
+    };
+}
