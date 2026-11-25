@@ -1324,7 +1324,6 @@ export class LobbyScene extends Component {
             services().event.on(GAME_SESSION_EVENTS.SeasonAdvanced, () => {
                 const session = services().session;
                 const translate = (key: string, ...args: string[]) => services().i18n.t(key, ...args);
-                this._maybeTriggerJealousy();
                 // 雙卡結算（SPI-12，PROG-2-2084）：大廳換季時陣亡名將的英靈卡與虎符細項接在虎符提示後
                 for (const message of [...session.consumeRivalNotices(), ...session.consumeTallyNotices(translate), ...session.consumeDualCardSettlementLines(translate)]) {
                     services().event.emit('SHOW_TOAST', { message, duration: 3 });
@@ -6650,6 +6649,8 @@ ${spent}`,
                 this._openSeasonChronicle('season-advance');
                 this._syncSeasonEventPopup();
                 this._syncLineagePopup();
+                // 吃醋彈窗排在季報之後，才不會被季報蓋住（PROG-2-10043）
+                this._maybeTriggerJealousy();
             };
             // 季報每季都開（PROG-2-9155）：沒事的季也顯示簡短一句，官職預告才不會漏
             // 關閉要走 UIManager，遮罩與堆疊才會一起收（PROG-2-9122）
