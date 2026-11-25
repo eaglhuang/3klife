@@ -17104,5 +17104,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10016.md",
     "title": "[PROG-2-10016] 武將詳情技能預覽只播音效與浮字（方案 C）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3088",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10018.md",
+    "title": "[PROG-2-10018] 大廳小人臉部色彩變體與名牌防疊",
+    "category": "task"
   }
 ]
