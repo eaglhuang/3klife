@@ -227,7 +227,11 @@ function testLandedIdWithSameNameReservationIsNotReissued() {
 function testLockAdapterReserveFullIdIsNotAPrefix() {
   withRepo(({ root }) => {
     const { LockAdapter } = require('../adapters/atm-3klife/lock-adapter');
-    const adapter = new LockAdapter({ projectRoot: root });
+    const adapter = new LockAdapter({
+      projectRoot: root,
+      lockDir: path.join(root, '.task-locks'),
+      taskCardDir: path.join(root, 'docs', 'agent-briefs', 'tasks'),
+    });
     const log = console.log;
     console.log = () => {};
     try {
@@ -244,6 +248,41 @@ function testLockAdapterReserveFullIdIsNotAPrefix() {
   });
 }
 
+// 2026-11-25 PM report: reservations from a deleted worktree, and a reserved
+// id that was unlocked without ever becoming a card, must not keep the id.
+function testAbandonedReservationsAreReleased() {
+  withRepo(({ base, root }) => {
+    const gone = path.join(base, 'deleted-worktree');
+    fs.mkdirSync(gone);
+    const ledger = path.join(root, '.git', occupancy.DEFAULT_POLICY.reservationLedgerFile);
+    occupancy.recordSharedReservation(root, { taskId: `${PREFIX}-0050`, agentName: 'codex' });
+    const data = JSON.parse(fs.readFileSync(ledger, 'utf8'));
+    data.reservations[0].worktree = gone.replace(/\\/g, '/');
+    fs.writeFileSync(ledger, JSON.stringify(data), 'utf8');
+    assert.equal(occupancy.listSharedReservations(root).length, 1);
+    fs.rmSync(gone, { recursive: true, force: true });
+    assert.equal(occupancy.listSharedReservations(root).length, 0, 'deleted worktree entry pruned');
+
+    const { LockAdapter } = require('../adapters/atm-3klife/lock-adapter');
+    const adapter = new LockAdapter({
+      projectRoot: root,
+      lockDir: path.join(root, '.task-locks'),
+      taskCardDir: path.join(root, 'docs', 'agent-briefs', 'tasks'),
+    });
+    const log = console.log;
+    console.log = () => {};
+    try {
+      const ticket = adapter.reserve(PREFIX, 'BattleExpert');
+      assert.ok(occupancy.listSharedReservations(root).some((entry) => entry.taskId === ticket.taskId));
+      adapter.unlock(ticket.taskId, 'BattleExpert');
+    } finally {
+      console.log = log;
+    }
+    occupancy.invalidateOccupancyCache();
+    assert.equal(occupancy.listSharedReservations(root).length, 0, 'unlocked reservation-only id released');
+  });
+}
+
 testBaseRefCardsInvisibleLocallyAreOccupied();
 testUnmergedBranchCommitMessageIsOccupied();
 testPullRequestOccupancy();
@@ -253,4 +292,5 @@ testLedgerTtlAndLandedPrune();
 testNonToplevelRootSkipsRemoteChecks();
 testLandedIdWithSameNameReservationIsNotReissued();
 testLockAdapterReserveFullIdIsNotAPrefix();
+testAbandonedReservationsAreReleased();
 console.log('[task-id-remote-occupancy.test] ok');

@@ -1,5 +1,5 @@
 {
-  "_note": "Task-card id allocation across parallel agents. An id is occupied if it appears on the base ref, in an unmerged local/remote branch (commit message or touched path), in a recent pull request (title/branch/body), or in the shared reservation ledger kept in the git common dir. Reservations must answer with the next free id instead of a bare refusal (INV-ATM-008).",
+  "_note": "Task-card id allocation across parallel agents. An id is occupied if it appears on the base ref, in an unmerged local/remote branch (commit message or touched path), in a recent pull request (title/branch/body), or in the shared reservation ledger kept in the git common dir. Reservations must answer with the next free id instead of a bare refusal (INV-ATM-008). pruneMissingWorktreeReservations: a ledger entry whose worktree directory no longer exists is dropped; pushed branches and PRs still occupy the id through their own sources.",
   "baseRef": "origin/master",
   "fetchRemote": "origin",
   "fetchBranch": "master",
@@ -24,5 +24,6 @@
   ],
   "reservationTtlHours": 168,
   "reservationLedgerFile": "task-id-reservations.json",
-  "occupancyCacheMs": 60000
+  "occupancyCacheMs": 60000,
+  "pruneMissingWorktreeReservations": true
 }
