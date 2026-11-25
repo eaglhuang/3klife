@@ -275,3 +275,18 @@
 | `doc_task_3082` | docs/agent-briefs/tasks/PROG/PROG-2-10010.md | [PROG-2-10010] 首戰實玩探針：記錄天氣、試放計謀、量格子特效 |
 | `doc_task_3083` | docs/agent-briefs/tasks/PROG/PROG-2-10014.md | [PROG-2-10014] playtest-online 火計探針細分失敗原因、時間上限、已知環境錯誤白名單 |
 | `doc_task_3084` | docs/agent-briefs/tasks/PROG/PROG-2-10015.md | [PROG-2-10015] 計謀鈕與招式失敗提示走四語 i18n；軍心鼓舞全員滿血改提示沒有需要補血 |
+| `doc_task_3085` | docs/agent-briefs/tasks/PROG/PROG-2-10016.md | [PROG-2-10016] 武將詳情技能預覽只播音效與浮字（方案 C） |
+| `doc_task_3087` | docs/agent-briefs/tasks/PROG/PROG-2-10019.md | [PROG-2-10019] 年終守城玩家引導：進場提示、部署階段橫幅、未部署警告（四語 i18n） |
+| `doc_task_3088` | docs/agent-briefs/tasks/PROG/PROG-2-10018.md | [PROG-2-10018] 大廳小人臉部色彩變體與名牌防疊 |
+| `doc_task_3089` | docs/agent-briefs/tasks/PROG/PROG-2-10021.md | [PROG-2-10021] 戰場受擊音效 light 層補變體：輪播避免連續重複、同幀節流 |
+| `doc_task_3090` | docs/agent-briefs/tasks/PROG/PROG-2-10022.md | [PROG-2-10022] 首年四季全程實玩腳本 playtest-online --full-year（逐季斷言） |
+| `doc_task_3091` | docs/agent-briefs/tasks/PROG/PROG-2-10023.md | [PROG-2-10023] 年終守城保底步兵卡與自動代打放行（AI 代為部署） |
+| `doc_task_3092` | docs/agent-briefs/tasks/PROG/PROG-2-10024.md | [PROG-2-10024] playtest-online --full-year 殘留浮層遮罩收窗與實跑驗證 |
+| `doc_task_3094` | docs/agent-briefs/tasks/PROG/PROG-2-10028.md | [PROG-2-10028] 戰場手感修正：揚塵粒子分散、掠奪跳字依序錯開、倒下擬聲字偏移 |
+| `doc_task_3095` | docs/agent-briefs/tasks/PROG/PROG-2-10025.md | [PROG-2-10025] 戰場單挑勝利／計謀橫幅不蓋 HUD 資訊 |
+| `doc_task_3096` | docs/agent-briefs/tasks/PROG/PROG-2-10026.md | PROG-2-10026: 結緣透明加法、誠意累積與紅娘叩門保底 |
+| `doc_task_3097` | docs/agent-briefs/tasks/PROG/PROG-2-10000.md | PROG-2-10000: 親生子嗣登記缺口修補 |
+| `doc_task_3098` | docs/agent-briefs/tasks/PROG/PROG-2-10032.md | [PROG-2-10032] 線上整年驗收開機步驟改輪詢開始鈕並失敗即中止 |
+| `doc_task_3099` | docs/agent-briefs/tasks/PROG/PROG-2-10027.md | PROG-2-10027 實作年末榜單頒獎服務 |
+| `doc_task_3100` | docs/agent-briefs/tasks/PROG/PROG-2-10033.md | PROG-2-10033 吃醋三選項與三連霸「天下名門」徽章 |
+| `doc_task_3101` | docs/agent-briefs/tasks/PROG/PROG-2-10029.md | PROG-2-10029 實作血統天賦小名與成長拆解表 |

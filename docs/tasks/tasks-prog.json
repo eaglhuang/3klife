@@ -18617,12 +18617,92 @@
       "priority": "P1",
       "owner": "ClaudeCode_claude-opus-5-5",
       "brief": "docs/agent-briefs/tasks/PROG/PROG-2-10025.md"
+    },
+    {
+      "id": "PROG-2-10026",
+      "title": "結緣透明加法公式、誠意累積（+12%/次）與第1年第3季紅娘叩門保底",
+      "status": "done",
+      "priority": "P0",
+      "owner": "Antigravity",
+      "brief": "docs/agent-briefs/tasks/PROG/PROG-2-10026.md"
+    },
+    {
+      "doc_id": "doc_task_3098",
+      "id": "PROG-2-10032",
+      "title": "線上整年驗收開機步驟改輪詢開始鈕並失敗即中止",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "bugfix",
+      "phase": "M0",
+      "created": "2026-11-25",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "boot-login-lobby 原固定等 12 秒，冷載入時找不到開始遊戲；改輪詢（上限 stuckMs），開機失敗即 boot-abort 不再跑後續步驟",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "輪詢開始遊戲",
+        "boot 失敗中止並輸出 boot-abort",
+        "單元測試通過"
+      ],
+      "deliverables": [],
+      "notes": "2026-11-25 | 狀態: done | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "id": "PROG-2-10027",
+      "title": "實作年末榜單頒獎服務：NPC 補位至 4 人、名次獎勵、驚喜獎與第 2~5 年曲線",
+      "status": "done",
+      "priority": "P1",
+      "owner": "antigravity",
+      "file": "docs/agent-briefs/tasks/PROG/PROG-2-10027.md"
+    },
+    {
+      "id": "PROG-2-10033",
+      "title": "實作吃醋三選項（B 價格縮放、C 抓包 3 次解鎖府中睡神）與三連霸天下名門徽章",
+      "status": "done",
+      "priority": "P1",
+      "owner": "antigravity",
+      "file": "docs/agent-briefs/tasks/PROG/PROG-2-10033.md"
+    },
+    {
+      "id": "PROG-2-10029",
+      "title": "實作血統天賦小名 48 池、出生抽取、8/12/15 歲揭曉與成長拆解表",
+      "status": "done",
+      "priority": "P1",
+      "owner": "antigravity",
+      "file": "docs/agent-briefs/tasks/PROG/PROG-2-10029.md"
     }
   ],
   "summary": {
-    "done": 338,
-    "in_progress": 4,
+    "done": 345,
+    "in_progress": 3,
     "open": 87,
-    "total": 429
+    "total": 435
   }
 }

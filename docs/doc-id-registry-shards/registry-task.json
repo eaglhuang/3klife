@@ -17152,5 +17152,41 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10025.md",
     "title": "[PROG-2-10025] 戰場單挑勝利／計謀橫幅不蓋 HUD 資訊",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3096",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10026.md",
+    "title": "PROG-2-10026: 結緣透明加法、誠意累積與紅娘叩門保底",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3097",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10000.md",
+    "title": "PROG-2-10000: 親生子嗣登記缺口修補",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3098",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10032.md",
+    "title": "[PROG-2-10032] 線上整年驗收開機步驟改輪詢開始鈕並失敗即中止",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3099",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10027.md",
+    "title": "PROG-2-10027 實作年末榜單頒獎服務",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3100",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10033.md",
+    "title": "PROG-2-10033 吃醋三選項與三連霸「天下名門」徽章",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3101",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10029.md",
+    "title": "PROG-2-10029 實作血統天賦小名與成長拆解表",
+    "category": "task"
   }
 ]
