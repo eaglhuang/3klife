@@ -17167,6 +17167,12 @@
   },
   {
     "id": "doc_task_3098",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10032.md",
+    "title": "[PROG-2-10032] 線上整年驗收開機步驟改輪詢開始鈕並失敗即中止",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3099",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10027.md",
     "title": "PROG-2-10027 實作年末榜單頒獎服務",
     "category": "task"

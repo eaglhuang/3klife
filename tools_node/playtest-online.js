@@ -668,6 +668,15 @@ async function main() {
         const r = await rm.click({ text: '^\\s*開始遊戲\\s*$' }, '開始遊戲');
         return `真滑鼠點「開始遊戲」字樣（${r.name}）`;
     };
+    /** 等「開始遊戲」可按：先守最短沉澱時間（--login-settle，避免剛進 LoginScene 就點觸發開機 pageerror），再輪詢到字樣／BtnStart 出現，上限 stuckMs（冷載入畫面可能還停在「正在連動遊戲」） */
+    const waitLoginStartReady = async () => {
+        await delay(Number(args['login-settle'] || 12000));
+        await waitUntil(
+            () => page.evaluate(() => window.__pt.hasButton('^BtnStart$') || window.__pt.textsMatching('^\\s*開始遊戲\\s*$').length > 0),
+            stuckMs,
+            async () => `LoginScene 內未出現「開始遊戲」；畫面文字：${(await page.evaluate(() => window.__pt.textsMatching('.+')).catch(() => [])).slice(0, 4).join('|')}`
+        );
+    };
     const listButtons = () => page.evaluate(() => window.__pt.listButtons());
     /** 把殘留的面板關掉，直到大廳底欄（BtnCatShop）回來；回傳是否成功 */
     const backToLobbyBar = async () => {
@@ -715,7 +724,7 @@ async function main() {
             await installHelpers();
             await waitUntil(async () => (await scene()) === 'LoginScene', stuckMs, '未進入 LoginScene');
             // 進 LoginScene 後等待再點開始（預設 12 秒：實測 LoginScene 出現後約 1 秒內點開始會觸發開機 pageerror，見 bug 卡；--login-settle 1000 可重現）
-            await delay(Number(args['login-settle'] || 12000));
+            await waitLoginStartReady();
             rec.detail.bootToLoginMs = Date.now() - bootT0;
 
             const startT0 = Date.now();
@@ -740,7 +749,12 @@ async function main() {
             rec.detail.lobbyScene = await scene();
             return rec.detail;
         });
-        // 第一步失敗（進不了大廳）時，後續步驟全部略過；其餘情況各步獨立判定
+        // 第一步失敗（進不了大廳）時直接中止，不再跑後續步驟（避免一串假失敗）
+        if (!bootOk) {
+            report.bootAbort = buildBootAbortReason(report.steps.find((x) => x.name === 'boot-login-lobby'));
+            console.error(`[playtest] boot-abort：${report.bootAbort}`);
+            throw new Error(`boot-abort：${report.bootAbort}`);
+        }
         const requireLobby = async () => {
             if ((await scene()) !== 'LobbyScene') throw new Error('目前不在 LobbyScene（前一步未進大廳）');
         };
@@ -1932,7 +1946,7 @@ async function main() {
             await waitUntil(() => page.evaluate(() => Boolean(window.cc && window.cc.director && window.cc.director.getScene())), stuckMs, '重開後引擎未就緒');
             await installHelpers();
             await waitUntil(async () => (await scene()) === 'LoginScene', stuckMs, '重開後未進入 LoginScene');
-            await delay(Number(args['login-settle'] || 12000));
+            await waitLoginStartReady();
             await clickLoginStart();
             await waitUntil(async () => (await scene()) === 'LobbyScene', stuckMs, '重開後點開始未進入 LobbyScene');
             // 以「底欄出現且載入提示消失」為準；載入提示會晚一點才掛上，只看提示消失會誤判。
@@ -2082,7 +2096,7 @@ async function main() {
                 await waitUntil(() => page.evaluate(() => Boolean(window.cc && window.cc.director && window.cc.director.getScene())), stuckMs, '重整後引擎未就緒');
                 await installHelpers();
                 await waitUntil(async () => (await scene()) === 'LoginScene', stuckMs, '重整後未進入 LoginScene');
-                await delay(Number(args['login-settle'] || 12000));
+                await waitLoginStartReady();
                 await clickLoginStart();
                 await waitUntil(async () => (await scene()) === 'LobbyScene', stuckMs, '重整後未進入 LobbyScene');
                 await waitUntil(async () => (await page.evaluate((re) => window.__pt.textsMatching(re), '正在準備|載入中|Loading|啟動遇到問題')).length === 0 && (await page.evaluate(() => window.__pt.hasButton('^BtnCatShop$'))), stuckMs, '重整後大廳沒準備好');
@@ -2451,7 +2465,7 @@ async function main() {
                         await waitUntil(() => page.evaluate(() => Boolean(window.cc && window.cc.director && window.cc.director.getScene())), stuckMs, 'qa 情境引擎未就緒');
                         await installHelpers();
                         await waitUntil(async () => (await scene()) === 'LoginScene', stuckMs, 'qa 情境未進入 LoginScene');
-                        await delay(Number(args['login-settle'] || 12000));
+                        await waitLoginStartReady();
                         await clickLoginStart();
                         await waitUntil(async () => (await scene()) === 'LobbyScene', stuckMs, 'qa 情境未進入 LobbyScene');
                         let qa = null;
@@ -2717,7 +2731,7 @@ async function main() {
                     await waitUntil(() => page.evaluate(() => Boolean(window.cc && window.cc.director && window.cc.director.getScene())), stuckMs, 'qa 情境引擎未就緒');
                     await installHelpers();
                     await waitUntil(async () => (await scene()) === 'LoginScene', stuckMs, 'qa 情境未進入 LoginScene');
-                    await delay(Number(args['login-settle'] || 12000));
+                    await waitLoginStartReady();
                     await clickLoginStart();
                     await waitUntil(async () => (await scene()) === 'LobbyScene', stuckMs, 'qa 情境未進入 LobbyScene');
                     // 快進完成：學府紀錄停在第 12 回合、期中打斷掛上；畫面上修業畫面作用中
@@ -2989,6 +3003,13 @@ async function checkBloodlineBounds(page, viewport) {
     };
 }
 
+/** 開機步驟失敗時的中止原因（純函式，供單元測試） */
+function buildBootAbortReason(rec) {
+    if (!rec) return '開機步驟未執行';
+    const texts = rec.detail && rec.detail.lastLoadingTexts;
+    return `${rec.reason || '開機步驟失敗'}${texts && texts.length ? `（最後畫面文字：${texts.join('|')}）` : ''}`;
+}
+
 if (require.main === module) {
     main().then((code) => { process.exitCode = code; }, (error) => {
         console.error(`[playtest] ${error && error.stack || error}`);
@@ -2996,4 +3017,4 @@ if (require.main === module) {
     });
 }
 
-module.exports = { parseArgs, parseViewport, DEFAULT_URL };
+module.exports = { parseArgs, parseViewport, DEFAULT_URL, buildBootAbortReason };
