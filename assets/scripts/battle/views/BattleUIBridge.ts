@@ -24,8 +24,8 @@ import { overrideFloatTextStyle } from '../../core/systems/FloatTextStyle';
 import { BLOCK_FLOAT_TEXT, shieldHitFeedback, type DamageBlockReason } from '../shared/BlockFeedback';
 import { StatusCueThrottle, statusFloatTypeOf, statusMakesTargetFlinch, statusPolarityOf, statusWaveDelaySec } from '../shared/StatusApplyFeedback';
 import { salvageSummaryLines } from '../../core/systems/StageSalvageSettlement';
-import { AUTO_PLAY_NO_SORTIE_LINE, AUTO_PLAY_OFF_LINE, AUTO_PLAY_ON_LINE, AUTO_PLAY_SKIP_LINE, AutoPlayState, delegateToggleStopsAutoPlay } from '../../core/systems/AutoPlay';
-import { DELEGATE_OFF_LINE, DELEGATE_UNAVAILABLE_LINE, delegateOnLine, FOOD_EMPTY_LINE } from '../../core/systems/SortieDeployScripts';
+import { AUTO_PLAY_OFF_LINE, AUTO_PLAY_ON_LINE, AUTO_PLAY_SKIP_LINE, AutoPlayState, delegateToggleStopsAutoPlay } from '../../core/systems/AutoPlay';
+import { DELEGATE_OFF_LINE, delegateOnLine, FOOD_EMPTY_LINE } from '../../core/systems/SortieDeployScripts';
 import { wisdomMeterText, WISDOM_SURGE_LOG } from '../shared/WisdomMeter';
 import { strategistHudInputOf } from '../shared/StrategistHudSource';
 import { selfBurstNoticeText, type SelfBurstChangedEvent } from '../shared/SelfBurstWindow';
@@ -1157,7 +1157,7 @@ export class BattleUIBridge {
     // 想拿回控制權：按委任＝同時停掉自動代打（PROG-2-9707）；委任鈕自己的提示已說明，不再重複跳 Toast
     if (delegateToggleStopsAutoPlay(this.autoPlay.active, on, c.ctrl.canDelegate())) this._stopAutoPlay(false);
     if (on && !c.ctrl.canDelegate()) {
-      c.deployRuntime?.showToast(DELEGATE_UNAVAILABLE_LINE);
+      c.deployRuntime?.showToast(services().i18n.t('ui.battle.delegate.unavailable'));
       this._syncDelegateButton();
       return;
     }
@@ -1206,10 +1206,10 @@ export class BattleUIBridge {
       c.ctrl.setDelegateEnabled(true);
       this._syncDelegateButton();
     } else {
-      this.appendLog(AUTO_PLAY_NO_SORTIE_LINE);
+      this.appendLog(services().i18n.t('ui.battle.autoplay.no_sortie'));
     }
     this.appendLog(AUTO_PLAY_ON_LINE);
-    c.deployRuntime?.showToast(canDelegate ? AUTO_PLAY_ON_LINE : AUTO_PLAY_NO_SORTIE_LINE);
+    c.deployRuntime?.showToast(canDelegate ? AUTO_PLAY_ON_LINE : services().i18n.t('ui.battle.autoplay.no_sortie'));
     this._syncAutoButton();
     this.onAutoPlayStarted?.();
   }

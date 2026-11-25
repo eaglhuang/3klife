@@ -4,7 +4,7 @@
  * Unity 對照：像測 DOTween 序列的參數表，不需要場景。
  */
 import { assert, TestSuite } from './TestRunner';
-import { TOAST_DEFAULT_HOLD_SEC, TOAST_RISE_PX, toastHoldSec } from '../assets/scripts/core/systems/ToastMotion';
+import { TOAST_DEFAULT_HOLD_SEC, TOAST_MODAL_BOTTOM_MARGIN_PX, TOAST_RISE_PX, toastCenterY, toastHoldSec } from '../assets/scripts/core/systems/ToastMotion';
 
 export function createToastMotionSuite(): TestSuite {
     const suite = new TestSuite('ToastMotion (Toast 上浮消失 doc_ui_0001 §4.1)');
@@ -22,6 +22,17 @@ export function createToastMotionSuite(): TestSuite {
 
     suite.test('消失時向上飄', () => {
         assert.isTrue(TOAST_RISE_PX > 0);
+    });
+
+    suite.test('沒彈窗時留在設計稿位置；有彈窗改貼底緣，不蓋標題（PROG-2-9994）', () => {
+        assert.equals(420, toastCenterY(420, false, 1080, 112));
+        assert.equals(-540 + 56 + TOAST_MODAL_BOTTOM_MARGIN_PX, toastCenterY(420, true, 1080, 112));
+        assert.isTrue(toastCenterY(420, true, 1080, 112) < 0);
+    });
+
+    suite.test('容器高度無效時，即使有彈窗也退回設計稿位置', () => {
+        assert.equals(420, toastCenterY(420, true, 0, 112));
+        assert.equals(420, toastCenterY(420, true, NaN, 112));
     });
 
     return suite;

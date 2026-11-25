@@ -114,7 +114,7 @@ assert.equal(soldierSpineConfig(false).path, 'spine/soldiers/soldier_spear_blue/
 assert.equal(soldierSpineConfig(false, true).path, 'spine/soldiers/soldier_spear_red/soldier_spear_red');
 assert.equal(soldierSpineConfig(true, true).path, 'spine/soldiers/soldier_bow_red/soldier_bow_red');
 assert.equal(soldierSpineConfig(true, false).path, 'spine/soldiers/soldier_bow_blue/soldier_bow_blue');
-import { ENEMY_CAVALRY_TINT, troopSpineConfig } from '../assets/scripts/battle/shared/UnitPresentationConfig';
+import { ENEMY_CAVALRY_TINT, ENEMY_TROOP_TINT, troopSpineConfig } from '../assets/scripts/battle/shared/UnitPresentationConfig';
 assert.equal(troopSpineConfig('medic', true).path, 'spine/soldiers/soldier_medic_red/soldier_medic_red');
 // PROG-2-9408：我方騎兵改用騎手＋馬合成骨架；前進播 gallop、蹄聲依 gallop 半週期同拍；敵方暫時沿用紅色槍兵
 const cavalry = troopSpineConfig('cavalry');
@@ -149,6 +149,11 @@ assert.equal(enemyCavalry.path, 'spine/soldiers/soldier_cavalry_red/soldier_cava
 assert.equal(enemyCavalry.tint, undefined);
 assert.equal(enemyCavalry.clips.move.name, 'gallop');
 assert.equal(troopSpineConfig('cavalry').tint, undefined);
+// QA 11/25：敵方步／弓小兵淡紅底色、我方不染，敵我一眼可辨
+for (const troop of ['infantry', 'archer', 'shield', 'pikeman']) {
+  assert.deepEqual(troopSpineConfig(troop, true).tint, ENEMY_TROOP_TINT);
+  assert.equal(troopSpineConfig(troop, false).tint, undefined);
+}
 // 實機量到兩格多、每秒約 144 單位：gallop 倍率約 1.15，不會撞到 2.2 上限而打滑
 const cavalryCore = new UnitPresentationCore(cavalry, { x: 0, y: 0 });
 cavalryCore.follow({ x: 144, y: 0 }, true, 1);

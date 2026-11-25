@@ -3,10 +3,10 @@
  * ToastMessageComposite — 全域吐司提示系統（Composite 版）
  * Wave 2 migration from ToastMessage - temporary floating notifications
  */
-import { _decorator, Color, Label, Tween, tween, UIOpacity } from 'cc';
+import { _decorator, Color, Label, Tween, tween, UIOpacity, Widget } from 'cc';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
-import { mergeHeldToasts, ToastQueue, toastHoldSeconds } from '../core/ToastQueue';
+import { BATTLE_TOAST_TOP_PX, battleToastHoldSeconds, dropStaleToasts, isToastStale, mergeHeldToasts, ToastQueue } from '../core/ToastQueue';
 
 const { ccclass, property } = _decorator;
 
@@ -28,6 +28,8 @@ interface QueuedToast {
     message: string;
     duration: number;
     color?: Color;
+    /** 排進佇列的時間（毫秒）；過期的提示不再補播（QA 11/25） */
+    queuedAtMs?: number;
 }
 
 @ccclass('ToastMessageComposite')
@@ -74,7 +76,7 @@ export class ToastMessageComposite extends CompositePanel {
         this._holdTimer = null;
         this._holdUntilMs = 0;
         if (!this.node || !this.node.isValid) return;
-        const held = this._held;
+        const held = dropStaleToasts(this._held, Date.now());
         this._held = [];
         for (const toast of held) void this.show(toast.message, toast.duration, { color: toast.color });
     }
@@ -110,6 +112,7 @@ export class ToastMessageComposite extends CompositePanel {
             message: options.text,
             duration: options.duration ?? this.defaultDuration,
             color: typeof optionsOrMessage === 'string' ? legacyOptions?.color : undefined,
+            queuedAtMs: Date.now(),
         };
 
         // 回合橫幅還在：先存著，橫幅收掉後再播（PROG-2-9416）
@@ -156,11 +159,11 @@ export class ToastMessageComposite extends CompositePanel {
         this._hideTween = tween(opacity)
             .to(0.15, { opacity: 255 })
             // 後面有人排隊時縮短停留；這句開始播之後才排進來的不影響它（PROG-2-9343）
-            .delay(Math.max(0.5, toastHoldSeconds(toast.duration, this._queue.pendingCount) - 0.3))
+            .delay(Math.max(0.5, battleToastHoldSeconds(toast.duration, this._queue.pendingCount) - 0.3))
             .to(0.3, { opacity: 0 })
             .call(() => {
                 this._hideTween = null;
-                const next = this._queue.next(Date.now() / 1000);
+                const next = this._nextFreshToast();
                 if (next) {
                     void this._present(next);
                     return;
@@ -171,8 +174,22 @@ export class ToastMessageComposite extends CompositePanel {
             .start();
     }
 
+    /** 取下一句還沒過期的提示；排太久的直接丟掉 */
+    private _nextFreshToast(): QueuedToast | null {
+        const now = Date.now();
+        let next = this._queue.next(now / 1000);
+        while (next && next.queuedAtMs !== undefined && isToastStale(next.queuedAtMs, now)) next = this._queue.next(now / 1000);
+        return next;
+    }
+
     protected override _onAfterBuildReady(binder: UITemplateBinder): void {
         this._binder = binder;
         this._messageLabel = binder.getLabel('Message');
+        // 戰場提示條上移到標題列之下、棋盤之上（layout 預設 top=120 會落在棋盤上緣）
+        const widget = this.node.getChildByName('ToastRoot')?.getComponent(Widget);
+        if (widget) {
+            widget.top = BATTLE_TOAST_TOP_PX;
+            widget.updateAlignment();
+        }
     }
 }

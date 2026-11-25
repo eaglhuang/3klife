@@ -88,5 +88,13 @@ export function createBadgeStackingSuite(): TestSuite {
         assert.equals(a, b);
     });
 
+    // QA 11/25：騎兵擠在同一區（8 支、含血條高度）也要全部分開，血條不互相重疊
+    suite.test('八支騎兵疊在同一點（含血條外框）全部分開', () => {
+        const tall = (id: string, x: number): StackBadgeEntry => ({ id, rect: badgeRectFromExtent(x, 300, 0.7, { left: -90, right: 90, top: 39 + 14, bottom: -39 }), priority: 0 });
+        const entries = Array.from({ length: 8 }, (_, i) => tall(`cav-${i}`, 400 + (i % 3) * 20));
+        const rects = placed(entries);
+        for (let i = 0; i < rects.length; i++) for (let j = i + 1; j < rects.length; j++) assert.isFalse(overlap(rects[i], rects[j]), `${i} 與 ${j} 不重疊`);
+    });
+
     return suite;
 }

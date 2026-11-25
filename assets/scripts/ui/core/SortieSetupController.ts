@@ -84,6 +84,11 @@ export interface SortieSetupDeps {
     /** 大廳開戰時的守方敵將（第一個關卡）；未載入時回傳 null，畫面顯示資料未載入 */
     getEnemyGeneral?: () => GeneralConfig | null;
     /**
+     * 這場是不是新手首戰教學戰（PROG-2-9994）。教學戰的敵軍血量、兵力、回合上限都被調成穩贏（PROG-2-9951），
+     * 粗估勝率只比雙方主將數值，會顯示偏低的 45%，所以教學戰改顯示「穩贏」提示。未提供時一律走粗估勝率。
+     */
+    isTutorialBattle?: () => boolean;
+    /**
      * 首戰指定主將不在玩家名冊時（總PM 裁決 A，PROG-2-9913）：回傳該關指定的武將資料，讓他仍可被推薦、顯示為主將。
      * 戰場會以關卡資料上陣；lead 留空讓戰場 fallback 到關卡指定主將。名冊內或沒有指定主將時回傳 null。
      */
@@ -274,7 +279,9 @@ export class SortieSetupController {
             ) + (shortage ? `\n${shortage}` : '');
         }
 
-        texts.sortiePredict = sortiePredictText(commander, this._deps.getEnemyGeneral?.() ?? null);
+        texts.sortiePredict = this._deps.isTutorialBattle?.()
+            ? t('sortie.predict.tutorial')
+            : sortiePredictText(commander, this._deps.getEnemyGeneral?.() ?? null);
 
         const gambit = this._deps.session.pendingSceneGambit;
         if (gambit) {
