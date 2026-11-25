@@ -9,6 +9,7 @@
  */
 import { TestRunner } from './TestRunner';
 import { createDeprecatedApiSuite } from './DeprecatedApiScanner';
+import { createBloodlineEpithetServiceSuite } from './BloodlineEpithetService.test';
 
 /**
  * 只在 Node.js CLI 環境（ts-node）下執行。
@@ -71,6 +72,8 @@ if (typeof window === 'undefined') {
         const n = Number(raw);
         if (n === 1 || n === 2 || n === 3) layerFilter = n;
     }
+
+    runner.register(createBloodlineEpithetServiceSuite());
 
     const summary = await runner.runAll(layerFilter);
 

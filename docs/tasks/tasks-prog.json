@@ -18561,12 +18561,20 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "id": "PROG-2-10029",
+      "title": "實作血統天賦小名 48 池、出生抽取、8/12/15 歲揭曉與成長拆解表",
+      "status": "done",
+      "priority": "P1",
+      "owner": "antigravity",
+      "file": "docs/agent-briefs/tasks/PROG/PROG-2-10029.md"
     }
   ],
   "summary": {
-    "done": 333,
+    "done": 334,
     "in_progress": 4,
     "open": 87,
-    "total": 423
+    "total": 424
   }
 }
