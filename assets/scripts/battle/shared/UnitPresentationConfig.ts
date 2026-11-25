@@ -201,6 +201,12 @@ const CAVALRY_NAME = 'soldier_cavalry_blue';
  * 紅方骨架缺檔時的後備：沿用藍騎兵騎馬骨架、以紅色相乘染色（藍甲會偏暗，只剩輪廓，所以只當後備）。
  */
 export const ENEMY_CAVALRY_TINT = { r: 255, g: 96, b: 96 } as const;
+/**
+ * 敵方步／弓／盾等小兵的陣營底色（QA 11/25；騎兵紅骨架維持不染色，缺檔時才走 ENEMY_CAVALRY_TINT）：長坂坡突圍敵我兵看起來都是綠色，一眼分不出誰是敵人。
+ * 紅色圖集本身就偏紅，這層淡紅相乘是保險：就算美術或載入路徑出錯、敵兵退到別色素材，
+ * 敵方仍偏暖紅、與我方藍／綠色素材區分。只輕壓綠藍通道，不把紅色素材染得過暗。
+ */
+export const ENEMY_TROOP_TINT = { r: 255, g: 170, b: 170 } as const;
 const CAVALRY_RED_NAME = 'soldier_cavalry_red';
 const CAVALRY_RED_MOUNTED_NAME = `${CAVALRY_RED_NAME}__mount_horse_bay`;
 /** 騎乘版骨架檔名（PROG-2-9868）：騎手騎在栗色馬上，動作名稱與舊合成骨架相同；缺圖時退回 CAVALRY_NAME。 */
@@ -233,7 +239,7 @@ export function troopSpineConfig(troop: string, isEnemy = false, tallyTemplateId
   const name = `soldier_${art.name}_${isEnemy ? 'red' : 'blue'}`;
   const cached = soldierCache.get(name);
   if (cached) return cached;
-  const config: UnitSpineConfig = { path: `spine/soldiers/${name}/${name}`, displayScale: 0.18, labelToFoot: 110, footOffset: { x: 4, y: 0 },
+  const config: UnitSpineConfig = { path: `spine/soldiers/${name}/${name}`, displayScale: 0.18, ...(isEnemy ? { tint: ENEMY_TROOP_TINT } : {}), labelToFoot: 110, footOffset: { x: 4, y: 0 },
     // walkGroundSpeed 由 walk 骨架估算：踩地腳 foot_f 在 0～0.4 秒、foot_n 在 0.4～0.8 秒各向後掃 40 骨架單位，
     // 身體每步前進 40 單位 / 0.4 秒 = 100 單位/秒，與原值相同，不需調整。
     walkGroundSpeed: 100, speedMultiplier: 2, maxAnimationSpeed: MAX_WALK_ANIMATION_SPEED, mirrorSkin: art.bow ? undefined : 'hand_mirror', squad: SOLDIER_SQUAD_SLOTS,

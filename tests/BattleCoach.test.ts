@@ -2,7 +2,7 @@ import { TestSuite, assert } from './TestRunner';
 import { BattleTutorialHint } from '../assets/scripts/battle/views/BattleTutorialHint';
 import { FirstBattleOperationGuide } from '../assets/scripts/core/systems/FirstBattleOperationGuide';
 import { EVENT_NAMES, Faction, SP_PER_KILL } from '../assets/scripts/core/config/Constants';
-import { battleCoachPlacement, coachRectsOverlap, battleCoachIsObstacle } from '../assets/scripts/ui/core/BattleCoachPlacement';
+import { battleCoachPlacement, coachRectsOverlap, battleCoachIsObstacle, coachTabPlacement, COACH_TITLE_BAND, COACH_TAB_HEIGHT } from '../assets/scripts/ui/core/BattleCoachPlacement';
 import { readFileSync } from 'fs';
 import { join } from 'path';
 export function createBattleCoachSuite(): TestSuite {
@@ -37,13 +37,28 @@ export function createBattleCoachSuite(): TestSuite {
     {x:w-300,y:100,width:280,height:64},{x:w-250,y:168,width:234,height:480},
     {x:w-362,y:h-244,width:344,height:226},{x:(w-944)/2,y:h-184,width:944,height:160}];
    const r=battleCoachPlacement(w,h,obstacles) || battleCoachPlacement(w,h,obstacles,true);
-   assert.isTrue(!!r);assert.isTrue(obstacles.every(o=>!coachRectsOverlap(r!,o)));
+   assert.isTrue(!!r);
+   // 收起頁籤刻意落在整條 TopBar 的空白處（標題列），只對其他 HUD 區塊與標籤要求不重疊
+   const isTab=r!.height===COACH_TAB_HEIGHT&&r!.y<COACH_TITLE_BAND;
+   assert.isTrue(obstacles.filter(o=>!(isTab&&o.y===0&&o.width===w)).every(o=>!coachRectsOverlap(r!,o)));
    assert.isTrue(r!.x>=0&&r!.y>=0&&r!.x+r!.width<=w&&r!.y+r!.height<=h);
   });
  }
- suite.test('完全沒空位時不蓋HUD；收起頁籤也是72設計px（720p為48px）', () => {
+ suite.test('完全沒空位時不蓋HUD；收起頁籤釘在標題列（高 60 設計px，不佔棋盤）', () => {
   assert.equals(null,battleCoachPlacement(360,640,[{x:0,y:0,width:360,height:640}],true));
-  const r=battleCoachPlacement(1080,1920,[],true)!;assert.equals(72,r.height);
+  const r=battleCoachPlacement(1080,1920,[],true)!;assert.equals(60,r.height);assert.isTrue(r.y<96);
+ });
+ suite.test('收起頁籤釘在標題列，不落在棋盤上方（QA 11/25）', () => {
+  const topBar={x:0,y:0,width:1920,height:86};
+  const turnLabel={x:18,y:20,width:140,height:40};
+  const r=battleCoachPlacement(1920,1080,[topBar,turnLabel],true)!;
+  assert.isTrue(r.y+r.height<=COACH_TITLE_BAND,'整個頁籤在標題列內');
+  assert.isFalse(coachRectsOverlap(r,turnLabel));
+  const tallBar=battleCoachPlacement(1920,1080,[{x:0,y:0,width:1920,height:130}],true)!;
+  assert.isTrue(tallBar.y+tallBar.height<=COACH_TITLE_BAND,'TopBar 比標題列高也不擋頁籤');
+  assert.equals(null,coachTabPlacement(1920,[{x:200,y:20,width:100,height:30}]),'標題列文字擋住時不硬塞');
+  const fallback=battleCoachPlacement(1920,1080,[{x:200,y:20,width:100,height:30}],true);
+  assert.isTrue(!fallback||fallback.y>=96||fallback.x!==190,'被擋住退回掃描');
  });
  suite.test('收合不受事件強行展開、綁定重開/翻頁與resize，移除600px遮擋箭頭', () => {
   const src=readFileSync(join(__dirname,'../assets/scripts/ui/components/BattleScenePanel.ts'),'utf8');
