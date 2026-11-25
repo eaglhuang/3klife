@@ -23,8 +23,10 @@ const cp = require('child_process');
 const DEFAULT_POLICY = require('./doc-id-allocation-policy.json');
 
 const DOC_ID_RE = /^(doc_(?:server_[a-z]+|[a-z]+))_(\d{4})$/i;
-const INJECTED_GREP_RE = 'doc_id:[[:space:]]*doc_[a-z]+(_[a-z]+)?_[0-9]{4}';
-const INJECTED_PARSE_RE = /doc_id:\s*(doc_[a-z]+(?:_[a-z]+)?_\d{4})/i;
+const INJECTED_GREP_RE = 'doc_id:[[:space:]]*doc_[a-z]+(_[a-z]+)?_[0-9]{4,}';
+// {4,}: report hand-written ids such as doc_task_10005 in full instead of a
+// truncated doc_task_1000 (valid ids stay 4 digits; see DOC_ID_RE).
+const INJECTED_PARSE_RE = /doc_id:\s*(doc_[a-z]+(?:_[a-z]+)?_\d{4,})/i;
 
 function normalizePath(value) {
   return String(value || '').replace(/\\/g, '/');
