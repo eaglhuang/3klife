@@ -1,0 +1,36 @@
+{
+  "npcFillPool": [
+    { "id": "npc_fill_1", "name": "陳登" },
+    { "id": "npc_fill_2", "name": "張昭" },
+    { "id": "npc_fill_3", "name": "審配" },
+    { "id": "npc_fill_4", "name": "沮授" }
+  ],
+  "npcFillDefaultRatios": [0.85, 0.95, 1.02, 1.1],
+  "npcFillMinRatio": 0.85,
+  "npcFillMaxRatio": 1.1,
+  "minRosterSize": 4,
+  "championRewardsByYear": {
+    "1": { "gold": 2000, "jade": 150, "title": "金榜魁首" },
+    "2": { "gold": 2300, "jade": 160, "title": "金榜魁首" },
+    "3": { "gold": 2600, "jade": 170, "title": "金榜魁首" },
+    "4": { "gold": 2900, "jade": 180, "title": "金榜魁首" },
+    "5": { "gold": 3200, "jade": 190, "title": "金榜魁首" }
+  },
+  "rank2Reward": { "gold": 1200, "jade": 100, "title": "榜眼英才" },
+  "rank3Reward": { "gold": 1000, "jade": 80, "title": "探花俊彥" },
+  "rank4To10Reward": { "gold": 500, "jade": 0 },
+  "surpriseAwards": {
+    "dark_horse": {
+      "id": "surprise_dark_horse",
+      "title": "年度黑馬獎",
+      "bonusGold": 500,
+      "reason": "年度表現大幅超越預期，獲頒年度黑馬獎！"
+    },
+    "spoiled": {
+      "id": "surprise_spoiled",
+      "title": "最會撒嬌獎",
+      "bonusGold": 500,
+      "reason": "深得眾人寵愛，獲頒最會撒嬌獎！"
+    }
+  }
+}

@@ -9,7 +9,7 @@
  */
 import { TestRunner } from './TestRunner';
 import { createDeprecatedApiSuite } from './DeprecatedApiScanner';
-import { createJealousyAndDynastyServiceSuite } from './JealousyAndDynastyService.test';
+import { createYearEndRankingServiceSuite } from './YearEndRankingService.test';
 import { createBondingSuccessServiceSuite } from './BondingSuccessService.test';
 
 /**
@@ -74,9 +74,8 @@ if (typeof window === 'undefined') {
         if (n === 1 || n === 2 || n === 3) layerFilter = n;
     }
 
+    runner.register(createYearEndRankingServiceSuite());
     runner.register(createBondingSuccessServiceSuite());
-
-    runner.register(createJealousyAndDynastyServiceSuite());
 
     const summary = await runner.runAll(layerFilter);
 
