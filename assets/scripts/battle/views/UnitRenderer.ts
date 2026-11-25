@@ -2036,16 +2036,20 @@ export class UnitRenderer extends Component {
   // ── PROG-2-9731 戰場 UI 演出（名牌戰鬥淡出、毒上身、治療光）──────────────
 
   /** 攻擊／受擊演出開始：名牌淡出（可重入，與 endCombatPresentation 成對） */
-  public beginCombatPresentation(): void { this.plateFade.begin(); }
-  public endCombatPresentation(): void { this.plateFade.end(); }
+  public beginCombatPresentation(): void { this.plateFadeAlive()?.begin(); }
+  public endCombatPresentation(): void { this.plateFadeAlive()?.end(); }
   /** 佇列清空或治療要讓玩家看血條時：放掉所有淡出計數，名牌馬上開始淡回 */
-  public releaseNameplateFade(): void { this.plateFade.releaseNow(); }
+  public releaseNameplateFade(): void { this.plateFadeAlive()?.releaseNow(); }
+  /** 元件已被銷毀（Cocos 會把欄位清成 null，橋接層仍可能握著舊參照）時回 null，名牌淡出入口一律走這裡 */
+  private plateFadeAlive(): NameplateCombatFade | null {
+    return this.isValid && this.plateFade ? this.plateFade : null;
+  }
   /** 治療事件一到先把該單位的顯示血量定在治療前，等血條那一步才放開（只記第一次，連續治療不被覆蓋） */
   public holdHealHp(unitId: string, hpBefore: number): void { if (!this.healHolds.has(unitId)) this.healHolds.set(unitId, hpBefore); }
   /** 放開血量定格；不帶 id 放開全部（演出佇列結束的保底，避免血條卡在舊值） */
   public releaseHealHp(unitId?: string): void { if (unitId === undefined) this.healHolds.clear(); else this.healHolds.delete(unitId); }
   /** QA 用：目前名牌不透明度比例（0~1） */
-  public debugNameplateAlpha(): number { return this.plateFade.alpha; }
+  public debugNameplateAlpha(): number { return this.plateFadeAlive()?.alpha ?? 1; }
 
   /** 每幀把淡出比例套到所有名牌；已陣亡淡出中的名牌與倒地隱藏（opacity 0）的主將名牌不動 */
   private applyNameplateFade(dt: number): void {
