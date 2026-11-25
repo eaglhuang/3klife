@@ -17968,6 +17968,30 @@
     },
     {
       "doc_id": "",
+      "id": "PROG-2-10008",
+      "title": "首戰主將不在名冊時還原起始主將，不再設為空（總PM 裁決方案①）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "bugfix",
+      "phase": "M0",
+      "created": "2026-11-25",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-25T11:30:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "description": "首戰編成視窗在指定主將不在名冊時把出戰主將設為空，首戰後大廳主將未定、戰場無出征帳本、自動不部署。",
+      "related": [],
+      "depends": ["PROG-2-9913", "PROG-2-10003"],
+      "notes": "2026-11-25 | 狀態: in-progress | 驗證: pending | 變更: 開卡 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "doc": "docs/agent-briefs/tasks/PROG/PROG-2-10008.md"
+      }
+    },
+    {
+      "doc_id": "",
       "id": "PROG-2-9998",
       "title": "戰場體驗修正：提示條與教學鈕離開棋盤、長坂坡敵我同色、血條不重疊（QA 11/25）",
       "owner": "ClaudeCode_claude-opus-5-5",
@@ -18106,8 +18130,8 @@
   ],
   "summary": {
     "done": 325,
-    "in_progress": 2,
+    "in_progress": 3,
     "open": 87,
-    "total": 414
+    "total": 415
   }
 }
