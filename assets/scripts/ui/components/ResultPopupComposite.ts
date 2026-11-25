@@ -7,6 +7,7 @@ import { _decorator, BlockInputEvents, Button, Color, Graphics, Label, Layout, M
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { loadGeneralAvatar } from '../core/GeneralAvatarLoader';
+import { bindAvatarTalk } from '../core/AvatarTalkBubble';
 import { playTitleFreeze } from '../core/TitleFreezeOverlay';
 import type { AwakeningFreezeTiming } from '../../shared/interfaces/IBattleUIComponents';
 import { resultPopupTone } from '../../shared/ResultPopupTone';
@@ -493,6 +494,7 @@ ${result.description}
         if (!holder || !sprite) return;
         if (!holder.getComponent(Mask)) holder.addComponent(Mask).type = Mask.Type.GRAPHICS_ELLIPSE;
         this.preloadAvatar(generalId);
+        bindAvatarTalk(sprite.node, generalId);
         const frame = generalId && this._avatarPreload?.id === generalId ? await this._avatarPreload.frame : null;
         // 等頭像期間又開了下一場的結算窗：交給新的那次處理
         if (this._avatarPendingId !== (generalId ?? null) || !sprite.isValid) return;

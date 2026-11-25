@@ -63,6 +63,28 @@ export function createLobbyHallLayoutSuite(): TestSuite {
         assert.equals(2224 / 1920, hallBgCoverScale(2224, 1080));
     });
 
+    suite.test('推進一季鈕在右下角（PROG-2-9953），不與底欄、世家面板、信箱入口重疊', () => {
+        const W = 1920, H = 1080;
+        const rect = (n: SpecNode) => {
+            const w = n.widget!;
+            const hasL = w.left !== undefined, hasT = w.top !== undefined;
+            const r = w.right !== undefined ? W - w.right : w.left! + n.width!;
+            const b = w.bottom !== undefined ? H - w.bottom : w.top! + n.height!;
+            return { l: hasL ? w.left! : r - n.width!, r, t: hasT ? w.top! : b - n.height!, b };
+        };
+        const overlap = (a: ReturnType<typeof rect>, b: ReturnType<typeof rect>) => a.l < b.r && b.l < a.r && a.t < b.b && b.t < a.b;
+        const back = findById(root, 'lobby-hall-screen.back')!;
+        assert.isTrue(back.widget!.right !== undefined && back.widget!.bottom !== undefined);
+        assert.isTrue(back.widget!.right! <= 40 && back.widget!.bottom! <= 40);
+        assert.isTrue(back.width! >= 160 && back.height! >= 64);
+        const br = rect(back);
+        for (const id of ['dock', 'clan', 'altar', 'wall-right']) assert.isFalse(overlap(br, rect(findById(root, `lobby-hall-screen.${id}`)!)));
+        // 信箱入口（MindRequestPanel）：右 250、底 38、150x56，要貼在推進鈕左側
+        const mail = { l: W - 250 - 150, r: W - 250, t: H - 38 - 56, b: H - 38 };
+        assert.isFalse(overlap(br, mail));
+        for (const id of ['dock', 'clan', 'altar']) assert.isFalse(overlap(mail, rect(findById(root, `lobby-hall-screen.${id}`)!)));
+    });
+
     suite.test('.json 與 .layout.json 內容一致', () => {
         assert.equals(JSON.stringify(root), JSON.stringify(load('lobby-hall-screen.layout.json')));
     });

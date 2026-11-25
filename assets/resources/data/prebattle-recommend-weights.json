@@ -1,0 +1,15 @@
+{
+  "_comment": "戰前一鍵推薦編制權重（PROG-2-9910）。數值由 PM 設計；公式見 assets/scripts/core/systems/PreBattleRecommend.ts。",
+  "version": 1,
+  "commander": { "lea": 0.6, "str": 0.4 },
+  "strategist": { "int": 0.7, "pol": 0.5 },
+  "deputy": { "lea": 1.0, "pol": 0.6 },
+  "tally": {
+    "deckSize": 4,
+    "rarityScore": { "normal": 1, "rare": 2, "epic": 3, "legendary": 4, "mythic": 5 },
+    "newUnitTypeBonus": 2.5
+  },
+  "encounterOverrides": {
+    "encounter-001": { "skipStrategist": true, "skipDeputy": true }
+  }
+}

@@ -17,8 +17,8 @@ function phase(turn: number, tutorialBattle?: boolean, difficultyBonus = 0, boss
 }
 export function createTutorialBattleWavesSuite(): TestSuite {
     const suite = new TestSuite('TutorialBattleWaves');
-    suite.test('教學照波次表出兵：第1回合不出，第2、3回合各2隊，第4到7回合各1隊，共8隊，之後不再增援（PROG-2-9324、PROG-2-9325、PROG-2-9330、PROG-2-9344）', () => {
-        assert.equals('0,2,2,1,1,1,1,0,0,0,0,0', Array.from({ length: 12 }, (_, i) => phase(i + 1, true).requested).join(','));
+    suite.test('教學照波次表出兵：第1回合不出，第2到7回合各1隊，共6隊，之後不再增援（PROG-2-9324、PROG-2-9325、PROG-2-9330、PROG-2-9344、PROG-2-9951）', () => {
+        assert.equals('0,1,1,1,1,1,1,0,0,0,0,0',Array.from({ length: 12 }, (_, i) => phase(i + 1, true).requested).join(','));
         assert.equals(0, phase(50, true).requested);
     });
     suite.test('教學戰出兵不被敵軍糧草卡住，一般戰照糧草（PROG-2-9346）', () => {
@@ -38,16 +38,16 @@ export function createTutorialBattleWavesSuite(): TestSuite {
         units.set('p', u(Faction.Player, 1)); run(true); assert.equals(1, lines.length);
         units.delete('p'); run(true); assert.equals(2, lines.length);
     });
-    suite.test('教學戰實際生出的隊數照波次表：糧草是 0 也出得滿 8 隊（PROG-2-9346 補驗）', () => {
+    suite.test('教學戰實際生出的隊數照波次表：糧草是 0 也出得滿 6 隊（PROG-2-9346 補驗、PROG-2-9951）', () => {
         let spawned = 0; const tm = { enemyFood: 0 };
         for (let turn = 1; turn <= 12; turn++) executeBattleEnemyDeployPhase({ state: { getGeneral: () => null, getCell: () => null }, turn, tutorialBattle: true,
             difficultyBonus: 0, turnManager: tm, spawnEnemyUnit: () => { spawned++; }, isCellMovementBlocked: () => false,
             enemyAi: { decideDeploy: (_s: unknown, budget: number, count: number) => Array.from({ length: budget >= 15 * count ? count : 0 }, (_, i) => ({ type: 'cavalry', lane: i })) } } as any);
-        assert.equals(8, spawned);
+        assert.equals(6, spawned);
     });
     suite.test('教學不受高難度加成增加波次', () => {
         assert.equals(0, phase(1, true, 2).requested);
-        assert.equals(2, phase(2, true, 2).requested);
+        assert.equals(1, phase(2, true, 2).requested);
     });
     suite.test('一般戰與未指定旗標完全保留部署公式', () => {
         for (const flag of [false, undefined]) {

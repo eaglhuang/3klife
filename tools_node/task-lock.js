@@ -60,7 +60,7 @@ function main(argv = process.argv.slice(2), adapter = new LockAdapter(createLock
 
     case 'reserve':
       if (!taskIdOrPrefix || !agentName) {
-        console.error('Usage: task-lock.js reserve <task-prefix> <agent-name> (or resolve identity first)');
+        console.error('Usage: task-lock.js reserve <task-prefix|task-id> <agent-name> (or resolve identity first)');
         printIdentityHint();
         return 1;
       }

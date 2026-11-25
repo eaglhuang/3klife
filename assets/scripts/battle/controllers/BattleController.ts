@@ -16,8 +16,8 @@ import {
 } from "../../core/config/Constants";
 import { GeneralUnit } from "../../core/models/GeneralUnit";
 import type { AiDifficulty } from "../../core/systems/AiSpCharge";
-import type { AiDifficultyEntry } from "../../core/systems/AiDifficultyTable";
-import { aiShouldUseUltimate } from '../../core/systems/AiUltimateDecision';
+import type { AiDifficultyEntry, AiIqLevel } from "../../core/systems/AiDifficultyTable";
+import { aiShouldUseUltimate, raiseIqToFloor, type AiUltimateRules } from '../../core/systems/AiUltimateDecision';
 import { aiUltimateFamilyPermits } from '../../core/systems/AiUltimateFamilyRule';
 import { isUltimateSlotUnlocked } from '../../core/systems/UltimateSlotUnlock';
 import { TroopUnit } from "../../core/models/TroopUnit";
@@ -28,10 +28,10 @@ import type { BattleResult } from "../BattleTypes";
 import { detectWeatherTransition, validateWeatherSchedule, weatherForTurn, type WeatherScheduleEntry } from "../../core/systems/WeatherSchedule";
 import { WEATHER_ITEM_TARGET, weatherItemActiveAt, type WeatherItemId, type WeatherItemOverride } from "../../core/systems/WeatherItem";
 import { EnemyAI, AI_USABLE_TYPES } from "./EnemyAI";
-import { isBattleSkillImplemented, resolveBattleSkillProfile, resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
+import { type BattleSkillProfile, isBattleSkillImplemented, resolveBattleSkillProfile, resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
 import { BattleSkillSourceTranslator } from '../skills/adapters/BattleSkillSourceTranslator';
 import { BattleSkillDispatcher, type GeneralSkillCastOptions } from '../runtime/BattleSkillDispatcher';
-import { buildUltimateSkills, findAncestorSignatureSkillId, findUltBasePowerTable, findUltimateBattleSkillId, findUltimateDamageDef, findUltimateSpecialRule, findUltimateFamily, findUltimateVitalityCostPct } from '../views/BattleSceneLoader';
+import { buildUltimateSkills, findAncestorSignatureSkillId, findUltBasePowerTable, findUltimateBattleSkillId, findUltimateDamageDef, findUltimateSpecialRule, findUltimateTeamHealMissingRatio, findUltimateFamily, findUltimateVitalityCostPct } from '../views/BattleSceneLoader';
 import { BattleFlowStateMachine } from './BattleFlowStateMachine';
 import { BattleRuntimeOrchestrator } from '../orchestrators/BattleRuntimeOrchestrator';
 import { executeBattleCombatPhase } from '../runtime/phases/BattleCombatPhase';
@@ -89,6 +89,8 @@ import {
   finishSortie,
   getTacticTpCost,
   regenTactic,
+  BASE_TACTIC_CAP,
+  TACTIC_REGEN_PER_TURN,
   ensureTacticCapCovers,
   spendTactic,
   retireUnit,
@@ -100,6 +102,7 @@ import {
   type SortieSummary,
 } from '../../core/systems/SortieDeploy';
 import {
+  delegateAiIqOf,
   delegatePickDeploy,
   delegateQualityOf,
   sortDelegateCandidates,
@@ -115,7 +118,8 @@ import { aiShouldInitiateDuel } from '../../core/systems/AiDuelDecision';
 import { lastSpurtReasonOf } from '../../core/systems/LastSpurtJudge';
 import { burnStamina, staminaPool, willOf } from '../../core/systems/StaminaBurn';
 import { advanceWisdomMeter, applyWisdomSurge } from '../shared/WisdomMeter';
-import { estimateTacticDamage } from '../shared/TacticDamageEstimate';
+import { pickLowestHpEnemy, pickSupportLowAlly, pickEnemyCluster, type AimUnit } from '../shared/AiCadenceTargeting';
+import { estimateTacticDamage, estimateTacticHitCount } from '../shared/TacticDamageEstimate';
 import type { TacticAiSituation } from '../shared/TacticAiRules';
 import { estimateHealValue, hasChokePointLane, hasDenseArea } from '../shared/EnemyTacticBoard';
 import { resolveEnemyInitialDeployment, type EnemyInitialDeploymentEntry } from '../shared/EnemyInitialDeployment';
@@ -239,6 +243,7 @@ export class BattleController {
       getUltimateVitalityCostPct: (ultimateId) => findUltimateVitalityCostPct(ultimateId),
       getUltimateDamageDef: (ultimateId) => findUltimateDamageDef(ultimateId),
       getUltimateSpecialRule: (ultimateId) => findUltimateSpecialRule(ultimateId),
+      getUltimateTeamHealMissingRatio: (ultimateId) => findUltimateTeamHealMissingRatio(ultimateId),
       getUltBasePowerTable: () => findUltBasePowerTable(),
       getAncestorSignatureSkillId: (ancestorTemplateId) => findAncestorSignatureSkillId(ancestorTemplateId),
       isUnitActionBlocked: (unitId) => this.turnManager.isUnitActionBlockedThisTurn(unitId),
@@ -594,7 +599,15 @@ export class BattleController {
     if (!targetUnitUid) return done;
     if (general.canUseSkill()) {
       const ultimate = buildUltimateSkills(general)[0];
-      if (ultimate) {
+      // 委任代打同敵方：SP 滿還要過奧義判斷（IQ 比例門檻＋家族審批），不符合就留著 SP 不放（PROG-2-9723）
+      const shouldCast = !!ultimate && !!this.delegateQuality && this.shouldFactionCastUltimate(
+        Faction.Player,
+        general,
+        this.delegateUltimateIq(this.delegateQuality),
+        this.state.aiUltimateRules,
+        ultimate?.ultimateId ?? '',
+      );
+      if (ultimate && shouldCast) {
         done.ultimate = this.triggerPlayerBattleSkill(ultimate.skillId, SkillSourceType.Ultimate, {
           targetMode: resolveBattleSkillTargetMode(ultimate.skillId, BattleSkillTargetMode.EnemyAll),
           ultimateId: ultimate.ultimateId ?? null,
@@ -653,6 +666,7 @@ export class BattleController {
   public configureAiDifficulty(entry: AiDifficultyEntry): void {
     this.state.aiDuelAcceptThreshold = entry.duelAcceptThreshold;
     this.state.aiIq = entry.aiIq;
+    this.state.aiUltimateRules = entry.ultimateRules;
     this.state.aiCanUseUltimate = entry.canUseUltimate;
     this.state.aiTacticIq = entry.aiIq;
     this.enemyAi.iq = entry.aiIq;
@@ -765,6 +779,9 @@ export class BattleController {
     this.sortie = ensureTacticCapCovers(createSortieState(sortieInput), getTacticTpCost(this.resolveSeedTacticId({})));
     // 教學戰開場計謀點給滿，第一回合就放得出計謀（PROG-2-9326）；要在墊高上限之後補，才補得到墊高後的上限
     if (this._tutorialBattle && GAME_CONFIG.tutorialStartTacticFull) this.sortie = { ...this.sortie, tacticCurrent: this.sortie.tacticMax };
+    // 池子 = 玩家上限 + 保留線，開場滿點：扣掉保留的 20 後可用量與玩家上限相同
+    const enemyTpMax = BASE_TACTIC_CAP + BattleController.ENEMY_TACTIC_TP_RESERVE;
+    this.enemyTacticPoints = { current: enemyTpMax, max: enemyTpMax };
     services().battle.configureFood({ initial: this.sortie.food, max: this.sortie.maxFood, perTurn: 0 });
     return this.sortie;
   }
@@ -940,13 +957,17 @@ export class BattleController {
    * 數值暫定：單體傷害以我方血量最低的單位估算，倍率 1、地形平原；效果值與地形不填（分數為 0）。
    * 沒有可選戰法或戰法庫查不到 battleSkillId 時回 null，呼叫端退回武將主技能。
    */
-  public chooseEnemyTactic(): { tacticId: string; battleSkillId: string } | null {
+  public chooseEnemyTactic(): { tacticId: string; battleSkillId: string; targetUnitUid?: string } | null {
+    this.enemyTacticDeclinedFlag = false;
     const general = this.state.enemyGeneral;
     if (!general) return null;
 
     const library = Array.from(this.tacticDefinitionMap.values()).map(def => ({ id: def.id, category: def.category }));
-    const candidates = buildEnemyTacticCandidates(general.tacticSlots, library);
-    if (candidates.length === 0) return null;
+    const allCandidates = buildEnemyTacticCandidates(general.tacticSlots, library);
+    if (allCandidates.length === 0) return null;
+    // TP 付不起（扣完低於保留線）的戰法不進候選池；全部付不起就改普攻、點數留著回復
+    const candidates = allCandidates.filter(candidate => this.canEnemyAffordTactic(candidate.tacticId));
+    if (candidates.length === 0) { this.enemyTacticDeclinedFlag = true; return null; }
 
     const playerUnits = this.livingUnitsOf(Faction.Player);
     const enemyUnits = this.livingUnitsOf(Faction.Enemy);
@@ -964,9 +985,16 @@ export class BattleController {
     );
     if (weakest) {
       const damage = this.estimateEnemyStrikeDamage(general, weakest);
+      const playerCellsForAoe = playerUnits.map(unit => ({ lane: unit.lane, depth: unit.depth }));
       for (const candidate of candidates) {
         if (candidate.category === 'single-damage') {
-          metrics[candidate.tacticId] = { estimatedDamage: damage };
+          // 群傷（PROG-2-9852）：依戰法設定估算同時打到幾個我方單位
+          const battleSkillId = this.tacticDefinitionMap.get(candidate.tacticId)?.battleSkillId ?? null;
+          const profile = battleSkillId ? resolveBattleSkillProfile(battleSkillId) : null;
+          const hitCount = profile
+            ? estimateTacticHitCount(profile.targetMode, playerCellsForAoe, { maxTargets: profile.maxTargets, areaRadius: profile.areaRadius })
+            : 1;
+          metrics[candidate.tacticId] = { estimatedDamage: damage, hitCount };
         }
       }
     }
@@ -995,15 +1023,77 @@ export class BattleController {
       situation,
       () => services().session.randomSource(),
     );
-    if (!tacticId) return null;
+    if (!tacticId) { this.enemyTacticDeclinedFlag = true; return null; }
     const battleSkillId = this.tacticDefinitionMap.get(tacticId)?.battleSkillId;
-    return battleSkillId ? { tacticId, battleSkillId } : null;
+    if (!battleSkillId) return null;
+    const profile = resolveBattleSkillProfile(battleSkillId);
+    const targetUnitUid = profile ? this.pickEnemyTacticTarget(profile, playerUnits, enemyUnits) : undefined;
+    return targetUnitUid ? { tacticId, battleSkillId, targetUnitUid } : { tacticId, battleSkillId };
+  }
+
+  /**
+   * 敵將戰法自動索敵（PROG-2-9853，規格 doc_spec_0360 §1）：
+   * 單體攻擊取我方血量比例最低者；單體友軍（治療）取血量 <50% 中最低的友軍；範圍戰法取覆蓋我方最多單位的錨點（<2 人退回預設目標）。
+   * 有射程加成的戰法交給選目標器的射程過濾，不指定；找不到時回 undefined 走預設目標。
+   */
+  private pickEnemyTacticTarget(
+    profile: BattleSkillProfile,
+    playerUnits: readonly TroopUnit[],
+    enemyUnits: readonly TroopUnit[],
+  ): string | undefined {
+    if (profile.rangeBonus) return undefined;
+    const toAim = (unit: TroopUnit): AimUnit => ({ unitId: unit.id, hp: unit.currentHp, maxHp: unit.maxHp, x: unit.lane, y: unit.depth });
+    switch (profile.targetMode) {
+      case BattleSkillTargetMode.EnemySingle:
+        return pickLowestHpEnemy(playerUnits.map(toAim))?.unitId;
+      case BattleSkillTargetMode.AllySingle:
+        return pickSupportLowAlly(enemyUnits.map(toAim))?.unitId;
+      case BattleSkillTargetMode.Area: {
+        const radius = Math.max(0, profile.areaRadius ?? 0);
+        const anchors = playerUnits.map(center => ({
+          x: center.lane,
+          y: center.depth,
+          hitCount: playerUnits.filter(u => Math.max(Math.abs(u.lane - center.lane), Math.abs(u.depth - center.depth)) <= radius).length,
+        }));
+        const pick = pickEnemyCluster(anchors, playerUnits.map(toAim), { x: 0, y: 0 });
+        if (pick?.kind !== 'anchor') return undefined;
+        return playerUnits.find(u => u.lane === pick.anchor.x && u.depth === pick.anchor.y)?.id;
+      }
+      default:
+        return undefined;
+    }
   }
 
   /**
    * 敵方本回合是否不放戰法（PROG-2-1466）：難度表禁用戰法，或低 IQ 沒抽中 30%。
    * 不出手時 SP 保留，下回合再判斷。
    */
+  /** 敵將計謀點（裁決 11/23：跟玩家一樣扣點，並保留 20 點作防禦）；沒有出征帳本（demo）時為 null，不限制。 */
+  private enemyTacticPoints: { current: number; max: number } | null = null;
+  public static readonly ENEMY_TACTIC_TP_RESERVE = 20;
+
+  public getEnemyTacticPoints(): { current: number; max: number } | null {
+    return this.enemyTacticPoints ? { ...this.enemyTacticPoints } : null;
+  }
+
+  /** 付完戰法後仍留得住保留點數才算付得起 */
+  private canEnemyAffordTactic(tacticId: string | null): boolean {
+    if (!this.enemyTacticPoints) return true;
+    return this.enemyTacticPoints.current - getTacticTpCost(tacticId) >= BattleController.ENEMY_TACTIC_TP_RESERVE;
+  }
+
+  /** 敵將施放戰法成功後扣點；沒有戰法 id（退回主技能）或沒有點數池時不扣 */
+  public spendEnemyTacticPoints(tacticId: string | null): void {
+    if (!this.enemyTacticPoints || !tacticId) return;
+    this.enemyTacticPoints.current = Math.max(0, this.enemyTacticPoints.current - getTacticTpCost(tacticId));
+  }
+
+  /** 最近一次 chooseEnemyTactic 是否「有候選但沒有值得放的」（PROG-2-9848）；供回合結算改普攻。 */
+  private enemyTacticDeclinedFlag = false;
+  public enemyTacticDeclined(): boolean {
+    return this.enemyTacticDeclinedFlag;
+  }
+
   public shouldEnemyHoldTactic(): boolean {
     if (!this.state.aiCanUseTactics) return true;
     return aiHoldsTactic(this.state.aiTacticIq, () => services().session.randomSource());
@@ -1034,9 +1124,7 @@ export class BattleController {
   }
 
   /**
-   * 敵方奧義決策（AIS-07）：難度表允許、精力已滿、有解鎖奧義，且 aiShouldUseUltimate 判定施放時，回傳奧義組合。
-   * 數值暫定（PM 裁定）：estimatedKills＝目前存活、兵力 ≤ 敵將單次預估傷害的我方單位數（範圍暫以全體我方計）；
-   * isLosing＝敵方存活單位少於玩家。
+   * 敵方奧義決策（AIS-07）：難度表允許、精力已滿、有解鎖奧義，且奧義判斷（同 shouldFactionCastUltimate）通過時，回傳奧義組合。
    */
   public chooseEnemyUltimate(): { battleSkillId: string; ultimateId: string } | null {
     const general = this.state.getGeneral(Faction.Enemy);
@@ -1050,24 +1138,51 @@ export class BattleController {
     const battleSkillId = linked ?? general.skillId;
     if (!battleSkillId) return null;
 
-    const playerCount = this.livingUnitsOf(Faction.Player).length;
-    const enemyCount = this.livingUnitsOf(Faction.Enemy).length;
-    const estimatedKills = this.livingUnitsOf(Faction.Player)
+    const shouldUse = this.shouldFactionCastUltimate(Faction.Enemy, general, this.state.aiIq, this.state.aiUltimateRules, ultimateId);
+    return shouldUse ? { battleSkillId, ultimateId } : null;
+  }
+
+  /**
+   * 奧義施放判斷（PROG-2-9723）：敵方 AI 與委任代打共用，依 IQ 與精力比例（aiShouldUseUltimate）加上家族審批（aiUltimateFamilyPermits）。
+   * 數值暫定（PM 裁定）：estimatedKills＝目前存活、兵力 ≤ 施放者單次預估傷害的對方單位數（範圍暫以全體對方計）；
+   * isLosing＝施放陣營存活單位少於對方。沒有 rules（未設定難度表）時不放。
+   */
+  private shouldFactionCastUltimate(
+    faction: Faction,
+    general: GeneralUnit,
+    iq: AiIqLevel,
+    rules: AiUltimateRules | null,
+    ultimateId: string,
+  ): boolean {
+    if (!rules) return false;
+    const foe = faction === Faction.Enemy ? Faction.Player : Faction.Enemy;
+    const ownCount = this.livingUnitsOf(faction).length;
+    const foeCount = this.livingUnitsOf(foe).length;
+    const estimatedKills = this.livingUnitsOf(foe)
       .filter(unit => unit.currentHp <= this.estimateEnemyStrikeDamage(general, unit)).length;
-    const shouldUse = aiShouldUseUltimate({
-      iq: this.state.aiIq,
+    const isLosing = ownCount < foeCount;
+    return aiShouldUseUltimate({
+      iq,
       vitality: general.vitality,
-      enemyCount: playerCount,
+      maxVitality: general.maxVitality,
+      enemyCount: foeCount,
       estimatedKills,
-      isLosing: enemyCount < playerCount,
+      isLosing,
+      rules,
     }) && aiUltimateFamilyPermits(findUltimateFamily(ultimateId), {
       estimatedKills,
-      enemyCount: playerCount,
+      enemyCount: foeCount,
       selfHpRatio: general.maxHp > 0 ? general.currentHp / general.maxHp : 0,
-      allyHpRatio: this.hpRatioOf(Faction.Enemy),
-      isLosing: enemyCount < playerCount,
+      allyHpRatio: this.hpRatioOf(faction),
+      isLosing,
     });
-    return shouldUse ? { battleSkillId, ultimateId } : null;
+  }
+
+  /** 委任代打奧義判斷用 IQ：委任品質對應的 IQ 不低於 ultimateRules.delegateMinIq（PROG-2-9728）；敵方不經過這裡 */
+  private delegateUltimateIq(quality: DelegateQuality): AiIqLevel {
+    const iq = delegateAiIqOf(quality);
+    const floor = this.state.aiUltimateRules?.delegateMinIq ?? iq;
+    return raiseIqToFloor(iq, floor);
   }
 
   /** 敵方施放奧義：生效後才清空精力並發事件（與玩家奧義同一套 SP 規則） */
@@ -1568,7 +1683,7 @@ export class BattleController {
           state: this.state,
           actingFaction: Faction.Player,
           turnManager: this.turnManager,
-          castEnemySeedTactic: (battleSkillId, tacticId) => this.castBattleSkill(Faction.Enemy, { battleSkillId, tacticId }),
+          castEnemySeedTactic: (battleSkillId, tacticId, targetUnitUid) => this.castBattleSkill(Faction.Enemy, { battleSkillId, tacticId, targetUnitUid: targetUnitUid ?? null }),
         });
         return {};
       case 'enemy-special-resolve':
@@ -1581,6 +1696,8 @@ export class BattleController {
           castEnemySeedTactic: (battleSkillId, tacticId) => this.castBattleSkill(Faction.Enemy, { battleSkillId, tacticId }),
           chooseEnemyTactic: () => this.chooseEnemyTactic(),
           shouldEnemyHoldTactic: () => this.shouldEnemyHoldTactic(),
+          enemyTacticDeclined: () => this.enemyTacticDeclined(),
+          spendEnemyTacticPoints: (tacticId) => this.spendEnemyTacticPoints(tacticId),
           defenseEngineerBombard: this.state.siegeDefender === Faction.Player ? this.defenseBattleConfig.engineerBombardDamage : 0,
         });
         if (phaseName === 'enemy-special-resolve' && this.state.battleTactic === BattleTactic.FloodAttack) {
@@ -1684,6 +1801,7 @@ export class BattleController {
       });
     }
     if (this.sortie) this.sortie = regenTactic(this.sortie);
+    if (this.enemyTacticPoints) this.enemyTacticPoints.current = Math.min(this.enemyTacticPoints.max, this.enemyTacticPoints.current + TACTIC_REGEN_PER_TURN);
     svc.battle.nextTurn();
     this.state.tickControlledUnits();
     this.updateLastSpurtMode();

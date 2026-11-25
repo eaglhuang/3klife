@@ -32,13 +32,28 @@ export function createGovernorHallControllerSuite(): TestSuite {
 
     suite.test('四條流向各有文字與 active 標記，節點 id 與 key 對應', () => {
         const flow = new GovernorHallController({ snapshot: () => snapshot() }).getFlowView();
-        assert.equals('黃金　115', flow.texts.govFlowGold);
-        assert.equals('糧草　90', flow.texts.govFlowFood);
+        assert.equals('本季黃金產出　115', flow.texts.govFlowGold);
+        assert.equals('本季糧草產出　90', flow.texts.govFlowFood);
         assert.equals('城市兵源上限　8000', flow.texts.govFlowCityTroopCap);
         assert.equals('補兵速度　300', flow.texts.govFlowRecruitRegen);
         for (const id of ['govFlowGold', 'govFlowFood', 'govFlowCityTroopCap', 'govFlowRecruitRegen']) {
             assert.isTrue(flow.actives[id]);
         }
+    });
+
+    suite.test('現有存量與每季產出分開標示：有傳 owned 才顯示存量列（PROG-2-9861）', () => {
+        const territory = (owned?: { food: number; gold: number }) => () => ({
+            level: 1, maxSlots: 2, pendingLevel: null,
+            plan: { ok: false, reason: 'insufficient-food' as const, targetLevel: 2, cost: { gold: 0, food: 1000 } },
+            owned,
+        });
+        const withOwned = new GovernorHallController({ snapshot: () => snapshot(), territory: territory({ food: 300, gold: 1000 }) }).getFlowView();
+        assert.equals('現有存量　金 1000　糧草 300', withOwned.texts.govStock);
+        assert.isTrue(withOwned.actives.govStock);
+        assert.equals('糧草不足（需 1000，現有 300）', withOwned.texts.btnUpgradeLabel);
+        const without = new GovernorHallController({ snapshot: () => snapshot(), territory: territory() }).getFlowView();
+        assert.equals('', without.texts.govStock);
+        assert.isFalse(without.actives.govStock);
     });
 
     suite.test('補兵為 0 時距離回滿顯示無法回滿，不會除以零', () => {
@@ -102,6 +117,42 @@ export function createGovernorHallControllerSuite(): TestSuite {
             territory: () => ({ level: 1, maxSlots: 2, pendingLevel: null, plan: planTerritoryUpgrade(1, null, 5000), goldShortage: true, owned: { food: 5000, gold: 100 } }),
         }).getFlowView();
         assert.equals('黃金不足（需 4000，現有 100）', flow.texts.btnUpgradeLabel);
+    });
+
+    suite.test('黃金基礎值為 0（沒選商業）時顯示新手引導提示，走 i18n key', () => {
+        const keys: string[] = [];
+        const flow = new GovernorHallController({
+            snapshot: () => snapshot({ gold: { base: 0, populationBonus: 0, policyModifier: 0 } }),
+            t: (key: string) => { keys.push(key); return '去內政牆接商業任務'; },
+        }).getFlowView();
+        assert.equals('去內政牆接商業任務', flow.texts.govGoldHint);
+        assert.isTrue(flow.actives.govGoldHint);
+        assert.equals('ui.governor.goldHint', keys[0]);
+    });
+
+    suite.test('黃金基礎值為 0 且沒注入 t 時退回 zh-TW 預設文字', () => {
+        const flow = new GovernorHallController({
+            snapshot: () => snapshot({ gold: { base: 0, populationBonus: 0, policyModifier: 0 } }),
+        }).getFlowView();
+        assert.equals('城庫空空如也？去內政牆接個商業任務，錢就進來啦！', flow.texts.govGoldHint);
+        assert.isTrue(flow.actives.govGoldHint);
+    });
+
+    suite.test('i18n 查不到 key（回傳 key 本身）時退回預設文字', () => {
+        const flow = new GovernorHallController({
+            snapshot: () => snapshot({ gold: { base: 0, populationBonus: 0, policyModifier: 0 } }),
+            t: (key: string) => key,
+        }).getFlowView();
+        assert.equals('城庫空空如也？去內政牆接個商業任務，錢就進來啦！', flow.texts.govGoldHint);
+    });
+
+    suite.test('黃金基礎值大於 0 或沒有經濟資料時不顯示提示', () => {
+        const withGold = new GovernorHallController({ snapshot: () => snapshot() }).getFlowView();
+        assert.equals('', withGold.texts.govGoldHint);
+        assert.isFalse(withGold.actives.govGoldHint);
+        const noEconomy = new GovernorHallController({ snapshot: () => snapshot({ gold: null, population: null, morale: null }) }).getFlowView();
+        assert.equals('', noEconomy.texts.govGoldHint);
+        assert.isFalse(noEconomy.actives.govGoldHint);
     });
 
     return suite;

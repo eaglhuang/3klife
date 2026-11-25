@@ -13,6 +13,8 @@ function rockContext() {
     const state = {
         units: new Map([[unit.id, unit]]),
         unitDots: new Map(),
+        unitBurns: new Map(),
+        tileEffects: new Map(),
         formationZones: new Map(),
         stageSalvage: emptyStageSalvage(),
         plunderedTiles: new Set<string>(),

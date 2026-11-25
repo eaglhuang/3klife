@@ -48,6 +48,8 @@ export interface RewardEffectOutcome {
 
 export interface RewardEffectEnv {
     refId: string;
+    /** 本次發放的來源（reward.claim 的 source）；宿主 handler 可讀 ref 取得對象，例如台詞成就的武將 id（PROG-2-9864） */
+    source?: { kind: string; ref?: string };
     wallet: WalletAuthority | null;
     /** 呼叫其他命令層（item.*）；不得繞過它直接改庫存 */
     invoke: LocalApiAdapter['invoke'];
@@ -252,7 +254,7 @@ export function registerRewardCommands(adapter: LocalApiAdapter, getPorts: () =>
         }
         precheck(items);
         const handlers = ports.handlers ?? {};
-        const env: RewardEffectEnv = { refId, wallet: ports.wallet, invoke: (name, args) => adapter.invoke(name, args) };
+        const env: RewardEffectEnv = { refId, source, wallet: ports.wallet, invoke: (name, args) => adapter.invoke(name, args) };
         const undos: Array<() => Promise<void>> = [];
         const overflow: RewardGrantResult['overflow'] = [];
         const delta: ApiDeltaOp[] = [];

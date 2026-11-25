@@ -11,7 +11,7 @@
  * 數值放 data/defense-battle.json，調數值不用動程式。
  *
  * 守城張力（使用者 11/21 裁決，PROG-2-9429）：
- *   - 敵方工兵活著就遠程投石，每隊每回合扣我方城寨 engineerBombardDamage（預設 15）。
+ *   - 敵方工兵活著就遠程投石，每隊每回合扣我方城寨 engineerBombardDamage（預設 12）。
  *   - 來攻主將留在後方本陣不前進（玩家仍可打過去擊殺提早獲勝）。
  *   - 敵方每回合補派最多 engineerReinforcePerTurn 隊工兵（預設 1），派到我方部隊最少的路。
  *
@@ -44,7 +44,7 @@ export interface DefenseBattleConfig {
 export const DEFAULT_DEFENSE_BATTLE: Readonly<DefenseBattleConfig> = Object.freeze({
     turnLimit: 12,
     moraleOnVictory: 2,
-    engineerBombardDamage: 15,
+    engineerBombardDamage: 12,
     engineerReinforcePerTurn: 1,
     engineerReinforceMax: 5,
     fortressMaxHp: FORTRESS_MAX_HP,

@@ -17,6 +17,7 @@ import {
     expireMissions, applyChainSpawn, refillBoards, releasePendingSpawns, wallOf, type MissionBoardsConfig,
 } from '../MissionBoardRules';
 import { blocksOf, evaluateAllCandidates, pickDelegate, type CandidateEval } from '../MissionFitness';
+import { chainTotalOf } from '../MissionChain';
 import { applyRecon, applyWait, intelBandOf, scoutIntelBonus, clampIntel } from '../MissionIntel';
 import type { MissionDataBundle } from '../MissionLoader';
 import { projectMission, projectRate } from '../MissionProjection';
@@ -156,7 +157,8 @@ export class OfflineMissionService implements IMissionService {
         const base = {
             id: inst.id, theme: inst.theme, intel: lock ? lock.intelAtDispatch : inst.intel,
             intelBand: intelBandOf(lock ? lock.intelAtDispatch : inst.intel, this._balance), status: inst.status, expireSeason: inst.expireSeason,
-            ...(lock ? { executorName: names.get(lock.generalIds[0]) ?? lock.generalIds[0], returnSeason: lock.returnSeason } : {}),
+            ...(lock ? { executorName: names.get(lock.generalIds[0]) ?? lock.generalIds[0], executorId: lock.generalIds[0], returnSeason: lock.returnSeason } : {}),
+            ...(inst.chainFrom && def ? { chain: { depth: inst.chainDepth ?? 2, total: chainTotalOf(this._data.defs, def.id, inst.chainDepth ?? 2) } } : {}),
         };
         if (inst.legacy && (!def || lock?.branchId === LEGACY_FLAT_BRANCH_ID)) {
             const pct = lock ? Math.round(lock.rate * 100) : 0;
@@ -436,7 +438,10 @@ export class OfflineMissionService implements IMissionService {
             if (e.kind === 'resource') gains[e.res] = (gains[e.res] ?? 0) + e.amount;
             else if (e.kind === 'generalExp' || e.kind === 'fame' || e.kind === 'officerExp') gains[e.kind] = (gains[e.kind] ?? 0) + e.amount;
         }
-        return { missionId: inst.id, title, generalId, generalName: facts.name, branchId, gains, tier, narratives, traceText: trace };
+        const chain = inst.chainFrom && def
+            ? { depth: inst.chainDepth ?? 2, total: chainTotalOf(this._data.defs, def.id, inst.chainDepth ?? 2), completed: (tier === 'critical' || tier === 'success') && !entries.some(e => e.kind === 'spawn') }
+            : undefined;
+        return { missionId: inst.id, title, generalId, generalName: facts.name, branchId, gains, tier, narratives, traceText: trace, ...(chain ? { chain } : {}) };
     }
 
     /** 服務自己持有的效果（旗標、連鎖、情報、解鎖、受傷／被俘）；回傳受傷季數 */
@@ -448,7 +453,7 @@ export class OfflineMissionService implements IMissionService {
                 return 0;
             }
             case 'spawn': {
-                const r = applyChainSpawn(this._snap, { defId: e.defId, intel: e.intel, afterSeasons: e.afterSeasons, expireSeasons: e.expireSeasons, chainFrom: source.id }, this._data.defs, season);
+                const r = applyChainSpawn(this._snap, { defId: e.defId, intel: e.intel, afterSeasons: e.afterSeasons, expireSeasons: e.expireSeasons, chainFrom: source.id, chainDepth: (source.chainDepth ?? 1) + 1 }, this._data.defs, season);
                 this._snap = r.snapshot;
                 spawned.push(...r.spawned.map(m => m.id));
                 return 0;

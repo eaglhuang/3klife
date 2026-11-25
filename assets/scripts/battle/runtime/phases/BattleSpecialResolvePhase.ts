@@ -19,11 +19,18 @@ export interface BattleSpecialResolvePhaseContext {
   readonly state: BattleState;
   readonly actingFaction: Faction;
   readonly turnManager: BattleTurnManager;
-  castEnemySeedTactic(battleSkillId: string | null, tacticId?: string | null): SkillExecutionResult;
+  castEnemySeedTactic(battleSkillId: string | null, tacticId?: string | null, targetUnitUid?: string | null): SkillExecutionResult;
   /** 敵方選技（PROG-2-0918）：回傳本回合要施放的戰法；null 時退回武將主技能 */
-  chooseEnemyTactic?(): { tacticId: string; battleSkillId: string } | null;
+  chooseEnemyTactic?(): { tacticId: string; battleSkillId: string; targetUnitUid?: string } | null;
   /** 敵方本回合是否不放戰法（PROG-2-1466，低 IQ 或難度表禁用）；true 時 SP 保留 */
   shouldEnemyHoldTactic?(): boolean;
+  /**
+   * 敵方有戰法可選、但評分後沒有值得放的（全 0 分或中 IQ 無傷害）時為 true（PROG-2-9848）：
+   * 規格要求此時改普攻，不再退回武將主技能硬放；SP 保留。沒有戰法槽時為 false，仍用主技能。
+   */
+  enemyTacticDeclined?(): boolean;
+  /** 敵將戰法施放成功後扣計謀點（裁決 11/23） */
+  spendEnemyTacticPoints?(tacticId: string | null): void;
   /** 守城戰敵方每隊工兵每回合投石扣我方城寨（PROG-2-9429）；非守城或未設定為 0 */
   defenseEngineerBombard?: number;
 }
@@ -57,11 +64,14 @@ export function executeBattleSpecialResolvePhase(context: BattleSpecialResolvePh
     && !(context.shouldEnemyHoldTactic?.() ?? false)
   ) {
     const chosen = context.chooseEnemyTactic?.() ?? null;
-    const result = context.castEnemySeedTactic(
+    const declined = !chosen && (context.enemyTacticDeclined?.() ?? false);
+    const result = declined ? { applied: false } as SkillExecutionResult : context.castEnemySeedTactic(
       chosen?.battleSkillId ?? enemyGeneral.skillId ?? enemyGeneral.battlePrimarySkillId ?? null,
       chosen?.tacticId ?? null,
+      chosen?.targetUnitUid ?? null,
     );
     if (result.applied) {
+      context.spendEnemyTacticPoints?.(chosen?.tacticId ?? null);
       context.turnManager.markEnemyAutoSkillUsed(currentTurn);
       enemyGeneral.currentSp = 0;
       svc.event.emit(EVENT_NAMES.GeneralSpChanged, {

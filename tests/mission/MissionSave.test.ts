@@ -143,5 +143,23 @@ export function createMissionSaveSuite(): TestSuite {
         assert.equals(0, r2.save.missions.length);
     });
 
+    suite.test('連鎖段數（chainDepth）存檔往返：正常保留、小於 2 或非數字丟棄，待生成佇列同理（PROG-2-9966）', () => {
+        const inst = (id: string, depth: unknown) => ({
+            id, defId: 'd', theme: 't', variant: 'v', spawnSeason: 1, expireSeason: 5, intel: 10, status: 'OPEN', chainFrom: 'M0', chainDepth: depth,
+        });
+        const n = normalizeMissionSave({
+            version: 2, revision: 1, rng: { seed: 1, serial: 1 }, season: 2,
+            missions: [inst('M1', 3.7), inst('M2', 1), inst('M3', 'x')],
+            pending: [{ defId: 'd', atSeason: 4, chainFrom: 'M1', chainDepth: 4 }, { defId: 'd', atSeason: 4, chainDepth: 0 }],
+        });
+        assert.isTrue(n !== null);
+        if (!n) return;
+        assert.equals(3, n.missions[0].chainDepth);
+        assert.equals(undefined, n.missions[1].chainDepth);
+        assert.equals(undefined, n.missions[2].chainDepth);
+        assert.equals(4, n.pending?.[0].chainDepth);
+        assert.equals(undefined, n.pending?.[1].chainDepth);
+    });
+
     return suite;
 }

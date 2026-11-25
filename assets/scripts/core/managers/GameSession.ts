@@ -31,7 +31,7 @@ import { tallyProducedSpec, tallyStarUpSpec } from '../systems/TallyScripts';
 import { formatTallyLine, type TallyLine, type TallyTranslate } from '../systems/TallyLineSpec';
 import { UCUFLogger, LogCategory } from '../utils/UCUFLogger';
 import { normalizeOfficerSnapshot, officerUnlocksOf, type OfficerUnlocks } from '../systems/OfficerSnapshot';
-import { addOfficerExp, BATTLE_MERIT_OFFICER_TASK, applyEraShiftToOfficerState, calcOfficerExpGain, initialOfficerState, normalizeOfficerState, toOfficerSnapshot, type OfficerState, type OfficerTaskResult } from '../systems/OfficerState';
+import { addOfficerExp, BATTLE_MERIT_OFFICER_TASK, OFFICER_TIER_EXP_THRESHOLDS, OFFICER_TIER_MAX, OFFICER_TIER_MIN, applyEraShiftToOfficerState, calcOfficerExpGain, initialOfficerState, normalizeOfficerState, toOfficerSnapshot, type OfficerState, type OfficerTaskResult } from '../systems/OfficerState';
 import { officerPermissionsOf, type OfficerPermissions } from '../systems/OfficerPermissions';
 import { FRESH_OPENING_OFFER_STATE, nextOpeningOffer, normalizeOpeningOfferState, resolveOpeningOffer, type OpeningOffer, type OpeningOfferOutcome, type OpeningOfferState, type OpeningOfferTable } from '../systems/OpeningOffer';
 import { activeOfficerTrial, boostedOfficerExp, effectiveOfficerState, grantOfficerTrial, normalizeOfficerTrial, type OfficerTrial, type OfficerTrialGrant } from '../systems/OfficerCommerce';
@@ -75,6 +75,8 @@ import type { LifespanCommand } from '../systems/LifespanCost';
 import type { LifecycleSettlement, SeasonLifecycle } from '../services/LegacyService';
 import type { SpiritCard } from '../models/SpiritCard';
 import type { MentorCard } from '../models/MentorCard';
+import { FriendshipService } from '../services/FriendshipService';
+import { FriendshipActionEngine, normalizeFriendshipActionTable, type FriendshipActionAppliedPayload, type FriendshipActionTable } from '../systems/FriendshipActionEngine';
 import { normalizeDeck, toggleDeckCard, DeckToggleOutcome } from '../services/PlayerDeckRules';
 import { SeededRandom, LEGACY_RANDOM_SEED } from '../systems/SeededRandom';
 import { applyAcademyGraduation, type AcademyGraduationResult } from '../systems/nurture/AcademyGraduation';
@@ -170,7 +172,8 @@ import type { SilverLedger } from '../api/localserver/SilverWalletPort';
 import { MARRIAGE_RELATION_GAIN, MATCHMAKER_CLOSED_LABEL, bondAffinityMet, diplomaticSlot, matchmakerCandidates, matchmakerSlot, matchmakerYearOf, relationAllowsAlliance, spouseHomeNationOf, type MatchmakerCandidate } from '../systems/SpouseSources';
 import { OccupancyService } from '../../shared/occupancy/OccupancyService';
 import { parseOccupancyMatrix, type OccupancyMatrixV1 } from '../../shared/occupancy/OccupancyMatrix';
-import { parseFamilyConfig, type FamilyConfigV1 } from '../../shared/family/FamilyConfig';
+import { parseFamilyConfig, spouseCapFor, type FamilyConfigV1 } from '../../shared/family/FamilyConfig';
+import { checkMatchmakerTrigger, type MatchmakerPromptType } from '../systems/MatchmakerGuideManager';
 import { FamilyService } from '../../shared/family/FamilyService';
 import { isEmptyFamilyState, type NursingMethod } from '../../shared/family/FamilyTypes';
 import type { OccupancyKind, OccupancyRecord } from '../../shared/occupancy/OccupancyTypes';
@@ -196,6 +199,7 @@ import { shouldShowVolunteerEvent } from '../systems/HallVolunteer';
 import { MISSION_DIFFICULTIES } from '../mission/MissionBalance';
 import { MISSION_TIER_TEXT, type MissionBlock, type MissionGeneralFacts, type MissionLedgerEntry, type MissionStatKey } from '../mission/MissionTypes';
 import { hashText } from '../mission/MissionRng';
+import type { HallMissionReportCard } from '../mission/MissionReactionCards';
 import { affinityFromLedger, memoryHintFromLedger, type MemoryLedgerLike } from '../mission/MissionMemory';
 import { migrateLegacyHallMissions, normalizeMissionSave } from '../mission/MissionSave';
 import type { MissionSaveV2 } from '../mission/MissionTypes';
@@ -290,6 +294,7 @@ import { services } from './ServiceLoader';
 import { type CampaignStageDef, enabledCampaignStages, getCampaignStage, isCampaignStagePlayable } from '../config/CampaignStages';
 import { phaseFactorColors, phaseForLevel, type UnlockPhase } from '../systems/UnlockPhase';
 import { protectedAfterLoss, CELLAR_PROTECTION } from '../systems/CellarProtection';
+import { applyNoviceLossProtection, splitLostTroops, troopLossRules } from '../systems/CommandSortieLoss';
 import { applySortieResult, FOOD_PER_SEASON, MilitaryReserve, normalizeMilitaryReserve, regenMilitaryOneSeason, STARTER_MILITARY } from '../systems/MilitaryReserve';
 import { buildGovernorSnapshot, type GovernorSnapshot } from '../systems/GovernorHallView';
 import { defenseOutcomeOf } from '../systems/DefenseBattle';
@@ -334,6 +339,8 @@ import { DynamicRelationBook, battleComradePairs, type DynamicRelationResult } f
 import { claimAllSeasonPass, createSeasonPassState, isDefaultSeasonPassState, mockSeasonPassLevelUp, normalizeSeasonPassState, type SeasonPassReward, type SeasonPassState } from '../systems/SeasonPass';
 import { normalizePendingSceneGambit, pendingSceneGambitOfTask, resolveSceneGambit, type PendingSceneGambit, type SceneGambitOutcome } from '../systems/HallSceneGambit';
 import { quickResolveWritClaimsFor } from '../systems/QuickResolveWritSources';
+import { AnnualRankingHook } from '../systems/annual_ranking/AnnualRankingHook';
+import { AnnualRankingManager } from '../systems/annual_ranking/AnnualRankingManager';
 import { checkQuickResolve, emptyQuickResolveState, isDefaultQuickResolveState, normalizeQuickResolveSave, quickResolveConfig, quickResolveSaveOf, rollQuickResolveDaily, spendQuickResolve, type QuickResolveCheck, type QuickResolveStage, type QuickResolveState } from '../systems/QuickResolveGate';
 import { ITEM_EXTREME_CHALLENGE_ORDER, createExtremeTaskState, extremeFreeAttemptsLeft, extremeStageOfWeek, extremeWeekIndexOf, isExtremeStage, normalizeExtremeTaskState, startExtremeTask, type ExtremeTaskState } from '../systems/ExtremeTaskBoard';
 import { rollExtremeTaskDrop, type ExtremeTaskDrop } from '../systems/ExtremeTaskDrop';
@@ -431,6 +438,8 @@ export const GAME_SESSION_EVENTS = {
     SeasonAdvanced: 'game-session-season-advanced',
     /** payload: { tiers: number[] }（大廳任務結算後官職晉升，OFC-08 提示用） */
     OfficerPromoted: 'game-session-officer-promoted',
+    /** payload: { tier: number }（測試工具直接設定官職階位後發出；大廳據此刷新設施鎖，PROG-2-9860） */
+    OfficerStateChanged: 'game-session-officer-state-changed',
     /** payload: GeneralRankPromotedPayload（武將名聲達門檻升將階，PROG-2-1898） */
     GeneralRankPromoted: 'game-session-general-rank-promoted',
     /** payload: YearReport（第 4 季結束時發出；養成線 FEM-06 等年度掛點接在這裡） */
@@ -454,6 +463,8 @@ export const GAME_SESSION_EVENTS = {
     RivalSeasonEvents: 'game-session-rival-season-events',
     /** payload: UnveilingEvent（UI 在此播放血脈命鏡開獎演出，再讓玩家選宿命） */
     GeneralUnveiled: 'game-session-general-unveiled',
+    /** payload: FriendshipActionAppliedPayload（玩家行為經權重表結算友誼後發出；applied=false 代表被次數上限／冷卻擋下，PROG-2-9954） */
+    FriendshipActionApplied: 'game-session-friendship-action-applied',
     /** payload: MentorCard */
     GeneralRetired: 'game-session-general-retired',
     /** payload: { generalId, name, imprints }（退役或去世凝練生平印記，PROG-2-1794） */
@@ -556,10 +567,22 @@ export interface HallMissionSeasonReport {
     succeeded: number;
     /** 這次結算實際入帳的總量（已截斷）；快轉合併提示與頂欄對帳用 */
     gains: { grain: number; gold: number; silver: number; generalExp: number };
+    /** 每件任務一張回報卡（PROG-2-9966）：武將、結果、獎勵、友誼、連鎖；畫面把同一季的卡合成一疊 */
+    cards: HallMissionReportCard[];
+}
+
+export interface MatchmakerOfferNotice {
+    promptType: MatchmakerPromptType;
+    remaining: number;
+    speechTextKey: string;
+    titleKey: string;
+    candidates: MatchmakerCandidate[];
 }
 
 export interface SeasonAdvancedPayload {
     advance: SeasonAdvanceResult;
+    /** 本季媒人說親導流通知（紅娘叩門／春季說親，PROG-2-9613）；沒有時省略 */
+    matchmakerOfferNotice?: MatchmakerOfferNotice;
     /** 本季到期結算的大廳任務回報（PROG-2-9130）；沒有任務結算時省略 */
     hallMissionReport?: HallMissionSeasonReport;
     /** 本季滿 65 歲被系統強制轉教官卡的武將 id（SPI-01 退役雙軌，PROG-2-1994）；沒有時省略 */
@@ -749,6 +772,12 @@ export interface SortieSupportSummary {
     deputyBonus: DeputyFoodBonus;
 }
 
+/** 名冊外的首戰指定主將（PROG-2-9913）：不可出戰也要能當主將；補一筆無血統的成員，只為了通過「主將必須在成員中」的檢查 */
+function withCommanderMember(members: SortieMember[], commanderUid: string | null): SortieMember[] {
+    if (!commanderUid || members.some((m) => m.id === commanderUid)) return members;
+    return [...members, { id: commanderUid }];
+}
+
 function toSortieMember(g: GeneralConfig): SortieMember {
     return {
         id: g.id,
@@ -833,6 +862,8 @@ export class GameSession implements AcademyRecordPort {
     public readonly dynamicRelations = new DynamicRelationBook();
     /** 武將心智（PROG-2-9146）：記憶、心情、台詞；大廳任務、戰後、換季結算點只呼叫 record／onTaskSettled／onSeasonSettle，隨存檔保存 */
     public readonly mind: IGeneralMindService = new OfflineGeneralMindService();
+    /** 友誼行為結算（PROG-2-9954）：權重表由 ServiceLoader 載入後 setFriendshipWeights；各功能掛點呼叫 applyFriendshipAction，結果以 FriendshipActionApplied 事件對外 */
+    private readonly _friendshipActions = new FriendshipActionEngine(() => FriendshipService.getInstance());
     /** 關係組合事件一次性紀錄（KIN-08，PROG-2-1412）：同季同對只播一次，隨存檔保存 */
     public readonly relationEvents = new RelationEventLedger();
     /** NPC 記憶擁有者 id 與 NPC_Memory read model（NPC-09）：新局由種子決定，讀檔缺欄位時補產 */
@@ -969,6 +1000,8 @@ export class GameSession implements AcademyRecordPort {
     private _breedingBirthRecords: BreedingBirthRecord[] = [];
     /** 世家系統解鎖旗標（PM 暫定）：第一位子嗣誕生時寫入；舊檔以出生紀錄推導。 */
     private _familySystemUnlockedFlag = false;
+    /** 結緣媒人首次紅娘叩門完成旗標（PROG-2-9613）：開場教學後首次換季完成後寫入，讀檔不重複 */
+    private _matchmakerFirstVisitDone = false;
     /** 新玩家開場進行中的幕 id（PROG-2-1371）；開場結束為 null */
     private _postLoadHook: (() => void | Promise<void>) | null = null;
     private _openingPhase: string | null = null;
@@ -2161,14 +2194,22 @@ export class GameSession implements AcademyRecordPort {
     /** 穿戴一般裝備（PROG-2-1040）：可否放入由一般裝備定義表的槽位判斷；成功才寫回物件庫列 */
     public equipGear(gearUid: string, generalUid: string, slotId: EquipSlot): GearEquipResult {
         const result = equipGearFlow(this._inventoryRecords, gearUid, generalUid, slotId, (record, slot) => gearDefinitionOf(record.Gear_ID)?.slot === slot);
-        if (result.ok) this._inventoryRecords = result.records;
+        if (result.ok) {
+            this._inventoryRecords = result.records;
+            // 賞賜：替武將穿上裝備／寶物（PROG-2-9954）
+            this.applyFriendshipAction(slotId === 'TREASURE' ? 'reward_grant_treasure' : 'reward_grant_equipment', generalUid);
+        }
         return result;
     }
 
     /** 卸下武將指定格的一般裝備（PROG-2-1040）；裝備回到倉庫 */
     public unequipGear(generalUid: string, slotId: EquipSlot): GearEquipResult {
         const result = unequipGearFlow(this._inventoryRecords, generalUid, slotId);
-        if (result.ok) this._inventoryRecords = result.records;
+        if (result.ok) {
+            this._inventoryRecords = result.records;
+            // 剝奪：卸下武將身上的裝備／寶物（PROG-2-9954）
+            this.applyFriendshipAction(slotId === 'TREASURE' ? 'equipment_strip_treasure' : 'equipment_strip_gear', generalUid);
+        }
         return result;
     }
 
@@ -2570,6 +2611,15 @@ export class GameSession implements AcademyRecordPort {
         return this._familySystemUnlockedFlag || this._breedingBirthRecords.length > 0;
     }
 
+    /** 結緣媒人首次紅娘叩門是否已完成（PROG-2-9613） */
+    public get matchmakerFirstVisitDone(): boolean {
+        return this._matchmakerFirstVisitDone;
+    }
+
+    public setMatchmakerFirstVisitDone(done: boolean): void {
+        this._matchmakerFirstVisitDone = done;
+    }
+
     /** 本局已記下的結緣子嗣紀錄（回傳複本，外部改動不影響內部） */
     public breedingBirthRecords(): BreedingBirthRecord[] {
         return normalizeBreedingBirthRecords(this._breedingBirthRecords);
@@ -2927,6 +2977,9 @@ export class GameSession implements AcademyRecordPort {
         this.dynamicRelations.restore([]);
         this._mindWrite().reset();
         this.relationEvents.restore([]);
+        FriendshipService.getInstance().loadSnapshot();
+        FriendshipService.getInstance().loadPairs();
+        this._friendshipActions.restore(undefined);
         this._npcPlayerId = npcPlayerIdFromSeed(seed);
         this._npcMemory = createNpcMemory(this._npcPlayerId);
         this._tallyLoyalty = {};
@@ -2941,6 +2994,7 @@ export class GameSession implements AcademyRecordPort {
         this._gachaRevision += 1;
         this._legacyCount = 0;
         this._legendaryMentoringUsedIds = [];
+        AnnualRankingManager.getInstance().restoreSaveData(null);
         this._itemMeta = emptyItemMeta();
         this._rewardMeta = emptyRewardMeta();
         this._questState = emptyQuestState();
@@ -2948,6 +3002,7 @@ export class GameSession implements AcademyRecordPort {
         this._storyMeta = emptyStoryMeta();
         this._breedingBirthRecords = [];
         this._familySystemUnlockedFlag = false;
+        this._matchmakerFirstVisitDone = false;
         this._openingPhase = null;
         this._openingOffers = { ...FRESH_OPENING_OFFER_STATE };
         this._enrollGrantDay = null;
@@ -3097,10 +3152,27 @@ export class GameSession implements AcademyRecordPort {
         );
         if (!record) return null;
         this._prison = { ...this._prison, pending: [...this._prison.pending, { record, target: { ...target }, ...(tallyId ? { tallyId } : {}) }] };
+        this._applyCaptureFriendship(target);
         if (this._autoSave && this._save) {
             await this.save();
         }
         return record;
+    }
+
+    /**
+     * 俘虜結算友誼（PROG-2-9954）：對每位名冊武將依「與被俘者的配對友誼」分類。
+     * 配對友誼 ≥ 20 視為同伴（扣分）、≤ −20 視為她的敵人（加分）；同陣營（nationId 相同）視為同陣營成員（扣分較輕）。
+     */
+    private _applyCaptureFriendship(target: GeneralConfig): void {
+        const service = FriendshipService.getInstance();
+        const nationOf = (g: object): string | undefined => (g as { nationId?: string }).nationId;
+        for (const member of this._roster.getAll()) {
+            if (member.id === target.id) continue;
+            const pair = service.getPair(member.id, target.id);
+            if (pair >= 20) this.applyFriendshipAction('capture_her_companion', member.id);
+            else if (pair <= -20) this.applyFriendshipAction('capture_enemy_of_her', member.id);
+            else if (nationOf(member) && nationOf(member) === nationOf(target)) this.applyFriendshipAction('capture_her_side_member', member.id);
+        }
     }
 
     /**
@@ -3812,6 +3884,44 @@ export class GameSession implements AcademyRecordPort {
 
     public get military(): MilitaryReserve {
         return { ...this._military };
+    }
+
+    /**
+     * 測試工具 2.0（PROG-2-9858，只由偵錯宿主呼叫）：調整城市兵源或糧草，夾在 0～上限（上限是規則，讀檔會被夾回，所以不能超過）。
+     * 回傳實際變動量與調整後數值；不寫檔，由呼叫端決定存檔時機。
+     */
+    public debugAdjustMilitary(field: 'food' | 'cityTroops', delta: number): { applied: number; value: number } {
+        const cap = field === 'food' ? this._military.foodCap : this._military.cityTroopsCap;
+        const before = this._military[field];
+        const value = Math.max(0, Math.min(cap, before + Math.trunc(delta)));
+        this._military = { ...this._military, [field]: value };
+        return { applied: value - before, value };
+    }
+
+    /** 測試工具 2.0：直接設定數值（recruitRegen／woundedCamp／discoveryLevel）；不寫檔 */
+    public debugSetStat(key: 'recruitRegen' | 'woundedCamp' | 'discoveryLevel', value: number): number {
+        const next = Math.max(0, Math.trunc(value));
+        if (key === 'discoveryLevel') {
+            this._discoveryLevel = Math.max(1, next);
+            return this._discoveryLevel;
+        }
+        this._military = { ...this._military, [key]: next };
+        return next;
+    }
+
+    /**
+     * 測試工具 2.0（PROG-2-9860，只由偵錯宿主呼叫）：把官職直接設為指定階位。
+     * 經驗設為該階晉升門檻，解鎖歷史補到該階；可往下調（方便重測鎖定狀態）。不寫檔，由呼叫端排程存檔。
+     */
+    public debugSetOfficerTier(tier: number): OfficerState {
+        const next = Math.min(OFFICER_TIER_MAX, Math.max(OFFICER_TIER_MIN, Math.trunc(tier)));
+        const officerExp = next <= OFFICER_TIER_MIN ? 0 : (OFFICER_TIER_EXP_THRESHOLDS[next] ?? 0);
+        const unlockHistory: number[] = [];
+        for (let t = OFFICER_TIER_MIN; t <= next; t++) unlockHistory.push(t);
+        this._officerState = { currentTier: next, officerExp, unlockHistory };
+        this._recordSandtableUnlockReached();
+        this._emit(GAME_SESSION_EVENTS.OfficerStateChanged, { tier: next });
+        return this.officerState;
     }
 
     /** 太守府的治理快照：季節倍率取目前季節，與季結入帳一致 */
@@ -4894,6 +5004,8 @@ export class GameSession implements AcademyRecordPort {
     private _missionSettleGains = { grain: 0, gold: 0, silver: 0, generalExp: 0 };
     private _missionSettleByMission = new Map<string, { grain: number; gold: number; silver: number; generalExp: number; fame: number }>();
     private _missionLedgerSeen = { fame: false, morale: false, sceneGambit: false };
+    /** 換季結算期間每筆任務帶來的友誼變化（任務 id → 實際寫入的友誼合計），給季報行尾顯示；結算結束清空（PROG-2-9965） */
+    private _missionSettleFriendship = new Map<string, number>();
     private _missionMindCache: GeneralMindSave['ledger'] | null = null;
     private _missionRequestSeq = 0;
 
@@ -5150,6 +5262,18 @@ export class GameSession implements AcademyRecordPort {
             const gambit = pendingSceneGambitOfTask({ Task_ID: info.missionId, Scene_Gambit: info.sceneGambit });
             if (gambit) this._pendingSceneGambit = gambit;
         }
+        // 友誼（PROG-2-9965）：自告奮勇獲准承擔，加上依結果的行為（大成功／成功／大失敗；一般失敗不扣）
+        const friendActions: string[] = [];
+        if (info.volunteered) friendActions.push('admin_volunteer_accepted');
+        if (info.tier === 'critical') friendActions.push('admin_mission_critical');
+        else if (info.tier === 'success') friendActions.push('admin_mission_success');
+        else if (info.tier === 'disaster') friendActions.push('admin_mission_disaster');
+        let friendGain = 0;
+        for (const actionId of friendActions) {
+            const applied = this.applyFriendshipAction(actionId, info.generalId);
+            if (applied.applied) friendGain += applied.delta;
+        }
+        this._missionSettleFriendship.set(info.missionId, friendGain);
         this._recordEventJournal(success ? 'DISPATCH_SUCCESS' : 'DISPATCH_FAIL', this._journalSubjects([info.generalId]));
         const index = (HALL_MISSION_DIFFICULTIES as readonly string[]).indexOf(info.difficulty);
         this._mindWrite().onTaskSettled({
@@ -5177,6 +5301,7 @@ export class GameSession implements AcademyRecordPort {
         if (!service) return undefined;
         this._missionSettleGains = { grain: 0, gold: 0, silver: 0, generalExp: 0 };
         this._missionSettleByMission.clear();
+        this._missionSettleFriendship.clear();
         const result = await service.advanceSeason({ requestId: this.nextMissionRequestId('season') });
         if (result.ok === false) {
             UCUFLogger.warn(LogCategory.DATA, '[GameSession] 換季任務結算失敗', result.text);
@@ -5192,14 +5317,33 @@ export class GameSession implements AcademyRecordPort {
                 mine.silver !== 0 ? `銀兩 ${mine.silver > 0 ? '+' : ''}${mine.silver}` : '',
                 mine.generalExp > 0 ? `武將經驗 +${mine.generalExp}` : '',
             ].filter((t) => t.length > 0).join('、') : '';
-            const tail = s.narratives.length > 0 ? `　${s.narratives[s.narratives.length - 1]}` : '';
-            return `${s.generalName}完成「${s.title}」：${MISSION_TIER_TEXT[s.tier]}${gained ? `（${gained}）` : ''}${tail}`;
+            const story = s.narratives.length > 0 ? s.narratives[s.narratives.length - 1] : '';
+            const friend = this._missionSettleFriendship.get(s.missionId) ?? 0;
+            // 成敗標籤放最前面，玩家一眼看得出大成功或大失敗；故事另起一行縮排
+            const chainTag = s.chain ? `　（連續任務 ${s.chain.depth}/${s.chain.total}）` : '';
+            const head = `【${MISSION_TIER_TEXT[s.tier]}】${s.generalName}・「${s.title}」${chainTag}${gained ? `　${gained}` : ''}${friend !== 0 ? `　友誼 ${friend > 0 ? '+' : ''}${friend}` : ''}`;
+            return story ? `${head}
+　${story}` : head;
+        });
+        // 整串連鎖任務走到底（成功收尾、沒再生出下一段）：另起一行特別標出（PROG-2-9966）
+        for (const s of settled) {
+            if (s.chain?.completed) lines.push(`★ 連續任務完結：「${s.title}」（${s.generalName}走完了這一串，共 ${s.chain.depth} 段）`);
+        }
+        const cards: HallMissionReportCard[] = settled.map((s) => {
+            const mine = this._missionSettleByMission.get(s.missionId);
+            return {
+                missionId: s.missionId, title: s.title, generalId: s.generalId, generalName: s.generalName, tier: s.tier,
+                gains: { grain: mine?.grain ?? 0, gold: mine?.gold ?? 0, silver: mine?.silver ?? 0, generalExp: mine?.generalExp ?? 0 },
+                friendship: this._missionSettleFriendship.get(s.missionId) ?? 0,
+                ...(s.chain ? { chain: { ...s.chain } } : {}),
+            };
         });
         return {
             lines,
             settled: settled.length,
             succeeded: settled.filter((s) => s.tier === 'critical' || s.tier === 'success').length,
             gains: { ...this._missionSettleGains },
+            cards,
         };
     }
 
@@ -5340,6 +5484,12 @@ export class GameSession implements AcademyRecordPort {
         return this.mind.barkFor(generalId, 'LOBBY', seed, this._mindContext(generalId));
     }
 
+    /** 武將此刻的心情（EAGER／HIGH／NORMAL／LOW）；武將不在名冊回 undefined。台詞系統推導情緒用（PROG-2-9964） */
+    public mindMoodOf(generalId: string): 'EAGER' | 'HIGH' | 'NORMAL' | 'LOW' | undefined {
+        if (!this._rosterRead().some((g) => g.id === generalId)) return undefined;
+        return this.mind.moodOf(generalId, this._mindContext(generalId));
+    }
+
     /** 武將信箱（主動請求、請罪、進言、抗命信）：未回應在前；PROG-2-9150 */
     public mindMailbox(): MindRequest[] {
         return this.mind.mailbox();
@@ -5363,7 +5513,30 @@ export class GameSession implements AcademyRecordPort {
         const req = this.mind.mailbox().find((r) => r.id === id);
         if (!req) return { ok: false, reply: '', events: [] };
         const result = this._mindWrite().resolveRequest(id, accept, this._mindContext(req.generalId));
+        if (result.ok) {
+            // 自告奮勇（請戰）與建議：答應／拒絕各對應權重表一項（PROG-2-9954）
+            if (req.kind === 'ASK_BATTLE') this.applyFriendshipAction(accept ? 'admin_volunteer_accepted' : 'admin_volunteer_rejected', req.generalId);
+            else if (req.kind === 'ADVISE') this.applyFriendshipAction(accept ? 'admin_advice_adopted' : 'admin_advice_ignored', req.generalId);
+        }
         if (result.ok && this._autoSave && this._save) await this.save();
+        return result;
+    }
+
+    /** 載入友誼行為權重表（friendship-action-weights.json 原始內容）；壞資料視為未載入，不拋例外 */
+    public setFriendshipWeights(raw: unknown): void {
+        this._friendshipActions.setTable(normalizeFriendshipActionTable(raw));
+    }
+
+    /**
+     * 結算一次玩家行為對武將的友誼（PROG-2-9954）：套性格倍率、每季上限與冷卻，寫入友誼表並發 FriendshipActionApplied。
+     * 省略 targetId＝玩家↔武將；帶 targetId＝武將↔武將配對（只該用在與我方有接觸的配對）。
+     * 其他系統（例如 Antigravity 的提親被拒 bonding_proposal_refused）直接呼叫此方法即可。
+     */
+    public applyFriendshipAction(actionId: string, generalId: string, targetId?: string): FriendshipActionAppliedPayload {
+        const general = this._roster.getAll().find((g) => g.id === generalId);
+        const personality = general ? personalityTypeOf(general as unknown as Parameters<typeof personalityTypeOf>[0]) : undefined;
+        const result = this._friendshipActions.apply({ actionId, generalId, ...(targetId ? { targetId } : {}), season: this._clock.state.totalSeasonsElapsed, ...(personality ? { personality } : {}) });
+        if (result.reason !== 'unknown-action') this._emit(GAME_SESSION_EVENTS.FriendshipActionApplied, result);
         return result;
     }
 
@@ -5387,6 +5560,9 @@ export class GameSession implements AcademyRecordPort {
         const ids = deployedIds.filter((id) => roster.some((g) => g.id === id));
         ids.forEach((generalId, index) => {
             this._mindWrite().record({ generalId, season, kind: 'BATTLE_RESULT', outcome: won ? 'SUCCESS' : 'FAIL', tags: ['battle'], label: '出征', isLead: index === 0 });
+            // 友誼：主將／編入出戰、同勝或同敗（PROG-2-9954）
+            this.applyFriendshipAction(index === 0 ? 'combat_main_commander' : 'combat_deploy_in_army', generalId);
+            this.applyFriendshipAction(won ? 'combat_victory_together' : 'combat_defeat_together', generalId);
         });
         for (const duel of options.duelOutcomes ?? []) {
             if (duel.tutorial) continue;
@@ -5535,7 +5711,7 @@ export class GameSession implements AcademyRecordPort {
     /** 某主將出征時實際生效的支援與加成；失效的支援（不能出戰、與主將撞角色或血統）視為不派 */
     public getSortieSupportSummary(commanderUid: string): SortieSupportSummary {
         const deployable = this.getDeployableGenerals();
-        const members = deployable.map(toSortieMember);
+        const members = withCommanderMember(deployable.map(toSortieMember), commanderUid);
         const byId = new Map(deployable.map((g) => [g.id, g]));
         const pick = (uid: string | null): GeneralConfig | null => (uid && uid !== commanderUid ? byId.get(uid) ?? null : null);
         const fits = (st: GeneralConfig | null, dp: GeneralConfig | null): boolean =>
@@ -5553,7 +5729,7 @@ export class GameSession implements AcademyRecordPort {
     }
 
     private _checkSortieSupport(commanderUid: string | null, strategistUid: string | null, deputyUid: string | null): SortieLoadoutCheck {
-        const members = this.getDeployableGenerals().map(toSortieMember);
+        const members = withCommanderMember(this.getDeployableGenerals().map(toSortieMember), commanderUid);
         return validateSortieLoadout({ commanderUid: commanderUid ?? '', strategistUid, deputyUid }, members);
     }
 
@@ -6036,6 +6212,22 @@ export class GameSession implements AcademyRecordPort {
         });
     }
 
+    /** 風雲榜治理記帳（PROG-2-9601）：上季內政入帳（lastGrant）歸給當時指派該任務的武將 */
+    private _recordAnnualGovernance(previousSeason: number, quarter: number): void {
+        const log = this._domesticLog;
+        const grant = log.lastSeason === previousSeason ? log.lastGrant : undefined;
+        if (!grant || !log.lastTask) return;
+        for (const assignment of this._governance) {
+            if (assignment.task !== log.lastTask) continue;
+            AnnualRankingHook.recordGovernance({
+                generalId: assignment.generalUid,
+                quarter,
+                taskType: assignment.task,
+                output: grant.amount,
+            });
+        }
+    }
+
     /** 季度治理報告（領地治理 §G）：上一季內政入帳加上季結算增加的糧草與城市兵源 */
     private _buildGovernanceReport(before: MilitaryReserve, previousSeason: number): string | null {
         const gains: Partial<Record<'food' | 'gold' | 'fame' | 'cityTroops', number>> = {
@@ -6127,6 +6319,7 @@ export class GameSession implements AcademyRecordPort {
         this._prison = { ...this._prison, intel: this._prison.intel + prisonYield.intel };
         this._military = { ...this._military, food: Math.min(this._military.foodCap, this._military.food + prisonYield.resource) };
         const governanceReport = this._buildGovernanceReport(reserveBeforeSettle, advance.previous.totalSeasonsElapsed);
+        this._recordAnnualGovernance(advance.previous.totalSeasonsElapsed, advance.previous.currentSeason);
         // 大廳任務：到期結算 → 過期 → 補新（PROG-2-9130，§9）；頂欄資源在這裡就已更新，彈窗關閉前即可見
         const hallMissionReport = await this._runMissionSeason();
         this._settleCityEconomySeason(advance.previous.totalSeasonsElapsed, this._tallyFoodDiscountArmed);
@@ -6194,10 +6387,32 @@ export class GameSession implements AcademyRecordPort {
             this._familySynergy = finalizeAdultChildren(this._familySynergy, this._roster.getAll());
             this._marriageProposal = rollMarriageProposal(this._roster.getAll(), this._clanTier, `suitor-${governanceSeason}`, remarkRandomOf(`marriage|${governanceSeason}|${this._seeded.snapshot().state}`), this._familySynergy);
         }
+        // 結緣媒人導流判定（PROG-2-9613）：開場教學後首次換季（紅娘叩門）與春季常規求親導流
+        let matchmakerOfferNotice: MatchmakerOfferNotice | undefined;
+        const offer = this.matchmakerOffer();
+        const spouseCap = this._familyConfig ? spouseCapFor(this._familyConfig, this.territoryLevel) : 2;
+        const mmTrigger = checkMatchmakerTrigger({
+            totalSeasonsElapsed: advance.current.totalSeasonsElapsed,
+            currentSeason: advance.current.currentSeason,
+            isOpeningDone: this._openingPhase === null,
+            firstVisitDone: this._matchmakerFirstVisitDone,
+            spouseCount: this._family.spouseCount(),
+            spouseCap,
+            remainingOffers: offer.remaining,
+        });
+        if (mmTrigger && offer.open) {
+            if (mmTrigger.promptType === 'first-visit') {
+                this._matchmakerFirstVisitDone = true;
+            }
+            matchmakerOfferNotice = {
+                ...mmTrigger,
+                candidates: offer.candidates,
+            };
+        }
         const seasonReportSections = this._buildSeasonReportSections(governanceSeason, economyBase, hallMissionReport);
         this._seasonActivity = emptySeasonActivity();
         this._seasonEconomyBase = { ...this._cityEconomy };
-        const payload: SeasonAdvancedPayload = { seasonReportSections, ...(nursingLines.length > 0 ? { nursingLines } : {}), ...(clanStipendLine ? { clanStipendLine } : {}), ...(forcedRetirements.length > 0 ? { forcedRetirements, forcedRetirementNames: forcedRetirements.map((id) => rosterBeforeLifecycle.find((general) => general.id === id)?.name ?? id) } : {}), ...(yuedanLines.length > 0 ? { yuedanLines } : {}), ...(omenLines.length > 0 ? { omenLines } : {}), ...(this._tallyFoodDiscountArmed ? { foodLowLine: FOOD_LOW_LINE } : {}), ...(treasures.length > 0 ? { prisonTreasureLines: treasures.map((entry) => prisonTreasureLine(entry.targetName, ITEM_DISPLAY_NAMES[ITEM_TREASURE])) } : {}), ...(governanceReport ? { governanceReport } : {}), ...(eventNotice ? { governanceEventLine: eventNotice } : {}), advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(hallMissionReport ? { hallMissionReport } : {}), ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids } : {}), ...(mercenaryDay.dayThreeUids.length > 0 ? { mercenaryDayThree: mercenaryDay.dayThreeUids } : {}), ...(mercenaryDay.trustUids.length > 0 ? { mercenaryTrust: mercenaryDay.trustUids } : {}) };
+        const payload: SeasonAdvancedPayload = { seasonReportSections, ...(matchmakerOfferNotice ? { matchmakerOfferNotice } : {}), ...(nursingLines.length > 0 ? { nursingLines } : {}), ...(clanStipendLine ? { clanStipendLine } : {}), ...(forcedRetirements.length > 0 ? { forcedRetirements, forcedRetirementNames: forcedRetirements.map((id) => rosterBeforeLifecycle.find((general) => general.id === id)?.name ?? id) } : {}), ...(yuedanLines.length > 0 ? { yuedanLines } : {}), ...(omenLines.length > 0 ? { omenLines } : {}), ...(this._tallyFoodDiscountArmed ? { foodLowLine: FOOD_LOW_LINE } : {}), ...(treasures.length > 0 ? { prisonTreasureLines: treasures.map((entry) => prisonTreasureLine(entry.targetName, ITEM_DISPLAY_NAMES[ITEM_TREASURE])) } : {}), ...(governanceReport ? { governanceReport } : {}), ...(eventNotice ? { governanceEventLine: eventNotice } : {}), advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(hallMissionReport ? { hallMissionReport } : {}), ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids } : {}), ...(mercenaryDay.dayThreeUids.length > 0 ? { mercenaryDayThree: mercenaryDay.dayThreeUids } : {}), ...(mercenaryDay.trustUids.length > 0 ? { mercenaryTrust: mercenaryDay.trustUids } : {}) };
         if (this._autoSave && this._save) {
             await this.save();
         }
@@ -6820,6 +7035,15 @@ export class GameSession implements AcademyRecordPort {
             this._lastBattleSnapshots = settlement.entries.map((entry) =>
                 buildBattleSnapshot(battleId, entry.generalId, entry.performance ?? EMPTY_PERFORMANCE, entry.outcome === 'win', battleDate));
         }
+        // 風雲榜戰鬥記帳（PROG-2-9601）：手動、極速決戰（offBoard）、委託代打都經過這裡，口徑一致
+        for (const entry of settlement.entries) {
+            AnnualRankingHook.recordBattle({
+                generalId: entry.generalId,
+                kills: entry.performance?.kills ?? 0,
+                enemyPower: 0,
+                battleMode: options.offBoard ? 'speed' : 'manual',
+            });
+        }
         await this._claimMilestoneNotes(settlement.entries);
         await this._claimQuickResolveWrits(result, options);
         if (settlement.entries.length === 0) {
@@ -6829,12 +7053,12 @@ export class GameSession implements AcademyRecordPort {
             if (firstClear) this._emit(GAME_SESSION_EVENTS.FirstBattleCleared, undefined);
             // 沒有可結算的出戰武將（名冊裡找不到主將）時，戰損與戰後獎懲仍要入帳（PROG-2-9149）
             const early = this._applySortieCost(result, options);
-            const earlyAftermath = early.outcomeKind && !options.teachingSpirit ? this._applyBattleAftermath(early.outcomeKind, early.lostTroopsApplied, options.defense) : undefined;
+            const earlyAftermath = early.outcomeKind && !options.teachingSpirit ? this._applyBattleAftermath(early.outcomeKind, early.lostTroopsApplied, options.defense, early.sortieLoss) : undefined;
             if ((earlyAftermath || early.sortieCost) && this._autoSave && this._save) await this.save();
             return { ...settlement, awakenings: [], captureNotices: [], aftermath: earlyAftermath, aftermathLines: earlyAftermath ? formatAftermathLines(earlyAftermath) : [], ...(early.sortieCost ? { military: this.military } : {}) };
         }
         // 戰損一律回扣城市兵源（領地治理系統 2026-04-26 裁定第 2 點）：戰場有出征帳本用帳本，極速決戰用常數表推估
-        const { outcomeKind, sortieCost, lostTroopsApplied } = this._applySortieCost(result, options);
+        const { outcomeKind, sortieCost, lostTroopsApplied, sortieLoss } = this._applySortieCost(result, options);
 
         // 戰場撿拾戰後入帳（關卡設計 §I-2，PROG-2-1571）：補給轉糧草、其餘轉背包材料，戰敗不入帳
         if (options.stageSalvage) {
@@ -6847,7 +7071,7 @@ export class GameSession implements AcademyRecordPort {
         }
 
         // 戰後獎懲（PROG-2-9149）：糧草、黃金、戰利品入帳，失敗扣民心；教學戰不結算
-        const aftermath = outcomeKind && !options.teachingSpirit ? this._applyBattleAftermath(outcomeKind, lostTroopsApplied, options.defense) : undefined;
+        const aftermath = outcomeKind && !options.teachingSpirit ? this._applyBattleAftermath(outcomeKind, lostTroopsApplied, options.defense, sortieLoss) : undefined;
 
         const source = battleExpSource(result);
         const discovery = source ? this._applyDiscoveryExp(source) : undefined;
@@ -6937,13 +7161,22 @@ export class GameSession implements AcademyRecordPort {
     }
 
     /** 戰損回扣城市兵源（極速決戰用常數表推估）；地窖保護只在戰敗時生效。回傳本次實際扣掉的兵數 */
-    private _applySortieCost(result: BattleResult, options: RecordBattleOptions): { outcomeKind: ReturnType<typeof aftermathOutcomeOf>; sortieCost: Pick<SortieSummary, 'lostTroops' | 'foodSpent'> | null; lostTroopsApplied: number } {
+    private _applySortieCost(result: BattleResult, options: RecordBattleOptions): { outcomeKind: ReturnType<typeof aftermathOutcomeOf>; sortieCost: Pick<SortieSummary, 'lostTroops' | 'foodSpent'> | null; lostTroopsApplied: number; sortieLoss: { reduced: number; woundedSent: number } | null } {
         const outcomeKind = aftermathOutcomeOf(result);
-        const sortieCost = options.sortie ?? (options.offBoard && outcomeKind ? quickSortieCost(outcomeKind, this._military.cityTroops) : null);
+        const rawCost = options.sortie ?? (options.offBoard && outcomeKind ? quickSortieCost(outcomeKind, this._military.cityTroops) : null);
+        // 新手保護（PROG-2-9717）：第 1 年敗戰才套損兵上限（陣亡＋傷兵）＝戰前城市兵源 30%；傷兵送營 60% 全年度適用
+        const protection = rawCost && outcomeKind
+            ? applyNoviceLossProtection(Math.min(this._military.cityTroops, Math.max(0, Math.floor(rawCost.lostTroops))), this._military.cityTroops, this._clock.state.currentYear, outcomeKind)
+            : null;
+        const sortieCost = rawCost && protection?.applies ? { ...rawCost, lostTroops: protection.lostTroops } : rawCost;
         const lostTroopsApplied = sortieCost ? Math.min(this._military.cityTroops, Math.max(0, Math.floor(sortieCost.lostTroops))) : 0;
+        let sortieLoss: { reduced: number; woundedSent: number } | null = null;
         if (sortieCost) {
             const foodBefore = this._military.food;
             this._military = applySortieResult(this._military, sortieCost);
+            const woundedSent = splitLostTroops(lostTroopsApplied).wounded;
+            if (woundedSent > 0) this._military = { ...this._military, woundedCamp: (this._military.woundedCamp ?? 0) + woundedSent };
+            sortieLoss = { reduced: protection?.applies ? protection.reduced : 0, woundedSent };
             // 地窖保護（ECO-06，PROG-2-1341）：戰敗時糧草不扣到 min(戰前, 保底) 以下
             this._lastCellarProtectedFood = 0;
             if (result === 'enemy-win' && CELLAR_PROTECTION.triggerAfterFailedDefense) {
@@ -6952,14 +7185,14 @@ export class GameSession implements AcademyRecordPort {
                 this._lastCellarProtectedFood = kept.saved;
             }
         }
-        return { outcomeKind, sortieCost, lostTroopsApplied };
+        return { outcomeKind, sortieCost, lostTroopsApplied, sortieLoss };
     }
 
     /**
      * 戰後獎懲入帳（PROG-2-9149）：糧草（不超過軍備上限）、黃金（走錢包、不超過太守府等級上限）、
      * 戰利品進背包、失敗扣民心；回傳帳本給結算畫面。錢包尚未綁定（沒進過大廳）時黃金不入帳也不提示。
      */
-    private _applyBattleAftermath(outcome: 'win' | 'draw' | 'loss', lostTroops: number, defense?: RecordBattleOptions['defense']): BattleAftermathLedger {
+    private _applyBattleAftermath(outcome: 'win' | 'draw' | 'loss', lostTroops: number, defense?: RecordBattleOptions['defense'], sortieLoss?: { reduced: number; woundedSent: number } | null): BattleAftermathLedger {
         const wallet = this._missionWallet;
         const ledger = planBattleAftermath(outcome, {
             food: this._military.food,
@@ -6970,6 +7203,11 @@ export class GameSession implements AcademyRecordPort {
         });
         if (!wallet) { ledger.gold = 0; ledger.goldTruncated = 0; }
         ledger.lostTroops = lostTroops;
+        if (sortieLoss && sortieLoss.reduced > 0) ledger.noviceProtectionReduced = sortieLoss.reduced;
+        if (sortieLoss && sortieLoss.woundedSent > 0) {
+            ledger.woundedSent = sortieLoss.woundedSent;
+            ledger.woundedRecoveryPercent = Math.round(troopLossRules().recoveryRatio * 100);
+        }
         if (ledger.food > 0) this._military = { ...this._military, food: this._military.food + ledger.food };
         if (ledger.gold > 0) wallet?.grant(ledger.gold);
         // 守城戰（PROG-2-9425）：失敗改走守城戰敗（民心 −3，全滅再扣人口），不疊一般戰敗民心；勝利另加民心
@@ -7293,6 +7531,7 @@ export class GameSession implements AcademyRecordPort {
         return {
             ...this._createBaseSnapshot(now),
             ...(this._legendaryMentoringUsedIds.length > 0 ? { legendaryMentoringUsedIds: [...this._legendaryMentoringUsedIds] } : {}),
+            annualRanking: AnnualRankingManager.getInstance().serialize(),
             ...(isEmptyRewardMeta(this._rewardMeta) ? {} : { rewardMeta: normalizeRewardMeta(this._rewardMeta) }),
             ...(isEmptyQuestState(this._questState) ? {} : { questState: normalizeQuestState(this._questState) }),
             ...(isEmptyFamilyState(this._family.snapshot()) ? {} : { familyState: this._family.snapshot() }),
@@ -7360,8 +7599,15 @@ export class GameSession implements AcademyRecordPort {
         const withInventory = this._inventoryRecords.length > 0 ? { ...withHallMissions, inventoryRecords: normalizeInventoryRecords(this._inventoryRecords) } : withHallMissions;
         const relationEventKeys = this.relationEvents.snapshot();
         const mindSave = this.mind.snapshot();
+        const friendshipService = FriendshipService.getInstance();
+        const friendships = friendshipService.exportSnapshot();
+        const friendshipPairs = friendshipService.exportPairs();
+        const friendshipActionLog = this._friendshipActions.snapshot();
         return {
             ...withInventory,
+            ...(Object.keys(friendships).length > 0 ? { friendships } : {}),
+            ...(Object.keys(friendshipPairs).length > 0 ? { friendshipPairs } : {}),
+            ...(Object.keys(friendshipActionLog).length > 0 ? { friendshipActionLog } : {}),
             ...this.lifespanSaveFields(),
             ...(relationEventKeys.length > 0 ? { relationEventKeys } : {}),
             ...(this._npcPlayerId ? { npcPlayerId: this._npcPlayerId } : {}),
@@ -7374,8 +7620,8 @@ export class GameSession implements AcademyRecordPort {
     }
 
     /** 領地治理欄位（PROG-2-0975）：只寫入非預設值，舊檔格式與預設狀態的快照不變。 */
-    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'cityEconomy' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'officerTrial' | 'paidFeatureQuota' | 'openingOffers' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay' | 'quickResolve' | 'seasonPass'> {
-        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'cityEconomy' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'officerTrial' | 'paidFeatureQuota' | 'openingOffers' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay' | 'quickResolve' | 'seasonPass'> = {};
+    private lifespanSaveFields(): Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'cityEconomy' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'officerTrial' | 'paidFeatureQuota' | 'openingOffers' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'matchmakerFirstVisitDone' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay' | 'quickResolve' | 'seasonPass'> {
+        const fields: Pick<PlayerSaveSnapshot, 'governanceAssignments' | 'autoGovernance' | 'magistrateUid' | 'territories' | 'journalEntries' | 'territoryLevel' | 'cityEconomy' | 'territoryUpgradePending' | 'farewellLetters' | 'loginStreak' | 'dailySubsidy' | 'monthlyCard' | 'officerTrial' | 'paidFeatureQuota' | 'openingOffers' | 'playerLogs' | 'dailyNews' | 'morningReport' | 'generalDispatch' | 'offlineBattleSnapshots' | 'tournament' | 'wishPool' | 'offlineInteractionLog' | 'sandtableUnlockHistory' | 'startingTalisman' | 'familySystemUnlocked' | 'matchmakerFirstVisitDone' | 'openingPhase' | 'enrollGrantDay' | 'aiAdaptiveStreak' | 'itemAcquisitionLog' | 'sevenDayJourney' | 'clanPrestige' | 'infusionRecords' | 'salaryLedger' | 'extremeTask' | 'pendingSceneGambit' | 'shrineOfferingDay' | 'quickResolve' | 'seasonPass'> = {};
         if (this._magistrateUid) fields.magistrateUid = this._magistrateUid;
         if (this._territoryLevel > 1) fields.territoryLevel = this._territoryLevel;
         fields.cityEconomy = { ...this._cityEconomy };
@@ -7407,6 +7653,7 @@ export class GameSession implements AcademyRecordPort {
         if (this._sandtableUnlockHistory.length > 0) fields.sandtableUnlockHistory = [...this._sandtableUnlockHistory];
         if (this._startingTalisman !== null) fields.startingTalisman = this.startingTalisman!;
         if (this._familySystemUnlockedFlag) fields.familySystemUnlocked = true;
+        if (this._matchmakerFirstVisitDone) fields.matchmakerFirstVisitDone = true;
         if (this._openingPhase !== null) fields.openingPhase = this._openingPhase;
         if (this._openingOffers.declined.length > 0 || this._openingOffers.purchased.length > 0) {
             fields.openingOffers = { declined: [...this._openingOffers.declined], purchased: [...this._openingOffers.purchased] };
@@ -7452,6 +7699,7 @@ export class GameSession implements AcademyRecordPort {
         this._offlineInteractionLog = normalizeOfflineInteractionLog(snapshot.offlineInteractionLog);
         this._sandtableUnlockHistory = normalizeUnlockHistory(snapshot.sandtableUnlockHistory);
         this._familySystemUnlockedFlag = snapshot.familySystemUnlocked === true;
+        this._matchmakerFirstVisitDone = snapshot.matchmakerFirstVisitDone === true;
         this._recordSandtableUnlockReached();
         this._startingTalisman = normalizeStartingTalisman(snapshot.startingTalisman);
         this._openingPhase = normalizeOpeningPhaseId(snapshot.openingPhase);
@@ -7618,6 +7866,7 @@ export class GameSession implements AcademyRecordPort {
         this._discoveryExp = progress.exp;
         this._setInventory(normalizeInventory(snapshot.inventory));
         this._legendaryMentoringUsedIds = (snapshot.legendaryMentoringUsedIds ?? []).filter((id) => typeof id === 'string');
+        AnnualRankingManager.getInstance().restoreSaveData(snapshot.annualRanking);
         this._itemMeta = normalizeItemMeta(snapshot.itemMeta);
         this._rewardMeta = normalizeRewardMeta(snapshot.rewardMeta);
         this._storyMeta = normalizeStoryMeta(snapshot.storyMeta);
@@ -7633,6 +7882,9 @@ export class GameSession implements AcademyRecordPort {
         this._npcPlayerId = savedNpcPlayerId ?? npcPlayerIdFromSeed(Math.floor(Math.random() * 4294967296));
         this._npcMemory = normalizeNpcMemory(snapshot.npcMemory, this._npcPlayerId) ?? createNpcMemory(this._npcPlayerId);
         this._mindWrite().restore(snapshot.generalMind);
+        FriendshipService.getInstance().loadSnapshot(snapshot.friendships);
+        FriendshipService.getInstance().loadPairs(snapshot.friendshipPairs);
+        this._friendshipActions.restore(snapshot.friendshipActionLog);
         this._legacyCount = normalizeLegacyCount(snapshot.legacyCount);
         this._officerState = normalizeOfficerState(snapshot.officerState);
         this._officerTrial = normalizeOfficerTrial(snapshot.officerTrial);

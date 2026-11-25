@@ -88,7 +88,19 @@ function parseBoards(raw: unknown, issues: MissionDataIssue[]): MissionBoardsCon
         rankRelativeWeights: raw.rankRelativeWeights as MissionBoardsConfig['rankRelativeWeights'],
         difficultyWeights: raw.difficultyWeights as Record<MissionDifficulty, number>,
         themeWeights: raw.themeWeights as Record<string, number>,
+        yearOneCommerceGuaranteed: parseYearOneGuarantee(raw.yearOneCommerceGuaranteed),
         overrides,
+    };
+}
+
+/** 第一年商業保底（缺省＝不啟用）；欄位逐一取出，否則解析時會被丟掉、保底靜默失效 */
+function parseYearOneGuarantee(raw: unknown): MissionBoardsConfig['yearOneCommerceGuaranteed'] {
+    if (!isObj(raw)) return undefined;
+    return {
+        maxSeason: typeof raw.maxSeason === 'number' ? raw.maxSeason : undefined,
+        targetWall: typeof raw.targetWall === 'string' ? raw.targetWall : undefined,
+        minCount: typeof raw.minCount === 'number' ? raw.minCount : undefined,
+        commerceDefIds: Array.isArray(raw.commerceDefIds) ? raw.commerceDefIds.filter((x): x is string => typeof x === 'string') : undefined,
     };
 }
 

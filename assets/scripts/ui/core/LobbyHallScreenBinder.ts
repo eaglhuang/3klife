@@ -2,7 +2,7 @@
 /**
  * LobbyHallScreenBinder — 把 lobby-hall-screen 的 runtime 行為接到已建好的畫面上。
  *
- * - 以 _ucufId 找右上角推進一季鈕、底部五鈕與場景面板（任務牆、祭壇、世家，UI-2-0152），點擊轉成注入的動作
+ * - 以 _ucufId 找右下角推進一季鈕、底部五鈕與場景面板（任務牆、祭壇、世家，UI-2-0152），點擊轉成注入的動作
  *   （畫面轉出的是 panel，不是 Button，所以直接聽 TOUCH_END）。
  * - 依季節序號與當地小時解析主題（HallTheme），交給 LobbyHallThemeApplier／LobbyHallThemeNodeView 套到節點。
  * - 在畫面根節點下加一層季節粒子（HallSeasonFxLayer），換季時重撒。
@@ -23,6 +23,8 @@ import { LOBBY_HALL_WALL_PIN_TEXT, type LobbyHallWallView } from '../../core/sys
 import type { LobbyHallAltarView } from './LobbyHallAltarView';
 import type { HallStageDecor } from '../../core/systems/HallStageCrowdPose';
 import type { HallStageLayout } from '../../core/systems/HallStagePlanner';
+import { HallActiveMissionStrip } from '../components/HallActiveMissionStrip';
+import type { PinnedMissionView } from '../../core/mission/MissionReactionCards';
 import { HallMapTurnPlayer } from '../components/HallMapTurnPlayer';
 import { HallSeasonFxLayer } from '../components/HallSeasonFxLayer';
 import { HallStageCrowd } from '../components/HallStageCrowd';
@@ -86,7 +88,7 @@ export interface LobbyHallStageDepsInput {
 export interface LobbyHallScreenDeps {
     readonly themeConfig: HallThemeConfig | null;
     readonly fxConfig: HallSeasonFxConfig | null;
-    /** 右上角「推進一季」鈕（PROG-2-9116：大廳不會關閉，原本的返回鈕沒有作用，改成換季入口） */
+    /** 右下角「推進一季」鈕（PROG-2-9953，手機拇指位置）（PROG-2-9116：大廳不會關閉，原本的返回鈕沒有作用，改成換季入口） */
     readonly onAdvanceSeason: () => void;
     readonly onDock: (id: LobbyHallDockId) => void;
     /** 場景面板點擊；未提供時面板不接點擊 */
@@ -95,6 +97,8 @@ export interface LobbyHallScreenDeps {
     readonly onWallRow?: (wall: LobbyHallWallId, rowIndex: number) => void;
     /** 點牆底的「展開軍務牆／內政牆」 */
     readonly onWallExpand?: (wall: LobbyHallWallId) => void;
+    /** 點牆下緣置頂的進行中任務晶片（PROG-2-9966）：開該任務詳情 */
+    readonly onWallActive?: (missionId: string) => void;
     /** 人群設定；設定檔沒載到時為 null，不建人群層 */
     readonly stage?: LobbyHallStageDepsInput | null;
     /** 勢力圖三態版面；沒載到時為 null，不掛地圖播放 */
@@ -304,6 +308,29 @@ export class LobbyHallScreenBinder {
                 if (row.pinned) setText(pin, LOBBY_HALL_WALL_PIN_TEXT);
             }
         });
+    }
+
+    private readonly _strips = new Map<LobbyHallWallId, HallActiveMissionStrip>();
+
+    /** 牆下緣置頂進行中任務（小頭像＋剩餘季數，最多 3 個，其餘「+N」；PROG-2-9966） */
+    setActiveMissions(id: LobbyHallWallId, view: PinnedMissionView): void {
+        let strip = this._strips.get(id);
+        if (!strip) {
+            const wall = findUcufNode(this._screenRoot, `lobby-hall-screen.${id}`);
+            if (!wall) return;
+            strip = new HallActiveMissionStrip(wall, (missionId) => this._deps.onWallActive?.(missionId));
+            this._strips.set(id, strip);
+        }
+        strip.set(view);
+    }
+
+    /** 某任務在牆上置頂的晶片節點（派出泡泡定位用）；沒有回 null */
+    activeChipOf(missionId: string): Node | null {
+        for (const strip of this._strips.values()) {
+            const node = strip.chipNodeOf(missionId);
+            if (node) return node;
+        }
+        return null;
     }
 
     /** 任務資料就緒前的牆面：隱藏所有任務列（含設計稿的範例列），計數處顯示載入字樣 */
@@ -584,7 +611,11 @@ export class LobbyHallScreenBinder {
         const ping = findUcufNode(this._screenRoot, 'lobby-hall-screen.map-ping');
         const labels = ping ? ping.children.map((c) => c.getComponent(Label)).filter((l): l is Label => !!l) : [];
         // 掛在沙盤的父節點：hidden 模式會關掉視窗節點，元件不能跟著停
-        const player = (viewport.parent ?? this._screenRoot).addComponent(HallMapTurnPlayer);
+        const playerHost = viewport.parent ?? this._screenRoot;
+        // 同上：保留下來的畫面上已有舊場景的播放元件，先移除再加，避免換季動畫重複播
+        const stalePlayer = playerHost.getComponent(HallMapTurnPlayer);
+        if (stalePlayer) stalePlayer.destroy();
+        const player = playerHost.addComponent(HallMapTurnPlayer);
         player.viewport = viewport;
         // 設計稿沙盤沒有內層地圖圖層，content 留空：只縮放視窗、落事件標記（暫定）
         player.content = null;
@@ -628,6 +659,13 @@ export class LobbyHallScreenBinder {
     private _insertAfterSandbox(node: Node): void {
         const sandbox = findUcufNode(this._screenRoot, 'lobby-hall-screen.sandbox-group');
         const parent = sandbox?.parent ?? this._screenRoot;
+        // 大廳畫面會跨場景保留（換季、戰鬥回來都沿用同一個 host）：舊場景留下的同名人群／粒子層還掛在樹上，
+        // 它的點擊回呼綁著已銷毀的 LobbyScene（欄位被引擎清成 null，點小人會拋 reading 'peek'，PROG-2-9994），
+        // 還會讓小人疊成好幾份。建新層之前先把同名舊層摘掉。
+        for (const stale of parent.children.filter((child) => child !== node && child.name === node.name)) {
+            stale.removeFromParent();
+            stale.destroy();
+        }
         parent.addChild(node);
         if (sandbox && sandbox.parent) {
             // 人群、粒子依建立順序排在沙盤之後：後建者在上

@@ -148,6 +148,8 @@ export interface ChainSpawnRequest {
     afterSeasons?: number;
     expireSeasons?: number;
     chainFrom?: string;
+    /** 這一段是連鎖第幾段（上一段 +1） */
+    chainDepth?: number;
 }
 
 /**
@@ -165,6 +167,7 @@ export function applyChainSpawn(
         if (req.intel !== undefined) p.intel = req.intel;
         if (req.expireSeasons !== undefined) p.expireSeasons = req.expireSeasons;
         if (req.chainFrom) p.chainFrom = req.chainFrom;
+        if (req.chainDepth !== undefined) p.chainDepth = req.chainDepth;
         (next.pending as MissionPendingSpawn[]).push(p);
         return { snapshot: next, spawned: [] };
     }
@@ -172,7 +175,7 @@ export function applyChainSpawn(
     next.rng.serial += 1;
     const inst = createMissionInstance({
         def, id: missionIdOf(next.rng.serial), saveSeed: next.rng.seed, season, spawnKey: 'chain',
-        intelOverride: req.intel, expireSeasons: req.expireSeasons, chainFrom: req.chainFrom,
+        intelOverride: req.intel, expireSeasons: req.expireSeasons, chainFrom: req.chainFrom, chainDepth: req.chainDepth,
     });
     next.missions.push(inst);
     return { snapshot: next, spawned: [inst] };
@@ -185,7 +188,7 @@ export function releasePendingSpawns(snap: MissionSyncSnapshot, defs: ReadonlyMa
     cur.pending = (cur.pending ?? []).filter(p => p.atSeason > season);
     const spawned: MissionInstance[] = [];
     for (const p of due) {
-        const r = applyChainSpawn(cur, { defId: p.defId, intel: p.intel, expireSeasons: p.expireSeasons, chainFrom: p.chainFrom }, defs, season);
+        const r = applyChainSpawn(cur, { defId: p.defId, intel: p.intel, expireSeasons: p.expireSeasons, chainFrom: p.chainFrom, chainDepth: p.chainDepth }, defs, season);
         cur = r.snapshot;
         spawned.push(...r.spawned);
     }

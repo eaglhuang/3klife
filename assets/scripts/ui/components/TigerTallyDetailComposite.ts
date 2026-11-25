@@ -17,12 +17,11 @@ import { TallyCardData } from './TigerTallyComposite';
 import { SPIRIT_TALLY_DETAIL_SCREEN_ID, spiritTallyDetailOfTally } from '../core/SpiritTallyDetailView';
 import { tallyLinkedLevelText } from '../core/SpiritTallyChain';
 import { withSpiritCardDetailFallback } from '../core/SpiritCardDetailTexts';
+import { TroopTypeBadge } from '../shared/TroopTypeBadge';
 
 const { ccclass } = _decorator;
 
 // 虎符詳情與英靈卡詳情共用 spirit-tally-detail-screen（TSK-12，PROG-2-1504）
-const UNITINFO_TYPE_ICON_FALLBACK_PATH = 'sprites/battle/battle_unit_type_underlay';
-const TROOP_TYPE_SUITE_GLYPH_PREFIX = 'sprites/battle/battle_unit_type_glyph_';
 const TALLY_CARD_ART_FALLBACK_PATH = 'sprites/battle/tally_card_art_placeholder/spriteFrame';
 const WHITE = new Color(255, 255, 255, 255);
 const _DETAIL_TITLE_COLOR = new Color(245, 228, 180, 255);
@@ -85,7 +84,7 @@ export class TigerTallyDetailComposite extends CompositePanel {
         this._binder?.setTexts(spiritTallyDetailOfTally(data).texts);
         void this._applyLinkedTallyLevel(data);
 
-        void this._applyTypeIcon(data);
+        this._applyTypeIcon(data);
         void this._applyArt(data);
         this._fillTraitCards(data);
         this._fillAbilityCards(data);
@@ -184,20 +183,9 @@ export class TigerTallyDetailComposite extends CompositePanel {
         label.overflow = Label.Overflow.CLAMP;
     }
 
-    private async _applyTypeIcon(data: TallyCardData): Promise<void> {
+    private _applyTypeIcon(data: TallyCardData): void {
         if (!this._typeIcon) return;
-        const spriteFrame = await this._loadSpriteFrameWithFallback(
-            this._buildTypeIconCandidates(data),
-            UNITINFO_TYPE_ICON_FALLBACK_PATH,
-        );
-        if (!spriteFrame) {
-            this._typeIcon.node.active = false;
-            return;
-        }
-
-        this._typeIcon.spriteFrame = spriteFrame;
-        this._typeIcon.color = WHITE;
-        this._typeIcon.node.active = true;
+        TroopTypeBadge.mount(this._typeIcon.node).setType(data.unitType);
     }
 
     private async _applyArt(data: TallyCardData): Promise<void> {
@@ -215,15 +203,6 @@ export class TigerTallyDetailComposite extends CompositePanel {
         this._artImage.spriteFrame = spriteFrame;
         this._artImage.color = WHITE;
         this._artImage.node.active = true;
-    }
-
-    private _buildTypeIconCandidates(data: TallyCardData): string[] {
-        const normalizedType = this._normalizeKey(data.unitType);
-        return this._uniquePaths([
-            data.typeIconResource,
-            normalizedType ? `sprites/battle/battle_unit_type_icon_${normalizedType}` : null,
-            normalizedType ? `${TROOP_TYPE_SUITE_GLYPH_PREFIX}${normalizedType}` : null,
-        ]);
     }
 
     private _buildArtCandidates(data: TallyCardData): string[] {

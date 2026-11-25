@@ -4,7 +4,7 @@
   "bundle": "lobby_ui",
   "atlasPolicy": "lobby_ui",
   "slots": {
-    "hall.card.bg": {
+    "hall.panel.solid": {
       "kind": "color-rect",
       "color": "backgroundDeep",
       "alpha": 246
@@ -57,6 +57,11 @@
       "isBold": true,
       "overflow": "CLAMP"
     },
+    "hall.button.primary.bg": {
+      "kind": "color-rect",
+      "color": "primary",
+      "alpha": 160
+    },
     "hall.row.bg": {
       "kind": "color-rect",
       "color": "backgroundDeep",
@@ -74,6 +79,20 @@
       "lineHeight": 30,
       "color": "secondaryLight",
       "overflow": "SHRINK"
+    },
+    "hall.label.section": {
+      "kind": "label-style",
+      "font": "fonts/notoserif_tc/notoserif_tc",
+      "fontSize": 20,
+      "lineHeight": 28,
+      "letterSpacing": 8,
+      "color": "#C4A05C",
+      "overflow": "CLAMP"
+    },
+    "hall.divider.section": {
+      "kind": "color-rect",
+      "color": "#E8C88C",
+      "alpha": 110
     }
   }
 }

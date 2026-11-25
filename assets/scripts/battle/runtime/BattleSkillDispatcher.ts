@@ -1,4 +1,7 @@
 // @spec-source → 戰法系統.md (doc_spec_0038)、戰場部署系統.md (doc_spec_0040)；PROG-2-1429 依建檔紀錄補標出處
+import { BURN_CONFIG } from '../shared/BurnStatus';
+import { POISON_STATUS_ID } from '../shared/StatusEffectLabel';
+import { igniteUnit } from './BurnIgnite';
 import {
   EVENT_NAMES,
   Faction,
@@ -76,6 +79,8 @@ export interface BattleSkillDispatcherContext {
   getAncestorSignatureSkillId?(ancestorTemplateId: string | null): string | null;
   /** 奧義的 USPECIAL 特殊規則（ULT-10，PROG-2-1978）；查不到或沒填回 undefined，不走特殊規則 */
   getUltimateSpecialRule?(ultimateId: string): UltimateSpecialRuleDef | null | undefined;
+  /** 團隊回復的已損 HP 比例（PM 11/22）；未提供視為 0 */
+  getUltimateTeamHealMissingRatio?(ultimateId: string): number | undefined;
 }
 
 /** 負責技能分發與執行上下文建立（seed tactic、direct skill、skill request 執行、context builder） */
@@ -224,7 +229,7 @@ export class BattleSkillDispatcher {
       maxHp: u.getEffectiveMaxHp(),
       morale: u.morale,
       effects: buff.getBuffs(u.id).map((b) => b.effect),
-    })));
+    })), this.context.getUltimateTeamHealMissingRatio?.(ultimateId) ?? 0);
     for (const o of outcomes) {
       const unit = byId.get(o.id)!;
       if (o.healed > 0) unit.heal(o.healed);
@@ -613,20 +618,17 @@ export class BattleSkillDispatcher {
       reviveFallenFriendly: (casterFaction: Faction, hpRatio: number) => state.reviveFallenUnit(casterFaction, hpRatio),
       addUnitDot: (unit: TroopUnit, ratio: number, turns: number) => {
         state.unitDots.set(unit.id, { unitId: unit.id, ratio, remainingTurns: turns });
+        // PROG-2-9731：毒箭上身也送 BuffApplied（以前只寫狀態表，玩家看不到命中回饋）；由 BattleUIBridge 排進戰鬥動畫佇列
+        services().event.emit(EVENT_NAMES.BuffApplied, { unitId: unit.id, effect: POISON_STATUS_ID, turns });
       },
       setTileHazard: (cell: { lane: number; depth: number }, damagePerTurn: number) => {
         // 固定地形格（掩體、營帳）不被火場覆蓋；暫時性格子狀態則以新的覆蓋舊的
-        const existing = state.getTileEffect(cell.lane, cell.depth);
-        if (existing && isFixedTileState(existing.state)) return;
-        state.setTileEffect({
-          id: `skill-fire-${cell.lane}-${cell.depth}`,
-          lane: cell.lane,
-          depth: cell.depth,
-          state: 'hazard-fire',
-          damagePerTurn,
-          notes: 'skill:hazard-cross',
-        });
+        // 戰法留下的火格有存在回合（PROG-2-9726，battle-burn.json fireTile.durationTurns）
+        state.placeFireTile(cell.lane, cell.depth, damagePerTurn, BURN_CONFIG.fireTile.durationTurns, `skill-fire-${cell.lane}-${cell.depth}`, 'skill:hazard-cross');
       },
+      addUnitBurn: (unit: TroopUnit) => igniteUnit(state, unit),
+      // 火計／水計的格子 hook（PROG-2-9960）：由 View 播 vfx-block 組合；純邏輯層只送事件
+      emitGridVfx: (kind, cell) => services().event.emit(EVENT_NAMES.TacticGridVfx, { kind, lane: cell.lane, depth: cell.depth }),
       applyDamage: (unit: TroopUnit, damage: number, casterFaction: Faction) => {
         const svc = services();
         combatResolver.applyUnitDamage(unit, damage, casterFaction, {

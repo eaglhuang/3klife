@@ -10,6 +10,7 @@ import { normalizeFamilySynergy, type FamilySynergyLedger } from '../systems/Fam
 import { normalizePedigreeProbes } from '../systems/PedigreeProbe';
 import { isSandtableTerritory } from '../systems/SandtableTerritories';
 import type { BreedingBirthRecord } from '../systems/BreedingBirthRecord';
+import type { AnnualRankingSaveData } from '../systems/annual_ranking/AnnualRankingManager';
 import { normalizeBreedingBirthRecords } from '../systems/BreedingBirthRecordSave';
 import { normalizeTravelCountdown, type TravelCountdown } from '../systems/TravelCountdown';
 import { readCardStarState } from '../systems/TigerTallyStar';
@@ -269,6 +270,8 @@ export interface PlayerSaveSnapshot {
     startingTalisman?: StartingSpiritTalisman;
     /** 世家系統解鎖旗標（PM 暫定）：第一位子嗣誕生後寫入；只寫 true；舊檔沒有時為未解鎖 */
     familySystemUnlocked?: boolean;
+    /** 結緣媒人首次紅娘叩門完成旗標（PROG-2-9613）：開場教學後首次換季完成後寫入，讀檔不重複 */
+    matchmakerFirstVisitDone?: boolean;
     /** 新玩家開場進行中的幕 id（PROG-2-1371）：讀檔後從該幕接續；開場結束或舊檔沒有時不寫入；版號不升 */
     openingPhase?: string;
     /** 已處理的最大登入日（YYYY-MM-DD 高水位）：舊稱免費入學令已發放日；入學令每日發放已退場（PROG-2-9206），欄位保留以相容舊存檔並供離線行為判斷 */
@@ -387,6 +390,14 @@ export interface PlayerSaveSnapshot {
     sortiePresets?: Readonly<Record<string, { strategistUid: string | null; deputyUid: string | null }>>;
     /** 出生紀錄（PROG-2-1146）：child.UID 去重；舊檔缺省為空，不回填歷史資料。 */
     breedingBirthRecords?: BreedingBirthRecord[];
+    /** 史境天下風雲榜年度指標與歷年排名（PROG-2-9601 PR2） */
+    annualRanking?: AnnualRankingSaveData;
+    /** 武將友誼值（PROG-2-9601 PR3 第8框架種子，稀疏儲存）：武將 ID → 友誼點數 (-100~100，負值為敵意區間；舊存檔皆 ≥0 故相容) */
+    friendships?: Record<string, number>;
+    /** 武將↔武將配對友誼（PROG-2-9954，只存與我方接觸者）：鍵為兩 id 排序後以 | 相接 */
+    friendshipPairs?: Record<string, number>;
+    /** 友誼行為每季次數與冷卻紀錄（PROG-2-9954） */
+    friendshipActionLog?: Record<string, { season: number; count: number; last: number }>;
 }
 
 /** 讀回編制預設：只保留格式正確的條目；缺欄位、非物件一律丟棄（舊存檔視為空） */
@@ -750,6 +761,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.sandtableUnlockHistory !== undefined ? { sandtableUnlockHistory: normalizeUnlockHistory(snapshot.sandtableUnlockHistory) } : {}),
         ...(normalizeStartingTalisman(snapshot.startingTalisman) !== null ? { startingTalisman: normalizeStartingTalisman(snapshot.startingTalisman)! } : {}),
         ...(snapshot.familySystemUnlocked === true ? { familySystemUnlocked: true } : {}),
+        ...(snapshot.matchmakerFirstVisitDone === true ? { matchmakerFirstVisitDone: true } : {}),
         ...(normalizeOpeningPhaseId(snapshot.openingPhase) !== null ? { openingPhase: normalizeOpeningPhaseId(snapshot.openingPhase)! } : {}),
         ...(snapshot.itemAcquisitionLog !== undefined ? { itemAcquisitionLog: normalizeAcquisitionLog(snapshot.itemAcquisitionLog) } : {}),
         ...(normalizeEnrollGrantDay(snapshot.enrollGrantDay) !== null ? { enrollGrantDay: normalizeEnrollGrantDay(snapshot.enrollGrantDay)! } : {}),
@@ -779,6 +791,10 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(normalizeOccupancyRecords(snapshot.occupancy).length > 0 ? { occupancy: normalizeOccupancyRecords(snapshot.occupancy) } : {}),
         ...(isEmptyFamilyState(normalizeFamilyState(snapshot.familyState)) ? {} : { familyState: normalizeFamilyState(snapshot.familyState) }),
         ...(snapshot.legendaryMentoringUsedIds !== undefined ? { legendaryMentoringUsedIds: normalizeLegendaryMentoringUsedIds(snapshot.legendaryMentoringUsedIds) } : {}),
+        ...(snapshot.annualRanking !== undefined ? { annualRanking: snapshot.annualRanking } : {}),
+        ...(snapshot.friendships !== undefined ? { friendships: snapshot.friendships } : {}),
+        ...(snapshot.friendshipPairs !== undefined ? { friendshipPairs: snapshot.friendshipPairs } : {}),
+        ...(snapshot.friendshipActionLog !== undefined ? { friendshipActionLog: snapshot.friendshipActionLog } : {}),
     };
 }
 

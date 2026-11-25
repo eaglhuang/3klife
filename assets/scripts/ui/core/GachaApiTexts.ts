@@ -126,7 +126,7 @@ export function gachaApiView(
             ? `★ 本期限定 · ${dto.endsAtMs ? formatRemaining(dto.endsAtMs, nowMs) : '期間限定'}`
             : (dto.showcaseIsUp ? dto.series.replace(/常設$/, '本期 UP') : dto.series),
         [pool.guarantee]: limited
-            ? `👑 ${dto.pity.destinyMax} 抽可換限定 SSR`
+            ? `👑 天命值滿 ${dto.pity.destinyMax} 抽可兌換限定 SSR（與小保底分開算）`
             : `✦ ${dto.pity.label.replace(/進度$/, '')} ${dto.pity.max} 抽`,
     };
     if (heroName) texts[pool.heroName] = spacedName(heroName);

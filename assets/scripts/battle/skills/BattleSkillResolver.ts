@@ -47,6 +47,10 @@ export interface BattleSkillExecutionContext {
   addUnitDot?(unit: TroopUnit, ratio: number, turns: number): void;
   /** 把指定格設為火場等持續傷害格（PROG-2-0757）；舊測試 context 可不提供 */
   setTileHazard?(cell: { lane: number; depth: number }, damagePerTurn: number): void;
+  /** 對單位施加燃燒（PROG-2-9726；疊層沿用 BuffStackHeal）；舊測試 context 可不提供 */
+  addUnitBurn?(unit: TroopUnit): void;
+  /** 戰法格子特效（火計、水計）：施放命中的格子要播哪種格子 hook；舊測試 context 可不提供 */
+  emitGridVfx?(kind: 'grid-fire' | 'grid-water-ripple', cell: { lane: number; depth: number }): void;
   applyDamage(unit: TroopUnit, damage: number, casterFaction: Faction): void;
   healUnit(unit: TroopUnit, amount: number, casterFaction: Faction): void;
   applyBuff(unit: TroopUnit, effect: StatusEffect, turns: number): void;

@@ -176,7 +176,8 @@ export function buildPlaceholderCutinConfig(generalId: string, generalName: stri
         shakeAmp: 8,
         shakeFrames: 8,
         // 暫代圖以前完全靜音（PROG-2-9435）：補切入風聲與命中吼聲，走下方的替代音表
-        sfx: [{ key: 'whoosh', offset: -0.04 }, { key: 'roar', offset: 0.03 }],
+        // PROG-2-9859：實測前 0.3 秒有聲、之後 1.3 秒空白直到 fireball；中段補一記重擊、結尾補一記命中，整段不再冷場
+        sfx: [{ key: 'whoosh', offset: -0.04 }, { key: 'roar', offset: 0.03 }, { key: 'hit_heavy', offset: 0.6 }, { key: 'hit', offset: 0.98 }],
       },
     ],
     textOverlays: [{ panelIndex: 0, delay: 0.1, fadeIn: 0.133, generalName, skillName }],

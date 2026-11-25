@@ -794,11 +794,12 @@ export const SORTIE_DEPLOY_BLOCK_TEXT: Readonly<Record<SortieDeployBlockReason, 
     FIELD_UNIT_LIMIT: '場上部隊已滿',
 };
 
-export const SORTIE_LOADOUT_ISSUE_TEXT: Readonly<Record<SortieLoadoutIssue, string>> = {
-    MISSING_COMMANDER: '尚未選定主將',
-    ROLE_LOCK: '同一武將不可同時擔任兩個出征角色',
-    SAME_BLOODLINE: '同名武將不可同場出征',
-    UNKNOWN_GENERAL: '編制中有不在名冊的武將',
+/** 編制問題對應的 i18n key（文案由 UI 層以 i18n 翻譯） */
+export const SORTIE_LOADOUT_ISSUE_KEY: Readonly<Record<SortieLoadoutIssue, string>> = {
+    MISSING_COMMANDER: 'sortie.issue.MISSING_COMMANDER',
+    ROLE_LOCK: 'sortie.issue.ROLE_LOCK',
+    SAME_BLOODLINE: 'sortie.issue.SAME_BLOODLINE',
+    UNKNOWN_GENERAL: 'sortie.issue.UNKNOWN_GENERAL',
 };
 
 /** 戰後結算面板六項：出征軍勢 / 返還兵力 / 本戰損耗 / 城市兵源變化 / 補兵速度 / 預估恢復回合（另附糧草消耗） */

@@ -9,6 +9,7 @@ const {
     formatTaskIdInspection,
     inspectTaskId,
     reserveNextTaskId,
+    reserveTaskIdOrNext,
 } = require('../../lib/task-id-guard');
 const { createLockAdapterConfig } = require('./lock-adapter-config');
 
@@ -116,8 +117,16 @@ class LockAdapter {
         return path.join(this.lockDir, `${taskId}.lock.json`);
     }
 
-    reserve(prefix, agentName) {
-        const reservation = reserveNextTaskId(this.projectRoot, prefix, agentName);
+    /**
+     * Reserve a task id. A prefix (e.g. PROG-2) reserves the next free id; a
+     * full id (e.g. PROG-2-9990) reserves it when free, otherwise the next free
+     * id under the same prefix (broker ticket, never a bare refusal).
+     */
+    reserve(prefixOrTaskId, agentName) {
+        const isFullId = /-\d{4,}$/.test(String(prefixOrTaskId || '').trim());
+        const reservation = isFullId
+            ? reserveTaskIdOrNext(this.projectRoot, prefixOrTaskId, agentName)
+            : reserveNextTaskId(this.projectRoot, prefixOrTaskId, agentName);
         const lockPath = this.lockPath(reservation.taskId);
         this.appendTrace({
             command: 'reserve',
@@ -130,7 +139,12 @@ class LockAdapter {
             scopeFingerprintVersion: 'scope-fingerprint/v1',
             conflictCount: 0,
         });
-        console.log(`🆔 已保留新卡號 "${reservation.taskId}" → ${agentName}`);
+        if (reservation.reassigned) {
+            console.log(`⚠️ "${reservation.requestedTaskId}" 已被占用，改保留下一個可用卡號 "${reservation.taskId}" → ${agentName}`);
+            console.log(`   ${reservation.collision}`);
+        } else {
+            console.log(`🆔 已保留新卡號 "${reservation.taskId}" → ${agentName}`);
+        }
         return reservation;
     }
 

@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-11-22
+> 生成日期: 2026-11-23
 > 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 15/15 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -178,3 +178,69 @@
 | `doc_task_2934` | docs/agent-briefs/tasks/PROG/PROG-2-9801.md | [PROG-2-9801] 網頁版卡頓優化第二輪（人物介紹頁／開場 Label 縮放） |
 | `doc_task_2937` | docs/agent-briefs/tasks/PROG/PROG-2-9611.md | 任務卡：PROG-2-9611 任務大廳金／銀兩口徑一致化與第一年商業任務銀兩產出 |
 | `doc_task_2939` | docs/agent-briefs/tasks/PROG/PROG-2-9820.md | [PROG-2-9820] 晉升導流「！」加大加亮，且泡泡必須出在掛「！」的武將身上 |
+| `doc_task_2941` | docs/agent-briefs/tasks/PROG/PROG-2-9802.md | [PROG-2-9802] 網頁版卡頓第三輪（漸層底板原生 canvas、全螢幕畫面遮蔽底層） |
+| `doc_task_2944` | docs/agent-briefs/tasks/PROG/PROG-2-9830.md | [PROG-2-9830] 教官池 SSR 保底改為軟 50／硬 90（與名將池完全一致） |
+| `doc_task_2945` | docs/agent-briefs/tasks/PROG/PROG-2-9714.md | [PROG-2-9714] 虎符卡面板繪製次數優化（文字改 BITMAP 進動態圖集合批） |
+| `doc_task_2947` | docs/agent-briefs/tasks/PROG/PROG-2-9715.md | [PROG-2-9715] 主將出陣改為 Q 版小人衝出出兵口、站格逐格前進（單挑只在規格條件觸發） |
+| `doc_task_2948` | docs/agent-briefs/tasks/PROG/PROG-2-9716.md | [PROG-2-9716] 騎兵攻擊音效改馬蹄聲（hoof_gallop，CC-BY 3.0） |
+| `doc_task_2949` | docs/agent-briefs/tasks/PROG/PROG-2-9612.md | [PROG-2-9612] 無頭試玩 lobby-commerce-silver 偶發失敗修正（報酬列受情報分層遮蔽） |
+| `doc_task_2950` | docs/agent-briefs/tasks/PROG/PROG-2-9719.md | [PROG-2-9719] 主將出陣規則依使用者 11/22 裁決：同路相鄰才單挑、小兵優先打武將、只從出兵口出陣、主將倒下加倍消失、正式規格章節 |
+| `doc_task_2951` | docs/agent-briefs/tasks/PROG/PROG-2-9718.md | [PROG-2-9718] 戰場文字套用 LabelLayoutDeferral（徽章、跳字、HUD）減少重排 |
+| `doc_task_2952` | docs/agent-briefs/tasks/PROG/PROG-2-9717.md | [PROG-2-9717] 第一年敗戰新手保護：損兵上限 30%＋傷兵營 60/40、每季康復 30% |
+| `doc_task_2953` | docs/agent-briefs/tasks/PROG/PROG-2-9720.md | [PROG-2-9720] BuffStackHeal 接線：狀態堆疊、治療、中毒結算實際走 doc_spec_0359 |
+| `doc_task_2954` | docs/agent-briefs/tasks/PROG/PROG-2-9721.md | [PROG-2-9721] 傷兵營改全年度適用 |
+| `doc_task_2955` | docs/agent-briefs/tasks/PROG/PROG-2-9723.md | [PROG-2-9723] AI 奧義精力門檻改比例與委任自動放奧義 |
+| `doc_task_2956` | docs/agent-briefs/tasks/PROG/PROG-2-9722.md | [PROG-2-9722] 守城勝率退步調查與修正 |
+| `doc_task_2957` | docs/agent-briefs/tasks/PROG/PROG-2-9724.md | [PROG-2-9724] 兵種徽章共用繪製函式 |
+| `doc_task_2958` | docs/agent-briefs/tasks/PROG/PROG-2-9725.md | [PROG-2-9725] 總PM 11/22 裁決落地：毒箭5%、TeamRecover已損25%、SP精力名詞 |
+| `doc_task_2959` | docs/agent-briefs/tasks/PROG/PROG-2-9728.md | [PROG-2-9728] 委任代打奧義門檻下限：至少中 IQ |
+| `doc_task_2960` | docs/agent-briefs/tasks/PROG/PROG-2-9726.md | [PROG-2-9726] 燃燒狀態：火格＋火攻戰法 |
+| `doc_task_2961` | docs/agent-briefs/tasks/PROG/PROG-2-9727.md | [PROG-2-9727] 名詞定義文件機械分片＋補 SP／精力名詞 |
+| `doc_task_2962` | docs/agent-briefs/tasks/PROG/PROG-2-9613.md | [PROG-2-9613] 結緣媒人導流（開場教學後首次換季紅娘叩門與春季常規求親導流） |
+| `doc_task_2963` | docs/agent-briefs/tasks/PROG/PROG-2-9729.md | [PROG-2-9729] 戰鬥音效分層：受擊輕重、分兵種腳步、變調與隨機音量 |
+| `doc_task_2964` | docs/agent-briefs/tasks/PROG/PROG-2-9730.md | [PROG-2-9730] 無頭試玩第 07 步 lobby-commerce-silver 仍偶發失敗（點擊瞬間被官職晉升彈窗蓋住） |
+| `doc_task_2965` | docs/agent-briefs/tasks/PROG/PROG-2-9601.md | [PROG-2-9601] 史境天下風雲榜計分核心與平時即時看板（W1a） |
+| `doc_task_2966` | docs/agent-briefs/tasks/PROG/PROG-2-9732.md | [PROG-2-9732] 戰鬥音效補件：金屬擊打／肉體悶擊／單拍馬蹄換成 CC0 外部素材（可切回變調版） |
+| `doc_task_2967` | docs/agent-briefs/tasks/PROG/PROG-2-9731.md | [PROG-2-9731] 戰場 UI 演出 B2：名牌戰鬥淡出、狀態圖示層數回合、奧義暫代大字與音效、毒上身回饋、治療時序 |
+| `doc_task_2970` | docs/agent-briefs/tasks/PROG/PROG-2-9840.md | [PROG-2-9840] 寬螢幕兩側灰邊：皮膚整面背景層跟著父容器伸縮、清除色改深色 |
+| `doc_task_2971` | docs/agent-briefs/tasks/PROG/PROG-2-9733.md | [PROG-2-9733] 規格回寫：使用者 2026-11-22 八項裁決（天氣、金銀轉移、官職分批解鎖、格子 buff、兵種符號、年終典禮、重複卡彈窗、燃燒） |
+| `doc_task_2972` | docs/agent-briefs/tasks/PROG/PROG-2-9831.md | [PROG-2-9831] LLM 批次文案工具與大廳武將聊天台詞第一批（API 贈送額度） |
+| `doc_task_2973` | docs/agent-briefs/tasks/PROG/PROG-2-9734.md | [PROG-2-9734] 戰場 buff 格靜態淡光圈＋部隊吃到 buff 腳下 2.5 秒特效（正式版，刪舊格子特效） |
+| `doc_task_2974` | docs/agent-briefs/tasks/PROG/PROG-2-9735.md | [PROG-2-9735] 戰場天氣：季節機率抽取、劇情關固定、戰前顯示 |
+| `doc_task_2975` | docs/agent-briefs/tasks/PROG/PROG-2-9736.md | [PROG-2-9736] 移除舊 buff 獲得 3D 特效（攻擊／回血）＋吃到 buff 特效依倍率分級 |
+| `doc_task_2976` | docs/agent-briefs/tasks/PROG/PROG-2-9737.md | [PROG-2-9737] 攻擊特效正式量產：騎兵／盾兵／法陣縮小降透明度（分兵種倍率） |
+| `doc_task_2977` | docs/agent-briefs/tasks/PROG/PROG-2-9738.md | [PROG-2-9738] 騎兵／騎馬武將套用 spine-trial 全套騎乘動作（攻擊／閃避／倒下／後退） |
+| `doc_task_2978` | docs/agent-briefs/tasks/PROG/PROG-2-9841.md | [PROG-2-9841] 技分頁戰法／奧義點擊開啟通用詳情子視窗 |
+| `doc_task_2979` | docs/agent-briefs/tasks/PROG/PROG-2-9847.md | [PROG-2-9847] 趙雲騎馬骨架接入戰場（ridingTier 依 riding-tiers.json） |
+| `doc_task_2980` | docs/agent-briefs/tasks/PROG/PROG-2-9843.md | [PROG-2-9843] 戰法詳情子視窗補招式描述文字 |
+| `doc_task_2981` | docs/agent-briefs/tasks/PROG/PROG-2-9845.md | [PROG-2-9845] 騎術系統與馬廄規格（ridingTier 三級、名駒、馬廄與配種） |
+| `doc_task_2983` | docs/agent-briefs/tasks/PROG/PROG-2-9842.md | [PROG-2-9842] 十連結果卡片壓扁＋統計列漏算 N |
+| `doc_task_2984` | docs/agent-briefs/tasks/PROG/PROG-2-9848.md | [PROG-2-9848] 敵將戰法全 0 分／無傷害改普攻（不再硬放主技能） |
+| `doc_task_2985` | docs/agent-briefs/tasks/PROG/PROG-2-9851.md | [PROG-2-9851] 敵將扣 TP 保留 20／治療健康線 >70%／冷卻規格對齊 |
+| `doc_task_2986` | docs/agent-briefs/tasks/PROG/PROG-2-9852.md | [PROG-2-9852] 敵將戰法群傷評分（單目標傷害×預估命中數） |
+| `doc_task_2987` | docs/agent-briefs/tasks/PROG/PROG-2-9858.md | [PROG-2-9858] 測試工具 2.0：全域 dev overlay＋共通 API debug 指令＋分頁面板 |
+| `doc_task_2988` | docs/agent-briefs/tasks/PROG/PROG-2-9853.md | [PROG-2-9853] 敵將戰法自動索敵（最低血量／補最低友軍／範圍錨點） |
+| `doc_task_2989` | docs/agent-briefs/tasks/PROG/PROG-2-9832.md | [PROG-2-9832] 幕府大廳套用大廳・內政統一風格（第一階段：共用 token＋主畫面） |
+| `doc_task_2990` | docs/agent-briefs/tasks/PROG/PROG-2-9844.md | [PROG-2-9844] 武將名稱旁顯示縮小頭像（GeneralNameTag） |
+| `doc_task_2991` | docs/agent-briefs/tasks/PROG/PROG-2-9846.md | [PROG-2-9846] 幕府大廳風格統一第二階段：任務牆／太守府／招賢館套用主題＋分節標題小字距與金線 |
+| `doc_task_2992` | docs/agent-briefs/tasks/PROG/PROG-2-9854.md | [PROG-2-9854] 修正幕府大廳任務牆／太守府套用主題後跑版 |
+| `doc_task_2993` | docs/agent-briefs/tasks/PROG/PROG-2-9855.md | [PROG-2-9855] 戰場回饋：燃燒／中毒 DOT 跳字分色 |
+| `doc_task_2994` | docs/agent-briefs/tasks/PROG/PROG-2-9860.md | [PROG-2-9860] 測試工具：解鎖分頁（debug.setRank／debug.unlockAll）＋DEV 圓鈕醒目化 |
+| `doc_task_2995` | docs/agent-briefs/tasks/PROG/PROG-2-9856.md | [PROG-2-9856] 戰場名牌：主將不顯示開發用「（主將棋子）」 |
+| `doc_task_2996` | docs/agent-briefs/tasks/PROG/PROG-2-9861.md | [PROG-2-9861] 太守府數字標示釐清：每季產出 vs 現有存量、黃金 0 提示、左欄留白 |
+| `doc_task_2997` | docs/agent-briefs/tasks/PROG/PROG-2-9857.md | [PROG-2-9857] 戰場回饋：狀態飄字依增益／減益／控制分色 |
+| `doc_task_2998` | docs/agent-briefs/tasks/PROG/PROG-2-9859.md | [PROG-2-9859] 戰場回饋：奧義暫代分鏡中段補音效（1.3 秒空白） |
+| `doc_task_2999` | docs/agent-briefs/tasks/PROG/PROG-2-9862.md | [PROG-2-9862] 戰場回饋：DOT tick 命中音與毒箭回饋 |
+| `doc_task_3000` | docs/agent-briefs/tasks/PROG/PROG-2-9863.md | [PROG-2-9863] 太守府：黃金為 0 時加新手引導提示（選商業任務才有黃金） |
+| `doc_task_3001` | docs/agent-briefs/tasks/PROG/PROG-2-9865.md | [PROG-2-9865] 線上試玩腳本修正：重載等載入遮罩消失、商業任務銀兩檢查依情報度 |
+| `doc_task_3002` | docs/agent-briefs/tasks/PROG/PROG-2-9866.md | [PROG-2-9866] 玩家行為統一權重表（武將友誼值）資料與規格 |
+| `doc_task_3003` | docs/agent-briefs/tasks/PROG/PROG-2-9867.md | [PROG-2-9867] 友誼值範圍改為 -100～+100 |
+| `doc_task_3004` | docs/agent-briefs/tasks/PROG/PROG-2-9869.md | [PROG-2-9869] 十連結果卡片加寬（使用者：左右太瘦） |
+| `doc_task_3005` | docs/agent-briefs/tasks/PROG/PROG-2-9910.md | [PROG-2-9910] 戰前推薦編制純邏輯（卡 A） |
+| `doc_task_3006` | docs/agent-briefs/tasks/PROG/PROG-2-9911.md | [PROG-2-9911] 戰前編成視窗（卡 B） |
+| `doc_task_3007` | docs/agent-briefs/tasks/PROG/PROG-2-9912.md | [PROG-2-9912] 首戰教學戰接入編成（卡 C） |
+| `doc_task_3008` | docs/agent-briefs/tasks/PROG/PROG-2-9913.md | [PROG-2-9913] 戰前編成實機驗收合併（卡 D） |
+| `doc_task_3009` | docs/agent-briefs/tasks/PROG/PROG-2-9615.md | [PROG-2-9615] 首年引導接進畫面與實機視角驗收 |
+| `doc_task_3050` | docs/agent-briefs/tasks/PROG/PROG-2-9803.md | [PROG-2-9803] 首戰自動戰 QA 計數修正與教學戰參數調校（60–90 秒目標） |
+| `doc_task_3051` | docs/agent-briefs/tasks/PROG/PROG-2-9868.md | [PROG-2-9868] 藍軍騎兵改用騎乘版 Spine 骨架（mount_horse_bay） |
+| `doc_task_3052` | docs/agent-briefs/tasks/PROG/PROG-2-9871.md | [PROG-2-9871] 轉蛋抽到的教官支援卡進支援卡清單與培育選卡（物品庫存 → 教官卡橋接） |

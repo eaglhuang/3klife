@@ -17,6 +17,7 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
  */
 import { _decorator, Button, Color, Label, Node, Sprite, SpriteFrame } from 'cc';
 import { services } from '../../core/managers/ServiceLoader';
+import { TroopTypeBadge } from '../shared/TroopTypeBadge';
 import { UIPreviewBuilder } from '../core/UIPreviewBuilder';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { UI_EVENTS } from '../core/UIEvents';
@@ -44,8 +45,6 @@ const RARITY_BORDER_COLORS: Record<TallyCardData['rarity'], Color> = {
 
 const DEFAULT_BADGE_DEF = { icon: '？', color: new Color(220, 220, 220, 255) };
 const TALLY_CARD_ART_FALLBACK_PATH = 'sprites/battle/tally_card_art_placeholder/spriteFrame';
-const TALLY_TYPE_BADGE_FALLBACK_PATH = 'sprites/battle/battle_unit_type_underlay';
-const TROOP_TYPE_SUITE_UNDERLAY_PATH = 'sprites/battle/battle_unit_type_underlay';
 const WHITE = new Color(255, 255, 255, 255);
 const TALLY_RARITY_PATHS: Record<TallyCardData['rarity'], string> = {
     normal:    'sprites/battle/tally_rarity_normal',
@@ -322,7 +321,7 @@ export class TigerTallyPanel extends UIPreviewBuilder {
 
         if (sprite) {
             sprite.color = WHITE;
-            void this._applyTypeBadgeSprite(sprite, slot, data, loadSeq);
+            TroopTypeBadge.mount(sprite.node).setType(data.unitType);
         }
     }
 
@@ -358,30 +357,6 @@ export class TigerTallyPanel extends UIPreviewBuilder {
         rarityBorder.spriteFrame = spriteFrame;
         rarityBorder.color = RARITY_BORDER_COLORS[data.rarity] ?? RARITY_BORDER_COLORS.normal;
         rarityBorder.node.active = true;
-    }
-
-    private async _applyTypeBadgeSprite(
-        sprite: Sprite,
-        slot: number,
-        data: TallyCardData,
-        loadSeq: number,
-    ): Promise<void> {
-        const normalizedType = this._normalizeKey(data.unitType);
-        const spriteFrame = await this._loadSpriteFrameWithFallback(
-            `tally.badge.type[${slot}]`,
-            this._uniquePaths([
-                data.typeBadgeResource,
-                normalizedType ? `sprites/battle/battle_unit_type_icon_${normalizedType}` : null,
-                TROOP_TYPE_SUITE_UNDERLAY_PATH,
-                normalizedType ? `sprites/battle/tally_badge_type_${normalizedType}` : null,
-            ]),
-            TALLY_TYPE_BADGE_FALLBACK_PATH,
-        );
-        if (!spriteFrame || !this._isLoadSeqCurrent(slot, loadSeq)) return;
-
-        sprite.spriteFrame = spriteFrame;
-        sprite.color = WHITE;
-        sprite.node.active = true;
     }
 
     private _buildArtCandidates(data: TallyCardData): string[] {

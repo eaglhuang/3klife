@@ -18,6 +18,8 @@ import { BattleSystem } from "../systems/BattleSystem";
 import { NetworkService } from "../systems/NetworkService";
 import { SyncManager } from "../systems/SyncManager";
 import { NpcMemoryAdapter } from "../dialogue/NpcMemoryAdapter";
+import { DialogueSystem } from "../dialogue/DialogueSystem";
+import { DIALOGUE_MOOD_RULES_JSON } from "../dialogue/DialogueContextBuilder";
 import { SceneManager } from "./SceneManager";
 import { GameManager } from "./GameManager";
 import { GameSession, InMemoryRosterStore } from "./GameSession";
@@ -66,15 +68,21 @@ import { configureMindMarriageRules, MIND_MARRIAGE_RULES_JSON, type MindMarriage
 import { CLAN_LINEAGE_RULES_JSON, configureClanLineageRules, type ClanLineageRulesConfig } from "../systems/ClanTradition";
 import { configureAcademyStories } from "../systems/nurture/AcademyStoryTexts";
 import { QUICK_RESOLVE_CONFIG_JSON, configureQuickResolve } from "../systems/QuickResolveGate";
+import { configureTroopLossRules, TROOP_LOSS_RULES_JSON, type TroopLossRulesConfig } from "../systems/CommandSortieLoss";
 import { ACADEMY_ENROLL_RULES_JSON, configureAcademyEnrollRules, type AcademyEnrollRulesConfig } from "../systems/nurture/AcademyEnrollRules";
 import { createAcademyQuestAdapter } from "../../shared/quest/AcademyQuest";
 import { DEFAULT_QUEST_CONFIG, normalizeQuestConfig } from "../../shared/quest/QuestConfig";
 import { FAMILY_CONFIG_JSON } from "../../shared/family/FamilyConfig";
 import { OCCUPANCY_MATRIX_JSON } from "../../shared/occupancy/OccupancyMatrix";
 import { QUEST_CONFIG_JSON, type QuestConfigV1 } from "../../shared/quest/QuestTypes";
-import { DEFAULT_REWARD_CONFIG, normalizeRewardConfig, REWARD_CONFIG_JSON, type RewardConfigV1, type RewardPoolDef } from "../../shared/reward/RewardConfig";
+import { DEFAULT_INSIGHT_CONFIG, DEFAULT_REWARD_CONFIG, normalizeRewardConfig, REWARD_CONFIG_JSON, type InsightConfigV1, type RewardConfigV1, type RewardPoolDef } from "../../shared/reward/RewardConfig";
+import { isApiFail } from "../../shared/api/ApiProtocol";
+import { evaluateInsight, type InsightDecision } from "../dialogue/NpcDialogueCache";
+import { FriendshipService } from "../services/FriendshipService";
+import { FRIENDSHIP_ACTION_WEIGHTS_JSON } from "../systems/FriendshipActionEngine";
 import { DEFAULT_STORY_CONFIG, normalizeStoryConfig, STORY_CONFIG_JSON, type StoryConfigV1 } from "../../shared/story/StoryConfig";
 import { ITEM_CONFIG_JSON, normalizeItemConfig, DEFAULT_ITEM_CONFIG, type ItemConfigV1 } from "../../shared/item/ItemConfig";
+import { setBattleSkillNameTranslator } from "../../shared/BattleSkillPresentation";
 import { DEFAULT_SUPPORT_CARDS_CONFIG, normalizeSupportCards, SUPPORT_CARDS_JSON, type SupportCardsConfigV1 } from "../../shared/support/SupportCardConfig";
 import { DEFAULT_SUPPORT_RULES, normalizeSupportRules, SUPPORT_RULES_JSON, withSupportItems, type SupportRulesV1 } from "../../shared/support/SupportRules";
 import { ACADEMY_INHERIT_MARKS_JSON, configureAcademyInheritMarks, type AcademyInheritMarksConfig } from "../systems/nurture/AcademyInheritAndMarks";
@@ -182,6 +190,8 @@ export class ServiceLoader {
     public readonly npcDialogue = new NpcDialogueService();
     /** 玩家-武將互動記憶回寫 adapter：訂閱全域事件後 fire-and-forget 寫回 npc-brain。 */
     public readonly npcMemory = new NpcMemoryAdapter();
+    /** 武將台詞 v2：推導參數、本機快取、友誼事件反應（PROG-2-9964）；前端只呼叫中台，不碰 AI 金鑰 */
+    public readonly dialogue = new DialogueSystem();
     /** 音效系統：BGM、SFX、循環音效，含 50ms 防重複播放 */
     public readonly audio = new AudioSystem();
     /** 多國語系系統：t(key) 字串查詢 + 語系字型懶載入 / 卸載 */
@@ -236,6 +246,8 @@ export class ServiceLoader {
 
         this.battle.setEventSystem(this.event);
         this.game.setEventSystem(this.event);
+        // 戰場招式名走 i18n（battle.skill_name.<id>）；語系切換後 t() 即時反映
+        setBattleSkillNameTranslator((key, ...args) => this.i18n.t(key, ...args));
         this.effect.setup(this.pool);
         // ResourceManager 連動 MemoryManager，使所有資源載入/釋放都通報記憶體管理器
         this.resource.bindMemoryManager(this.memory);
@@ -255,6 +267,10 @@ export class ServiceLoader {
         this.network.setup(this.event);
         this.sync.setup(this.event, this.network);
         this.npcMemory.setup(this.event, this.npcDialogue, this.sync);
+        this.dialogue.setup(this.event, this.session, this.npcDialogue, () => this.sync.getMemorySaveId(), (generalId, text) => {
+            const name = this.session.roster.find((g) => g.id === generalId)?.name ?? generalId;
+            this.event.emit("SHOW_TOAST", { message: `${name}：${text}`, duration: 4 });
+        });
 
         // 長局主迴圈：名冊沿用 PlayerRosterService，存檔後端依平台選擇
         this.session.setEventEmitter(this.event);
@@ -352,6 +368,11 @@ export class ServiceLoader {
         this.localApi?.setDebugHost(host);
     }
 
+    /** 合併偵錯宿主能力（測試工具 2.0；PROG-2-9858）：場景與測試工具各提供不同能力，互不覆蓋；傳 null 清空 */
+    public extendDebugHost(partial: DebugHost | null): void {
+        this.bindDebugHost(partial === null ? null : { ...(this.debugHost ?? {}), ...partial });
+    }
+
     /** 存檔與退役歸檔共用同一個儲存後端（key 不同，不會互蓋）；初始化與切換暫時狀態時呼叫 */
     private bindSaveStorage(): void {
         const storageAdapter = this.createSaveStorageAdapter();
@@ -387,6 +408,19 @@ export class ServiceLoader {
         this.applyRewardConfig();
         // 支援卡發放（PROG-2-9242）：入學／傳承／傳承滿轉學分都走 item.* 命令；卡表與規則用 getter，設定重載後立即生效
         this.localApi.registerRewardEffect(SUPPORT_CARD_EFFECT_KIND, createSupportCardHandler(() => ({ cards: this.supportCards, rules: this.supportRules })));
+        // 台詞成就「有感而發」（PROG-2-9864）：效果 insight 只加友誼（走友誼框架），成就與已見紀錄由 recordInsightDialogue 寫進 rewardMeta
+        this.localApi.registerRewardEffect('insight', (effect, env) => {
+            const generalId = env.source?.ref ?? '';
+            const amount = typeof effect.friendship === 'number' ? effect.friendship : 0;
+            if (!generalId || amount <= 0) throw new Error('insight 效果缺少武將 id 或友誼量');
+            FriendshipService.getInstance().add(generalId, amount, 'insight');
+            return {
+                applied: effect,
+                trace: [`FRIENDSHIP+${amount}`],
+                events: [{ evt: 'insight.granted', data: { generalId, tier: effect.tier ?? null, friendship: amount } }],
+                undo: async () => { FriendshipService.getInstance().add(generalId, -amount, 'insight:undo'); },
+            };
+        });
         if (this.generalGrantHost) this.localApi.registerRewardEffect('general', createGeneralGrantHandler(this.generalGrantHost));
         this.localApi.setRewardAuthority(this.session.rewardAuthority());
         this.session.setRewardApi(this.localApi.api);
@@ -454,6 +488,30 @@ export class ServiceLoader {
         }
     }
 
+    /**
+     * 台詞成就「有感而發」（PROG-2-9864）：玩家觸發台詞中台並取得非降級台詞後呼叫。
+     * 先在權威端判定新台詞與次數上限（寫進 rewardMeta.insight），再走 reward.claim 入帳；入帳失敗就還原狀態。
+     * dayKey 為本機日期 YYYY-MM-DD。
+     */
+    public async recordInsightDialogue(generalId: string, text: string, dayKey: string): Promise<{ decision: InsightDecision; badgeId: string | null }> {
+        const cfg: InsightConfigV1 = this.rewardConfig.insight ?? DEFAULT_INSIGHT_CONFIG;
+        const authority = this.session.rewardAuthority();
+        const prev = authority.meta();
+        const ev = evaluateInsight(prev.insight, generalId, text, dayKey, cfg);
+        if (ev.decision === 'none') return { decision: 'none', badgeId: null };
+        authority.setMeta({ ...prev, insight: ev.next });
+        if (ev.decision === 'capped') return { decision: 'capped', badgeId: null };
+        const bundleId = ev.decision === 'first' ? cfg.firstBundle : cfg.stepBundle;
+        const res = await this.api.cmd('reward.claim', {
+            bundleId, grantKey: `insight:${generalId}:${ev.fingerprint}`, source: { kind: 'insight', ref: generalId },
+        });
+        if (isApiFail(res)) {
+            authority.setMeta(prev);
+            return { decision: 'none', badgeId: null };
+        }
+        return { decision: ev.decision, badgeId: ev.decision === 'first' ? (ev.next.achieved[generalId]?.badgeId ?? null) : null };
+    }
+
     /** NPC 好友教官清單（MENT-14 MVP）：資料表載入失敗時清單為空，借用入口不可用 */
     public async loadNpcFriendMentors(): Promise<void> {
         try {
@@ -513,7 +571,10 @@ export class ServiceLoader {
             loadSafe<Partial<MindMarriageRulesConfig>>(MIND_MARRIAGE_RULES_JSON, configureMindMarriageRules),
             loadSafe<Partial<AcademyInheritMarksConfig>>(ACADEMY_INHERIT_MARKS_JSON, configureAcademyInheritMarks),
             loadSafe<Partial<AcademyEnrollRulesConfig>>(ACADEMY_ENROLL_RULES_JSON, configureAcademyEnrollRules),
+            loadSafe<Partial<TroopLossRulesConfig>>(TROOP_LOSS_RULES_JSON, configureTroopLossRules),
             loadSafe<unknown>(STORY_CONFIG_JSON, (raw) => { this.storyConfig = normalizeStoryConfig(raw); this.localApi?.setStoryConfig(this.storyConfig); configureAcademyStories(this.storyConfig); }),
+            loadSafe<unknown>(DIALOGUE_MOOD_RULES_JSON, (raw) => { this.dialogue.setRules(raw); }),
+            loadSafe<unknown>(FRIENDSHIP_ACTION_WEIGHTS_JSON, (raw) => { this.session.setFriendshipWeights(raw); }),
             loadSafe<unknown>(REWARD_CONFIG_JSON, (raw) => { this.rewardConfig = normalizeRewardConfig(raw); this.applyRewardConfig(); }),
             loadSafe<unknown>(QUEST_CONFIG_JSON, (raw) => { this.questConfig = normalizeQuestConfig(raw); this.localApi?.setQuestConfig(this.questConfig); }),
             loadSafe<unknown>(ITEM_CONFIG_JSON, (raw) => { this.itemConfig = normalizeItemConfig(raw); this.applyItemConfig(); }),

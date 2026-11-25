@@ -47,7 +47,7 @@ export function createDiscordDispatchIntegrationSuite(): TestSuite {
     const suite = new TestSuite('DiscordDispatchIntegration（SCN-09 離間接線 PROG-2-1985）');
     suite.test('資料表：sow-discord 有 profile，顯示標籤歸控制類', () => {
         assert.equals('discord', resolveBattleSkillProfile('sow-discord')!.effectKind ?? '');
-        assert.equals('control', tileSkillCategoryOf(getBattleSkillPresentation('sow-discord').categoryTag));
+        assert.equals('control', tileSkillCategoryOf(getBattleSkillPresentation('sow-discord').categoryZh));
     });
     suite.test('派發器施放：最前排敵兵倒戈 1 回合，回合結束換回', () => {
         const { state, dispatcher } = setup([['e1', 2, 5], ['e2', 2, 6]]);

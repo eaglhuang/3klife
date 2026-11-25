@@ -26,12 +26,13 @@ export interface LobbyHallWallView {
     readonly rows: readonly LobbyHallWallRowView[];
 }
 
-export function buildLobbyHallWallView(rows: readonly HallTaskRow[], boardMax: number): LobbyHallWallView {
+/** metaPrefix：回傳該列要加在獎勵前的標記（例「連續任務 2/3」；PROG-2-9966），空字串不加 */
+export function buildLobbyHallWallView(rows: readonly HallTaskRow[], boardMax: number, metaPrefix?: (row: HallTaskRow) => string): LobbyHallWallView {
     return {
         countText: `${rows.length} / ${boardMax}`,
         rows: rows.slice(0, LOBBY_HALL_WALL_ROWS).map((row) => ({
             title: row.title,
-            meta: row.rewardText || row.requiredRankText,
+            meta: [metaPrefix?.(row) ?? '', row.rewardText || row.requiredRankText].filter((x) => x.length > 0).join('・'),
             difficulty: row.difficultyText,
             pinned: row.accepted,
         })),

@@ -37,7 +37,7 @@ export interface SeasonEventEffect {
 export interface SeasonEventOptionDef {
     label: string;
     effect: SeasonEventEffect;
-    /** 效果說明（含暫不結算的項目） */
+    /** 玩家看得到的效果說明；只寫確實會結算的項目（士氣、適性、治安尚未接上結算，不寫進來，PROG-2-9994） */
     note: string;
 }
 
@@ -74,8 +74,8 @@ export const SEASON_PERSONALITY_EVENTS: readonly SeasonPersonalityEventDef[] = O
         id: 'FEAST_REQUEST', archetype: 'Brave', title: '軍中索酒',
         desc: '{Name}：「主公，操演方畢，弟兄們辛苦，可否撥款犒賞全軍？」',
         options: [
-            { label: '撥款犒賞（黃金 -50）', effect: { costGold: 50, loyalty: 10 }, note: '忠誠 +10（士氣 +15 暫不結算）' },
-            { label: '嚴詞拒絕', effect: {}, note: '無影響（士氣 -5 暫不結算）' },
+            { label: '撥款犒賞（黃金 -50）', effect: { costGold: 50, loyalty: 10 }, note: '忠誠 +10，弟兄們喝得開心' },
+            { label: '嚴詞拒絕', effect: {}, note: '沒有損失，只是弟兄們有點哀怨' },
         ],
     },
     {
@@ -90,7 +90,7 @@ export const SEASON_PERSONALITY_EVENTS: readonly SeasonPersonalityEventDef[] = O
         id: 'DRILL_TRAINING', archetype: 'Warlike', title: '校場苦練',
         desc: '{Name}：「在下筋骨發癢，自往校場閉門苦練十日！」',
         options: [
-            { label: '親往校閱', effect: { strExp: 20 }, note: '武力經驗 +20（步騎適性 +5 暫不結算）' },
+            { label: '親往校閱', effect: { strExp: 20 }, note: '武力經驗 +20' },
             { label: '由他自練', effect: { strExp: 10 }, note: '武力經驗 +10' },
         ],
     },
@@ -98,7 +98,7 @@ export const SEASON_PERSONALITY_EVENTS: readonly SeasonPersonalityEventDef[] = O
         id: 'ORPHAN_RELIEF', archetype: 'Benevolent', title: '撫恤遺孤',
         desc: '{Name}：「臣巡視城鄉，見陣亡士卒家屬困苦，請開倉施粥。」',
         options: [
-            { label: '撥糧施粥（糧草 -50）', effect: { costFood: 50, fame: 15 }, note: '民心 +15 折為名聲（治安 +10 暫不結算）' },
+            { label: '撥糧施粥（糧草 -50）', effect: { costFood: 50, fame: 15 }, note: '民心 +15 折為名聲' },
             { label: '庫存吃緊', effect: {}, note: '無影響' },
         ],
     },

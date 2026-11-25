@@ -239,7 +239,10 @@ export function tween(_target: any) {
 
 export const Layers = { Enum: { DEFAULT: 1 } };
 export const geometry = { Ray: class { o = new Vec3(); d = new Vec3(); } };
-export const gfx = { CullMode: { NONE: 0 } };
+export const gfx = {
+    CullMode: { NONE: 0 },
+    BlendFactor: { ZERO: 0, ONE: 1, SRC_ALPHA: 2, ONE_MINUS_SRC_ALPHA: 3, SRC_COLOR: 4, ONE_MINUS_SRC_COLOR: 5 },
+};
 // 裝飾器同時支援 @x 與 @x(...) 兩種寫法，型別放寬為 any（mock 僅供型別檢查）
 export const _decorator: {
     ccclass: any;
@@ -287,6 +290,13 @@ export class Graphics {
     declare fillColor: Color;
     declare strokeColor: Color;
     declare lineWidth: number;
+    declare lineCap: number;
+    declare lineJoin: number;
+    static LineCap = { BUTT: 0, ROUND: 1, SQUARE: 2 };
+    static LineJoin = { BEVEL: 0, ROUND: 1, MITER: 2 };
+    getMaterialInstance(_index: number): { overridePipelineStates(_s: Record<string, unknown>): void } | null { return null; }
+    arc(_cx: number, _cy: number, _r: number, _a0: number, _a1: number, _ccw?: boolean): void { /* mock */ }
+    quadraticCurveTo(_cx: number, _cy: number, _x: number, _y: number): void { /* mock */ }
     clear(): void { /* mock */ }
     fill(): void { /* mock */ }
     stroke(): void { /* mock */ }
@@ -411,6 +421,7 @@ export const view = {
     getScaleX: (): number => 1,
     setResolutionPolicy: (_policy: number): void => undefined,
     on: (_event: string, _cb: () => void): void => undefined,
+    off: (_event: string, _cb: () => void): void => undefined,
 };
 
 /** Spine 組件最小型別替身（只供 SpineGeneralOverlay 型別檢查；測試以執行期 stub 替換實作）。 */

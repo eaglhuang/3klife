@@ -19,6 +19,10 @@ export interface AIGeneralTemplate {
     Profile_ID: AIProfileId;
     Exclusive_Tactics: string[];
     Exclusive_Troop_Names: string[];
+    /**
+     * 自訂難度倍率。目前無消費者：只在本檔做正數驗證，戰鬥與 AI 決策都不讀它（PROG-2-9803 以 grep 確認）。
+     * 要讓它生效前需先另開卡並問總PM（會等於新增一個全域難度機制）。
+     */
     Custom_Difficulty_Mod: number;
     Dialogue: { Appear?: string; Duel_Accept?: string; Duel_Refuse?: string; Defeat?: string };
 }

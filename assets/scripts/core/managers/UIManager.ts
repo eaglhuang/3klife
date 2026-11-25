@@ -257,6 +257,11 @@ export class UIManager {
         return this.closeCurrentUI();
     }
 
+    /** 彈窗遮罩是否正顯示中：提示條據此判斷要不要讓位（PROG-2-9994） */
+    public hasBackdropShown(): boolean {
+        return !!this._uiBackdropNode?.isValid && this._uiBackdropNode.active;
+    }
+
     /** 查詢指定 UI 是否目前處於開啟狀態 */
     public isOpen(uiId: UIID): boolean {
         return this.registry.get(uiId)?.isOpen ?? false;

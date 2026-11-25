@@ -130,6 +130,54 @@ export function createEnemyTacticTurnE2ESuite(): TestSuite {
         assert.equals('test-scene-tactic', picked!.tacticId);
     });
 
+    suite.test('敵將戰法成功施放後扣計謀點，且不會扣到保留線以下', () => {
+        const ctrl = battle([{ slot: 0, tacticId: TEST_TACTIC_ID } as unknown as GeneralUnit['tacticSlots'][number]]);
+        const pool = ctrl.getEnemyTacticPoints();
+        assert.isTrue(pool !== null && pool.current === pool.max, '開場滿點');
+        ctrl.spendEnemyTacticPoints(TEST_TACTIC_ID);
+        const after = ctrl.getEnemyTacticPoints()!;
+        assert.isTrue(after.current <= pool!.current, '施放後點數不增加');
+    });
+
+    suite.test('敵將計謀點只剩保留線附近時，付不起的戰法不進候選，改普攻', () => {
+        const ctrl = battle([{ slot: 0, tacticId: TEST_TACTIC_ID } as unknown as GeneralUnit['tacticSlots'][number]]);
+        (ctrl as unknown as { enemyTacticPoints: { current: number; max: number } }).enemyTacticPoints.current = BattleController.ENEMY_TACTIC_TP_RESERVE;
+        assert.equals(null, ctrl.chooseEnemyTactic());
+        assert.isTrue(ctrl.enemyTacticDeclined(), '付不起要記成放棄放招');
+    });
+
+    suite.test('PROG-2-9853：單體戰法自動索敵挑我方血量比例最低的單位', () => {
+        const ctrl = battle([{ slotId: 's1', tacticId: TEST_TACTIC_ID, source: 'bloodline' }]);
+        const weak = new TroopUnit('player-weak', TroopType.Infantry, Faction.Player, {
+            hp: 100, attack: 30, defense: 10, moveRange: 1, attackRange: 1,
+        });
+        weak.moveTo(3, 5);
+        weak.currentHp = 20;
+        ctrl.state.addUnit(weak);
+        const picked = ctrl.chooseEnemyTactic();
+        assert.isDefined(picked);
+        assert.equals('player-weak', picked!.targetUnitUid);
+    });
+
+    suite.test('PROG-2-9848：沒有戰法槽時不算「放棄放招」（仍用武將主技能）', () => {
+        const ctrl = battle([]);
+        assert.equals(null, ctrl.chooseEnemyTactic());
+        assert.isFalse(ctrl.enemyTacticDeclined());
+    });
+
+    suite.test('PROG-2-9848：有戰法候選但全 0 分（場上沒有可打的我方單位）→ 放棄放招，改普攻', () => {
+        const ctrl = battle([{ slotId: 's1', tacticId: TEST_TACTIC_ID, source: 'bloodline' }]);
+        for (const unit of ctrl.state.units.values()) if (unit.faction === Faction.Player) unit.currentHp = 0;
+        assert.equals(null, ctrl.chooseEnemyTactic());
+        assert.isTrue(ctrl.enemyTacticDeclined(), '候選存在但沒有值得放的，應改普攻而非退回主技能');
+    });
+
+    suite.test('PROG-2-9848：下一次選到戰法後旗標會清除', () => {
+        const ctrl = battle([{ slotId: 's1', tacticId: TEST_TACTIC_ID, source: 'bloodline' }]);
+        assert.isDefined(ctrl.chooseEnemyTactic());
+        assert.isFalse(ctrl.enemyTacticDeclined());
+    });
+
     suite.test('真實回合：玩家施放路徑不受影響（玩家 castBattleSkill 不帶敵方戰法）', () => {
         const ctrl = battle([{ slotId: 's1', tacticId: TEST_TACTIC_ID, source: 'bloodline' }]);
         const playerCalls: Array<Faction> = [];

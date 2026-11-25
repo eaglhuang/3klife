@@ -16,13 +16,12 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
  */
 import { _decorator, Button, Color, Label, Node, Sprite, SpriteFrame } from 'cc';
 import { services } from '../../core/managers/ServiceLoader';
+import { TroopTypeBadge } from '../shared/TroopTypeBadge';
 import { UIPreviewBuilder } from '../core/UIPreviewBuilder';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { TallyCardData } from './TigerTallyComposite';
 
 const { ccclass } = _decorator;
-const UNITINFO_TYPE_ICON_FALLBACK_PATH = 'sprites/battle/battle_unit_type_underlay';
-const TROOP_TYPE_SUITE_GLYPH_PREFIX = 'sprites/battle/battle_unit_type_glyph_';
 const WHITE = new Color(255, 255, 255, 255);
 
 @ccclass('UnitInfoPanel')
@@ -134,7 +133,7 @@ export class UnitInfoPanel extends UIPreviewBuilder {
         if (this._spdRow)    this._spdRow.string     = `速度：${data.spd}`;
         if (this._costRow)   this._costRow.string    = `費用：${data.cost}`;
         if (this._descText)  this._descText.string   = this._buildDetailText(data);
-        void this._applyTypeIcon(data);
+        this._applyTypeIcon(data);
 
         // 特性標籤：每個 trait 建立一個 Label 子節點
         this._fillTraitTags(data);
@@ -199,57 +198,9 @@ export class UnitInfoPanel extends UIPreviewBuilder {
         return blocks.join('\n');
     }
 
-    private async _applyTypeIcon(data: TallyCardData): Promise<void> {
+    private _applyTypeIcon(data: TallyCardData): void {
         if (!this._typeIcon) return;
-
-        const spriteFrame = await this._loadSpriteFrameWithFallback(
-            this._buildTypeIconCandidates(data),
-            UNITINFO_TYPE_ICON_FALLBACK_PATH,
-        );
-
-        if (!spriteFrame) {
-            this._typeIcon.node.active = false;
-            return;
-        }
-
-        this._typeIcon.spriteFrame = spriteFrame;
-        this._typeIcon.color = WHITE;
-        this._typeIcon.node.active = true;
-    }
-
-    private _buildTypeIconCandidates(data: TallyCardData): string[] {
-        const normalizedType = this._normalizeKey(data.unitType);
-        return this._uniquePaths([
-            data.typeIconResource,
-            normalizedType ? `sprites/battle/battle_unit_type_icon_${normalizedType}` : null,
-            normalizedType ? `${TROOP_TYPE_SUITE_GLYPH_PREFIX}${normalizedType}` : null,
-        ]);
-    }
-
-    private async _loadSpriteFrameWithFallback(
-        preferredPaths: string[],
-        fallbackPath: string,
-    ): Promise<SpriteFrame | null> {
-        for (const path of preferredPaths) {
-            const spriteFrame = await services().resource.loadSpriteFrame(path).catch(() => null);
-            if (spriteFrame) {
-                return spriteFrame;
-            }
-        }
-
-        return services().resource.loadSpriteFrame(fallbackPath).catch(() => null);
-    }
-
-    private _uniquePaths(paths: Array<string | null | undefined>): string[] {
-        const seen = new Set<string>();
-        const result: string[] = [];
-        for (const path of paths) {
-            const normalized = path?.trim();
-            if (!normalized || seen.has(normalized)) continue;
-            seen.add(normalized);
-            result.push(normalized);
-        }
-        return result;
+        TroopTypeBadge.mount(this._typeIcon.node).setType(data.unitType);
     }
 
     private _normalizeKey(value: string): string {

@@ -39,7 +39,7 @@ D_{\text{est}}, & \text{其他常規狀態}
 $$S_{\text{heal}} = \begin{cases} 
 0, & \text{若 } V_{\text{effect}} \le 0 \\
 V_{\text{effect}} + 1000, & \text{若 } \text{LowestHpRate}_{\text{ally}} \le 0.35 \text{ (危急狀態)} \\
-\lfloor V_{\text{effect}} \times 0.5 \rfloor, & \text{若 } \text{LowestHpRate}_{\text{ally}} > 0.35 \text{ (平安狀態降權)}
+\lfloor V_{\text{effect}} \times 0.5 \rfloor, & \text{若 } \text{LowestHpRate}_{\text{ally}} > 0.7 \text{ (健康狀態降權)} \ V_{\text{effect}}, & \text{若 } 0.35 < \text{LowestHpRate}_{\text{ally}} \le 0.7 \text{ (中間區間維持原值)}
 \end{cases}$$
 
 ### 2.3 地格場景類（`tile-scene`）
@@ -74,7 +74,7 @@ $$S_{\text{scene}} = \begin{cases}
 | **Step 3** | 天候硬斷 | 驗證暴雨下火攻等天候不相容戰法得分為 0，不得入選。 |
 | **Step 4** | 斬殺優先 | 敵方有單位進入斬殺線時，單體傷害戰法獲得 $+1000$ 斬殺加權。 |
 | **Step 5** | 急救優先 | 我方單位瀕危（$\le 35\%$）時，治療與護盾戰法獲得 $+1000$ 急救加權。 |
-| **Step 6** | 平安節制 | 我方血線健康時，治療戰法得分折半（$0.5\times$），不浪費 TP。 |
+| **Step 6** | 平安節制 | 我方血線健康（>70%）時，治療戰法得分折半；35%~70% 維持原值（$0.5\times$），不浪費 TP。 |
 | **Step 7** | 決策回傳 | 準確回傳最優 `tacticId`，並能與 `BattleController` 執行端無縫接合。 |
 
 ---

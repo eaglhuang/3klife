@@ -50,10 +50,13 @@ import type { HallStageCast } from '../../core/systems/HallStageDirector';
 import { UIID, LayerType } from '../../core/config/UIConfig';
 import type { GeneralConfig, GeneralDetailDefaultTab } from '../../core/models/GeneralUnit';
 import { services } from '../../core/managers/ServiceLoader';
+import { FriendshipService } from '../../core/services/FriendshipService';
 import type { IUIManagedController } from '../../shared/interfaces/IUIInterfaces';
 import { SceneName } from '../../core/config/Constants';
-import { IBattleEntryParams, DEFAULT_BATTLE_ENTRY_PARAMS, EncounterConfig, isTutorialBattle } from '../../shared/BattleEntryParams';
-import { normalizeWeather } from '../../shared/CommonEnums';
+import { IBattleEntryParams, DEFAULT_BATTLE_ENTRY_PARAMS, EncounterConfig, firstBattleOpensLoadout, isTutorialBattle } from '../../shared/BattleEntryParams';
+import { Weather } from '../../shared/CommonEnums';
+import { createSeededRng, rollBattleWeather, seasonWeatherSeed, validateBattleWeatherSeasonTable, type BattleWeatherSeasonTable } from '../../core/systems/BattleWeatherRoll';
+import { weatherPreBattleLine } from '../../core/systems/WeatherEffectText';
 import { BattleTactic } from '../../core/config/Constants';
 import { GeneralListComposite } from '../components/GeneralListComposite';
 import { GeneralDetailComposite } from '../components/GeneralDetailComposite';
@@ -116,6 +119,14 @@ import { FAST_FORWARD_MAX_SEASONS, FAST_FORWARD_REASON_TEXT, fastForwardSeasons 
 import { BREEDING_MIN_AGE } from '../../core/systems/BreedingSystem';
 import { RECRUIT_ROWS_PER_PAGE, RecruitHallController } from '../core/RecruitHallController';
 import { loadGeneralAvatar, loadGeneralPortrait } from '../core/GeneralAvatarLoader';
+import { bindAvatarTalk, setAvatarTalkProvider, showAvatarBubbleText } from '../core/AvatarTalkBubble';
+import { HallMissionReportStack } from '../components/HallMissionReportStack';
+import {
+    buildPinnedMissions, fallbackLineKey, missionContextKey, resolveCardLines, MISSION_LINE_TIMEOUT_MS,
+    type HallMissionReportCard, type HallMissionReportCardWithLine,
+} from '../../core/mission/MissionReactionCards';
+import { chainTagText } from '../../core/mission/MissionChain';
+import { applyGeneralNameTags, loadGeneralNameTagStyle } from '../components/GeneralNameTag';
 import { setPlaceholderBackdropVisible } from '../core/PlaceholderBackdrop';
 import { RELATION_GRAPH_SLOTS, RelationGraphController } from '../core/RelationGraphController';
 import { RelationGraphRenderer } from '../core/RelationGraphRenderer';
@@ -163,6 +174,8 @@ import { parseQaAcademyParams } from '../core/AcademyQaFastForward';
 import { fastForwardFamily, parseQaFamilyParams } from '../core/FamilyQaFastForward';
 import { AcademyApiClient } from '../core/AcademyApi';
 import { ancestralInheritToastText, newAncestralInheritViews } from '../core/AcademyInheritView';
+import { buildAcademyEmptyGuardViewState, academyEnrollCandidateAges } from '../core/AcademyEmptyGuardView';
+import { academyEnrollRules } from '../../core/systems/nurture/AcademyEnrollRules';
 import { ClanShrineController } from '../core/ClanShrineController';
 import { OpeningOfferPopupController } from '../core/OpeningOfferPopupController';
 import { SeasonEventPopupController } from '../core/SeasonEventPopupController';
@@ -181,6 +194,10 @@ import { BLOODLINE_VIGNETTE_CELL_COUNT, bloodlineVignetteOpenLabel, bloodlineVig
 import { installOfficerTierTable, type OfficerTierRow } from '../../core/systems/OfficerTierTable';
 import { shouldShowMentorUnlockPrompt } from '../../core/systems/MentorGuidance';
 import { buildPromotionHallGuide, buildRankUnlockPopupView, installOfficerFeatureUnlocks, lobbyActionLock, lockedActionToast, nextRankPreviewLine, PromotionHallGuide } from '../../core/systems/OfficerFeatureUnlocks';
+import { LobbyGuideQueue, type LobbyGuideItem } from '../core/LobbyGuideQueue';
+import { MATCHMAKER_FIRST_VISIT_SPEECH, MATCHMAKER_SPRING_VISIT_SPEECH } from '../../core/systems/MatchmakerGuideManager';
+import { MatchmakerDialogPresenter } from '../family/MatchmakerDialogPresenter';
+import type { MatchmakerOfferNotice } from '../../core/managers/GameSession';
 import { installSageProgressTable } from '../../core/systems/SageFavor';
 import { installSandtableTerritories } from '../../core/systems/SandtableTerritories';
 import { OFFICER_PROMOTION_FREEZE_TIMING, officerPromotionFreezeTitles, officerPromotionNoticeOf, officerPromotionRewardTotal } from '../../core/systems/HallMissionSettlement';
@@ -207,6 +224,9 @@ import { findSupportCard } from '../../shared/support/SupportCardConfig';
 import { buildRewardPools, legacyPoolIdsOf, type RosterMember } from '../../shared/reward/RewardRoster';
 import { GachaWalletPort } from '../../core/api/localserver/GachaWalletPort';
 import { isApiFail } from '../../shared/api/ApiProtocol';
+import type { ItemListResult } from '../../shared/api/ApiCommands';
+import type { MentorCard } from '../../core/models/MentorCard';
+import { mergeMentorCards, supportRowsAsMentorCards } from '../../core/systems/SupportCardMentorBridge';
 import { ADMISSION_TOKEN_ID } from '../../shared/item/ItemConfig';
 import { gachaCostOf, parseGachaMainPools, pickPullCurrency, type GachaApi, type GachaCurrencyId, type GachaMainPoolConfig } from '../../core/gacha/GachaApi';
 import { gachaApiView, gachaAutoSizeNodes, gachaHeroIdOf, gachaWalletLabelTexts } from '../core/GachaApiTexts';
@@ -242,7 +262,8 @@ import { buildLobbyScout, ScoutPanelController } from '../core/ScoutPanelControl
 import type { TacticCounterTagTable } from '../../core/systems/LoadoutCheck';
 import { spiritSlotViewOf } from '../../core/systems/SpiritSlotState';
 import { DestinyShopController } from '../core/DestinyShopController';
-import { SortieSetupController, type SortieRole } from '../core/SortieSetupController';
+import { SortieSetupController, type SortieDeckCardInfo, type SortieRole } from '../core/SortieSetupController';
+import { parsePreBattleWeights, type PreBattleWeights } from '../../core/systems/PreBattleRecommend';
 import type { PowDecision } from '../../core/systems/PrisonerOfWar';
 import { OracleCouple, SageOracleController } from '../core/SageOracleController';
 import { buildRetireReviewTexts, RETIRE_REVIEW_OPEN_EVENT, withRetireReviewFallback, type RetireReviewOpenPayload } from '../core/RetireReviewController';
@@ -290,6 +311,7 @@ import { bindGachaActions, GACHA_ACTION_NODES } from '../core/GachaActionBinding
 import { formatGeneralDisplayName } from '../../core/models/GeneralTitle';
 import { buildMissionGeneralOptions } from '../../core/systems/MissionGeneralOptions';
 import { clanPerkVisible, treeGenerationVisible } from '../../core/systems/FamilyMilestone';
+import { isDevToolEnabled } from '../../core/dev/DevToolGate';
 import { attachCurrencyCheatPanel, detachCurrencyCheatPanel, detachRosterClearButton, ensureGlobalDevOverlay, refreshCurrencyDisplay, showGachaInfoModal } from '../dev/GachaDevOverlay';
 import { DailyReportController } from '../core/DailyReportController';
 import { dailySubsidyText, economySubsidyBannerText } from '../core/DailySubsidyNotice';
@@ -301,6 +323,8 @@ import { SUITABILITY_BADGE_LABEL, suitabilityBadgeText } from '../../core/system
 import { DS3_BLOODLINE_TREE_NODE_NAME, ensureDs3BloodlineTree } from '../components/character-ds3/Ds3BloodlineTree';
 import { BLOODLINE_TREE_OPEN_LINE } from '../../core/systems/BloodlineTreeSlots';
 import { delegateSchedule } from '../../core/systems/AutoNurture';
+import { AnnualRankingManager } from '../../core/systems/annual_ranking/AnnualRankingManager';
+import type { AnnualRankingConfig } from '../../core/systems/annual_ranking/AnnualRankingTypes';
 /** 限定池 id（gacha-config／limited-pool-schedule 對應，PROG-2-9024） */
 const LIMITED_POOL_ID = 'limited-pool';
 
@@ -577,6 +601,9 @@ export class LobbyScene extends Component {
     private _hallBoard: HallBoardPanelController | null = null;
     /** 大廳輪替走動的當班名單狀態（60 秒換一批）與聊天台詞庫（Issue #2135） */
     private _hallWalkerState: WalkerPlanState = INITIAL_WALKER_STATE;
+    /** 大廳通用導流隊列（PROG-2-9613）：晉升、媒人、年終典禮通用引導隊列 */
+    private readonly _guideQueue: LobbyGuideQueue = new LobbyGuideQueue();
+    private _activeMatchmakerPresenter: MatchmakerDialogPresenter | null = null;
     /** 晉升解鎖大廳導流（PROG-2-9610）：晉升完成後若有新機能解鎖，由大廳武將頂金色驚嘆號引導並提供捷徑 */
     private _pendingPromotionGuide: PromotionHallGuide | null = null;
     /** 晉升導流「！」掛在哪位武將頭上；只有點這位才出導流泡泡，標記與泡泡必須同一人 */
@@ -640,6 +667,8 @@ export class LobbyScene extends Component {
     private _scoutPanelHost: UIScreenPreviewHost | null = null;
     private readonly _scoutPanel = new ScoutPanelController();
     private _tacticCounterTags: TacticCounterTagTable | null = null;
+    /** 季節天氣機率表（PROG-2-9735，data/battle-weather-season）；載入前或載入失敗時抽天氣一律退回晴天 */
+    private _weatherSeasonTable: BattleWeatherSeasonTable | null = null;
     private _destinyShopHost: UIScreenPreviewHost | null = null;
     private _destinyShop: DestinyShopController | null = null;
     private _sortieHost: UIScreenPreviewHost | null = null;
@@ -940,6 +969,7 @@ export class LobbyScene extends Component {
             if (openingFirst) this._keepOpeningOnTop();
         }
         if (!this.node?.isValid) return;
+        await this._ensureAnnualRankingConfig();
         this._registerUIControllers();
         await services().ui.open(UIID.LobbyMain);
         if (!this.node?.isValid) return; // PROG-2-9196: scene already destroyed (switched away), stop quietly
@@ -1238,7 +1268,30 @@ export class LobbyScene extends Component {
                 const hallGuide = buildPromotionHallGuide(payload.tiers, (k, ...args) => services().i18n.t(k, ...args));
                 this._pendingPromotionGuide = hallGuide?.primaryFeature.lobbyAction ? hallGuide : null;
                 this._promotionGuideGeneralId = null;
-                if (this._pendingPromotionGuide) {
+                if (this._pendingPromotionGuide && hallGuide) {
+                    const actionId = hallGuide.primaryFeature.lobbyAction as LobbyActionId;
+                    this._guideQueue.enqueue({
+                        id: 'officer-promotion',
+                        priority: 'officer-promotion',
+                        markStyle: PROMOTION_MARK_STYLE,
+                        guideSpeech: hallGuide.guideSpeech,
+                        acceptLabel: hallGuide.acceptLabel,
+                        declineLabel: hallGuide.declineLabel,
+                        actionId,
+                        onAccept: () => {
+                            this._pendingPromotionGuide = null;
+                            this._promotionGuideGeneralId = null;
+                            this._guideQueue.dequeue('officer-promotion');
+                            this._lobbyHall?.refreshStage(Date.now() / 1000);
+                            this._runCityHubAction(actionId);
+                        },
+                        onDecline: () => {
+                            this._pendingPromotionGuide = null;
+                            this._promotionGuideGeneralId = null;
+                            this._guideQueue.dequeue('officer-promotion');
+                            this._lobbyHall?.refreshStage(Date.now() / 1000);
+                        },
+                    });
                     this._lobbyHall?.refreshStage(Date.now() / 1000);
                 }
                 // 升官動畫（官職系統 E-6，PROG-2-1859）：每升一階播一次大字定格
@@ -1484,12 +1537,16 @@ export class LobbyScene extends Component {
         void services().loadQuickResolveConfig();
     }
 
-    /** 出戰：新手教學戰或沒有關卡資料時照舊直接進戰場，其餘先彈出模式選擇 */
+    /** 出戰：新手首戰先開戰前編成視窗（PROG-2-9912）；沒有關卡資料時照舊直接進戰場，其餘先彈出模式選擇 */
     private _chooseSortieMode(): void {
         const encounter = this._currentEncounter();
         // 本季關卡都打完、下一關要等下一季（PROG-2-9421）：提示玩家，這次出戰是重打已通關的關卡
         const lockedHint = this._seasonLockedNextHint();
         if (lockedHint) services().event.emit('SHOW_TOAST', { message: `${lockedHint}；本季可重打已通關的關卡`, duration: 3 });
+        if (firstBattleOpensLoadout(services().session.clearedStageIds, !!encounter)) {
+            void this._openFirstBattleLoadout();
+            return;
+        }
         const popup = this._quickSortiePopup;
         if (!encounter || !popup?.host || isTutorialBattle(services().session.clearedStageIds)) {
             void this._enterBattle();
@@ -1642,7 +1699,7 @@ export class LobbyScene extends Component {
             toast: (message) => { services().event.emit('SHOW_TOAST', { message, duration: 2.5 }); },
             roster: () => session.roster,
             nurtureBlockReasons: (childId) => services().nurture.checkStart(childId).reasons,
-            loadMentorCards: async () => attachSupportToCards((await services().legacy?.getMentorCards()) ?? [], await this._loadSupportCatalog()),
+            loadMentorCards: async () => await this._loadAllMentorCards(),
             lockedMentorIds: () => services().nurture.lockedMentorIds(),
             // 入學令改走物品庫存（PROG-2-9203）：家庭倉庫的 ITEM_ADMISSION_TOKEN；NurtureService.admission 只留給舊培育入口
             tokensLeft: () => session.itemCount(ADMISSION_TOKEN_ID),
@@ -1696,10 +1753,11 @@ export class LobbyScene extends Component {
     private _startQaAcademy(): void {
         const flow = this._academyFlow;
         const qa = parseQaAcademyParams((globalThis as { window?: { location?: { search?: string } } }).window?.location?.search);
-        if (!flow || !qa) return;
+        // 測試工具開啟時也綁定（時間分頁的學府快轉），但不自動啟動快進；PROG-2-9858
+        if (!flow || (!qa && !isDevToolEnabled())) return;
         // 結果掛在 window.__qaAcademy，供 QA 腳本與人工在主控台查看（done 帶快進結果，error 帶原因）
         const publish = (value: unknown): void => { (globalThis as { __qaAcademy?: unknown }).__qaAcademy = value; };
-        services().bindDebugHost({
+        services().extendDebugHost({
             fastForwardAcademy: async (turns) => {
                 publish({ state: 'running', turns });
                 try {
@@ -1712,6 +1770,7 @@ export class LobbyScene extends Component {
                 }
             },
         });
+        if (!qa) return;
         // 命令只回「已啟動」（串行佇列不能等快進跑完），失敗時記警告
         void services().api.cmd('debug.fastForward', { target: 'academy', turns: qa.turns }).then((res) => {
             if (isApiFail(res)) {
@@ -1744,6 +1803,36 @@ export class LobbyScene extends Component {
     private _openAcademyFlow(): void {
         const flow = this._academyFlow;
         if (!flow?.enrollHost) { this._showNotOpenYet(); return; }
+
+        const session = services().session;
+        const candidateAges = academyEnrollCandidateAges({
+            roster: session.roster,
+            familyMembers: session.familyHost.service.members(),
+            birthChildIds: session.breedingBirthRecords().map((r) => r.child.UID),
+        });
+        const minEnrollAge = academyEnrollRules().minEnrollAge;
+        const guard = buildAcademyEmptyGuardViewState({ candidateAges, minEnrollAge });
+
+        if (!guard.canOpenEnrollView) {
+            let message = guard.messageKey ? services().i18n.t(guard.messageKey, guard.messageParams?.minAge ?? minEnrollAge) : '學府尚未招募及冠門生';
+            if (guard.messageKey === 'ui.academy.empty_guard.too_young_desc') {
+                message = services().i18n.t(guard.messageKey, guard.messageParams?.currentAge ?? 0, guard.messageParams?.minAge ?? minEnrollAge, guard.messageParams?.yearsRemaining ?? 1);
+            }
+            services().event.emit('SHOW_TOAST', { message, duration: 3.5 });
+
+            if (guard.actionRedirectRoute === 'matchmaker') {
+                const offer = session.matchmakerOffer();
+                if (offer.open) {
+                    this._enqueueMatchmakerGuide({
+                        promptType: 'first-visit',
+                        candidates: offer.candidates,
+                        remaining: offer.remaining,
+                    });
+                }
+            }
+            return;
+        }
+
         void flow.openFromMenu();
     }
 
@@ -1797,10 +1886,26 @@ export class LobbyScene extends Component {
         await this._mentorBorrow.mount();
     }
 
+    /**
+     * 可用的教官卡全清單（培育、學府、教官卡清單共用，PROG-2-9871）：
+     * 舊存檔的教官卡（退役、舊轉蛋）＋教官池抽到、存在物品庫存的學府支援卡（SUP_*）。庫存是唯一真相，每次重讀重算、不寫回存檔。
+     */
+    private async _loadAllMentorCards(): Promise<MentorCard[]> {
+        const legacy = attachSupportToCards((await services().legacy?.getMentorCards()) ?? [], await this._loadSupportCatalog());
+        try {
+            const res = await services().api.query<ItemListResult>('item.list', {});
+            if (isApiFail(res)) return legacy;
+            return mergeMentorCards(legacy, supportRowsAsMentorCards(services().supportCardsConfig(), res.result.rows));
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 讀庫存支援卡失敗，只列舊教官卡', error);
+            return legacy;
+        }
+    }
+
     private async _mountMentorHoldings(): Promise<void> {
         this._mentorHoldings = new MentorHoldingsController<UIScreenPreviewHost>({
             mountHost: (bindings) => this._mountPreviewScreenHost('MentorHoldingsHost', 'mentor-borrow-screen', bindings),
-            loadCards: async () => attachSupportToCards((await services().legacy?.getMentorCards()) ?? [], await this._loadSupportCatalog()),
+            loadCards: async () => await this._loadAllMentorCards(),
             breedText,
             openDetail: (card, title) => this.openMentorCardDetail(card, title),
             bringToFront: (host) => this._bringNodeToFront(host.node),
@@ -1934,6 +2039,7 @@ export class LobbyScene extends Component {
         this._sessionEventUnsubscribers.push(
             event.on(GAME_SESSION_EVENTS.LeadGeneralChanged, refresh),
             event.on(GAME_SESSION_EVENTS.OfficerPromoted, refresh),
+            event.on(GAME_SESSION_EVENTS.OfficerStateChanged, refresh),
             event.on(GAME_SESSION_EVENTS.BattleSettled, refresh),
             event.on(GAME_SESSION_EVENTS.InventoryChanged, refresh),
         );
@@ -2006,6 +2112,7 @@ export class LobbyScene extends Component {
             food: session.military.food,
             cityTroops: session.military.cityTroops,
             cityTroopsCap: session.military.cityTroopsCap,
+            woundedCamp: session.military.woundedCamp,
             totalSeasonsElapsed: session.gameTime.totalSeasonsElapsed,
             fame: session.fame,
             population: session.cityPopulation,
@@ -2041,6 +2148,7 @@ export class LobbyScene extends Component {
             const sprite = binder.getSprite('lordAvatar');
             if (holder && sprite) {
                 if (!holder.getComponent(Mask)) holder.addComponent(Mask).type = Mask.Type.GRAPHICS_ELLIPSE;
+                bindAvatarTalk(holder, leadId);
                 void loadGeneralAvatar(leadId).then((frame) => {
                     if (frame && leadId === this._cityHubAvatarId && sprite.isValid) {
                         sprite.spriteFrame = frame;
@@ -2092,7 +2200,7 @@ export class LobbyScene extends Component {
             unveiling: services().unveiling,
             nurture: services().nurture,
             familyStudy: services().nurture,
-            loadMentorCards: async () => attachSupportToCards((await services().legacy?.getMentorCards()) ?? [], await this._loadSupportCatalog()),
+            loadMentorCards: async () => await this._loadAllMentorCards(),
             text: breedText(),
             persist: async () => {
                 if (services().session.hasSaveService) {
@@ -3183,6 +3291,7 @@ export class LobbyScene extends Component {
             this._refreshExtremeTask();
             return;
         }
+        await this._ensureWeatherSeasonTable();
         const params = this._buildBattleEntryParams(undefined, encounter);
         services().scene.switchScene(SceneName.Battle, { ...params, tutorial: false, teachingSpirit: null });
     }
@@ -3246,6 +3355,7 @@ export class LobbyScene extends Component {
             // 人口、民心、黃金基礎值、人口紅利都由 GameSession 快照給出（PROG-2-9138）
             snapshot: () => services().session.governorSnapshot(),
             territory: () => this._governorTerritoryInfo(),
+            t: (key: string) => services().i18n.t(key),
         });
         this._govHallHost = await this._mountPreviewScreenHost('GovernorHallHost', 'governor-hall-screen', [
             { buttonId: 'btnClose', handler: () => { this._closeGovernorHall(); } },
@@ -4116,10 +4226,13 @@ export class LobbyScene extends Component {
         return wall === 'wall-left' ? 'Military' : 'Domestic';
     }
 
-    /** 大廳牆面第 rowIndex 張任務卡：開該牆並直接開出同一個任務的詳情（PROG-2-9123） */
+    /**
+     * 大廳牆面第 rowIndex 張任務卡：直接開出同一個任務的詳情（PROG-2-9123、PROG-2-9965）。
+     * 不再先開全螢幕任務牆面板：牆上已列出任務，多一層只是重複；要看總覽按「展開軍務牆／內政牆」。
+     */
     private _onClickLobbyWallRow(wall: LobbyHallWallId, rowIndex: number): void {
         if (!this._hallBoard || !this._hallBoardHost) { this._showNotOpenYet(); return; }
-        this._openHallBoard(this._hallBoardOfWall(wall));
+        this._hallBoard.switchBoard(this._hallBoardOfWall(wall));
         // 牆上只列未接取任務，列號和任務板的列號不同：用牆上記下的任務代號開詳情
         const missionId = this._lobbyWallOpenIds[wall]?.[rowIndex];
         if (missionId) this._openHallDetailById(missionId); else this._onClickHallDetail(rowIndex);
@@ -4166,6 +4279,14 @@ export class LobbyScene extends Component {
         return services().session.gameTime.totalSeasonsElapsed;
     }
 
+    /** 派出當下：武將在牆上置頂的頭像旁說一句（台詞系統「mission_dispatch」，不通用本機預設；PROG-2-9966） */
+    private async _showDispatchBubble(missionId: string, generalId: string | undefined): Promise<void> {
+        if (!generalId) return;
+        const text = await this._missionLineText('dispatch', generalId, undefined, this._hallSeason() + missionId.length);
+        const anchor = this._lobbyHall?.activeChipOf(missionId);
+        if (anchor) showAvatarBubbleText(anchor, text);
+    }
+
     /**
      * 派出任務（執行／委任／任務牆接取共用）：成功時顯示明確的派出提示，失敗時顯示原因並回傳 false。
      * generalId 為 null 表示委任（系統依武將記憶選人）。
@@ -4201,6 +4322,8 @@ ${spent}`,
         });
         this._lobbyHall?.reactToDispatch((card?.difficulty ?? 'EASY') as Parameters<NonNullable<typeof this._lobbyHall>['reactToDispatch']>[0]);
         this._refreshLobbyHallTopbar();
+        this._refreshLobbyHallWalls();
+        void this._showDispatchBubble(missionId, v.generalIds[0]);
         return true;
     }
 
@@ -4221,6 +4344,7 @@ ${spent}`,
             reconGrainCost: data.balance.recon.grainCost,
             reconCap: data.balance.recon.cap,
             hiddenRevealIntel: data.balance.hiddenRevealIntel,
+            intelBands: data.balance.intelBands,
             selectedGeneralId,
         });
     }
@@ -4451,6 +4575,8 @@ ${spent}`,
         this._hallDialogue = createLobbyDialogueProvider(chatRaw, chatStore, {
             fetcher: createHttpChatBookFetcher(parseCloudDialogueConfig(chatRaw).endpoint),
         });
+        // 全遊戲頭像點擊說話共用同一個台詞接口（PROG-2-9885）
+        setAvatarTalkProvider(this._hallDialogue);
         const host = await this._mountPreviewScreenHost('LobbyHallHost', 'lobby-hall-screen');
         this._lobbyHallHost = host;
         // 大廳底欄與城池底欄同一套分類：點了展開城池子選單（轉蛋等入口都在裡面），不再各自直達單一功能
@@ -4479,6 +4605,8 @@ ${spent}`,
             // 牆上每張任務卡開對應任務、頁尾開整面牆（PROG-2-9123）
             onWallRow: (wall, rowIndex) => this._onClickLobbyWallRow(wall, rowIndex),
             onWallExpand: (wall) => this._openHallBoard(this._hallBoardOfWall(wall)),
+            // 牆下緣置頂的進行中任務：點晶片開該任務詳情（PROG-2-9966）
+            onWallActive: (missionId) => this._openHallDetailById(missionId),
             // Q 版武將人群（UI-2-0150）：只有毛遂自薦者與輪替的 2~3 位我方武將會在場（Issue #2135）
             stage: stageLayout && stageDecor
                 ? {
@@ -4545,9 +4673,16 @@ ${spent}`,
         });
         const taskMarks = new Set(plan.volunteerIds);
         const markStyleById = new Map<string, string>();
-        // PROG-2-9610：晉升導流待引導時，挑一位在場走動的武將頭頂掛大金色「！」；
+        // PROG-2-9610 / PROG-2-9613：大廳通用導流（晉升、媒人叩門等），挑一位在場走動的武將頭頂掛大金色「！」；
         // 已選的人還在場就沿用（輪替不換人，玩家看到的標記與點到的泡泡才是同一位）
-        if (this._pendingPromotionGuide && generals.length > 0) {
+        if (this._guideQueue.hasPending && generals.length > 0) {
+            const anchorId = this._guideQueue.bindAnchorGeneral(generals);
+            if (anchorId) {
+                this._promotionGuideGeneralId = anchorId;
+                taskMarks.add(anchorId);
+                markStyleById.set(anchorId, this._guideQueue.peek()?.markStyle ?? PROMOTION_MARK_STYLE);
+            }
+        } else if (this._pendingPromotionGuide && generals.length > 0) {
             const kept = generals.find(g => g.id === this._promotionGuideGeneralId);
             this._promotionGuideGeneralId = (kept ?? generals[0]).id;
             taskMarks.add(this._promotionGuideGeneralId);
@@ -4561,11 +4696,30 @@ ${spent}`,
      * 其餘是聊天，依友誼挑一句，連點不重複同一句。
      */
     private _onHallActorTap(generalId: string): HallActorTapView | null {
+        // 場景已銷毀（引擎會把欄位清成 null）就不處理；正常不會走到，是保留畫面殘留舊回呼的最後防線（PROG-2-9994）
+        if (!this.isValid) return null;
         const session = services().session;
         const profile = session.hallStageProfile(generalId);
         if (!profile) return null;
-        // 晉升解鎖導流（PROG-2-9610）：若有新解鎖功能，武將優先以口語泡泡提示並提供直達按鈕
-        // 只有頭頂掛著「！」的那位才出導流泡泡；其他人照常聊天（泡泡與標記不同人會讓玩家搞不清誰在說話）
+        // 大廳通用導流隊列（PROG-2-9613）：若有待引導項（晉升、媒人叩門等），掛標記者優先出導流泡泡
+        const activeGuide = this._guideQueue.peek();
+        if (activeGuide && generalId === (this._guideQueue.anchorGeneralId ?? this._promotionGuideGeneralId)) {
+            return {
+                name: profile.name,
+                text: activeGuide.guideSpeech,
+                volunteer: {
+                    acceptLabel: activeGuide.acceptLabel,
+                    declineLabel: activeGuide.declineLabel,
+                    onAccept: () => {
+                        activeGuide.onAccept?.();
+                    },
+                    onDecline: () => {
+                        activeGuide.onDecline?.();
+                    },
+                },
+            };
+        }
+        // 晉升解鎖導流（PROG-2-9610，相容備援）
         if (this._pendingPromotionGuide && generalId === this._promotionGuideGeneralId) {
             const guide = this._pendingPromotionGuide;
             const text = guide.guideSpeech;
@@ -4598,6 +4752,10 @@ ${spent}`,
         // 武將心智（PROG-2-9146）：有可說的記憶或心情就先說，引用玩家過去的決定；沒什麼特別想說才走一般閒聊
         const bark = session.hallMindBark(generalId, this._mindBarkTaps++);
         if (bark.text) return { name: profile.name, text: bark.text };
+        // 中台 v2 台詞：本機快取有符合目前心情與好感的句子就說；同時背景補句給下次（PROG-2-9964）
+        const v2 = services().dialogue.cachedLine(generalId, 'lobby-idle');
+        services().dialogue.prefetch(generalId, 'lobby-idle');
+        if (v2) return { name: profile.name, text: v2.text };
         const text = this._speakLobby(generalId, 'tap', {});
         return text === null ? null : { name: profile.name, text };
     }
@@ -4624,9 +4782,9 @@ ${spent}`,
         return line.text.replace(/\{(\w+)\}/g, (whole, name: string) => vars[name] ?? whole);
     }
 
-    /** 武將友誼值：友誼系統尚未建立，暫一律 0（只會說一開始就解鎖的台詞）；日後改接真正的友誼資料 */
-    private _hallFriendshipOf(_generalId: string): number {
-        return 0;
+    /** 武將友誼值（PROG-2-9601 PR3 接通真實第8框架友誼服務） */
+    private _hallFriendshipOf(generalId: string): number {
+        return FriendshipService.getInstance().get(generalId);
     }
 
     /**
@@ -4683,11 +4841,49 @@ ${spent}`,
             const open = rows.filter((row) => this._hallRowStatus(row.taskId).length === 0);
             const activeCount = rows.length - open.length;
             this._lobbyWallOpenIds[key === 'Military' ? 'wall-left' : 'wall-right'] = open.map((row) => row.taskId);
-            const wall = buildLobbyHallWallView(open, HALL_BOARD_MAX_ROWS);
+            const wall = buildLobbyHallWallView(open, HALL_BOARD_MAX_ROWS, (row) => this._chainTagOf(row.taskId));
             return { ...wall, countText: activeCount > 0 ? `未接取 ${open.length}・進行中 ${activeCount} 件` : `未接取 ${open.length}` };
         };
         this._lobbyHall.setWall('wall-left', view('Military'));
         this._lobbyHall.setWall('wall-right', view('Domestic'));
+        // 進行中的任務置頂在牆下緣：小頭像＋還有 N 季，最多 3 個、其餘「+N」（doc_spec_1178 §7.3(5)，PROG-2-9966）
+        const boardView = session.missionService?.getBoard();
+        const cards = boardView && boardView.ok ? boardView.value.missions : [];
+        const wallOf = this._wallOfTheme();
+        const season = this._hallSeason();
+        this._lobbyHall.setActiveMissions('wall-left', buildPinnedMissions(cards.filter((c) => wallOf(c.theme) === 'Military'), season));
+        this._lobbyHall.setActiveMissions('wall-right', buildPinnedMissions(cards.filter((c) => wallOf(c.theme) !== 'Military'), season));
+    }
+
+    /** 任務若是連鎖生出的，回「連續任務 2/3」，否則空字串（牆上列、詳情共用） */
+    private _chainTagOf(missionId: string): string {
+        const board = services().session.missionService?.getBoard();
+        const card = board && board.ok ? findCard(board.value, missionId) : undefined;
+        return card?.chain ? chainTagText(card.chain.depth, card.chain.total, (key, ...args) => services().i18n.t(key, ...args)) : '';
+    }
+
+    private readonly _hallReportStack = new HallMissionReportStack();
+
+    /** 任務回報／派出台詞：先問台詞系統（本機快取或中台，限時），不通就用本機預設（i18n），玩家看不出差別 */
+    private _missionLineText(kind: 'dispatch' | 'return', generalId: string, tier: HallMissionReportCard['tier'] | undefined, pick: number): Promise<string> {
+        const t = (key: string) => services().i18n.t(key);
+        const fallback = t(fallbackLineKey(kind, tier, pick));
+        return services().dialogue.missionLine(generalId, missionContextKey(kind, tier), MISSION_LINE_TIMEOUT_MS)
+            .then((line) => line ?? fallback)
+            .catch(() => fallback);
+    }
+
+    /** 把這一季（或快轉累積）的回報卡合成一疊顯示，看完或全部略過才回來 */
+    private async _showMissionReportStack(cards: readonly HallMissionReportCard[]): Promise<void> {
+        if (cards.length === 0 || !this.node?.isValid) return;
+        const fetcher = (card: HallMissionReportCard) => services().dialogue.missionLine(card.generalId, missionContextKey('return', card.tier), MISSION_LINE_TIMEOUT_MS);
+        const lines: HallMissionReportCardWithLine[] = await resolveCardLines(
+            cards, fetcher,
+            (card, index) => services().i18n.t(fallbackLineKey('return', card.tier, index + card.missionId.length)),
+        );
+        if (!this.node?.isValid) return;
+        const host = this.node.scene?.getComponentInChildren(Canvas)?.node ?? this.node;
+        await this._hallReportStack.show(host, lines);
     }
 
     /** 同步幕府大廳頂列的資源數、官職主將與年季晝夜 */
@@ -4754,6 +4950,8 @@ ${spent}`,
             this._generalGalleryHost,
             this._spiritCardDetailHost,
             this._spiritFamilyOverviewHost,
+            this._deckSelect?.host,
+            this._leadSelect?.host,
         ];
         const byId = new Map<string, UIScreenPreviewHost>();
         const candidates: OverlayCandidate[] = [];
@@ -4829,6 +5027,7 @@ ${spent}`,
             const sprite = binder.getSprite(portraitId);
             if (!holder || !sprite) return;
             if (!holder.getComponent(Mask)) holder.addComponent(Mask).type = Mask.Type.GRAPHICS_RECT;
+            bindAvatarTalk(holder, key.replace(/_portrait$/, '').replace(/_/g, '-'));
             // 換成另一位：新圖載完前不顯示上一位或版面預設的剪影（issue #2086：孫策甘寧同圖、張飛「?」）
             const slot = `${prefix}:${i}`;
             if (this._portraitSwap.begin(slot, key)) {
@@ -4872,6 +5071,7 @@ ${spent}`,
             const sprite = binder.getSprite(`${prefix}Avatar${i}`);
             if (!holder || !sprite) return;
             if (!holder.getComponent(Mask)) holder.addComponent(Mask).type = Mask.Type.GRAPHICS_ELLIPSE;
+            bindAvatarTalk(holder, id);
             void loadGeneralAvatar(id).then((frame) => {
                 if (frame && seq === this._avatarSeq.get(prefix) && sprite.isValid) {
                     sprite.spriteFrame = frame;
@@ -4965,9 +5165,74 @@ ${spent}`,
                 for (const uid of payload?.mercenaryDepartures ?? []) {
                     services().event.emit('SHOW_TOAST', { message: mercFarewellLine(mercName(uid)), duration: 3 });
                 }
+                if (payload?.matchmakerOfferNotice) {
+                    this._enqueueMatchmakerGuide(payload.matchmakerOfferNotice);
+                }
                 this._refreshMercenaryPanel();
             }),
         );
+    }
+
+    /** 結緣媒人導流排入大廳隊列（PROG-2-9613） */
+    private _enqueueMatchmakerGuide(notice: MatchmakerOfferNotice): void {
+        const isFirst = notice.promptType === 'first-visit';
+        const fallbackSpeech = isFirst ? MATCHMAKER_FIRST_VISIT_SPEECH : MATCHMAKER_SPRING_VISIT_SPEECH;
+        const key = isFirst ? 'MATCHMAKER_FIRST_VISIT_SPEECH' : 'MATCHMAKER_SPRING_VISIT_SPEECH';
+        const speech = services().i18n.t(key, fallbackSpeech);
+        this._guideQueue.enqueue({
+            id: 'matchmaker-guide',
+            priority: 'matchmaker',
+            markStyle: PROMOTION_MARK_STYLE,
+            guideSpeech: speech,
+            acceptLabel: services().i18n.t('MATCHMAKER_ACTION_ACCEPT', '立即相看'),
+            declineLabel: services().i18n.t('MATCHMAKER_ACTION_DECLINE', '稍後再議'),
+            actionId: 'family-matchmaker',
+            payload: notice,
+            onAccept: () => {
+                this._guideQueue.dequeue('matchmaker-guide');
+                this._lobbyHall?.refreshStage(Date.now() / 1000);
+                this._openMatchmakerDialog(notice);
+            },
+            onDecline: () => {
+                this._guideQueue.dequeue('matchmaker-guide');
+                this._lobbyHall?.refreshStage(Date.now() / 1000);
+            },
+        });
+        this._lobbyHall?.refreshStage(Date.now() / 1000);
+    }
+
+    private _openMatchmakerDialog(notice: MatchmakerOfferNotice): void {
+        const session = services().session;
+        const config = session.familyConfig;
+        const price = config?.matchmakerPrice ?? 100;
+        const silver = session.silverLedger.silverBalance();
+        const presenter = new MatchmakerDialogPresenter({
+            promptType: notice.promptType,
+            candidates: notice.candidates,
+            price,
+            silverBalance: silver,
+            remainingOffers: notice.remaining,
+            onEnroll: async (pickIndex) => {
+                const res = session.enrollMatchmakerSpouse(pickIndex);
+                if (res.ok) {
+                    services().event.emit('SHOW_TOAST', {
+                        message: `良緣締結！${res.generalId ? (session.findGeneral(res.generalId)?.name ?? '') : ''}已成為主公家眷。`,
+                        duration: 3,
+                    });
+                    this._refreshWalletPreviewState();
+                } else if (res.reason === 'silver-low') {
+                    services().event.emit('SHOW_TOAST', {
+                        message: '家族銀兩不足，媒婆說她不賒帳',
+                        duration: 3,
+                    });
+                }
+                return res;
+            },
+            onGotoCommerce: () => {
+                this._runCityHubAction('hall');
+            },
+        });
+        this._activeMatchmakerPresenter = presenter;
     }
 
     private _openRivalDiplomacy(): void {
@@ -5012,7 +5277,9 @@ ${spent}`,
         if (!binder || !this._domestic) {
             return;
         }
-        applyFlowView(binder, this._domestic.getFlowView());
+        const view = this._domestic.getFlowView();
+        applyFlowView(binder, view);
+        void loadGeneralNameTagStyle().then((style) => applyGeneralNameTags(binder, view.nameTags, style));
     }
 
     private async _onClickDomesticTask(domestic: DomesticPanelController, taskId: DomesticTaskId): Promise<void> {
@@ -5100,6 +5367,7 @@ ${spent}`,
             const sprite = binder.getSprite(spriteId);
             if (!holder || !sprite || !id) continue;
             if (!holder.getComponent(Mask)) holder.addComponent(Mask).type = Mask.Type.GRAPHICS_ELLIPSE;
+            bindAvatarTalk(holder, id);
             void loadGeneralAvatar(id).then((frame) => {
                 if (!frame || seq !== this._avatarSeq.get('bonding') || !sprite.isValid) return;
                 sprite.sizeMode = Sprite.SizeMode.CUSTOM;
@@ -5385,6 +5653,7 @@ ${spent}`,
         const encounter = this._currentEncounter();
         const host = this._scoutPanelHost;
         if (!encounter || !host) return true;
+        await this._ensureWeatherSeasonTable();
         const enemy = this._generals.find((g) => g.id === encounter.enemyGeneralId);
         const leadId = services().session.resolveLeadGeneralId(encounter.playerGeneralId);
         const lead = services().session.roster.find((g) => g.id === leadId) ?? this._generals.find((g) => g.id === leadId);
@@ -5393,12 +5662,49 @@ ${spent}`,
             enemy ? { name: enemy.name, ...(enemy.title ? { title: enemy.title } : {}) } : null,
             (lead?.tacticSlots ?? []).map((slot) => slot.tacticId),
             await this._loadTacticCounterTags(),
+            weatherPreBattleLine(this._resolveEncounterWeather(encounter)),
         );
         const result = this._scoutPanel.ask(scout);
         host.node.active = true;
         this._bringNodeToFront(host.node);
         if (host.binder) applyFlowView(host.binder, this._scoutPanel.getView());
         return result;
+    }
+
+    /** 載入史境天下風雲榜配置（PROG-2-9601）；失敗時榜單沒有啟用項目，看板不顯示任何數字 */
+    private async _ensureAnnualRankingConfig(): Promise<void> {
+        if (AnnualRankingManager.getInstance().getConfig()) return;
+        try {
+            const data = await services().resource.loadJson<AnnualRankingConfig>('data/annual-ranking-config', { tags: ['LobbyScene'] });
+            AnnualRankingManager.getInstance().setConfig(data);
+        } catch {
+            // 配置缺失：風雲榜以停用狀態運作，不影響大廳
+        }
+    }
+
+    /** 載入季節天氣機率表；戰前偵查與開戰前都先等它，兩處才會讀到同一個天氣 */
+    private async _ensureWeatherSeasonTable(): Promise<void> {
+        if (this._weatherSeasonTable) return;
+        try {
+            const data = await services().resource.loadJson<BattleWeatherSeasonTable>('data/battle-weather-season', { tags: ['LobbyScene'] });
+            this._weatherSeasonTable = validateBattleWeatherSeasonTable(data);
+        } catch {
+            this._weatherSeasonTable = null;
+        }
+    }
+
+    /**
+     * 本場天氣（使用者 19 點裁決）：關卡 weather 有值就固定；沒值依本季機率抽。
+     * 種子 = 年-季-關卡，同一季同一關永遠同一種，戰前顯示與戰場必定一致。
+     */
+    private _resolveEncounterWeather(encounter: EncounterConfig): Weather {
+        const time = services().session.gameTime;
+        return rollBattleWeather({
+            season: time.currentSeason,
+            encounter,
+            table: this._weatherSeasonTable,
+            rng: createSeededRng(seasonWeatherSeed(time.currentYear, time.currentSeason, encounter.id)),
+        }).weather;
     }
 
     private async _loadTacticCounterTags(): Promise<TacticCounterTagTable> {
@@ -5768,7 +6074,7 @@ ${spent}`,
             mountHost: (bindings) => this._mountPreviewScreenHost('DeckSelectHost', 'lobby-deck-select-screen', bindings),
             deck: () => services().session.deck,
             cards: () => getTallyCardSummaries(),
-            toggle: (cardId, catalogIds) => services().session.toggleDeckCard(cardId, catalogIds),
+            toggle: (cardId, catalogIds) => { this._sortie?.clearRecommendation(); return services().session.toggleDeckCard(cardId, catalogIds); },
             toast: (message, duration) => services().event.emit('SHOW_TOAST', { message, duration }),
             warn: (message, error) => UCUFLogger.warn(LogCategory.DATA, message, error),
         });
@@ -5791,7 +6097,7 @@ ${spent}`,
             mountHost: (bindings) => this._mountPreviewScreenHost('LeadSelectHost', 'lobby-lead-select-screen', bindings),
             deployable: () => services().session.getDeployableGenerals(),
             leadId: () => services().session.leadGeneralId,
-            setLead: (id) => services().session.setLeadGeneral(id),
+            setLead: (id) => { this._sortie?.clearRecommendation(); return services().session.setLeadGeneral(id); },
             openSortie: () => this._openSortieSetup(),
             toast: (message, duration) => services().event.emit('SHOW_TOAST', { message, duration }),
             warn: (message, error) => UCUFLogger.warn(LogCategory.DATA, message, error),
@@ -5813,9 +6119,17 @@ ${spent}`,
      * 候選與加成都在 SortieSetupController（純邏輯），這裡只綁按鈕、套 view。
      */
     private async _mountSortieSetup(): Promise<void> {
+        const weights = await this._loadPreBattleWeights();
+        const tallyCards: SortieDeckCardInfo[] = Array.from(buildTallyCardCatalog().entries()).map(([cardId, card]) => ({
+            cardId,
+            name: card.unitName,
+            unitType: card.unitType,
+            rarity: card.rarity,
+        }));
         // 守方 = 大廳開戰用的當前關卡敵將（與開戰時取的 _currentEncounter() 同一來源）
         const sortie = new SortieSetupController({
             session: services().session,
+            isTutorialBattle: () => isTutorialBattle(services().session.clearedStageIds),
             getEnemyGeneral: () => {
                 const enemyId = this._currentEncounter()?.enemyGeneralId;
                 return enemyId ? this._generals.find((g) => g.id === enemyId) ?? null : null;
@@ -5825,11 +6139,31 @@ ${spent}`,
                 get: () => services().session.sortiePresets,
                 set: (store) => { void services().session.setSortiePresets(store); },
             },
+            lookup: (key: string, ...args: string[]) => services().i18n.t(key, ...args),
+            // 一鍵推薦（PROG-2-9911）：權重載入失敗時推薦鈕停用，其餘編制照常
+            // 首戰指定主將不在名冊時仍可當主將推薦（PROG-2-9913，總PM 裁決 A）
+            fixedCommander: () => {
+                // 只限新手首戰（非首戰的指定主將不在名冊時行為不變）
+                if (!firstBattleOpensLoadout(services().session.clearedStageIds, true)) return null;
+                const id = this._currentEncounter()?.playerGeneralId;
+                if (!id || services().session.roster.some((g) => g.id === id)) return null;
+                return this._generals.find((g) => g.id === id) ?? null;
+            },
+            prebattle: {
+                weights,
+                encounters: () => this._encounters,
+                currentEncounterId: () => this._currentEncounter()?.id ?? null,
+                cards: () => tallyCards,
+            },
         });
         this._sortie = sortie;
         const step = (role: SortieRole, delta: number): void => { sortie.cycle(role, delta); this._refreshSortieSetup(); };
         this._sortieHost = await this._mountPreviewScreenHost('SortieSetupHost', 'sortie-setup-screen', [
             { buttonId: 'btnCloseSortie', handler: () => { this._closeSortieSetup(); } },
+            { buttonId: 'btnPickLead', handler: () => { this._openHostFromSortie(this._leadSelect); } },
+            { buttonId: 'btnPickDeck', handler: () => { this._openHostFromSortie(this._deckSelect); } },
+            { buttonId: 'btnRecommend', handler: () => { void sortie.recommend().then(() => { this._refreshSortieSetup(); }); } },
+            { buttonId: 'btnConfirmSortie', handler: () => { this._confirmSortieSetup(); } },
             { buttonId: 'btnPrevStrategist', handler: () => { step('strategist', -1); } },
             { buttonId: 'btnNextStrategist', handler: () => { step('strategist', 1); } },
             { buttonId: 'btnClearStrategist', handler: () => { sortie.clear('strategist'); this._refreshSortieSetup(); } },
@@ -5846,8 +6180,30 @@ ${spent}`,
             event.on(GAME_SESSION_EVENTS.LeadGeneralChanged, refresh),
             event.on(GAME_SESSION_EVENTS.RosterChanged, refresh),
             event.on(GAME_SESSION_EVENTS.BattleSettled, refresh),
+            event.on(GAME_SESSION_EVENTS.DeckChanged, refresh),
             event.on(GAME_SESSION_EVENTS.Loaded, refresh),
         );
+    }
+
+    /** 戰前推薦權重（PROG-2-9910 的 JSON）；讀取或驗證失敗回傳 null，編制視窗的推薦鈕會停用 */
+    private async _loadPreBattleWeights(): Promise<PreBattleWeights | null> {
+        try {
+            return parsePreBattleWeights(await services().resource.loadJson<unknown>('data/prebattle-recommend-weights'));
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 戰前推薦權重載入失敗', error);
+            return null;
+        }
+    }
+
+    /** 從出征編制開啟主將／卡組選擇畫面（既有畫面，不另開一套）；畫面關閉後仍停在編制視窗之下 */
+    private _openHostFromSortie(picker: { host: UIScreenPreviewHost | null; refresh(): void } | null): void {
+        const host = picker?.host;
+        if (!host) {
+            return;
+        }
+        picker?.refresh();
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
     }
 
     private _openSortieSetup(): void {
@@ -5861,10 +6217,44 @@ ${spent}`,
         this._refreshSortieSetup();
     }
 
+    /**
+     * 新手首戰的出戰（PROG-2-9912）：先開戰前編成視窗並預填一鍵推薦，玩家按「確認出戰」後才進戰場。
+     * 編成視窗是背景掛載的面板，_openSortieSetup 會先補建；補建失敗時不擋玩家，直接進戰場。
+     */
+    private async _openFirstBattleLoadout(): Promise<void> {
+        try {
+            await this._openSortieSetup();
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.UI, '[LobbyScene] 首戰編成視窗開啟失敗，改直接進戰場', error);
+            void this._enterBattle();
+            return;
+        }
+        const sortie = this._sortie;
+        if (!this._sortieHost || !sortie) {
+            void this._enterBattle();
+            return;
+        }
+        await sortie.recommend();
+        this._refreshSortieSetup();
+    }
+
+    /** 編成視窗的「確認出戰」（PROG-2-9912）：新手首戰已在編成視窗確認，直接進戰場；其餘照舊走出戰模式選擇 */
+    private _confirmSortieSetup(): void {
+        this._closeSortieSetup();
+        if (firstBattleOpensLoadout(services().session.clearedStageIds, !!this._currentEncounter())) {
+            void this._enterBattle();
+            return;
+        }
+        this.onClickEnterBattle();
+    }
+
     private _closeSortieSetup(): void {
         if (this._sortieHost) {
             this._sortieHost.node.active = false;
         }
+        this._deckSelect?.close();
+        const leadSelectHost = this._leadSelect?.host;
+        if (leadSelectHost) leadSelectHost.node.active = false;
     }
 
     private _refreshSortieSetup(): void {
@@ -5900,11 +6290,13 @@ ${spent}`,
                 .map((g) => g.id));
             let adults = adultIds();
             const hall = { settled: 0, succeeded: 0, grain: 0, gold: 0, silver: 0, generalExp: 0 };
+            const hallCards: HallMissionReportCard[] = [];
             const result = await fastForwardSeasons(async () => {
                 const payload = await this._advanceSeasonWithSalaries();
                 const report = payload.hallMissionReport;
                 if (report) {
                     hall.settled += report.settled; hall.succeeded += report.succeeded;
+                    hallCards.push(...report.cards);
                     hall.grain += report.gains.grain; hall.gold += report.gains.gold; hall.silver += report.gains.silver; hall.generalExp += report.gains.generalExp;
                 }
                 return payload;
@@ -5933,6 +6325,8 @@ ${spent}`,
             }
             this._refreshLobbyHallTopbar();
             this._refreshHallBoard();
+            // 快轉期間累積的回報卡合成一疊，最後一次看（逐季不彈窗；PROG-2-9966）
+            await this._showMissionReportStack(hallCards);
         } finally {
             this._fastForwarding = false;
             this._refreshDomestic();
@@ -5988,6 +6382,7 @@ ${spent}`,
             message: `年終將至，${knownInvader ? `${knownInvader.nationName}大軍` : '敵軍'}壓境！全城備戰守城`,
             duration: 3,
         });
+        await this._ensureWeatherSeasonTable();
         const params = this._buildBattleEntryParams(undefined, encounter);
         services().scene.switchScene(SceneName.Battle, {
             ...params,
@@ -6026,6 +6421,8 @@ ${spent}`,
             this._refreshLobbyHallTopbar();
             this._refreshHallBoard();
             const hallLines = hallMissionReport?.lines ?? [];
+            // 本季所有任務回報合成一疊卡片：逐張點或全部略過，看完才開季報（PROG-2-9966）
+            await this._showMissionReportStack(hallMissionReport?.cards ?? []);
             const followUps = (): void => {
                 this._openSeasonChronicle('season-advance');
                 this._syncSeasonEventPopup();
@@ -6233,6 +6630,7 @@ ${spent}`,
         const root = binder.getNode('LobbyMainScreen_div_21');
         const portrait = root?.getChildByName('skinLayer_LobbyMainScreen_div_21_LobbyMainScreen_img_2');
         const sprite = portrait?.getComponent(Sprite);
+        bindAvatarTalk(portrait, id);
         void presentLobbyLead(general ?? null, {
             setTexts: texts => binder.setTexts(texts),
             setFrame: frame => { if (sprite) sprite.spriteFrame = frame; },
@@ -6392,7 +6790,8 @@ ${spent}`,
 
         this._ensureWidget(hostNode);
         // 彈窗／全螢幕 host 必須吃掉點擊，避免點空白或按鈕邊緣穿透到底層大廳與武將
-        const nonBlockingHosts = new Set(['LobbyHallHost', 'LobbyMainHost', 'SeasonHudHost']);
+        // 選主將／選卡組是大廳底層的小卡，不是彈窗：整頁透明 host 若吃點擊，會蓋住左上主將頭像等底下可點的東西（頭像點擊說話 PROG-2-9885）
+        const nonBlockingHosts = new Set(['LobbyHallHost', 'LobbyMainHost', 'SeasonHudHost', 'LeadSelectHost', 'DeckSelectHost']);
         if (BlockInputEvents && !nonBlockingHosts.has(hostName) && !hostNode.getComponent(BlockInputEvents)) {
             hostNode.addComponent(BlockInputEvents);
         }
@@ -8024,11 +8423,14 @@ ${spent}`,
         const selectedGeneral = this._resolveMissionDetailSmokeGeneral(previewVariant, availableGenerals);
         // 環境偵察面板（PROG-2-0405）：用大廳目前關卡的真實地形與天氣
         const encounter = this._currentEncounter();
-        const scout = encounter ? buildEnvScoutLines(buildBattlefieldReconForEncounter(encounter)) : null;
+        await this._ensureWeatherSeasonTable();
+        // 天氣用與開戰相同的抽取結果（PROG-2-9735），預報與天氣行都以它為準
+        const weather = encounter ? this._resolveEncounterWeather(encounter) : null;
+        const scout = encounter && weather ? buildEnvScoutLines(buildBattlefieldReconForEncounter({ ...encounter, weather })) : null;
 
         await services().ui.open(UIID.LobbyMissionDetailDialog, {
             previewVariant,
-            state: scout ? { envScoutTerrainLine: scout.terrainLine, envScoutWeatherLine: scout.weatherLine } : undefined,
+            state: scout && weather ? { envScoutTerrainLine: scout.terrainLine, envScoutWeatherLine: weatherPreBattleLine(weather) } : undefined,
             availableGenerals,
             selectedGeneralId: selectedGeneral?.id,
             selectedGeneralLabel: selectedGeneral?.label,
@@ -8772,6 +9174,7 @@ ${spent}`,
 
     /** 開戰：攻城戰先扣主將的攻城壽命（存檔後才切場景），其餘直接切場景 */
     private async _enterBattle(battleTactic?: BattleTactic): Promise<void> {
+        await this._ensureWeatherSeasonTable();
         if (!(await this._askScoutBeforeSortie())) return;
         const params = this._buildBattleEntryParams(battleTactic ?? await this._resolveSceneGambit());
         const siege = lifespanCommandForBattleKind(this._currentEncounter()?.battleKind);
@@ -8835,7 +9238,7 @@ ${spent}`,
             playerEquipment: [...(encounter.playerEquipment ?? [])],
             enemyEquipment: [...(encounter.enemyEquipment ?? [])],
             selectedCardIds: services().session.deck,
-            weather: normalizeWeather(encounter.weather) ?? DEFAULT_BATTLE_ENTRY_PARAMS.weather,
+            weather: this._resolveEncounterWeather(encounter),
             battleTactic: battleTactic ?? encounter.battleTactic ?? DEFAULT_BATTLE_ENTRY_PARAMS.battleTactic,
             backgroundId: battleTactic === BattleTactic.FloodAttack ? undefined : encounter.backgroundId,
             campaignStageId: services().session.resolveCampaignStage(encounter.campaignStage).id,

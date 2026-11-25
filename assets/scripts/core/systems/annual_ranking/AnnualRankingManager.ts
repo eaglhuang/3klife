@@ -1,0 +1,310 @@
+/**
+ * 史境天下風雲榜總控管理器（PROG-2-9601 / PROG-2-9602）
+ * 職責：
+ * 1. 載入並管理 annual-ranking-config.json 配置
+ * 2. 初始化核心帳本與 4 大首發 Provider
+ * 3. 匯總平時大廳即時看板資料（前 3 名 ＋ 自家名次）
+ * 4. 執行年終完整結算與年度輪替
+ * 5. 俸祿機制雙軌計算（季常官職俸金 ＋ 年終風雲榜恩賞）
+ */
+
+import { AnnualGeneralLedger, LedgerSerializedData } from './AnnualGeneralLedger';
+import {
+  AnnualRankingConfig,
+  AnnualRankingSaveData,
+  BoardConfig,
+  BoardRankResult,
+  LobbyBoardPreview,
+  RankingContext,
+  SalarySystemConfig
+} from './AnnualRankingTypes';
+export type { AnnualRankingSaveData } from './AnnualRankingTypes';
+import { RankingBoardRegistry } from './RankingBoardRegistry';
+import { KillsRankingProvider } from './providers/KillsRankingProvider';
+import { GovernanceRankingProvider } from './providers/GovernanceRankingProvider';
+import { CharmRankingProvider } from './providers/CharmRankingProvider';
+import { RookieRankingProvider } from './providers/RookieRankingProvider';
+import {
+  calculateOfficialQuarterlySalary,
+  calculateAnnualRankingBounty,
+  QuarterlySalaryResult,
+  AnnualRankingBountyResult
+} from './AnnualRankingSalary';
+
+export class AnnualRankingManager {
+  private static _instance: AnnualRankingManager | null = null;
+  private _config: AnnualRankingConfig | null = null;
+  private _ledger: AnnualGeneralLedger;
+  private _registry: RankingBoardRegistry;
+  private _previousYearRanks: Record<string, Record<string, number>> = {};
+  private _salaryClaimedYears: Set<number> = new Set();
+  private _quarterlySalaryClaims: Record<string, boolean> = {};
+
+  constructor(config?: AnnualRankingConfig, ledger?: AnnualGeneralLedger) {
+    this._ledger = ledger || new AnnualGeneralLedger(1);
+    this._registry = RankingBoardRegistry.getInstance();
+    if (config) {
+      this._config = config;
+    }
+    this.registerDefaultProviders();
+    if (!AnnualRankingManager._instance) {
+      AnnualRankingManager._instance = this;
+    }
+  }
+
+  public static getInstance(config?: AnnualRankingConfig): AnnualRankingManager {
+    if (!this._instance) {
+      this._instance = new AnnualRankingManager(config);
+    } else if (config) {
+      this._instance.setConfig(config);
+    }
+    return this._instance;
+  }
+
+  public static resetInstance(): void {
+    this._instance = null;
+    RankingBoardRegistry.resetInstance();
+  }
+
+  public setConfig(config: AnnualRankingConfig): void {
+    this._config = config;
+  }
+
+  public getConfig(): AnnualRankingConfig | null {
+    return this._config;
+  }
+
+  public get ledger(): AnnualGeneralLedger {
+    return this._ledger;
+  }
+
+  public get registry(): RankingBoardRegistry {
+    return this._registry;
+  }
+
+  /**
+   * 演藝熱度記帳（衰減參數取自 annual-ranking-config.json 的 charm 榜單，不硬編碼）
+   */
+  public recordCharmPerformance(
+    generalId: string,
+    playTitle: string,
+    theaterPrestige: number,
+    playHeat: number,
+    repeatCount: number = 0,
+    banquetDiploHype: number = 0
+  ): void {
+    const charm = this._config?.boards.find((b) => b.boardId === 'charm');
+    this._ledger.recordCharmPerformance(
+      generalId, playTitle, theaterPrestige, playHeat, repeatCount, banquetDiploHype,
+      charm?.repeatDecayMin, charm?.repeatDecayStep
+    );
+  }
+
+  /**
+   * 註冊預設首發 4 大榜單 Provider
+   */
+  public registerDefaultProviders(): void {
+    this._registry.registerProvider(new KillsRankingProvider());
+    this._registry.registerProvider(new GovernanceRankingProvider());
+    this._registry.registerProvider(new CharmRankingProvider());
+    this._registry.registerProvider(new RookieRankingProvider());
+  }
+
+  /**
+   * 取得啟用中的榜單配置清單
+   */
+  public getActiveBoardConfigs(): BoardConfig[] {
+    if (!this._config || !this._config.boards) {
+      return [];
+    }
+    return this._config.boards
+      .filter((b) => b.enabled)
+      .sort((a, b) => a.ceremonyOrder - b.ceremonyOrder);
+  }
+
+  /**
+   * 取得平時大廳即時風雲榜入口資料（使用者 11/22 裁決）：
+   * 僅展示各榜前 3 名 ＋ 玩家自己名次，其餘留待年終揭曉
+   */
+  public getLobbyPreviews(
+    candidateIds: string[],
+    playerGeneralIds: string[],
+    context: RankingContext
+  ): LobbyBoardPreview[] {
+    const activeConfigs = this.getActiveBoardConfigs();
+    const enrichedContext: RankingContext = {
+      ...context,
+      previousYearRanks: this._previousYearRanks
+    };
+
+    const results: LobbyBoardPreview[] = [];
+
+    for (const config of activeConfigs) {
+      const boardResult = this._registry.evaluateBoard(config, candidateIds, this._ledger, enrichedContext);
+      const preview = RankingBoardRegistry.filterLobbyPreview(boardResult, playerGeneralIds, config.titleKey);
+      results.push(preview);
+    }
+
+    return results;
+  }
+
+  /**
+   * 年終正式評估（全量排名與異動計算）
+   */
+  public evaluateYearEnd(
+    candidateIds: string[],
+    context: RankingContext
+  ): Record<string, BoardRankResult> {
+    const activeConfigs = this.getActiveBoardConfigs();
+    const enrichedContext: RankingContext = {
+      ...context,
+      quarter: 4,
+      previousYearRanks: this._previousYearRanks
+    };
+
+    const results = this._registry.evaluateAll(activeConfigs, candidateIds, this._ledger, enrichedContext);
+
+    // 更新歷史百名排名紀錄，供下一年比對 ▲+N / ▼-N / — / NEW
+    this.updatePreviousYearRanks(results);
+
+    return results;
+  }
+
+  /**
+   * 更新前一年歷史排名快照
+   */
+  private updatePreviousYearRanks(results: Record<string, BoardRankResult>): void {
+    const newPrevRanks: Record<string, Record<string, number>> = {};
+    const maxTrack = this._config?.historyMaxRanksTracked || 100;
+
+    Object.keys(results).forEach((boardId) => {
+      newPrevRanks[boardId] = {};
+      const boardRes = results[boardId];
+      for (const cand of boardRes.candidates) {
+        if (cand.rank <= maxTrack) {
+          newPrevRanks[boardId][cand.generalId] = cand.rank;
+        }
+      }
+    });
+
+    this._previousYearRanks = newPrevRanks;
+  }
+
+  /**
+   * 換年重置（TC-RNK-01）：封存快照並清空帳本
+   */
+  public resetForNewYear(nextYear?: number): void {
+    this._ledger.resetYear(nextYear);
+  }
+
+  /**
+   * 存檔序列化
+   */
+  public serialize(): AnnualRankingSaveData {
+    return {
+      ledger: this._ledger.serialize(),
+      previousYearRanks: this._previousYearRanks,
+      salaryClaimedYears: Array.from(this._salaryClaimedYears),
+      quarterlySalaryClaims: { ...this._quarterlySalaryClaims }
+    };
+  }
+
+  /**
+   * 讀檔／開新局時換成該存檔的風雲榜狀態；沒有資料時清空（不影響已載入的榜單設定）
+   */
+  public restoreSaveData(data?: AnnualRankingSaveData | null): void {
+    this._ledger = new AnnualGeneralLedger(1);
+    this._previousYearRanks = {};
+    this._salaryClaimedYears.clear();
+    this._quarterlySalaryClaims = {};
+    if (data) this.deserialize(data);
+  }
+
+  public deserialize(data: Partial<AnnualRankingSaveData>): void {
+    if (!data) return;
+    if (data.ledger) {
+      this._ledger.deserialize(data.ledger);
+    }
+    if (data.previousYearRanks) {
+      this._previousYearRanks = data.previousYearRanks;
+    }
+    if (Array.isArray(data.salaryClaimedYears)) {
+      this._salaryClaimedYears = new Set(data.salaryClaimedYears);
+    }
+    if (data.quarterlySalaryClaims && typeof data.quarterlySalaryClaims === 'object') {
+      this._quarterlySalaryClaims = { ...data.quarterlySalaryClaims };
+    }
+  }
+
+  /**
+   * 計算武將上榜對世家聲望的貢獻點數（依 clanPrestige 配置）
+   * @param ranks 該武將在各個榜單取得的名次陣列
+   */
+  public calculateClanPrestigeContribution(ranks: number[]): number {
+    const cfg = this._config?.clanPrestige;
+    if (!cfg || !cfg.enabled) return 0;
+
+    let total = 0;
+    const base = cfg.baseContribution || 50;
+    const max = cfg.maxPerGeneral || 500;
+
+    for (const rank of ranks) {
+      if (rank <= 0 || rank > 100) continue;
+      let mul = cfg.multipliers.rankTop100 || 1.0;
+      if (rank === 1) {
+        mul = cfg.multipliers.rank1 || 5.0;
+      } else if (rank <= 3) {
+        mul = cfg.multipliers.rankTop3 || 3.0;
+      } else if (rank <= 10) {
+        mul = cfg.multipliers.rankTop10 || 2.0;
+      }
+      total += Math.round(base * mul);
+    }
+
+    return Math.min(max, total);
+  }
+
+  /**
+   * 俸祿機制方案 B：計算季常官職俸祿（金）
+   */
+  public calculateOfficialQuarterlySalary(officialTier: number): QuarterlySalaryResult {
+    return calculateOfficialQuarterlySalary(officialTier, this._config?.salarySystem);
+  }
+
+  /**
+   * 俸祿機制方案 B：計算年終風雲榜恩賞（銀兩＋名聲）
+   */
+  public calculateAnnualRankingBounty(ranks: number[]): AnnualRankingBountyResult {
+    return calculateAnnualRankingBounty(ranks, this._config?.salarySystem);
+  }
+
+  /**
+   * 季常官職俸金領取標記檢驗
+   */
+  public isQuarterlySalaryClaimed(year: number, quarter: number): boolean {
+    const key = `${year}_Q${quarter}`;
+    return !!this._quarterlySalaryClaims[key];
+  }
+
+  /**
+   * 標記季常官職俸金已領取
+   */
+  public markQuarterlySalaryClaimed(year: number, quarter: number): void {
+    const key = `${year}_Q${quarter}`;
+    this._quarterlySalaryClaims[key] = true;
+  }
+
+  /**
+   * 年終風雲榜恩賞領取標記檢驗
+   */
+  public isAnnualRankingBountyClaimed(year: number): boolean {
+    return this._salaryClaimedYears.has(year);
+  }
+
+  /**
+   * 標記年終風雲榜恩賞已領取
+   */
+  public markAnnualRankingBountyClaimed(year: number): void {
+    this._salaryClaimedYears.add(year);
+  }
+}

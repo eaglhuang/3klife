@@ -14,13 +14,17 @@
           ▼                                                     ▼
    【第一層：智力審批 (IQ)】                             【第二層：家族審批 (Family)】
    • LOW: 絕不主動施放                                   • SelfBurst: 斬殺或血量 ≤30%
-   • MEDIUM: 精力 >50 且敵方 >3 支                       • TeamBuff/Heal: 血量 ≤50% 或落後
-   • HIGH: 擊殺 ≥2 支，或落後且精力 >30                 • Debuff/Control: 敵方存活 ≥3 支
+   • MEDIUM: 精力 >最大精力50% 且敵方 >3 支             • TeamBuff/Heal: 血量 ≤50% 或落後
+   • HIGH: 擊殺 ≥2 支，或落後且精力 >最大精力30%       • Debuff/Control: 敵方存活 ≥3 支
 ```
 
 ---
 
 ## 2. 第一層：智力等級審批狀態機（`AiUltimateDecision`）
+
+> **總PM 11/22 裁決（PROG-2-9723）**：精力門檻由絕對值改為**比例**（精力 ÷ 最大精力）。理由：男將精力上限 120、女將 100，用絕對值會讓女將較早達標，用比例才公平。比例值放在 `assets/resources/data/ai-difficulty.json` 頂層 `ultimateRules`（`mediumVitalityRatio: 0.5`、`highLosingVitalityRatio: 0.3`），不寫死在程式。
+>
+> **適用範圍**：敵方 AI 與**委任代打**（玩家方自動代打）共用本層與第二層審批。委任代打的智力等級由委任品質對應（智力 ≥90 EXPERT 對 EXTREME，≥70 HIGH，≥50 MEDIUM，其餘 LOW）。代打主將 SP 滿時，才照同一套判斷決定要不要放奧義。**委任代打門檻至少中 IQ（總PM 11/22 裁決）**：委任智力 LOW 時，以 MEDIUM 判斷（精力 > 最大精力 50% 即可放）；下限寫在 `ultimateRules.delegateMinIq`，敵方 AI 的 LOW 維持不放。
 
 本層檢定 AI 武將之體力儲備、敵方兵力規模與大局勝負走向：
 
@@ -28,21 +32,21 @@
 ```typescript
 if (iq === 'LOW') return false;
 if (iq === 'MEDIUM') {
-    return vitality > 50 && enemyCount > 3;
+    return vitality > maxVitality * rules.mediumVitalityRatio && enemyCount > 3;
 }
 // HIGH / EXTREME / PERFECT
-return estimatedKills >= 2 || (isLosing && vitality > 30);
+return estimatedKills >= 2 || (isLosing && vitality > maxVitality * rules.highLosingVitalityRatio);
 ```
 
 ### 2.2 數值門檻與行為規範
 1. **低智力（LOW IQ）**：
    - 無統籌奧義之氣魄，**絕不主動施放奧義**，恆次回傳 `false`。
 2. **中智力（MEDIUM IQ）**：
-   - **精力門檻**：$\text{vitality} > 50$（`ULTIMATE_MEDIUM_VITALITY`），確保奧義消耗後不致虛脫。
+   - **精力門檻**：$\text{vitality} > \text{maxVitality} \times 50\%$（`rules.mediumVitalityRatio`，總PM 11/22 裁決改比例），確保奧義消耗後不致虛脫。
    - **敵勢門檻**：場上敵軍（玩家）單位數 $> 3$ 支（`ULTIMATE_MEDIUM_ENEMY_COUNT`），見敵勢浩大即傾力一擊。
 3. **高智力及以上（HIGH / EXTREME / PERFECT IQ）**：
    - **毀滅打擊**：預估斬殺敵軍數 $\ge 2$ 支（`ULTIMATE_HIGH_KILL_COUNT = 2`），以迅速瓦解敵方編制為目標。
-   - **殘局逆轉（Comeback Trigger）**：若全軍總兵力落後（`isLosing = true`）且精力仍有餘裕（$\text{vitality} > 30$，`ULTIMATE_HIGH_LOSING_VITALITY`），果斷施放奧義挽救敗局。
+   - **殘局逆轉（Comeback Trigger）**：若全軍總兵力落後（`isLosing = true`）且精力仍有餘裕（$\text{vitality} > \text{maxVitality} \times 30\%$，`rules.highLosingVitalityRatio`，總PM 11/22 裁決改比例），果斷施放奧義挽救敗局。
 
 ---
 

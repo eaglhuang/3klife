@@ -19,6 +19,10 @@
 | feijian.mp3 | `"feijian"` | 飛劍 | 🚧 WIP | — |
 | fireball.mp3 | `"fireball"` | 火球 | 🚧 WIP | — |
 | footstep.mp3 | `"footstep"` | 腳步聲 | 🚧 WIP | — |
+| hoof_gallop.wav | `"hoof_gallop"` | 騎兵攻擊馬蹄聲（22.05kHz 單聲道、約 0.58 秒；署名見文末「第三方音效授權」） | ✅ 使用中 | `BattleAudio.ts` `unitAttackPrimary`（PROG-2-9580） |
+| hit_light.wav / hit_heavy.wav / hit_block.wav / hit_lethal.wav | `"hit_light"` 等 | 受擊分層變調版本（PROG-2-9729）：由 hurt／shield／bite 重取樣（22.05kHz 單聲道），規則見 `data/battle-audio-layers.json` | ✅ 使用中 | `BattleAudioLayers.ts`；產生腳本 `tools_node/gen-audio-variants.js` |
+| footstep_light.wav / footstep_heavy.wav / footstep_hoof.wav | `"footstep_light"` 等 | 分兵種腳步變調版本（PROG-2-9729）：由 footstep／hoof_gallop 重取樣；馬蹄沿用 hoof_gallop 的 CC-BY 署名（見文末） | ✅ 使用中 | `BattleAudio.ts` `playBattleFootstep` |
+| cc0_hit_metal.ogg / cc0_hit_flesh.ogg / cc0_hoof_single.wav | `"cc0_hit_metal"` 等 | CC0 外部素材（PROG-2-9732）：金屬擊打取代 hit_block、肉體悶擊取代 hit_heavy、單拍馬蹄取代 footstep_hoof；`battle-audio-layers.json` 的 `clipSource` 設 `cc0`（預設）使用，設 `pitched` 回到變調代用版。授權見 `clips/LICENSES-cc0.md` | ✅ 使用中 | `BattleAudioLayers.ts` `resolveClipName` |
 | heal.mp3 | `"heal"` | 治療 | 🚧 WIP | — |
 | hurt.mp3 | `"hurt"` | 受擊 | 🚧 WIP | — |
 | laser.mp3 | `"laser"` | 雷射 | 🚧 WIP | — |
@@ -65,3 +69,11 @@ services().audio.registerClip("hurt", clip);
 services().audio.playSfx("hurt");           // 50ms 防重複播放
 services().audio.playSfxWithCooldown("footstep", 1.0, 300); // 300ms 冷卻
 ```
+
+---
+
+## 第三方音效授權（署名）
+
+| 檔名 | 來源 | 作者 | 授權 | 備註 |
+|------|------|------|------|------|
+| hoof_gallop.wav | https://opengameart.org/node/132682 （Horse Gallop Loop，原檔 gallop_01.ogg，freesound.org/s/403026） | Alan McKinney (alanmcki)；OpenGameArt 上傳者 AntumDeluge | CC-BY 3.0（https://creativecommons.org/licenses/by/3.0/）需署名 | 已改編：取其中一段蹄聲循環、轉單聲道、重取樣 22050Hz、尾端 30ms 淡出 |

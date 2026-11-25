@@ -15,6 +15,8 @@ export interface TacticAiCandidate {
     category: TacticAiCategory;
     /** single-damage：預估傷害 */
     estimatedDamage?: number;
+    /** single-damage：預估同時打到幾個我方單位（群傷；預設 1），總分 = 單目標傷害 × 命中數 */
+    hitCount?: number;
     /** buff-heal：預估效果值（回血量或增益量） */
     effectValue?: number;
     /** tile-scene：是否有 choke point */
@@ -38,7 +40,9 @@ export const TACTIC_AI_KILL_BONUS = 1000;
 export const TACTIC_AI_DANGER_HP_RATE = 0.35;
 /** 暫定：危險時 Buff / Heal 加分 */
 export const TACTIC_AI_DANGER_BONUS = 1000;
-/** 暫定：非危險時 Buff / Heal 降權係數 */
+/** 健康線（裁決 11/23，對齊 0390）：最低 HP 比例高於此值才對 Buff / Heal 降權；介於危險線與健康線之間照原值 */
+export const TACTIC_AI_HEALTHY_HP_RATE = 0.7;
+/** 暫定：健康時 Buff / Heal 降權係數 */
 export const TACTIC_AI_IDLE_DEMOTE = 0.5;
 /** 暫定：choke point / 密集區各自的加分 */
 export const TACTIC_AI_SCENE_POINT = 10;
@@ -50,13 +54,14 @@ export function scoreTacticCandidate(candidate: TacticAiCandidate, situation: Ta
             const damage = candidate.estimatedDamage ?? 0;
             if (damage <= 0) return 0;
             const killable = situation.enemyHp.some(hp => hp > 0 && hp <= damage);
-            return damage + (killable ? TACTIC_AI_KILL_BONUS : 0);
+            return damage * Math.max(1, Math.floor(candidate.hitCount ?? 1)) + (killable ? TACTIC_AI_KILL_BONUS : 0);
         }
         case 'buff-heal': {
             const value = candidate.effectValue ?? 0;
             if (value <= 0) return 0;
             const danger = situation.allyLowestHpRate <= TACTIC_AI_DANGER_HP_RATE;
-            return danger ? value + TACTIC_AI_DANGER_BONUS : value * TACTIC_AI_IDLE_DEMOTE;
+            if (danger) return value + TACTIC_AI_DANGER_BONUS;
+            return situation.allyLowestHpRate > TACTIC_AI_HEALTHY_HP_RATE ? value * TACTIC_AI_IDLE_DEMOTE : value;
         }
         case 'tile-scene': {
             if (candidate.weatherCompatible === false) return 0;

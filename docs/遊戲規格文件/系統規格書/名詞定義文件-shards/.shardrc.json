@@ -1,0 +1,14 @@
+{
+  "version": 1,
+  "source": "../名詞定義文件.md",
+  "indexTitle": "名詞定義文件（分片索引）",
+  "indexPath": "docs/遊戲規格文件/系統規格書/名詞定義文件.md",
+  "type": "markdown-h2",
+  "preambleShard": "shard-a",
+  "defaultShard": "shard-a",
+  "shards": [
+    {"name": "shard-a", "title": "前言覆寫裁定與命名規則", "pattern": "^命名規則"},
+    {"name": "shard-b", "title": "全系統名詞總表", "pattern": "^全系統名詞總表"},
+    {"name": "shard-c", "title": "MCQ 決策記錄（Q61–Q65）", "pattern": "^🗳 MCQ"}
+  ]
+}

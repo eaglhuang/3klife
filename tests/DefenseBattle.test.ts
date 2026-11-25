@@ -200,9 +200,11 @@ export function createDefenseBattleSuite(): TestSuite {
         assert.isTrue(lobby.includes("e.battleKind !== 'defense'"));
     });
 
-    suite.test('設定檔：工兵投石每隊 15、每回合補 1 隊；壞值用預設（PROG-2-9429）', () => {
+    suite.test('設定檔：工兵投石每隊 12、每回合補 1 隊；JSON 與預設一致、守城勝率不退步（PROG-2-9722）；壞值用預設（PROG-2-9429）', () => {
         const real = parseDefenseBattleConfig(readData('defense-battle.json'));
-        assert.equals(15, real.engineerBombardDamage);
+        assert.equals(12, real.engineerBombardDamage);
+        assert.equals(DEFAULT_DEFENSE_BATTLE.engineerBombardDamage, real.engineerBombardDamage);
+        assert.equals(500, real.fortressMaxHp);
         assert.equals(1, real.engineerReinforcePerTurn);
         const bad = parseDefenseBattleConfig({ engineerBombardDamage: -3, engineerReinforcePerTurn: 'x' });
         assert.equals(DEFAULT_DEFENSE_BATTLE.engineerBombardDamage, bad.engineerBombardDamage);
@@ -234,7 +236,7 @@ export function createDefenseBattleSuite(): TestSuite {
     const enemyEngineers = (ctrl: BattleController) => [...ctrl.state.units.values()]
         .filter((u) => u.faction === Faction.Enemy && u.type === TroopType.Engineer && !u.isDead()).length;
 
-    suite.test('守城投石：敵軍回合每隊活著的工兵不論站位扣我方城寨 15；非守城不扣（PROG-2-9429）', () => {
+    suite.test('守城投石：敵軍回合每隊活著的工兵不論站位扣我方城寨 engineerBombardDamage；非守城不扣（PROG-2-9429）', () => {
         const ctrl = controller(Faction.Player);
         spawn(ctrl, TroopType.Engineer, Faction.Enemy, 0, 6);
         spawn(ctrl, TroopType.Engineer, Faction.Enemy, 2, 6);
@@ -248,7 +250,7 @@ export function createDefenseBattleSuite(): TestSuite {
         // 補派的工兵在出兵階段就上場，同一回合也會投石
         const engineersAfter = enemyEngineers(ctrl);
         assert.isTrue(engineersAfter >= engineersBefore + 1);
-        assert.equals(before - 15 * engineersAfter, ctrl.state.playerFortressHp);
+        assert.equals(before - ctrl.defenseBattle.engineerBombardDamage * engineersAfter, ctrl.state.playerFortressHp);
         assert.isTrue(hits.includes(ctrl.state.playerFortressHp));
 
         const normal = controller(Faction.Enemy);

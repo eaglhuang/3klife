@@ -44,7 +44,6 @@
     },
     "battle_death_burst": {
       "blockId": "p3d_mep_explosion",
-      "audio": "boom",
       "lifetime": 0.95,
       "blocks": [
         {
@@ -65,7 +64,6 @@
     },
     "battle_death_vanish": {
       "blockId": "p3d_box_hit",
-      "audio": "boom",
       "lifetime": 0.95,
       "blocks": [
         {

@@ -97,7 +97,7 @@ for (const t of [0, 0.3, 0.75, 1]) {
   assert.ok(Math.abs(old.angle - neu.angle) < 1e-9 && Math.abs(old.scale - neu.scale) < 1e-9 && Math.abs(old.opacity - neu.opacity) <= 1, `slash t=${t}`);
 }
 // 用到的音效 clip 都真的在 audio bundle 裡
-const clips = new Set(readdirSync(join(__dirname, '../assets/bundles/audio/clips')).filter(f => f.endsWith('.mp3')).map(f => f.replace(/\.mp3$/, '')));
+const clips = new Set(readdirSync(join(__dirname, '../assets/bundles/audio/clips')).filter(f => /\.(mp3|wav)$/.test(f)).map(f => f.replace(/\.(mp3|wav)$/, '')));
 for (const key of Object.values(ATTACK_SFX_KEY)) assert.ok(clips.has(BATTLE_AUDIO_CLIP_MAP[key]), `${key} 的 clip 檔不存在`);
 // PROG-2-9412：命中時間——閃光要在命中前出現、命中前後還亮著；弓箭以箭飛到為準、騎兵以撞上為準
 assert.equal(ATTACK_IMPACT_SEC.bow, ARROW_HIT_DELAY_SEC);

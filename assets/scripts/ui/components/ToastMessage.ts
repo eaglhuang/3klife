@@ -1,6 +1,6 @@
 // @spec-source → 見 docs/cross-reference-index.md
-import { _decorator, Color, Label, Node, Tween, tween, UITransform, UIOpacity, Vec3, Widget } from "cc";
-import { TOAST_FADE_SEC, TOAST_RISE_PX, toastHoldSec } from '../../core/systems/ToastMotion';
+import { _decorator, BlockInputEvents, Color, Label, Node, Tween, tween, UITransform, UIOpacity, Vec3, Widget } from "cc";
+import { TOAST_FADE_SEC, TOAST_RISE_PX, toastCenterY, toastHoldSec } from '../../core/systems/ToastMotion';
 import { services } from "../../core/managers/ServiceLoader";
 import { UIPreviewBuilder } from "../core/UIPreviewBuilder";
 import { SolidBackground } from './SolidBackground';
@@ -31,6 +31,9 @@ export class ToastMessage extends UIPreviewBuilder {
   /** 上浮消失的位移 tween 與 ToastRoot 原位（主戰場UI §4.1，PROG-2-1894） */
   private riseTween: Tween<Node> | null = null;
   private _rootBasePos: Vec3 | null = null;
+  /** 設計稿給的原位 y（畫面上方）；彈窗開著時改貼底緣，見 toastCenterY */
+  private _designY = 0;
+  private _placedAtModal = false;
   private _isBuilt = false;
   private _blockingOverlay: Node | null = null;
   private _activeToastKey: string | null = null;
@@ -150,13 +153,16 @@ export class ToastMessage extends UIPreviewBuilder {
 
     // 停留後同時淡出並上浮（§4.1）；每次顯示先回到原位
     this._stopRise();
-    if (!this._rootBasePos) this._rootBasePos = rootNode.position.clone();
-    rootNode.setPosition(this._rootBasePos);
+    if (!this._rootBasePos) {
+      this._rootBasePos = rootNode.position.clone();
+      this._designY = this._rootBasePos.y;
+    }
+    this._placeRoot(rootNode, this._isModalOpen());
     const hold = toastHoldSec(duration);
-    const base = this._rootBasePos;
+    // 用相對位移上浮：彈窗途中開啟、提示條改了位置，上浮仍從目前位置起算
     this.riseTween = tween(rootNode)
       .delay(hold)
-      .to(TOAST_FADE_SEC, { position: new Vec3(base.x, base.y + TOAST_RISE_PX, base.z) })
+      .by(TOAST_FADE_SEC, { position: new Vec3(0, TOAST_RISE_PX, 0) })
       .start();
 
     this.hideTween = tween(opacity)
@@ -172,6 +178,36 @@ export class ToastMessage extends UIPreviewBuilder {
         this.node.active = false;
       })
       .start();
+  }
+
+  /** 提示條出現後才開啟彈窗（例如換季提示剛出、季報就彈出）：下一幀就讓位，不蓋標題 */
+  update(): void {
+    const root = this.node.getChildByName('ToastRoot');
+    if (!this.node.active || !root || !this._rootBasePos) return;
+    const modal = this._isModalOpen();
+    if (modal === this._placedAtModal) return;
+    this._placeRoot(root, modal);
+  }
+
+  /** 依有無彈窗把提示條放到上方設計位置或貼底緣；回原位時順便復原被 _stopRise 記住的原位 */
+  private _placeRoot(root: Node, modal: boolean): void {
+    const containerH = this.node.getComponent(UITransform)?.height ?? 0;
+    const rootH = root.getComponent(UITransform)?.height ?? 0;
+    const y = toastCenterY(this._designY, modal, containerH, rootH);
+    const base = this._rootBasePos ?? root.position.clone();
+    this._rootBasePos = new Vec3(base.x, y, base.z);
+    this._placedAtModal = modal;
+    root.setPosition(this._rootBasePos);
+  }
+
+  /**
+   * 目前有沒有彈窗蓋在畫面上：UIManager 的彈窗遮罩顯示中，
+   * 或同一場景下有掛 BlockInputEvents 的全螢幕 host（學府、季事件等不走 UIManager 的彈窗）開著。
+   */
+  private _isModalOpen(): boolean {
+    if (services().ui.hasBackdropShown()) return true;
+    const siblings = this.node.parent?.children ?? [];
+    return siblings.some((child) => child !== this.node && child.activeInHierarchy && !!child.getComponent(BlockInputEvents));
   }
 
   private _stopRise(): void {

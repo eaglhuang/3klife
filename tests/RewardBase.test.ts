@@ -18,6 +18,9 @@ import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStora
 import { isApiFail, type ApiResult } from '../assets/scripts/shared/api/ApiProtocol';
 import type { RewardGrantResult, RewardPoolsResult } from '../assets/scripts/shared/api/ApiCommands';
 import { DeterministicRngSession } from '../assets/scripts/shared/foundation/DeterministicRng';
+import { DEFAULT_INSIGHT_CONFIG } from '../assets/scripts/shared/reward/RewardConfig';
+import * as fs from 'fs';
+import * as path from 'path';
 import { DEFAULT_ITEM_CONFIG, type HolderRef } from '../assets/scripts/shared/item/ItemConfig';
 import { emptyItemMeta, type ItemMeta } from '../assets/scripts/shared/item/ItemRules';
 import { normalizeRewardConfig, type RewardConfigV1 } from '../assets/scripts/shared/reward/RewardConfig';
@@ -443,3 +446,53 @@ export function createRewardBaseSuite(): TestSuite {
 
     return suite;
 }
+
+/** 台詞成就（PROG-2-9864）：insight 設定與 rewardMeta.insight 的正規化、存檔往返，以及出貨的 reward-config.json 內容 */
+export function createRewardInsightSuite(): TestSuite {
+    const suite = new TestSuite('獎勵 base：台詞成就 insight 設定與存檔 (PROG-2-9864)');
+
+    suite.test('出貨的 reward-config.json 有兩個 insight bundle 與 insight 區段（數值在 JSON，不在程式）', () => {
+        const file = path.join(__dirname, '..', 'assets', 'resources', 'data', 'reward-config.json');
+        const config = normalizeRewardConfig(JSON.parse(fs.readFileSync(file, 'utf-8')));
+        const first = config.bundles.find((b) => b.id === 'BUNDLE_INSIGHT_FIRST');
+        const step = config.bundles.find((b) => b.id === 'BUNDLE_INSIGHT_STEP');
+        assert.isTrue(!!first && !!step, '兩個 bundle 都要存在');
+        assert.equals(10, Number(first?.effects[0].friendship));
+        assert.equals(2, Number(step?.effects[0].friendship));
+        assert.isTrue(!!first && first.sources.indexOf('insight') >= 0, 'sources 要含 insight');
+        assert.equals('BUNDLE_INSIGHT_FIRST', config.insight?.firstBundle);
+        assert.equals(3, config.insight?.dailyCap);
+        assert.equals(200, config.insight?.seenLimit);
+    });
+
+    suite.test('insight 設定缺欄位或不合法時退回缺省；缺區段也不丟錯', () => {
+        const cfg = normalizeRewardConfig({ schema: 'reward-config.v1', insight: { dailyCap: -1, seenLimit: 'x' } });
+        assert.equals(DEFAULT_INSIGHT_CONFIG.dailyCap, cfg.insight?.dailyCap as number);
+        assert.equals(DEFAULT_INSIGHT_CONFIG.seenLimit, cfg.insight?.seenLimit as number);
+        assert.equals('BUNDLE_INSIGHT_STEP', cfg.insight?.stepBundle as string);
+        assert.equals(DEFAULT_INSIGHT_CONFIG.dailyCap, normalizeRewardConfig({}).insight?.dailyCap as number);
+    });
+
+    suite.test('rewardMeta.insight 存檔往返；空紀錄不寫入；壞條目被丟', () => {
+        assert.isTrue(isEmptyRewardMeta(emptyRewardMeta()));
+        const meta = normalizeRewardMeta({
+            insight: {
+                seen: { 'lu-bu': ['aa', 7, ''], empty: [] },
+                daily: { 'lu-bu': { day: '2026-11-23', count: 2 }, bad: { day: 1, count: 1 } },
+                achieved: { 'lu-bu': { badgeId: 'badge_insight_lu-bu', unlockedDay: '2026-11-23' } },
+            },
+        });
+        assert.equals(JSON.stringify(['aa']), JSON.stringify(meta.insight?.seen['lu-bu']));
+        assert.equals(undefined, meta.insight?.seen['empty']);
+        assert.equals(2, meta.insight?.daily['lu-bu'].count);
+        assert.equals(undefined, meta.insight?.daily['bad']);
+        assert.isFalse(isEmptyRewardMeta(meta));
+        const again = normalizeRewardMeta(JSON.parse(JSON.stringify(meta)));
+        assert.equals(JSON.stringify(meta), JSON.stringify(again));
+        const none = normalizeRewardMeta({ insight: { seen: {}, daily: {}, achieved: {} } });
+        assert.equals(undefined, none.insight);
+    });
+
+    return suite;
+}
+

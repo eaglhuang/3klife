@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "_comment": "PROG-2-9731 戰場 UI 演出：名牌戰鬥淡出、狀態圖示層數與回合、奧義暫代大字、毒上身、治療時序。所有秒數、顏色、大小都在這裡調。",
+  "nameplate": {
+    "combatAlpha": 0.12,
+    "fadeOutSec": 0.12,
+    "fadeInSec": 0.3,
+    "restoreDelaySec": 0.35
+  },
+  "statusBadge": {
+    "turnsFontSize": 22,
+    "stackFontSize": 22,
+    "turnsColor": [255, 255, 255, 255],
+    "stackColor": [255, 220, 90, 255],
+    "outlineColor": [20, 10, 20, 255],
+    "outlineWidth": 3,
+    "stackPrefix": "×",
+    "stackFloatSuffix": " ×"
+  },
+  "ultPlaceholder": {
+    "skillFontRatio": 0.17,
+    "skillColor": [255, 236, 160, 255],
+    "skillOutlineColor": [60, 20, 90, 255],
+    "tagFontRatio": 0.035,
+    "tagColor": [214, 200, 240, 255]
+  },
+  "poisonHit": {
+    "floatText": "中毒",
+    "flashFillColor": [110, 255, 90, 255],
+    "flashEdgeColor": [160, 80, 230, 255],
+    "flashPeakAlpha": 150,
+    "flashSec": 0.5,
+    "flashRadiusX": 38,
+    "flashRadiusY": 56,
+    "flashRise": 10,
+    "float": {
+      "color": [170, 255, 110, 255],
+      "outlineColor": [70, 20, 100, 255],
+      "fontSize": 46,
+      "durationMs": 1300
+    }
+  },
+  "heal": {
+    "lightFillColor": [120, 255, 170, 255],
+    "lightEdgeColor": [230, 255, 235, 255],
+    "lightPeakAlpha": 170,
+    "lightSec": 0.5,
+    "lightRadiusX": 34,
+    "lightRadiusY": 52,
+    "lightRise": 26,
+    "floatDelaySec": 0.22,
+    "hpBarDelaySec": 0.5,
+    "queueStaggerSec": 0.1
+  }
+}

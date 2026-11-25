@@ -30,7 +30,7 @@
         },
         "width": 1400,
         "height": 900,
-        "skinSlot": "mp.card.bg",
+        "skinSlot": "mp.panel.solid",
         "children": [
           {
             "type": "label",
@@ -43,7 +43,8 @@
             "height": 40,
             "text": "太守府",
             "styleSlot": "mp.label.title",
-            "width": 700
+            "width": 700,
+            "textKey": "ui.governor.title"
           },
           {
             "type": "button",
@@ -68,7 +69,8 @@
                 },
                 "height": 40,
                 "text": "關閉",
-                "styleSlot": "mp.label.button"
+                "styleSlot": "mp.label.button",
+                "textKey": "ui.close"
               }
             ]
           },
@@ -89,7 +91,7 @@
                 "name": "GovPopulation",
                 "id": "govPopulation",
                 "widget": {
-                  "top": 110,
+                  "top": 30,
                   "left": 32
                 },
                 "height": 48,
@@ -102,7 +104,20 @@
                 "name": "GovMorale",
                 "id": "govMorale",
                 "widget": {
-                  "top": 170,
+                  "top": 90,
+                  "left": 32
+                },
+                "height": 40,
+                "text": "",
+                "styleSlot": "mp.label.body",
+                "width": 640
+              },
+              {
+                "type": "label",
+                "name": "GovStock",
+                "id": "govStock",
+                "widget": {
+                  "top": 150,
                   "left": 32
                 },
                 "height": 40,
@@ -115,7 +130,7 @@
                 "name": "GovFlowGold",
                 "id": "govFlowGold",
                 "widget": {
-                  "top": 250,
+                  "top": 210,
                   "left": 32
                 },
                 "height": 40,
@@ -128,7 +143,7 @@
                 "name": "GovFlowFood",
                 "id": "govFlowFood",
                 "widget": {
-                  "top": 300,
+                  "top": 260,
                   "left": 32
                 },
                 "height": 40,
@@ -141,7 +156,7 @@
                 "name": "GovFlowCityTroopCap",
                 "id": "govFlowCityTroopCap",
                 "widget": {
-                  "top": 350,
+                  "top": 310,
                   "left": 32
                 },
                 "height": 40,
@@ -154,7 +169,7 @@
                 "name": "GovFlowRecruitRegen",
                 "id": "govFlowRecruitRegen",
                 "widget": {
-                  "top": 400,
+                  "top": 360,
                   "left": 32
                 },
                 "height": 40,
@@ -167,7 +182,7 @@
                 "name": "GovLevel",
                 "id": "govLevel",
                 "widget": {
-                  "top": 460,
+                  "top": 420,
                   "left": 32
                 },
                 "height": 40,
@@ -180,7 +195,7 @@
                 "name": "GovSlots",
                 "id": "govSlots",
                 "widget": {
-                  "top": 510,
+                  "top": 470,
                   "left": 32
                 },
                 "height": 40,
@@ -193,7 +208,7 @@
                 "name": "GovPending",
                 "id": "govPending",
                 "widget": {
-                  "top": 560,
+                  "top": 520,
                   "left": 32
                 },
                 "height": 40,
@@ -206,12 +221,12 @@
                 "name": "BtnUpgrade",
                 "id": "btnUpgrade",
                 "widget": {
-                  "top": 610,
+                  "top": 570,
                   "left": 32
                 },
                 "width": 420,
                 "height": 56,
-                "skinSlot": "mp.button.bg",
+                "skinSlot": "mp.button.primary.bg",
                 "children": [
                   {
                     "type": "label",
@@ -239,9 +254,21 @@
               "left": 740
             },
             "width": 600,
-            "height": 230,
+            "height": 274,
             "skinSlot": "mp.row.bg",
             "children": [
+              {
+                "type": "panel",
+                "name": "GovGoldTitleLine",
+                "id": "govGoldTitleLine",
+                "widget": {
+                  "top": 12,
+                  "left": 24
+                },
+                "width": 560,
+                "height": 1,
+                "skinSlot": "mp.divider.section"
+              },
               {
                 "type": "label",
                 "name": "GovGoldCardTitle",
@@ -252,7 +279,7 @@
                 },
                 "height": 40,
                 "text": "",
-                "styleSlot": "mp.label.name",
+                "styleSlot": "mp.label.section",
                 "width": 560
               },
               {
@@ -306,6 +333,19 @@
                 "text": "",
                 "styleSlot": "mp.label.body",
                 "width": 560
+              },
+              {
+                "type": "label",
+                "name": "GovGoldHint",
+                "id": "govGoldHint",
+                "widget": {
+                  "top": 232,
+                  "left": 24
+                },
+                "height": 32,
+                "text": "",
+                "styleSlot": "mp.label.body",
+                "width": 560
               }
             ]
           },
@@ -314,13 +354,25 @@
             "name": "GovFoodCard",
             "id": "govFoodCard",
             "widget": {
-              "top": 360,
+              "top": 404,
               "left": 740
             },
             "width": 600,
             "height": 230,
             "skinSlot": "mp.row.bg",
             "children": [
+              {
+                "type": "panel",
+                "name": "GovFoodTitleLine",
+                "id": "govFoodTitleLine",
+                "widget": {
+                  "top": 12,
+                  "left": 24
+                },
+                "width": 560,
+                "height": 1,
+                "skinSlot": "mp.divider.section"
+              },
               {
                 "type": "label",
                 "name": "GovFoodCardTitle",
@@ -331,7 +383,7 @@
                 },
                 "height": 40,
                 "text": "",
-                "styleSlot": "mp.label.name",
+                "styleSlot": "mp.label.section",
                 "width": 560
               },
               {
@@ -393,13 +445,25 @@
             "name": "GovTroopCard",
             "id": "govTroopCard",
             "widget": {
-              "top": 610,
+              "top": 654,
               "left": 740
             },
             "width": 600,
             "height": 230,
             "skinSlot": "mp.row.bg",
             "children": [
+              {
+                "type": "panel",
+                "name": "GovTroopTitleLine",
+                "id": "govTroopTitleLine",
+                "widget": {
+                  "top": 12,
+                  "left": 24
+                },
+                "width": 560,
+                "height": 1,
+                "skinSlot": "mp.divider.section"
+              },
               {
                 "type": "label",
                 "name": "GovTroopCardTitle",
@@ -410,7 +474,7 @@
                 },
                 "height": 40,
                 "text": "",
-                "styleSlot": "mp.label.name",
+                "styleSlot": "mp.label.section",
                 "width": 560
               },
               {

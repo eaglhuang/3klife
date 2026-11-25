@@ -13,7 +13,7 @@ import { StatusEffect } from '../../shared/CommonEnums';
 
 /** 圖示種類；顯示字與顏色由 STATUS_ICON_DEFS 決定 */
 export type StatusIconKind =
-  | 'stun' | 'rooted' | 'controlled' | 'poison' | 'weak' | 'slow' | 'no-shoot'
+  | 'stun' | 'rooted' | 'controlled' | 'poison' | 'burn' | 'weak' | 'slow' | 'no-shoot'
   | 'defense-down' | 'attack-down' | 'accuracy-down' | 'hp-down' | 'morale-down'
   | 'invincible' | 'shield' | 'attack-up' | 'defense-up' | 'hp-up' | 'morale-up'
   | 'haste' | 'crit-up';
@@ -33,6 +33,7 @@ export const STATUS_ICON_DEFS: Readonly<Record<StatusIconKind, StatusIconDef>> =
   'rooted':        { glyph: '定', isDebuff: true,  order: 1 },
   'controlled':    { glyph: '控', isDebuff: true,  order: 2 },
   'poison':        { glyph: '毒', isDebuff: true,  order: 3 },
+  'burn':          { glyph: '燃', isDebuff: true,  order: 3 },
   'weak':          { glyph: '弱', isDebuff: true,  order: 4 },
   'slow':          { glyph: '緩', isDebuff: true,  order: 5 },
   'no-shoot':      { glyph: '封', isDebuff: true,  order: 6 },
@@ -61,6 +62,8 @@ export interface StatusIconEntry {
   isDebuff: boolean;
   /** 剩餘回合；沒有回合概念（例如永久加成）為 null */
   turns: number | null;
+  /** 疊層數（PROG-2-9731，目前只有燃燒會疊）；沒有疊層概念為 null，畫面只在 ≥2 時顯示「×N」 */
+  stacks: number | null;
 }
 
 export interface UnitStatusIconList {
@@ -91,6 +94,8 @@ export interface UnitStatusContext {
   effects: ReadonlyArray<{ effect: StatusEffect | string; remainingTurns: number }>;
   /** 毒箭 DOT */
   dot: { remainingTurns: number } | null;
+  /** 燃燒（PROG-2-9726） */
+  burn: { remainingTurns: number; stacks?: number } | null;
   /** 所屬陣營的全隊增益 aura */
   teamAura: {
     remainingTurns: number;
@@ -117,7 +122,7 @@ export interface UnitStatusContext {
 
 /** 空來源：沒有任何狀態 */
 export function emptyStatusContext(): UnitStatusContext {
-  return { effects: [], dot: null, teamAura: null, massDebuff: null, selfBurst: null, duelVictory: null, controlled: null };
+  return { effects: [], dot: null, burn: null, teamAura: null, massDebuff: null, selfBurst: null, duelVictory: null, controlled: null };
 }
 
 /** 比較順序：減益在前；同類依 order */
@@ -132,14 +137,15 @@ export function compareStatusIcons(a: StatusIconEntry, b: StatusIconEntry): numb
  */
 export function computeUnitStatusIcons(unit: UnitStatusSource, ctx: UnitStatusContext, maxVisible = STATUS_ICON_MAX_VISIBLE): UnitStatusIconList {
   const byKind = new Map<StatusIconKind, StatusIconEntry>();
-  const add = (kind: StatusIconKind, turns: number | null): void => {
+  const add = (kind: StatusIconKind, turns: number | null, stacks: number | null = null): void => {
     const def = STATUS_ICON_DEFS[kind];
     const normalized = turns !== null && Number.isFinite(turns) ? Math.max(0, Math.floor(turns)) : null;
     const prev = byKind.get(kind);
     if (!prev) {
-      byKind.set(kind, { kind, glyph: def.glyph, isDebuff: def.isDebuff, turns: normalized });
+      byKind.set(kind, { kind, glyph: def.glyph, isDebuff: def.isDebuff, turns: normalized, stacks });
       return;
     }
+    if (stacks !== null) prev.stacks = Math.max(prev.stacks ?? 0, stacks);
     // 永久（null）優先，否則取較長回合
     if (prev.turns === null) return;
     prev.turns = normalized === null ? null : Math.max(prev.turns, normalized);
@@ -172,6 +178,7 @@ export function computeUnitStatusIcons(unit: UnitStatusSource, ctx: UnitStatusCo
 
   // 3) 毒箭、被控制
   if (ctx.dot && ctx.dot.remainingTurns > 0) add('poison', ctx.dot.remainingTurns);
+  if (ctx.burn && ctx.burn.remainingTurns > 0) add('burn', ctx.burn.remainingTurns, ctx.burn.stacks ?? null);
   if (ctx.controlled && ctx.controlled.turnsLeft > 0) add('controlled', ctx.controlled.turnsLeft);
 
   // 4) 全隊增益 aura
@@ -208,7 +215,7 @@ export function computeUnitStatusIcons(unit: UnitStatusSource, ctx: UnitStatusCo
     overflow,
     overflowText: overflow > 0 ? `+${overflow}` : '',
     allKinds: all.map((i) => i.kind),
-    signature: all.map((i) => `${i.kind}:${i.turns ?? 'x'}`).join('|') + `#${limit}`,
+    signature: all.map((i) => `${i.kind}:${i.turns ?? 'x'}${i.stacks !== null && i.stacks >= 2 ? `*${i.stacks}` : ''}`).join('|') + `#${limit}`,
   };
 }
 
@@ -233,6 +240,7 @@ export function gainedTones(kinds: readonly StatusIconKind[]): { buff: boolean; 
 /** 從 BattleState／單位組出狀態來源（結構型別，免依賴 cc；缺的欄位視為沒有） */
 export interface StatusStateLike {
   unitDots?: ReadonlyMap<string, { remainingTurns: number }>;
+  unitBurns?: ReadonlyMap<string, { remainingTurns: number; stacks?: number }>;
   teamAuras?: ReadonlyMap<string, UnitStatusContext['teamAura']>;
   massDebuffs?: ReadonlyMap<string, UnitStatusContext['massDebuff']>;
   selfBursts?: ReadonlyMap<string, UnitStatusContext['selfBurst']>;
@@ -249,6 +257,7 @@ export function buildUnitStatusContext(
   return {
     effects: buffEntries,
     dot: state.unitDots?.get(unit.id) ?? null,
+    burn: state.unitBurns?.get(unit.id) ?? null,
     teamAura: state.teamAuras?.get(unit.faction) ?? null,
     massDebuff: state.massDebuffs?.get(unit.faction) ?? null,
     selfBurst: state.selfBursts?.get(unit.faction) ?? null,

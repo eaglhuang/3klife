@@ -11,13 +11,19 @@
     },
     "rank-unlock.card.bg": {
       "kind": "color-rect",
-      "color": "backgroundDeep",
-      "alpha": 246
+      "color": "#140F0C",
+      "alpha": 230,
+      "cornerRadius": 4,
+      "borderWidth": 1,
+      "borderColor": "#E8C88CA0"
     },
     "rank-unlock.button.ok": {
       "kind": "color-rect",
-      "color": "primary",
-      "alpha": 220
+      "color": "#A8322A",
+      "alpha": 190,
+      "cornerRadius": 2,
+      "borderWidth": 1,
+      "borderColor": "#E8C88C70"
     },
     "rank-unlock.label.title": {
       "kind": "label-style",

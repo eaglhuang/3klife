@@ -16,15 +16,16 @@ export type OnboardingActionId = keyof typeof ONBOARDING_ACTIONS;
 
 /**
  * 大堂上的對應入口。anchor 為 layout 的 _ucufId；
- * pick 'siblings'：取錨點的兄弟節點（大堂頂列的金／玉／糧／兵沒有自己的 id，以同列的「返回」為錨點）。
+ * pick 'siblings'：取錨點的兄弟節點；pick 'children'：取錨點的子節點
+ * （大堂頂列的金／銀／玉／糧／兵沒有自己的 id，以資源列容器 resource-row 為錨點；PROG-2-9953 推進一季鈕移出頂列後不再以它為錨點）。
  */
 export interface HallTutorialTargetSpec {
     readonly anchor: string;
-    readonly pick: 'self' | 'siblings';
+    readonly pick: 'self' | 'siblings' | 'children';
 }
 
 export const ONBOARDING_HALL_TARGETS: Readonly<Record<OnboardingActionId, HallTutorialTargetSpec>> = {
-    fate: { anchor: 'lobby-hall-screen.back', pick: 'siblings' },
+    fate: { anchor: 'lobby-hall-screen.resource-row', pick: 'children' },
     growth: { anchor: 'lobby-hall-screen.dock-sortie', pick: 'self' },
     legacy: { anchor: 'lobby-hall-screen.dock-generals', pick: 'self' },
 };
@@ -55,7 +56,9 @@ export function resolveTutorialTargets<T extends TutorialTargetNode>(actionId: O
         if (!anchor) return [];
         const picked = spec.pick === 'self'
             ? [anchor]
-            : ((anchor.parent?.children ?? []) as readonly T[]).filter(node => node !== anchor);
+            : spec.pick === 'children'
+                ? ((anchor.children ?? []) as readonly T[])
+                : ((anchor.parent?.children ?? []) as readonly T[]).filter(node => node !== anchor);
         return picked.filter(node => node.activeInHierarchy);
     }
     const city = surfaces.cityTarget(ONBOARDING_ACTIONS[actionId].target);

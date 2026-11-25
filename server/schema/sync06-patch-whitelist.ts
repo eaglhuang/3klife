@@ -79,6 +79,7 @@ export const SYNC_PATCH_ROOT_KEYS: readonly string[] = [
     'sandtableUnlockHistory',
     'startingTalisman',
     'familySystemUnlocked',
+    'matchmakerFirstVisitDone',
     'openingPhase',
     'enrollGrantDay',
     'itemAcquisitionLog',
@@ -137,6 +138,10 @@ export const SYNC_PATCH_ROOT_KEYS: readonly string[] = [
     'countdown',
     'sortiePresets',
     'breedingBirthRecords',
+    'annualRanking',
+    'friendships',
+    'friendshipPairs',
+    'friendshipActionLog',
 ];
 
 const ROOT_KEY_SET = new Set(SYNC_PATCH_ROOT_KEYS);

@@ -8,6 +8,7 @@
  *  - 完美獎勵在情報不足時是 ???，並附說明「情報 100 才會揭曉」。
  *  - 派遣後顯示鎖定狀態（情報、分支、成功率凍結）與預計回報季。
  */
+import { chainTagText } from '../../core/mission/MissionChain';
 import type { DetailActionKey } from '../core/HallDetailActionStates';
 import { SEASONS_PER_YEAR, formatSeasonLabel } from '../../core/systems/GameClock';
 import type { MissionDetailView } from '../../core/mission/MissionTypes';
@@ -96,7 +97,11 @@ export interface MissionDialogContext {
     reconCap?: number;
     /** 完美獎勵揭曉的情報度（資料表值）；沒給時視為 100 */
     hiddenRevealIntel?: number;
+    /** 情報分段門檻（資料表值）；有給時情報提示列會寫「再探到幾 % 能多看到什麼」（PROG-2-9965） */
+    intelBands?: { vague: number; clear: number; full: number };
     selectedGeneralId: string | null;
+    /** 本場戰場天氣一行（PROG-2-9735）；有值時環境偵察的天氣欄改顯示它，沒給（一般任務）維持「風險・期限」 */
+    weatherLine?: string;
 }
 
 export interface MissionDialogState {
@@ -145,6 +150,15 @@ export function lockedStatusText(d: Pick<MissionDetailView, 'intel'>): string {
 export function returnSeasonText(card: Readonly<MissionCardView> | undefined, season: number): string {
     const ret = card?.returnSeason;
     return ret === undefined ? '' : `預計${seasonCodeLabel(ret)}回報（還有 ${Math.max(0, ret - season)} 季）`;
+}
+
+/** 下一段情報能多看到什麼：讓玩家算「再探值不值」（取捨可見）；沒給門檻或已到頂回空字串 */
+export function intelUnlockNote(intel: number, bands?: { vague: number; clear: number; full: number }): string {
+    if (!bands) return '';
+    if (intel < bands.vague) return `（到 ${bands.vague}% 才看得出成功率高低）`;
+    if (intel < bands.clear) return `（到 ${bands.clear}% 可看到成功率區間）`;
+    if (intel < bands.full) return `（到 ${bands.full}% 可看到確切成功率）`;
+    return '';
 }
 
 /** 詳情視窗 state（情報遮蔽、成功率投影、耗費不足標示、四鈕可用與原因）；沒有該任務回傳 null */
@@ -199,10 +213,11 @@ export function buildMissionDialogState(service: IMissionService, missionId: str
     const intelHint = active ? lockedStatusText(d)
         : d.intel >= revealIntel ? '情報已完整'
             : fullBand ? `情報 ${d.intel}%，已達再探上限；100% 才會揭曉完美獎勵`
-                : `情報 ${d.intel}%，再探或等待可提高`;
+                : `情報 ${d.intel}%，再探或等待可提高${intelUnlockNote(d.intel, ctx.intelBands)}`;
 
     return {
-        missionTypeLabel: `${MISSION_WALL_NAME[wallOfTheme(d.theme)] ?? ''}・${MISSION_DIFFICULTY_NAME[d.difficulty] ?? d.difficulty}`,
+        // 連鎖任務多帶一個「連續任務 2/3」標記（PROG-2-9966）
+        missionTypeLabel: `${MISSION_WALL_NAME[wallOfTheme(d.theme)] ?? ''}・${MISSION_DIFFICULTY_NAME[d.difficulty] ?? d.difficulty}${card?.chain ? `・${chainTagText(card.chain.depth, card.chain.total)}` : ''}`,
         missionTitle: d.title,
         missionBrief: d.brief,
         intelRevealPercent: d.intel,
@@ -211,7 +226,7 @@ export function buildMissionDialogState(service: IMissionService, missionId: str
         intelFogVisible: !fullBand || active,
         intelHintLabel: intelHint,
         envScoutTerrainLine: factsLine || '尚未探得敵情',
-        envScoutWeatherLine: `${labeled('風險', d.risk.text)}・${periodText}`,
+        envScoutWeatherLine: ctx.weatherLine ?? `${labeled('風險', d.risk.text)}・${periodText}`,
         generalSelectHintLabel: active && card?.executorName ? `${rateLine}・${card.executorName}出任務中` : rateLine,
         volunteerBadgeVisible: !active && picked?.volunteer === true,
         volunteerBadgeLabel: !active && picked?.volunteer === true ? `${picked.name} 毛遂自薦` : '',

@@ -36,6 +36,8 @@ export interface DomesticFlowView {
     texts: Record<string, string>;
     actives: Record<string, boolean>;
     enabled: Record<string, boolean>;
+    /** 主事名稱旁的小頭像：key 為主事文字節點 id；generalId 空字串表示未指派（隱藏） */
+    nameTags: Record<string, { generalId: string; name: string }>;
 }
 
 export interface DomesticPanelDeps {
@@ -235,6 +237,7 @@ export class DomesticPanelController {
             noticeLabel: this._notice !== null || !!this._deps.eventLine?.(),
         };
         const enabled: Record<string, boolean> = {};
+        const nameTags: Record<string, { generalId: string; name: string }> = {};
         for (const row of rows) {
             const name = NODE_NAME[row.taskId];
             const key = name.charAt(0).toLowerCase() + name.slice(1);
@@ -244,6 +247,7 @@ export class DomesticPanelController {
             actives[`${key}Chosen`] = row.chosenThisSeason;
             enabled[`btn${name}`] = row.canChoose;
             texts[`${key}Governor`] = row.governorName ? `主事：${row.governorName}` : '主事：未指派';
+            nameTags[`${key}Governor`] = { generalId: row.governorId ?? '', name: row.governorName ?? '' };
             texts[`btnGov${name}Label`] = '換將';
             actives[`btnGov${name}`] = canAssign;
             enabled[`btnGov${name}`] = canAssign;
@@ -265,6 +269,6 @@ export class DomesticPanelController {
         enabled.btnAutoMode = hasMode;
         actives.btnAutoGov = canAssign;
         enabled.btnAutoGov = canAssign;
-        return { texts, actives, enabled };
+        return { texts, actives, enabled, nameTags };
     }
 }

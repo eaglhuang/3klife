@@ -168,6 +168,7 @@
               {
                 "type": "container",
                 "name": "LobbyHallScreen_div_11",
+                "_ucufId": "lobby-hall-screen.resource-row",
                 "width": 896,
                 "height": 52,
                 "layout": {
@@ -332,29 +333,6 @@
                         "text": "3,000",
                         "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_4",
                         "textKey": "auto.lobby-hall-screen.lobby-hall-screen-span-4"
-                      }
-                    ]
-                  },
-                  {
-                    "type": "panel",
-                    "name": "LobbyHallScreen_div_16",
-                    "_ucufId": "lobby-hall-screen.back",
-                    "width": 96,
-                    "height": 52,
-                    "layout": {
-                      "type": "horizontal",
-                      "alignItems": "center",
-                      "justifyContent": "center"
-                    },
-                    "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_16",
-                    "children": [
-                      {
-                        "type": "label",
-                        "name": "LobbyHallScreen_span_5",
-                        "text": "推進一季",
-                        "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_5",
-                        "width": 96,
-                        "height": 52
                       }
                     ]
                   }
@@ -1543,6 +1521,7 @@
                           "top": 3
                         },
                         "text": "再議",
+                        "textKey": "ui.hall.btn.defer",
                         "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_51",
                         "width": 34,
                         "height": 25
@@ -1879,6 +1858,7 @@
                         "width": 114,
                         "height": 26,
                         "text": "空位",
+                        "textKey": "ui.hall.slot.empty",
                         "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_b_9"
                       },
                       {
@@ -1990,6 +1970,7 @@
                       "top": 0
                     },
                     "text": "出征",
+                    "textKey": "ui.hall.btn.expedition",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_62",
                     "width": 196,
                     "height": 76
@@ -2012,6 +1993,7 @@
                       "top": 0
                     },
                     "text": "武將",
+                    "textKey": "ui.hall.btn.generals",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_63",
                     "width": 196,
                     "height": 76
@@ -2034,6 +2016,7 @@
                       "top": 0
                     },
                     "text": "內政",
+                    "textKey": "ui.hall.btn.domestic",
                     "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_64",
                     "width": 196,
                     "height": 76
@@ -2085,6 +2068,33 @@
                 ]
               }
             ]
+          },
+          {
+            "type": "panel",
+            "name": "LobbyHallScreen_div_16",
+            "_ucufId": "lobby-hall-screen.back",
+            "width": 200,
+            "height": 84,
+            "layout": {
+              "type": "horizontal",
+              "alignItems": "center",
+              "justifyContent": "center"
+            },
+            "skinSlot": "auto.lobby-hall-screen.lobbyhallscreen_div_16",
+            "children": [
+              {
+                "type": "label",
+                "name": "LobbyHallScreen_span_5",
+                "text": "推進一季",
+                "styleSlot": "auto.lobby-hall-screen.lobbyhallscreen_span_5",
+                "width": 200,
+                "height": 84
+              }
+            ],
+            "widget": {
+              "right": 24,
+              "bottom": 24
+            }
           }
         ]
       }

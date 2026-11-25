@@ -14,6 +14,7 @@
  *   → 回到 dispatchDirectBattleSkill：startSelfBurst／applyTeamRecover／startTeamAura／applyEnemyMassDebuff／applyUltimateSpecialRule（依 family）
  */
 import * as fs from 'fs';
+import { useZhTwSkillNames } from './zhTwSkillNames';
 import * as path from 'path';
 import { assert, TestSuite } from './TestRunner';
 import { BattleController } from '../assets/scripts/battle/controllers/BattleController';
@@ -98,6 +99,7 @@ export function createUltimateEffectAuditSuite(): TestSuite {
     // ───────────────────────── 張飛：名稱與資料來源 ─────────────────────────
 
     suite.test('張飛名稱：選單「當陽怒吼」來自奧義定義、演出「震軍怒喝」來自技能 id 表，兩份資料互不相連', () => {
+        useZhTwSkillNames();
         services().initialize();
         seedUltimateDataForHeadless(ULTIMATES, {});
         const def = ULTIMATES.find((u) => u.id === 'ult-zhang-fei-1') as CanonicalUltimateDefinition;
@@ -122,6 +124,7 @@ export function createUltimateEffectAuditSuite(): TestSuite {
     });
 
     suite.test('張飛名稱〔待裁決〕：五個奧義槽全指到同一個 battleSkillId，演出名／效果說明一律「震軍怒喝」，與各槽自己的名稱和說明脫鉤', () => {
+        useZhTwSkillNames();
         const slots = ULTIMATES.filter((u) => u.templateId === 'GEN_SHU_ZHANG_FEI');
         assert.equals(5, slots.length);
         assert.equals('當陽怒吼,萬夫莫敵,蛇矛裂陣,燕人威喝,長坂戰神', slots.map((s) => s.name).join(','));
@@ -307,20 +310,17 @@ export function createUltimateEffectAuditSuite(): TestSuite {
 
     // ───────────────────────── 趙雲 ─────────────────────────
 
-    suite.test('趙雲名稱：選單「龍膽激昂」／演出「龍魂突刺」，說明（武力 +50% 免疫控制 2 回合）與演出說明（自動貫穿最佳列）講的是兩件事', () => {
+    suite.test('趙雲名稱統一為「龍膽·破軍」：定義與演出表一致，說明（武力 +50% 免疫控制 2 回合）與演出說明（自動貫穿最佳列）講的是兩件事', () => {
         const def = ULTIMATES.find((u) => u.id === 'ult-zhao-yun-1') as CanonicalUltimateDefinition;
-        assert.equals('龍膽激昂', def.name);
+        assert.equals('龍膽·破軍', def.name);
         assert.equals('武力 +50%，免疫控制 2 回合。', def.description);
         assert.equals('zhao-yun-pierce', def.battleSkillId);
         const pres = getBattleSkillPresentation('zhao-yun-pierce');
-        assert.equals('龍魂突刺', pres.name);
-        assert.equals('【突擊】龍魂突刺：自動貫穿最佳列', pres.effectStatus);
+        assert.equals('【突擊】龍膽·破軍：自動貫穿最佳列', pres.effectStatus);
         assert.equals('龍魂突刺', TACTICS.find((t) => t.id === 'tactic-dragon-pierce')?.displayName);
         services().initialize();
         seedUltimateDataForHeadless(ULTIMATES, {});
-        assert.equals('龍膽激昂', buildUltimateSkills(playerGeneral('zhao-yun', 1))[0].label);
-        // 第五槽 zhao-yun-immortal 沒有演出表項目，會退回顯示技能 id 本身
-        assert.equals('zhao-yun-immortal', getBattleSkillPresentation('zhao-yun-immortal').name, '〔待裁決〕白馬銀槍·不滅 的演出名查不到，直接顯示英文 id');
+        assert.equals('龍膽·破軍', buildUltimateSkills(playerGeneral('zhao-yun', 1))[0].label);
     });
 
     suite.test('趙雲實際效果：施放後直線敵軍受三連擊傷害（說明沒寫），並開出 2 回合自身爆發窗口（說明有寫）', () => {
@@ -343,6 +343,7 @@ export function createUltimateEffectAuditSuite(): TestSuite {
     // ───────────────────────── 關羽 ─────────────────────────
 
     suite.test('關羽名稱：選單「青龍偃月」／演出「月牙刀斬」；說明「前方扇形」但招式資料是直線（Line，長 3），與說明不符', () => {
+        useZhTwSkillNames();
         const def = ULTIMATES.find((u) => u.id === 'ult-guan-yu-1') as CanonicalUltimateDefinition;
         assert.equals('青龍偃月', def.name);
         assert.equals('前方扇形大範圍斬擊。', def.description);
@@ -377,6 +378,7 @@ export function createUltimateEffectAuditSuite(): TestSuite {
     // ───────────────────────── 呂布 ─────────────────────────
 
     suite.test('呂布名稱：選單「方天畫戟」／演出「天下無雙」；演出名正好是第 5 槽的奧義名，與第 1 槽說明（三連擊、穿透 2 格）不符', () => {
+        useZhTwSkillNames();
         const def = ULTIMATES.find((u) => u.id === 'ult-lu-bu-1') as CanonicalUltimateDefinition;
         assert.equals('方天畫戟', def.name);
         assert.equals('三連擊，每擊穿透 2 格。', def.description);

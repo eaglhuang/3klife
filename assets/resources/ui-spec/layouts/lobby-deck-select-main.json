@@ -37,11 +37,38 @@
             "widget": {
               "top": 10,
               "left": 12,
-              "right": 12
+              "right": 56
             },
             "height": 30,
             "text": "手動已選 0/4",
             "styleSlot": "deck.select.label.title"
+          },
+          {
+            "type": "button",
+            "name": "BtnDeckClose",
+            "id": "btnDeckClose",
+            "widget": {
+              "top": 8,
+              "right": 8
+            },
+            "width": 40,
+            "height": 28,
+            "skinSlot": "deck.select.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnDeckCloseLabel",
+                "id": "deckCloseLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 20,
+                "text": "關閉",
+                "styleSlot": "deck.select.label.card"
+              }
+            ]
           },
           {
             "type": "label",

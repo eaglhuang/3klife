@@ -17,6 +17,7 @@ import { UITemplateBinder } from '../core/UITemplateBinder';
 import { UI_EVENTS } from '../core/UIEvents';
 import { emitDeployDragDebug, isCardTap } from './DeployDragDebug';
 import { logBattleUIPosition } from './BattleUIDiag';
+import { TroopTypeBadge } from '../shared/TroopTypeBadge';
 
 const { ccclass } = _decorator;
 
@@ -33,8 +34,6 @@ const UNIT_TYPE_BADGES: Record<string, { icon: string; color: Color }> = {
 
 const DEFAULT_BADGE_DEF = { icon: '？', color: new Color(220, 220, 220, 255) };
 const TALLY_CARD_ART_FALLBACK_PATH = 'ui/tiger-tally/card-art/troops/spriteFrame';
-const TALLY_TYPE_BADGE_FALLBACK_PATH = 'sprites/battle/battle_unit_type_underlay';
-const TROOP_TYPE_SUITE_UNDERLAY_PATH = 'sprites/battle/battle_unit_type_underlay';
 const WHITE = new Color(255, 255, 255, 255);
 
 /**
@@ -314,8 +313,7 @@ export class TigerTallyComposite extends CompositePanel {
         textNode.active = false;
 
         if (sprite) {
-            sprite.color = TALLY_TIER_STYLE[data.rarity]?.badgeTint ?? WHITE;
-            void this._applyTypeBadgeSprite(sprite, slot, data, loadSeq);
+            TroopTypeBadge.mount(sprite.node).setType(data.unitType);
         }
     }
 
@@ -407,29 +405,6 @@ export class TigerTallyComposite extends CompositePanel {
         artSprite.spriteFrame = spriteFrame;
         artSprite.color = WHITE;
         artSprite.node.active = true;
-    }
-
-    private async _applyTypeBadgeSprite(
-        sprite: Sprite,
-        slot: number,
-        data: TallyCardData,
-        loadSeq: number,
-    ): Promise<void> {
-        const normalizedType = this._normalizeKey(data.unitType);
-        const spriteFrame = await this._loadSpriteFrameWithFallback(
-            `tally.badge.type[${slot}]`,
-            this._uniquePaths([
-                data.typeBadgeResource,
-                normalizedType ? `sprites/battle/battle_unit_type_icon_${normalizedType}` : null,
-                TROOP_TYPE_SUITE_UNDERLAY_PATH,
-            ]),
-            TALLY_TYPE_BADGE_FALLBACK_PATH,
-        );
-        if (!spriteFrame || !this._isLoadSeqCurrent(slot, loadSeq)) return;
-
-        sprite.spriteFrame = spriteFrame;
-        sprite.color = WHITE;
-        sprite.node.active = true;
     }
 
     private _buildArtCandidates(data: TallyCardData): string[] {

@@ -21,7 +21,8 @@ export const CURRENCY_LABELS: Record<WalletCurrencyKey, string> = {
 
 /** 新檔的起始錢包（原為 LocalGachaService 私有常數，數值不變）；存檔為 null 時的入帳基底 */
 export const STARTER_GACHA_WALLET: Readonly<Record<WalletCurrencyKey, number>> = {
-    gems: 1280,
+    /** 開局靈玉 1500＝剛好一次限定池十連（tenCost 1500）；原 1280 差 220，新玩家第一次十連買不起（PROG-2-9994，總PM 11/25 裁決） */
+    gems: 1500,
     /** 正式開局黃金 1000（規格 CP-01；PROG-2-9149）；原 128,450 只留在 QA_STARTER_GACHA_WALLET */
     gold: 1000,
     tickets: 12,

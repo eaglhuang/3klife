@@ -131,10 +131,23 @@ export interface RewardBundleDef {
     presentation: RewardPresentationDef;
 }
 
+/** 台詞成就「有感而發」（PROG-2-9864）的數值：友誼加成寫在兩個 bundle 的效果內，這裡只管上限與套件 id */
+export interface InsightConfigV1 {
+    /** 每位武將每日可加友誼的次數上限（只計 stepBundle） */
+    dailyCap: number;
+    /** 每位武將已見台詞指紋的保留筆數上限（舊的淘汰） */
+    seenLimit: number;
+    /** 首次新台詞：解鎖成就、稱號、徽章與友誼 */
+    firstBundle: string;
+    /** 之後每句新台詞：友誼 */
+    stepBundle: string;
+}
+
 export interface RewardConfigV1 {
     schema: 'reward-config.v1';
     pools: RewardPoolDef[];
     bundles: RewardBundleDef[];
+    insight?: InsightConfigV1;
 }
 
 export const REWARD_CONFIG_JSON = 'data/reward-config';
@@ -143,6 +156,14 @@ export const DEFAULT_PRESENTATION_TYPE = 'instant';
 export const INSTANT_PRESENTATION: RewardPresentationDef = Object.freeze({ type: DEFAULT_PRESENTATION_TYPE, args: {}, skippable: true });
 
 export const DEFAULT_REWARD_CONFIG: RewardConfigV1 = Object.freeze({ schema: 'reward-config.v1', pools: [], bundles: [] });
+
+/** 台詞成就的缺省值（reward-config.json 缺 insight 區段時才用；正式數值以 JSON 為準） */
+export const DEFAULT_INSIGHT_CONFIG: InsightConfigV1 = Object.freeze({
+    dailyCap: 3,
+    seenLimit: 200,
+    firstBundle: 'BUNDLE_INSIGHT_FIRST',
+    stepBundle: 'BUNDLE_INSIGHT_STEP',
+});
 
 function isRecord(value: unknown): value is Record<string, unknown> {
     return typeof value === 'object' && value !== null && !Array.isArray(value);
@@ -368,7 +389,23 @@ export function normalizeRewardConfig(raw: unknown): RewardConfigV1 {
         const bundle = normalizeBundle(b);
         if (bundle && !bundleIds.has(bundle.id)) { bundleIds.add(bundle.id); bundles.push(bundle); }
     }
-    return { schema: 'reward-config.v1', pools, bundles };
+    const insight = normalizeInsightConfig(raw.insight);
+    return { schema: 'reward-config.v1', pools, bundles, insight };
+}
+
+function positiveInt(value: unknown, fallback: number): number {
+    return typeof value === 'number' && Number.isInteger(value) && value > 0 ? value : fallback;
+}
+
+/** 讀 insight 區段；缺欄位或不合法的欄位退回缺省值 */
+export function normalizeInsightConfig(raw: unknown): InsightConfigV1 {
+    const r = isRecord(raw) ? raw : {};
+    return {
+        dailyCap: positiveInt(r.dailyCap, DEFAULT_INSIGHT_CONFIG.dailyCap),
+        seenLimit: positiveInt(r.seenLimit, DEFAULT_INSIGHT_CONFIG.seenLimit),
+        firstBundle: str(r.firstBundle) ?? DEFAULT_INSIGHT_CONFIG.firstBundle,
+        stepBundle: str(r.stepBundle) ?? DEFAULT_INSIGHT_CONFIG.stepBundle,
+    };
 }
 
 export function findPool(config: RewardConfigV1, id: string): RewardPoolDef | undefined {

@@ -48,16 +48,17 @@ export function createSeasonReportPanelSuite(): TestSuite {
         const rows = buildSeasonReportPanelRows(reports);
         assert.equals(SEASON_REPORT_PANEL_ROWS, rows.length);
         assert.equals(1, rows[0].rank);
-        assert.equals(reports[0].scriptLine, rows[0].lineText);
-        assert.equals(reports[SEASON_REPORT_PANEL_ROWS - 1].scriptLine, rows[SEASON_REPORT_PANEL_ROWS - 1].lineText);
+        assert.equals('武將0 精神飽滿，隨時可以去結緣', rows[0].lineText);
+        assert.equals(80, rows[0].vitalityPct);
     });
 
     suite.test('超過列數時底部提示說明「另有 X 位」，列數剛好時不提示人數', () => {
         const reports = Array.from({ length: SEASON_REPORT_PANEL_ROWS + 2 }, (_, i) => reportRow(`g${i}`, `武將${i}`, 80));
         const texts = buildSeasonReportPanelTexts('第 2 年 春季', reports);
-        assert.isTrue(texts['DialogCard/FooterBar/HintLabel'].startsWith('另有 2 位武將未列出'));
+        assert.isTrue(texts['DialogCard/FooterBar/HintLabel'].startsWith('另有 2 位精力也夠'));
         const exact = buildSeasonReportPanelTexts('第 2 年 春季', reports.slice(0, SEASON_REPORT_PANEL_ROWS));
-        assert.isFalse(exact['DialogCard/FooterBar/HintLabel'].includes('未列出'));
+        assert.isFalse(exact['DialogCard/FooterBar/HintLabel'].includes('另有'));
+        assert.isFalse(exact['DialogCard/FooterBar/HintLabel'].includes('暫定'));
     });
 
     suite.test('空名冊：空白提示有字，所有列為占位「—」', () => {
@@ -71,7 +72,15 @@ export function createSeasonReportPanelSuite(): TestSuite {
         const texts = buildSeasonReportPanelTexts('第 2 年 春季', [reportRow('g1', '趙雲', 90)]);
         assert.equals('', texts['DialogCard/ScrollView/ScrollContent/EmptyHintLabel']);
         assert.equals('第 2 年 春季', texts['DialogCard/HeaderBar/SeasonLabel']);
-        assert.equals('本季戰報：趙雲 精力剩 90%，可進行結緣。', texts['DialogCard/ScrollView/ScrollContent/Row0/LineLabel']);
+        assert.equals('趙雲 精神飽滿，隨時可以去結緣', texts['DialogCard/ScrollView/ScrollContent/Row0/LineLabel']);
+        assert.equals('90%', texts['DialogCard/ScrollView/ScrollContent/Row0/RankLabel']);
+    });
+
+    suite.test('精力 80% 以下用「還撐得住」；語系表有字就用語系表', () => {
+        const mid = buildSeasonReportPanelRows([reportRow('g1', '關羽', 72)]);
+        assert.equals('關羽 還撐得住，要結緣也行', mid[0].lineText);
+        const localized = buildSeasonReportPanelRows([reportRow('g1', 'Guan Yu', 72)], 6, (key, ...args) => key === 'ui.season_report.vitality.mid' ? `${args[0]} is fine` : key);
+        assert.equals('Guan Yu is fine', localized[0].lineText);
     });
 
     suite.test('所有文字路徑都存在於 season-report-main.json（setTextsByPath 寫得進去）', () => {

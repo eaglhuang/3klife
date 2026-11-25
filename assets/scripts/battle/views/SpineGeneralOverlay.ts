@@ -7,6 +7,9 @@ import { DeployLandingSample, deployLandingTotalSec, landingCrossed, memberDeplo
 import { UnitSpineConfig } from '../shared/UnitPresentationConfig';
 import { AttackStyle, pickAttackClip } from '../shared/AttackStyle';
 import { DuelExchange, DuelPresentationCore } from '../shared/DuelPresentationCore';
+
+/** 場邊單挑雙方各離中心的距離（overlay 像素，PROG-2-9719）。 */
+const DUEL_SIDELINE_GAP = 70;
 import { getHitFlashCurve, hitFeedbackTotalSec, hitFlashStrength, parseHitFlashCurve, sampleHitRecoil, sampleHitShake, setHitFlashCurve } from './BattlePresentationTiming';
 
 interface Entry {
@@ -47,6 +50,12 @@ export type LandingListener = (id: string, x: number, y: number, isLeader: boole
  * 真正的全身閃白要用雙色染色（two-color tint）著色器，這裡先用相乘可行的暖色提亮脈衝當閃色。
  */
 const HIT_FLASH_TINT = { r: 255, g: 120, b: 110 };
+
+/** 骨架基礎色：一般單位白色（不染）；設了 tint 的骨架（敵方騎兵暫代紅色）用該色，閃色也在它上面疊。 */
+function baseColorOf(config: UnitSpineConfig): Color {
+  const t = config.tint;
+  return t ? new Color(t.r, t.g, t.b, 255) : Color.WHITE;
+}
 
 /**
  * PROG-2-9412：受擊閃白材質（resources/effects/spine-hit-flash）。全部單位共用一份 Material，
@@ -232,6 +241,17 @@ export class SpineUnitOverlay {
     return true;
   }
 
+  /** 施法：骨架有專屬施法動作（config.castClip，騎乘包的通用 cast）就播它，否則沿用通用攻擊動作（PROG-2-9993）。 */
+  public playCast(id: string): boolean {
+    const entry = this.entries.get(id);
+    const cast = entry?.config.castClip;
+    if (entry?.node?.isValid && cast) {
+      const runtime = entry.node.getComponent(sp.Skeleton)?.skeletonData?.getRuntimeData();
+      if (runtime?.findAnimation(cast.name)) { entry.core.play('attack', cast); return true; }
+    }
+    return this.play(id, 'attack');
+  }
+
   /**
    * 受擊回饋：閃色 + 左右抖動（PROG-2-9401）。抖動是畫面位置上的暫時偏移，每幀由 apply 疊加在移動位置上，
    * 所以不會打斷移動、也不會把單位拉回舊位置；結束時偏移自然歸零。
@@ -251,23 +271,30 @@ export class SpineUnitOverlay {
     if (entry && sec > 0) entry.freeze = Math.max(entry.freeze, sec);
   }
   public exists(id: string): boolean { return this.entries.has(id); }
+  /** 這個單位的 Spine 節點是否已載好、畫得出來（PROG-2-9715：主將出陣衝刺要等載好才起跑） */
+  public isShown(id: string): boolean { return !!this.entries.get(id)?.node?.isValid; }
   public revive(id: string): void {
     const entry = this.entries.get(id);
     if (entry && !this.duel?.ids.includes(id) && entry.core.snapshot().action === 'fall') entry.core.play('idle');
   }
 
   /** 回傳是否真的播了交鋒動畫；任一方沒有 Spine 動畫時回 false，呼叫端要自己補演出 */
-  public async playDuel(a: string, b: string, winner: 0 | 1 | null, fallen: boolean, exchanges: readonly DuelExchange[]): Promise<boolean> {
+  /**
+   * arenaCenter：有給就到這個點（場邊）對站，左方 a、右方 b；沒給沿用雙方腳點中點（PROG-2-9719 Q1=B）。
+   * 演完雙方各自走回出發時的腳點（主將回格子、場邊待命者回待命點）。
+   */
+  public async playDuel(a: string, b: string, winner: 0 | 1 | null, fallen: boolean, exchanges: readonly DuelExchange[], arenaCenter?: { x: number; y: number } | null): Promise<boolean> {
     if (this.duel) return false;
     const loaded = await Promise.all([this.waitForEntry(a), this.waitForEntry(b)]);
     if (!loaded.every(Boolean) || this.duel) return false;
     const first = this.entries.get(a), second = this.entries.get(b);
     if (!first?.node?.isValid || !second?.node?.isValid) return false;
     const left = first.core.snapshot().foot, right = second.core.snapshot().foot;
-    const midpoint = { x: (left.x + right.x) / 2, y: (left.y + right.y) / 2 };
     const dx = right.x - left.x, dy = right.y - left.y, distance = Math.hypot(dx, dy);
-    const direction = distance > 0.001 ? { x: dx / distance, y: dy / distance } : { x: 1, y: 0 };
-    const gap = Math.min(90, Math.max(40, distance / 4));
+    const midpoint = arenaCenter ? { x: arenaCenter.x, y: arenaCenter.y } : { x: (left.x + right.x) / 2, y: (left.y + right.y) / 2 };
+    // 場邊對站一律左右排開（玩家在左）；沒指定場邊時沿雙方連線方向
+    const direction = arenaCenter ? { x: 1, y: 0 } : distance > 0.001 ? { x: dx / distance, y: dy / distance } : { x: 1, y: 0 };
+    const gap = arenaCenter ? DUEL_SIDELINE_GAP : Math.min(90, Math.max(40, distance / 4));
     const core = new DuelPresentationCore(
       { unit: first.core, sideline: left, arena: { x: midpoint.x - direction.x * gap, y: midpoint.y - direction.y * gap } },
       { unit: second.core, sideline: right, arena: { x: midpoint.x + direction.x * gap, y: midpoint.y + direction.y * gap } }, winner, fallen, exchanges,
@@ -442,7 +469,7 @@ export class SpineUnitOverlay {
       // pos 已含抖動偏移與帶頭者起伏；起伏換成隊員自己相位的，才是錯開的集體走路
       const followerBob = walking ? stepBobOffset(entry.stepClock, slot.phase * state.clip.duration, gait.bobPx, gait.footfallIntervalSec) - leaderBob : 0;
       follower.setPosition(pos.x - slot.x * state.facing, pos.y + slot.y + followerBob - landing.dy + memberLanding.dy, 0);
-      if (flashChanged) this.setSkeletonFlash(followerSkel, flash);
+      if (flashChanged) this.setSkeletonFlash(followerSkel, flash, baseColorOf(entry.config));
       follower.setScale(entry.config.displayScale * state.facing * memberLanding.scaleX, entry.config.displayScale * memberLanding.scaleY, 1);
       if (skinChanged) followerSkel.setSkin(skin);
       if (clipChanged && hasClip) {
@@ -520,12 +547,12 @@ export class SpineUnitOverlay {
   /** 把閃色強度畫到帶頭者骨架上；強度沒變就不動。回傳是否有變，讓 apply 的隊員迴圈跟著畫。 */
   private paintFlash(skeleton: sp.Skeleton, entry: Entry, strength: number): boolean {
     if (strength === entry.flashPainted) return false;
-    this.setSkeletonFlash(skeleton, strength);
+    this.setSkeletonFlash(skeleton, strength, baseColorOf(entry.config));
     entry.flashPainted = strength;
     return true;
   }
 
-  private setSkeletonFlash(skeleton: sp.Skeleton, strength: number): void {
+  private setSkeletonFlash(skeleton: sp.Skeleton, strength: number, base: Color = Color.WHITE): void {
     // PROG-2-9412：閃白材質已套上時，直接改 shader 的閃白強度（真正的白光）；
     // 每具骨架依混合模式各有自己的材質實例，逐一寫入。材質還沒載好才退回下面的相乘暖色。
     if (hitFlashMaterial && skeleton.customMaterial === hitFlashMaterial) {
@@ -535,7 +562,8 @@ export class SpineUnitOverlay {
       return;
     }
     const t = HIT_FLASH_TINT;
-    this.flashColor.set(255 - (255 - t.r) * strength, 255 - (255 - t.g) * strength, 255 - (255 - t.b) * strength, 255);
+    this.flashColor.set(base.r * (255 - (255 - t.r) * strength) / 255, base.g * (255 - (255 - t.g) * strength) / 255,
+      base.b * (255 - (255 - t.b) * strength) / 255, 255);
     skeleton.color = this.flashColor;
   }
 
@@ -567,6 +595,11 @@ export class SpineUnitOverlay {
       for (let i = 0; i < (entry.config.squad?.length ?? 0); i += 1) {
         entry.followers.push(this.createNode(entry.config.path, parent, `SpineUnit_${id}_m${i + 1}`, data));
       }
+      // 基礎染色（敵方騎兵紅色調）：池內節點取出時已被重設成白，這裡改回本單位的基礎色
+      for (const n of [node, ...entry.followers]) {
+        const skel = n.isValid ? n.getComponent(sp.Skeleton) : null;
+        if (skel) skel.color = baseColorOf(entry.config);
+      }
       // 受擊閃白材質：載好就套到帶頭者與隊員；閃色強度歸零重畫，避免先前寫過的相乘暖色殘留
       ensureHitFlashMaterial(() => {
         // 單位已移除（節點可能已回收給別的單位）就不要再碰，否則會誤改別人的顏色
@@ -575,7 +608,7 @@ export class SpineUnitOverlay {
           const skel = n.isValid ? n.getComponent(sp.Skeleton) : null;
           if (!skel) continue;
           if (skel.customMaterial !== hitFlashMaterial) skel.customMaterial = hitFlashMaterial; // 池內重用的節點已套過，不重設以免重建材質實例
-          skel.color = Color.WHITE;
+          skel.color = baseColorOf(entry.config);
         }
         entry.flashPainted = -1;
       });

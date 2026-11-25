@@ -1,0 +1,160 @@
+[
+  {
+    "key": "archer",
+    "sourceBounds": [
+      22,
+      20,
+      83,
+      88
+    ],
+    "targetScale": 0.795,
+    "dilationRadius": 7,
+    "outputBounds": [
+      24,
+      22,
+      80,
+      84
+    ],
+    "outputPng": "C:\\Users\\User\\3KLife\\artwork\\temp\\hu-fu-unit-icon-candidate-20261122\\candidate-24px-revision\\archer.png"
+  },
+  {
+    "key": "cavalry",
+    "sourceBounds": [
+      20,
+      25,
+      88,
+      78
+    ],
+    "targetScale": 0.795,
+    "dilationRadius": 7,
+    "outputBounds": [
+      22,
+      26,
+      84,
+      76
+    ],
+    "outputPng": "C:\\Users\\User\\3KLife\\artwork\\temp\\hu-fu-unit-icon-candidate-20261122\\candidate-24px-revision\\cavalry.png"
+  },
+  {
+    "key": "engineer",
+    "sourceBounds": [
+      37,
+      20,
+      53,
+      88
+    ],
+    "targetScale": 0.795,
+    "dilationRadius": 7,
+    "outputBounds": [
+      36,
+      22,
+      56,
+      84
+    ],
+    "outputPng": "C:\\Users\\User\\3KLife\\artwork\\temp\\hu-fu-unit-icon-candidate-20261122\\candidate-24px-revision\\engineer.png"
+  },
+  {
+    "key": "infantry",
+    "sourceBounds": [
+      48,
+      20,
+      31,
+      88
+    ],
+    "targetScale": 0.795,
+    "dilationRadius": 7,
+    "outputBounds": [
+      44,
+      22,
+      39,
+      84
+    ],
+    "outputPng": "C:\\Users\\User\\3KLife\\artwork\\temp\\hu-fu-unit-icon-candidate-20261122\\candidate-24px-revision\\infantry.png"
+  },
+  {
+    "key": "medic",
+    "sourceBounds": [
+      35,
+      20,
+      57,
+      88
+    ],
+    "targetScale": 0.795,
+    "dilationRadius": 7,
+    "outputBounds": [
+      34,
+      22,
+      59,
+      84
+    ],
+    "outputPng": "C:\\Users\\User\\3KLife\\artwork\\temp\\hu-fu-unit-icon-candidate-20261122\\candidate-24px-revision\\medic.png"
+  },
+  {
+    "key": "navy",
+    "sourceBounds": [
+      20,
+      26,
+      88,
+      76
+    ],
+    "targetScale": 0.795,
+    "dilationRadius": 7,
+    "outputBounds": [
+      22,
+      27,
+      84,
+      74
+    ],
+    "outputPng": "C:\\Users\\User\\3KLife\\artwork\\temp\\hu-fu-unit-icon-candidate-20261122\\candidate-24px-revision\\navy.png"
+  },
+  {
+    "key": "pikeman",
+    "sourceBounds": [
+      54,
+      20,
+      20,
+      88
+    ],
+    "targetScale": 0.795,
+    "dilationRadius": 7,
+    "outputBounds": [
+      49,
+      22,
+      30,
+      84
+    ],
+    "outputPng": "C:\\Users\\User\\3KLife\\artwork\\temp\\hu-fu-unit-icon-candidate-20261122\\candidate-24px-revision\\pikeman.png"
+  },
+  {
+    "key": "shield",
+    "sourceBounds": [
+      28,
+      20,
+      71,
+      88
+    ],
+    "targetScale": 0.795,
+    "dilationRadius": 7,
+    "outputBounds": [
+      29,
+      22,
+      70,
+      84
+    ],
+    "outputPng": "C:\\Users\\User\\3KLife\\artwork\\temp\\hu-fu-unit-icon-candidate-20261122\\candidate-24px-revision\\shield.png"
+  },
+  {
+    "preview": "24px",
+    "file": "C:\\Users\\User\\3KLife\\artwork\\temp\\hu-fu-unit-icon-candidate-20261122\\candidate-24px-revision\\24px-badge-preview.png",
+    "layout": "8x1",
+    "iconSize": 19,
+    "cellSize": 32
+  },
+  {
+    "preview": "40px",
+    "file": "C:\\Users\\User\\3KLife\\artwork\\temp\\hu-fu-unit-icon-candidate-20261122\\candidate-24px-revision\\40px-badge-preview.png",
+    "layout": "4x2",
+    "iconSize": 32,
+    "cellSize": 48
+  }
+]

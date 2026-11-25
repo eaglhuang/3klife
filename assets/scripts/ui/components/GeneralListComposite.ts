@@ -13,7 +13,7 @@
  */
 import { _decorator, Node, Label, Button, UITransform, Layout, Widget, HorizontalTextAlignment, VerticalTextAlignment, Color, ScrollView, Sprite } from 'cc';
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
-import type { NpcContextOption, NpcDialogueKeywordSelection, NpcDialogueLocale, NpcDialogueModelPreset, NpcDialogueResponse, NpcDialogueSpeechContextMode } from '../../core/services/NpcDialogueService';
+import type { NpcContextOption, NpcDialogueKeywordSelection, NpcDialogueLocale, NpcDialogueModelPreset, NpcDialogueRequest, NpcDialogueResponse, NpcDialogueSpeechContextMode } from '../../core/services/NpcDialogueService';
 import { EVENT_NPC_INTERACTION_COMPLETED } from '../../core/dialogue/NpcMemoryAdapter';
 import { services } from '../../core/managers/ServiceLoader';
 import { CompositePanel } from '../core/CompositePanel';
@@ -24,6 +24,9 @@ import { UITemplateBinder } from '../core/UITemplateBinder';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { RetirementFlowController } from '../core/RetirementFlowController';
 import { SolidBackground } from './SolidBackground';
+import { sharedNpcDialogueCache } from '../../core/dialogue/NpcDialogueCache';
+import { applyInsightFromDialogue } from '../../core/dialogue/InsightFlow';
+import { bindAvatarTalk } from '../core/AvatarTalkBubble';
 import { RETIRE_REVIEW_OPEN_EVENT, type RetireReviewOpenPayload } from '../core/RetireReviewController';
 
 const { ccclass } = _decorator;
@@ -405,6 +408,7 @@ export class GeneralListComposite extends CompositePanel {
             entry.requested = true;
             const sprite = entry.row.getChildByPath('AvatarBox/Avatar')?.getComponent(Sprite);
             if (!sprite) continue;
+            bindAvatarTalk(sprite.node, entry.generalId);
             void loadGeneralAvatar(entry.generalId).then((frame) => {
                 if (!frame || !sprite.isValid) return;
                 sprite.trim = false;
@@ -1014,7 +1018,7 @@ export class GeneralListComposite extends CompositePanel {
         this._setNpcDialogueProvider(`Provider：請求中 / preset：${this._npcDialogueModelPresetLabel(requestedModelPreset)}`);
         this._setNpcDialogueProviderTrace(`Quality：-｜Resolve：pending｜Trace：${requestedSpeechContextMode} / ${requestedModelPreset} / ${this._npcDialogueSelectedKeyword.keywordKey}`);
         try {
-            const response = await services().npcDialogue.requestDialogue({
+            const dialogueRequest: NpcDialogueRequest = {
                 generalId: this._npcDialogueSelectedGeneral.id,
                 contextKey: this._npcDialogueSelectedContext?.contextKey,
                 selectedKeywordKeys: [this._npcDialogueSelectedKeyword.keywordKey],
@@ -1024,7 +1028,10 @@ export class GeneralListComposite extends CompositePanel {
                 llmModelPreset: requestedModelPreset,
                 maxChars: 90,
                 saveId: this._npcDialogueMemorySaveId,
-            });
+            };
+            const response = await services().npcDialogue.requestDialogue(dialogueRequest);
+            // 非降級的 AI 台詞存進本機快取：之後點該武將頭像會優先說這句（PROG-2-9885）
+            if (!response.fallbackUsed) sharedNpcDialogueCache.put(dialogueRequest, response, Date.now());
             this._setNpcDialogueHint(response.text);
             this._setNpcDialogueProvider(this._npcDialogueProviderButtonText(response, requestedModelPreset));
             const presetMismatch = response.llmModelPreset !== requestedModelPreset;
@@ -1048,6 +1055,9 @@ export class GeneralListComposite extends CompositePanel {
                 });
             }
             services().event.emit('SHOW_TOAST', { message: response.text, duration: 4 });
+            if (!response.fallbackUsed) {
+                void applyInsightFromDialogue(response.generalId, response.text, this._npcDialogueSelectedGeneral.name ?? response.generalId);
+            }
             UCUFLogger.info(LogCategory.DATA, '[GeneralListComposite] npc dialogue response', {
                 generalId: response.generalId,
                 selectedKeywordKey: this._npcDialogueSelectedKeyword.keywordKey,
