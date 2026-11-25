@@ -157,6 +157,14 @@ function testHandWrittenTaskCardDocIdFails() {
     assert.ok(report.errors.some((message) => message.includes('registry does not assign it')), report.errors.join('\n'));
     assert.deepEqual(report.suggestions, ['doc_task_0002'], 'outlier must not drive the suggestion');
 
+    // Five-digit ids copied from task numbers >= 10000 must be reported in full.
+    const wide = 'docs/agent-briefs/tasks/PROG/PROG-2-10005.md';
+    writeDoc(root, wide, 'doc_task_10005');
+    report = guard.checkCollisions(root, 'origin/master', policy);
+    assert.ok(report.errors.some((message) => message.startsWith('doc_task_10005 is written in')), report.errors.join('\n'));
+    assert.ok(!report.errors.some((message) => message.startsWith('doc_task_1000 ')), report.errors.join('\n'));
+    fs.rmSync(path.join(root, wide));
+
     writeDoc(root, card, 'doc_task_0002');
     writeRegistry(root, [['doc_task_0001', 'docs/a.md'], ['doc_task_0002', card]]);
     report = guard.checkCollisions(root, 'origin/master', policy);
