@@ -2147,14 +2147,19 @@ async function main() {
                     if (!opened) throw new Error('底欄「培育」→「學府」打不開');
                     await delay(2500);
                     rec.detail.buttons = await listButtons();
-                    rec.detail.panelTexts = (await rm.allTexts()).slice(0, 40);
-                    // 入學鈕（AcEnrollConfirm）在不能入學時（少年名將未滿 15 歲）是灰的、不算可按按鈕，所以改認入學畫面一定會有的返回鈕與書院選項
+                    const allTexts = await rm.allTexts();
+                    rec.detail.panelTexts = allTexts.slice(0, 40);
+                    // 入學畫面有兩種合法結果（PROG-2-9609 起學府入口有空門守衛）：
+                    //  1. 有及冠子嗣：開入學畫面。入學鈕（AcEnrollConfirm）不能入學時是灰的、不算可按按鈕，所以改認一定會有的返回鈕與書院選項。
+                    //  2. 子嗣未滿入學年齡或沒有子嗣：不開畫面，改跳提示條（少年名將第 1 年必走這條）。提示字串的 {0}{1}{2} 必須已代入實際數字。
                     rec.detail.enrollScreen = rec.detail.buttons.some((n) => /^(?:[Bb]tn)?(?:AcEnrollConfirm|AcEnrollBack)$/.test(n)) && rec.detail.buttons.some((n) => /^AcAcademy\d+$/.test(n));
+                    rec.detail.guardToast = allTexts.find((t) => /離入學|入學）|歲以上的孩子|尚未招募及冠門生/.test(t)) || null;
                     await shot(rec, 'academy-enroll-open');
                     const closed = await clickButton('^(?:[Bb]tn)?AcEnrollBack$');
                     rec.detail.closed = Boolean(closed);
                     await delay(800);
-                    if (!rec.detail.enrollScreen) throw new Error(`學府入學畫面沒有出現（沒有返回鈕／書院選項；畫面按鈕：${rec.detail.buttons.join('、') || '無'}）`);
+                    if (rec.detail.guardToast && /\{[^}]*\}/.test(rec.detail.guardToast)) throw new Error(`學府守衛提示的佔位符沒有代入數字：${rec.detail.guardToast}`);
+                    if (!rec.detail.enrollScreen && !rec.detail.guardToast) throw new Error(`學府入學畫面沒有出現，也沒有守衛提示條（沒有返回鈕／書院選項；畫面按鈕：${rec.detail.buttons.join('、') || '無'}；畫面文字：${rec.detail.panelTexts.slice(0, 12).join(' / ')}）`);
                     return rec.detail;
                 });
                 // 6. 推進一季；處理所有換季彈窗
