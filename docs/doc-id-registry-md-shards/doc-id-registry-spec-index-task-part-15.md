@@ -272,3 +272,4 @@
 | `doc_task_3079` | docs/agent-briefs/tasks/PROG/PROG-2-10007.md | [PROG-2-10007] 推進一季 releaseNameplateFade 讀 null 崩潰 |
 | `doc_task_3080` | docs/agent-briefs/tasks/PROG/PROG-2-10009.md | [PROG-2-10009] 主將被派去大廳任務時改選其他可出戰武將並提示 |
 | `doc_task_3081` | docs/agent-briefs/tasks/PROG/PROG-2-10008.md | [PROG-2-10008] 首戰主將不在名冊時還原起始主將，不再設為空（總PM 裁決方案①） |
+| `doc_task_3082` | docs/agent-briefs/tasks/PROG/PROG-2-10010.md | [PROG-2-10010] 首戰實玩探針：記錄天氣、試放計謀、量格子特效 |

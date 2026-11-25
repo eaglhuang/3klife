@@ -42,6 +42,7 @@
  *   --year      選用：原步驟後接一年循環（每季內政／任務牆／戰鬥／抽卡／培育／推進一季），輸出 year-report.json（PROG-2-9141）
  *   --battles-per-season  --year 時每季出征場數（預設 2）
  *   --no-set-lead  --year 時不替玩家指定出戰主將（主將未定時戰場無出征帳本、自動代打不出兵，會打輸；用來重現）
+ *   --no-tactic-probe  不做首戰計謀探針（預設首戰記錄天氣、試放一次計謀並量格子特效，輸出在 report.battles，PROG-2-10010）
  *   --no-auto-play  戰鬥改逐回合手按結束回合（預設開場按一次「自動」走自動代打，PROG-2-9711）
  *   --academy   選用：學府實玩（PROG-2-9192）：推進到第 2 年第 1 季 → 入學潁川（核對入學令 −1）→ 36 回合 → 結業彈窗 → 回大廳；
  *               另在複製存檔的第二情境用 ?qaAcademy=11 驗快進入口。輸出 academy-report.json（回合數、打斷、評級、前後季數、節點數、
@@ -68,7 +69,7 @@ const path = require('path');
 const { execFileSync } = require('child_process');
 const { createRealMouse } = require('./playtest-real-mouse');
 const { decideEndTurnAction } = require('./playtest-end-turn-fallback');
-const { formatYearQuarterLine } = require('./playtest-year-summary');
+const { formatYearQuarterLine, formatFirstBattleLine } = require('./playtest-year-summary');
 
 const projectRoot = path.resolve(__dirname, '..');
 const DEFAULT_URL = 'https://eaglhuang.github.io/3klife-play/';
@@ -324,9 +325,75 @@ function installPageHelpers() {
                 ultCutin: Boolean(sc.isUltCutinActive),
                 waitingDuel: Boolean(ctrl && ctrl.isWaitingDuelPlacement),
                 battleEnded: Boolean(ctrl && ctrl.state && ctrl.state.battleEndAnnounced),
+                weather: ctrl && ctrl.state ? String(ctrl.state.weather) : null,
                 canAdvance,
                 thinking,
             };
+        },
+        /**
+         * 首戰計謀探針（PROG-2-10010）：試放一次計謀並量格子特效。
+         * 候選順序：preferId（火計）→ 我方戰法槽；先查施放條件（例如火計要 WINDY），不符的跳過並記下；
+         * 第一個條件達成、點數夠、施放成功的算數。回傳 ok/reason/tacticId/fallbackFrom 與格子特效量測：
+         *   hooks＝TacticVfxHooks 格子 hook 派發次數增量（tacticGridVfxStats）；nodes＝施放後 0.15／0.6 秒兩次取樣中，火焰／粒子類啟用節點數相對施放前的最大增量。
+         * 只呼叫既有控制器 API，不改遊戲規則；controller 找不到時 reason 為 NO_BATTLE。
+         */
+        castTacticProbe: async (preferId) => {
+            const st = window.__pt.battleState();
+            const comp = window.__ptBattleComp;
+            const ctrl = comp && comp.sceneContext ? comp.sceneContext.ctrl : null;
+            if (!st || !ctrl) return { ok: false, reason: 'NO_BATTLE', weather: st ? st.weather : null };
+            const loader = await window.System.import('chunks:///_virtual/ServiceLoader.ts').catch(() => null);
+            const vfx = await window.System.import('chunks:///_virtual/TacticVfxHooks.ts').catch(() => null);
+            const hookTotal = () => (vfx && vfx.tacticGridVfxStats ? vfx.tacticGridVfxStats['grid-fire'] + vfx.tacticGridVfxStats['grid-water-ripple'] : null);
+            const fxNodeCount = () => { let n = 0; walk(scene(), (node) => { if (node.activeInHierarchy && /cfxr|^p3d_|fire|flame|bubble|vfx/i.test(node.name)) n++; }); return n; };
+            const out = { ok: false, reason: null, weather: String(ctrl.state.weather), tacticId: null, battleSkillId: null, fallbackFrom: null, skipped: [], inSlots: null, hooks: null, nodes: null, nodesBefore: null, slots: [] };
+            const general = ctrl.state.playerGeneral;
+            const slots = ((general && general.tacticSlots) || []).map((x) => x.tacticId).filter(Boolean);
+            out.slots = slots;
+            if (!ctrl.canUsePlayerSkills()) { out.reason = 'NOT_PLAYER_PHASE（現在不是我方可放招的階段）'; return out; }
+            const candidates = [];
+            if (preferId) candidates.push(preferId);
+            for (const id of slots) if (!candidates.includes(id)) candidates.push(id);
+            const defs = ctrl.tacticDefinitionMap;
+            const hooksBefore = hookTotal();
+            const nodesBefore = fxNodeCount();
+            for (const id of candidates) {
+                const def = defs && defs.get ? defs.get(id) : null;
+                if (!def || !def.battleSkillId) { out.skipped.push({ id, why: 'NO_DEFINITION' }); continue; }
+                const unmet = ctrl.skillDispatcher.findUnmetGeneralTacticCondition('player', id);
+                if (unmet) { out.skipped.push({ id, why: 'CONDITION_UNMET', condition: unmet }); continue; }
+                const tp = ctrl.getPlayerTacticPointState({ tacticId: id });
+                out.tp = tp ? { current: tp.current, max: tp.max, enabled: tp.enabled } : null;
+                if (!ctrl.canAffordTactic(id)) { out.skipped.push({ id, why: 'TP_SHORT（計謀點 ' + (tp ? tp.current + '/' + tp.max : '?') + '）' }); continue; }
+                if (ctrl.seedTacticNeedsSp() && general && !general.canUseSkill()) { out.skipped.push({ id, why: 'SP_NOT_FULL（' + general.currentSp + '/' + general.maxSp + '）' }); continue; }
+                let applied = false;
+                try { applied = Boolean(ctrl.triggerPlayerBattleSkill(def.battleSkillId, 'seed-tactic', { targetMode: def.targetMode, tacticId: id })); } catch (e) { out.skipped.push({ id, why: 'THROW:' + String(e && e.message || e) }); continue; }
+                if (!applied) { out.skipped.push({ id, why: 'CAST_NOT_APPLIED（可能場上沒有目標）' }); continue; }
+                out.ok = true;
+                out.tacticId = id;
+                out.battleSkillId = def.battleSkillId;
+                out.inSlots = slots.includes(id);
+                break;
+            }
+            if (!out.ok) {
+                out.reason = out.skipped.length ? out.skipped.map((x) => x.id + ':' + x.why).join('；') : 'NO_CANDIDATE（戰法槽沒有計謀）';
+                return out;
+            }
+            if (preferId && out.tacticId !== preferId) {
+                out.fallbackFrom = preferId;
+                const pk = out.skipped.find((x) => x.id === preferId);
+                out.fallbackReason = pk ? pk.why : 'NOT_TRIED';
+            }
+            let peak = 0;
+            for (const ms of [150, 450]) {
+                await new Promise((r) => setTimeout(r, ms));
+                peak = Math.max(peak, fxNodeCount() - nodesBefore);
+            }
+            const hooksAfter = hookTotal();
+            out.nodesBefore = nodesBefore;
+            out.nodes = Math.max(0, peak);
+            out.hooks = hooksBefore === null || hooksAfter === null ? null : hooksAfter - hooksBefore;
+            return out;
         },
         /**
          * 每回合各段演出實測秒數取樣器（PROG-2-9803）：每 50ms 讀一次 battleState，
@@ -433,6 +500,8 @@ async function main() {
         viewport,
         browser: browserPath,
         steps: [],
+        /** 首戰探針結果（天氣、計謀施放、格子特效；PROG-2-10010） */
+        battles: [],
         passed: false,
     };
     let browser = null;
@@ -1461,7 +1530,23 @@ async function main() {
             // 每回合各段演出實測秒數（PROG-2-9803）：取樣器跟著戰鬥迴圈跑，結算時彙整成 presentation-timing.json
             await page.evaluate(() => window.__pt.startTimingSampler());
             const hardDeadline = Date.now() + 360000;
+            // 首戰探針（PROG-2-10010）：記錄戰鬥天氣，並在我方可放招時試放一次計謀（火計優先，天氣不符改放第一個可放的），量格子特效
+            let tacticProbe = null;
+            let tacticAttempts = 0;
+            const firstBattle = { weather: null, tactic: null };
+            rec.detail.firstBattle = firstBattle;
             while (!settled) {
+                if (opts.probeTactic && !tacticProbe) {
+                    const st = await page.evaluate(() => window.__pt.battleState()).catch(() => null);
+                    if (st && st.weather && !firstBattle.weather) firstBattle.weather = st.weather;
+                    if (st && !st.advancing && !st.ultCutin && !st.duelPanel && !st.battleEnded && tacticAttempts < 30) {
+                        tacticAttempts += 1;
+                        const probe = await page.evaluate((id) => window.__pt.castTacticProbe(id), 'tactic-fire-scheme').catch((e) => ({ ok: false, reason: 'PROBE_ERROR:' + String(e && e.message || e) }));
+                        firstBattle.tactic = { ...probe, attempts: tacticAttempts };
+                        if (probe.weather && !firstBattle.weather) firstBattle.weather = probe.weather;
+                        if (probe.ok) tacticProbe = probe;
+                    }
+                }
                 if ((await scene()) === 'LobbyScene') { settled = 'auto-lobby'; break; }
                 if (await page.evaluate(() => window.__pt.scenePresence('BattleReview'))) { settled = 'review'; break; }
                 if ((await page.evaluate(() => window.__pt.textsMatching('^(勝利|失敗|戰敗|平手)$'))).length) { settled = 'review'; break; }
@@ -1492,6 +1577,13 @@ async function main() {
             }
             rec.detail.settledBy = settled;
             rec.detail.battleMs = Date.now() - battleT0;
+            if (opts.probeTactic) {
+                const fb = rec.detail.firstBattle;
+                if (!fb.tactic) fb.tactic = { ok: false, reason: 'NEVER_ATTEMPTED（戰鬥期間沒有出現我方可放招的時機）', attempts: tacticAttempts };
+                fb.line = formatFirstBattleLine(fb);
+                report.battles.push({ step: rec.name, result: null, weather: fb.weather, tactic: fb.tactic, gridVfx: { nodes: fb.tactic.nodes ?? null, hooks: fb.tactic.hooks ?? null }, line: fb.line });
+                console.log(`[playtest] ${fb.line}`);
+            }
             {
                 const timing = await page.evaluate(() => { window.__pt.stopTimingSampler(); return window.__pt.timingSummary(); }).catch(() => null);
                 if (timing) {
@@ -1596,7 +1688,9 @@ async function main() {
         await step('battle-to-settlement', async (rec) => {
             // 戰後獎懲（PROG-2-9149）：記戰前頂欄、結算畫面截圖，回大廳後再記頂欄，看糧／金／兵源的變化
             rec.detail.topBefore = await readTopbar();
-            const d = await runBattle(rec, { shotTag: 'battle-settle' });
+            const d = await runBattle(rec, { shotTag: 'battle-settle', probeTactic: !args['no-tactic-probe'] });
+            const lastBattle = report.battles[report.battles.length - 1];
+            if (lastBattle && lastBattle.result === null) lastBattle.result = d.result || null;
             await delay(2500);
             rec.detail.topAfter = await readTopbar();
             return d;
