@@ -16930,5 +16930,89 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9990.md",
     "title": "[PROG-2-9990] 任務卡號跨 worktree／PR／commit 預約防撞",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3057",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10001.md",
+    "title": "[PROG-2-10001] doc_id 不得沿用卡號與任務卡身分覆寫守門",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3058",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9951.md",
+    "title": "[PROG-2-9951] 首戰（encounter-001）新手穩贏調整",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3059",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9952.md",
+    "title": "[PROG-2-9952] 大廳選卡器（手動已選）缺關閉鈕與 Esc，出征編組收起時殘留",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3060",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9953.md",
+    "title": "[PROG-2-9953] 「推進一季」鈕移到大廳右下角（手機拇指位置，X-01 裁決）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3061",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9954.md",
+    "title": "[PROG-2-9954] 友誼值行為結算接進平常遊玩（第 8 框架實作）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3062",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9960.md",
+    "title": "[PROG-2-9960] 補齊 23 個戰場招式名（走 i18n）並統一趙雲奧義名為「龍膽·破軍」",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3063",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9961.md",
+    "title": "[PROG-2-9961] 火計／水計格子 VFX hook 接線（grid-fire、grid-water-ripple）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3064",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9962.md",
+    "title": "[PROG-2-9962] 戰場招式效果說明與類別標籤走 i18n",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3065",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9972.md",
+    "title": "[PROG-2-9972] 格子火焰 VFX 不播修正：格子 hook 改用有 prefab 的積木",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3066",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9973.md",
+    "title": "[PROG-2-9973] 戰鬥 HUD 與出陣畫面多語殘留（en／ja）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3067",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9989.md",
+    "title": "[PROG-2-9989] 計謀放不出來：沒起風時按鈕看似可按、點了只跳「發動失敗」",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3068",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9994.md",
+    "title": "[PROG-2-9994] 11/25 發版前 QA 修正",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3069",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9995.md",
+    "title": "[PROG-2-9995] 戰場單位倒下／被擊殺演出（漫畫式、無血腥）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3070",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9997.md",
+    "title": "[PROG-2-9997] 戰場 vfx-block 必須有 prefabPath 防回歸",
+    "category": "task"
   }
 ]

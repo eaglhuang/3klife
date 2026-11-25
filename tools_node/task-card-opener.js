@@ -21,6 +21,7 @@ const {
   MILESTONE_PATH_REL,
 } = require('./lib/atm-stabilization-milestone');
 const { deriveAgentIdentity } = require('./lib/agent-identity');
+const docIdAllocationGuard = require('./lib/doc-id-allocation-guard');
 const { createTaskAdapter } = require('./adapters/atm-3klife/task-adapter');
 
 const taskAdapter = createTaskAdapter({
@@ -565,6 +566,27 @@ function upsertTaskInUiShard(existing, task) {
   return shard;
 }
 
+/**
+ * --doc-id must name an id the registry already assigns to this card
+ * (PROG-2-10001). doc_id is allocated by --assign-doc-id, never copied from
+ * the task number.
+ */
+function assertDocIdRegisteredFor(mdPath, docId) {
+  const rel = path.relative(PROJECT_ROOT, mdPath).replace(/\\/g, '/');
+  const entry = (docIdAllocationGuard.readShardEntries(PROJECT_ROOT, null) || [])
+    .find((candidate) => candidate && candidate.id === docId);
+  if (!entry || String(entry.path || '').replace(/\\/g, '/') !== rel) {
+    const owner = entry ? `已登記給 ${entry.path}` : '未在 doc_id 登記表登記';
+    throw new Error(`--doc-id ${docId} ${owner}；新卡請改用 --assign-doc-id 由登記表配號（doc_id 不可沿用卡號）`);
+  }
+}
+
+function readInjectedDocIdFromFile(mdPath) {
+  if (!fs.existsSync(mdPath)) return '';
+  const match = /^doc_id:\s*(\S+)/m.exec(fs.readFileSync(mdPath, 'utf8'));
+  return match ? match[1].replace(/^["']|["']$/g, '') : '';
+}
+
 function printHelp(log = console.log) {
   log([
     '用法：',
@@ -591,7 +613,7 @@ function printHelp(log = console.log) {
     '  --deliverables    交付物清單',
     '  --notes           備註 / notes 欄內容',
     '  --allow-existing-id  允許覆寫 / 更新既有 task id（預設遇到已佔用 id 會直接失敗）',
-    '  --doc-id          指定 frontmatter doc_id；通常與 --assign-doc-id 二選一',
+    '  --doc-id          指定既有、已在登記表登記給此卡的 doc_id；新卡請用 --assign-doc-id（doc_id 不可沿用卡號）',
     '  --assign-doc-id   write 模式下於 Markdown 寫入後呼叫 doc-id-registry 自動分配 doc_id',
     '  --md-out          Markdown 輸出路徑',
     '  --md-kind         generic / agent-briefs，未指定時依路徑推斷',
@@ -884,9 +906,14 @@ async function main(options = {}, runtime = {}) {
   let lockFilesOverride = null;
   if (mdOutArg) {
     const resolvedMdPath = resolvePath(mdOutArg);
+    if (docId) {
+      assertDocIdRegisteredFor(resolvedMdPath, docId);
+    }
     writeText(resolvedMdPath, mdContent, dryRun);
     if (!dryRun && assignDocId) {
       await taskAdapter.assignDocId(resolvedMdPath);
+      const assigned = readInjectedDocIdFromFile(resolvedMdPath);
+      if (assigned) task.doc_id = assigned;
     }
   } else if (dryRun) {
     printDryRunArtifact('markdown', mdContent, io.log);

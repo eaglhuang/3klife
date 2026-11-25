@@ -1,0 +1,8 @@
+{
+  "_note": "Task card identity guard (PROG-2-10001). An existing task card or task-store entry keeps its identity: immutable fields may not be removed or changed, doc_id may only move to an id the registry assigns to the same path, and a title change must record the old title in renamedFromField. Different work must reserve a new task id instead.",
+  "cardPathPattern": "^docs/agent-briefs/tasks/.+\\.md$",
+  "taskStorePathPattern": "^docs/tasks/tasks-[A-Za-z0-9_-]+\\.json$",
+  "immutableFields": ["id", "created", "created_by_agent"],
+  "docIdField": "doc_id",
+  "renamedFromField": "renamed_from"
+}

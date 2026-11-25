@@ -74,6 +74,9 @@
    - 預約會比對：`origin/master`（自動 fetch）、本機與遠端所有未合併分支的 commit 訊息與檔名、`gh pr list --state all --search <prefix>` 的 PR 標題／分支／內文，以及存在 git common dir 的共用預約表 `task-id-reservations.json`（同一台機器所有 worktree 共用，原子寫入，TTL 168 小時，卡號落地 master 後自動清除）。
    - 同一個 Agent 開兩個 worktree 也視為不同持有者，不會共用同一號。
    - `gh` 不可用或離線時只會警告並退回其他來源；這時請先 `git fetch origin` 再預約。規則參數在 `tools_node/lib/task-id-allocation-policy.json`。
+   - 請在以 `origin/master` 為底的 worktree 執行預約；本地 master 分歧的樹可能還在跑舊版工具。
+   - doc_id 一律由登記表配號：開卡加 `--assign-doc-id`，或對既有檔案跑 `node tools_node/doc-id-registry.js --assign <卡片路徑>`。**doc_id 不可沿用卡號**（例如 PROG-2-9973 寫成 `doc_task_9973`）；CI 的 Doc ID collision gate 會擋下任務卡中未登記的 doc_id，`--doc-id` 也只接受已登記給同一張卡的號。
+   - 卡號一旦落地就代表那件工作：不可把既有卡（含 `docs/tasks/tasks-*.json` 條目）改寫成別的工作。`id`、`created`、`created_by_agent` 不可刪改，doc_id 只能經 `--renumber` 改號，換標題必須加 `renamed_from: "<舊標題>"`；不同的工作請重新預約卡號。CI 的 Task card identity guard（`node tools_node/validate-task-card-identity.js --base origin/master`）會擋下違規。
 4. 在卡片寫清楚：開單原因、完整描述、驗證方式、是否需要測試。
 5. 同步更新對應 shard / manifest；若屬於 UI task shard，更新後執行 `node tools_node/build-ui-task-manifest.js`。
 6. 同步更新 [tasks_index.md](C:\Users\User\3KLife\docs\agent-briefs\tasks_index.md (doc_task_0002)) (doc_task_0002) 與 [CheckList.md](C:\Users\User\3KLife\docs\agent-briefs\CheckList.md (doc_ai_0022)) (doc_ai_0022)。

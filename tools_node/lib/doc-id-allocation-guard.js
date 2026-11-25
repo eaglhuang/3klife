@@ -298,6 +298,23 @@ function checkCollisions(root, baseRef, policy = DEFAULT_POLICY) {
     errors.push({ id, message: `${id} is injected in ${keys.size} different docs; new in this change: ${added.join(', ')}.` });
   }
 
+  // A doc_id marker this change adds must be one the registry assigns to that
+  // doc. Hand-written ids (e.g. copying the task number into doc_task_NNNN)
+  // bypass allocation and push the allocation floor toward exhaustion.
+  const registeredScope = (policy.registeredInjectionPathPatterns || []).map((pattern) => new RegExp(pattern));
+  if (registeredScope.length) {
+    const registeredKey = new Map([...seenId].map(([id, p]) => [id, mirrorKey(p, policy)]));
+    for (const [id, paths] of headInjected) {
+      const baseKeys = new Set([...(baseInjected.get(id) || [])].map((p) => mirrorKey(p, policy)));
+      for (const p of paths) {
+        const key = mirrorKey(p, policy);
+        if (!registeredScope.some((re) => re.test(normalizePath(p)))) continue;
+        if (baseKeys.has(key) || registeredKey.get(id) === key) continue;
+        errors.push({ id, message: `${id} is written in ${p} but the registry does not assign it to that doc; run node tools_node/doc-id-registry.js --assign ${p} (doc_id is allocated, never copied from the task number).` });
+      }
+    }
+  }
+
   const unique = [];
   const seenMessages = new Set();
   for (const error of errors) {
@@ -306,7 +323,9 @@ function checkCollisions(root, baseRef, policy = DEFAULT_POLICY) {
       unique.push(error);
     }
   }
-  const maxByPrefix = nextFreeByPrefix([seenId.keys(), baseMap.keys(), headInjected.keys(), baseInjected.keys()]);
+  // Suggestions come from registered ids only, so hand-written outliers cannot
+  // push the suggested next id toward the namespace limit.
+  const maxByPrefix = nextFreeByPrefix([seenId.keys(), baseMap.keys()]);
   const prefixes = new Set(unique.map((error) => (splitDocId(error.id) || {}).prefix).filter(Boolean));
   const suggestions = [...prefixes].sort().map((prefix) => formatDocId(prefix, (maxByPrefix.get(prefix) || 0) + 1));
   return { ok: unique.length === 0, errors: unique.map((error) => error.message), suggestions };
