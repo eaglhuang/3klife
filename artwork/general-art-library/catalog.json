@@ -1453,7 +1453,7 @@
         ]
       },
       "smallAvatar": {
-        "activeVersion": "0003",
+        "activeVersion": "0001",
         "status": "review-pending",
         "history": [
           {
@@ -3641,7 +3641,7 @@
         "status": "review-pending"
       },
       "smallAvatar": {
-        "activeVersion": "0001",
+        "activeVersion": "0003",
         "status": "review-pending",
         "history": [
           {
