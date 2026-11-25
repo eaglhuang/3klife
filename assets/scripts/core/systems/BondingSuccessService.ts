@@ -1,71 +1,152 @@
-// @spec-source → 1825 統一規格定案；PROG-2-10026
-/**
- * BondingSuccessService — 結緣透明加法公式、誠意累積與紅娘叩門保底
- *
- * 1. 透明加法公式（UI 分項顯示）：
- *    P = clamp(0.25 + (K - 0.8) * 0.45 + F / 200 + Sincerity + Matchmaker, 0.15, 0.95)
- * 2. 誠意累積：每次提親被拒 +12%（上限 +36%），成功後歸零。
- * 3. 紅娘叩門保底：第 1 年第 3 季無配偶時觸發，成功率固定 80%，不扣好感、不進冷卻、每存檔 1 次。
- */
+import bondingConfig from '../../../resources/data/master/bonding-config.json';
 
 export interface BondingProbabilityInput {
-    /** 相性 K (0.8 ~ 1.4) */
-    readonly compatibilityK: number;
-    /** 雙邊好感度 (-100 ~ 100) */
-    readonly friendship: number;
-    /** 累計被拒次數 (每次 +0.12, 上限 +0.36) */
-    readonly rejectCount: number;
-    /** 媒人加權 (例如 0 / 0.08 / 0.15) */
-    readonly matchmakerBonus?: number;
+    compatibilityK: number;
+    favorF: number;
+    sincerityBonus: number;
+    matchmakerBonus?: number;
 }
 
 export interface BondingProbabilityBreakdown {
-    readonly base: number;
-    readonly compatibilityBonus: number;
-    readonly friendshipBonus: number;
-    readonly sincerityBonus: number;
-    readonly matchmakerBonus: number;
-    readonly total: number;
+    base: number;
+    compatibility: number;
+    favor: number;
+    sincerity: number;
+    matchmaker: number;
+    rawTotal: number;
+    finalRate: number;
 }
 
-export const BONDING_BASE_RATE = 0.25;
-export const BONDING_SINCERITY_STEP = 0.12;
-export const BONDING_SINCERITY_MAX = 0.36;
-export const BONDING_MIN_RATE = 0.15;
-export const BONDING_MAX_RATE = 0.95;
-export const MATCHMAKER_FALLBACK_RATE = 0.8;
-
-function clamp(value: number, min: number, max: number): number {
-    return Math.min(max, Math.max(min, value));
+export interface MatchmakerFallbackContext {
+    year: number;
+    season: number;
+    hasPartner: boolean;
+    matchmakerFallbackUsed: boolean;
 }
 
-export function calculateBondingProbability(input: BondingProbabilityInput): BondingProbabilityBreakdown {
-    const k = clamp(Number.isFinite(input.compatibilityK) ? input.compatibilityK : 1.0, 0.8, 1.4);
-    const f = clamp(Number.isFinite(input.friendship) ? input.friendship : 0, -100, 100);
-    const rejects = Math.max(0, Math.floor(input.rejectCount || 0));
-    const matchmakerBonus = Math.max(0, Number.isFinite(input.matchmakerBonus) ? (input.matchmakerBonus as number) : 0);
-
-    const compatibilityBonus = Number(((k - 0.8) * 0.45).toFixed(4));
-    const friendshipBonus = Number((f / 200).toFixed(4));
-    const sincerityBonus = Number(Math.min(BONDING_SINCERITY_MAX, rejects * BONDING_SINCERITY_STEP).toFixed(4));
-
-    const rawTotal = BONDING_BASE_RATE + compatibilityBonus + friendshipBonus + sincerityBonus + matchmakerBonus;
-    const total = Number(clamp(rawTotal, BONDING_MIN_RATE, BONDING_MAX_RATE).toFixed(4));
-
-    return {
-        base: BONDING_BASE_RATE,
-        compatibilityBonus,
-        friendshipBonus,
-        sincerityBonus,
-        matchmakerBonus,
-        total,
-    };
+export interface BondingProposalState {
+    favorF: number;
+    rejectCount: number;
+    cooldownSeasons: number;
+    matchmakerFallbackUsed: boolean;
+    hasPartner: boolean;
 }
 
-export function shouldTriggerMatchmakerFallback(params: {
-    readonly totalSeasonsElapsed: number;
-    readonly hasSpouse: boolean;
-    readonly alreadyTriggered: boolean;
-}): boolean {
-    return params.totalSeasonsElapsed >= 2 && !params.hasSpouse && !params.alreadyTriggered;
+export interface BondingProposalResult {
+    success: boolean;
+    rateUsed: number;
+    breakdown: BondingProbabilityBreakdown | null;
+    isMatchmakerFallback: boolean;
+    nextState: BondingProposalState;
+}
+
+/**
+ * 結緣成功率、誠意累積與紅娘叩門保底純邏輯服務（PROG-2-10026）
+ * 所有數值皆從 assets/resources/data/master/bonding-config.json 讀取。
+ */
+export class BondingSuccessService {
+    public static getSincerityBonus(rejectCount: number): number {
+        const raw = Math.max(0, rejectCount) * bondingConfig.sincerityPerReject;
+        return Math.min(bondingConfig.sincerityMax, raw);
+    }
+
+    public static calculateBondingProbability(input: BondingProbabilityInput): BondingProbabilityBreakdown {
+        const base = bondingConfig.baseRate;
+        const compatibility = Math.round((input.compatibilityK - bondingConfig.compatibilityBase) * bondingConfig.compatibilityMultiplier);
+        const favor = Math.round(input.favorF / bondingConfig.favorDivisor);
+        const sincerity = Math.min(bondingConfig.sincerityMax, Math.max(0, input.sincerityBonus));
+        const matchmaker = input.matchmakerBonus ?? 0;
+
+        const rawTotal = base + compatibility + favor + sincerity + matchmaker;
+        const finalRate = Math.max(bondingConfig.minRate, Math.min(bondingConfig.maxRate, rawTotal));
+
+        return {
+            base,
+            compatibility,
+            favor,
+            sincerity,
+            matchmaker,
+            rawTotal,
+            finalRate,
+        };
+    }
+
+    /**
+     * 紅娘叩門保底判定：僅限第 1 年第 3 季、尚無伴侶、且該存檔尚未觸發過（每存檔至多 1 次）。
+     */
+    public static shouldTriggerMatchmakerFallback(ctx: MatchmakerFallbackContext): boolean {
+        const cfg = bondingConfig.matchmakerFallback;
+        return (
+            ctx.year === cfg.year &&
+            ctx.season === cfg.season &&
+            !ctx.hasPartner &&
+            !ctx.matchmakerFallbackUsed
+        );
+    }
+
+    /**
+     * 執行一次真實結緣提親流程：
+     * - 一般提親被拒：好感 -12、誠意 +12%（上限 +36%）、進入冷卻。
+     * - 紅娘叩門保底：固定 80% 成功率，若仍未成親則不扣好感、不進冷卻，並標記已使用（每存檔 1 次）。
+     */
+    public static attemptBondingProposal(
+        state: BondingProposalState,
+        params: {
+            year: number;
+            season: number;
+            compatibilityK: number;
+            matchmakerBonus?: number;
+            rollPercent: number; // 0~100，小於 rateUsed 視為成功
+        },
+    ): BondingProposalResult {
+        const isFallback = this.shouldTriggerMatchmakerFallback({
+            year: params.year,
+            season: params.season,
+            hasPartner: state.hasPartner,
+            matchmakerFallbackUsed: state.matchmakerFallbackUsed,
+        });
+
+        if (isFallback) {
+            const rateUsed = bondingConfig.matchmakerFallback.guaranteedRate;
+            const success = params.rollPercent < rateUsed;
+            return {
+                success,
+                rateUsed,
+                breakdown: null,
+                isMatchmakerFallback: true,
+                nextState: {
+                    ...state,
+                    hasPartner: success ? true : state.hasPartner,
+                    matchmakerFallbackUsed: true,
+                    // 保底不扣好感、不進冷卻
+                    favorF: state.favorF,
+                    cooldownSeasons: state.cooldownSeasons,
+                },
+            };
+        }
+
+        const sincerity = this.getSincerityBonus(state.rejectCount);
+        const breakdown = this.calculateBondingProbability({
+            compatibilityK: params.compatibilityK,
+            favorF: state.favorF,
+            sincerityBonus: sincerity,
+            matchmakerBonus: params.matchmakerBonus,
+        });
+        const success = params.rollPercent < breakdown.finalRate;
+
+        return {
+            success,
+            rateUsed: breakdown.finalRate,
+            breakdown,
+            isMatchmakerFallback: false,
+            nextState: success
+                ? { ...state, hasPartner: true }
+                : {
+                    ...state,
+                    favorF: state.favorF + bondingConfig.rejectFavorDelta,
+                    rejectCount: state.rejectCount + 1,
+                    cooldownSeasons: state.cooldownSeasons + 1,
+                },
+        };
+    }
 }
