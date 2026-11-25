@@ -4,10 +4,11 @@
  */
 import { TestSuite, assert } from './TestRunner';
 
-const { formatYearQuarterLine, battleResultLabel, formatFirstBattleLine } = require('../tools_node/playtest-year-summary') as {
+const { formatYearQuarterLine, battleResultLabel, formatFirstBattleLine, isKnownEnvError } = require('../tools_node/playtest-year-summary') as {
     formatYearQuarterLine: (yq: { season: string | null; seasonAfter?: string | null; battles: Array<{ ok: boolean; result: string | null }>; errors: string[] }) => string;
     battleResultLabel: (battle: { ok: boolean; result: string | null }) => string;
-    formatFirstBattleLine: (info: { weather?: string | null; tactic?: { ok?: boolean; tacticId?: string | null; reason?: string | null; fallbackFrom?: string | null; fallbackReason?: string | null; nodes?: number | null; hooks?: number | null } | null }) => string;
+    formatFirstBattleLine: (info: { weather?: string | null; tactic?: { ok?: boolean; tacticId?: string | null; reason?: string | null; fallbackFrom?: string | null; fallbackReason?: string | null; nodes?: number | null; hooks?: number | null; attempts?: number; noEnemyPolls?: number } | null }) => string;
+    isKnownEnvError: (text: string) => boolean;
 };
 
 export function createPlaytestYearSummarySuite(): TestSuite {
@@ -52,6 +53,22 @@ export function createPlaytestYearSummarySuite(): TestSuite {
     suite.test('首戰摘要：施放失敗寫原因，沒有格子特效；沒讀到天氣顯示 ?', () => {
         assert.equals('首戰天氣 SUNNY；計謀 失敗（TP_SHORT）；格子特效 無', formatFirstBattleLine({ weather: 'SUNNY', tactic: { ok: false, reason: 'TP_SHORT' } }));
         assert.equals('首戰天氣 ?；計謀 失敗（未嘗試）；格子特效 無', formatFirstBattleLine({ weather: null, tactic: null }));
+    });
+
+    suite.test('首戰摘要：失敗帶嘗試統計與細分原因', () => {
+        const line = formatFirstBattleLine({ weather: 'WINDY', tactic: { ok: false, reason: 'tactic-fire-scheme:CAST_NOT_APPLIED（存活敵軍 2、我方受傷 0/5、SP 100/100、TP 免扣、blockedReason no-target）', attempts: 12, noEnemyPolls: 4 } });
+        assert.equals('首戰天氣 WINDY；計謀 失敗（tactic-fire-scheme:CAST_NOT_APPLIED（存活敵軍 2、我方受傷 0/5、SP 100/100、TP 免扣、blockedReason no-target）；嘗試 12 次、無敵軍空檔 4 次）；格子特效 無', line);
+        assert.equals('首戰天氣 ?；計謀 失敗（NO_ENEMY_ALIVE；嘗試 0 次、無敵軍空檔 0 次）；格子特效 無', formatFirstBattleLine({ weather: null, tactic: { ok: false, reason: 'NO_ENEMY_ALIVE', attempts: 0 } }));
+    });
+
+    suite.test('已知環境錯誤：NPC brain 對話被本機網路存取檢查擋下的三種樣態', () => {
+        const u = 'http://127.0.0.1:8765/v1/npc/dialogue';
+        assert.equals(true, isKnownEnvError(`POST ${u} net::ERR_BLOCKED_BY_LOCAL_NETWORK_ACCESS_CHECKS`));
+        assert.equals(true, isKnownEnvError(`POST ${u} net::ERR_FAILED`));
+        assert.equals(true, isKnownEnvError(`Access to fetch at '${u}' from origin 'https://x.github.io' has been blocked by CORS policy: loopback address space`));
+        assert.equals(false, isKnownEnvError('POST http://127.0.0.1:8765/v1/other net::ERR_FAILED'));
+        assert.equals(false, isKnownEnvError(`GET ${u} 500`));
+        assert.equals(false, isKnownEnvError('TypeError: x is undefined'));
     });
 
     return suite;

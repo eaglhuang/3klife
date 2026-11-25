@@ -14,6 +14,18 @@
 
 每步記錄耗時、截圖、期間的 console error 與 pageerror。pageerror 會讓該步失敗；console error 只記錄。
 
+### 首戰計謀探針（PROG-2-10010／10014）
+
+首戰戰鬥中試放一次火計（`castTacticProbe`），結果寫進 `report.battles` 與摘要行。只在場上已有存活敵軍時才試放；嘗試時間窗約 60 秒（從第一個可放招空檔起算），沒有存活敵軍的取樣不算嘗試。失敗時摘要行與 `reason` 寫明細分原因：存活敵軍數、我方受傷單位數、SP、TP、`blockedReason`（取自結算器回傳），並附「嘗試 N 次、無敵軍空檔 M 次」。
+
+### 已知環境錯誤（暫時性白名單）
+
+線上 HTTPS 網頁版連本機 NPC brain（`POST http://127.0.0.1:8765/v1/npc/dialogue`）會被 Chrome 本機網路存取檢查擋下，出現 `ERR_BLOCKED_BY_LOCAL_NETWORK_ACCESS_CHECKS`、`ERR_FAILED`、CORS loopback 三種錯誤。這是預期環境錯誤，觸發點在大廳端（LobbyScene、AvatarTalkBubble），不是戰場。
+
+- 線上版這三種錯誤不計入 console error 數，報告另列 `knownEnvErrors`，結尾輸出「已知環境錯誤：N 筆」，不隱藏。
+- 只認 `127.0.0.1:8765` 的 NPC 對話網址；打其他網址的 NPC 錯誤仍計入錯誤數。本機建置目錄（`--dir`）不套用。
+- 暫時性：線上版本來應打 Render 中台，待線上版改打中台後移除（`isKnownEnvError` 在 `tools_node/playtest-year-summary.js`）。
+
 ## 用法
 
 ```bash
