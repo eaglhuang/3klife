@@ -18691,7 +18691,15 @@
       "file": "docs/agent-briefs/tasks/PROG/PROG-2-10033.md"
     },
     {
-      "doc_id": "doc_task_3101",
+      "id": "PROG-2-10029",
+      "title": "實作血統天賦小名 48 池、出生抽取、8/12/15 歲揭曉與成長拆解表",
+      "status": "done",
+      "priority": "P1",
+      "owner": "antigravity",
+      "file": "docs/agent-briefs/tasks/PROG/PROG-2-10029.md"
+    },
+    {
+      "doc_id": "doc_task_3103",
       "id": "PROG-2-10035",
       "title": "大廳任務類視窗套用戰場結算風格（settle 皮膚家族）",
       "owner": "ClaudeCode_claude-opus-5-5",
@@ -18701,22 +18709,20 @@
       "phase": "M0",
       "created": "2026-11-25",
       "created_by_agent": "ClaudeCode_claude-opus-5-5",
-      "started_at": "2026-11-26T00:42:03+08:00",
+      "started_at": "2026-11-26T01:21:04+08:00",
       "started_by_agent": "ClaudeCode_claude-opus-5-5",
       "chain_id": "",
       "chain_step": "",
       "sensor_triggered_by": "",
-      "description": "把戰場勝利結算窗樣式抽成主題 familyBindings.settle，任務詳情窗與極限任務窗改套，結算窗明細色改走 settle token。",
+      "description": "把戰場勝利結算窗樣式抽成主題 familyBindings.settle，任務詳情窗與極限任務窗改套。",
       "related": [],
       "depends": [],
       "acceptance": [
-        "tsc 0；run-cli 全過；compute-gate quick；實跑截圖"
+        "tsc 0；run-cli 全過；截圖"
       ],
       "deliverables": [
         "theme-registry familyBindings.settle",
-        "ThemeService.skinStyleFor",
-        "skin 調整",
-        "tests/ThemeSystem"
+        "ThemeService.skinStyleFor"
       ],
       "notes": "2026-11-25 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
       "brief": {
@@ -18743,9 +18749,9 @@
     }
   ],
   "summary": {
-    "done": 344,
+    "done": 345,
     "in_progress": 4,
     "open": 87,
-    "total": 435
+    "total": 436
   }
 }
