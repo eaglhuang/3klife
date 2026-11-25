@@ -17062,5 +17062,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9999.md",
     "title": "[PROG-2-9999] playtest-online --year 學府入學畫面找不到：查根因並修復（QA 11/25）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3079",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10007.md",
+    "title": "[PROG-2-10007] 推進一季 releaseNameplateFade 讀 null 崩潰",
+    "category": "task"
   }
 ]

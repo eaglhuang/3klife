@@ -269,3 +269,4 @@
 | `doc_task_3076` | docs/agent-briefs/tasks/PROG/PROG-2-9993.md | [PROG-2-9993] 接 spine-trial 騎乘輸出：manifest 同步工具、mounted-list 資料驅動、趙雲/呂布/關羽騎乘 |
 | `doc_task_3077` | docs/agent-briefs/tasks/PROG/PROG-2-9998.md | [PROG-2-9998] 戰場體驗修正：提示條與教學鈕離開棋盤、長坂坡敵我同色、血條不重疊（QA 11/25） |
 | `doc_task_3078` | docs/agent-briefs/tasks/PROG/PROG-2-9999.md | [PROG-2-9999] playtest-online --year 學府入學畫面找不到：查根因並修復（QA 11/25） |
+| `doc_task_3079` | docs/agent-briefs/tasks/PROG/PROG-2-10007.md | [PROG-2-10007] 推進一季 releaseNameplateFade 讀 null 崩潰 |
