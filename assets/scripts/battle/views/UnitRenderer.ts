@@ -87,8 +87,9 @@ import type { TileBuffBadge } from "../shared/TileBuffBadge";
 import { BADGE_HIT_PRIORITY_SEC, badgeRectFromExtent, easePlateOffset, stackBadgeOffsets, unionExtent, type LabelRect, type LocalExtent, type StackBadgeEntry } from "../shared/GeneralPlateAvoidance";
 import { buildUnitStatusContext, computeUnitStatusIcons, gainedTones, newlyGainedKinds, type StatusIconKind } from "../shared/UnitStatusIcons";
 import { services } from "../../core/managers/ServiceLoader";
-import { FLOAT_MISS_TEXT, FloatTextType } from "../../core/systems/FloatTextStyle";
-import { DEFEAT_VFX, defeatTextKeyOf, defeatVfxStats, isGeneralAvatarUnitId } from "./BattleFlowVfx";
+import { FLOAT_MISS_TEXT, FLOAT_TEXT_STYLES, FloatTextType } from "../../core/systems/FloatTextStyle";
+import { lootTextPlacement } from "../shared/TacticVfxHooks";
+import { DEFEAT_VFX, defeatTextKeyOf, defeatTextOffsetOf,defeatVfxStats, isGeneralAvatarUnitId } from "./BattleFlowVfx";
 import { vitalityRingView, type VitalityRingView } from "../../core/systems/VitalityBarView";
 import { GeneralVitalityStrip } from "./GeneralVitalityStrip";
 import {
@@ -173,8 +174,6 @@ interface BadgeView {
   bottomNameLabel: Label | null;  // 下排兵種名稱（將軍無用）
 }
 
-/** 掠奪飄字每行間隔（秒） */
-const LOOT_TEXT_STAGGER_SEC = 0.5;
 /** PROG-2-9715：主將出陣從待命點衝到出陣格的秒數（約一格半距離，比小兵前進稍快，表現「衝出去」） */
 const GENERAL_DASH_SEC = 0.55;
 /** 主將素材載入最多等幾秒才起跑；超過就直接站格，不讓主將卡在待命點 */
@@ -699,7 +698,10 @@ export class UnitRenderer extends Component {
       } else {
         defeatVfxStats.troop++;
       }
-      this.spawnFloatText(services().i18n.t(defeatTextKeyOf(isGeneral)), 'defeat', pos, unitId);
+      // 擬聲字延後並往側上方偏移，錯開暴擊傷害數字與 +SP（BattleFlowVfx.DEFEAT_VFX）
+      const defeatText = services().i18n.t(defeatTextKeyOf(isGeneral));
+      const defeatOffset = defeatTextOffsetOf(unitId, FLOAT_TEXT_STYLES.defeat.fontSize);
+      this.scheduleOnce(() => this.spawnFloatText(defeatText, 'defeat', pos, unitId, defeatOffset), DEFEAT_VFX.textDelaySec);
       defeatVfxStats.text++;
       (globalThis as { __DEFEAT_VFX_STATS__?: unknown }).__DEFEAT_VFX_STATS__ = defeatVfxStats;
     } catch (error) { console.warn('[UnitRenderer] 倒下演出略過', error); }
@@ -1081,8 +1083,8 @@ export class UnitRenderer extends Component {
    * 外觀設定請修改 FloatTextSystem.ts 中的 FLOAT_CONFIGS
    */
   /** anchorKey：同一單位短時間連續跳字會依序錯開（FloatTextSystem 內處理）。 */
-  private spawnFloatText(text: string, type: FloatTextType, worldPos: Vec3, anchorKey?: string): void {
-    services().floatText.show(type, text, worldPos, anchorKey);
+  private spawnFloatText(text: string, type: FloatTextType, worldPos: Vec3, anchorKey?: string, offset?: { x: number; y: number }): void {
+    services().floatText.show(type, text, worldPos, anchorKey, offset);
   }
 
   private waitSeconds(seconds: number): Promise<void> {
@@ -1357,7 +1359,8 @@ export class UnitRenderer extends Component {
     const worldPos = this.getUnitWorldPosition(lane, depth);
     if (!worldPos) return;
     texts.forEach((text, index) => {
-      this.scheduleOnce(() => this.spawnFloatText(text, 'loot', worldPos), index * LOOT_TEXT_STAGGER_SEC);
+      const place = lootTextPlacement(index, FLOAT_TEXT_STYLES.loot.fontSize);
+      this.scheduleOnce(() => this.spawnFloatText(text, 'loot', worldPos, undefined, { x: place.x, y: place.y }), place.delaySec);
     });
   }
 

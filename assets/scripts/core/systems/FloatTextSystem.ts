@@ -104,7 +104,7 @@ export class FloatTextSystem {
      * @param worldPos 3D 世界座標，自動轉換為 Canvas UI 座標
      * @param anchorKey 錨點（通常是單位 id）；同一錨點短時間連續跳字會依序錯開位置，不傳則只有隨機水平偏移
      */
-    show(type: FloatTextType, text: string, worldPos: Vec3, anchorKey?: string): void {
+    show(type: FloatTextType, text: string, worldPos: Vec3, anchorKey?: string, offset?: { x: number; y: number }): void {
         if (!this.uiRoot || !this.worldCamera || !this.canvasNode) return;
 
         const config = FLOAT_TEXT_STYLES[type];
@@ -140,9 +140,9 @@ export class FloatTextSystem {
         const stagger = anchorKey
             ? this.stagger.place(anchorKey, Date.now(), config.durationMs, floatEffectiveHeight(config))
             : { x: 0, y: 0 };
-        const offsetX = (Math.random() - 0.5) * 2 * config.randomOffsetX + stagger.x;
+        const offsetX = (Math.random() - 0.5) * 2 * config.randomOffsetX + stagger.x + (offset?.x ?? 0);
         let startX = uiPos.x + offsetX;
-        const startY = uiPos.y + stagger.y;
+        const startY = uiPos.y + stagger.y + (offset?.y ?? 0);
         // PROG-2-9415：往上飄的路徑會蓋到棋盤 buff 格的圖示與倍數時，水平挪到旁邊，兩邊都看得清楚
         const avoid = this.avoidProvider?.();
         if (avoid && avoid.length > 0) {
