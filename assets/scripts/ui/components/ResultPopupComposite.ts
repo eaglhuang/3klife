@@ -19,6 +19,7 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { services } from '../../core/managers/ServiceLoader';
 import { buildResultSections, RESULT_SECTION_TITLE, type ResultDetailRow } from '../../shared/ResultDetailSections';
 import { currentScreenCssScale, readableText } from '../core/ReadableText';
+import type { ThemeService } from '../core/ThemeService';
 
 /** 結算畫面規格掛載的等待上限（毫秒，PROG-2-9404）：畫面規格或皮膚下載 404／卡住時不能讓玩家永遠看不到結果 */
 const RESULT_MOUNT_MAX_MS = 15000;
@@ -91,12 +92,25 @@ const VERDICT_FONT = { fontSize: 32, lineHeight: 42 } as const;
  * 手機小螢幕放大明細字（PROG-2-9433）：812×375 時 26px 只剩約 9 CSS px，放大到至少 12 CSS px；
  * 欄名寬度跟著字級等比放大。桌機縮放夠大時原樣回傳，照網頁原稿。
  */
-function detailStyleFor(cssScale: number): DetailStyle {
+function detailStyleFor(cssScale: number, theme: ThemeService | null = null): DetailStyle {
+    // 顏色走主題 settle.* token（換季／節慶整套換色）；沒有主題服務時用 DETAIL_STYLE 預設
+    const color = (key: string, fallback: Color, alpha?: number): Color => {
+        const hex = theme?.token<string>(key);
+        if (!hex) return fallback;
+        const c = new Color().fromHEX(hex);
+        if (alpha !== undefined) c.a = alpha;
+        return c;
+    };
     const header = readableText(DETAIL_STYLE.headerFontSize, DETAIL_STYLE.headerLineHeight, cssScale);
     const row = readableText(DETAIL_STYLE.rowFontSize, DETAIL_STYLE.rowLineHeight, cssScale);
     const grow = row.fontSize / DETAIL_STYLE.rowFontSize;
     return {
         ...DETAIL_STYLE,
+        headerColor: color('settle.text.heading', DETAIL_STYLE.headerColor),
+        headerRuleColor: color('settle.rule.color', DETAIL_STYLE.headerRuleColor, theme?.token<number>('settle.rule.alpha') ?? DETAIL_STYLE.headerRuleColor.a),
+        keyColor: color('settle.text.key', DETAIL_STYLE.keyColor),
+        valueColor: color('settle.text.value', DETAIL_STYLE.valueColor),
+        zebraColor: color('settle.row.bg', DETAIL_STYLE.zebraColor, theme?.token<number>('settle.row.alpha') ?? DETAIL_STYLE.zebraColor.a),
         headerFontSize: header.fontSize,
         headerLineHeight: header.lineHeight,
         rowFontSize: row.fontSize,
@@ -115,6 +129,8 @@ export class ResultPopupComposite extends CompositePanel {
     /** 返回大廳鈕原本的寬度（藏起再戰鈕時拉寬，恢復時還原） */
     private _backBaseWidth = 0;
     private _isMounted = false;
+    /** 主題服務：明細顏色取 settle.* token（PROG-2-9832 家族）；取不到用預設色 */
+    private _theme: ThemeService | null = null;
     private _mounting: Promise<void> | null = null;
     private _visible = false;
     private _description = '';
@@ -154,6 +170,7 @@ export class ResultPopupComposite extends CompositePanel {
         }
 
         this._description = result.description;
+        this._theme = await services().specLoader.getThemeService().catch(() => null);
         if (!this._isMounted) { this._showEmergencyCard(result); return; }
         // 第一行是勝負說明，放頭像旁大字；其餘明細分區排進捲動區（PROG-2-9424）
         const [verdict, ...detailLines] = result.description.split('\n');
@@ -328,7 +345,7 @@ ${result.description}
         const content = scroll?.content;
         if (!scroll || !content) return;
         const width = content.getComponent(UITransform)?.contentSize.width ?? 1000;
-        const style = detailStyleFor(currentScreenCssScale());
+        const style = detailStyleFor(currentScreenCssScale(), this._theme);
         let used = 0;
         for (const section of buildResultSections(lines)) {
             const title = RESULT_SECTION_TITLE[section.id];

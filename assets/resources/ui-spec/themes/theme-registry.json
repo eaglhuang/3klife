@@ -70,28 +70,86 @@
         "text.section": "#C4A05C",
         "text.section.letterSpacing": 8,
         "text.body": "#D9C9A6",
-        "text.button": "#F1E5CC"
+        "text.button": "#F1E5CC",
+        "settle.panel.bg": "#F6E7C1",
+        "settle.panel.alpha": 255,
+        "settle.panel.cornerRadius": 28,
+        "settle.panel.borderWidth": 4,
+        "settle.panel.border": "#C9A060",
+        "settle.header.bg": "#EBD39A",
+        "settle.header.alpha": 255,
+        "settle.inset.bg": "#F6E7C1",
+        "settle.inset.alpha": 200,
+        "settle.inset.cornerRadius": 14,
+        "settle.inset.borderWidth": 2,
+        "settle.inset.border": "#C9A060",
+        "settle.section.bg": "#FFF3D2",
+        "settle.section.alpha": 210,
+        "settle.section.cornerRadius": 10,
+        "settle.section.borderWidth": 1,
+        "settle.section.border": "#D8B878",
+        "settle.row.bg": "#8C5A1E",
+        "settle.row.alpha": 30,
+        "settle.row.cornerRadius": 8,
+        "settle.avatar.bg": "#2E2422",
+        "settle.avatar.border": "#E8BE60",
+        "settle.text.title": "#B03018",
+        "settle.text.heading": "#7A3E10",
+        "settle.text.key": "#8A4B12",
+        "settle.text.value": "#3B2410",
+        "settle.text.muted": "#8A6A3A",
+        "settle.rule.color": "#B07A2A",
+        "settle.rule.alpha": 200,
+        "settle.button.dark.bg": "#2B2724",
+        "settle.button.dark.alpha": 255,
+        "settle.button.dark.cornerRadius": 16,
+        "settle.button.dark.borderWidth": 2,
+        "settle.button.dark.border": "#14110F",
+        "settle.button.gold.bg": "#8A5A1E",
+        "settle.button.gold.alpha": 255,
+        "settle.button.gold.cornerRadius": 16,
+        "settle.button.gold.borderWidth": 2,
+        "settle.button.gold.border": "#E8BE60",
+        "settle.text.button": "#FFF3D6",
+        "settle.badge.bg": "#8A5A1E",
+        "settle.badge.alpha": 255,
+        "settle.badge.cornerRadius": 6,
+        "settle.text.alert": "#B3261E",
+        "settle.text.accent": "#9A5B10",
+        "settle.dropdown.bg": "#2B2724",
+        "settle.dropdown.row": "#3C342E",
+        "settle.dropdown.selected": "#6E4E22",
+        "settle.dropdown.text": "#FFF3D6",
+        "settle.dropdown.hint": "#E8C88C",
+        "settle.dropdown.badge": "#FFD27A",
+        "settle.dropdown.blocked": "#FF8A7A"
       }
     },
     "spring": {
       "nameKey": "ui.theme.name.spring",
       "tokens": {
         "panel.border": "#B8D8A0A0",
-        "text.section": "#A8C888"
+        "text.section": "#A8C888",
+        "settle.panel.border": "#9CB872",
+        "settle.inset.border": "#9CB872"
       }
     },
     "summer": {
       "nameKey": "ui.theme.name.summer",
       "tokens": {
         "panel.border": "#8CD0E8A0",
-        "text.section": "#7CBCD8"
+        "text.section": "#7CBCD8",
+        "settle.panel.border": "#6FB4CC",
+        "settle.inset.border": "#6FB4CC"
       }
     },
     "autumn": {
       "nameKey": "ui.theme.name.autumn",
       "tokens": {
         "panel.border": "#E8A860A0",
-        "text.section": "#D09048"
+        "text.section": "#D09048",
+        "settle.panel.border": "#D08A3C",
+        "settle.inset.border": "#D08A3C"
       }
     },
     "winter": {
@@ -99,7 +157,12 @@
       "tokens": {
         "panel.border": "#C8DCF0A0",
         "text.section": "#A8C0DC",
-        "text.title": "#F4F8FF"
+        "text.title": "#F4F8FF",
+        "settle.panel.bg": "#EEF2F6",
+        "settle.panel.border": "#A8C0DC",
+        "settle.inset.border": "#A8C0DC",
+        "settle.header.bg": "#D5E0EC",
+        "settle.badge.bg": "#4A6A8C"
       }
     },
     "lunar-new-year": {
@@ -111,7 +174,11 @@
         "button.primary.border": "#FFD878CC",
         "panel.border": "#FFD878B0",
         "text.title": "#FFE9A8",
-        "text.section": "#FFC850"
+        "text.section": "#FFC850",
+        "settle.panel.bg": "#FBE9C8",
+        "settle.panel.border": "#E0A020",
+        "settle.button.gold.bg": "#C8281E",
+        "settle.button.gold.border": "#FFD878"
       }
     }
   },
@@ -171,5 +238,133 @@
         }
       }
     }
-  ]
+  ],
+  "familyBindings": {
+    "settle": {
+      "$note": "戰場『勝利』結算視窗風格（米黃金框面板、紅標題、內嵌清單、深灰／深金按鈕）抽成的共用家族；大廳任務類視窗改在這裡登記 skin 與 slot 對應，不各自複製樣式。換季／節慶只覆寫 settle.* token。slot 對應可寫完整 slot id 或後綴（最長優先）。",
+      "appliesToSkins": [
+        "lobby-mission-detail-dialog-default",
+        "extreme-task-screen.skin",
+        "result-popup-default"
+      ],
+      "slotRoles": {
+        "mission.dialog.card.bg": "panel",
+        "mission.dialog.header.bg": "header",
+        "mission.dialog.footer.bg": "header",
+        "mission.dialog.scroll.bg": "inset",
+        "mission.dialog.section.bg": "section",
+        "mission.dialog.row.bg": "rowAlt",
+        "mission.dialog.btn.primary": "buttonGold",
+        "mission.dialog.btn.secondary": "buttonDark",
+        "mission.dialog.label.header": "labelTitle",
+        "mission.dialog.label.section": "labelKey",
+        "mission.dialog.label.title": "labelHeading",
+        "mission.dialog.label.body": "labelValue",
+        "mission.dialog.label.muted": "labelMuted",
+        "mission.dialog.label.metric": "labelValue",
+        "mission.dialog.label.cost": "labelKey",
+        "mission.dialog.label.reward": "labelHeading",
+        "mission.dialog.label.dropdown": "labelButton",
+        "mission.dialog.label.button": "labelButton",
+        "et.card.bg": "panel",
+        "et.button.bg": "buttonGold",
+        "et.label.title": "labelTitle",
+        "et.label.body": "labelValue",
+        "popup.detail.bg": "inset",
+        "popup.avatar.ring": "avatarRing",
+        "mission.dialog.dropdown.btn": "buttonDark",
+        "mission.dialog.close.btn": "buttonDark",
+        "mission.dialog.badge.type": "badge",
+        "mission.dialog.badge.intel": "badge",
+        "mission.dialog.badge.volunteer": "badge",
+        "mission.dialog.label.badge": "labelButton",
+        "mission.dialog.label.chevron": "labelButton",
+        "mission.dialog.fog.mask": "rowAlt",
+        "mission.dialog.env.bg": "rowAlt",
+        "mission.dialog.label.close": "labelButton"
+      },
+      "roles": {
+        "panel": {
+          "kind": "color-rect",
+          "color": "@settle.panel.bg",
+          "alpha": "@settle.panel.alpha",
+          "cornerRadius": "@settle.panel.cornerRadius",
+          "borderWidth": "@settle.panel.borderWidth",
+          "borderColor": "@settle.panel.border"
+        },
+        "header": {
+          "kind": "color-rect",
+          "color": "@settle.header.bg",
+          "alpha": "@settle.header.alpha"
+        },
+        "inset": {
+          "kind": "color-rect",
+          "color": "@settle.inset.bg",
+          "alpha": "@settle.inset.alpha",
+          "cornerRadius": "@settle.inset.cornerRadius",
+          "borderWidth": "@settle.inset.borderWidth",
+          "borderColor": "@settle.inset.border"
+        },
+        "section": {
+          "kind": "color-rect",
+          "color": "@settle.section.bg",
+          "alpha": "@settle.section.alpha",
+          "cornerRadius": "@settle.section.cornerRadius",
+          "borderWidth": "@settle.section.borderWidth",
+          "borderColor": "@settle.section.border"
+        },
+        "rowAlt": {
+          "kind": "color-rect",
+          "color": "@settle.row.bg",
+          "alpha": "@settle.row.alpha",
+          "cornerRadius": "@settle.row.cornerRadius"
+        },
+        "avatarRing": {
+          "kind": "color-rect",
+          "color": "@settle.avatar.bg",
+          "borderColor": "@settle.avatar.border"
+        },
+        "buttonDark": {
+          "kind": "color-rect",
+          "color": "@settle.button.dark.bg",
+          "alpha": "@settle.button.dark.alpha",
+          "cornerRadius": "@settle.button.dark.cornerRadius",
+          "borderWidth": "@settle.button.dark.borderWidth",
+          "borderColor": "@settle.button.dark.border"
+        },
+        "buttonGold": {
+          "kind": "color-rect",
+          "color": "@settle.button.gold.bg",
+          "alpha": "@settle.button.gold.alpha",
+          "cornerRadius": "@settle.button.gold.cornerRadius",
+          "borderWidth": "@settle.button.gold.borderWidth",
+          "borderColor": "@settle.button.gold.border"
+        },
+        "labelTitle": {
+          "color": "@settle.text.title"
+        },
+        "labelHeading": {
+          "color": "@settle.text.heading"
+        },
+        "labelKey": {
+          "color": "@settle.text.key"
+        },
+        "labelValue": {
+          "color": "@settle.text.value"
+        },
+        "labelMuted": {
+          "color": "@settle.text.muted"
+        },
+        "labelButton": {
+          "color": "@settle.text.button"
+        },
+        "badge": {
+          "kind": "color-rect",
+          "color": "@settle.badge.bg",
+          "alpha": "@settle.badge.alpha",
+          "cornerRadius": "@settle.badge.cornerRadius"
+        }
+      }
+    }
+  }
 }

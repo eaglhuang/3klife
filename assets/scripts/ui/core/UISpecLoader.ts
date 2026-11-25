@@ -232,8 +232,8 @@ export class UISpecLoader {
 
     private async _applyTheme(skinId: string, manifest: UISkinManifest): Promise<UISkinManifest> {
         const theme = await this.getThemeService();
-        const style = theme?.skinStyle();
-        if (!theme || !style || !theme.appliesToSkin(skinId)) return manifest;
+        const style = theme?.skinStyleFor(skinId);
+        if (!theme || !style) return manifest;
         return { ...manifest, slots: restyleSkinSlots(manifest.slots, style) };
     }
 
