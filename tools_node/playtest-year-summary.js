@@ -84,8 +84,9 @@ function evaluateFullYear(input) {
   const advanced = new Set();
   const base = input.baselineAdvances || 0;
   if (Number.isFinite(input.startOrdinal)) for (let i = 0; i < base; i++) advanced.add((((input.startOrdinal - base + i) % 4) + 4) % 4);
-  let casts = 0;
-  let battleSeasons = 0;
+  // 原第 10 步的首戰（開年前已打的那場）也算整年的放招與進戰場
+  let casts = input.baselineCasts || 0;
+  let battleSeasons = input.baselineBattles || 0;
   for (const q of input.quarters || []) {
     const label = q.season || ordinalLabel(q.ordinal);
     const advOk = Number.isFinite(q.ordinal) && q.seasonAfterOrdinal === q.ordinal + 1;

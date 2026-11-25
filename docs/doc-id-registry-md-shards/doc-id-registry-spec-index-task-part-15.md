@@ -281,5 +281,8 @@
 | `doc_task_3089` | docs/agent-briefs/tasks/PROG/PROG-2-10021.md | [PROG-2-10021] 戰場受擊音效 light 層補變體：輪播避免連續重複、同幀節流 |
 | `doc_task_3090` | docs/agent-briefs/tasks/PROG/PROG-2-10022.md | [PROG-2-10022] 首年四季全程實玩腳本 playtest-online --full-year（逐季斷言） |
 | `doc_task_3091` | docs/agent-briefs/tasks/PROG/PROG-2-10023.md | [PROG-2-10023] 年終守城保底步兵卡與自動代打放行（AI 代為部署） |
-| `doc_task_3092` | docs/agent-briefs/tasks/PROG/PROG-2-10000.md | PROG-2-10000: 親生子嗣登記缺口修補 |
-| `doc_task_3093` | docs/agent-briefs/tasks/PROG/PROG-2-10026.md | PROG-2-10026: 結緣透明加法、誠意累積與紅娘叩門保底 |
+| `doc_task_3092` | docs/agent-briefs/tasks/PROG/PROG-2-10024.md | [PROG-2-10024] playtest-online --full-year 殘留浮層遮罩收窗與實跑驗證 |
+| `doc_task_3094` | docs/agent-briefs/tasks/PROG/PROG-2-10028.md | [PROG-2-10028] 戰場手感修正：揚塵粒子分散、掠奪跳字依序錯開、倒下擬聲字偏移 |
+| `doc_task_3095` | docs/agent-briefs/tasks/PROG/PROG-2-10025.md | [PROG-2-10025] 戰場單挑勝利／計謀橫幅不蓋 HUD 資訊 |
+| `doc_task_3096` | docs/agent-briefs/tasks/PROG/PROG-2-10026.md | PROG-2-10026: 結緣透明加法、誠意累積與紅娘叩門保底 |
+| `doc_task_3097` | docs/agent-briefs/tasks/PROG/PROG-2-10000.md | PROG-2-10000: 親生子嗣登記缺口修補 |

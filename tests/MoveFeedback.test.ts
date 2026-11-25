@@ -3,6 +3,7 @@ import { TerrainType, TroopType } from '../assets/scripts/shared/CommonEnums';
 import {
     DUST_COLOR_DARK,
     DUST_COLOR_LIGHT,
+    DUST_PARTICLE_RANGES,
     FOOTFALL_INTERVAL_SEC,
     MOVE_FOOTSTEP_MAX_VOLUME,
     MOVE_FOOTSTEP_TABLE,
@@ -112,11 +113,14 @@ export function createMoveFeedbackSuite(): TestSuite {
         const spec = moveDustFor(TroopType.Infantry, TerrainType.Plain);
         for (const r of [0, 0.25, 0.5, 0.75, 0.999]) {
             const p = rollDustParticle(spec, () => r);
-            assert.isTrue(p.startSize >= 16 && p.startSize <= 24, `粒徑 ${p.startSize}`);
-            assert.isTrue(p.endScale >= 1.8 && p.endScale <= 2.5);
-            assert.isTrue(p.rise >= 25 && p.rise <= 45);
-            assert.isTrue(p.drift >= 15 && p.drift <= 40);
-            assert.isTrue(p.lifeSec >= 0.6 && p.lifeSec <= 0.9);
+            const R = DUST_PARTICLE_RANGES;
+            assert.isTrue(p.startSize >= R.startSize[0] && p.startSize <= R.startSize[1], `粒徑 ${p.startSize}`);
+            assert.isTrue(p.endScale >= R.endScale[0] && p.endScale <= R.endScale[1]);
+            assert.isTrue(p.rise >= R.rise[0] && p.rise <= R.rise[1]);
+            assert.isTrue(p.drift >= R.drift[0] && p.drift <= R.drift[1]);
+            assert.isTrue(p.lifeSec >= R.lifeSec[0] && p.lifeSec <= R.lifeSec[1]);
+            // 單顆終端大小（粒徑 × 放大）要小於 1 倍粒徑上限的 2 倍，避免又糊成一整塊
+            assert.isTrue(p.startSize * p.endScale <= 14 * 1.9 + 1e-6, '終端粒徑不得過大');
             assert.isTrue(p.color.r <= DUST_COLOR_LIGHT.r && p.color.r >= DUST_COLOR_DARK.r);
             assert.isTrue(p.color.g <= DUST_COLOR_LIGHT.g && p.color.g >= DUST_COLOR_DARK.g);
             assert.isTrue(p.color.b <= DUST_COLOR_LIGHT.b && p.color.b >= DUST_COLOR_DARK.b);
