@@ -8,7 +8,7 @@ export function createTacticWeatherClickThroughSuite(): TestSuite {
     suite.test('天氣禁用時計謀按鈕保持可點，其他原因仍不可點', () => {
         const source = fs.readFileSync(path.join(__dirname, '..', 'assets/scripts/ui/components/ActionCommandComposite.ts'), 'utf8');
         assert.isTrue(
-            source.includes('this._tacticClickable = this._tacticEnabled || reason === TACTIC_REASON_WEATHER;'),
+            source.includes('this._tacticClickable = this._tacticEnabled || reason === tacticReasonText(TACTIC_REASON_WEATHER);'),
             '天氣禁用沒有保留點擊',
         );
         assert.isTrue(source.includes('if (!this._tacticClickable) return;'), '點擊沒有改用可點擊旗標');

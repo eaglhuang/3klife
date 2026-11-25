@@ -10,10 +10,17 @@
 import { Weather } from '../../shared/CommonEnums';
 import { checkTacticWeather } from '../../core/systems/WeatherTacticRestriction';
 import { describeTacticCondition, type TacticCondition } from '../../core/systems/TacticCondition';
+import { services } from '../../core/managers/ServiceLoader';
 
-export const TACTIC_REASON_NO_POINTS = '計謀點不足';
-export const TACTIC_REASON_NO_SP = 'SP 不足';
-export const TACTIC_REASON_WEATHER = '天氣禁用';
+/** 灰色提示的 i18n 鍵（四語；PROG-2-10015）。顯示字一律用 tacticReasonText 取，不寫死中文 */
+export const TACTIC_REASON_NO_POINTS = 'ui.battle.skill.reason.no_points';
+export const TACTIC_REASON_NO_SP = 'ui.battle.skill.reason.no_sp';
+export const TACTIC_REASON_WEATHER = 'ui.battle.skill.reason.weather';
+
+/** 把灰色提示鍵換成目前語系的字 */
+export function tacticReasonText(key: string): string {
+    return services().i18n.t(key);
+}
 
 export interface TacticAvailabilityInput {
     id: string;
@@ -36,6 +43,8 @@ export interface TacticAvailability {
     enabled: boolean;
     /** 不能施放時的短原因；可以施放時為 null */
     reason: string | null;
+    /** 原因是上面三個鍵之一時帶出該鍵（戰法自己的條件說明沒有鍵） */
+    reasonKey?: string;
     /** 兩個字的原因，寫在計謀鈕第二行；沒有時按鈕寫「受限」 */
     shortReason?: string;
 }
@@ -45,11 +54,11 @@ export function buildTacticAvailability(
     state: TacticAvailabilityState,
 ): TacticAvailability[] {
     return tactics.map((tactic) => {
-        if (!state.tacticPointEnabled) return { id: tactic.id, label: tactic.label, enabled: false, reason: TACTIC_REASON_NO_POINTS };
-        if (!state.generalCanUseSkill) return { id: tactic.id, label: tactic.label, enabled: false, reason: TACTIC_REASON_NO_SP };
+        if (!state.tacticPointEnabled) return { id: tactic.id, label: tactic.label, enabled: false, reason: tacticReasonText(TACTIC_REASON_NO_POINTS), reasonKey: TACTIC_REASON_NO_POINTS };
+        if (!state.generalCanUseSkill) return { id: tactic.id, label: tactic.label, enabled: false, reason: tacticReasonText(TACTIC_REASON_NO_SP), reasonKey: TACTIC_REASON_NO_SP };
         const weather = checkTacticWeather(tactic.tags, state.weather);
         // 天氣擋下時，戰法自己若有兩個字的條件（例如火攻「待風」）照樣寫在按鈕上，不要只寫「受限」（PROG-2-9347）
-        if (!weather.allowed) return { id: tactic.id, label: tactic.label, enabled: false, reason: TACTIC_REASON_WEATHER,
+        if (!weather.allowed) return { id: tactic.id, label: tactic.label, enabled: false, reason: tacticReasonText(TACTIC_REASON_WEATHER), reasonKey: TACTIC_REASON_WEATHER,
             shortReason: tactic.unmetCondition ? describeTacticCondition(tactic.unmetCondition).short : undefined };
         if (tactic.unmetCondition) {
             const text = describeTacticCondition(tactic.unmetCondition);

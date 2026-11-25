@@ -10,7 +10,7 @@ import { BattleController } from '../assets/scripts/battle/controllers/BattleCon
 import { Faction, Weather } from '../assets/scripts/core/config/Constants';
 import { GeneralUnit, type GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 import { describeTacticCondition } from '../assets/scripts/core/systems/TacticCondition';
-import { buildTacticAvailability } from '../assets/scripts/ui/core/TacticAvailabilityPresenter';
+import { buildTacticAvailability, tacticReasonText, TACTIC_REASON_NO_POINTS, TACTIC_REASON_WEATHER } from '../assets/scripts/ui/core/TacticAvailabilityPresenter';
 
 const FIRE = { id: 'tactic-fire-scheme', battleSkillId: 'zhou-yu-inferno', tcond: [{ kind: 'weather', allowed: ['WINDY'] }] };
 const READY = { weather: Weather.Clear, tacticPointEnabled: true, generalCanUseSkill: true };
@@ -64,7 +64,7 @@ export function createTacticConditionButtonSuite(): TestSuite {
             [{ id: 'zhou-yu-inferno', label: '火攻', tags: ['fire'], unmetCondition: { kind: 'weather', allowed: [Weather.Windy] } }],
             { ...READY, weather: Weather.Rain });
         assert.isFalse(item.enabled);
-        assert.equals('天氣禁用', item.reason ?? '');
+        assert.equals(tacticReasonText(TACTIC_REASON_WEATHER), item.reason ?? '');
         assert.equals('待風', item.shortReason ?? '');
     });
 
@@ -72,7 +72,7 @@ export function createTacticConditionButtonSuite(): TestSuite {
         const [item] = buildTacticAvailability(
             [{ id: 'zhou-yu-inferno', label: '火攻', tags: [], unmetCondition: { kind: 'weather', allowed: [Weather.Windy] } }],
             { ...READY, tacticPointEnabled: false });
-        assert.equals('計謀點不足', item.reason ?? '');
+        assert.equals(tacticReasonText(TACTIC_REASON_NO_POINTS), item.reason ?? '');
         assert.equals(undefined, item.shortReason);
     });
 

@@ -18200,6 +18200,34 @@
       }
     },
     {
+      "id": "PROG-2-10015",
+      "doc_id": "doc_task_3084",
+      "title": "計謀鈕與招式失敗提示走四語 i18n；軍心鼓舞全員滿血改提示沒有需要補血",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-25",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-25T14:45:38+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "description": "TacticAvailabilityPresenter 寫死的計謀點不足／SP 不足／天氣禁用改走四語 i18n；heal 類招式在我方全員滿血時改彈沒有需要補血的部隊。只動提示文字與狀態判斷，不動數值與規則。",
+      "related": [
+        "PROG-2-9342",
+        "PROG-2-9333",
+        "PROG-2-10010"
+      ],
+      "depends": [],
+      "notes": "2026-11-25 | 狀態: done | 驗證: tsc 0 錯、run-cli 9569 通過、compute-gate quick | 變更: Presenter 三句灰色提示改四語 i18n 鍵（ui.battle.skill.reason.*）並帶 reasonKey；BattleSkillTargetingFlow 計謀點不足 Toast 改走同鍵；補血招式全員滿血改彈 cast_failed_no_wounded；新增 allFriendliesFullHp；測試 4 組＋3 檔對應調整 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "doc": "docs/agent-briefs/tasks/PROG/PROG-2-10015.md"
+      }
+    },
+    {
       "doc_id": "doc_task_3083",
       "id": "PROG-2-10014",
       "title": "playtest-online 火計探針細分失敗原因、時間上限、已知環境錯誤白名單",
@@ -18247,9 +18275,9 @@
     }
   ],
   "summary": {
-    "done": 330,
+    "done": 328,
     "in_progress": 3,
     "open": 87,
-    "total": 420
+    "total": 418
   }
 }
