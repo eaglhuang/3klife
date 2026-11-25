@@ -18356,6 +18356,57 @@
       }
     },
     {
+      "doc_id": "doc_task_3089",
+      "id": "PROG-2-10021",
+      "title": "戰場受擊音效 light 層補變體：輪播避免連續重複、同幀節流",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-25",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-25T16:36:39+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "受擊 light 層只有 2 檔連擊單調；用現有音檔擴池，避免連續兩次相同，並對同一瞬間多次受擊節流。不新增音檔、不動核心規則與數值。",
+      "related": [
+        "PROG-2-9729"
+      ],
+      "depends": [],
+      "acceptance": [
+        "light 池>=4 檔且不連續重複",
+        "同視窗節流",
+        "池空不崩",
+        "tsc 0、run-cli 全過"
+      ],
+      "deliverables": [],
+      "notes": "2026-11-25 | 狀態: done | 驗證: tsc 0 錯、run-cli 9588 通過、compute-gate quick 4/4；未實機聽（weapon／bat 借音聽感未驗） | 變更: BattleAudioLayers 輕擊池擴為 hit_light／hurt／weapon／bat（後兩者音量×0.6）、HitSfxState 避免連續同檔、tryAcquireHitSfx 輕擊 60ms 內最多 2 聲、池空不崩；BattleUIBridge 接線；JSON 同步；tests/BattleAudioLayers.test.ts 新增 3 案 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
       "doc_id": "doc_task_3090",
       "id": "PROG-2-10022",
       "title": "首年四季全程實玩腳本 playtest-online --full-year（逐季斷言）",
@@ -18408,9 +18459,9 @@
     }
   ],
   "summary": {
-    "done": 334,
-    "in_progress": 3,
+    "done": 331,
+    "in_progress": 4,
     "open": 87,
-    "total": 424
+    "total": 422
   }
 }
