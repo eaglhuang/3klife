@@ -1178,20 +1178,20 @@ export class BattleUIBridge {
   }
 
 
-  /** 年終守城：我方場上還沒部署任何部隊就不得開戰／自動代打（PROG-2-10019，使用者 11/25 裁決） */
+  /** 年終守城：我方場上還沒部署任何部隊就不得手動開戰；自動代打由 AI 部署所以放行（PROG-2-10019／10023，使用者 11/25 裁決） */
   public isDefenseDeployBlocked(): boolean {
     const state = this.ctx.ctrl?.state;
     if (!state || this._defenseGateOpen) return false;
     let troops = 0;
     state.units.forEach(u => { if (u.faction === Faction.Player && u.currentHp > 0) troops += 1; });
-    const blocked = isDefenseDeployBlocked(state.siegeDefender === Faction.Player, troops);
+    const blocked = isDefenseDeployBlocked(state.siegeDefender === Faction.Player, troops, this.autoPlay.active);
     // 部署過一次就放行到本場結束：中途部隊全滅不能卡死自動代打與回合推進
     if (!blocked) this._defenseGateOpen = true;
     return blocked;
   }
 
   /** 被閘門擋下時跳四語警告；回傳 true 表示已擋下 */
-  public blockIfDefenseUndeployed(kind: 'end_turn' | 'auto'): boolean {
+  public blockIfDefenseUndeployed(kind: 'end_turn'): boolean {
     if (!this.isDefenseDeployBlocked()) return false;
     const lookup = withDefenseGuideFallback((key, ...args) => services().i18n.t(key, ...args));
     this.ctx.deployRuntime?.showToast(lookup(`ui.battle.defense.blocked_${kind}`), 3);
@@ -1209,7 +1209,6 @@ export class BattleUIBridge {
     const c = this.ctx;
     const state = c.ctrl?.state;
     if (!c.ctrl || !state || state.battleEndAnnounced) return;
-    if (this.blockIfDefenseUndeployed('auto')) return;
     // 自動代打中再按＝跳過演出：先過極速決戰可用條件（PROG-2-9709），不可用就提示原因、維持自動代打
     if (this.autoPlay.active) {
       const gate = this._quickResolveGate();

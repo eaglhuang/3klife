@@ -1241,5 +1241,5 @@
   "ui.battle.defense.banner_deploy": "守城準備：左の兵種カードを自陣の最下段のマスへドラッグして配置し、「ターン終了」で開戦",
   "ui.battle.defense.banner_ready": "部隊配置完了：「ターン終了」で開戦、城塞を守り抜け",
   "ui.battle.defense.blocked_end_turn": "部隊が未配置のため開戦できません！先に兵種カードを自陣の最下段へ",
-  "ui.battle.defense.blocked_auto": "部隊が未配置のため自動代行できません！先に兵種カードを自陣の最下段へ"
+  "ui.battle.defense.guard_granted": "兵力か兵糧が足りないため、保底の{0}カードを1枚支給します（兵糧は消費しません）。底線のマスにドラッグして配備してください"
 }
