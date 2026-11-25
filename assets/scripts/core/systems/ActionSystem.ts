@@ -50,6 +50,12 @@ export interface ActionContext {
     targetUnitIds:  string[];
     /** 被施術目標的世界座標列表（與 targetUnitIds 索引對應） */
     targetPositions: { x: number; y: number; z: number }[];
+    /**
+     * 預覽模式（武將詳情技能預覽）：只播音效與浮字，略過 vfx 步驟，
+     * 避免對尚無 prefab 的積木呼叫 EffectSystem.playBlock 而報錯。
+     * 戰場端不傳此欄位，行為不變。
+     */
+    previewOnly?:   boolean;
 }
 
 // ─── ActionSystem ───────────────────────────────────────────────────────────
@@ -170,6 +176,7 @@ export class ActionSystem {
      * target='targets' → 每個 targetPosition 各播一次
      */
     private doVfx(step: VfxStep, ctx: ActionContext): void {
+        if (ctx.previewOnly) return;
         const positions = step.target === "targets"
             ? ctx.targetPositions
             : [ctx.casterPos];

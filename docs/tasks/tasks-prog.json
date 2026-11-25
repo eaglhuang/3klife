@@ -18272,12 +18272,56 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_3085",
+      "id": "PROG-2-10016",
+      "title": "武將詳情技能預覽只播音效與浮字（方案 C）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-25",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-25T07:50:51+00:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "詳情預覽因 7 個積木缺 prefabPath 取不到特效節點而每次報 error；預覽路徑改傳 previewOnly 跳過 vfx 步驟，並移除誤導的點擊預覽提示。待 7 個積木 prefab 完成（美術佇列，方案 A）再恢復。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-25 | 狀態: done | 驗證: tsc 測試設定 0 錯、run-cli 9573 通過、compute-gate quick 4/4；未做實機（本機無可點開詳情的建置，僅單元測試驗證） | 變更: ActionContext.previewOnly，doVfx 預覽略過；GeneralDetailSkillsChild 預覽傳 previewOnly、移除點擊預覽提示（該字串為寫死中文，無 i18n 鍵、無孤兒鍵）、註解待 7 積木 prefab（方案 A）再恢復；tests/ActionSystem.test.ts 兩案 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
-    "done": 329,
+    "done": 330,
     "in_progress": 2,
     "open": 87,
-    "total": 418
+    "total": 419
   }
 }
