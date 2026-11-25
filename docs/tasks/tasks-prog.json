@@ -17984,12 +17984,36 @@
         "summary": "",
         "doc": "docs/agent-briefs/tasks/PROG/PROG-2-9989.md"
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-9999",
+      "title": "playtest-online --year 學府入學畫面找不到：查根因並修復（QA 11/25）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-25",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-25T09:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "description": "年循環 yq1~yq3 回報學府入學畫面沒有出現；判斷是遊戲 bug 或腳本過時並修復。",
+      "related": [],
+      "depends": [],
+      "notes": "2026-11-25 | 狀態: done | 驗證: tsc 0 錯、run-cli 9546 通過、compute-gate quick 4/4、playtest --year 學府步驟 PASS（截圖 artifacts/playtest-online/xuefu-fix-PROG-2-9999/）| 變更: 根因兩處——遊戲端守衛提示 i18n 用具名佔位符 {currentAge} 但 t() 只認 {0}{1}，玩家看到原樣大括號，已改四語系並加單元測試；腳本端入學畫面步驟沒跟上 PROG-2-9609 空門守衛（未滿 15 歲不開畫面只跳提示條），改為接受入學畫面或守衛提示條且提示不得殘留佔位符 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "doc": "docs/agent-briefs/tasks/PROG/PROG-2-9999.md"
+      }
     }
   ],
   "summary": {
-    "done": 317,
+    "done": 318,
     "in_progress": 3,
     "open": 86,
-    "total": 406
+    "total": 407
   }
 }
