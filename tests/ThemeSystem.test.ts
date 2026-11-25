@@ -315,7 +315,7 @@ export function createThemeSystemSuite(): TestSuite {
         assert.isTrue(svc.skinStyleFor('not-registered') === null);
     });
 
-    suite.test('settle 家族：任務詳情窗各 slot 換成結算風格；未指定的 slot（進度條、徽章）原樣', () => {
+    suite.test('settle 家族：任務詳情窗各 slot 換成結算風格；未指定的 slot（進度條）原樣', () => {
         const svc = new ThemeService();
         svc.setRegistry(registry);
         const skin = readJson<{ slots: Record<string, any> }>('assets/resources/ui-spec/skins/lobby-mission-detail-dialog-default.json').slots;
@@ -325,7 +325,9 @@ export function createThemeSystemSuite(): TestSuite {
         assert.equals('#8A5A1E', out['mission.dialog.btn.primary'].color);
         assert.equals('#3B2410', out['mission.dialog.label.body'].color);
         assert.equals(JSON.stringify(skin['mission.dialog.bar.fill.food']), JSON.stringify(out['mission.dialog.bar.fill.food']));
-        assert.equals(JSON.stringify(skin['mission.dialog.badge.type']), JSON.stringify(out['mission.dialog.badge.type']));
+        assert.equals('#8A5A1E', out['mission.dialog.badge.type'].color);
+        assert.equals('#FFF3D6', out['mission.dialog.label.dropdown'].color);
+        assert.equals('#8C5A1E', out['mission.dialog.fog.mask'].color);
     });
 
     suite.test('settle 家族：換冬季主題整套換色（卡片底與框線）', () => {

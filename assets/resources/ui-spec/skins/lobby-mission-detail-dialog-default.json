@@ -146,8 +146,8 @@
     },
     "mission.dialog.fog.mask": {
       "kind": "color-rect",
-      "color": "colorBlack",
-      "alpha": 110
+      "color": "#8C5A1E",
+      "alpha": 30
     },
     "mission.dialog.label.header": {
       "kind": "label-style",
@@ -262,6 +262,11 @@
       "horizontalAlign": "CENTER",
       "verticalAlign": "CENTER",
       "overflow": "CLAMP"
+    },
+    "mission.dialog.env.bg": {
+      "kind": "color-rect",
+      "color": "#8C5A1E",
+      "alpha": 30
     }
   }
 }

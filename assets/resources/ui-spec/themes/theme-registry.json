@@ -110,7 +110,19 @@
         "settle.button.gold.cornerRadius": 16,
         "settle.button.gold.borderWidth": 2,
         "settle.button.gold.border": "#E8BE60",
-        "settle.text.button": "#FFF3D6"
+        "settle.text.button": "#FFF3D6",
+        "settle.badge.bg": "#8A5A1E",
+        "settle.badge.alpha": 255,
+        "settle.badge.cornerRadius": 6,
+        "settle.text.alert": "#B3261E",
+        "settle.text.accent": "#9A5B10",
+        "settle.dropdown.bg": "#2B2724",
+        "settle.dropdown.row": "#3C342E",
+        "settle.dropdown.selected": "#6E4E22",
+        "settle.dropdown.text": "#FFF3D6",
+        "settle.dropdown.hint": "#E8C88C",
+        "settle.dropdown.badge": "#FFD27A",
+        "settle.dropdown.blocked": "#FF8A7A"
       }
     },
     "spring": {
@@ -149,7 +161,8 @@
         "settle.panel.bg": "#EEF2F6",
         "settle.panel.border": "#A8C0DC",
         "settle.inset.border": "#A8C0DC",
-        "settle.header.bg": "#D5E0EC"
+        "settle.header.bg": "#D5E0EC",
+        "settle.badge.bg": "#4A6A8C"
       }
     },
     "lunar-new-year": {
@@ -251,7 +264,7 @@
         "mission.dialog.label.metric": "labelValue",
         "mission.dialog.label.cost": "labelKey",
         "mission.dialog.label.reward": "labelHeading",
-        "mission.dialog.label.dropdown": "labelValue",
+        "mission.dialog.label.dropdown": "labelButton",
         "mission.dialog.label.button": "labelButton",
         "et.card.bg": "panel",
         "et.button.bg": "buttonGold",
@@ -260,7 +273,15 @@
         "popup.detail.bg": "inset",
         "popup.avatar.ring": "avatarRing",
         "mission.dialog.dropdown.btn": "buttonDark",
-        "mission.dialog.close.btn": "buttonDark"
+        "mission.dialog.close.btn": "buttonDark",
+        "mission.dialog.badge.type": "badge",
+        "mission.dialog.badge.intel": "badge",
+        "mission.dialog.badge.volunteer": "badge",
+        "mission.dialog.label.badge": "labelButton",
+        "mission.dialog.label.chevron": "labelButton",
+        "mission.dialog.fog.mask": "rowAlt",
+        "mission.dialog.env.bg": "rowAlt",
+        "mission.dialog.label.close": "labelButton"
       },
       "roles": {
         "panel": {
@@ -336,6 +357,12 @@
         },
         "labelButton": {
           "color": "@settle.text.button"
+        },
+        "badge": {
+          "kind": "color-rect",
+          "color": "@settle.badge.bg",
+          "alpha": "@settle.badge.alpha",
+          "cornerRadius": "@settle.badge.cornerRadius"
         }
       }
     }
