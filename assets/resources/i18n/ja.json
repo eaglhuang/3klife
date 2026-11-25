@@ -1236,5 +1236,10 @@
   "battle.skill_category.breakthrough": "突破",
   "battle.skill_category.invincible": "無敵",
   "battle.defeat.troop": "ぽてっ！",
-  "battle.defeat.general": "敗退！"
+  "battle.defeat.general": "敗退！",
+  "ui.battle.defense.entry": "守城戦です！先に部隊を配置してから開戦。{0}ターン耐えれば勝利",
+  "ui.battle.defense.banner_deploy": "守城準備：左の兵種カードを自陣の最下段のマスへドラッグして配置し、「ターン終了」で開戦",
+  "ui.battle.defense.banner_ready": "部隊配置完了：「ターン終了」で開戦、城塞を守り抜け",
+  "ui.battle.defense.blocked_end_turn": "部隊が未配置のため開戦できません！先に兵種カードを自陣の最下段へ",
+  "ui.battle.defense.blocked_auto": "部隊が未配置のため自動代行できません！先に兵種カードを自陣の最下段へ"
 }

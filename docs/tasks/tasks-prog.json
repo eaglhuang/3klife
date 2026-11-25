@@ -18316,12 +18316,36 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "id": "PROG-2-10019",
+      "doc_id": "doc_task_3087",
+      "title": "年終守城玩家引導：進場提示、部署階段橫幅、未部署警告並阻擋（四語 i18n）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-25",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-25T16:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "description": "QA 體驗 9：年終守城缺玩家引導。進場 Toast、部署階段橫幅、未部署時阻擋結束回合與自動代打並跳警告；只動戰前流程與 UI，不動戰場規則與數值。",
+      "related": ["PROG-2-9425", "PROG-2-9426", "PROG-2-9707"],
+      "depends": [],
+      "notes": "2026-11-25 | 狀態: done | 驗證: tsc 0 錯、run-cli 9577 通過、compute-gate quick；未做實機截圖 | 變更: 新增 DefenseGuide／DefenseDeployGuide，BattleScene 進場掛提示與橫幅，TurnFlowManager／BattleUIBridge 未部署閘門，四語 i18n 五鍵 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "doc": "docs/agent-briefs/tasks/PROG/PROG-2-10019.md"
+      }
     }
   ],
   "summary": {
-    "done": 330,
+    "done": 331,
     "in_progress": 2,
     "open": 87,
-    "total": 419
+    "total": 420
   }
 }

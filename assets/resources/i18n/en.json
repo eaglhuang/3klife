@@ -1304,5 +1304,10 @@
   "battle.skill_category.breakthrough": "Breakthrough",
   "battle.skill_category.invincible": "Invincible",
   "battle.defeat.troop": "Poof!",
-  "battle.defeat.general": "Defeated!"
+  "battle.defeat.general": "Defeated!",
+  "ui.battle.defense.entry": "This is a defense battle! Deploy your troops before the fight starts. Survive {0} turns to win.",
+  "ui.battle.defense.banner_deploy": "Defense prep: drag a troop card from the left onto a cell on your baseline, then press \"End Turn\" to start the battle",
+  "ui.battle.defense.banner_ready": "Troops in position: press \"End Turn\" to start the battle and hold the fortress",
+  "ui.battle.defense.blocked_end_turn": "No troops deployed yet, cannot start! Drag a troop card onto your baseline first",
+  "ui.battle.defense.blocked_auto": "No troops deployed yet, cannot auto-play! Drag a troop card onto your baseline first"
 }
