@@ -1,19 +1,26 @@
 {
   "jealousy": {
+    "maxPerSpousePerYear": 1,
     "optionA": {
       "label": "誠懇安撫",
-      "favorDelta": 5,
-      "goldCost": 0
+      "goldCost": 0,
+      "successRate": 70,
+      "successFavorDelta": 5,
+      "failFavorDelta": -3
     },
     "optionB": {
       "label": "厚禮賠罪",
       "basePrice": 200,
       "yearlyScale": 0.25,
-      "favorDelta": 15
+      "favorDelta": 10
     },
     "optionC": {
       "label": "裝傻打混",
-      "favorDelta": -5,
+      "goldCost": 0,
+      "sleepSuccessRate": 50,
+      "sleepFavorDelta": 0,
+      "sleepStaminaDelta": 10,
+      "caughtFavorDelta": -6,
       "caughtThresholdForTitle": 3,
       "unlockedTitle": "府中睡神"
     }
@@ -22,6 +29,8 @@
     "badgeId": "badge_tianxia_mingmen",
     "badgeTitle": "天下名門",
     "requiredConsecutiveFirstPlace": 3,
-    "neverTriggersInYearOne": true
+    "neverTriggersInYearOne": true,
+    "academyBonusPct": 5,
+    "salaryBonusPct": 10
   }
 }
