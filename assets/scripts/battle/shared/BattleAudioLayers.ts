@@ -16,7 +16,8 @@ import { TroopType } from '../../shared/CommonEnums';
 export type HitTier = 'light' | 'heavy' | 'block' | 'lethal';
 export type Range = readonly [number, number];
 
-export interface HitTierSpec { clips: string[]; volume: Range }
+/** clipVolumeScale：個別 clip 的音量倍率（借用別層音檔時壓低），沒列＝1。 */
+export interface HitTierSpec { clips: string[]; volume: Range; clipVolumeScale?: Record<string, number> }
 
 /** 音檔來源：cc0＝CC0 外部素材（預設）；pitched＝變調代用版。 */
 export type AudioClipSource = 'cc0' | 'pitched';
@@ -30,6 +31,8 @@ export interface BattleAudioLayersConfig {
     critIsHeavy: boolean;
     shieldTroopBlocks: boolean;
     tiers: Record<HitTier, HitTierSpec>;
+    /** 輕擊音節流（PROG-2-10021）：windowMs 內最多 maxPerWindow 聲，避免群體同幀受擊疊音爆音 */
+    lightThrottle: { windowMs: number; maxPerWindow: number };
   };
   footstep: {
     clips: Record<string, string>;
@@ -52,11 +55,12 @@ export const DEFAULT_BATTLE_AUDIO_LAYERS: BattleAudioLayersConfig = {
     critIsHeavy: true,
     shieldTroopBlocks: true,
     tiers: {
-      light: { clips: ['hit_light', 'hurt'], volume: [0.7, 0.9] },
+      light: { clips: ['hit_light', 'hurt', 'weapon', 'bat'], volume: [0.7, 0.9], clipVolumeScale: { weapon: 0.6, bat: 0.6 } },
       heavy: { clips: ['hit_heavy'], volume: [0.9, 1.0] },
       block: { clips: ['hit_block'], volume: [0.8, 1.0] },
       lethal: { clips: ['hit_lethal'], volume: [0.95, 1.0] },
     },
+    lightThrottle: { windowMs: 60, maxPerWindow: 2 },
   },
   footstep: {
     clips: {
@@ -86,6 +90,13 @@ function range(v: unknown, fallback: Range): Range {
   return [a, b];
 }
 
+function scaleMap(v: unknown, fallback?: Record<string, number>): Record<string, number> | undefined {
+  if (!v || typeof v !== 'object') return fallback;
+  const out: Record<string, number> = {};
+  for (const [k, x] of Object.entries(v as Record<string, unknown>)) if (typeof x === 'number' && x > 0 && x <= 2) out[k] = x;
+  return out;
+}
+
 function strList(v: unknown, fallback: string[]): string[] {
   if (!Array.isArray(v)) return fallback;
   const list = v.filter((s): s is string => typeof s === 'string' && s.length > 0);
@@ -100,7 +111,11 @@ export function parseBattleAudioLayersConfig(raw: unknown): BattleAudioLayersCon
   const tiers = {} as Record<HitTier, HitTierSpec>;
   for (const t of ['light', 'heavy', 'block', 'lethal'] as HitTier[]) {
     const src = (hit.tiers?.[t] ?? {}) as Record<string, unknown>;
-    tiers[t] = { clips: strList(src.clips, d.hit.tiers[t].clips), volume: range(src.volume, d.hit.tiers[t].volume) };
+    tiers[t] = {
+      clips: strList(src.clips, d.hit.tiers[t].clips),
+      volume: range(src.volume, d.hit.tiers[t].volume),
+      clipVolumeScale: scaleMap(src.clipVolumeScale, d.hit.tiers[t].clipVolumeScale),
+    };
   }
   const fs = (root.footstep ?? {}) as Record<string, any>;
   const clips: Record<string, string> = { ...d.footstep.clips };
@@ -121,6 +136,10 @@ export function parseBattleAudioLayersConfig(raw: unknown): BattleAudioLayersCon
       critIsHeavy: typeof hit.critIsHeavy === 'boolean' ? hit.critIsHeavy : d.hit.critIsHeavy,
       shieldTroopBlocks: typeof hit.shieldTroopBlocks === 'boolean' ? hit.shieldTroopBlocks : d.hit.shieldTroopBlocks,
       tiers,
+      lightThrottle: {
+        windowMs: num((hit.lightThrottle ?? {}).windowMs, d.hit.lightThrottle.windowMs),
+        maxPerWindow: num((hit.lightThrottle ?? {}).maxPerWindow, d.hit.lightThrottle.maxPerWindow),
+      },
     },
     footstep: {
       clips,
@@ -177,11 +196,38 @@ export function resolveClipName(clip: string, cfg: BattleAudioLayersConfig = DEF
 
 export interface PickedSfx { clip: string; volume: number }
 
-/** 依層挑 clip（多個 clip 時隨機挑一個）與隨機音量。 */
-export function pickHitSfx(tier: HitTier, cfg: BattleAudioLayersConfig = DEFAULT_BATTLE_AUDIO_LAYERS, rand: () => number = Math.random): PickedSfx {
+/** 受擊音選檔狀態：各層上一次播的 clip（避免連續兩次相同）＋輕擊最近播放時間戳（節流用）。 */
+export interface HitSfxState { lastClip: Partial<Record<HitTier, string>>; lightRecent: number[] }
+
+export function createHitSfxState(): HitSfxState {
+  return { lastClip: {}, lightRecent: [] };
+}
+
+/**
+ * 依層挑 clip 與隨機音量。給了 state 且池內有 2 個以上 clip 時，不會連續兩次挑到同一個；
+ * 池為空（設定被清空）回傳 clip 為空字串，呼叫端應退回舊 cue 不崩。
+ */
+export function pickHitSfx(tier: HitTier, cfg: BattleAudioLayersConfig = DEFAULT_BATTLE_AUDIO_LAYERS, rand: () => number = Math.random, state?: HitSfxState): PickedSfx {
   const spec = cfg.hit.tiers[tier];
-  const clip = spec.clips[Math.min(spec.clips.length - 1, Math.floor(rand() * spec.clips.length))];
-  return { clip: resolveClipName(clip, cfg), volume: pickInRange(spec.volume, rand) };
+  const pool = spec?.clips ?? [];
+  if (pool.length === 0) return { clip: '', volume: pickInRange(spec?.volume ?? [1, 1], rand) };
+  const last = state?.lastClip[tier];
+  const candidates = pool.length > 1 && last !== undefined ? pool.filter(c => c !== last) : pool;
+  const list = candidates.length > 0 ? candidates : pool;
+  const raw = list[Math.min(list.length - 1, Math.floor(rand() * list.length))];
+  if (state) state.lastClip[tier] = raw;
+  const scale = spec.clipVolumeScale?.[raw] ?? 1;
+  return { clip: resolveClipName(raw, cfg), volume: pickInRange(spec.volume, rand) * scale };
+}
+
+/** 輕擊音這一刻能不能播（windowMs 內最多 maxPerWindow 聲）；能播就登記。非輕擊層不節流，永遠 true。 */
+export function tryAcquireHitSfx(state: HitSfxState, tier: HitTier, nowMs: number, cfg: BattleAudioLayersConfig = DEFAULT_BATTLE_AUDIO_LAYERS): boolean {
+  if (tier !== 'light') return true;
+  const t = cfg.hit.lightThrottle;
+  state.lightRecent = state.lightRecent.filter(x => nowMs - x < t.windowMs);
+  if (state.lightRecent.length >= t.maxPerWindow) return false;
+  state.lightRecent.push(nowMs);
+  return true;
 }
 
 /** 兵種腳步 clip；沒設定回傳 null（呼叫端退回舊 cue，例如水軍划水聲）。 */

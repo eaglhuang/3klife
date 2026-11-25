@@ -66,4 +66,50 @@ function isKnownEnvError(text) {
   return /ERR_BLOCKED_BY_LOCAL_NETWORK_ACCESS_CHECKS|ERR_FAILED|CORS[\s\S]*loopback|loopback[\s\S]*CORS/i.test(t);
 }
 
-module.exports = { battleResultLabel, formatYearQuarterLine, formatFirstBattleLine, isKnownEnvError };
+const SEASON_LABELS = ['春', '夏', '秋', '冬'];
+const ordinalLabel = (o) => (Number.isFinite(o) ? `第 ${Math.floor(o / 4)} 年${SEASON_LABELS[o % 4]}` : '?');
+
+/**
+ * 首年全程實玩斷言（--full-year，純函式）：吃 year-report 的季資料，吐檢查清單與摘要行；失敗帶「哪一步＋原因」。
+ * 季資料欄位：ordinal、season、seasonAfterOrdinal、topBefore／topAfter（含 jade、silver）、battles（ok、result、tactic.ok）、yearEndBattles、errors。
+ * config：minCasts（整年最少放招，預設 1）、yearEndOrdinal（年終守城所在季，預設 7＝第 1 年冬）、expectEndOrdinal（換年後序數，預設 8）、minDistinctSeasons（預設 4）。
+ * @param {{ startOrdinal: number|null, baselineAdvances: number, endOrdinal: number|null, quarters: object[], config?: object }} input
+ * @returns {{ ok: boolean, checks: Array<{ name: string, ok: boolean, reason: string|null }>, lines: string[] }}
+ */
+function evaluateFullYear(input) {
+  const cfg = Object.assign({ minCasts: 1, yearEndOrdinal: 7, expectEndOrdinal: 8, minDistinctSeasons: 4 }, input.config || {});
+  const checks = [];
+  const check = (name, ok, reason) => checks.push({ name, ok: Boolean(ok), reason: ok ? null : reason });
+  const lines = [];
+  const advanced = new Set();
+  const base = input.baselineAdvances || 0;
+  if (Number.isFinite(input.startOrdinal)) for (let i = 0; i < base; i++) advanced.add((((input.startOrdinal - base + i) % 4) + 4) % 4);
+  let casts = 0;
+  let battleSeasons = 0;
+  for (const q of input.quarters || []) {
+    const label = q.season || ordinalLabel(q.ordinal);
+    const advOk = Number.isFinite(q.ordinal) && q.seasonAfterOrdinal === q.ordinal + 1;
+    if (advOk) advanced.add(q.ordinal % 4);
+    const bs = q.battles || [];
+    const entered = bs.filter((b) => b.ok && !/^極速/.test(b.result || '')).length;
+    if (entered) battleSeasons += 1;
+    const qc = bs.filter((b) => b.tactic && b.tactic.ok).length;
+    casts += qc;
+    const t0 = q.topBefore || {};
+    const t1 = q.topAfter || {};
+    const d = (k) => (Number.isFinite(t0[k]) && Number.isFinite(t1[k]) ? `${t0[k]}→${t1[k]}` : '?');
+    lines.push(`${label}：推進${advOk ? '成功' : '失敗'}；玉 ${d('jade')}；銀兩 ${d('silver')}；進戰場 ${entered} 場；放技能 ${qc} 次；年終守城 ${q.yearEndBattles || 0} 場`);
+    const advErr = (q.errors || []).find((e) => /^advance：/.test(e)) || '無';
+    if (!advOk) check(`${label} 推進一季`, false, `季別沒有從 ${ordinalLabel(q.ordinal)} 前進一季（advance 錯誤：${advErr}）`);
+    if (q.ordinal === cfg.yearEndOrdinal) check('年終守城結算', (q.yearEndBattles || 0) >= 1 && advOk, `${label} 換季沒有進年終守城戰場或沒打到結算（守城 ${q.yearEndBattles || 0} 場；advance 錯誤：${advErr}）`);
+  }
+  check('四季各推進一次', advanced.size >= cfg.minDistinctSeasons, `只推進過 ${Array.from(advanced).map((i) => SEASON_LABELS[i]).join('、') || '無'}，不足 ${cfg.minDistinctSeasons} 個不同季別`);
+  check('戰鬥中手動放技能', casts >= cfg.minCasts, `整年放招 ${casts} 次，少於 ${cfg.minCasts}（看各場 tactic.reason 與天氣；火計需 WINDY）`);
+  check('有進戰場', battleSeasons >= 1, '整年沒有任何一季真的進入戰場（只有極速決戰或步驟失敗）');
+  check('換年後年份加一且為第一季', input.endOrdinal === cfg.expectEndOrdinal, `期望 ${ordinalLabel(cfg.expectEndOrdinal)}，實際 ${ordinalLabel(input.endOrdinal)}`);
+  const failed = checks.filter((c) => !c.ok);
+  lines.push(`整年：放招 ${casts} 次；進戰場季數 ${battleSeasons}；終點 ${ordinalLabel(input.endOrdinal)}；${failed.length ? '失敗 ' + failed.map((c) => `【${c.name}】${c.reason}`).join('；') : '全部通過'}`);
+  return { ok: !failed.length, checks, lines };
+}
+
+module.exports = { evaluateFullYear, battleResultLabel, formatYearQuarterLine, formatFirstBattleLine, isKnownEnvError };

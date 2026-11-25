@@ -4,11 +4,12 @@
  */
 import { TestSuite, assert } from './TestRunner';
 
-const { formatYearQuarterLine, battleResultLabel, formatFirstBattleLine, isKnownEnvError } = require('../tools_node/playtest-year-summary') as {
+const { formatYearQuarterLine, battleResultLabel, formatFirstBattleLine, isKnownEnvError, evaluateFullYear } = require('../tools_node/playtest-year-summary') as {
     formatYearQuarterLine: (yq: { season: string | null; seasonAfter?: string | null; battles: Array<{ ok: boolean; result: string | null }>; errors: string[] }) => string;
     battleResultLabel: (battle: { ok: boolean; result: string | null }) => string;
     formatFirstBattleLine: (info: { weather?: string | null; tactic?: { ok?: boolean; tacticId?: string | null; reason?: string | null; fallbackFrom?: string | null; fallbackReason?: string | null; nodes?: number | null; hooks?: number | null; attempts?: number; noEnemyPolls?: number } | null }) => string;
     isKnownEnvError: (text: string) => boolean;
+    evaluateFullYear: (input: { startOrdinal: number | null; baselineAdvances: number; endOrdinal: number | null; quarters: Array<Record<string, unknown>>; config?: Record<string, number> }) => { ok: boolean; checks: Array<{ name: string; ok: boolean; reason: string | null }>; lines: string[] };
 };
 
 export function createPlaytestYearSummarySuite(): TestSuite {
@@ -69,6 +70,24 @@ export function createPlaytestYearSummarySuite(): TestSuite {
         assert.equals(false, isKnownEnvError('POST http://127.0.0.1:8765/v1/other net::ERR_FAILED'));
         assert.equals(false, isKnownEnvError(`GET ${u} 500`));
         assert.equals(false, isKnownEnvError('TypeError: x is undefined'));
+    });
+
+    suite.test('全年斷言：四季推進、放招、年終守城、換年都通過', () => {
+        const q = (o: number, extra: Record<string, unknown> = {}) => ({ ordinal: o, seasonAfterOrdinal: o + 1, season: 's' + o, battles: [{ ok: true, result: '勝利', tactic: { ok: o === 4 } }], topBefore: { jade: 1, silver: 2 }, topAfter: { jade: 3, silver: 4 }, yearEndBattles: o === 7 ? 1 : 0, errors: [], ...extra });
+        const r = evaluateFullYear({ startOrdinal: 5, baselineAdvances: 1, endOrdinal: 8, quarters: [q(5), q(6), q(7)] });
+        assert.equals(false, r.ok); // 沒放招
+        const r2 = evaluateFullYear({ startOrdinal: 5, baselineAdvances: 1, endOrdinal: 8, quarters: [q(5, { battles: [{ ok: true, result: '勝利', tactic: { ok: true } }] }), q(6), q(7)] });
+        assert.equals(true, r2.ok);
+    });
+
+    suite.test('全年斷言：沒換年／沒進年終守城時失敗並說明哪一步', () => {
+        const q = (o: number, extra: Record<string, unknown> = {}) => ({ ordinal: o, seasonAfterOrdinal: o + 1, season: 's' + o, battles: [{ ok: true, result: '勝利', tactic: { ok: true } }], yearEndBattles: 0, errors: [], ...extra });
+        const r = evaluateFullYear({ startOrdinal: 4, baselineAdvances: 0, endOrdinal: 7, quarters: [q(4), q(5), q(6, { seasonAfterOrdinal: 6 }), q(7, { seasonAfterOrdinal: 7, errors: ['advance：季別沒有前進'] })] });
+        assert.equals(false, r.ok);
+        const failed = r.checks.filter((c) => !c.ok).map((c) => c.name);
+        assert.equals(true, failed.includes('年終守城結算'));
+        assert.equals(true, failed.includes('換年後年份加一且為第一季'));
+        assert.equals(true, r.checks.some((c) => !c.ok && /advance 錯誤：advance：季別沒有前進/.test(c.reason || '')));
     });
 
     return suite;

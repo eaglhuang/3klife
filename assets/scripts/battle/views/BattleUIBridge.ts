@@ -110,7 +110,7 @@ import {
   type BattleAudioCue,
   type DotTickSfx,
 } from '../shared/BattleAudio';
-import { attackSfxDelaySec, pickHitSfx, resolveHitTier, shouldPlayCritBoom, type HitTier } from '../shared/BattleAudioLayers';
+import { attackSfxDelaySec, createHitSfxState, pickHitSfx, tryAcquireHitSfx, resolveHitTier, shouldPlayCritBoom, type HitTier } from '../shared/BattleAudioLayers';
 
 // ── 型別補充 ─────────────────────────────────────────────────────────────────
 // boardRenderer / unitRenderer 使用 any 以解耦 3D 渲染模組（可後續換強型別）
@@ -190,6 +190,9 @@ export function createBattleSceneContext(): BattleSceneContext {
 export const RETREAT_LOG_LINE = '我軍鳴金收兵，撤出戰場';
 
 /** 沒有交鋒動畫時，逐招跳傷害的總時間上限（秒）與單招間隔上下限 */
+/** PROG-2-10021：受擊音選檔／節流狀態（全場共用） */
+const hitSfxState = createHitSfxState();
+
 const DUEL_FALLBACK_TOTAL_SECONDS = 2.4;
 const DUEL_FALLBACK_MAX_GAP_SECONDS = 0.4;
 const DUEL_FALLBACK_MIN_GAP_SECONDS = 0.06;
@@ -552,11 +555,16 @@ export class BattleUIBridge {
     const hitAudioKey = resolveBattleUnitHitSfxKey(damageSource);
     // PROG-2-9729：夜襲先機打擊維持雷聲；其餘依輕／重／擋下／致命分層挑變調 clip 與隨機音量
     // PROG-2-9862：回合扣血 tick（dotTickSfx 有值）不走分層受擊音；'none' 代表同回合已響過，整段靜音
-    const layered = !dotTickSfx && hitTier && hitAudioKey === BATTLE_AUDIO_CUE.unitHitCommon ? pickHitSfx(hitTier, battleAudioLayers) : null;
+    const useLayers = !dotTickSfx && !!hitTier && hitAudioKey === BATTLE_AUDIO_CUE.unitHitCommon;
+    // PROG-2-10021：輕擊同一瞬間太多聲就略過（不退回舊 cue）；輪播避免連續兩次同一檔
+    const hitThrottled = useLayers && !tryAcquireHitSfx(hitSfxState, hitTier!, Date.now(), battleAudioLayers);
+    const picked = useLayers && !hitThrottled ? pickHitSfx(hitTier!, battleAudioLayers, Math.random, hitSfxState) : null;
+    const layered = picked && picked.clip ? picked : null;
     const hitEffectKey = resolveBattleUnitHitEffectKey(damageSource);
     const play = () => {
       if (dotTickSfx === 'none') { /* 同回合同單位已響過 DOT tick */ }
       else if (dotTickSfx) playBattleAudio(dotTickSfx.cue, dotTickSfx.volume);
+      else if (hitThrottled) { /* 輕擊音節流：略過這一聲 */ }
       else if (layered) playBattleClip(layered.clip, layered.volume);
       else playBattleAudio(hitAudioKey);
       playBattleFlowEffectAtCell(services().effect, this.ctx.boardRenderer, hitEffectKey, lane, depth, 0.9, 0.12);
