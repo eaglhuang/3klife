@@ -251,7 +251,7 @@ import {
     normalizeDiscoveryProgress,
 } from '../systems/DiscoveryProgress';
 import type { NurtureAwakeningHooks } from '../services/NurtureService';
-import { buildStarterRoster, pickStartingLead, STARTER_CORE_GENERAL_ID, StarterRosterOptions } from '../services/StarterRosterService';
+import { buildStarterRoster, STARTER_CORE_GENERAL_ID, StarterRosterOptions } from '../services/StarterRosterService';
 import { buildStarterYouth, getStarterYouthConfig } from '../services/StarterYouthService';
 import { resolveFactorColor } from '../systems/FactorInheritance';
 import { insertSpiritCard, replaceSpiritCard, setPrimarySpiritCard, unequipSpiritCard, type SpiritSlotFlowResult } from '../systems/SpiritSlotFlow';
@@ -760,14 +760,6 @@ export class InMemoryRosterStore implements RosterStore {
 }
 
 /** 出征支援：參謀官 / 後勤官（PROG-2-0083） */
-/** 主將不能出戰時的替補（PROG-2-10009） */
-export interface LeadSubstitution {
-    lead: GeneralConfig;
-    substitute: GeneralConfig;
-    /** 原主將不能出戰的原因（例：on-hall-mission） */
-    reasons: readonly string[];
-}
-
 export interface SortieSupport {
     strategistUid: string | null;
     deputyUid: string | null;
@@ -2580,6 +2572,11 @@ export class GameSession implements AcademyRecordPort {
     /** 出生紀錄以子嗣 UID 去重並複製；結緣確認流程會在此之後呼叫既有 save。 */
     public recordBreedingBirth(record: BreedingBirthRecord): void {
         this._breedingBirthRecords = normalizeBreedingBirthRecords([...this._breedingBirthRecords, record]);
+        this._family.recordBiologicalChild(
+            record.child.uid,
+            [record.session.Father_UID, record.session.Mother_UID],
+            this._clock.state.totalSeasonsElapsed,
+        );
         this._familySystemUnlockedFlag = true;
         this.recordPlayerLog('GENERAL_BORN');
         this._recordEventJournal('GENERAL_BORN', this._journalSubjects([record.session.Father_UID, record.session.Mother_UID]));
@@ -5744,23 +5741,7 @@ export class GameSession implements AcademyRecordPort {
     /** 進戰場的我軍主將：指定的主將還能出戰就用它，否則用 fallbackId（遭遇戰預設） */
     public resolveLeadGeneralId(fallbackId: string): string {
         const lead = this._leadGeneralId;
-        if (!lead) return fallbackId;
-        if (this.checkDeployable(lead).eligible) return lead;
-        // 主將在名冊但不能出戰（任務中、受傷…）：改由其他可出戰武將出戰，不退回名冊外的關卡指定主將（PROG-2-10009）
-        return this.leadSubstitution()?.substitute.id ?? fallbackId;
-    }
-
-    /**
-     * 主將在名冊內但目前不能出戰時的替補（PROG-2-10009）：回傳原主將與改選者（起始主將／統率最高的可出戰武將）。
-     * 主將可出戰、沒有指定主將、主將不在名冊、或名冊完全無人可出戰時回傳 null（維持原有 fallback 行為）。
-     */
-    public leadSubstitution(): LeadSubstitution | null {
-        const leadId = this._leadGeneralId;
-        if (!leadId) return null;
-        const lead = this._roster.getAll().find((g) => g.id === leadId);
-        if (!lead || this.checkDeployable(leadId).eligible) return null;
-        const substitute = pickStartingLead(this.getDeployableGenerals().filter((g) => g.id !== leadId));
-        return substitute ? { lead, substitute, reasons: this.checkDeployable(leadId).reasons } : null;
+        return lead && this.checkDeployable(lead).eligible ? lead : fallbackId;
     }
 
     /** 戰場建立我軍主將時查詢：名冊內可出戰才回傳戰場用設定，否則 null（沿用內建 / JSON 武將） */

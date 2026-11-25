@@ -200,4 +200,19 @@ export class FamilyService {
         if (existing) return existing;
         return this.addFamilyMember({ personId, kind: 'adopted', adoptSource: 'starter', parentIds: [], branchId: null, joinedAt });
     }
+
+    /**
+     * 結緣誕生親生子嗣登記（PROG-2-9973）：寫入家族登記表 kind='biological'；冪等，已在名冊就保留原紀錄。
+     */
+    public recordBiologicalChild(personId: string, parentIds: readonly string[], joinedAt: number): FamilyMemberRecord {
+        const existing = this.get(personId);
+        if (existing) return existing;
+        return this.addFamilyMember({
+            personId,
+            kind: 'biological',
+            parentIds: [...parentIds],
+            branchId: null,
+            joinedAt,
+        });
+    }
 }
