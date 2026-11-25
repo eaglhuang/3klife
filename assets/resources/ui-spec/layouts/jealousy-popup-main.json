@@ -1,0 +1,174 @@
+{
+  "id": "jealousy-popup-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "JealousyPopupRoot",
+    "id": "jealousyPopupRoot",
+    "width": 1920,
+    "height": 1080,
+    "children": [
+      {
+        "type": "panel",
+        "name": "JealousyPopupCard",
+        "id": "jealousyPopupCard",
+        "width": 800,
+        "height": 700,
+        "skinSlot": "jp.card.bg",
+        "layout": {
+          "type": "vertical",
+          "justifyContent": "start",
+          "spacingY": 12,
+          "paddingTop": 28,
+          "paddingRight": 28,
+          "paddingBottom": 28,
+          "paddingLeft": 28
+        },
+        "children": [
+          {
+            "type": "label",
+            "name": "JpTitle",
+            "id": "jpTitle",
+            "width": 744,
+            "height": 48,
+            "text": "吃醋",
+            "styleSlot": "jp.label.title"
+          },
+          {
+            "type": "label",
+            "name": "JpSpouse",
+            "id": "jpSpouse",
+            "width": 744,
+            "height": 40,
+            "text": "",
+            "styleSlot": "jp.label.body"
+          },
+          {
+            "type": "label",
+            "name": "JpHint",
+            "id": "jpHint",
+            "width": 744,
+            "height": 40,
+            "text": "",
+            "styleSlot": "jp.label.body"
+          },
+          {
+            "type": "button",
+            "name": "BtnOptionA",
+            "id": "btnOptionA",
+            "width": 744,
+            "height": 64,
+            "skinSlot": "jp.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnOptionALabel",
+                "id": "btnOptionALabel",
+                "width": 744,
+                "height": 40,
+                "text": "",
+                "styleSlot": "jp.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnOptionB",
+            "id": "btnOptionB",
+            "width": 744,
+            "height": 64,
+            "skinSlot": "jp.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnOptionBLabel",
+                "id": "btnOptionBLabel",
+                "width": 744,
+                "height": 40,
+                "text": "",
+                "styleSlot": "jp.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnOptionC",
+            "id": "btnOptionC",
+            "width": 744,
+            "height": 64,
+            "skinSlot": "jp.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnOptionCLabel",
+                "id": "btnOptionCLabel",
+                "width": 744,
+                "height": 40,
+                "text": "",
+                "styleSlot": "jp.label.button"
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "JpBody",
+            "id": "jpBody",
+            "width": 744,
+            "height": 88,
+            "text": "",
+            "styleSlot": "jp.label.body"
+          },
+          {
+            "type": "label",
+            "name": "JpTitleUnlocked",
+            "id": "jpTitleUnlocked",
+            "width": 744,
+            "height": 40,
+            "text": "",
+            "styleSlot": "jp.label.title"
+          },
+          {
+            "type": "container",
+            "name": "JpButtonRow",
+            "id": "jpButtonRow",
+            "width": 744,
+            "height": 64,
+            "children": [
+              {
+                "type": "button",
+                "name": "BtnJealousyClose",
+                "id": "btnJealousyClose",
+                "width": 200,
+                "height": 64,
+                "skinSlot": "jp.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnJealousyCloseLabel",
+                    "id": "btnJealousyCloseLabel",
+                    "width": 200,
+                    "height": 40,
+                    "text": "關閉",
+                    "styleSlot": "jp.label.button"
+                  }
+                ],
+                "widget": {
+                  "right": 0,
+                  "vCenter": true
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

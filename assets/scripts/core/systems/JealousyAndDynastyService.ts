@@ -44,6 +44,11 @@ export class JealousyAndDynastyService {
         return Math.round(basePrice * (1 + yearlyScale * (y - 1)));
     }
 
+    /** 這位配偶本年是否還有吃醋名額（上限見 config.jealousy.maxPerSpousePerYear） */
+    public static hasQuotaLeft(state: JealousyState, spouseId: string, year: number): boolean {
+        return (state.spouseYearTriggerCount[`${spouseId}_y${year}`] ?? 0) < config.jealousy.maxPerSpousePerYear;
+    }
+
     public static resolveJealousyOption(
         state: JealousyState,
         option: JealousyOption,

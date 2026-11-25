@@ -18762,12 +18762,28 @@
       "priority": "P1",
       "owner": "antigravity",
       "file": "docs/agent-briefs/tasks/PROG/PROG-2-10037.md"
+    },
+    {
+      "id": "PROG-2-10038",
+      "title": "實作吃醋三選項彈窗 UI（補齊 10033 i18n 鍵與第 1/2/3 次抓包三段台詞）",
+      "status": "done",
+      "priority": "P1",
+      "owner": "antigravity",
+      "file": "docs/agent-briefs/tasks/PROG/PROG-2-10038.md"
+    },
+    {
+      "id": "PROG-2-10043",
+      "title": "結緣提親機率面板與吃醋彈窗掛進遊戲（PROG-2-10037／10038 掛載整合）",
+      "status": "in-progress",
+      "priority": "P1",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "file": "docs/agent-briefs/tasks/PROG/PROG-2-10043.md"
     }
   ],
   "summary": {
-    "done": 348,
-    "in_progress": 3,
+    "done": 349,
+    "in_progress": 4,
     "open": 87,
-    "total": 438
+    "total": 440
   }
 }

@@ -1,0 +1,218 @@
+{
+  "id": "bonding-proposal-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "BondingProposalRoot",
+    "id": "bondingProposalRoot",
+    "width": 1920,
+    "height": 1080,
+    "children": [
+      {
+        "type": "panel",
+        "name": "BondingProposalCard",
+        "id": "bondingProposalCard",
+        "width": 800,
+        "height": 620,
+        "skinSlot": "bp.card.bg",
+        "layout": {
+          "type": "vertical",
+          "justifyContent": "start",
+          "spacingY": 12,
+          "paddingTop": 28,
+          "paddingRight": 28,
+          "paddingBottom": 28,
+          "paddingLeft": 28
+        },
+        "children": [
+          {
+            "type": "label",
+            "name": "BpTitle",
+            "id": "bpTitle",
+            "width": 744,
+            "height": 48,
+            "text": "結緣成功率",
+            "styleSlot": "bp.label.title"
+          },
+          {
+            "type": "label",
+            "name": "BpTarget",
+            "id": "bpTarget",
+            "width": 744,
+            "height": 40,
+            "text": "提親對象",
+            "styleSlot": "bp.label.body"
+          },
+          {
+            "type": "label",
+            "name": "BpBreakdown",
+            "id": "bpBreakdown",
+            "width": 744,
+            "height": 176,
+            "text": "",
+            "styleSlot": "bp.label.body"
+          },
+          {
+            "type": "label",
+            "name": "BpEpithet",
+            "id": "bpEpithet",
+            "width": 744,
+            "height": 64,
+            "text": "",
+            "styleSlot": "bp.label.body"
+          },
+          {
+            "type": "container",
+            "name": "BpAgeRow",
+            "id": "bpAgeRow",
+            "width": 744,
+            "height": 64,
+            "children": [
+              {
+                "type": "button",
+                "name": "BtnAge8",
+                "id": "btnAge8",
+                "width": 200,
+                "height": 64,
+                "skinSlot": "bp.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnAge8Label",
+                    "id": "btnAge8Label",
+                    "width": 200,
+                    "height": 40,
+                    "text": "8 歲",
+                    "styleSlot": "bp.label.button"
+                  }
+                ],
+                "widget": {
+                  "left": 0,
+                  "vCenter": true
+                }
+              },
+              {
+                "type": "button",
+                "name": "BtnAge12",
+                "id": "btnAge12",
+                "width": 200,
+                "height": 64,
+                "skinSlot": "bp.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnAge12Label",
+                    "id": "btnAge12Label",
+                    "width": 200,
+                    "height": 40,
+                    "text": "12 歲",
+                    "styleSlot": "bp.label.button"
+                  }
+                ],
+                "widget": {
+                  "hCenter": true,
+                  "vCenter": true
+                }
+              },
+              {
+                "type": "button",
+                "name": "BtnAge15",
+                "id": "btnAge15",
+                "width": 200,
+                "height": 64,
+                "skinSlot": "bp.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnAge15Label",
+                    "id": "btnAge15Label",
+                    "width": 200,
+                    "height": 40,
+                    "text": "15 歲",
+                    "styleSlot": "bp.label.button"
+                  }
+                ],
+                "widget": {
+                  "right": 0,
+                  "vCenter": true
+                }
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "BpMessage",
+            "id": "bpMessage",
+            "width": 744,
+            "height": 40,
+            "text": "",
+            "styleSlot": "bp.label.body"
+          },
+          {
+            "type": "container",
+            "name": "BpButtonRow",
+            "id": "bpButtonRow",
+            "width": 744,
+            "height": 64,
+            "children": [
+              {
+                "type": "button",
+                "name": "BtnPropose",
+                "id": "btnPropose",
+                "width": 200,
+                "height": 64,
+                "skinSlot": "bp.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnProposeLabel",
+                    "id": "btnProposeLabel",
+                    "width": 200,
+                    "height": 40,
+                    "text": "提親",
+                    "styleSlot": "bp.label.button"
+                  }
+                ],
+                "widget": {
+                  "left": 0,
+                  "vCenter": true
+                }
+              },
+              {
+                "type": "button",
+                "name": "BtnClose",
+                "id": "btnClose",
+                "width": 200,
+                "height": 64,
+                "skinSlot": "bp.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnCloseLabel",
+                    "id": "btnCloseLabel",
+                    "width": 200,
+                    "height": 40,
+                    "text": "關閉",
+                    "styleSlot": "bp.label.button"
+                  }
+                ],
+                "widget": {
+                  "right": 0,
+                  "vCenter": true
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

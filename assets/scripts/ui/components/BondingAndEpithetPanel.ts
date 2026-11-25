@@ -1,16 +1,18 @@
 import { _decorator, Color, Component, Label, Node, Widget } from 'cc';
-import { BondingSuccessService, BondingProposalState } from '../../core/systems/BondingSuccessService';
+import { BondingSuccessService, BondingProposalState, BondingProposalResult } from '../../core/systems/BondingSuccessService';
 import { BloodlineEpithetService, BloodlineEpithetDef } from '../../core/systems/BloodlineEpithetService';
-import { I18nSystem } from '../../core/systems/I18nSystem';
-import { ThemeService } from '../core/ThemeService';
+import type { ThemeService } from '../core/ThemeService';
+
+/** 翻譯函式（正式環境傳 services().i18n.t，測試可傳假的） */
+export type PanelTranslate = (key: string, ...args: string[]) => string;
 
 const { ccclass, property } = _decorator;
 
 /**
  * 結緣公式分項與小名 8/12/15 歲三段揭曉 UI 元件（PROG-2-10037）
  * - 使用 Widget 相對比例錨點，保留直式／手機橫式彈性。
- * - 透過 ThemeService 實際讀取 master 現有 settle.text.title / settle.text.value token。
- * - 透過 I18nSystem.instance.t() 翻譯四語系鍵值，並由呼叫端傳入真實配偶與好感資料。
+ * - 顏色走 settle.text.title / settle.text.value token（由呼叫端經 setServices 注入 ThemeService；沒給就用墊底色）。
+ * - 文字走注入的翻譯函式（四語系），資料由呼叫端傳入真實配偶、好感與相性 K。
  */
 @ccclass('BondingAndEpithetPanel')
 export class BondingAndEpithetPanel extends Component {
@@ -37,14 +39,28 @@ export class BondingAndEpithetPanel extends Component {
         hasPartner: false,
     };
 
+    private _t: PanelTranslate = (key) => key;
+    private _theme: ThemeService | null = null;
+    private _matchmakerBonus: number = 0;
     private _compatibilityK: number = 1.0;
     private _epithet: BloodlineEpithetDef | null = null;
     private _currentAge: number = 8;
 
+    /** 獨立節點（沒有 UCUF 畫面規格管版面）才要自己掛比例 Widget；掛在 UCUF 畫面上維持 false */
+    @property
+    public useOwnAnchors: boolean = false;
+
     protected onLoad(): void {
-        this.applyResponsiveAnchors();
+        if (this.useOwnAnchors) this.applyResponsiveAnchors();
         this.applySettleThemeTokens();
         this.refreshDisplay();
+    }
+
+    /** 注入翻譯與主題服務（先於 bindProposalData 呼叫）；主題為 null 時用墊底色 */
+    public setServices(t: PanelTranslate, theme: ThemeService | null): void {
+        this._t = t;
+        this._theme = theme;
+        this.applySettleThemeTokens();
     }
 
     /**
@@ -64,7 +80,13 @@ export class BondingAndEpithetPanel extends Component {
     }
 
     public applyResponsiveAnchors(): void {
-        const widget = this.node.getComponent(Widget) ?? this.node.addComponent(Widget);
+        // 掛在 UCUF 畫面根節點時，版面已由畫面規格的 Widget 管理，不重複覆寫
+        if (this.node.getComponent(Widget)) return;
+        const widget = this.node.addComponent(Widget);
+        widget.isAbsoluteLeft = false;
+        widget.isAbsoluteRight = false;
+        widget.isAbsoluteTop = false;
+        widget.isAbsoluteBottom = false;
         widget.isAlignLeft = true;
         widget.isAlignRight = true;
         widget.isAlignTop = true;
@@ -80,9 +102,8 @@ export class BondingAndEpithetPanel extends Component {
      * 透過 ThemeService 實際讀取 master 現有 settle.text.title / settle.text.value（深色文字配淺紙底）
      */
     public applySettleThemeTokens(): void {
-        const theme = ThemeService.instance;
-        const titleHex = String(theme.getToken('settle.text.title') ?? '#8A1C1C');
-        const valueHex = String(theme.getToken('settle.text.value') ?? '#3B2A1A');
+        const titleHex = this._theme?.token<string>('settle.text.title') ?? '#B03018';
+        const valueHex = this._theme?.token<string>('settle.text.value') ?? '#3B2410';
 
         if (this.titleLabel) {
             this.titleLabel.color = new Color().fromHEX(titleHex);
@@ -95,18 +116,30 @@ export class BondingAndEpithetPanel extends Component {
         }
     }
 
-    public onClickPropose(year: number, season: number, rollPercent: number): void {
+    public onClickPropose(year: number, season: number, rollPercent: number): BondingProposalResult {
         const res = BondingSuccessService.attemptBondingProposal(this._proposalState, {
             year,
             season,
             compatibilityK: this._compatibilityK,
+            matchmakerBonus: this._matchmakerBonus,
             rollPercent,
         });
         this._proposalState = res.nextState;
         this.refreshDisplay();
+        return res;
     }
 
-    public onSelectEpithetAge(age: 8 | 12 | 15): void {
+    /** 目前提親狀態（好感、被拒次數、冷卻）；呼叫端用來回存 */
+    public get proposalState(): BondingProposalState {
+        return { ...this._proposalState };
+    }
+
+    public setMatchmakerBonus(bonus: number): void {
+        this._matchmakerBonus = bonus;
+        this.refreshDisplay();
+    }
+
+    public onSelectEpithetAge(age: number): void {
         this._currentAge = age;
         this.refreshDisplay();
     }
@@ -117,13 +150,13 @@ export class BondingAndEpithetPanel extends Component {
         breakdownLines: string[];
         epithetText: string;
     } {
-        const i18n = I18nSystem.instance;
+        const i18n = { t: this._t };
         const sincerity = BondingSuccessService.getSincerityBonus(this._proposalState.rejectCount);
         const bd = BondingSuccessService.calculateBondingProbability({
             compatibilityK: this._compatibilityK,
             favorF: this._proposalState.favorF,
             sincerityBonus: sincerity,
-            matchmakerBonus: 0,
+            matchmakerBonus: this._matchmakerBonus,
         });
         const epithet = this._epithet ?? BloodlineEpithetService.drawBirthEpithet(0);
         const reveal = BloodlineEpithetService.getRevealStateAtAge(this._currentAge, epithet);

@@ -150,4 +150,18 @@ export class GovernorHallController {
             case 'recruitRegen': return 'govFlowRecruitRegen';
         }
     }
+
+    /**
+     * PROG-2-10038 吃醋三選項事件彈窗入口（供大廳／配偶事件觸發）
+     */
+    public triggerJealousyEventEntry(
+        state: import('../../core/systems/JealousyAndDynastyService').JealousyState,
+        option: import('../../core/systems/JealousyAndDynastyService').JealousyOption,
+        year: number,
+        spouseId: string,
+        rollPercent: number = 99,
+    ) {
+        const { JealousyAndDynastyService } = require('../../core/systems/JealousyAndDynastyService');
+        return JealousyAndDynastyService.resolveJealousyOption(state, option, year, spouseId, rollPercent);
+    }
 }

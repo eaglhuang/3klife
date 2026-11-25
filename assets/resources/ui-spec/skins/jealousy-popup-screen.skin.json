@@ -1,0 +1,43 @@
+{
+  "id": "jealousy-popup-screen.skin",
+  "version": 1,
+  "bundle": "lobby_ui",
+  "atlasPolicy": "lobby_ui",
+  "slots": {
+    "jp.card.bg": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 246
+    },
+    "jp.button.bg": {
+      "kind": "color-rect",
+      "color": "primary",
+      "alpha": 160
+    },
+    "jp.label.title": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 32,
+      "lineHeight": 40,
+      "color": "secondaryLight",
+      "overflow": "CLAMP",
+      "isBold": true
+    },
+    "jp.label.body": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 24,
+      "lineHeight": 30,
+      "color": "secondaryLight",
+      "overflow": "SHRINK"
+    },
+    "jp.label.button": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 24,
+      "lineHeight": 30,
+      "color": "secondaryLight",
+      "overflow": "SHRINK"
+    }
+  }
+}
