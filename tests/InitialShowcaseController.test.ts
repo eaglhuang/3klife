@@ -70,8 +70,9 @@ export function createInitialShowcaseControllerSuite(): TestSuite {
         const layout = readJson<any>('assets/resources/ui-spec/layouts/initial-showcase-main.json');
         const card = layout.root.children.find((c: any) => c.id === 'showcaseCard');
         assert.isTrue(card.width <= layout.canvas.designWidth);
-        const last = card.children.find((c: any) => c.id === 'showcasePortraitFrame5');
+        const last = card.children.find((c: any) => c.id === 'showcaseColumn5');
         assert.isTrue(last.widget.left + last.width <= card.width, '第六欄超出卡片');
+        assert.isTrue(card.children.length <= 20, '卡片直屬子節點不可超過 20（UI Spec 版面守門）');
         const button = card.children.find((c: any) => c.id === 'btnShowcaseNext');
         assert.isDefined(button.widget.bottom);
     });
