@@ -134,10 +134,20 @@ export class TurnFlowManager {
               this._enemyTurnPending = false;
               this.finalizeAdvance();
             });
-          }), BATTLE_TURN_FLOW_TIMING.postSubturnVisualBufferSec);
-        }, BATTLE_TURN_FLOW_TIMING.enemyThinkingLeadInSec);
+          }), this.postSubturnBufferSec());
+        }, this.enemyThinkingLeadSec());
       });
-    }), BATTLE_TURN_FLOW_TIMING.postSubturnVisualBufferSec);
+    }), this.postSubturnBufferSec());
+  }
+
+  /** 敵軍思考前置秒數：首戰教學戰縮短（PROG-2-10072），其餘照 BATTLE_TURN_FLOW_TIMING */
+  private enemyThinkingLeadSec(): number {
+    return this.ctx.ctrl?.tutorialBattle ? GAME_CONFIG.tutorialEnemyThinkingLeadInSec : BATTLE_TURN_FLOW_TIMING.enemyThinkingLeadInSec;
+  }
+
+  /** 子回合後視覺緩衝秒數：首戰教學戰縮短（PROG-2-10072） */
+  private postSubturnBufferSec(): number {
+    return this.ctx.ctrl?.tutorialBattle ? GAME_CONFIG.tutorialPostSubturnVisualBufferSec : BATTLE_TURN_FLOW_TIMING.postSubturnVisualBufferSec;
   }
 
   public finalizeAdvance(): void {

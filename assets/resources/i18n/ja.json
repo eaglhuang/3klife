@@ -408,6 +408,7 @@
   "ui.battle.skill.source_tactic": "戦法",
   "ui.battle.skill.charging": "{0}チャージ中、SPが不足しています",
   "ui.battle.autoplay.no_sortie": "この戦闘には出征軍勢がないため、オートは自動でターンを終了するだけです",
+  "ui.battle.tutorial.speed_x2": "初陣は 2 倍速で進行します。右上の速度ボタンでいつでも 1 倍速に戻せます。",
   "ui.battle.delegate.unavailable": "この戦闘には出征軍勢がないため、委任できません",
   "ui.battle.last_spurt.entered": "{0}ターン・ラストスパート！",
   "ui.battle.stamina.exhausted_player": "味方の主将が力尽き、ラストスパート終了",
