@@ -17314,5 +17314,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10067.md",
     "title": "[PROG-2-10067] 新手教學結束後第一個目標：出征鈕脈動＋史小境提示",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3127",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10061.md",
+    "title": "[PROG-2-10061] 首戰教學浮窗移到左下角（資料驅動、避開拇指區與接戰區）",
+    "category": "task"
   }
 ]
