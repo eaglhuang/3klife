@@ -165,7 +165,7 @@ export function createSeasonChronicleOnboardingSuite(): TestSuite {
         assert.contains(scene, 'private _openingUiReady = false');
         assert.contains(scene, 'canOpen: () => canShowSeasonChronicle(');
         assert.contains(scene, 'onOpened: (host) => this._bringNodeToFront(host.node)');
-        assert.contains(scene, 'onOverlayChanged: () => { this._seasonChroniclePopup?.refreshAvailability(); }');
+        assert.contains(scene, 'onOverlayChanged: () => { this._refreshPopupAvailability(); }');
         assert.contains(panels, 'this._ports.onOverlayChanged?.()');
         assert.contains(scene, "this._openSeasonChronicle('daily-first-login')");
         assert.contains(scene, 'if (session.seasonChronicleUnread) chronicle?.open()');

@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "_note": "官職晉升解鎖節奏（PROG-2-9151）。unlockTier 與各功能的門檻皆為暫定值，可逆；lobbyAction 對應大廳選單項目 id（LobbyCityHubController.LobbyActionId），省略代表只做說明、不控制按鈕（例如任務難度、沙盤階段本來就由官職階位決定）。unlockTier 1 為核心功能，開局就開放。PROG-2-9187（使用者裁決 11/20）：開獎・培育與關係圖鑑改為開局開放；支援卡、祠堂開局沒有內容可看（尚無教官卡、聲望 0 無福祉），維持縣府佐官開放。",
+  "_note": "官職晉升解鎖節奏（PROG-2-9151）。unlockTier 與各功能的門檻皆為暫定值，可逆；lobbyAction 對應大廳選單項目 id（LobbyCityHubController.LobbyActionId），省略代表只做說明、不控制按鈕（例如任務難度、沙盤階段本來就由官職階位決定）。unlockTier 1 為核心功能，開局就開放。PROG-2-9187（使用者裁決 11/20）：開獎・培育與關係圖鑑改為開局開放；支援卡開局沒有內容可看（尚無教官卡），維持縣府佐官開放。PROG-2-10070：祠堂多了「親子談話」（開局就有幼苗可談，首年目標需要），改為開局開放。",
   "tiers": [
     {
       "unlockTier": 1,
@@ -76,6 +76,12 @@
           "name": "關係圖鑑",
           "description": "查看武將間的恩怨與情誼。",
           "lobbyAction": "relationGraph"
+        },
+        {
+          "id": "SHRINE",
+          "name": "祠堂",
+          "description": "供奉宗族、累積傳承，也能跟家裡的孩子談心。",
+          "lobbyAction": "shrine"
         }
       ]
     },
@@ -105,12 +111,6 @@
           "name": "通行證",
           "description": "每季的成長獎勵軌道。",
           "lobbyAction": "seasonPass"
-        },
-        {
-          "id": "SHRINE",
-          "name": "祠堂",
-          "description": "供奉宗族，累積傳承。",
-          "lobbyAction": "shrine"
         },
         {
           "id": "QUEST_NORMAL",

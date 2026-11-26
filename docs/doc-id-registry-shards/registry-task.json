@@ -17310,6 +17310,12 @@
     "category": "task"
   },
   {
+    "id": "doc_task_3125",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10062.md",
+    "title": "[PROG-2-10062] 首年目標清單：資料、追蹤、一次性領獎與大廳進度條",
+    "category": "task"
+  },
+  {
     "id": "doc_task_3126",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10067.md",
     "title": "[PROG-2-10067] 新手教學結束後第一個目標：出征鈕脈動＋史小境提示",
@@ -17319,6 +17325,12 @@
     "id": "doc_task_3127",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10061.md",
     "title": "[PROG-2-10061] 首戰教學浮窗移到左下角（資料驅動、避開拇指區與接戰區）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3128",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10070.md",
+    "title": "[PROG-2-10070] 子嗣成長事件彈窗＋親子談話按鈕（最小可玩）",
     "category": "task"
   },
   {
@@ -17364,6 +17376,12 @@
     "category": "task"
   },
   {
+    "id": "doc_task_3138",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10092.md",
+    "title": "[PROG-2-10092] 季報信箱改名：信箱標題與入口走 i18n 四語系（PM 裁決 A）",
+    "category": "task"
+  },
+  {
     "id": "doc_task_3141",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10094.md",
     "title": "[PROG-2-10094] 天下沙盤領地解鎖教學與挑戰賽培育指引規格（11/26 修訂）",
@@ -17379,6 +17397,12 @@
     "id": "doc_task_3143",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10096.md",
     "title": "[PROG-2-10096] 名將挑戰賽卡片：培育期推薦與一鍵前往培育（實作）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3144",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10091.md",
+    "title": "[PROG-2-10091] 索引健檢：虎符族文件補列與 keep.summary 更新",
     "category": "task"
   }
 ]

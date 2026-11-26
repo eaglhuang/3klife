@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "$note": "親子談話（PROG-2-10070）：每名孩子每年可談一次；話題依該孩子累計談話次數輪替，好感增量由話題決定（1～3）。文案走 i18n lineKey，不寫死在程式。",
+  "topics": [
+    { "id": "talk_stove", "lineKey": "child.talk.line1", "favorDelta": 1 },
+    { "id": "talk_chicken", "lineKey": "child.talk.line2", "favorDelta": 2 },
+    { "id": "talk_cloud", "lineKey": "child.talk.line3", "favorDelta": 3 }
+  ]
+}

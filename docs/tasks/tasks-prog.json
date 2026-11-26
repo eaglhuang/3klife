@@ -19475,12 +19475,168 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_3125",
+      "id": "PROG-2-10062",
+      "title": "首年目標清單：資料、追蹤、一次性領獎與大廳進度條",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-26T17:27:21+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "Antigravity 首年目標清單（6 目標、總獎 650 銀兩）進遊戲：master JSON＋載入器＋schema 驗證、掛既有事件的追蹤、存檔向後相容、reward.claim 一次性領獎、大廳首年目標進度條＋下一步按鈕＋完成 Toast、典禮新手滿貫賀詞。",
+      "related": [
+        "PROG-2-10046",
+        "PROG-2-10027",
+        "PROG-2-9607"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [
+        "assets/resources/data/master/year1-goals.json",
+        "assets/scripts/core/systems/Year1Goals.ts",
+        "assets/scripts/ui/core/Year1GoalsController.ts",
+        "tests/Year1Goals.test.ts"
+      ],
+      "notes": "2026-11-26 | 狀態: done | 驗證: tsc 0 錯誤、run-cli 全過（含 Year1Goals 27 項）、compute-gate standard 13/14（僅既有模組邊界警告）、網頁版無頭 Chrome 1920 實跑進度條／Toast／開場隱藏 | 變更: 首年目標資料、追蹤、一次性領獎、大廳進度條、典禮新手滿貫 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_3138",
+      "id": "PROG-2-10092",
+      "title": "季報信箱改名：信箱標題與入口走 i18n 四語系（PM 裁決 A）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-26T23:22:40+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "Q3 後續：PM 選 A，信箱改名季報信箱，標題與入口文字走 i18n 四語系",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [
+        "assets/scripts/ui/components/mind/MindRequestPanel.ts",
+        "assets/scripts/ui/components/mind/MindRequestView.ts",
+        "assets/scripts/ui/components/mind/SeasonDigestView.ts",
+        "assets/resources/i18n/zh-TW.json",
+        "assets/resources/i18n/zh-CN.json",
+        "assets/resources/i18n/en.json",
+        "assets/resources/i18n/ja.json",
+        "tests/SeasonDigest.test.ts"
+      ],
+      "notes": "2026-11-26 | 狀態: done | 驗證: run-cli 全過（9806）、tsc 0 錯、compute-gate quick 通過 | 變更: 信箱標題與入口文字改走 i18n 四語系（季報信箱） | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_3128",
+      "id": "PROG-2-10070",
+      "title": "子嗣成長事件彈窗＋親子談話按鈕（最小可玩）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-26T18:41:10+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "換年待決的血統成長事件彈窗（A／B 選項呼叫 family.resolveGrowthEvent，Toast 回報）；家族孩子面板加親子談話按鈕，每年一次好感增量放 JSON，3 句搞笑話題輪替，累計 childInteractionCountThisYear；承 PROG-2-10057／10058／10059。",
+      "related": [
+        "PROG-2-10057",
+        "PROG-2-10058"
+      ],
+      "depends": [
+        "PROG-2-10059"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-26 | 狀態: done | 驗證: run-cli 全過、tsc 0 錯、compute-gate standard 通過；網頁版 1920 寬實跑截圖（彈窗開啟、選項 Toast、祠堂親子談話）| 變更: 子嗣成長事件彈窗（UCUF＋UIScreenPreviewHost，仿吃醋彈窗）、祠堂親子談話（family.talkToChild、每孩每年一次、話題與好感增量放 child-talk-config.json、3 句輪替）、childInteractionCountThisYear、祠堂改開局開放（官職階位 1）| 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      },
+      "completed_at": "2026-11-26T23:10:00+08:00"
     }
   ],
   "summary": {
-    "done": 361,
+    "done": 364,
     "in_progress": 5,
     "open": 88,
-    "total": 455
+    "total": 458
   }
 }

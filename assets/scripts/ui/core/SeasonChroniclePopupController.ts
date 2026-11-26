@@ -119,6 +119,8 @@ export interface SeasonChroniclePopupDeps<H extends MentorHoldingsHostLike> {
     canOpen?: () => boolean;
     /** 延後開窗也需由宿主拉至最上層。 */
     onOpened?: (host: H) => void;
+    /** 季報收起後通知宿主（後面排隊的彈窗可以補開） */
+    onClosed?: () => void;
 }
 
 export class SeasonChroniclePopupController<H extends MentorHoldingsHostLike> {
@@ -202,6 +204,7 @@ export class SeasonChroniclePopupController<H extends MentorHoldingsHostLike> {
         const state = this._deps.state();
         if (state.encounterId !== null && state.encounterChoice === null) return;
         this._host.node.active = false;
+        this._deps.onClosed?.();
     }
 
     public async respond(optionIndex: 0 | 1): Promise<void> {

@@ -180,6 +180,8 @@ import { ancestralInheritToastText, newAncestralInheritViews } from '../core/Aca
 import { buildAcademyEmptyGuardViewState, academyEnrollCandidateAges } from '../core/AcademyEmptyGuardView';
 import { academyEnrollRules } from '../../core/systems/nurture/AcademyEnrollRules';
 import { ClanShrineController } from '../core/ClanShrineController';
+import { ChildGrowthPopupController, type ChildGrowthResolveOutcome } from '../core/ChildGrowthPopupController';
+import type { FamilyChildLedgerResult, FamilyGrowthEventsResult, FamilyResolveGrowthEventResult, FamilyTalkToChildResult } from '../../shared/api/ApiCommands';
 import { OpeningOfferPopupController } from '../core/OpeningOfferPopupController';
 import { SeasonEventPopupController } from '../core/SeasonEventPopupController';
 import { canShowSeasonChronicle, SeasonChroniclePopupController } from '../core/SeasonChroniclePopupController';
@@ -295,6 +297,9 @@ import { BondingJealousyRuntime, pairSynergyK, seedOfText } from '../../core/sys
 import { YearEndCeremonyPanel } from '../components/YearEndCeremonyPanel';
 import { buildYearEndCeremonyResult } from '../../core/systems/YearEndCeremonyRuntime';
 import { claimYearEndRewards } from '../../core/systems/YearEndCeremonyReward';
+import { Year1GoalsPanel } from '../components/Year1GoalsPanel';
+import { Year1GoalsController, type Year1GoalsSessionPort } from '../core/Year1GoalsController';
+import { claimYear1GoalReward } from '../../core/systems/Year1GoalsReward';
 import type { YearEndRankingResult } from '../../core/systems/YearEndRankingService';
 import ceremonyRankingConfig from '../../../resources/data/master/year-end-ranking-config.json';
 import { BloodlineEpithetService } from '../../core/systems/BloodlineEpithetService';
@@ -535,6 +540,11 @@ export class LobbyScene extends Component {
     private _pendingCeremonyYear = 0;
     private _ceremonyResult: YearEndRankingResult | null = null;
     private _ceremonyClaiming = false;
+    /** 首年目標進度條與領獎結算（PROG-2-10062）；Toast 排隊逐則播，避免一次完成多項互相蓋掉 */
+    private _year1Goals: Year1GoalsController | null = null;
+    private _year1Panel: Year1GoalsPanel | null = null;
+    private _year1ToastQueue: string[] = [];
+    private _year1ToastDraining = false;
     private _extremeTaskMessage = '';
     private _listPanel: GeneralListComposite | null = null;
     private _detailPanel: GeneralDetailComposite | null = null;
@@ -570,6 +580,8 @@ export class LobbyScene extends Component {
     /** 武將信箱面板（PROG-2-9150）：右上角入口＋請求列表 */
     private _mindPanel: MindRequestPanel | null = null;
     private _seasonChroniclePopup: SeasonChroniclePopupController<UIScreenPreviewHost> | null = null;
+    /** 換年待決的孩子成長小事彈窗（PROG-2-10070） */
+    private _childGrowthPopup: ChildGrowthPopupController<UIScreenPreviewHost> | null = null;
     private _lineagePopup: LineageMilestonePopupController<UIScreenPreviewHost> | null = null;
     private _quickSortiePopup: QuickSortiePopupController<UIScreenPreviewHost> | null = null;
     private _seasonPassPanel: SeasonPassController<UIScreenPreviewHost> | null = null;
@@ -928,6 +940,7 @@ export class LobbyScene extends Component {
             // 任務牆與詳情窗跟著大廳一起掛（PROG-2-9130）：資料是小 json，不必排在 40 多個背景介面之後，
             // 否則玩家進大廳時牆上沒有真任務、點了也開不出詳情
             () => this._mountHallBoard(),
+            () => this._mountYear1Goals(),
             async () => { await this._mountLobbyMissionDetailDialogPanel(); services().ui.register(UIID.LobbyMissionDetailDialog, this._createLobbyMissionDetailDialogController()); },
             () => this._mountRedFaceShowcase(),
             ...(openingFirst ? [] : [() => this._mountOpeningPanels()]),
@@ -966,6 +979,7 @@ export class LobbyScene extends Component {
             { id: 'BondingSetup', run: () => this._mountBondingSetup() },
             { id: 'BondingProposal', run: () => this._mountBondingProposal() },
             { id: 'JealousyPopup', run: () => this._mountJealousyPopup() },
+            { id: 'ChildGrowthPopup', run: () => this._mountChildGrowthPopup() },
             { id: 'YearEndCeremony', run: () => this._mountYearEndCeremony() },
             { id: 'JobChange', run: () => this._mountJobChange() },
             { id: 'Domestic', run: () => this._mountDomestic() },
@@ -1014,7 +1028,7 @@ export class LobbyScene extends Component {
         this._lobbyLoadingHint?.destroy();
         this._lobbyLoadingHint = null;
         this._openingPanels?.refreshOnboarding();
-        this._seasonChroniclePopup?.refreshAvailability();
+        this._refreshPopupAvailability();
         // 首勝紅顏展示開著時先不彈俘虜窗，等紅顏關閉再彈（PROG-2-1129）
         if (!this._redFaceHost?.node.active) {
             this._openDaughterRoutePopupIfPending();
@@ -1381,6 +1395,19 @@ export class LobbyScene extends Component {
             offeringPills: GameSession.SHRINE_OFFERING_PILLS,
             now: () => Date.now(),
             toast: (message) => { services().event.emit('SHOW_TOAST', { message, duration: 2.5 }); },
+            // 親子談話（PROG-2-10070）：讀家族孩子走 family.childLedger，談話走 family.talkToChild；好感與次數由權威端入帳
+            child: {
+                snapshot: async () => {
+                    const res = await services().api.query<FamilyChildLedgerResult>('family.childLedger', {});
+                    return isApiFail(res) ? null : res.result;
+                },
+                talk: async (childId) => {
+                    const res = await services().api.cmd<FamilyTalkToChildResult>('family.talkToChild', { childId });
+                    if (!isApiFail(res)) return { ok: true, result: res.result };
+                    return { ok: false, reason: res.reason === 'FAMILY_CHILD_TALKED' ? 'already-talked' : res.reason === 'FAMILY_CHILD_UNKNOWN' ? 'unknown-child' : 'error' };
+                },
+                t: this._panelT,
+            },
         });
         await shrine.mount();
         this._clanShrine = shrine;
@@ -1525,6 +1552,7 @@ export class LobbyScene extends Component {
                 openingLetter: services().session.openingLetter,
             }),
             onOpened: (host) => this._bringNodeToFront(host.node),
+            onClosed: () => { void this._childGrowthPopup?.refreshAvailability(); },
             apply: (host, view) => { if (host.binder) applyFlowView(host.binder, view); },
             state: () => services().session.seasonChronicle,
             archive: () => services().session.chronicleArchive,
@@ -3183,7 +3211,7 @@ export class LobbyScene extends Component {
                 rollDestinyRound: () => this._rollDestinyRound(),
                 presentDestinyPool: (view, actions) => this._presentDestinyPool(view, actions),
                 closeDestinyPool: () => { this._hideDestinyPrelude(); if (this._destinyPoolHost) this._destinyPoolHost.node.active = false; },
-                onOverlayChanged: () => { this._seasonChroniclePopup?.refreshAvailability(); },
+                onOverlayChanged: () => { this._refreshPopupAvailability(); },
                 onOnboardingRefreshed: () => { this._sortieHint?.refresh(); },
                 openingLetterText: () => ({ title: services().i18n.t('copy.letter.opening.title'), body: openingLetterBodyWithFunLine(services().i18n.t('copy.letter.opening.body'), services().session.magistrateUid ?? ''), button: services().i18n.t('copy.letter.opening.button') }),
                 warn: (message, error) => UCUFLogger.warn(LogCategory.DATA, message, error),
@@ -3591,6 +3619,60 @@ export class LobbyScene extends Component {
         host.node.active = false;
     }
 
+    /** 孩子成長小事可不可以彈：開場、教學、信件結束，且季報、典禮、吃醋與季度推進都沒在進行 */
+    private _canShowChildGrowthPopup(): boolean {
+        const session = services().session;
+        return canShowSeasonChronicle({
+            openingUiReady: this._openingUiReady,
+            openingInProgress: this._isOpeningInProgress(),
+            onboarding: session.onboarding,
+            openingLetter: session.openingLetter,
+        }) && !this._advancingSeason && !this._seasonChroniclePopup?.isOpen && !this._ceremonyHost?.node.active && !this._jealousyHost?.node.active;
+    }
+
+    /** 開場、季報等遮擋狀態變動時一併重查（季報彈窗與孩子成長小事彈窗都有待開請求） */
+    private _refreshPopupAvailability(): void {
+        this._seasonChroniclePopup?.refreshAvailability();
+        void this._childGrowthPopup?.refreshAvailability();
+    }
+
+    /**
+     * 孩子成長小事彈窗（PROG-2-10070）：UCUF 畫面＋ChildGrowthPopupController；待決事件讀 family.growthEvents，
+     * 玩家選 A／B 經 family.resolveGrowthEvent 入帳（五維、好感、銀兩、聲望、碎片、同窗好友），Toast 回報結果。
+     */
+    private async _mountChildGrowthPopup(): Promise<void> {
+        const popup = new ChildGrowthPopupController<UIScreenPreviewHost>({
+            mountHost: (bindings) => this._mountPreviewScreenHost('ChildGrowthPopupHost', 'child-growth-popup-screen', bindings),
+            apply: (host, view) => { if (host.binder) applyFlowView(host.binder, view); },
+            pending: async () => {
+                const res = await services().api.query<FamilyGrowthEventsResult>('family.growthEvents', {});
+                return isApiFail(res) ? [] : res.result.pending;
+            },
+            childInfo: (childId) => {
+                const child = services().session.roster.find((g) => g.id === childId);
+                return child ? { name: child.name, age: Math.floor((child.age ?? 0) + 1e-9) } : null;
+            },
+            resolve: async (childId, eventId, optionId): Promise<ChildGrowthResolveOutcome> => {
+                const res = await services().api.cmd<FamilyResolveGrowthEventResult>('family.resolveGrowthEvent', { childId, eventId, optionId });
+                if (!isApiFail(res)) {
+                    this._refreshLobbyHallTopbar();
+                    return { ok: true, resultKey: res.result.resultKey };
+                }
+                if (res.reason === 'INSUFFICIENT_BALANCE') return { ok: false, reason: 'silver-low' };
+                if (res.reason === 'FAMILY_GROWTH_NOT_PENDING') return { ok: false, reason: 'gone' };
+                return { ok: false, reason: 'error' };
+            },
+            t: this._panelT,
+            toast: (message) => { services().event.emit('SHOW_TOAST', { message, duration: 3 }); },
+            canOpen: () => this._canShowChildGrowthPopup(),
+            onOpened: (host) => this._bringNodeToFront(host.node),
+        });
+        await popup.mount();
+        this._childGrowthPopup = popup;
+        // 讀檔進大廳時若有上次沒選的待決事件，也補問一次（守衛不允許就等遮擋解除）
+        void popup.open();
+    }
+
     /** 年終頒獎典禮（PROG-2-10046）：UCUF 畫面＋YearEndCeremonyPanel；名單與獎勵由 YearEndRankingService 以真實聲望結算 */
     private async _mountYearEndCeremony(): Promise<void> {
         const host = await this._mountPreviewScreenHost('YearEndCeremonyHost', 'year-end-ceremony-screen', [
@@ -3625,6 +3707,112 @@ export class LobbyScene extends Component {
         host.node.active = false;
     }
 
+    /** 首年目標（PROG-2-10062）：進度條掛在大廳上方中央；完成就領獎、跳 Toast，進度條隨事件刷新 */
+    private async _mountYear1Goals(): Promise<void> {
+        const host = await this._mountPreviewScreenHost('Year1GoalsHost', 'year1-goals-screen', [
+            { buttonId: 'btnY1Next', handler: () => { this._runYear1GoalsNext(); } },
+        ]);
+        const nodeOf = (id: string): Node | null => host.binder.getNode(id) ?? null;
+        const panel = host.node.getComponent(Year1GoalsPanel) ?? host.node.addComponent(Year1GoalsPanel);
+        panel.progressLabel = nodeOf('y1Progress')?.getComponent(Label) ?? null;
+        panel.hintLabel = nodeOf('y1Hint')?.getComponent(Label) ?? null;
+        panel.barTrack = nodeOf('y1BarTrack');
+        panel.barFill = nodeOf('y1BarFill');
+        panel.nextButton = nodeOf('btnY1Next');
+        const theme = await services().specLoader.getThemeService().catch(() => null);
+        panel.setServices(this._panelT, theme);
+        host.binder.setTexts({ btnY1NextLabel: this._panelT('year1.panel.go') });
+        const sessionPort: Year1GoalsSessionPort = {
+            get year1Goals() { return services().session.year1Goals; },
+            get currentYear() { return services().session.gameTime.currentYear; },
+            markYear1GoalClaimed: (goalId) => services().session.markYear1GoalClaimed(goalId),
+            excludeFromYearSilverIncome: (amount) => services().session.excludeFromYearSilverIncome(amount),
+        };
+        this._year1Goals = new Year1GoalsController({
+            session: sessionPort,
+            claim: (goal, kind) => claimYear1GoalReward(services().api, goal, kind),
+            t: this._panelT,
+            toast: (message) => this._queueYear1Toast(message),
+        });
+        this._year1Panel = panel;
+        const refresh = (): void => { void this._settleYear1Goals(); };
+        this._sessionEventUnsubscribers.push(
+            services().event.on(GAME_SESSION_EVENTS.Year1GoalsChanged, refresh),
+            services().event.on(GAME_SESSION_EVENTS.Loaded, refresh),
+            services().event.on(GAME_SESSION_EVENTS.SeasonAdvanced, refresh),
+            services().event.on(GAME_SESSION_EVENTS.BattleSettled, refresh),
+            services().event.on(GAME_SESSION_EVENTS.RosterChanged, refresh),
+        );
+        host.node.active = true;
+        refresh();
+    }
+
+    /** 進度條要畫在大廳殿內（LobbyHallHost）之上，否則被殿內底圖蓋住；殿內還沒掛好就稍後再試（最多 30 次） */
+    private _raiseYear1Host(): void {
+        const host = this.node.getChildByName('Year1GoalsHost');
+        const hall = this.node.getChildByName('LobbyHallHost');
+        if (!host) return;
+        if (!hall) {
+            if (this._year1RaiseTries++ < 30) { this.unschedule(this._retryYear1Goals); this.scheduleOnce(this._retryYear1Goals, 1); }
+            return;
+        }
+        if (host.getSiblingIndex() < hall.getSiblingIndex()) host.setSiblingIndex(hall.getSiblingIndex());
+    }
+
+    private _year1RaiseTries = 0;
+
+    private readonly _retryYear1Goals = (): void => { void this._settleYear1Goals(); };
+
+    /** 對帳（補判已打贏、已有配偶）→ 刷新進度條 → 領獎；領獎完成再刷一次 */
+    private async _settleYear1Goals(): Promise<void> {
+        const goals = this._year1Goals;
+        const panel = this._year1Panel;
+        if (!goals || !panel) return;
+        // 新玩家開場（信、名將登場、宿命轉蛋）期間不顯示進度條也不領獎；開場結束後再接手
+        if (this._isOpeningInProgress() || services().session.openingPhase !== null) {
+            panel.node.active = false;
+            this.unschedule(this._retryYear1Goals);
+            this.scheduleOnce(this._retryYear1Goals, 1);
+            return;
+        }
+        services().session.syncYear1Goals();
+        this._raiseYear1Host();
+        panel.refresh(goals.getView());
+        await goals.settle();
+        if (this.node?.isValid) panel.refresh(goals.getView());
+    }
+
+    /** 「下一步」按鈕：未解鎖只給提示，已解鎖就開對應功能 */
+    private _runYear1GoalsNext(): void {
+        const action = this._year1Goals?.getView().nextAction as LobbyActionId | null | undefined;
+        if (!action) return;
+        const session = services().session;
+        const lock = lobbyActionLock(action, session.officerState.currentTier);
+        if (lock.locked) {
+            this._showToast(lockedActionToast(lobbyActionName(action), lock, session.officerState.officerExp));
+            return;
+        }
+        this._runCityHubAction(action);
+    }
+
+    /** Toast 排隊：一次完成多項時逐則播，每則 2.4 秒 */
+    private _queueYear1Toast(message: string): void {
+        this._year1ToastQueue.push(message);
+        if (this._year1ToastDraining) return;
+        this._year1ToastDraining = true;
+        const next = (): void => {
+            const text = this._year1ToastQueue.shift();
+            if (text === undefined || !this.node?.isValid) {
+                this._year1ToastDraining = false;
+                this._year1ToastQueue.length = 0;
+                return;
+            }
+            services().event.emit('SHOW_TOAST', { message: text, duration: 2.2 });
+            this.scheduleOnce(next, 2.4);
+        };
+        next();
+    }
+
     /** 典禮要的單一音效：大廳平常沒載入 audio bundle，只取這一個 clip（不整包載入，省手機記憶體）；失敗就靜音 */
     private _ensureCeremonyClip(name: string): void {
         const audio = services().audio;
@@ -3647,6 +3835,9 @@ export class LobbyScene extends Component {
         const session = services().session;
         const { scoreInput, context } = session.yearEndScoreInputs();
         const result = buildYearEndCeremonyResult(year, scoreInput, this._panelT('ui.ceremony.house'), context);
+        // 首年目標（PROG-2-10062）：先用本年名次結算「金榜題名」，再判新手滿貫；只多一行賀詞，不動榜單分數與名次
+        session.recordYear1Sprint(year, result.playerRank);
+        if (this._year1Goals?.isGrandSlam(year)) result.newbieGrandSlam = true;
         this._ceremonyResult = result;
         const playerScore = result.standings.find((entry) => entry.isPlayer)?.score ?? 0;
         void session.recordYearEndCeremonyScore(year, playerScore).catch(() => undefined);
@@ -3659,6 +3850,7 @@ export class LobbyScene extends Component {
 
     private _closeYearEndCeremony(): void {
         if (this._ceremonyHost) this._ceremonyHost.node.active = false;
+        void this._childGrowthPopup?.refreshAvailability();
     }
 
     /**
@@ -3730,6 +3922,7 @@ export class LobbyScene extends Component {
     private _closeJealousyPopup(): void {
         if (this._jealousyHost) this._jealousyHost.node.active = false;
         this._jealousySpouseId = null;
+        void this._childGrowthPopup?.refreshAvailability();
     }
 
     /** 選項結算：好感寫回真實好感系統、厚禮賠罪真的扣銀兩（不夠就不扣、不結算） */
@@ -4248,10 +4441,10 @@ export class LobbyScene extends Component {
             // 順序反了大堂會被城市層整片蓋住，新手引導也框到底下的入口（PROG-2-2226）
             void services().ui.open(UIID.LobbyMain).then(() => {
                 if (this._ready) this._openLobbyHall();
-                this._seasonChroniclePopup?.refreshAvailability();
+                this._refreshPopupAvailability();
             });
         } else {
-            this._seasonChroniclePopup?.refreshAvailability();
+            this._refreshPopupAvailability();
         }
     }
 
@@ -5454,6 +5647,7 @@ ${spent}`,
             this._spiritFamilyOverviewHost,
             this._deckSelect?.host,
             this._leadSelect?.host,
+            this._childGrowthPopup?.host,
         ];
         const byId = new Map<string, UIScreenPreviewHost>();
         const candidates: OverlayCandidate[] = [];
@@ -6937,9 +7131,11 @@ ${spent}`,
                 this._syncSeasonEventPopup();
                 this._syncLineagePopup();
                 // 年終頒獎典禮排在季報之後（PROG-2-10046）；典禮播放期間不再疊吃醋彈窗，吃醋留到下一季
-                if (this._openYearEndCeremony()) return;
+                if (this._openYearEndCeremony()) { void this._childGrowthPopup?.open(); return; }
                 // 吃醋彈窗排在季報之後，才不會被季報蓋住（PROG-2-10043）
                 this._maybeTriggerJealousy();
+                // 換年排出的孩子成長小事排在最後；前面有彈窗開著就合併成待開，等它們收起再補開（PROG-2-10070）
+                void this._childGrowthPopup?.open();
             };
             // 季報每季都開（PROG-2-9155）：沒事的季也顯示簡短一句，官職預告才不會漏
             // 關閉要走 UIManager，遮罩與堆疊才會一起收（PROG-2-9122）
@@ -7305,7 +7501,7 @@ ${spent}`,
         this._ensureWidget(hostNode);
         // 彈窗／全螢幕 host 必須吃掉點擊，避免點空白或按鈕邊緣穿透到底層大廳與武將
         // 選主將／選卡組是大廳底層的小卡，不是彈窗：整頁透明 host 若吃點擊，會蓋住左上主將頭像等底下可點的東西（頭像點擊說話 PROG-2-9885）
-        const nonBlockingHosts = new Set(['LobbyHallHost', 'LobbyMainHost', 'SeasonHudHost', 'LeadSelectHost', 'DeckSelectHost']);
+        const nonBlockingHosts = new Set(['LobbyHallHost', 'LobbyMainHost', 'SeasonHudHost', 'Year1GoalsHost', 'LeadSelectHost', 'DeckSelectHost']);
         if (BlockInputEvents && !nonBlockingHosts.has(hostName) && !hostNode.getComponent(BlockInputEvents)) {
             hostNode.addComponent(BlockInputEvents);
         }
@@ -8466,7 +8662,7 @@ ${spent}`,
                 // 大廳 HUD 拉到最前後，新手教學／開場信件要再壓回最上層，不能被大廳蓋住（PROG-2-1624）
                 this._openingPanels?.refreshOnboarding();
                 this._openingPanels?.refreshOpeningLetter();
-                this._seasonChroniclePopup?.refreshAvailability();
+                this._refreshPopupAvailability();
                 if (this._seasonChroniclePopup?.isOpen) this._bringNodeToFront(this._seasonChroniclePopup.host!.node);
             },
             hide: () => {

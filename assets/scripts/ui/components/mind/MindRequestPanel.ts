@@ -8,7 +8,7 @@ import { BlockInputEvents, Button, Color, Graphics, HorizontalTextAlignment, Lab
 import type { MindRequest, MindResolveResult } from '../../../core/mind/MindTypes';
 import { buildMindRequestRows, mindBadgeText, type MindRequestRowView } from './MindRequestView';
 import type { SeasonDigestNote } from '../../../core/systems/SeasonDigest';
-import { buildDigestRows, type DigestTextLookup, type SeasonDigestRowView } from './SeasonDigestView';
+import { buildDigestRows, digestText, SEASON_DIGEST_TEXTS, type DigestTextLookup, type SeasonDigestRowView } from './SeasonDigestView';
 
 export interface MindRequestPanelHost {
     mailbox: () => MindRequest[];
@@ -96,7 +96,7 @@ export class MindRequestPanel {
         parent.addChild(this.entry);
         this.entry.addComponent(UITransform).setContentSize(150, 56);
         fillRect(this.entry, 150, 56, new Color(120, 70, 30, 230));
-        this._badge = makeLabel(this.entry, 'Text', '信箱', 28, new Color(255, 240, 200, 255), 150, 56, 0, 0, HorizontalTextAlignment.CENTER);
+        this._badge = makeLabel(this.entry, 'Text', digestText(this._host.lookup, SEASON_DIGEST_TEXTS.mailboxEntry), 24, new Color(255, 240, 200, 255), 150, 56, 0, 0, HorizontalTextAlignment.CENTER);
         this._dot = new Node('UnreadDot');
         this.entry.addChild(this._dot);
         this._dot.setPosition(66, 22, 0);
@@ -127,7 +127,7 @@ export class MindRequestPanel {
         this.panel.addChild(sheet);
         sheet.addComponent(UITransform).setContentSize(PANEL_W, ROW_H * MAX_ROWS + 110);
         fillRect(sheet, PANEL_W, ROW_H * MAX_ROWS + 110, new Color(48, 34, 24, 245));
-        makeLabel(sheet, 'Title', '武將信箱', 36, new Color(255, 224, 160, 255), 400, 50, 0, (ROW_H * MAX_ROWS) / 2 + 30, HorizontalTextAlignment.CENTER);
+        makeLabel(sheet, 'Title', digestText(this._host.lookup, SEASON_DIGEST_TEXTS.mailboxTitle), 36, new Color(255, 224, 160, 255), 400, 50, 0, (ROW_H * MAX_ROWS) / 2 + 30, HorizontalTextAlignment.CENTER);
         makeButton(sheet, 'BtnMindClose', '關閉', 120, 50, PANEL_W / 2 - 80, (ROW_H * MAX_ROWS) / 2 + 30, new Color(90, 60, 40, 255), () => { this.close(); });
         this._list = new Node('List');
         sheet.addChild(this._list);
@@ -160,13 +160,18 @@ export class MindRequestPanel {
     }
 
     /** 換季、讀檔、回應之後重畫：徽章數字、紅點與列表 */
+    /** 入口文字（四語系 i18n，PROG-2-10092：信箱改名季報信箱） */
+    private _entryLabel(): string {
+        return digestText(this._host.lookup, SEASON_DIGEST_TEXTS.mailboxEntry);
+    }
+
     public refresh(): void {
         const all = this._host.mailbox();
         const requests = this._lastAnswered ? [...all.filter((r) => r.id === this._lastAnswered), ...all.filter((r) => r.id !== this._lastAnswered)] : all;
         const notes = this._host.digest?.() ?? [];
         const pending = all.filter((r) => r.status === 'PENDING').length;
         const unreadNotes = notes.filter((n) => !n.read).length;
-        this._badge.string = mindBadgeText(pending + unreadNotes);
+        this._badge.string = mindBadgeText(pending + unreadNotes, this._entryLabel());
         this._dot.active = pending + unreadNotes > 0;
         const show = requests.length > 0 || notes.length > 0;
         if (show && !this.entry.active) this._host.bringToFront?.(this.entry);
@@ -184,7 +189,7 @@ export class MindRequestPanel {
         applyLayer(this._list, this._layer);
         // 剛標已讀：紅點與徽章對齊
         const left = (this._host.digest?.() ?? []).filter((n) => !n.read).length;
-        this._badge.string = mindBadgeText(pending + left);
+        this._badge.string = mindBadgeText(pending + left, this._entryLabel());
         this._dot.active = pending + left > 0;
     }
 

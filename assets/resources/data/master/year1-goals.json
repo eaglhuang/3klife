@@ -1,0 +1,89 @@
+{
+  "schemaVersion": 1,
+  "year": 1,
+  "totalSilver": 650,
+  "grandSlamMin": 5,
+  "titles": [
+    { "id": "newlywed", "nameKey": "year1.title.newlywed" },
+    { "id": "rising_star", "nameKey": "year1.title.rising_star" }
+  ],
+  "goals": [
+    {
+      "id": "y1_first_battle",
+      "order": 1,
+      "season": 1,
+      "trigger": { "type": "battle-win" },
+      "reward": { "silver": 150, "bundleId": "BUNDLE_Y1_GOAL_FIRST_BATTLE" },
+      "nameKey": "year1.goal.first_battle.name",
+      "actionKey": "year1.goal.first_battle.action",
+      "toastKey": "year1.goal.first_battle.toast",
+      "nextAction": "battle"
+    },
+    {
+      "id": "y1_first_recruit",
+      "order": 2,
+      "season": 1,
+      "trigger": { "type": "recruit" },
+      "reward": { "silver": 100, "bundleId": "BUNDLE_Y1_GOAL_FIRST_RECRUIT" },
+      "nameKey": "year1.goal.first_recruit.name",
+      "actionKey": "year1.goal.first_recruit.action",
+      "toastKey": "year1.goal.first_recruit.toast",
+      "nextAction": "recruitHall"
+    },
+    {
+      "id": "y1_first_affairs",
+      "order": 3,
+      "season": 2,
+      "trigger": { "type": "domestic" },
+      "reward": { "silver": 100, "bundleId": "BUNDLE_Y1_GOAL_FIRST_AFFAIRS" },
+      "nameKey": "year1.goal.first_affairs.name",
+      "actionKey": "year1.goal.first_affairs.action",
+      "toastKey": "year1.goal.first_affairs.toast",
+      "nextAction": "domestic"
+    },
+    {
+      "id": "y1_first_talk",
+      "order": 4,
+      "season": 2,
+      "trigger": {
+        "type": "child-talk",
+        "counter": "childInteractionCountThisYear",
+        "min": 1,
+        "fallback": {
+          "enabled": true,
+          "counter": "homeGiftOrNurtureCount",
+          "events": ["home-gift", "nurture"]
+        }
+      },
+      "reward": { "silver": 50, "childFavor": 3, "bundleId": "BUNDLE_Y1_GOAL_FIRST_TALK" },
+      "nameKey": "year1.goal.first_talk.name",
+      "actionKey": "year1.goal.first_talk.action",
+      "toastKey": "year1.goal.first_talk.toast",
+      "nextAction": "nurture"
+    },
+    {
+      "id": "y1_first_spouse",
+      "order": 5,
+      "season": 3,
+      "trigger": { "type": "spouse", "min": 1 },
+      "reward": { "silver": 150, "titleId": "newlywed", "bundleId": "BUNDLE_Y1_GOAL_FIRST_SPOUSE" },
+      "nameKey": "year1.goal.first_spouse.name",
+      "actionKey": "year1.goal.first_spouse.action",
+      "toastKey": "year1.goal.first_spouse.toast",
+      "nextAction": "bonding"
+    },
+    {
+      "id": "y1_top3_sprint",
+      "order": 6,
+      "season": 4,
+      "trigger": { "type": "year-end-rank", "maxRank": 3 },
+      "reward": { "silver": 100, "titleId": "rising_star", "bundleId": "BUNDLE_Y1_GOAL_TOP3_SPRINT" },
+      "consolation": { "silver": 20, "bundleId": "BUNDLE_Y1_GOAL_SPRINT_CONSOLATION" },
+      "nameKey": "year1.goal.top3_sprint.name",
+      "actionKey": "year1.goal.top3_sprint.action",
+      "toastKey": "year1.goal.top3_sprint.toast",
+      "consolationToastKey": "year1.goal.top3_sprint.consolation",
+      "nextAction": "hallBoard"
+    }
+  ]
+}
