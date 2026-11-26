@@ -39,6 +39,9 @@
 | `doc_task_3142` | docs/agent-briefs/tasks/PROG/PROG-2-10095.md | [PROG-2-10095] 天下沙盤領地：第 2 年解鎖、搞笑教學、放置效果預覽（實作） |
 | `doc_task_3143` | docs/agent-briefs/tasks/PROG/PROG-2-10096.md | [PROG-2-10096] 名將挑戰賽卡片：培育期推薦與一鍵前往培育（實作） |
 | `doc_task_3144` | docs/agent-briefs/tasks/PROG/PROG-2-10091.md | [PROG-2-10091] 索引健檢：虎符族文件補列與 keep.summary 更新 |
+| `doc_task_3145` | docs/agent-briefs/tasks/PROG/PROG-2-10078.md | [PROG-2-10078] 戰場小兵 Spine 骨架預載與節點池預熱（騎兵出現延遲） |
+| `doc_task_3146` | docs/agent-briefs/tasks/PROG/PROG-2-10079.md | [PROG-2-10079] 戰場音效預載與同檔池化（馬蹄聲首次延遲） |
+| `doc_task_3147` | docs/agent-briefs/tasks/PROG/PROG-2-10080.md | [PROG-2-10080] 將軍專屬單一 HUD：合併兵種徽章與武將名牌、放大騎兵將領 |
 | `doc_task_3150` | docs/agent-briefs/tasks/PROG/PROG-2-10101.md | [PROG-2-10101] 獲得面板規格（RewardPresenter：任何人物／物品獲得的統一出口） |
 | `doc_task_3151` | docs/agent-briefs/tasks/PROG/PROG-2-10102.md | [PROG-2-10102] 實作：獲得面板 RewardPresenter＋AcquirePanelController 並改接任務回報／季報／轉蛋收尾 |
 | `doc_task_3157` | docs/agent-briefs/tasks/PROG/PROG-2-10083.md | [PROG-2-10083] 大廳小人台詞依武將性別換自稱（女將不再說某） |
@@ -54,4 +57,4 @@
 | `doc_task_3179` | docs/agent-briefs/tasks/PROG/PROG-2-10109.md | [PROG-2-10109] 台詞性別化第二批：老年自稱、AI prompt 與快取鍵、資料檔寫死自稱 |
 | `doc_task_3180` | docs/agent-briefs/tasks/PROG/PROG-2-10113.md | [PROG-2-10113] Antigravity 試玩三 bug |
 | `doc_task_3181` | docs/agent-briefs/tasks/PROG/PROG-2-10107.md | [PROG-2-10107] 放招微調：士氣鼓舞 TP 20 免傷兵、首年主將補通用計謀加速 15、奧義門檻方案 A |
-| `doc_task_3182` | docs/agent-briefs/tasks/PROG/PROG-2-10111.md | [PROG-2-10111] playtest character-intro-tabs 點名冊第一列沒開出人物介紹 |
+| `doc_task_3183` | docs/agent-briefs/tasks/PROG/PROG-2-10111.md | [PROG-2-10111] playtest character-intro-tabs 點名冊第一列沒開出人物介紹 |

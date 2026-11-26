@@ -62,7 +62,7 @@ import { playBattleAudio, playBattleFootstep } from "../shared/BattleAudio";
 import { MoveDustEmitter } from "./MoveDustEmitter";
 import { SpineUnitOverlay } from "./SpineGeneralOverlay";
 import { GeneralPortraitStandee, STANDEE_HEIGHT_PX, needsStandeeFallback } from "./GeneralPortraitStandee";
-import { generalSpineConfig, resolveRidingTier, setMountedList, squadMemberCount, troopSpineConfigWithFallback } from '../shared/UnitPresentationConfig';
+import { generalSpineConfig, resolveRidingTier, setMountedList, squadMemberCount, troopSpineConfig, troopSpineConfigWithFallback } from '../shared/UnitPresentationConfig';
 import { DuelExchange } from '../shared/DuelPresentationCore';
 import { BATTLE_VISUAL_TIMING, buildHitShakeSteps, hitScaleNeighborDepth, planHitFeedback, planMoveSegment } from "./BattlePresentationTiming";
 import { BuffGainEffectPool } from "./effects/BuffGainEffectPool";
@@ -380,6 +380,15 @@ export class UnitRenderer extends Component {
     // fire-and-forget: 特效 Pool 初始化是非同步（需載入資源），不阻塞主流程
     void this.setupAllEffectPools();
     void this.loadAttackSurgeConfig();
+  }
+
+  /**
+   * 戰前預載這場會出現的兵種 Spine（PROG-2-10078）：骨架資料先載好、節點池先預熱，
+   * 單位上場時不必再等資源（騎兵的馬身骨架第一次載入實測 2 秒多）。回傳的 Promise 有逾時保底，不會卡住戰場載入。
+   */
+  public prewarmTroopSpines(troops: ReadonlyArray<{ troop: string; isEnemy: boolean; tallyTemplateId?: string | null }>): Promise<void> {
+    this.ensureRoots();
+    return this.spineUnits.preload(troops.map(t => troopSpineConfig(t.troop, t.isEnemy, t.tallyTemplateId)));
   }
 
   public renderState(state: BattleState): void {
