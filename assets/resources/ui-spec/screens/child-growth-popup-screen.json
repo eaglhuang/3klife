@@ -1,0 +1,17 @@
+{
+  "id": "child-growth-popup-screen",
+  "version": 1,
+  "uiId": "ChildGrowthPopup",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "child-growth-popup-main",
+  "skin": "child-growth-popup-screen.skin",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}
