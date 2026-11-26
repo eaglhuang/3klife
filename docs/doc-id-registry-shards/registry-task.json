@@ -17310,12 +17310,6 @@
     "category": "task"
   },
   {
-    "id": "doc_task_3130",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10072.md",
-    "title": "[PROG-2-10072] 首戰節奏：預設 x2、縮短敵方回合等待、試玩腳本自動代打校正",
-    "category": "task"
-  },
-  {
     "id": "doc_task_3126",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10067.md",
     "title": "[PROG-2-10067] 新手教學結束後第一個目標：出征鈕脈動＋史小境提示",
@@ -17325,6 +17319,18 @@
     "id": "doc_task_3127",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10061.md",
     "title": "[PROG-2-10061] 首戰教學浮窗移到左下角（資料驅動、避開拇指區與接戰區）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3130",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10072.md",
+    "title": "[PROG-2-10072] 首戰節奏：預設 x2、縮短敵方回合等待、試玩腳本自動代打校正",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3133",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10075.md",
+    "title": "[PROG-2-10075] 同步騎馬匹 mounted-list（關羽）",
     "category": "task"
   }
 ]
