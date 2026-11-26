@@ -17542,5 +17542,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10117.md",
     "title": "[PROG-2-10117] pre-commit 編碼檢查在缺 tools_node 的 worktree（mailbox 分支）改走內建檢查",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3188",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10118.md",
+    "title": "[PROG-2-10118] 戰場部隊徽章避讓武將本體",
+    "category": "task"
   }
 ]

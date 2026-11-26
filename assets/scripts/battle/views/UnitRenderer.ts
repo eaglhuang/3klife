@@ -84,7 +84,7 @@ import { NameplateCombatFade, getBattleUiFeedback } from "../shared/BattleUiFeed
 import { TileBuffMarkers } from "./TileBuffMarkers";
 import { UnitBuffPickupVfx } from "./UnitBuffPickupVfx";
 import type { TileBuffBadge } from "../shared/TileBuffBadge";
-import { BADGE_HIT_PRIORITY_SEC, badgeRectFromExtent, easePlateOffset, stackBadgeOffsets, unionExtent, type LabelRect, type LocalExtent, type StackBadgeEntry } from "../shared/GeneralPlateAvoidance";
+import { BADGE_HIT_PRIORITY_SEC, BODY_AVOID_MAX_SHIFT_RATIO, BODY_FADE_ALPHA, badgeRectFromExtent, bodyAvoidOffsetY, easePlateOffset, generalBodyRect, stackBadgeOffsets, unionExtent, type LabelRect, type LocalExtent, type StackBadgeEntry } from "../shared/GeneralPlateAvoidance";
 import { buildUnitStatusContext, computeUnitStatusIcons, gainedTones, newlyGainedKinds, type StatusIconKind } from "../shared/UnitStatusIcons";
 import { services } from "../../core/managers/ServiceLoader";
 import { FLOAT_MISS_TEXT, FLOAT_TEXT_STYLES, FloatTextType, cellFloatAnchor } from "../../core/systems/FloatTextStyle";
@@ -161,6 +161,8 @@ interface GeneralView {
   faction: Faction;
   usingHeroModel: boolean;
   heroLoading: boolean;
+  /** 本體腳底（圖層座標）與名牌到腳底距離，部隊框避讓武將本體用（PROG-2-10118）；沒有骨架時為 undefined，物件每幀重用 */
+  bodyFoot?: { x: number; y: number; labelToFoot: number };
 }
 
 interface BadgeView {
@@ -283,8 +285,13 @@ export class UnitRenderer extends Component {
   /** 部隊資訊框避開武將名牌的目前 Y 位移（PROG-2-9434），每幀平滑逼近目標 */
   private readonly plateAvoidOffsets = new Map<string, number>();
   private readonly plateRectsBuf: LabelRect[] = [];
+  /** 部隊框避讓武將本體（PROG-2-10118）：本體矩形暫存、各框目前的透明度比例（1 = 不透明，不在表內） */
+  private readonly bodyRectsBuf: LabelRect[] = [];
+  private readonly bodyFadeAlpha = new Map<string, number>();
   /** 部隊框錯開（PROG-2-9440）：每幀重用的輸入陣列、各單位最後受擊時間（戰場時鐘） */
   private readonly badgeEntriesBuf: StackBadgeEntry[] = [];
+  private readonly bodyDyBuf = new Map<string, number>();
+  private readonly bodyFadedBuf = new Set<string>();
   private readonly lastHitAt = new Map<string, number>();
   private badgeClock = 0;
   private unsubVitality: (() => void) | null = null;
@@ -1277,7 +1284,13 @@ export class UnitRenderer extends Component {
           faction === Faction.Enemy ? -1 : 1, false, dt);
         if (shown) view.modelRoot.active = false;
         else if (view.usingHeroModel) view.modelRoot.active = true;
-      } else { this.spineUnits.remove(`general:${faction}`); if (view.usingHeroModel) view.modelRoot.active = true; }
+        const fx = side?.x ?? p.x;
+        const fy = side?.y ?? p.y - config.labelToFoot;
+        if (shown) {
+          if (view.bodyFoot) { view.bodyFoot.x = fx; view.bodyFoot.y = fy; view.bodyFoot.labelToFoot = config.labelToFoot; }
+          else view.bodyFoot = { x: fx, y: fy, labelToFoot: config.labelToFoot };
+        } else view.bodyFoot = undefined;
+      } else { view.bodyFoot = undefined; this.spineUnits.remove(`general:${faction}`); if (view.usingHeroModel) view.modelRoot.active = true; }
     });
     perfEnd('generalViews', t); t = perfBegin();
     this.applyNameplateFade(dt);
@@ -1804,26 +1817,81 @@ export class UnitRenderer extends Component {
         priority: hitAt !== undefined && this.badgeClock - hitAt < BADGE_HIT_PRIORITY_SEC ? 1 : 0,
       });
     });
+    // PROG-2-10118：武將本體優先看得清楚。部隊框先往本體腳下讓開，讓不開才降半透明；
+    // 讓開後的位置再交給部隊框彼此錯開。目標值每幀重算，實際位移／透明度用平滑逼近，避免閃爍。
+    const bodies = this.bodyRectsBuf;
+    bodies.length = 0;
+    let maxShift = 0;
+    this.generalViews.forEach((view) => {
+      const foot = view.bodyFoot;
+      if (!view.labelNode.active || !foot) return;
+      bodies.push(generalBodyRect(foot.x, foot.y, foot.labelToFoot));
+      maxShift = Math.max(maxShift, foot.labelToFoot * BODY_AVOID_MAX_SHIFT_RATIO);
+    });
+    const bodyDy = this.bodyDyBuf;
+    bodyDy.clear();
+    const bodyFaded = this.bodyFadedBuf;
+    bodyFaded.clear();
+    if (bodies.length > 0) {
+      for (const e of entries) {
+        const r = bodyAvoidOffsetY(e.rect, bodies, maxShift);
+        if (r.dy !== 0) { bodyDy.set(e.id, r.dy); e.rect.y += r.dy; }
+        if (r.faded) bodyFaded.add(e.id);
+      }
+    }
     const targets = stackBadgeOffsets(entries, plates);
+    const baseOpacity = Math.round(Math.min(1, Math.max(0, this.plateFade.alpha)) * 255);
     this.unitViews.forEach((view, unitId) => {
       const label = view.labelNode;
       const current = this.plateAvoidOffsets.get(unitId) ?? 0;
       if (!label.active) {
         if (current !== 0) this.plateAvoidOffsets.delete(unitId);
+        this.bodyFadeAlpha.delete(unitId);
         return;
       }
-      const next = easePlateOffset(current, targets.get(unitId) ?? 0, dt);
-      if (next === 0) { this.plateAvoidOffsets.delete(unitId); return; }
-      this.plateAvoidOffsets.set(unitId, next);
-      const p = label.position;
-      label.setPosition(p.x, p.y + next, p.z);
+      const next = easePlateOffset(current, (bodyDy.get(unitId) ?? 0) + (targets.get(unitId) ?? 0), dt);
+      if (next === 0) this.plateAvoidOffsets.delete(unitId);
+      else {
+        this.plateAvoidOffsets.set(unitId, next);
+        const p = label.position;
+        label.setPosition(p.x, p.y + next, p.z);
+      }
+      this.applyBodyFade(view, unitId, bodyFaded.has(unitId), baseOpacity, dt);
     });
     for (const unitId of this.plateAvoidOffsets.keys()) {
       if (!this.unitViews.has(unitId)) this.plateAvoidOffsets.delete(unitId);
     }
+    for (const unitId of this.bodyFadeAlpha.keys()) {
+      if (!this.unitViews.has(unitId)) this.bodyFadeAlpha.delete(unitId);
+    }
     for (const unitId of this.lastHitAt.keys()) {
       if (!this.unitViews.has(unitId)) this.lastHitAt.delete(unitId);
     }
+  }
+
+  /**
+   * 部隊框讓不開武將本體時的半透明（PROG-2-10118）：透明度比例平滑往目標靠，與全場名牌淡出相乘；
+   * 比例回到 1 時寫回淡出基準值並移出表，之後不再碰該框的透明度。陣亡中的框由死亡流程自己控制，不介入。
+   */
+  private applyBodyFade(view: UnitView, unitId: string, faded: boolean, baseOpacity: number, dt: number): void {
+    if (this.dyingUnits.has(unitId) || !isValid(view.labelOpacity)) { this.bodyFadeAlpha.delete(unitId); return; }
+    const current = this.bodyFadeAlpha.get(unitId) ?? 1;
+    const target = faded ? BODY_FADE_ALPHA : 1;
+    if (current === 1 && target === 1) return;
+    const eased = dt > 0 ? current + (target - current) * Math.min(1, dt * 14) : target;
+    const next = Math.abs(eased - target) < 0.02 ? target : eased;
+    if (next === 1) {
+      this.bodyFadeAlpha.delete(unitId);
+      view.labelOpacity.opacity = baseOpacity;
+      return;
+    }
+    this.bodyFadeAlpha.set(unitId, next);
+    view.labelOpacity.opacity = Math.round(baseOpacity * next);
+  }
+
+  /** QA／測試：部隊框因武將本體而半透明的比例（1 不在表內） */
+  public debugBodyFadeAlpha(): Record<string, number> {
+    return Object.fromEntries(this.bodyFadeAlpha);
   }
 
   /**
