@@ -17347,13 +17347,14 @@
   },
   {
     "id": "doc_task_3136",
-<<<<<<< HEAD
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10068.md",
-    "title": "[PROG-2-10068] 首年前 2 季季報彈窗精簡：任務回報與市井奇遇併進信箱，任務詳情加白話導讀",
-=======
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10073.md",
     "title": "[PROG-2-10073] 戰前偵查面板：措辭降噪＋出征確認框疊字修正",
->>>>>>> origin/master
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3137",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10068.md",
+    "title": "[PROG-2-10068] 首年前 2 季季報彈窗精簡：任務回報與市井奇遇併進信箱，任務詳情加白話導讀",
     "category": "task"
   }
 ]
