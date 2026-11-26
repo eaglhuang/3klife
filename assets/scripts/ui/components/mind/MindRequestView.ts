@@ -67,6 +67,6 @@ export function buildMindRequestRows(requests: readonly MindRequest[], nameOf: (
 }
 
 /** 入口徽章文字：沒有待回應時只顯示「信箱」 */
-export function mindBadgeText(pendingCount: number): string {
-    return pendingCount > 0 ? `信箱 ${pendingCount}` : '信箱';
+export function mindBadgeText(pendingCount: number, label = '信箱'): string {
+    return pendingCount > 0 ? `${label} ${pendingCount}` : label;
 }

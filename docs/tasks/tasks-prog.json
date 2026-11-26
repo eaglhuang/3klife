@@ -19475,12 +19475,65 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_3138",
+      "id": "PROG-2-10092",
+      "title": "季報信箱改名：信箱標題與入口走 i18n 四語系（PM 裁決 A）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-26T23:22:40+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "Q3 後續：PM 選 A，信箱改名季報信箱，標題與入口文字走 i18n 四語系",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [
+        "assets/scripts/ui/components/mind/MindRequestPanel.ts",
+        "assets/scripts/ui/components/mind/MindRequestView.ts",
+        "assets/scripts/ui/components/mind/SeasonDigestView.ts",
+        "assets/resources/i18n/zh-TW.json",
+        "assets/resources/i18n/zh-CN.json",
+        "assets/resources/i18n/en.json",
+        "assets/resources/i18n/ja.json",
+        "tests/SeasonDigest.test.ts"
+      ],
+      "notes": "2026-11-26 | 狀態: done | 驗證: run-cli 全過（9806）、tsc 0 錯、compute-gate quick 通過 | 變更: 信箱標題與入口文字改走 i18n 四語系（季報信箱） | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
-    "done": 361,
-    "in_progress": 5,
+    "done": 364,
+    "in_progress": 4,
     "open": 88,
-    "total": 455
+    "total": 456
   }
 }
