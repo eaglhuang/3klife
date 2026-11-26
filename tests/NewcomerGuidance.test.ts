@@ -19,6 +19,7 @@ export function createNewcomerGuidanceSuite(): TestSuite {
     suite.test('三段引導保留正式文案，資源用途與實際入口另外說明', () => {
         assert.contains(ONBOARDING_ACTIONS.fate.text, '金是黃金');
         assert.contains(ONBOARDING_ACTIONS.fate.text, '玉是玉璧');
+        assert.contains(ONBOARDING_ACTIONS.fate.text, '銀兩'); // 頂欄有銀兩格，新手引導要交代它是什麼
         assert.equals('ResourceBar', ONBOARDING_ACTIONS.fate.target);
         assert.equals('btnCatSortie', ONBOARDING_ACTIONS.growth.target);
         assert.equals('btnCatGenerals', ONBOARDING_ACTIONS.legacy.target);

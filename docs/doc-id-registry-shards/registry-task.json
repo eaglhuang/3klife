@@ -17290,5 +17290,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10057.md",
     "title": "[PROG-2-10057] 血統第 3~5 年成長小事件：資料載入器、schema 驗證與觸發／一次性邏輯（核心基礎調查）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3122",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10060.md",
+    "title": "[PROG-2-10060] 新手前 10～20 分鐘稽核小修：開場信按鈕、教學銀兩、結緣入口、任務牆獎勵提示",
+    "category": "task"
   }
 ]

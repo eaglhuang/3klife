@@ -26,13 +26,17 @@ export interface LobbyHallWallView {
     readonly rows: readonly LobbyHallWallRowView[];
 }
 
-/** metaPrefix：回傳該列要加在獎勵前的標記（例「連續任務 2/3」；PROG-2-9966），空字串不加 */
-export function buildLobbyHallWallView(rows: readonly HallTaskRow[], boardMax: number, metaPrefix?: (row: HallTaskRow) => string): LobbyHallWallView {
+/**
+ * metaPrefix：回傳該列要加在獎勵前的標記（例「連續任務 2/3」；PROG-2-9966），空字串不加。
+ * rewardHintOf：回傳任務卡目前看得到的獎勵提示（情報不足時是「糧草／武將經驗？」這類粗略字）；
+ * 有值就優先顯示，讓新手在牆上就知道做這件事有什麼好處，不用只看到沒意義的「官階 1 以上」。
+ */
+export function buildLobbyHallWallView(rows: readonly HallTaskRow[], boardMax: number, metaPrefix?: (row: HallTaskRow) => string, rewardHintOf?: (row: HallTaskRow) => string): LobbyHallWallView {
     return {
         countText: `${rows.length} / ${boardMax}`,
         rows: rows.slice(0, LOBBY_HALL_WALL_ROWS).map((row) => ({
             title: row.title,
-            meta: [metaPrefix?.(row) ?? '', row.rewardText || row.requiredRankText].filter((x) => x.length > 0).join('・'),
+            meta: [metaPrefix?.(row) ?? '', rewardHintOf?.(row) || row.rewardText || row.requiredRankText].filter((x) => x.length > 0).join('・'),
             difficulty: row.difficultyText,
             pinned: row.accepted,
         })),
