@@ -17300,7 +17300,7 @@
   {
     "id": "doc_task_3123",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10059.md",
-    "title": "[PROG-2-10059] 年底結算接成長事件：待處理事件佇列存檔、resolveBloodlineEvent 結算（屬性／好感／銀兩／聲望／小名碎片／同窗好友）",
+    "title": "[PROG-2-10059] 年底結算接成長事件：待處理事件佇列存檔、resolveBloodlineEvent 結算",
     "category": "task"
   },
   {
@@ -17331,6 +17331,18 @@
     "id": "doc_task_3133",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10075.md",
     "title": "[PROG-2-10075] 同步騎馬匹 mounted-list（關羽）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3134",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10077.md",
+    "title": "[PROG-2-10077] 格擋音換成 Kenney impactMetal_light_001（CC0）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3135",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10064.md",
+    "title": "[PROG-2-10064] 新手開場點擊精簡：介紹合併自動長卷、六名將一頁亮相、SSR 揭曉加點擊提示",
     "category": "task"
   }
 ]
