@@ -1701,7 +1701,16 @@ async function main() {
             const firstCard = await waitUntil(() => page.evaluate(() => window.__pt.listButtons()).then((list) => list.find((n) => n === 'Row') || list.find((n) => /^(BtnGeneral\d*|BtnGeneralCard\d*|GeneralCard\d*|BtnCard0|BtnHero0)$/i.test(n)) || null), 30000, '名冊中找不到第一位武將');
             rec.detail.firstCard = firstCard;
             if (avatarTalk) { await avatarProbe(rec, 'rosterRowAvatar', { name: '^(RowAvatar|Avatar|AvatarSprite)$', under: '^Row$' }, 'avatar-talk-roster'); await delay(200); }
-            await clickButton(`^${firstCard}$`);
+            // 名冊是回收列池（約 13 列）：locate 預設由最上層（前序最後一列）往下挑，會挑到列表遮罩下緣外、
+            // 玩家看不到也點不到的那一列（中心 y≈1068）。第一列要明確取前序第一個 Row（畫面最上方那列，玩家真的看得到）。
+            if (firstCard === 'Row') {
+                const rowLoc = await rm.locate({ name: '^Row$', button: true });
+                const rowCount = (rowLoc && rowLoc.matches) || 1;
+                rec.detail.rowCount = rowCount;
+                await rm.click({ name: '^Row$', button: true, nth: rowCount - 1 }, '名冊第一列');
+            } else {
+                await clickButton(`^${firstCard}$`);
+            }
             await waitUntil(() => page.evaluate(() => window.__pt.scenePresence('CharacterDs3|character-ds3')), 30000, '人物介紹畫面未出現');
             await delay(1200);
 
