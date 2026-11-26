@@ -17410,5 +17410,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10083.md",
     "title": "[PROG-2-10083] 大廳小人台詞依武將性別換自稱（女將不再說某）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3161",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10090.md",
+    "title": "[PROG-2-10090] 大廳小人待出場疊在畫面邊緣點不到",
+    "category": "task"
   }
 ]
