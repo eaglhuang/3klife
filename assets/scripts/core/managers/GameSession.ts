@@ -96,7 +96,7 @@ import { recordTrialBattle } from '../systems/MercenaryBattleRecord';
 import { settleTrialRollover, type DepartureEvent } from '../systems/MercenaryDeparture';
 import { appendSeasonDigest, markSeasonDigestRead, normalizeSeasonDigest, type SeasonDigestNote } from '../systems/SeasonDigest';
 import { appendFarewellLetter, createEpitaphLetter, createFarewellLetter, FarewellLetter, farewellJournalEntry, markFarewellLetterRead } from '../systems/FarewellLetterInbox';
-import { EPITAPH_TEXT } from '../systems/ChildUnveiling';
+import { epitaphTextOf } from '../systems/ChildUnveiling';
 import { CAPTIVITY_SEASONS, canRansomCaptive, captiveFreedSpec, captureNoticeSpec, isCaptivityServed, isCaptive, normalizeRosterCaptivity, planGeneralCaptures, takeTalliesWithDefector, type GeneralCaptureRecord } from '../systems/GeneralCaptivity';
 import { EMPTY_LOGIN_STREAK, LoginStreakState, loginDayOf, recordLogin } from '../systems/LoginStreak';
 import { dailySubsidyOf, type SubsidyResourceKey } from '../systems/DailySubsidy';
@@ -7611,7 +7611,7 @@ export class GameSession implements AcademyRecordPort {
             if (outcome.verdict === 'beheaded') {
                 next = next.map((g) => (g.id === outcome.generalId ? { ...g, status: GENERAL_STATUS_DEAD } : g));
                 this._farewellLetters = appendFarewellLetter(this._farewellLetters, createEpitaphLetter({
-                    generalId: outcome.generalId, generalName: outcome.generalName, season, body: EPITAPH_TEXT.BattleDeath,
+                    generalId: outcome.generalId, generalName: outcome.generalName, season, body: epitaphTextOf('BattleDeath', this.roster.find((r) => r.id === outcome.generalId)),
                 }));
             } else if (outcome.verdict === 'surrendered') {
                 next = next.filter((g) => g.id !== outcome.generalId);

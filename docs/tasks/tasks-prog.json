@@ -19783,12 +19783,167 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_3174",
+      "id": "PROG-2-10105",
+      "title": "UI 規格：戰場軍勢糧草常駐顯示與出牌不足提示＋內政任務詳情單屏重排（使用者 11/27 回饋）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "兩份規格書（doc_spec_1341、doc_spec_1342）＋兩張 HTML mockup＋選擇題；不改遊戲程式；實作卡 PROG-2-10104、PROG-2-10108",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [
+        "docs/遊戲規格文件/系統規格書/戰場軍勢糧草常駐顯示與出牌不足提示規格書.md",
+        "docs/遊戲規格文件/系統規格書/內政任務詳情單屏重排與固定底部行動列規格書.md",
+        "docs/遊戲規格文件/設計參考/ui-asks-1127/"
+      ],
+      "notes": "2026-11-27 | 狀態: done | 驗證: compute-gate quick | 變更: 新增兩份規格書、mockup、索引登記、兩張實作卡（todo） | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_3175",
+      "id": "PROG-2-10104",
+      "title": "實作：戰場軍勢糧草常駐顯示、卡片費用章與不足說明面板",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "todo",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依戰場軍勢糧草常駐顯示與出牌不足提示規格書（doc_spec_1341）實作：BattleResourceBar、DeployCardCost、describeDeployShortfall、i18n 四語系、單元測試",
+      "related": [
+        "PROG-2-10105"
+      ],
+      "depends": [
+        "PROG-2-10105"
+      ],
+      "acceptance": [],
+      "deliverables": [
+        "assets/scripts/core/systems/SortieDeployScripts.ts",
+        "assets/scripts/ui/components/DeployComposite.ts",
+        "assets/scripts/ui/components/DeployPanel.ts",
+        "assets/scripts/ui/components/BattleHUD.ts",
+        "assets/resources/i18n/zh-TW.json",
+        "tests/SortieDeployShortfall.test.ts"
+      ],
+      "notes": "2026-11-26 | 狀態: todo | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_3176",
+      "id": "PROG-2-10108",
+      "title": "實作：內政任務詳情單屏三欄重排與固定底部行動列",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "todo",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依內政任務詳情單屏重排規格書（doc_spec_1342）改 lobby-mission-detail-dialog-main.json 與 LobbyMissionDetailDialogComposite.ts；橫式三欄、直式單欄、無捲動",
+      "related": [
+        "PROG-2-10105"
+      ],
+      "depends": [
+        "PROG-2-10105"
+      ],
+      "acceptance": [],
+      "deliverables": [
+        "assets/resources/ui-spec/layouts/lobby-mission-detail-dialog-main.json",
+        "assets/scripts/ui/components/LobbyMissionDetailDialogComposite.ts",
+        "assets/resources/i18n/zh-TW.json"
+      ],
+      "notes": "2026-11-26 | 狀態: todo | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
-    "done": 368,
+    "done": 369,
     "in_progress": 4,
-    "open": 89,
-    "total": 461
+    "open": 91,
+    "total": 464
   }
 }

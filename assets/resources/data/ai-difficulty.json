@@ -11,6 +11,7 @@
   "ultimateRules": {
     "mediumVitalityRatio": 0.5,
     "highLosingVitalityRatio": 0.3,
-    "delegateMinIq": "MEDIUM"
+    "delegateMinIq": "MEDIUM",
+    "delegateMediumEnemyCount": 0
   }
 }

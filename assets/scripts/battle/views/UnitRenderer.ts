@@ -56,7 +56,7 @@ import { SlashShotView } from "./SlashShotView";
 import { AttackVfxPlayer, generalWeaponOf, GeneralVfxInfo } from "./AttackVfxPlayer";
 import { attackVfxFor } from "../shared/AttackVfxMapping";
 import { attackStyleFor } from "../shared/AttackStyle";
-import { createMoveSfxThrottleState, moveBeatFor, tryAcquireMoveSfx } from "../shared/MoveFeedback";
+import { FLOOD_SPLASH_INTERVAL_SEC, FLOOD_SPLASH_SPEC, createMoveSfxThrottleState, moveBeatFor, tryAcquireMoveSfx } from "../shared/MoveFeedback";
 import { DEPLOY_LANDING_PUFFS, RiderDeployDrop, deployLandingDust, deployLandingThud, riderDeployRingPuffs } from "../shared/DeployLanding";
 import { playBattleAudio, playBattleFootstep } from "../shared/BattleAudio";
 import { MoveDustEmitter } from "./MoveDustEmitter";
@@ -267,6 +267,10 @@ export class UnitRenderer extends Component {
   private hpLossPool:  BuffGainEffectPool | null = null;
   private readonly unitViews = new Map<string, UnitView>();
   private readonly movingUnits = new Set<string>();
+  /** 被水流強制位移中的單位（PROG-2-10100）：播沉浮搖晃與水花、不播走路。 */
+  private readonly carriedUnits = new Set<string>();
+  /** 漂流單位距下次水花的剩餘秒數；單位離水或移除時一併清掉。 */
+  private readonly splashTimers = new Map<string, number>();
   /**
    * PROG-2-9715：主將出陣衝刺。上場那一刻 Spine 從己方底線外的待命點跑到出陣格，之後跟小兵一樣站格、逐格走。
    * key＝格上主將單位 id；from＝待命點腳點，t＝已跑秒數。Unity 對照：一次性的 DOTween 位移，跑完即刪。
@@ -413,6 +417,8 @@ export class UnitRenderer extends Component {
         this.spineUnits.remove(unitId);
         this.generalStandees.remove(unitId);
         this.unitViews.delete(unitId);
+        this.carriedUnits.delete(unitId);
+        this.splashTimers.delete(unitId);
         this.generalDashes.delete(unitId);
       }
     });
@@ -423,6 +429,32 @@ export class UnitRenderer extends Component {
 
   private getBattleSurfaceLift(): number {
     return this.latestState?.battleTactic === BattleTactic.FloodAttack ? 0.16 : 0;
+  }
+
+  /**
+   * 單位是否處在「被水沖／卡在水裡」的狀態（PROG-2-10100）：被水流強制位移中，或敵軍站在水攻的水流格上。
+   * 我方站木筏不晃。主將不算（主將有自己的演出）。
+   */
+  private isFloodDrifting(unit: TroopUnit, isGeneral: boolean): boolean {
+    if (isGeneral) return false;
+    if (this.carriedUnits.has(unit.id)) return true;
+    const state = this.latestState;
+    if (state?.battleTactic !== BattleTactic.FloodAttack || unit.faction !== Faction.Enemy) return false;
+    const effect = state.getTileEffect(unit.lane, unit.depth);
+    return effect?.state === 'river-current' && effect.notes === 'scene-gambit:flood-attack';
+  }
+
+  /** 漂流中的單位開沉浮、隔一陣在腳點濺水花；沒漂就關掉並清計時。 */
+  private updateFloodDrift(unitId: string, unit: TroopUnit, isGeneral: boolean, view: UnitView, dt: number): boolean {
+    const drifting = this.isFloodDrifting(unit, isGeneral);
+    this.spineUnits.setDrift(unitId, drifting);
+    if (!drifting) { this.splashTimers.delete(unitId); return false; }
+    const left = (this.splashTimers.get(unitId) ?? 0) - dt;
+    if (left > 0) { this.splashTimers.set(unitId, left); return true; }
+    this.splashTimers.set(unitId, FLOOD_SPLASH_INTERVAL_SEC);
+    const foot = this.unitGroundFoot(view);
+    if (foot) this.moveDust.emit(foot.x, foot.y, unit.faction === Faction.Enemy ? -1 : 1, FLOOD_SPLASH_SPEC, true);
+    return true;
   }
 
   private shouldShowFloodRaft(unit: TroopUnit): boolean {
@@ -517,6 +549,7 @@ export class UnitRenderer extends Component {
 
     // 停止該節點上一切進行中的 tween，避免多回合快速推進時舊 tween 的 .call() 把單位定位到前一回合的目標格
     Tween.stopAllByTarget(view.worldNode);
+    this.carriedUnits.delete(unit.id);
     this.movingUnits.add(unit.id);
     view.worldNode.setWorldPosition(fromPos);
     const isRiverCurrentMove = typeof forcedMoveReason === 'string' && forcedMoveReason.startsWith('river-current');
@@ -674,6 +707,8 @@ export class UnitRenderer extends Component {
         view.worldNode.destroy();
         view.labelNode.destroy();
         this.unitViews.delete(unitId);
+        this.carriedUnits.delete(unitId);
+        this.splashTimers.delete(unitId);
         this.generalDashes.delete(unitId);
         this.dyingUnits.delete(unitId);
       })
@@ -913,32 +948,30 @@ export class UnitRenderer extends Component {
     Tween.stopAllByTarget(view.visualNode);
 
     this.movingUnits.add(unit.id);
+    this.carriedUnits.add(unit.id);
     view.worldNode.setWorldPosition(fromPos);
     view.visualNode.setPosition(originalVisualPos);
     view.visualNode.setRotationFromEuler(originalVisualEuler);
 
-    let completedParts = 0;
-    const finish = (): void => {
-      completedParts += 1;
-      if (completedParts < 2) {
-        return;
-      }
-      this.movingUnits.delete(unit.id);
-      view.worldNode.setWorldPosition(toPos);
-      view.visualNode.setPosition(originalVisualPos);
-      view.visualNode.setRotationFromEuler(originalVisualEuler);
-    };
-
+    // 以世界節點的位移 tween 作為完成訊號（PROG-2-10100）：有 Spine 的單位 visualNode 是隱藏的（active=false），
+    // 隱藏節點上的 tween 不會前進；以前要等兩段 tween 都完成，movingUnits 永遠清不掉，單位被水沖過一次
+    // 就一直被當成「移動中」（回合流程卡到逾時、疊層持續走路）。visualNode 的沉浮只是 3D 棋子的點綴，不當完成條件。
     tween(view.worldNode)
       .to(BATTLE_VISUAL_TIMING.moveAdvanceSec, { worldPosition: toPos }, { easing: 'linear' })
-      .call(finish)
+      .call(() => {
+        Tween.stopAllByTarget(view.visualNode);
+        this.movingUnits.delete(unit.id);
+        this.carriedUnits.delete(unit.id);
+        view.worldNode.setWorldPosition(toPos);
+        view.visualNode.setPosition(originalVisualPos);
+        view.visualNode.setRotationFromEuler(originalVisualEuler);
+      })
       .start();
 
     tween(view.visualNode)
       .to(sinkSec, { position: sinkVisualPos, eulerAngles: sinkVisualEuler }, { easing: 'quadOut' })
       .to(carrySec, { position: sinkVisualPos, eulerAngles: sinkVisualEuler }, { easing: 'linear' })
       .to(sinkSec, { position: originalVisualPos, eulerAngles: originalVisualEuler }, { easing: 'quadIn' })
-      .call(finish)
       .start();
   }
 
@@ -1223,9 +1256,11 @@ export class UnitRenderer extends Component {
           const p = view.labelNode.position;
           // PROG-2-9715：格上主將跟小兵一樣站在自己的格子上（以前釘在場邊待命點，玩家看不到主將出陣走格）
           const foot = isGeneral ? this.boardGeneralFoot(unitId, unit.faction, view, dt) : this.unitGroundFoot(view);
+          // 被水沖／卡在水裡不播走路：疊層位移照跟，但動作改站姿＋沉浮（PROG-2-10100）
+          const drifting = this.updateFloodDrift(unitId, unit, isGeneral, view, dt);
           const moving = this.movingUnits.has(unitId) || (isGeneral && this.generalDashes.has(unitId));
           const shown = this.spineUnits.sync(unitId, config, foot?.x ?? p.x, foot?.y ?? p.y - config.labelToFoot,
-            unit.faction === Faction.Enemy ? -1 : 1, moving, dt, view.labelNode.active,
+            unit.faction === Faction.Enemy ? -1 : 1, moving && !drifting, dt, view.labelNode.active,
             isGeneral ? 1 : squadMemberCount(unit.currentHp, unit.getEffectiveMaxHp()));
           view.visualNode.active = !shown;
         } else { this.spineUnits.remove(unitId); view.visualNode.active = true; }
