@@ -15,6 +15,7 @@ import {
     EARLY_QUIET_BOND_ROWS, SEASON_DIGEST_LIMIT, appendSeasonDigest, buildChronicleDigestNote, buildMissionDigestNote, isEarlyQuietSeason,
     markSeasonDigestRead, normalizeSeasonDigest, planSeasonAdvanceFlow, seasonDigestUnreadCount, type SeasonDigestNote,
 } from '../assets/scripts/core/systems/SeasonDigest';
+import { mindBadgeText } from '../assets/scripts/ui/components/mind/MindRequestView';
 import { SEASON_DIGEST_TEXTS, buildDigestRows } from '../assets/scripts/ui/components/mind/SeasonDigestView';
 import { buildSeasonReportPanelRows, buildSeasonReportPanelTexts } from '../assets/scripts/core/systems/SeasonReportPanel';
 import type { QuarterlyBattleReportRow } from '../assets/scripts/core/systems/RetireReviewCopy';
@@ -133,6 +134,16 @@ export function createSeasonDigestSuite(): TestSuite {
             assert.isTrue(dict['ui.season_digest.chronicle_encounter'].includes('{2}'), `${lang} chronicle 參數`);
             assert.isTrue(dict['ui.mission.jargon_guide'].includes('{0}'), `${lang} 導讀參數`);
         }
+    });
+
+    suite.test('信箱改名「季報信箱」（PROG-2-10092）：標題與入口走 i18n，四語系不同字；入口數字沿用 mindBadgeText', () => {
+        const zh = JSON.parse(readSource('assets/resources/i18n/zh-TW.json')) as Record<string, string>;
+        assert.equals('季報信箱', zh['ui.season_digest.mailbox_title']);
+        assert.equals('季報信箱', zh['ui.season_digest.mailbox_entry']);
+        assert.equals('季報信箱 3', mindBadgeText(3, zh['ui.season_digest.mailbox_entry']));
+        assert.equals('信箱', mindBadgeText(0), '沒給 label 維持舊字');
+        const panel = readSource('assets/scripts/ui/components/mind/MindRequestPanel.ts');
+        assert.isFalse(panel.includes("'武將信箱'"), '標題不再寫死字串');
     });
 
     suite.test('session：換季後寫入紀要；存讀檔保留未讀狀態；舊存檔沒有欄位也能讀', async () => {
