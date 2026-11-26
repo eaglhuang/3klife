@@ -19261,12 +19261,64 @@
       }
     },
     {
-      "doc_id": "doc_task_3127",
+      "doc_id": "doc_task_3126",
+      "id": "PROG-2-10067",
+      "title": "新手教學結束後第一個目標：出征鈕脈動＋史小境提示",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-26T17:57:11+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "新手體驗稽核 K1：教學結束後大廳沒有指向出征的提示。教學完成後大廳出征鈕呼吸光暈脈動（單一節點 tween、不開粒子）＋史小境搞笑一句提示（i18n 四語系）；玩家點出征或進入戰鬥後取消並標記完成（存檔欄位 sortieHintPending，舊存檔向後相容）。與首年目標清單的下一步提示分段互不重複。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [
+        "assets/scripts/core/systems/OnboardingTutorial.ts",
+        "assets/scripts/core/managers/GameSession.ts",
+        "assets/scripts/ui/core/SortieHintPulse.ts",
+        "assets/scripts/ui/core/LobbyOpeningPanels.ts",
+        "assets/scripts/ui/scenes/LobbyScene.ts",
+        "assets/resources/i18n/*.json",
+        "tests/SortieHint.test.ts"
+      ],
+      "notes": "2026-11-26 | 狀態: done | 驗證: run-cli 全過（9768 passed）、tsc 0 錯、compute-gate standard 通過（僅既有 ui->battle 警告） | 變更: 教學完成後大廳出征鈕脈動（SortieHintPulseView 單一光暈節點 tween）＋史小境一句提示（i18n ui.onboarding.sortie_hint 四語系）；存檔欄位 onboarding.sortieHintPending，舊存檔缺欄位視為無提示；點出征或進戰鬥關閉並存檔；與首年目標清單「下一步」分段互不重複 | 阻塞: 無（畫面未在可實跑建置截圖，只做單元測試）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_3128",
       "id": "PROG-2-10068",
       "title": "首年前 2 季季報彈窗精簡：任務回報與市井奇遇併進信箱，任務詳情加白話導讀",
       "owner": "ClaudeCode_claude-opus-5-5",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-26",
@@ -19281,10 +19333,25 @@
       "depends": [],
       "acceptance": [],
       "deliverables": [
+        "assets/scripts/core/systems/SeasonDigest.ts",
+        "assets/scripts/ui/components/mind/SeasonDigestView.ts",
+        "assets/scripts/ui/components/mind/MindRequestPanel.ts",
+        "assets/scripts/core/managers/GameSession.ts",
+        "assets/scripts/core/services/PlayerSaveService.ts",
+        "assets/scripts/core/systems/SeasonReportPanel.ts",
+        "assets/scripts/ui/components/SeasonReportComposite.ts",
+        "assets/scripts/ui/mission/MissionDetailPresenter.ts",
         "assets/scripts/ui/scenes/LobbyScene.ts",
-        "tests/SeasonDigest.test.ts"
+        "assets/resources/i18n/zh-TW.json",
+        "assets/resources/i18n/zh-CN.json",
+        "assets/resources/i18n/en.json",
+        "assets/resources/i18n/ja.json",
+        "server/schema/sync06-patch-whitelist.ts",
+        "tests/SeasonDigest.test.ts",
+        "tests/mission/MissionDetailPresenter.test.ts",
+        "tools_node/playtest-online.js"
       ],
-      "notes": "2026-11-26 | 狀態: in-progress | 驗證: pending | 變更: ClaudeCode_claude-opus-5-5 開始處理 | 阻塞: none",
+      "notes": "2026-11-26 | 狀態: done | 驗證: run-cli 全過、tsc 0 錯、compute-gate standard 通過（僅既有 ui->battle 警告）、web 建置＋無頭 Chrome 1920 實玩（前 2 季只彈戰報＋事件，第 3 季完整，信箱紅點＋紀要列）| 變更: 新增 SeasonDigest／SeasonDigestView、MindRequestPanel 紀要列與紅點、存檔 seasonDigest（sync06 白名單同步）、任務詳情白話導讀（四語系）、playtest-online 增加信箱步驟 | 阻塞: none",
       "brief": {
         "style": "classic",
         "label": "",
@@ -19309,8 +19376,8 @@
     }
   ],
   "summary": {
-    "done": 359,
-    "in_progress": 5,
+    "done": 360,
+    "in_progress": 4,
     "open": 88,
     "total": 452
   }

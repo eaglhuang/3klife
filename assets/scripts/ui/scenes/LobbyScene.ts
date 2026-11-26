@@ -5,6 +5,9 @@ import { presentLobbyLead } from '../core/LobbyLeadPresentation';
 import { openingLetterBodyWithFunLine } from '../../core/systems/FunLineLibrary';
 import { placeTutorialTarget } from '../core/OnboardingTargetHighlight';
 import { onboardingActionIdAt, resolveTutorialTargets } from '../core/OnboardingTargetResolver';
+import { SortieHintController } from '../core/SortieHintController';
+import { SortieHintPulseView } from '../core/SortieHintPulseView';
+import { findUcufNode } from '../core/UcufNodeLookup';
 import { ERA_SHIFT_TEXT, formatHegemonRise } from '../../core/systems/RivalRulerLines';
 import { nationDef } from '../../core/systems/RivalNations';
 import type { SkinSlot } from '../core/UISpecTypes';
@@ -621,6 +624,8 @@ export class LobbyScene extends Component {
     /** 幕府大廳（UI-2-0149）：另開入口，與主大廳並存 */
     private _lobbyHallHost: UIScreenPreviewHost | null = null;
     private _lobbyHall: LobbyHallScreenBinder | null = null;
+    /** 教學結束後「去出征」提示（PROG-2-10067）：只管教學結束到第一戰這一段 */
+    private _sortieHint: SortieHintController | null = null;
     private _hallThemeConfig: HallThemeConfig | null = null;
     private _lobbyBackdrop: LobbyBackdrop | null = null;
     private _lobbyBackdropConfig: HallThemeConfig | null = null;
@@ -3179,6 +3184,7 @@ export class LobbyScene extends Component {
                 presentDestinyPool: (view, actions) => this._presentDestinyPool(view, actions),
                 closeDestinyPool: () => { if (this._destinyPoolHost) this._destinyPoolHost.node.active = false; },
                 onOverlayChanged: () => { this._seasonChroniclePopup?.refreshAvailability(); },
+                onOnboardingRefreshed: () => { this._sortieHint?.refresh(); },
                 openingLetterText: () => ({ title: services().i18n.t('copy.letter.opening.title'), body: openingLetterBodyWithFunLine(services().i18n.t('copy.letter.opening.body'), services().session.magistrateUid ?? ''), button: services().i18n.t('copy.letter.opening.button') }),
                 warn: (message, error) => UCUFLogger.warn(LogCategory.DATA, message, error),
                 // 幕府大堂開著時城市畫面被整個蓋住：改框大堂上的同功能入口（PROG-2-2226）
@@ -3377,6 +3383,7 @@ export class LobbyScene extends Component {
         }
         await this._ensureWeatherSeasonTable();
         const params = this._buildBattleEntryParams(undefined, encounter);
+        void this._sortieHint?.complete();
         services().scene.switchScene(SceneName.Battle, { ...params, tutorial: false, teachingSpirit: null });
     }
 
@@ -4974,6 +4981,7 @@ ${spent}`,
             sortie: 'sortie', generals: 'generals', domestic: 'domestic', training: 'nurture', shop: 'shop',
         };
         const dock = (id: LobbyHallDockId): void => {
+            if (id === 'sortie') void this._sortieHint?.complete();
             this._lobbyHall?.hideBubble();
             this._cityHubCategory = toggleCategory(this._cityHubCategory, dockCategory[id]);
             this._refreshCityHub();
@@ -5012,6 +5020,7 @@ ${spent}`,
             mapLayout,
         });
         host.node.active = false;
+        this._sortieHint = this._createSortieHint(host.node);
         // 頂欄先用真資料，不讓設計稿的年季文字閃一下（PROG-2-9130）
         this._refreshLobbyHallTopbar();
         // 換季勢力圖聚焦（UI-2-0151）：大廳開著就播，沒開就留到下次開大廳播一次
@@ -5212,6 +5221,27 @@ ${spent}`,
         this._openingPanels?.refreshOnboarding();
         // 大堂剛啟用的這一幀 Widget 尚未對齊，下一幀再定位一次聚焦框（PROG-2-2226）
         this.scheduleOnce(() => { this._openingPanels?.refreshOnboarding(); }, 0);
+        this._sortieHint?.refresh();
+    }
+
+    /** 教學結束後出征鈕脈動＋史小境一句提示；脈動節點掛在大廳底欄出征鈕下，重用不重建（PROG-2-10067） */
+    private _createSortieHint(hallRoot: Node): SortieHintController {
+        const pulse = new SortieHintPulseView(() => findUcufNode(hallRoot, 'lobby-hall-screen.dock-sortie') as Node | null);
+        return new SortieHintController({
+            onboarding: () => services().session.onboarding,
+            clearedStageCount: () => services().session.clearedStageIds.length,
+            // 開場面板（信、宿命轉蛋、教學）還蓋著時不提示
+            hallVisible: () => hallRoot.active && (this._openingPanels?.activeHostNodes().length ?? 0) === 0,
+            setPulse: on => pulse.setPulse(on),
+            say: () => services().event.emit('SHOW_TOAST', { message: services().i18n.t('ui.onboarding.sortie_hint'), duration: 6 }),
+            markDone: async () => {
+                try {
+                    await services().session.completeSortieHint();
+                } catch (error) {
+                    UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 出征提示存檔失敗', error);
+                }
+            },
+        });
     }
 
     /** 幕府大廳左右牆（UI-2-0153）：左軍務、右內政，資料同任務板；任務資料沒載到時維持設計稿文字 */
@@ -6786,6 +6816,7 @@ ${spent}`,
         });
         await this._ensureWeatherSeasonTable();
         const params = this._buildBattleEntryParams(undefined, encounter);
+        void this._sortieHint?.complete();
         services().scene.switchScene(SceneName.Battle, {
             ...params,
             ...(knownInvader ? { enemyGeneralId: knownInvader.generalId } : {}),
@@ -9591,6 +9622,7 @@ ${spent}`,
         if (siege && params.playerGeneralId) {
             await services().session.spendSiegeLifespan(params.playerGeneralId);
         }
+        void this._sortieHint?.complete();
         services().scene.switchScene(SceneName.Battle, params);
     }
 
