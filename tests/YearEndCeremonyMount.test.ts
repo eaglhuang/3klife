@@ -147,5 +147,66 @@ export function createYearEndCeremonyMountSuite(): TestSuite {
         }
     });
 
+    // ── 擋輸入護欄（PROG-2-10054）：典禮宿主 YearEndCeremonyHost 帶 BlockInputEvents，
+    //    只有「播放中／等玩家收下賞賜」才允許作用中；未播放、已關閉都必須 active=false，否則會擋住結算彈窗關閉鈕與底欄 ──
+    const lobbySrc = (): string => fs.readFileSync(path.join(ROOT, 'assets/scripts/ui/scenes/LobbyScene.ts'), 'utf8');
+    const methodBody = (src: string, signature: RegExp): string => {
+        const start = src.search(signature);
+        assert.isTrue(start >= 0, `找不到方法 ${signature}`);
+        const open = src.indexOf('{', start);
+        let depth = 0;
+        for (let i = open; i < src.length; i++) {
+            if (src[i] === '{') depth++;
+            else if (src[i] === '}' && --depth === 0) return src.slice(open, i + 1);
+        }
+        throw new Error(`方法 ${signature} 沒有結尾`);
+    };
+
+    suite.test('擋輸入護欄：掛載完成時典禮宿主 active=false（未播放不擋輸入）', () => {
+        const body = methodBody(lobbySrc(), /private async _mountYearEndCeremony\(/);
+        const tail = body.slice(body.lastIndexOf('this._ceremonyPanel = panel;'));
+        assert.isTrue(/host\.node\.active = false;/.test(tail), '_mountYearEndCeremony 結尾沒有把宿主收起');
+    });
+
+    suite.test('擋輸入護欄：只有 _openYearEndCeremony 會把典禮宿主打開，且必須有待播年份才開', () => {
+        const src = lobbySrc();
+        const opener = methodBody(src, /private _openYearEndCeremony\(/);
+        assert.isTrue(/year <= 0\) return false/.test(opener), '沒有待播年份仍會開典禮');
+        assert.isTrue(/host\.node\.active = true/.test(opener));
+        // 其他地方不得再把 _ceremonyHost 設成 active=true
+        const stripped = src.replace(opener, '');
+        assert.isFalse(/_ceremonyHost[^;\n]*\.active\s*=\s*true/.test(stripped), '有別處把 _ceremonyHost 打開');
+    });
+
+    suite.test('擋輸入護欄：收下賞賜成功後一定走 _closeYearEndCeremony 收起宿主，關閉就是 active=false', () => {
+        const src = lobbySrc();
+        const close = methodBody(src, /private _closeYearEndCeremony\(/);
+        assert.isTrue(/_ceremonyHost\.node\.active = false/.test(close));
+        const claim = methodBody(src, /private async _claimYearEndCeremonyReward\(/);
+        assert.isTrue(/this\._closeYearEndCeremony\(\)/.test(claim), '收下賞賜成功後沒有關閉宿主');
+        assert.isTrue(/finally\s*\{[^}]*_ceremonyClaiming = false/.test(claim), '領取旗標沒有在 finally 釋放，失敗後會卡死');
+    });
+
+    suite.test('擋輸入護欄：典禮面板播放中收下鈕隱藏；播完或跳過一律走 _finish 釋放（收下鈕出現、播放旗標歸零、完成回呼只觸發一次）', () => {
+        const src = fs.readFileSync(path.join(ROOT, 'assets/scripts/ui/components/YearEndCeremonyPanel.ts'), 'utf8');
+        const bind = methodBody(src, /public bindRankingResult\(/);
+        assert.isTrue(/_playing = true/.test(bind) && /closeButton\.active = false/.test(bind), '開播時要隱藏收下鈕');
+        const finish = methodBody(src, /private _finish\(/);
+        assert.isTrue(/_playing = false/.test(finish), '收尾沒有清播放旗標');
+        assert.isTrue(/closeButton\.active = true/.test(finish), '收尾沒有露出收下鈕，玩家會被宿主卡住');
+        assert.isTrue(/_onFinished = null/.test(finish), '完成回呼沒有只觸發一次');
+        const tick = methodBody(src, /public tick\(/);
+        assert.isTrue(/this\._finish\(\)/.test(tick), '第 3 幕時間到沒有收尾');
+        const skip = methodBody(src, /public skip\(/);
+        assert.isTrue(/_canSkip/.test(skip) && /this\._finish\(\)/.test(skip), '跳過沒有走 _finish 或沒擋首次');
+    });
+
+    suite.test('實跑腳本護欄：playtest-online 認得典禮（等播完按收下賞賜）且殘留檢查含 YearEndCeremonyHost', () => {
+        const tool = fs.readFileSync(path.join(ROOT, 'tools_node/playtest-online.js'), 'utf8');
+        assert.isTrue(tool.includes("'^BtnYcClose$'"), 'playtest-online 沒有處理「收下賞賜」');
+        assert.isTrue(/settleYearEndCeremony\(\);\s*\n\s*const closers/.test(tool), 'backToLobbyBar 開頭沒有先收掉典禮');
+        assert.isTrue(/\|YearEndCeremonyHost\)\$'\)\)/.test(tool), '彈窗殘留檢查沒有包含 YearEndCeremonyHost');
+    });
+
     return suite;
 }
