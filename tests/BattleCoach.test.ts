@@ -87,6 +87,14 @@ export function createBattleCoachSuite(): TestSuite {
   assert.equals(DEFAULT_COACH_PLACEMENT,parseCoachPlacementConfig({...raw,region:{x:0,y:0,width:2,height:1}}));
   assert.equals(DEFAULT_COACH_PLACEMENT,parseCoachPlacementConfig(null));
  });
+ suite.test('部署步驟預設收成頁籤（資料驅動），其餘步驟維持展開卡', () => {
+  assert.equals('["battle.guide.step.deploy"]',JSON.stringify(DEFAULT_COACH_PLACEMENT.tabHintKeys));
+  
+  assert.equals('[]',JSON.stringify(parseCoachPlacementConfig({...DEFAULT_COACH_PLACEMENT,tabHintKeys:[]}).tabHintKeys));
+  const src=readFileSync(join(__dirname,'../assets/scripts/ui/components/BattleScenePanel.ts'),'utf8');
+  assert.contains(src,'tabHintKeys.includes(current.key)');
+  assert.isTrue(src.indexOf('child.getComponent(Widget)?.updateAlignment()')<src.indexOf('panel.setPosition('),'子節點對齊要在設定浮窗位置之前，否則位置被父 widget 拉回上方置中');
+ });
  suite.test('教學文案四語系都有每一步與 SP 後綴，並帶在提示上', () => {
   const g=new FirstBattleOperationGuide();
   const steps=['deploy','clash','ultimate','victory','retreat','stalemate'];

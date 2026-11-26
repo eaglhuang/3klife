@@ -73,6 +73,8 @@ export class BattleScenePanel extends Component {
     private _guideHost: UIScreenPreviewHost | null = null;
     private _guideMount: Promise<void> | null = null;
     private _guideMinimized = false;
+    /** 玩家在「預設收成頁籤」的步驟主動展開過的提示 key；換步驟即失效 */
+    private _guideTabOverrideKey: string | null = null;
     private _guideControlsBound = false;
     private readonly _guideLayoutTick = (): void => { this._layoutOperationGuide(); };
     private _guideHint: OperationHint | null = null;
@@ -121,7 +123,7 @@ export class BattleScenePanel extends Component {
             binder?.getNode('guidePrevious')?.on(Button.EventType.CLICK, () => services().event.emit('first-battle-guide-previous', undefined), this);
             binder?.getNode('guideNext')?.on(Button.EventType.CLICK, () => services().event.emit('first-battle-guide-next', undefined), this);
             binder?.getNode('guideMinimize')?.on(Button.EventType.CLICK, () => { this._guideMinimized = true; this._layoutOperationGuide(); }, this);
-            binder?.getNode('guideResume')?.on(Button.EventType.CLICK, () => { this._guideMinimized = false; this._layoutOperationGuide(); }, this);
+            binder?.getNode('guideResume')?.on(Button.EventType.CLICK, () => { this._guideMinimized = false; this._guideTabOverrideKey = this._guideHint?.key ?? null; this._layoutOperationGuide(); }, this);
             this.schedule(this._guideLayoutTick, 0.25);
         }
         this._layoutOperationGuide();
@@ -156,7 +158,8 @@ export class BattleScenePanel extends Component {
             for (const child of n.children) visit(child, covered || blocks);
         };
         if (this.node.parent) visit(this.node.parent);
-        const expanded = !this._guideMinimized && battleCoachPlacement(root.width,root.height,obstacles,false,this._coachConfig);
+        const tabbedStep = !!current.key && this._coachConfig.tabHintKeys.includes(current.key) && this._guideTabOverrideKey !== current.key;
+        const expanded = !this._guideMinimized && !tabbedStep && battleCoachPlacement(root.width,root.height,obstacles,false,this._coachConfig);
         const compact = !expanded;
         const rect = expanded || battleCoachPlacement(root.width,root.height,obstacles,true,this._coachConfig);
         binder?.setActives({ guideCard: !!rect && !compact, guideResume: !!rect && compact });
@@ -166,9 +169,11 @@ export class BattleScenePanel extends Component {
             const widget = panel.getComponent(Widget);
             if (widget) widget.enabled = false;
             panel.getComponent(UITransform)?.setContentSize(rect.width,rect.height);
+            // 先排子節點：引擎的 Widget.updateAlignment 會連父節點的（已停用）版面 widget 一起套回，
+            // 把位置拉回版面預設的上方置中；所以最後才設定浮窗位置。
+            for (const child of panel.children) child.getComponent(Widget)?.updateAlignment();
             panel.setPosition(rect.x+rect.width/2-root.width*root.anchorX,
                 root.height*(1-root.anchorY)-rect.y-rect.height/2,0);
-            for (const child of panel.children) child.getComponent(Widget)?.updateAlignment();
         }
         placeTutorialTarget(binder, compact ? null : target);
     }

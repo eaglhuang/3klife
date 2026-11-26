@@ -10,5 +10,6 @@
   "cards": [
     { "widthRatio": 0.34, "minWidth": 360, "maxWidth": 720, "height": 248 },
     { "widthRatio": 0.26, "minWidth": 360, "maxWidth": 480, "height": 308 }
-  ]
+  ],
+  "tabHintKeys": ["battle.guide.step.deploy"]
 }

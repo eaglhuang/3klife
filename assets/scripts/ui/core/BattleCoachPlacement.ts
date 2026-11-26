@@ -32,6 +32,7 @@ export function coachTabPlacement(width: number, obstacles: readonly CoachRect[]
  *   region     允許放置的區域（畫面寬高的比例）；右下拇指區與下緣操作鈕留在區域之外
  *   forbidden  區域內另外禁放的矩形（比例），例如接戰區核心
  *   cards      展開卡的尺寸候選（寬度比例夾在 min／max；高度為設計像素），依序嘗試
+ *   tabHintKeys 預設收成小頁籤的步驟（部署步驟要拖兵卡，卡片不可蓋住左下部署格）
  * 解析失敗或缺欄位時退回 DEFAULT_COACH_PLACEMENT（兩者由單元測試鎖定一致）。
  */
 export type CoachAnchor = 'bottom-left' | 'bottom-right' | 'top-left' | 'top-right';
@@ -44,6 +45,8 @@ export interface CoachPlacementConfig {
     region: CoachRatioRect;
     forbidden: CoachRatioRect[];
     cards: CoachCardSize[];
+    /** 這些提示 key 的步驟預設收成小頁籤（例如部署要拖兵卡到左下格，不能被卡片蓋住）；玩家按頁籤可展開 */
+    tabHintKeys: string[];
 }
 export const DEFAULT_COACH_PLACEMENT: CoachPlacementConfig = {
     anchor: 'bottom-left',
@@ -55,6 +58,7 @@ export const DEFAULT_COACH_PLACEMENT: CoachPlacementConfig = {
         { widthRatio: 0.34, minWidth: 360, maxWidth: 720, height: 248 },
         { widthRatio: 0.26, minWidth: 360, maxWidth: 480, height: 308 },
     ],
+    tabHintKeys: ['battle.guide.step.deploy'],
 };
 const COACH_ANCHORS: readonly CoachAnchor[] = ['bottom-left', 'bottom-right', 'top-left', 'top-right'];
 const finite = (v: unknown): v is number => typeof v === 'number' && Number.isFinite(v);
@@ -74,7 +78,8 @@ export function parseCoachPlacementConfig(raw: unknown): CoachPlacementConfig {
     if (forbidden.some(f => !f)) return DEFAULT_COACH_PLACEMENT;
     const cards = c.cards as CoachCardSize[];
     if (cards.some(k => !k || !finite(k.widthRatio) || !finite(k.minWidth) || !finite(k.maxWidth) || !finite(k.height) || k.widthRatio <= 0 || k.height <= 0)) return DEFAULT_COACH_PLACEMENT;
-    return { anchor: c.anchor as CoachAnchor, margin: c.margin, step: c.step, region, forbidden: forbidden as CoachRatioRect[], cards };
+    const tabHintKeys = Array.isArray(c.tabHintKeys) && c.tabHintKeys.every(k => typeof k === 'string') ? c.tabHintKeys : DEFAULT_COACH_PLACEMENT.tabHintKeys;
+    return { anchor: c.anchor as CoachAnchor, margin: c.margin, step: c.step, region, forbidden: forbidden as CoachRatioRect[], cards, tabHintKeys };
 }
 const toRect = (r: CoachRatioRect, width: number, height: number): CoachRect =>
     ({ x: r.x * width, y: r.y * height, width: r.width * width, height: r.height * height });
