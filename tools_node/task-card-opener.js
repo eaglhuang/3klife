@@ -177,6 +177,11 @@ function buildAgentBriefsFrontmatter(task) {
     lines.push(`doc_id: ${renderYamlScalar(task.doc_id)}`);
   }
   lines.push(`id: ${renderYamlScalar(task.id)}`);
+  // ATM tasks import only recognizes cards whose front matter declares task_id.
+  lines.push(`task_id: ${renderYamlScalar(task.id)}`);
+  if (task.title) {
+    lines.push(`title: ${renderYamlScalar(task.title)}`);
+  }
   lines.push(`priority: ${renderYamlScalar(task.priority)}`);
   lines.push(`phase: ${renderYamlScalar(task.phase)}`);
   lines.push(`created: ${renderYamlScalar(task.created)}`);
@@ -255,6 +260,16 @@ function canReuseExistingTaskId(inspection, currentAgentName, mdPath) {
   return mdPathMatchesExistingTaskCard;
 }
 
+// ATM tasks import rejects deliverables that carry narrative text (ATM_TASK_IMPORT_DELIVERABLE_PATH_INVALID).
+const DELIVERABLE_PATH_RE = /^[^\s（）、，。]+$/u;
+
+function assertDeliverablesArePaths(deliverables) {
+  const invalid = deliverables.filter((item) => !DELIVERABLE_PATH_RE.test(String(item).trim()));
+  if (invalid.length > 0) {
+    throw new Error(`--deliverables must be repository paths only (move descriptions to --description): ${invalid.join(' | ')}`);
+  }
+}
+
 function buildTask(options) {
   const created = options.created || todayIso();
   const status = normalizeStatus(options.status);
@@ -262,6 +277,7 @@ function buildTask(options) {
   const depends = options.depends.length > 0 ? options.depends : [];
   const acceptance = options.acceptance.length > 0 ? options.acceptance : [];
   const deliverables = options.deliverables.length > 0 ? options.deliverables : [];
+  assertDeliverablesArePaths(deliverables);
   const startedAt = status === 'in-progress'
     ? (options.startedAt || nowRfc3339())
     : '';
@@ -458,6 +474,7 @@ function buildGenericMarkdown(task) {
   const frontmatterLines = [
     '---',
     `id: ${renderValue(task.id)}`,
+    `task_id: ${renderValue(task.id)}`,
     `title: ${renderValue(task.title)}`,
     `owner: ${renderValue(task.owner)}`,
     `priority: ${renderValue(task.priority)}`,
