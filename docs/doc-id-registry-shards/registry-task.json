@@ -17218,5 +17218,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10043.md",
     "title": "PROG-2-10043 結緣提親機率面板與吃醋彈窗掛進遊戲",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3108",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10045.md",
+    "title": "[PROG-2-10045] 戰場 HUD／飄字打磨批次（飄字疊字、部署提示遮擋、長字縮放）",
+    "category": "task"
   }
 ]
