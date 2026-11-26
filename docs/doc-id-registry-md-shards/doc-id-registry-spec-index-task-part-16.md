@@ -54,3 +54,4 @@
 | `doc_task_3179` | docs/agent-briefs/tasks/PROG/PROG-2-10109.md | [PROG-2-10109] 台詞性別化第二批：老年自稱、AI prompt 與快取鍵、資料檔寫死自稱 |
 | `doc_task_3180` | docs/agent-briefs/tasks/PROG/PROG-2-10113.md | [PROG-2-10113] Antigravity 試玩三 bug |
 | `doc_task_3181` | docs/agent-briefs/tasks/PROG/PROG-2-10107.md | [PROG-2-10107] 放招微調：士氣鼓舞 TP 20 免傷兵、首年主將補通用計謀加速 15、奧義門檻方案 A |
+| `doc_task_3182` | docs/agent-briefs/tasks/PROG/PROG-2-10111.md | [PROG-2-10111] playtest character-intro-tabs 點名冊第一列沒開出人物介紹 |
