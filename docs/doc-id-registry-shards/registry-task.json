@@ -17356,5 +17356,23 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10068.md",
     "title": "[PROG-2-10068] 首年前 2 季季報彈窗精簡：任務回報與市井奇遇併進信箱，任務詳情加白話導讀",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3145",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10078.md",
+    "title": "[PROG-2-10078] 戰場小兵 Spine 骨架預載與節點池預熱（騎兵出現延遲）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3146",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10079.md",
+    "title": "[PROG-2-10079] 戰場音效預載與同檔池化（馬蹄聲首次延遲）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3147",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10080.md",
+    "title": "[PROG-2-10080] 將軍專屬單一 HUD：合併兵種徽章與武將名牌、放大騎兵將領",
+    "category": "task"
   }
 ]
