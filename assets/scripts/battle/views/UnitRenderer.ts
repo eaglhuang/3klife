@@ -1672,7 +1672,7 @@ export class UnitRenderer extends Component {
     const labelNode = new Node(`GeneralLabel_${faction}`);
     labelNode.layer = this.canvasNode?.layer ?? Layers.Enum.UI_2D;
     this.uiRoot?.addChild(labelNode);
-    const badge = this.buildBadge(labelNode, GENERAL_PLATE_WIDTH, GENERAL_PLATE_HEIGHT);
+    const badge = this.buildBadge(labelNode, GENERAL_PLATE_WIDTH, GENERAL_PLATE_HEIGHT, null, null, true);
     // 武將 HUD 標籤陣營色：玩家藍、敵軍紅
     badge.typeLabel.color = faction === Faction.Enemy
       ? new Color(255, 130, 130, 255)
@@ -1739,8 +1739,9 @@ export class UnitRenderer extends Component {
       // 名牌本體寬 186＋底板 10；左側另有能量環（見 buildVitalityRing 的位置）
       const left = (GENERAL_PLATE_WIDTH / 2 + 5 + VITALITY_RING_RADIUS + 8 + VITALITY_RING_RADIUS + 6) * s;
       const right = (GENERAL_PLATE_WIDTH + 10) / 2 * s;
-      const halfH = (GENERAL_PLATE_HEIGHT * 2 + 10) / 2 * s;
-      plates.push({ x: label.position.x + (right - left) / 2, y: label.position.y, halfW: (left + right) / 2, halfH });
+      const halfH = (GENERAL_PLATE_HEIGHT + 14) / 2 * s;
+      // 單排名牌底板中心在上排（GENERAL_PLATE_HEIGHT / 2 + 2，未縮放）
+      plates.push({ x: label.position.x + (right - left) / 2, y: label.position.y + (GENERAL_PLATE_HEIGHT / 2 + 2) * s, halfW: (left + right) / 2, halfH });
     });
     // PROG-2-9440：部隊框彼此也錯開；剛受擊的框先擺（留原位），其他框讓開
     this.badgeClock += dt > 0 ? dt : 0;
@@ -2302,7 +2303,7 @@ export class UnitRenderer extends Component {
    * rootNode 只保留位置、縮放、透明度與尺寸。沒給（武將名牌）時維持原本的 Graphics 版（PROG-2-9713）。
    */
   private buildBadge(rootNode: Node, width: number, height: number, troopType: TroopType | null = null,
-    layers: BadgeBatchLayers | null = null): BadgeView {
+    layers: BadgeBatchLayers | null = null, singleRow = false): BadgeView {
     const rootTf = rootNode.addComponent(UITransform);
     rootTf.setContentSize(width, height * 2 + 10);
     const opacity = rootNode.addComponent(UIOpacity);
@@ -2314,7 +2315,9 @@ export class UnitRenderer extends Component {
     const bgParent = layers ? layers.proxyFor(rootNode, "bg") : rootNode;
     const textParent = layers ? layers.proxyFor(rootNode, "text") : rootNode;
     const bw = width + 10;
-    const bh = height * 2 + 10;
+    // 單排名牌（武將）：沒有下排名稱，底板只包上排，位置仍以原上排為準（PROG-2-10080）
+    const bh = singleRow ? height + 14 : height * 2 + 10;
+    const bgCenterY = singleRow ? height / 2 + 2 : 0;
     if (layers) {
       // 底框：與 Graphics 版同色同尺寸；外框描邊外擴 1.5，所以精靈比框大 3
       this.addBadgeBgSprite(bgParent, bw + 3, bh + 3);
@@ -2323,6 +2326,7 @@ export class UnitRenderer extends Component {
       const bgNode = new Node("Bg");
       bgNode.layer = rootNode.layer;
       rootNode.addChild(bgNode);
+      bgNode.setPosition(0, bgCenterY, 0);
       const bgTf = bgNode.addComponent(UITransform);
       bgTf.setContentSize(bw, bh);
       const bgGraphics = bgNode.addComponent(Graphics);
