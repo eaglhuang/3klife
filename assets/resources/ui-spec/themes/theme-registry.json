@@ -249,6 +249,7 @@
         "jealousy-popup-screen.skin",
         "child-growth-popup-screen.skin",
         "year-end-ceremony-screen.skin",
+        "year1-goals-screen.skin",
         "result-popup-default"
       ],
       "slotRoles": {
@@ -297,6 +298,13 @@
         "yc.label.button": "labelButton",
         "yc.label.standing": "labelValue",
         "yc.label.reward": "labelHeading",
+        "y1.card.bg": "panel",
+        "y1.bar.track": "inset",
+        "y1.bar.fill": "buttonGold",
+        "y1.button.bg": "buttonGold",
+        "y1.label.progress": "labelHeading",
+        "y1.label.hint": "labelValue",
+        "y1.label.button": "labelButton",
         "popup.detail.bg": "inset",
         "popup.avatar.ring": "avatarRing",
         "mission.dialog.dropdown.btn": "buttonDark",
