@@ -122,3 +122,47 @@ export function stackBadgeOffsets(entries: readonly StackBadgeEntry[], obstacles
     }
     return out;
 }
+
+/** 部隊框讓開武將本體後保留的間距（PROG-2-10118） */
+export const BODY_AVOID_GAP = 6;
+/** 讓不開（要移太遠）時改成半透明的透明度比例（0～1） */
+export const BODY_FADE_ALPHA = 0.3;
+/** 武將本體矩形相對 labelToFoot 的比例：本體由腳底往上到頭頂，頭頂與名牌之間留白，所以高度取 0.8 */
+export const GENERAL_BODY_HEIGHT_RATIO = 0.8;
+/** 本體半寬相對 labelToFoot 的比例（騎兵連馬較寬，寧可略大） */
+export const GENERAL_BODY_HALF_WIDTH_RATIO = 0.3;
+/** 部隊框往腳下讓開的最大位移相對 labelToFoot 的比例；超過就不移，改半透明，免得徽章離自己的兵太遠 */
+export const BODY_AVOID_MAX_SHIFT_RATIO = 0.75;
+
+/** 部隊框對武將本體的避讓結果：dy 為 Y 位移，faded 為 true 代表讓不開、改半透明 */
+export interface BodyAvoidResult {
+    dy: number;
+    faded: boolean;
+}
+
+/**
+ * 武將本體在圖層座標的矩形（PROG-2-10118）。footX／footY 是雙腳腳底中點，labelToFoot 是名牌到腳底的距離（設定值，
+ * 步兵主將與騎兵共用同一套換算，不寫死像素）。
+ */
+export function generalBodyRect(footX: number, footY: number, labelToFoot: number): LabelRect {
+    const halfH = labelToFoot * GENERAL_BODY_HEIGHT_RATIO / 2;
+    return { x: footX, y: footY + halfH, halfW: labelToFoot * GENERAL_BODY_HALF_WIDTH_RATIO, halfH };
+}
+
+/**
+ * 武將本體優先（PROG-2-10118）：部隊框與武將本體重疊時，先往下挪到武將腳下（逐塊本體往下找到不重疊的位置）；
+ * 挪動距離超過 maxShift 就維持原位、改標記半透明。不重疊回傳 {dy:0, faded:false}。
+ */
+export function bodyAvoidOffsetY(badge: LabelRect, bodies: readonly LabelRect[], maxShift: number, gap: number = BODY_AVOID_GAP): BodyAvoidResult {
+    const hit = (dy: number): LabelRect | null => {
+        for (const body of bodies) if (overlaps(badge, body, dy)) return body;
+        return null;
+    };
+    let dy = 0;
+    for (let i = 0; i < 8; i++) {
+        const body = hit(dy);
+        if (!body) return dy === 0 || Math.abs(dy) <= maxShift ? { dy, faded: false } : { dy: 0, faded: true };
+        dy = Math.min(dy, (body.y - body.halfH - gap) - (badge.y + badge.halfH));
+    }
+    return { dy: 0, faded: true };
+}
