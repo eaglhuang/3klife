@@ -94,6 +94,10 @@ export interface NpcDialogueRequest {
     /** v2（中台台詞庫）：schemaVersion=2 時以下欄位必須全部填齊，缺了中台回 422；由 DialogueContextBuilder 產生 */
     schemaVersion?: number;
     personality?: string;
+    /** 說話者性別 'M'／'F'、年齡、自稱（SpeakerVoice 算出）：中台 prompt 要求台詞用此自稱，快取鍵也含自稱 */
+    gender?: 'M' | 'F';
+    age?: number;
+    selfPronoun?: string;
     mood?: string;
     relationBucket?: number;
     worldPhase?: string;
@@ -193,6 +197,9 @@ export class NpcDialogueService {
             ...(request.schemaVersion && request.schemaVersion >= 2 ? {
                 schemaVersion: request.schemaVersion,
                 personality: request.personality,
+                gender: request.gender,
+                age: request.age,
+                selfPronoun: request.selfPronoun,
                 mood: request.mood,
                 relationBucket: request.relationBucket,
                 worldPhase: request.worldPhase,

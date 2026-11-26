@@ -18,6 +18,7 @@
 import { CHILD_STATUS_MYSTERY } from './BreedingSystem';
 import type { FactorDictionary } from './FactorInheritance';
 import type { JournalEntryInput } from './JournalLog';
+import { selfOf, voiceGenderOf, VOICE_ELDER_AGE } from '../mind/SpeakerVoice';
 
 export type ChildOmenId = 'OMEN_PURPLE_QI' | 'OMEN_METEOR_DREAM' | 'OMEN_TIGER_ROAR' | 'OMEN_DEER_HERB';
 export type CareerFateType = 'Warrior' | 'Scholar' | 'ClanKeeper' | 'Hermit';
@@ -75,11 +76,20 @@ export const CAREER_FATE_BUFFS: Readonly<Record<CareerFateType, CareerFateBuff>>
     Hermit: { label: '遊歷隱士', vitalityCap: 15, lateBloomerChanceMultiplier: 2 },
 };
 
+/** 絕筆原文模板：{self} 自稱（SpeakerVoice）、{brave} 男「男兒」女「巾幗」；請用 epitaphTextOf 代入，不要直接顯示 */
 export const EPITAPH_TEXT: Readonly<Record<EpitaphType, string>> = {
-    Retirement: '主公明鑑：老夫披甲四十年，幸不辱命。殘軀漸老，花甲自退，當歸故里教導宗族子嗣。先祖之威名，必由後生續寫。伏維主公保重千金之軀，老夫拜謝！',
-    BattleDeath: '主公！陣前死戰，男兒本色。恨不能隨主公廓清寰宇！末將先去九泉為我軍開道，家族子嗣，懇請主公好生看顧…來世，誓再為主公執韁策馬！',
-    ClanShrine: '形骸雖逝，魂魄依舊護佑宗門。凡我血胤子弟，入學受業、登壇拜將之時，老夫必化身靈感戰法，於九天之上長相守望！',
+    Retirement: '主公明鑑：{self}披甲四十年，幸不辱命。殘軀漸老，花甲自退，當歸故里教導宗族子嗣。先祖之威名，必由後生續寫。伏維主公保重千金之軀，{self}拜謝！',
+    BattleDeath: '主公！陣前死戰，{brave}本色。恨不能隨主公廓清寰宇！末將先去九泉為我軍開道，家族子嗣，懇請主公好生看顧…來世，誓再為主公執韁策馬！',
+    ClanShrine: '形骸雖逝，魂魄依舊護佑宗門。凡我血胤子弟，入學受業、登壇拜將之時，{self}必化身靈感戰法，於九天之上長相守望！',
 };
+
+/** 絕筆實際文字：榮退與宗祠入祀是老年人說的，固定用老年自稱（男老夫、女老身）；戰歿不用自稱 */
+export function epitaphTextOf(type: EpitaphType, profile: Readonly<{ gender?: string }> = {}): string {
+    const female = voiceGenderOf(profile.gender) === 'F';
+    return EPITAPH_TEXT[type]
+        .split('{self}').join(selfOf({ gender: profile.gender, age: VOICE_ELDER_AGE }))
+        .split('{brave}').join(female ? '巾幗' : '男兒');
+}
 
 function topFiveStat(s: Readonly<ChildStats>): number {
     return Math.max(s.str, s.int, s.lea, s.pol, s.cha);
@@ -179,7 +189,7 @@ export const EPITAPH_JOURNAL_PRIORITY = 70;
 
 /** 組成絕筆日誌；這個死因不寫絕筆（將階不足的退役）回傳 null。 */
 export function epitaphJournalEntry(
-    general: { readonly id: string; readonly name?: string; readonly generalRank?: number },
+    general: { readonly id: string; readonly name?: string; readonly generalRank?: number; readonly gender?: string },
     cause: 'retire' | 'battle' | 'natural', sequence: number, timestamp: string,
 ): JournalEntryInput | null {
     const type = epitaphTypeFor(cause, general.generalRank ?? 0);
@@ -190,6 +200,6 @@ export function epitaphJournalEntry(
         category: 'GROWTH',
         relatedGeneralUids: [general.id],
         priority: EPITAPH_JOURNAL_PRIORITY,
-        summary: `${general.name ?? general.id}絕筆：${EPITAPH_TEXT[type]}`,
+        summary: `${general.name ?? general.id}絕筆：${epitaphTextOf(type, general)}`,
     };
 }

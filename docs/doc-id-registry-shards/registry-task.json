@@ -17416,5 +17416,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10090.md",
     "title": "[PROG-2-10090] 大廳小人待出場疊在畫面邊緣點不到",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3168",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10109.md",
+    "title": "[PROG-2-10109] 台詞性別化第二批：老年自稱、AI prompt 與快取鍵、資料檔寫死自稱",
+    "category": "task"
   }
 ]

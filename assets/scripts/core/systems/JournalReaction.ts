@@ -68,7 +68,7 @@ const PERSONAL_BATTLE_WIN: PersonalTable = {
     Playful: ['{name}：{cite}贏得漂亮，這仗也不賴，戰報請主公過目。'],
 };
 const PERSONAL_DISPATCH_FAIL: PersonalTable = {
-    Brave: ['{name}：差事辦完了。{cite}的虧某沒忘，下回還要再戰。'],
+    Brave: ['{name}：差事辦完了。{cite}的虧我沒忘，下回還要再戰。'],
     Wise: ['{name}：差事已回報。{cite}的教訓在前，我這回處處留心。'],
     Loyal: ['{name}：差事回報主公。{cite}未能成事，我格外謹慎，願主公過目。'],
     Playful: ['{name}：差事回來啦。{cite}那回搞砸了，這回可小心多了。'],
