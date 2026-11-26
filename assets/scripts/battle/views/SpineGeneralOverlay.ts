@@ -1,7 +1,7 @@
 import { Color, EffectAsset, JsonAsset, Material, Node, UITransform, Vec4, resources, sp } from 'cc';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
 import { UnitAction, UnitPresentationCore, UnitPresentationState, resolveClipName } from '../shared/UnitPresentationCore';
-import { dustBeatsFor, stepBobOffset } from '../shared/MoveFeedback';
+import { dustBeatsFor, floodDriftSample, stepBobOffset } from '../shared/MoveFeedback';
 import { sampleChargePose } from '../shared/SkillCastPresentation';
 import { DeployLandingSample, deployLandingTotalSec, landingCrossed, memberDeployDelay, sampleDeployLanding } from '../shared/DeployLanding';
 import { UnitSpineConfig } from '../shared/UnitPresentationConfig';
@@ -11,6 +11,14 @@ import { DuelExchange, DuelPresentationCore } from '../shared/DuelPresentationCo
 /** 場邊單挑雙方各離中心的距離（overlay 像素，PROG-2-9719）。 */
 const DUEL_SIDELINE_GAP = 70;
 import { getHitFlashCurve, hitFeedbackTotalSec, hitFlashStrength, parseHitFlashCurve, sampleHitRecoil, sampleHitShake, setHitFlashCurve } from './BattlePresentationTiming';
+
+/** 2D 節點繞 z 軸傾斜（度）；角度沒變就不寫，省得每幀弄髒節點變換。 */
+const paintedTilt = new WeakMap<Node, number>();
+function setTilt(node: Node, deg: number): void {
+  if ((paintedTilt.get(node) ?? 0) === deg) return;
+  paintedTilt.set(node, deg);
+  node.setRotationFromEuler(0, 0, deg);
+}
 
 interface Entry {
   config: UnitSpineConfig;
@@ -38,6 +46,8 @@ interface Entry {
   deploy: { t: number } | null;
   /** 放招蓄力進行中的時鐘（秒，PROG-2-9410）；結束後為 null。 */
   charge: { t: number; dur: number } | null;
+  /** 漂流（被水沖走／卡在水流格，PROG-2-10100）時鐘（秒）；null 表示沒在漂。只疊加沉浮與傾斜，不碰動作狀態。 */
+  drift: { t: number } | null;
 }
 
 /** 落腳通知：腳點（與單位節點同一座標系）、面向、是否為帶頭者。 */
@@ -130,7 +140,7 @@ export class SpineUnitOverlay {
     let entry = this.entries.get(id);
     if (entry && entry.config.path !== config.path) { this.remove(id); entry = undefined; }
     if (!entry) {
-      entry = { config, core: new UnitPresentationCore(config, { x, y }, facing), node: null, revision: -1, facing, loading: false, ready: [], visible, followers: [], members, hit: null, freeze: 0, flashPainted: 0, stepClock: 0, deploy: null, charge: null };
+      entry = { config, core: new UnitPresentationCore(config, { x, y }, facing), node: null, revision: -1, facing, loading: false, ready: [], visible, followers: [], members, hit: null, freeze: 0, flashPainted: 0, stepClock: 0, deploy: null, charge: null, drift: null };
       this.entries.set(id, entry);
       if (this.pendingDeploys.delete(id)) entry.deploy = { t: 0 };
     }
@@ -153,6 +163,15 @@ export class SpineUnitOverlay {
     const entry = this.entries.get(id);
     if (!entry?.node?.isValid || !(durationSec > 0)) return false;
     entry.charge = { t: 0, dur: durationSec };
+    return true;
+  }
+
+  /** 開關漂流姿態（PROG-2-10100）：開著時每幀上下沉浮、左右搖晃；關掉立刻回正。沒有這個單位回 false。 */
+  public setDrift(id: string, on: boolean): boolean {
+    const entry = this.entries.get(id);
+    if (!entry) return false;
+    if (on && !entry.drift) entry.drift = { t: 0 };
+    else if (!on) entry.drift = null;
     return true;
   }
 
@@ -186,6 +205,7 @@ export class SpineUnitOverlay {
         entry.hit.frame += 1;
         if (entry.hit.frame < getHitFlashCurve().holdFrames) entry.hit.holdEnd = entry.hit.elapsed;
       }
+      if (entry.drift) entry.drift.t += Math.max(0, dt);
       if (entry.charge) { entry.charge.t += Math.max(0, dt); if (entry.charge.t >= entry.charge.dur) entry.charge = null; }
       const landingPrev = this.advanceDeploy(entry, dt);
       const frozen = entry.freeze > 0;
@@ -377,6 +397,7 @@ export class SpineUnitOverlay {
     skeleton.setToSetupPose();
     skeleton.setSkin('default');
     node.setScale(1, 1, 1);
+    setTilt(node, 0); // 回收的節點不帶著漂流傾斜
     node.setPosition(0, 0, 0);
   }
 
@@ -440,8 +461,11 @@ export class SpineUnitOverlay {
     const leaderBob = walking ? stepBobOffset(entry.stepClock, 0, gait.bobPx, gait.footfallIntervalSec) : 0;
     // 部署落地：往上的位移與壓扁縮放（腳點為骨架原點，縮放不會讓腳離地）
     const landing = this.landingSample(entry, 0);
+    const drift = entry.drift ? floodDriftSample(entry.drift.t) : null;
     node.setPosition(state.foot.x - offset.x * entry.config.displayScale * state.facing + shakeX + recoilX,
-      state.foot.y - offset.y * entry.config.displayScale + leaderBob + landing.dy, 0);
+      state.foot.y - offset.y * entry.config.displayScale + leaderBob + landing.dy + (drift?.dy ?? 0), 0);
+    const tilt = drift?.angle ?? 0;
+    setTilt(node, tilt);
     node.setScale(entry.config.displayScale * state.facing * landing.scaleX * chargePose.scale, entry.config.displayScale * landing.scaleY * chargePose.scale, 1);
     const skinChanged = entry.facing !== state.facing || entry.revision < 0;
     const clipChanged = entry.revision !== state.revision;
@@ -468,7 +492,11 @@ export class SpineUnitOverlay {
       // 站位以「面向的後方」為準，所以 x 要跟著朝向翻面
       // pos 已含抖動偏移與帶頭者起伏；起伏換成隊員自己相位的，才是錯開的集體走路
       const followerBob = walking ? stepBobOffset(entry.stepClock, slot.phase * state.clip.duration, gait.bobPx, gait.footfallIntervalSec) - leaderBob : 0;
-      follower.setPosition(pos.x - slot.x * state.facing, pos.y + slot.y + followerBob - landing.dy + memberLanding.dy, 0);
+      // 漂流：隊員各自錯開相位，沉浮不同步才像一群人在水裡掙扎；pos 已含帶頭者的沉浮，這裡換成自己的
+      const memberDrift = entry.drift ? floodDriftSample(entry.drift.t, slot.phase + 0.25 * (i + 1)) : null;
+      follower.setPosition(pos.x - slot.x * state.facing, pos.y + slot.y + followerBob - landing.dy + memberLanding.dy + (memberDrift ? memberDrift.dy - (drift?.dy ?? 0) : 0), 0);
+      const memberTilt = memberDrift?.angle ?? 0;
+      setTilt(follower, memberTilt);
       if (flashChanged) this.setSkeletonFlash(followerSkel, flash, baseColorOf(entry.config));
       follower.setScale(entry.config.displayScale * state.facing * memberLanding.scaleX, entry.config.displayScale * memberLanding.scaleY, 1);
       if (skinChanged) followerSkel.setSkin(skin);

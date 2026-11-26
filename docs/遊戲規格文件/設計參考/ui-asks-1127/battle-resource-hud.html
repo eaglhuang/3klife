@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-TW"><head><meta charset="utf-8"><title>戰場軍勢糧草常駐顯示 mockup（1920x1080）</title>
+<style>
+:root{--gold:#e8c46a;--panel:#2a2018ee;--line:#6b5230;--ok:#7fd48a;--bad:#ff6a5a;--warn:#ffb84d;--soft:#cdbb97}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1920px;height:1080px;overflow:hidden;font-family:"Microsoft JhengHei","PingFang TC",sans-serif;color:#f3e7cc;background:linear-gradient(#4b6a45 0,#58774d 40%,#3d5538 100%);position:relative}
+.lane{position:absolute;left:260px;right:260px;height:120px;border-top:2px dashed #ffffff30}
+.tag{position:absolute;font-size:13px;color:#fff;background:#000a;border:1px solid #fff4;border-radius:4px;padding:2px 8px}
+.hud{position:absolute;top:12px;left:50%;transform:translateX(-50%);width:62%;height:84px;background:var(--panel);border:2px solid var(--line);border-radius:14px;display:flex;align-items:center;gap:28px;padding:0 28px}
+.res{flex:1;display:flex;flex-direction:column;gap:6px}
+.res .row{display:flex;align-items:baseline;gap:10px}
+.res .ico{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-size:18px;font-weight:900;background:#0006;border:2px solid var(--gold);align-self:center}
+.res .name{font-size:20px;color:var(--soft);font-weight:700}
+.res .cur{font-size:34px;font-weight:900;color:var(--gold);font-variant-numeric:tabular-nums}
+.res .max{font-size:20px;color:var(--soft)}
+.res .hint{margin-left:auto;font-size:14px;color:var(--soft);border:1px solid var(--line);border-radius:10px;padding:1px 8px}
+.bar{position:relative;height:12px;border-radius:7px;background:#0007;overflow:hidden;border:1px solid #0009}
+.bar i{position:absolute;left:0;top:0;bottom:0;border-radius:7px}
+.bar b{position:absolute;top:-1px;bottom:-1px;width:3px;background:#fff;opacity:.9}
+.sep{width:2px;height:56px;background:var(--line)}
+.low .cur{color:var(--bad)}
+.low .bar i{background:linear-gradient(90deg,#c0392b,#ff6a5a)}
+.mid .bar i{background:linear-gradient(90deg,#b58a2c,#e8c46a)}
+.tp .bar i{background:linear-gradient(90deg,#3d6fb5,#7fb2ff)}
+.tray{position:absolute;left:50%;bottom:16px;transform:translateX(-50%);width:78%;display:flex;gap:18px;justify-content:center;align-items:flex-end}
+.card{width:200px;height:270px;border-radius:14px;background:linear-gradient(#3a2c20,#241a12);border:3px solid var(--gold);position:relative;padding:12px;display:flex;flex-direction:column;align-items:center}
+.card .art{width:150px;height:120px;border-radius:10px;background:#0005;display:grid;place-items:center;font-size:54px;margin-top:6px}
+.card h4{font-size:22px;margin-top:8px}
+.card .cost{margin-top:auto;display:flex;gap:8px;width:100%}
+.chip{flex:1;border-radius:8px;padding:4px 0;text-align:center;font-size:18px;font-weight:800;background:#0007;border:2px solid #4d6;color:var(--ok)}
+.chip small{display:block;font-size:12px;font-weight:600;color:var(--soft)}
+.chip.bad{border-color:var(--bad);color:var(--bad);background:#3a0d0a}
+.card.off{filter:saturate(.35);border-color:#7a6a58;opacity:.92}
+.card.off .miss{position:absolute;left:8px;right:8px;top:70px;background:#7a1e14f0;border:2px solid var(--bad);border-radius:8px;padding:6px;text-align:center;font-size:18px;font-weight:800;color:#fff;z-index:2}
+.card.sel{transform:translateY(-22px);box-shadow:0 0 22px #e8c46a99}
+.badge{position:absolute;top:-12px;left:-12px;width:34px;height:34px;border-radius:50%;background:var(--bad);display:grid;place-items:center;font-weight:900;color:#fff;border:2px solid #fff;z-index:3}
+.sheet{position:absolute;left:50%;bottom:318px;transform:translateX(-50%);width:800px;background:#241a12f4;border:3px solid var(--bad);border-radius:16px;padding:18px 24px}
+.sheet h3{font-size:26px;color:var(--warn);margin-bottom:6px}
+.sheet p{font-size:20px;line-height:1.5}
+.sheet .tbl{display:grid;grid-template-columns:1.2fr 1fr 1fr 1fr;gap:6px 12px;margin:10px 0;font-size:19px}
+.sheet .tbl div{background:#0005;border-radius:8px;padding:6px 10px}
+.sheet .tbl .h{background:none;color:var(--soft);font-size:15px;padding:0 10px}
+.sheet .how{margin-top:8px;border-top:1px dashed var(--line);padding-top:8px}
+.sheet .how li{font-size:19px;margin-left:22px;line-height:1.55}
+.sheet .btns{display:flex;gap:12px;margin-top:12px}
+.btn{padding:8px 18px;border-radius:10px;border:2px solid var(--gold);background:#4a3820;font-size:19px;font-weight:700}
+.btn.pri{background:linear-gradient(#c9a24a,#8c6a22);color:#1b1410}
+.toast{position:absolute;left:50%;top:112px;transform:translateX(-50%);background:#7a1e14f0;border:2px solid #fff6;border-radius:12px;padding:10px 22px;font-size:22px;font-weight:700;white-space:nowrap}
+.note{position:absolute;right:16px;top:120px;width:300px;font-size:15px;line-height:1.5;background:#000b;border:1px solid #fff4;border-radius:8px;padding:10px;color:#ddd}
+.note b{color:var(--gold)}
+</style></head><body>
+<div class="lane" style="top:250px"></div><div class="lane" style="top:370px"></div><div class="lane" style="top:490px"></div><div class="lane" style="top:610px"></div>
+<span class="tag" style="left:280px;top:226px">五路戰場（本稿不動）</span>
+
+<div class="hud">
+  <div class="res low">
+    <div class="row"><span class="ico">兵</span><span class="name">軍勢</span><span class="cur">400</span><span class="max">/ 8,000</span><span class="hint">ⓘ 本場帶來的兵</span></div>
+    <div class="bar"><i style="width:5%"></i></div>
+  </div>
+  <div class="sep"></div>
+  <div class="res mid">
+    <div class="row"><span class="ico">糧</span><span class="name">糧草</span><span class="cur">120</span><span class="max">/ 300</span><span class="hint">ⓘ 本場軍糧</span></div>
+    <div class="bar"><i style="width:40%"></i><b style="left:34%"></b></div>
+  </div>
+  <div class="sep"></div>
+  <div class="res tp" style="max-width:260px">
+    <div class="row"><span class="ico">謀</span><span class="name">計謀</span><span class="cur" style="font-size:28px">18</span><span class="max">/ 30</span></div>
+    <div class="bar"><i style="width:60%"></i></div>
+  </div>
+</div>
+
+<div class="toast" style="top:112px">兵不夠了：騎兵要 500 兵，你只剩 400，差 100。點卡看怎麼補。</div>
+
+<div class="note"><b>常駐資源列</b>（錨點：上方置中，寬 62% 比例）<br>數字＝目前 / 總量。低於 25% 轉紅。白色小豎線＝選中卡出完後會剩多少（預覽，圖中為盾兵扣 14 糧）。<br><br><b>卡牌</b>（錨點：下方置中）<br>每張卡下緣固定兩個費用章：兵／糧；夠付＝綠框、缺＝紅框＋缺額。<br><br><b>說明面板</b>：點灰卡或 toast 展開；寬度用比例，直式時改貼底部滿版。</div>
+
+<div class="sheet">
+  <h3>兵不夠了，這張卡暫時派不出去</h3>
+  <p>騎兵一隊要 <b>500 兵＋18 糧</b>。你現在 <b style="color:var(--bad)">軍勢只剩 400</b>（差 100），糧草 120 夠用。</p>
+  <div class="tbl">
+    <div class="h"></div><div class="h">需要</div><div class="h">現有</div><div class="h">缺口</div>
+    <div>兵・軍勢</div><div>500</div><div style="color:var(--bad)">400</div><div style="color:var(--bad);font-weight:800">差 100</div>
+    <div>糧・糧草</div><div>18</div><div style="color:var(--ok)">120</div><div style="color:var(--ok)">夠</div>
+  </div>
+  <p style="font-size:17px;color:var(--soft)">從哪扣：派出時，兵從「軍勢」扣、糧從「糧草」扣；部隊撤回或戰死，剩餘的兵會回到軍勢。</p>
+  <ul class="how"><li>撤回場上一支殘兵：剩的兵立刻回到軍勢（最快）。</li><li>改派便宜的兵種：民兵只要 300 兵，現在就派得出去。</li><li>等主將升階：會補兵。糧草戰場上不會自己長，打完才結算退還。</li></ul>
+  <div class="btns"><span class="btn pri">改派：民兵（300 兵）</span><span class="btn">撤回場上殘兵</span><span class="btn">知道了</span></div>
+</div>
+
+<div class="tray">
+  <div class="card sel"><div class="art">🛡</div><h4>盾兵</h4><div class="cost"><div class="chip"><small>兵</small>350</div><div class="chip"><small>糧</small>14</div></div></div>
+  <div class="card off"><span class="badge">!</span><div class="miss">缺 100 兵</div><div class="art">🐎</div><h4>騎兵</h4><div class="cost"><div class="chip bad"><small>兵</small>500</div><div class="chip"><small>糧</small>18</div></div></div>
+  <div class="card off"><span class="badge">!</span><div class="miss">缺 100 兵</div><div class="art">⚔</div><h4>步兵</h4><div class="cost"><div class="chip bad"><small>兵</small>500</div><div class="chip"><small>糧</small>10</div></div></div>
+  <div class="card"><div class="art">🏹</div><h4>民兵</h4><div class="cost"><div class="chip"><small>兵</small>300</div><div class="chip"><small>糧</small>5</div></div></div>
+  <div class="card off"><span class="badge">!</span><div class="miss">缺 800 兵<br>缺 6 糧</div><div class="art">🐯</div><h4>虎符・SR</h4><div class="cost"><div class="chip bad"><small>兵</small>1,200</div><div class="chip bad"><small>糧</small>126</div></div></div>
+</div>
+</body></html>

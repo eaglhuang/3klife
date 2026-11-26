@@ -4,7 +4,7 @@
  *
  * 規則（規格偽碼）：
  * - 低 IQ（LOW）：不主動施放。
- * - 中 IQ（MEDIUM）：精力 > 最大精力 × mediumVitalityRatio（預設 50%）且場上敵方 > 3 時施放。
+ * - 中 IQ（MEDIUM）：精力 > 最大精力 × mediumVitalityRatio（預設 50%）且場上敵方 > 3 時施放（委任代打改 > delegateMediumEnemyCount，PROG-2-10107）。
  * - 高 IQ（HIGH 以上）：可擊殺 ≥ 2 支，或處於劣勢且精力 > 最大精力 × highLosingVitalityRatio（預設 30%）時施放。
  *
  * 精力門檻用比例：男將精力上限 120、女將 100，用絕對值會讓女將較早達標，改比例後同比例判斷一致。
@@ -31,6 +31,8 @@ export interface AiUltimateRules {
     highLosingVitalityRatio: number;
     /** 委任代打的 IQ 下限（PROG-2-9728，總PM 11/22 裁決）：委任 IQ 低於此值時照此值判斷；敵方 AI 不套用 */
     delegateMinIq: AiIqLevel;
+    /** 委任代打的 MEDIUM 敵勢門檻（PROG-2-10107，方案 A）：敵方隊數需大於此值；敵方 AI 仍用 ULTIMATE_MEDIUM_ENEMY_COUNT。缺值視為 0 */
+    delegateMediumEnemyCount?: number;
 }
 
 export interface AiUltimateDecisionInput {
@@ -47,6 +49,8 @@ export interface AiUltimateDecisionInput {
     isLosing: boolean;
     /** 精力門檻比例（來自難度表） */
     rules: AiUltimateRules;
+    /** 委任代打（玩家方自動代打）：中 IQ 的敵勢門檻改用 rules.delegateMediumEnemyCount */
+    delegate?: boolean;
 }
 
 /** 規格：中 IQ 的敵方數門檻 */
@@ -61,10 +65,14 @@ export function parseAiUltimateRules(raw: unknown): AiUltimateRules | null {
     const inUnit = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value) && value >= 0 && value <= 1;
     if (!inUnit(rules.mediumVitalityRatio) || !inUnit(rules.highLosingVitalityRatio)) return null;
     if (!rules.delegateMinIq || !IQ_ORDER.includes(rules.delegateMinIq)) return null;
+    const delegateMediumEnemyCount = typeof rules.delegateMediumEnemyCount === 'number' && Number.isInteger(rules.delegateMediumEnemyCount) && rules.delegateMediumEnemyCount >= 0
+        ? rules.delegateMediumEnemyCount
+        : 0;
     return {
         mediumVitalityRatio: rules.mediumVitalityRatio,
         highLosingVitalityRatio: rules.highLosingVitalityRatio,
         delegateMinIq: rules.delegateMinIq,
+        delegateMediumEnemyCount,
     };
 }
 
@@ -76,7 +84,7 @@ export function raiseIqToFloor(iq: AiIqLevel, floor: AiIqLevel): AiIqLevel {
 export function aiShouldUseUltimate(input: AiUltimateDecisionInput): boolean {
     if (input.iq === 'LOW') return false;
     if (input.iq === 'MEDIUM') {
-        return input.vitality > input.maxVitality * input.rules.mediumVitalityRatio && input.enemyCount > ULTIMATE_MEDIUM_ENEMY_COUNT;
+        return input.vitality > input.maxVitality * input.rules.mediumVitalityRatio && input.enemyCount > (input.delegate ? (input.rules.delegateMediumEnemyCount ?? 0) : ULTIMATE_MEDIUM_ENEMY_COUNT);
     }
     return input.estimatedKills >= ULTIMATE_HIGH_KILL_COUNT
         || (input.isLosing && input.vitality > input.maxVitality * input.rules.highLosingVitalityRatio);

@@ -54,6 +54,7 @@ export function createChildUnveilingSuite(): TestSuite {
         assert.equals('BattleDeath', epitaphTypeFor('battle', 0));
         assert.equals('ClanShrine', epitaphTypeFor('natural', 0));
         assert.isTrue(EPITAPH_TEXT.Retirement.startsWith('主公明鑑'));
+        assert.isTrue(EPITAPH_TEXT.Retirement.includes('{self}'), '模板走 {self}，不寫死老夫');
     });
 
     return suite;

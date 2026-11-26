@@ -12,6 +12,7 @@
  * Unity 對照：像把玩家的 SaveData 裡的 HeroInstance，轉成戰鬥場景用的 BattleUnitData，
  * 戰鬥結束再用 BattleReport 把結果寫回 HeroInstance（等同 ScriptableObject → Runtime Instance 的來回）。
  */
+import { Faction } from '../../shared/CommonEnums';
 import { toLibraryTacticId } from './InspiredTacticMap';
 import { tacticLoadoutCapacity } from './TacticLoadout';
 import type { GeneralConfig, GeneralGeneConfig, GeneralStatsConfig, GeneralTacticSlotConfig } from '../models/GeneralUnit';
@@ -196,6 +197,14 @@ export function computeAttackBonus(general: GeneralConfig): number {
     return Math.round(Math.max(0, total) * 1000) / 1000;
 }
 
+/** 通用計謀（PROG-2-10107，總PM 11/27 裁決）：玩家方主將一律補一招加速（15 TP、無條件、全體友軍），不佔智力槽位上限 */
+export const COMMON_TACTIC_ID = 'tactic-insp-haste';
+
+function withCommonTactic(slots: GeneralTacticSlotConfig[]): GeneralTacticSlotConfig[] {
+    if (slots.some((slot) => slot.tacticId === COMMON_TACTIC_ID)) return slots;
+    return [...slots, { slotId: 'slot-common', tacticId: COMMON_TACTIC_ID, source: 'inborn', notes: '通用計謀' }];
+}
+
 function buildTacticSlots(general: BattleRosterGeneral): GeneralTacticSlotConfig[] {
     // 槽位上限依戰場智力（規格 §F-7），並不超過全域上限
     const capacity = Math.min(tacticLoadoutCapacity(battleIntelligenceOf(general)), BATTLE_TACTIC_SLOT_LIMIT);
@@ -233,7 +242,7 @@ export function buildBattleConfig(general: GeneralConfig, faction: GeneralConfig
         hp: g.prowess || !(g.hp > 0) ? hp : Math.round(g.hp * fatigueHpFactor(g)),
         str, int: intel, lea, pol, cha, luk,
         attackBonus: computeAttackBonus(g),
-        tacticSlots: buildTacticSlots(g),
+        tacticSlots: faction === Faction.Player ? withCommonTactic(buildTacticSlots(g)) : buildTacticSlots(g),
         // 名冊沒存精力欄位時用性別預設（男 120／女 100）；戰場端不能自己猜 100，否則閘門與戰後結算基準會偏離名冊
         vitality: vitalityOf(g),
         maxVitality: maxVitalityOf(g),
