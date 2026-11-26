@@ -94,6 +94,7 @@ import { advanceTrialDay } from '../systems/MercenaryTrialDay';
 import { reachedTrialDayThree, reachedTrustStage } from '../systems/MercenaryScripts';
 import { recordTrialBattle } from '../systems/MercenaryBattleRecord';
 import { settleTrialRollover, type DepartureEvent } from '../systems/MercenaryDeparture';
+import { appendSeasonDigest, markSeasonDigestRead, normalizeSeasonDigest, type SeasonDigestNote } from '../systems/SeasonDigest';
 import { appendFarewellLetter, createEpitaphLetter, createFarewellLetter, FarewellLetter, farewellJournalEntry, markFarewellLetterRead } from '../systems/FarewellLetterInbox';
 import { EPITAPH_TEXT } from '../systems/ChildUnveiling';
 import { CAPTIVITY_SEASONS, canRansomCaptive, captiveFreedSpec, captureNoticeSpec, isCaptivityServed, isCaptive, normalizeRosterCaptivity, planGeneralCaptures, takeTalliesWithDefector, type GeneralCaptureRecord } from '../systems/GeneralCaptivity';
@@ -950,6 +951,8 @@ export class GameSession implements AcademyRecordPort {
     private _milestoneStage: MilestoneStage = 1;
     private _expertView = false;
     private _marriageProposal: MarriageProposal | null = null;
+    /** 季報紀要信箱（首年前幾季併進信箱的純資訊報表，PROG-2-10068） */
+    private _seasonDigest: SeasonDigestNote[] = [];
     private _familySynergy: FamilySynergyLedger = emptyFamilySynergyLedger();
     private _pedigreeProbes: string[] = [];
     private _hiddenLineageProbes: string[] = [];
@@ -3183,6 +3186,7 @@ export class GameSession implements AcademyRecordPort {
         this._territories = defaultKeepTerritories();
         this._journal = createEmptyJournal();
         this._farewellLetters = [];
+        this._seasonDigest = [];
         this._loginStreak = { ...EMPTY_LOGIN_STREAK };
         this._dailySubsidy = null;
         this._monthlyCard = null;
@@ -4828,6 +4832,34 @@ export class GameSession implements AcademyRecordPort {
     /** 告別信收件匣（唯讀副本）。 */
     public get farewellLetters(): FarewellLetter[] {
         return this._farewellLetters.map(l => ({ ...l }));
+    }
+
+    /** 季報紀要信箱（唯讀副本，PROG-2-10068）。 */
+    public get seasonDigest(): SeasonDigestNote[] {
+        return this._seasonDigest.map((n) => ({ ...n, args: [...n.args] }));
+    }
+
+    /** 寫入紀要（同 id 不重複）；不自動存檔，由換季後的存檔帶走。回傳這次真正新增的則數。 */
+    public fileSeasonDigest(notes: readonly SeasonDigestNote[]): number {
+        const had = new Set(this._seasonDigest.map((n) => n.id));
+        let added = 0;
+        for (const note of notes) {
+            if (had.has(note.id)) continue;
+            had.add(note.id);
+            added += 1;
+            this._seasonDigest = appendSeasonDigest(this._seasonDigest, note);
+        }
+        return added;
+    }
+
+    /** 開信箱算看過：紅點熄滅。 */
+    public markSeasonDigestRead(id: string): void {
+        this._seasonDigest = markSeasonDigestRead(this._seasonDigest, id);
+    }
+
+    /** 「知道了」：紀要移出信箱。 */
+    public dismissSeasonDigest(id: string): void {
+        this._seasonDigest = this._seasonDigest.filter((n) => n.id !== id);
     }
 
     /** 標記告別信已讀；找不到 ID 時不變動。 */
@@ -7805,6 +7837,7 @@ export class GameSession implements AcademyRecordPort {
             milestoneStage: this._milestoneStage,
             expertView: this._expertView || undefined,
             marriageProposal: this._marriageProposal ?? undefined,
+            seasonDigest: this._seasonDigest.length > 0 ? this.seasonDigest : undefined,
             familySynergy: this._familySynergy.finalizedIds.length > 0 ? this._familySynergy : undefined,
             pedigreeProbes: this._pedigreeProbes.length > 0 ? [...this._pedigreeProbes] : undefined,
             hiddenLineageProbes: this._hiddenLineageProbes.length > 0 ? [...this._hiddenLineageProbes] : undefined,
@@ -8063,6 +8096,7 @@ export class GameSession implements AcademyRecordPort {
         this._clock.restore(snapshot.gameTime);
         // 學府修業進行中：外界時鐘以入學當下的快照為準，防止修業期間被改存檔刷季（PROG-2-9189）
         this._occupancy.restore(snapshot.occupancy);
+        this._seasonDigest = normalizeSeasonDigest(snapshot.seasonDigest);
         // 先還原任務狀態：學府占用 refId 取自任務實例（PROG-2-9215），要在對帳學府紀錄之前就位
         this._questState = normalizeQuestState(snapshot.questState);
         this._family.restore(snapshot.familyState);

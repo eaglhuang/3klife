@@ -100,6 +100,8 @@ export interface MissionDialogContext {
     /** 情報分段門檻（資料表值）；有給時情報提示列會寫「再探到幾 % 能多看到什麼」（PROG-2-9965） */
     intelBands?: { vague: number; clear: number; full: number };
     selectedGeneralId: string | null;
+    /** 白話導讀（i18n 組好的一行，PROG-2-10068）：解釋「再探」「情報 N%」；有給且任務未派出、情報未滿時接在情報提示列下面 */
+    jargonGuide?: string;
     /** 本場戰場天氣一行（PROG-2-9735）；有值時環境偵察的天氣欄改顯示它，沒給（一般任務）維持「風險・期限」 */
     weatherLine?: string;
 }
@@ -214,6 +216,8 @@ export function buildMissionDialogState(service: IMissionService, missionId: str
         : d.intel >= revealIntel ? '情報已完整'
             : fullBand ? `情報 ${d.intel}%，已達再探上限；100% 才會揭曉完美獎勵`
                 : `情報 ${d.intel}%，再探或等待可提高${intelUnlockNote(d.intel, ctx.intelBands)}`;
+    const intelHintWithGuide = !active && d.intel < revealIntel && ctx.jargonGuide ? `${intelHint}
+${ctx.jargonGuide}` : intelHint;
 
     return {
         // 連鎖任務多帶一個「連續任務 2/3」標記（PROG-2-9966）
@@ -224,7 +228,7 @@ export function buildMissionDialogState(service: IMissionService, missionId: str
         intelBody: [d.objective.text, ...d.hints].filter((s) => s.length > 0).join('\n'),
         // 鎖定中也要顯示提示列（鎖定文字放在這裡），所以不因情報高而隱藏
         intelFogVisible: !fullBand || active,
-        intelHintLabel: intelHint,
+        intelHintLabel: intelHintWithGuide,
         envScoutTerrainLine: factsLine || '尚未探得敵情',
         envScoutWeatherLine: ctx.weatherLine ?? `${labeled('風險', d.risk.text)}・${periodText}`,
         generalSelectHintLabel: active && card?.executorName ? `${rateLine}・${card.executorName}出任務中` : rateLine,

@@ -40,6 +40,8 @@ export interface SeasonReportOpenPayload {
     rankPreviewLine?: string;
     /** 本季行動／人口與民心／武將心聲區段（SeasonReportSections 組好；沒內容的區段不在陣列內） */
     sections?: readonly SeasonReportSection[];
+    /** 結緣名單最多列幾位（首年前幾季精簡，PROG-2-10068）；沒給用預設 */
+    bondRowLimit?: number;
     onRequestClose?: () => void;
 }
 
@@ -92,7 +94,7 @@ export class SeasonReportComposite extends CompositePanel {
         if (!payload) return;
         const hallLines = payload.hallMissionLines ?? [];
         const sections = payload.sections ?? [];
-        const texts = buildSeasonReportPanelTexts(payload.seasonLabel, payload.reports, hallLines, payload.rankPreviewLine ?? '', sections, (key, ...args) => services().i18n.t(key, ...args));
+        const texts = buildSeasonReportPanelTexts(payload.seasonLabel, payload.reports, hallLines, payload.rankPreviewLine ?? '', sections, (key, ...args) => services().i18n.t(key, ...args), payload.bondRowLimit);
         const binder = this._templateBinder;
         binder?.setTextsByPath(texts);
         if (!binder) return;
@@ -105,7 +107,7 @@ export class SeasonReportComposite extends CompositePanel {
             if (transform && text.length > 0) transform.setContentSize(transform.width, seasonReportLabelHeight(text));
         }
         // 精力行只列達標者：沒有的列整列隱藏，不留「—」占位
-        const visibleRows = buildSeasonReportPanelRows(payload.reports).length;
+        const visibleRows = buildSeasonReportPanelRows(payload.reports, payload.bondRowLimit ?? SEASON_REPORT_PANEL_ROWS).length;
         for (let i = 0; i < SEASON_REPORT_PANEL_ROWS; i += 1) {
             const row = binder.getNodeByPath(`${SCROLL_CONTENT_PATH}/Row${i}`);
             if (row) row.active = i < visibleRows;

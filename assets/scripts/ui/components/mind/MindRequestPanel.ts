@@ -7,6 +7,8 @@
 import { BlockInputEvents, Button, Color, Graphics, HorizontalTextAlignment, Label, Node, UITransform, VerticalTextAlignment, Widget } from 'cc';
 import type { MindRequest, MindResolveResult } from '../../../core/mind/MindTypes';
 import { buildMindRequestRows, mindBadgeText, type MindRequestRowView } from './MindRequestView';
+import type { SeasonDigestNote } from '../../../core/systems/SeasonDigest';
+import { buildDigestRows, type DigestTextLookup, type SeasonDigestRowView } from './SeasonDigestView';
 
 export interface MindRequestPanelHost {
     mailbox: () => MindRequest[];
@@ -15,6 +17,18 @@ export interface MindRequestPanelHost {
     resolve: (id: string, accept: boolean) => Promise<MindResolveResult>;
     /** 面板建好或重畫後，讓外面把節點拉到最上層 */
     bringToFront?: (node: Node) => void;
+    /** 季報紀要（首年前幾季併進信箱的純資訊報表，PROG-2-10068）；沒給就沒有紀要列 */
+    digest?: () => SeasonDigestNote[];
+    /** 紀要文字查表（i18n）；沒給用 zh-TW 預設 */
+    lookup?: DigestTextLookup;
+    /** 該紀要對應的市井奇遇是否還能抉擇（決定要不要出「去看看」） */
+    encounterOpen?: (note: SeasonDigestNote) => boolean;
+    /** 開信箱面板即算看過：紅點熄滅 */
+    markDigestRead?: (id: string) => void;
+    /** 「知道了」：把紀要移出信箱 */
+    dismissDigest?: (id: string) => void;
+    /** 「去看看」：宿主開三國季報；回傳後面板會收起，避免疊在季報上 */
+    openDigest?: (id: string) => void;
 }
 
 const PANEL_W = 900;
@@ -68,6 +82,8 @@ export class MindRequestPanel {
     public readonly entry: Node;
     public readonly panel: Node;
     private readonly _badge: Label;
+    /** 未讀紅點（有待回應請求或未讀紀要時亮） */
+    private readonly _dot: Node;
     private readonly _list: Node;
     private _open = false;
     private _busy = false;
@@ -81,6 +97,15 @@ export class MindRequestPanel {
         this.entry.addComponent(UITransform).setContentSize(150, 56);
         fillRect(this.entry, 150, 56, new Color(120, 70, 30, 230));
         this._badge = makeLabel(this.entry, 'Text', '信箱', 28, new Color(255, 240, 200, 255), 150, 56, 0, 0, HorizontalTextAlignment.CENTER);
+        this._dot = new Node('UnreadDot');
+        this.entry.addChild(this._dot);
+        this._dot.setPosition(66, 22, 0);
+        this._dot.addComponent(UITransform).setContentSize(22, 22);
+        const dotGraphics = this._dot.addComponent(Graphics);
+        dotGraphics.fillColor = new Color(235, 50, 40, 255);
+        dotGraphics.circle(0, 0, 11);
+        dotGraphics.fill();
+        this._dot.active = false;
         const widget = this.entry.addComponent(Widget);
         // 放右下角空白處（PROG-2-9953）：貼底欄右側、推進一季鈕（右下角 200x84）的左邊，右上角被內政／人脈面板蓋住點不到
         widget.isAlignBottom = true; widget.isAlignRight = true; widget.bottom = 38; widget.right = 250;
@@ -134,21 +159,54 @@ export class MindRequestPanel {
         if (this._open) this.close(); else this.open();
     }
 
-    /** 換季、讀檔、回應之後重畫：徽章數字與列表 */
+    /** 換季、讀檔、回應之後重畫：徽章數字、紅點與列表 */
     public refresh(): void {
         const all = this._host.mailbox();
         const requests = this._lastAnswered ? [...all.filter((r) => r.id === this._lastAnswered), ...all.filter((r) => r.id !== this._lastAnswered)] : all;
+        const notes = this._host.digest?.() ?? [];
         const pending = all.filter((r) => r.status === 'PENDING').length;
-        this._badge.string = mindBadgeText(pending);
-        const show = requests.length > 0;
+        const unreadNotes = notes.filter((n) => !n.read).length;
+        this._badge.string = mindBadgeText(pending + unreadNotes);
+        this._dot.active = pending + unreadNotes > 0;
+        const show = requests.length > 0 || notes.length > 0;
         if (show && !this.entry.active) this._host.bringToFront?.(this.entry);
         this.entry.active = show;
         if (!this._open) return;
-        for (const r of requests.slice(0, MAX_ROWS)) if (r.status === 'PENDING' && !r.read) this._host.markRead(r.id);
-        const rows = buildMindRequestRows(requests.slice(0, MAX_ROWS), this._host.nameOf);
+        // 待回應的請求優先；紀要最多佔 2 列，剩下的列給請求
+        const noteRows = buildDigestRows(notes, this._host.lookup, this._host.encounterOpen).slice(0, Math.min(2, MAX_ROWS));
+        const shownRequests = requests.slice(0, MAX_ROWS - noteRows.length);
+        for (const r of shownRequests) if (r.status === 'PENDING' && !r.read) this._host.markRead(r.id);
+        for (const row of noteRows) if (row.unread) this._host.markDigestRead?.(row.id);
+        const rows = buildMindRequestRows(shownRequests, this._host.nameOf);
         this._list.removeAllChildren();
         rows.forEach((row, i) => this._drawRow(row, i));
+        noteRows.forEach((row, i) => this._drawNoteRow(row, rows.length + i));
         applyLayer(this._list, this._layer);
+        // 剛標已讀：紅點與徽章對齊
+        const left = (this._host.digest?.() ?? []).filter((n) => !n.read).length;
+        this._badge.string = mindBadgeText(pending + left);
+        this._dot.active = pending + left > 0;
+    }
+
+    /** 紀要列：左側文字、右側「去看看」「知道了」直排（版面用相對列高，不寫死像素位置） */
+    private _drawNoteRow(row: SeasonDigestRowView, index: number): void {
+        const y = (ROW_H * MAX_ROWS) / 2 - ROW_H * (index + 0.5);
+        const node = new Node(`DigestRow-${index}`);
+        this._list.addChild(node);
+        node.setPosition(0, y, 0);
+        node.addComponent(UITransform).setContentSize(PANEL_W - 40, ROW_H - 10);
+        fillRect(node, PANEL_W - 40, ROW_H - 10, new Color(44, 58, 70, 255));
+        const rowW = PANEL_W - 40;
+        const bodyW = rowW - 200;
+        makeLabel(node, 'Head', `${row.kindLabel}${row.unread ? '　●' : ''}`, 24, new Color(150, 210, 240, 255), 400, 30, -rowW / 2 + 220, ROW_H / 2 - 22);
+        makeLabel(node, 'Body', row.text, 22, new Color(245, 240, 230, 255), bodyW, 96, -rowW / 2 + 20 + bodyW / 2, -8);
+        const btnX = rowW / 2 - 85;
+        let btnY = row.canOpen ? 24 : 0;
+        if (row.canOpen) {
+            makeButton(node, `BtnDigestOpen-${index}`, row.openLabel, 140, 44, btnX, btnY, new Color(60, 120, 70, 255), () => { this._host.openDigest?.(row.id); });
+            btnY = -30;
+        }
+        makeButton(node, `BtnDigestAck-${index}`, row.ackLabel, 140, 44, btnX, btnY, new Color(90, 80, 70, 255), () => { this._host.dismissDigest?.(row.id); this.refresh(); });
     }
 
     private _drawRow(row: MindRequestRowView, index: number): void {
