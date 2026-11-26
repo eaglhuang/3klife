@@ -167,7 +167,7 @@ export class DestinyOpeningController {
             const coreId = await startNewGameFromDestiny(this._deps.session, this._deps.seed(), this._deps.generals(), this._state, beautyId, youthId);
             this._startedId = coreId;
             this._beautyId = beautyId;
-            this._lastMessage = beautyId ? `紅顏 ${this._nameOf(beautyId)} 前來相會，已加入名冊，可到「結緣」配對` : '';
+            this._lastMessage = beautyId ? `紅顏 ${this._nameOf(beautyId)} 前來相會，已加入名冊，可到「武將 → 結緣」配對` : '';
             await this._deps.onStarted(coreId);
             return true;
         } catch (error) {

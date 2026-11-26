@@ -3123,7 +3123,7 @@ export class LobbyScene extends Component {
                     onboarding: services().session.onboarding,
                     openingLetter: services().session.openingLetter,
                 }),
-                notifyBeauty: name => services().event.emit('SHOW_TOAST', { message: `紅顏 ${name} 前來相會，已加入名冊，可到「結緣」配對`, duration: 4 }),
+                notifyBeauty: name => services().event.emit('SHOW_TOAST', { message: `紅顏 ${name} 前來相會，已加入名冊，可到「武將 → 結緣」配對`, duration: 4 }),
                 notifyStarterYouth: name => services().event.emit('SHOW_TOAST', { message: services().i18n.t('ui.opening.starter_child_hint', name), duration: 6 }),
                 pickStarterYouth: options => this._pickStarterYouth(options),
                 advanceOpening: event => { this._advanceOpening(event); },
@@ -3131,7 +3131,7 @@ export class LobbyScene extends Component {
                 presentDestinyPool: (view, actions) => this._presentDestinyPool(view, actions),
                 closeDestinyPool: () => { if (this._destinyPoolHost) this._destinyPoolHost.node.active = false; },
                 onOverlayChanged: () => { this._seasonChroniclePopup?.refreshAvailability(); },
-                openingLetterText: () => ({ title: services().i18n.t('copy.letter.opening.title'), body: openingLetterBodyWithFunLine(services().i18n.t('copy.letter.opening.body'), services().session.magistrateUid ?? '') }),
+                openingLetterText: () => ({ title: services().i18n.t('copy.letter.opening.title'), body: openingLetterBodyWithFunLine(services().i18n.t('copy.letter.opening.body'), services().session.magistrateUid ?? ''), button: services().i18n.t('copy.letter.opening.button') }),
                 warn: (message, error) => UCUFLogger.warn(LogCategory.DATA, message, error),
                 // 幕府大堂開著時城市畫面被整個蓋住：改框大堂上的同功能入口（PROG-2-2226）
                 focusTutorial: (host, step) => {
@@ -5173,7 +5173,7 @@ ${spent}`,
             const open = rows.filter((row) => this._hallRowStatus(row.taskId).length === 0);
             const activeCount = rows.length - open.length;
             this._lobbyWallOpenIds[key === 'Military' ? 'wall-left' : 'wall-right'] = open.map((row) => row.taskId);
-            const wall = buildLobbyHallWallView(open, HALL_BOARD_MAX_ROWS, (row) => this._chainTagOf(row.taskId));
+            const wall = buildLobbyHallWallView(open, HALL_BOARD_MAX_ROWS, (row) => this._chainTagOf(row.taskId), (row) => this._rewardHintOf(row.taskId));
             return { ...wall, countText: activeCount > 0 ? `未接取 ${open.length}・進行中 ${activeCount} 件` : `未接取 ${open.length}` };
         };
         this._lobbyHall.setWall('wall-left', view('Military'));
@@ -5185,6 +5185,13 @@ ${spent}`,
         const season = this._hallSeason();
         this._lobbyHall.setActiveMissions('wall-left', buildPinnedMissions(cards.filter((c) => wallOf(c.theme) === 'Military'), season));
         this._lobbyHall.setActiveMissions('wall-right', buildPinnedMissions(cards.filter((c) => wallOf(c.theme) !== 'Military'), season));
+    }
+
+    /** 牆上列的獎勵提示：任務卡目前看得到的獎勵字（情報不足為「糧草／武將經驗？」），查不到回空字串改走官階字 */
+    private _rewardHintOf(missionId: string): string {
+        const board = services().session.missionService?.getBoard();
+        const card = board && board.ok ? findCard(board.value, missionId) : undefined;
+        return card?.reward?.text ?? '';
     }
 
     /** 任務若是連鎖生出的，回「連續任務 2/3」，否則空字串（牆上列、詳情共用） */
