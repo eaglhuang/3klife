@@ -1376,5 +1376,22 @@
   "bloodline.event.y5.optA": "一人で押させる（武力 +1、名声 +3）",
   "bloodline.event.y5.optB": "学友を呼ぶ（魅力 +1、親友獲得）",
   "bloodline.event.y5.resA": "気合で押し出し、近所から拍手喝采！",
-  "bloodline.event.y5.resB": "皆で協力して押し出し、良い学友ができた！"
+  "bloodline.event.y5.resB": "皆で協力して押し出し、良い学友ができた！",
+  "ui.child.growth.title": "子どもの成長ハプニング",
+  "ui.child.growth.child": "{0}（{1}歳）",
+  "ui.child.growth.hint": "二択です。正解はなく、結果が違うだけ",
+  "ui.child.growth.close": "あとで",
+  "ui.child.growth.more": "あと {0} 件のハプニングが待っています",
+  "ui.child.growth.silver_low": "家の銀が足りません。子どものお願いはひとまずお預けです",
+  "ui.child.growth.gone": "このハプニングはもう処理済みです",
+  "ui.child.talk.info": "{0}（{1}歳）　親子好感 {2}",
+  "ui.child.talk.none": "まだ話せる子どもがいません",
+  "ui.child.talk.hint": "子ども一人につき年に一度、話ができます",
+  "ui.child.talk.done_btn": "今年はもう話しました",
+  "ui.child.talk.next": "次の子",
+  "ui.child.talk.gain": "親子好感 +{0}",
+  "ui.child.talk.already": "今年はもう話しました。また来年",
+  "child.talk.line1": "一番尊敬する人を聞くと「諸葛亮！藁船で矢を借りたから、ぼくもパパのお金を借りてお菓子を買う」と言う。",
+  "child.talk.line2": "「曹沖は象の重さを量って天才だって。じゃあぼくはパパのおやつを量る」あなたは黙ってお菓子の壺を抱え込んだ。",
+  "child.talk.line3": "子どもが真顔で聞く。「劉備は三度も訪ねて軍師を迎えたよ。パパもぼくの部屋に三度来て、ごはんに誘ってくれる？」"
 }

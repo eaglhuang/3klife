@@ -53,6 +53,14 @@
       "color": "secondaryLight",
       "overflow": "CLAMP",
       "isBold": true
+    },
+    "clan.shrine.label.line": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 20,
+      "lineHeight": 28,
+      "color": "secondaryLight",
+      "overflow": "SHRINK"
     }
   }
 }

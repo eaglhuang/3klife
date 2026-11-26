@@ -27,7 +27,7 @@
           "vCenter": true
         },
         "width": 720,
-        "height": 560,
+        "height": 720,
         "skinSlot": "clan.shrine.card.bg",
         "children": [
           {
@@ -105,6 +105,86 @@
                 "height": 134,
                 "text": "",
                 "styleSlot": "clan.shrine.label.body"
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "ClanShrineChildInfoLabel",
+            "id": "shrineChildInfo",
+            "widget": {
+              "top": 396,
+              "left": 24,
+              "right": 176
+            },
+            "height": 32,
+            "text": "",
+            "styleSlot": "clan.shrine.label.body"
+          },
+          {
+            "type": "button",
+            "name": "ClanShrineChildNextButton",
+            "id": "btnChildNext",
+            "widget": {
+              "top": 392,
+              "right": 24
+            },
+            "height": 40,
+            "skinSlot": "clan.shrine.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "ClanShrineChildNextButtonLabel",
+                "id": "btnChildNextLabel",
+                "widget": {
+                  "top": 8,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "換一位",
+                "styleSlot": "clan.shrine.label.button"
+              }
+            ],
+            "width": 136
+          },
+          {
+            "type": "label",
+            "name": "ClanShrineChildLineLabel",
+            "id": "shrineChildLine",
+            "widget": {
+              "top": 440,
+              "left": 24,
+              "right": 24
+            },
+            "height": 84,
+            "text": "",
+            "styleSlot": "clan.shrine.label.line"
+          },
+          {
+            "type": "button",
+            "name": "ClanShrineChildTalkButton",
+            "id": "btnChildTalk",
+            "widget": {
+              "top": 532,
+              "left": 24,
+              "right": 24
+            },
+            "height": 44,
+            "skinSlot": "clan.shrine.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "ClanShrineChildTalkButtonLabel",
+                "id": "btnChildTalkLabel",
+                "widget": {
+                  "top": 8,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "親子談話",
+                "styleSlot": "clan.shrine.label.button"
               }
             ]
           },
