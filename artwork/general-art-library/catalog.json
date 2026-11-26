@@ -1439,7 +1439,7 @@
       "uid": "huang-yue-ying",
       "name": "黃月英",
       "standing": {
-        "activeVersion": "0006",
+        "activeVersion": "0007",
         "status": "review-pending",
         "history": [
           {
@@ -1472,12 +1472,20 @@
             "sha256": "C4E6E8C01D1C059B083684E12A71C00FF43BB8F030F97AB2540B717658934964",
             "canvas": "1024x1536 RGBA",
             "note": "v6 重建候選：深青、象牙、古銅與玉色機巧設計；成熟曲線、側身動勢與頭肩至靴具的工藝完整。"
+          },
+          {
+            "version": "0007",
+            "file": "standing/huang_yue_ying__黃月英__standing_0007.png",
+            "status": "review-pending",
+            "sha256": "4E0E9170020CCF3255B178BFE4E729336B4A60061195E7F48F114695EDF76742",
+            "canvas": "1024x1536 RGBA",
+            "note": "Full-body 3/4 standing portrait; modest high-neck teal and ivory inventor outfit with mechanical embroidery; head-outline center approximately 49.8% of canvas width; pending PM review."
           }
         ]
       },
       "battle": {
         "status": "review-pending",
-        "activeVersion": "0005",
+        "activeVersion": "0006",
         "history": [
           {
             "version": "0003",
@@ -1514,11 +1522,23 @@
             "gaze": "battlefield direction",
             "sourceStanding": "standing/huang_yue_ying__黃月英__standing_0006.png",
             "note": "沿用 v6 靜態造型與青銅機巧配件；全身、道具及透明邊界完整，候選待審。"
+          },
+          {
+            "version": "0006",
+            "file": "battle/huang_yue_ying__黃月英__battle_0006.png",
+            "status": "review-pending",
+            "sha256": "44DF3D0DFFD3D23E82DA0378B2F801792B50D01695520A92A9856249A79FB23F",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "compact armillary gear and technical scroll",
+            "poseLabel": "mechanical deployment and scroll guidance",
+            "gaze": "direct-to-camera",
+            "sourceStandingFile": "standing/huang_yue_ying__黃月英__standing_0007.png",
+            "note": "Full-body action pose matched to standing colors and outfit; transparent canvas; pending PM review."
           }
         ]
       },
       "avatar": {
-        "activeVersion": "0004",
+        "activeVersion": "0005",
         "status": "review-pending",
         "history": [
           {
@@ -1560,11 +1580,27 @@
               "width": 600,
               "height": 600
             }
+          },
+          {
+            "version": "0005",
+            "file": "avatars/huang_yue_ying__黃月英__avatar_0005.png",
+            "status": "review-pending",
+            "sha256": "29CD965E11DA5272FBB5DD9C3DD2A6977B9553EA677BEBAEB84A5EDD8186F4EA",
+            "canvas": "256x256 RGBA",
+            "sourceStandingFile": "standing/huang_yue_ying__黃月英__standing_0007.png",
+            "method": "crop-only; no redraw, rotation or retouch",
+            "cropBox": {
+              "x": 268,
+              "y": 20,
+              "width": 479,
+              "height": 479
+            },
+            "qc": "125px/250px review: full chest seam visible with waist belt excluded; shoulder surfaces visible; head-outline center approximately 50.5% of canvas width."
           }
         ]
       },
       "smallAvatar": {
-        "activeVersion": "0002",
+        "activeVersion": "0003",
         "status": "review-pending",
         "history": [
           {
@@ -1586,6 +1622,22 @@
             "createdAt": "2026-11-21",
             "sourceFileForResize": "small_avatars/huang_yue_ying__黃月英__small_avatar_0001.png",
             "sourceSha256ForResize": "7545f5289977eb550965209a78390405877ec2b5da41a4c637fa6e97ab8493b5"
+          },
+          {
+            "version": "0003",
+            "file": "small_avatars/huang_yue_ying__黃月英__small_avatar_0003.png",
+            "status": "review-pending",
+            "sha256": "C13664AA078A2FE88BA6EB2A7417E2DFC3316C59194218DEF9EFBFE4309EFEA9",
+            "canvas": "256x256 RGBA",
+            "sourceStandingFile": "standing/huang_yue_ying__黃月英__standing_0007.png",
+            "method": "crop-only; no redraw, rotation or retouch",
+            "cropBox": {
+              "x": 347.43,
+              "y": 25.43,
+              "width": 319.15,
+              "height": 319.15
+            },
+            "qc": "125px review: complete low-profile hairstyle and face, neck and both shoulders visible; head-outline center approximately 50.9%; cranial head height 75.2%."
           }
         ]
       },
@@ -2878,7 +2930,10 @@
             "poseLabel": "C：低重心雙斧斜向發力",
             "sourcePortraitFile": "standing/dian_wei__典韋__standing_0003.png",
             "method": "Image generation using standing identity and approved male finish-quality reference; transparent RGBA output.",
-            "headOutlineBoundsPx": [486, 548],
+            "headOutlineBoundsPx": [
+              486,
+              548
+            ],
             "headOutlineCenterXPercent": 50.5,
             "headAngleDegreesApprox": 30,
             "qc": "125/250px progressive preview: low forceful stance, twin axe heads and both grip points visible; headbox near center; transparent background; no clipped hands, axes or boots.",
@@ -2903,8 +2958,11 @@
             "sha256": "7DBA7A18FC64649BC3270BAEA921DD2C79D27D78E088CF7B00BCB98FE402EDEF",
             "canvas": "1024x1536 RGBA",
             "method": "Image generation edit of the approved Dian Wei identity: head turned 30–35 degrees in three-quarter view with eyes directed toward the viewer; body, armor and paired axes retained; transparent RGBA output.",
-            "headOutlineBoundsPx": [466, 558],
-            "headOutlineCenterXPercent": 50.0,
+            "headOutlineBoundsPx": [
+              466,
+              558
+            ],
+            "headOutlineCenterXPercent": 50,
             "headAngleDegreesApprox": 33,
             "qc": "125/250px progressive preview: three-quarter head turn with gaze toward viewer; head outline centered; full figure, paired axes and armor details visible; transparent background.",
             "createdAt": "2026-11-26",
@@ -2930,8 +2988,11 @@
             "source": "standing/dian_wei__典韋__standing_0003.png",
             "method": "Image generation using standing identity reference; uniform resize to 256x256 RGBA.",
             "crop": "complete-chest-bust; bottom at full chest armor edge, no waist belt",
-            "headOutlineBoundsPx": [96, 160],
-            "headOutlineCenterXPercent": 50.0,
+            "headOutlineBoundsPx": [
+              96,
+              160
+            ],
+            "headOutlineCenterXPercent": 50,
             "headAngleDegreesApprox": 35,
             "qc": "250px preview: both shoulders and complete chest armor visible; bottom stops above waist/belt; side angle and head centering checked.",
             "createdAt": "2026-11-26",
@@ -2964,8 +3025,11 @@
             "source": "small_avatars/dian_wei__典韋__small_avatar_0002.png (pre-crop candidate, SHA256 E58B3DCE1CB500CA626A92DF0DB16D1D27E1C55C994C65801D13054E57F8FD54)",
             "method": "Proportional independent square recrop of the approved shoulder-line headshot; no redraw or rotation; 1254x1254 source crop x=133.82,y=0.41,side=1086.36, box-filter downscale.",
             "crop": "shoulder-line",
-            "headOutlineBoundsPx": [76, 180],
-            "headOutlineCenterXPercent": 50.0,
+            "headOutlineBoundsPx": [
+              76,
+              180
+            ],
+            "headOutlineCenterXPercent": 50,
             "headHeightPercent": 71.6,
             "headAngleDegreesApprox": 35,
             "qc": "125px progressive preview: head outline centered, 71.6% head height, skull and chin visible, both shoulder surfaces present at lower edge; crop guide geometry passed.",
@@ -3995,7 +4059,7 @@
         "activeVersion": "0003"
       },
       "standing": {
-        "status": "integrated",
+        "status": "review-pending",
         "history": [
           {
             "version": "0002",
@@ -4013,11 +4077,10 @@
             "note": "沿用最新荀彧設計，等比縮入中央75%寬及上下安全區；待總 PM 審核。"
           }
         ],
-        "activeVersion": "0003",
-        "status": "review-pending"
+        "activeVersion": "0003"
       },
       "avatar": {
-        "status": "integrated",
+        "status": "review-pending",
         "history": [
           {
             "version": "0002",
@@ -4075,11 +4138,10 @@
             "qc": "PM accepted avatar_0006 on 2026-11-26: chest boundary correct, head centered and side angle preserved; pending PR merge."
           }
         ],
-        "activeVersion": "0006",
-        "status": "review-pending"
+        "activeVersion": "0006"
       },
       "smallAvatar": {
-        "activeVersion": "0004",
+        "activeVersion": "0006",
         "status": "review-pending",
         "history": [
           {
@@ -4146,9 +4208,7 @@
             "headAngleDegreesApprox": 30,
             "qc": "250px preview: head body centered on red centerline; ear/chin head outline x=427–828 px (34.0%–66.0%, center 50.0%); head height 60% excluding tall crown; full crown and shoulder line retained. QA overlay: artwork/temp/xun_yu_centering/small_avatar_0006_centerline_qa.png. Pending PM review."
           }
-        ],
-        "activeVersion": "0006",
-        "status": "review-pending"
+        ]
       }
     },
     {
@@ -4202,7 +4262,10 @@
               "width": 397,
               "height": 397
             },
-            "headOutlineBoundsPx": [24, 163],
+            "headOutlineBoundsPx": [
+              24,
+              163
+            ],
             "headOutlineCenterXPercent": 50.1,
             "headAngleDegreesApprox": 35,
             "crop": "complete-chest-bottom; both shoulders and full chest visible; no waist or belt",
@@ -4269,7 +4332,10 @@
               "width": 304.26,
               "height": 304.26
             },
-            "headOutlineBoundsPx": [29, 209],
+            "headOutlineBoundsPx": [
+              29,
+              209
+            ],
             "headOutlineCenterXPercent": 50.1,
             "headHeightPercent": 70.7,
             "faceHeightPercent": 42.1,
@@ -4305,7 +4371,7 @@
             "poseLabel": "優雅轉身展卷施策",
             "sourcePortraitFile": "standing/jia_xu__賈詡__standing_0003.png",
             "method": "Image generation using updated standing and approved bust identity references; uniformly scaled 0.80 around canvas center on transparent RGBA canvas.",
-            "headOutlineCenterXPercent": 50.0,
+            "headOutlineCenterXPercent": 50,
             "headAngleDegreesApprox": 35,
             "qc": "125/250px progressive preview: graceful, calculating three-quarter action; both hands grip the two rollers of one strategy scroll correctly; head near center, gaze engaged, full figure and transparent background retained.",
             "createdAt": "2026-11-26",
