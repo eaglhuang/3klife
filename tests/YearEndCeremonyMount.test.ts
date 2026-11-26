@@ -55,12 +55,12 @@ export function createYearEndCeremonyMountSuite(): TestSuite {
 
     suite.test('結算：4 位名門，玩家名次與獎勵取自 YearEndRankingService 真資料', () => {
         const high = buildYearEndCeremonyResult(1, 1200, '本府');
-        assert.equal(high.standings.length, 4);
-        assert.equal(high.playerRank, 2);
-        assert.equal(high.playerReward.gold, 1200);
+        assert.equals(high.standings.length, 4);
+        assert.equals(high.playerRank, 2);
+        assert.equals(high.playerReward.gold, 1200);
         const low = buildYearEndCeremonyResult(1, 0, '本府');
-        assert.equal(low.playerRank, 4);
-        assert.equal(low.playerReward.gold, 500);
+        assert.equals(low.playerRank, 4);
+        assert.equals(low.playerReward.gold, 500);
     });
 
     suite.test('三幕文字在四語系都沒有原始 key 與殘留佔位（前三名／落榜／驚喜獎）', () => {
