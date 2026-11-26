@@ -39,6 +39,7 @@ export function createDeployedUnitPresentationSuite(): TestSuite {
    const fake:any = {
      unitViews:new Map([['u1',{worldNode:node}]]),
      movingUnits:new Set<string>(),
+     carriedUnits:new Set<string>(), // PROG-2-10100：被水沖走的單位
      // 與真實 updateUnitView 一致：沒在移動才把節點放到單位所在格
      updateUnitView:(_v:any,u:any)=>{ if(!fake.movingUnits.has(u.id)) node.worldPosition=cellPos(u.depth); },
      getUnitWorldPosition:(_l:number,d:number)=>cellPos(d),
