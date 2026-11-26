@@ -77,6 +77,11 @@
 | doc_spec_1236（年終守城戰） |—|doc_spec_0049、doc_spec_0376、doc_spec_0525、doc_spec_1182、doc_spec_1184、doc_spec_1186|
 | doc_data_0002 |—|doc_data_0001、doc_spec_0040|
 | doc_spec_0007 |doc_spec_0002、doc_ui_0027|doc_spec_0040、doc_spec_0044、doc_spec_0012、doc_spec_0041、doc_spec_0032|
+| doc_spec_1333 |doc_spec_0457|doc_spec_0014、doc_spec_0002|
+| doc_spec_1334 |doc_spec_1333|doc_spec_0457、doc_spec_0007|
+| doc_spec_1335 |doc_spec_1334|doc_spec_0457|
+| doc_spec_1336 |doc_spec_0007|doc_spec_0007|
+| doc_spec_1337 |doc_spec_1336|doc_spec_0007、doc_spec_1334|
 | doc_spec_0020 |doc_spec_0002、doc_spec_0039|doc_spec_0032、doc_spec_0037、doc_spec_0014、doc_spec_0022、doc_spec_0018|
 | doc_spec_0039** |—|doc_spec_0038、doc_spec_0041、doc_spec_0030、doc_spec_0044、doc_spec_0040、doc_ui_0001、doc_spec_0020（E-4/E-5 場景戰法觸發）|
 | doc_spec_0044 |doc_spec_0007、doc_ui_0001|doc_spec_0040、doc_spec_0039、doc_spec_0026、doc_spec_0032|
@@ -273,6 +278,7 @@
 
 > 「依 11/21 裁決修訂」註記（PROG-2-9224）：doc_spec_1179（shard-d／e／f／g）、1233（shard-a／b）、1181（shard-g）、1180（shard-k／n）、0310、0482、0318、0562、0563、0569 及教官卡相關規格（教官系統（支援卡）、教官支援卡四大原型／詞條 Schema、教官訓練格爆發、教官精力欄位、教官靈感戰法六招、名將身後傳承）。
 
+> 「11/26 修訂」註記（PROG-2-10094）：doc_spec_1333～1335 為世界沙盤（doc_spec_0457）領地第 2 年解鎖／教學／放置效果預覽附則；doc_spec_1336～1337 為名將挑戰賽系統（doc_spec_0007）賽季卡培育期準備指引附則；實作卡 PROG-2-10095、10096。
 ### 虎符族（PROG-2-10091 索引健檢補列，2026-11-26）
 
 | Doc ID | 標題 | 相對路徑 | 摘要說明 |

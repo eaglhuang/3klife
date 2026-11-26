@@ -17382,15 +17382,33 @@
     "category": "task"
   },
   {
-    "id": "doc_task_3154",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10081.md",
-    "title": "[PROG-2-10081] 奧義 C 組音效接入戰場奧義施放（蓄力／爆發／收尾）",
+    "id": "doc_task_3141",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10094.md",
+    "title": "[PROG-2-10094] 天下沙盤領地解鎖教學與挑戰賽培育指引規格（11/26 修訂）",
     "category": "task"
   },
   {
-    "id": "doc_task_3155",
+    "id": "doc_task_3142",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10095.md",
+    "title": "[PROG-2-10095] 天下沙盤領地：第 2 年解鎖、搞笑教學、放置效果預覽（實作）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3143",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10096.md",
+    "title": "[PROG-2-10096] 名將挑戰賽卡片：培育期推薦與一鍵前往培育（實作）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3144",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10091.md",
     "title": "[PROG-2-10091] 索引健檢：虎符族文件補列與 keep.summary 更新",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3156",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10081.md",
+    "title": "[PROG-2-10081] 奧義 C 組音效接入戰場奧義施放（蓄力／爆發／收尾）",
     "category": "task"
   }
 ]

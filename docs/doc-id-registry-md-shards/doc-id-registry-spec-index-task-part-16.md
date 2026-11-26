@@ -35,5 +35,8 @@
 | `doc_task_3136` | docs/agent-briefs/tasks/PROG/PROG-2-10073.md | [PROG-2-10073] 戰前偵查面板：措辭降噪＋出征確認框疊字修正 |
 | `doc_task_3137` | docs/agent-briefs/tasks/PROG/PROG-2-10068.md | [PROG-2-10068] 首年前 2 季季報彈窗精簡：任務回報與市井奇遇併進信箱，任務詳情加白話導讀 |
 | `doc_task_3138` | docs/agent-briefs/tasks/PROG/PROG-2-10092.md | [PROG-2-10092] 季報信箱改名：信箱標題與入口走 i18n 四語系（PM 裁決 A） |
-| `doc_task_3154` | docs/agent-briefs/tasks/PROG/PROG-2-10081.md | [PROG-2-10081] 奧義 C 組音效接入戰場奧義施放（蓄力／爆發／收尾） |
-| `doc_task_3155` | docs/agent-briefs/tasks/PROG/PROG-2-10091.md | [PROG-2-10091] 索引健檢：虎符族文件補列與 keep.summary 更新 |
+| `doc_task_3141` | docs/agent-briefs/tasks/PROG/PROG-2-10094.md | [PROG-2-10094] 天下沙盤領地解鎖教學與挑戰賽培育指引規格（11/26 修訂） |
+| `doc_task_3142` | docs/agent-briefs/tasks/PROG/PROG-2-10095.md | [PROG-2-10095] 天下沙盤領地：第 2 年解鎖、搞笑教學、放置效果預覽（實作） |
+| `doc_task_3143` | docs/agent-briefs/tasks/PROG/PROG-2-10096.md | [PROG-2-10096] 名將挑戰賽卡片：培育期推薦與一鍵前往培育（實作） |
+| `doc_task_3144` | docs/agent-briefs/tasks/PROG/PROG-2-10091.md | [PROG-2-10091] 索引健檢：虎符族文件補列與 keep.summary 更新 |
+| `doc_task_3156` | docs/agent-briefs/tasks/PROG/PROG-2-10081.md | [PROG-2-10081] 奧義 C 組音效接入戰場奧義施放（蓄力／爆發／收尾） |
