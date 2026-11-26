@@ -204,7 +204,7 @@
         "gene_command",
         "gene_honor"
       ],
-      "battleSkillId": "liu-bei-rally",
+      "battleSkillId": "mentor-morale",
       "sourceType": "seed-tactic",
       "targetMode": "ally-all",
       "timing": "active-cast",

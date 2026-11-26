@@ -25,9 +25,10 @@ function loadRules(): DialogueRulesConfig {
 const RULES = loadRules();
 const HOLDERS = [{ id: 'wei', territories: 4 }, { id: 'shu', territories: 4 }, { id: 'wu', territories: 3 }, { id: 'player', territories: 1 }];
 
-interface Fake { personality?: string; mind?: string; player?: number; pair?: Record<string, number>; holders?: typeof HOLDERS | undefined; recent?: string | null }
+interface Fake { voice?: { gender?: string; age?: number }; personality?: string; mind?: string; player?: number; pair?: Record<string, number>; holders?: typeof HOLDERS | undefined; recent?: string | null }
 function source(f: Fake = {}): DialogueStateSource {
     return {
+        voiceOf: () => f.voice,
         personalityOf: () => ('personality' in f ? f.personality : 'Brave'),
         mindMoodOf: () => ('mind' in f ? f.mind : 'NORMAL'),
         friendshipOf: (_id, t: DialogueTarget) => (t.kind === 'player' ? ('player' in f ? f.player : 0) : f.pair?.[t.id]),
@@ -299,6 +300,27 @@ export function createDialogueRequesterSuite(): TestSuite {
         assert.equals('gift_received', sent[1].interaction?.type);
         // 事件有記下來，之後閒聊心情有餘溫
         assert.equals('reward_grant_treasure', log.latest('zhang-fei', { kind: 'player' }, 5, 2));
+    });
+
+    suite.test('性別／年齡／自稱進請求與快取鍵（女將、老者與男將不共用台詞）', () => {
+        const build = (voice?: { gender?: string; age?: number }) => buildDialogueRequest({ generalId: 'g1', contextKey: 'greeting' }, source({ voice }), RULES);
+        const male = build({ gender: '男', age: 30 });
+        const female = build({ gender: '女', age: 30 });
+        const elder = build({ gender: '男', age: 65 });
+        const kid = build({ gender: '女', age: 10 });
+        const none = build(undefined);
+        if (!male.ok || !female.ok || !elder.ok || !kid.ok || !none.ok) { assert.isTrue(false, '應建構成功'); return; }
+        assert.equals('M', male.request.gender);
+        assert.equals('某', male.request.selfPronoun);
+        assert.equals('F', female.request.gender);
+        assert.equals(30, female.request.age);
+        assert.equals('本姑娘', female.request.selfPronoun);
+        assert.equals('老夫', elder.request.selfPronoun);
+        assert.equals('我', kid.request.selfPronoun);
+        assert.equals('某', none.request.selfPronoun, '缺性別年齡視為男成年');
+        assert.equals(undefined, none.request.age);
+        assert.equals(4, new Set([male.cacheKey, female.cacheKey, elder.cacheKey, kid.cacheKey]).size, '四種聲線快取鍵各不同');
+        assert.equals(male.cacheKey, none.cacheKey, '男成年與缺值同鍵');
     });
 
     return suite;

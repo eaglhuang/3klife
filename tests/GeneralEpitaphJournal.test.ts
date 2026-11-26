@@ -6,7 +6,7 @@ import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/manager
 import { LegacyService } from '../assets/scripts/core/services/LegacyService';
 import { PlayerSaveService } from '../assets/scripts/core/services/PlayerSaveService';
 import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStorageAdapter';
-import { EPITAPH_TEXT, epitaphJournalEntry } from '../assets/scripts/core/systems/ChildUnveiling';
+import { epitaphTextOf, epitaphJournalEntry } from '../assets/scripts/core/systems/ChildUnveiling';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 
 function elder(id: string, extra: Record<string, unknown> = {}): GeneralConfig {
@@ -39,9 +39,9 @@ export function createGeneralEpitaphJournalSuite(): TestSuite {
         assert.equals('T', retire.timestamp);
         assert.equals('GROWTH', retire.category);
         assert.equals('a', retire.relatedGeneralUids.join(','));
-        assert.equals(`甲絕筆：${EPITAPH_TEXT.Retirement}`, retire.summary);
-        assert.equals(`甲絕筆：${EPITAPH_TEXT.BattleDeath}`, epitaphJournalEntry({ id: 'a', name: '甲' }, 'battle', 1, 'T')!.summary);
-        assert.equals(`甲絕筆：${EPITAPH_TEXT.ClanShrine}`, epitaphJournalEntry({ id: 'a', name: '甲' }, 'natural', 1, 'T')!.summary);
+        assert.equals(`甲絕筆：${epitaphTextOf('Retirement')}`, retire.summary);
+        assert.equals(`甲絕筆：${epitaphTextOf('BattleDeath')}`, epitaphJournalEntry({ id: 'a', name: '甲' }, 'battle', 1, 'T')!.summary);
+        assert.equals(`甲絕筆：${epitaphTextOf('ClanShrine')}`, epitaphJournalEntry({ id: 'a', name: '甲' }, 'natural', 1, 'T')!.summary);
     });
 
     suite.test('條目：退役將階不到 3 沒有絕筆；缺姓名用 id', () => {
@@ -58,7 +58,7 @@ export function createGeneralEpitaphJournalSuite(): TestSuite {
         const entries = epitaphs(session);
         assert.equals(1, entries.length);
         assert.equals('high', entries[0].relatedGeneralUids[0]);
-        assert.equals(`high公絕筆：${EPITAPH_TEXT.Retirement}`, entries[0].summary);
+        assert.equals(`high公絕筆：${epitaphTextOf('Retirement')}`, entries[0].summary);
     });
 
     suite.test('老死：換季死亡寫入祀絕筆，已故武將隔季不重寫', async () => {
@@ -67,9 +67,21 @@ export function createGeneralEpitaphJournalSuite(): TestSuite {
         const entries = epitaphs(session);
         assert.equals(1, entries.length);
         assert.equals('old', entries[0].relatedGeneralUids[0]);
-        assert.equals(`old公絕筆：${EPITAPH_TEXT.ClanShrine}`, entries[0].summary);
+        assert.equals(`old公絕筆：${epitaphTextOf('ClanShrine')}`, entries[0].summary);
         await session.advanceSeason(0);
         assert.equals(1, epitaphs(session).length);
+    });
+
+    suite.test('絕筆自稱依性別：男老夫、女老身，戰歿「男兒」改「巾幗」，不留未代入槽位', () => {
+        const male = epitaphTextOf('Retirement', { gender: '男' });
+        const female = epitaphTextOf('Retirement', { gender: '女' });
+        assert.isTrue(male.includes('老夫') && !male.includes('老身'), male);
+        assert.isTrue(female.includes('老身') && !female.includes('老夫'), female);
+        assert.isTrue(epitaphTextOf('ClanShrine', { gender: '女' }).includes('老身'));
+        assert.isTrue(epitaphTextOf('BattleDeath', { gender: '女' }).includes('巾幗本色'));
+        assert.isTrue(epitaphTextOf('BattleDeath').includes('男兒本色'));
+        for (const type of ['Retirement', 'BattleDeath', 'ClanShrine'] as const) assert.isTrue(!/\{\w+\}/.test(epitaphTextOf(type, { gender: '女' })));
+        assert.equals(`乙絕筆：${female}`, epitaphJournalEntry({ id: 'b', name: '乙', generalRank: 3, gender: '女' }, 'retire', 1, 'T')!.summary);
     });
 
     return suite;

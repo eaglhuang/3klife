@@ -10,6 +10,7 @@
 
 import { FriendshipService } from '../../services/FriendshipService';
 import type { BoardRankResult } from './AnnualRankingTypes';
+import { selfOf, type VoiceProfile } from '../../mind/SpeakerVoice';
 
 export interface CongratulationDialogues {
     categories: Record<string, {
@@ -80,12 +81,14 @@ export class AnnualRankingCongratulation {
      * @param generalId 武將 ID
      * @param characterCategory 武將性格分類 ('fierce' | 'scholar' | 'commander' | 'cunning')
      * @param eligibleGeneralIds 當年度獲獎/前十名武將候選名單（若提供則執行資格檢驗）
+     * @param voice 說話者性別／性格／年齡；回話模板的 {self} 依此代入自稱（缺值視為男成年）
      */
     public congratulate(
         year: number,
         generalId: string,
         characterCategory: string = 'default',
-        eligibleGeneralIds?: readonly string[]
+        eligibleGeneralIds?: readonly string[],
+        voice: Readonly<VoiceProfile> = {}
     ): CongratulateResult {
         if (!generalId) {
             return { success: false, generalId: '', reason: 'INVALID_GENERAL' };
@@ -116,7 +119,7 @@ export class AnnualRankingCongratulation {
         yearSet.add(generalId);
 
         // 隨機選取性格回話台詞
-        const barkText = this._pickBark(characterCategory, generalId, year);
+        const barkText = this._pickBark(characterCategory, generalId, year).split('{self}').join(selfOf(voice));
 
         return {
             success: true,
