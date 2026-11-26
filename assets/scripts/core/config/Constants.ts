@@ -141,6 +141,15 @@ export const GAME_CONFIG = {
    */
   tutorialEnemyGeneralHpRatio: 0.3,
   /**
+   * 首戰教學戰：開場預設戰場倍速（1 | 2），玩家可按控制列速度鈕切回 x1（總PM 2026-11-26 裁決，PROG-2-10072）。
+   * 只動戰場時間倍率，不改規則與結算；一般戰鬥維持 x1。
+   */
+  tutorialDefaultBattleSpeed: 2 as 1 | 2,
+  /** 首戰教學戰：敵方子回合開始前「敵軍思考」前置秒數（一般戰鬥 2.0，見 BATTLE_TURN_FLOW_TIMING；僅限首戰，總PM 2026-11-26 裁決） */
+  tutorialEnemyThinkingLeadInSec: 1.0,
+  /** 首戰教學戰：子回合邏輯跑完後等待戰鬥視覺佇列的最少秒數（一般戰鬥 2.3；僅限首戰） */
+  tutorialPostSubturnVisualBufferSec: 1.2,
+  /**
    * 首戰教學戰：出征軍勢至少補到這個數，補上的兵力不扣城市兵源。
    * 原因：首戰軍勢 3000 只夠派 5 隊，第 3 回合起玩家無兵可派；8000 又能派到 12 隊，敵軍全場只有 6 隊，幾乎沒有戰損。
    * 5000 大約派到第 4 回合共 7～8 隊，後半段要靠場上部隊、計謀與奧義（總PM 2026-11-17 裁決，PROG-2-9334）。

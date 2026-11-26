@@ -52,6 +52,7 @@
  *   --skill-prefer <id>  --full-year 優先放的計謀（預設 tactic-fire-scheme，需 WINDY）；--min-casts <n> 整年最少放招次數（預設 1）
  *   --no-set-lead  --year 時不替玩家指定出戰主將（主將未定時戰場無出征帳本、自動代打不出兵，會打輸；用來重現）
  *   --no-tactic-probe  不做首戰計謀探針（預設首戰記錄天氣、試放一次計謀並量格子特效，輸出在 report.battles，PROG-2-10010）
+ *   --battle-shots <毫秒>  戰鬥中每隔這麼久截一張 bt-<序號>.png（PROG-2-10072）
  *   --no-auto-play  戰鬥改逐回合手按結束回合（預設開場按一次「自動」走自動代打，PROG-2-9711）
  *   --academy   選用：學府實玩（PROG-2-9192）：推進到第 2 年第 1 季 → 入學潁川（核對入學令 −1）→ 36 回合 → 結業彈窗 → 回大廳；
  *               另在複製存檔的第二情境用 ?qaAcademy=11 驗快進入口。輸出 academy-report.json（回合數、打斷、評級、前後季數、節點數、
@@ -330,7 +331,17 @@ function installPageHelpers() {
             if (sc.isAdvancingTurn) {
                 walk(scene(), (node) => { if (!thinking && node.name === 'EnemyThinking' && node.activeInHierarchy) thinking = true; });
             }
+            // 自動代打是否真的開啟（PROG-2-10072）：讀戰場橋接層旗標；x2 速度鈕亮起（UIOpacity 180）＝目前為 x2
+            const bridge = comp.battleUIBridge || null;
+            let speedX2 = null;
+            walk(scene(), (node) => {
+                if (speedX2 !== null || node.name !== 'BtnSpeed' || !node.activeInHierarchy) return;
+                const op = node.getComponent && node.getComponent('cc.UIOpacity');
+                speedX2 = Boolean(op && op.opacity === 180);
+            });
             return {
+                autoPlay: Boolean(bridge && bridge.isAutoPlayActive),
+                speedX2,
                 advancing: Boolean(sc.isAdvancingTurn),
                 duelPanel: Boolean(sc.isDuelPanelActive),
                 ultCutin: Boolean(sc.isUltCutinActive),
@@ -1621,9 +1632,16 @@ async function main() {
          */
         /** 已在戰場（BattleScene）後：加速、佈陣、打到結算、回大廳。runBattle 與年終守城（換季後自動進戰場）共用 */
         const driveBattle = async (rec, opts, battleT0) => {
-            // 加速（若有）
+            // 等戰場載入完成（PROG-2-10072）：讀取畫面（「正在準備戰鬥」）時按 BtnAuto 會落空，自動代打沒開成功、每回合靠補按結束回合
+            const readyDeadline = Date.now() + 60000;
+            while (Date.now() < readyDeadline) {
+                const st = await page.evaluate(() => window.__pt.battleState()).catch(() => null);
+                if (st && !st.advancing && st.canAdvance !== null && st.speedX2 !== null) break;
+                await delay(500);
+            }
             await delay(1500);
-            await clickButton('^BtnFastForward$');
+            // 首戰預設 x2（PROG-2-10072）：記錄開場速度；舊的 BtnFastForward 按鈕不存在，保留點擊會誤切回 x1，已移除
+            rec.detail.speedX2AtStart = (await page.evaluate(() => window.__pt.battleState()).catch(() => null) || {}).speedX2 ?? null;
             // 首戰教學框：收起；再把第一張兵卡拖到我方底線第 3 路（座標以 1920x1080 截圖比例換算）
             await clickByText('.*', '^\\s*收起\\s*$');
             await delay(800);
@@ -1638,7 +1656,16 @@ async function main() {
             await delay(1000);
             // 自動代打（PROG-2-9707／9711）：開場按一次「自動」＝委任出兵＋每回合自動結束回合；只按一次，再按會跳到極速決戰
             // --no-auto-play 可改回逐回合手按結束回合
-            const autoPlay = !args['no-auto-play'] && opts.autoPlay !== false && Boolean(await clickButton('^BtnAuto$'));
+            let autoPlay = false;
+            if (!args['no-auto-play'] && opts.autoPlay !== false) {
+                // 按一次後驗證旗標真的亮起；沒亮才再按（最多 3 次，避免第二次按成極速決戰：亮起後絕不再按）
+                for (let attempt = 0; attempt < 3 && !autoPlay; attempt += 1) {
+                    if (!await clickButton('^BtnAuto$')) { await delay(1000); continue; }
+                    await delay(800);
+                    const st = await page.evaluate(() => window.__pt.battleState()).catch(() => null);
+                    autoPlay = Boolean(st && st.autoPlay);
+                }
+            }
             rec.detail.autoPlay = autoPlay;
             rec.detail.endTurnFallbacks = 0;
             await delay(800);
@@ -1657,8 +1684,17 @@ async function main() {
             let probeStartedAt = null;
             const firstBattle = { weather: null, tactic: null };
             rec.detail.firstBattle = firstBattle;
+            // --battle-shots <毫秒>：戰鬥中每隔這麼久截一張 bt-<序號>.png（看 x2 下飄字與受擊是否看得清，PROG-2-10072）
+            const battleShotMs = Number(args['battle-shots']) || 0;
+            let lastBattleShotAt = 0;
+            let battleShotIndex = 0;
             let castShotTaken = false;
             while (!settled) {
+                if (battleShotMs > 0 && Date.now() - lastBattleShotAt >= battleShotMs) {
+                    lastBattleShotAt = Date.now();
+                    battleShotIndex += 1;
+                    await page.screenshot({ path: path.join(outDir, `bt-${String(battleShotIndex).padStart(3, '0')}.png`) }).catch(() => {});
+                }
                 // 放招計數（PROG-2-10074）：包住委任放招階段；第一次放出招時擷取畫面
                 await page.evaluate(() => window.__pt.hookDelegateCasts()).catch(() => false);
                 if (!castShotTaken) {

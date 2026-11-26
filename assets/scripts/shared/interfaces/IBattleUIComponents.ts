@@ -47,6 +47,8 @@ export interface IBattleLogLike {
     setDelegateActive?(active: boolean): void;
     /** 自動代打鈕亮暗（PROG-2-9707）；由戰場橋接層呼叫，測試替身可不實作 */
     setAutoActive?(active: boolean): void;
+    /** 同步速度鈕外觀與內部倍率（首戰教學預設 x2，PROG-2-10072）；測試替身可不實作 */
+    setSpeed?(speed: 1 | 2): void;
 }
 
 export interface IDuelChallengeLike {
