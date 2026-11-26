@@ -850,8 +850,8 @@
       "uid": "lu-ling-qi",
       "name": "呂玲綺",
       "standing": {
-        "activeVersion": "0002",
-        "status": "integrated",
+        "activeVersion": "0003",
+        "status": "review-pending",
         "history": [
           {
             "version": "0001",
@@ -862,12 +862,20 @@
             "version": "0002",
             "file": "standing/lu_ling_qi__呂玲綺__standing_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "standing/lu_ling_qi__呂玲綺__standing_0003.png",
+            "status": "review-pending",
+            "sha256": "7f6d75ee193bd3772783f7ea75379367713d52c41a8381355ce48d88f6e74314",
+            "canvas": "1024x1536 RGBA",
+            "note": "v5品質線重建候選：銀白分層輕甲、深梅紫內層與玫瑰金結構飾件；待審。"
           }
         ]
       },
       "battle": {
         "status": "review-pending",
-        "activeVersion": "0002",
+        "activeVersion": "0003",
         "history": [
           {
             "version": "0001",
@@ -887,12 +895,24 @@
             "gaze": "direct-to-camera",
             "sourceStanding": "standing/lu_ling_qi__呂玲綺__standing_0002.png",
             "note": "保持既有紅銀輕甲與戟形武器；長柄筆直、全身與武器完整入框。候選待審，未接入遊戲。"
+          },
+          {
+            "version": "0003",
+            "file": "battle/lu_ling_qi__呂玲綺__battle_0003.png",
+            "status": "review-pending",
+            "sha256": "99b6bf8a398d8ed3726b71823fba97a93307f71766fe3c0258db3074744bd283",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "crescent halberd",
+            "poseLabel": "上挑格擋後跨步反擊",
+            "gaze": "forward-three-quarter",
+            "sourceStanding": "standing/lu_ling_qi__呂玲綺__standing_0003.png",
+            "note": "沿用靜態造型，向上挑架後跨步反擊；全身與戟保持完整，待審。"
           }
         ]
       },
       "avatar": {
-        "activeVersion": "0002",
-        "status": "integrated",
+        "activeVersion": "0003",
+        "status": "review-pending",
         "history": [
           {
             "version": "0001",
@@ -903,6 +923,21 @@
             "version": "0002",
             "file": "avatars/lu_ling_qi__呂玲綺__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/lu_ling_qi__呂玲綺__avatar_0003.png",
+            "status": "review-pending",
+            "sha256": "38d9c943ee50e509cf9634586e22763d07098fed61644fcd56ffbf7fe01ef987",
+            "canvas": "256x256 RGBA",
+            "sourceBust": "busts/lu_ling_qi__呂玲綺__bust_0001.png",
+            "cropBox": [
+              0,
+              0,
+              700,
+              700
+            ],
+            "resampling": "Lanczos proportional resize to 256x256"
           }
         ]
       },
@@ -926,6 +961,27 @@
             "method": "uniform resize with alpha premultiplication; no crop or redraw",
             "qc": "保留原核准來源的完整構圖與透明邊界，只作等比例縮放至256x256；未裁切、旋轉或重畫。",
             "createdAt": "2026-11-21"
+          }
+        ]
+      },
+      "bust": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "busts/lu_ling_qi__呂玲綺__bust_0001.png",
+            "status": "review-pending",
+            "sha256": "c489ed9a2db7c9aa00ea1c3e159860a2aa69914b5d984f90044b6f7f8124be50",
+            "canvas": "700x800 RGBA",
+            "sourceStanding": "standing/lu_ling_qi__呂玲綺__standing_0003.png",
+            "cropBox": [
+              162,
+              115,
+              700,
+              800
+            ],
+            "note": "僅由靜態立繪等比例裁切；半身含肩與胸部。"
           }
         ]
       }
@@ -1308,8 +1364,8 @@
       "uid": "huang-yue-ying",
       "name": "黃月英",
       "standing": {
-        "activeVersion": "0004",
-        "status": "integrated",
+        "activeVersion": "0006",
+        "status": "review-pending",
         "history": [
           {
             "version": "0001",
@@ -1324,13 +1380,29 @@
           {
             "version": "0004",
             "file": "standing/huang_yue_ying__黃月英__standing_0004.png",
-            "status": "integrated"
+            "status": "superseded"
+          },
+          {
+            "version": "0005",
+            "file": "standing/huang_yue_ying__黃月英__standing_0005.png",
+            "status": "review-pending",
+            "sha256": "73c2717f4814d0d1fadd223087de354df11897d3614a72960466e843a476c6b8",
+            "canvas": "1024x1536 RGBA",
+            "note": "依男女立繪品質基準 v4 重建的靜態候選；角色設計及細節待審，未接入遊戲。"
+          },
+          {
+            "version": "0006",
+            "file": "standing/huang_yue_ying__黃月英__standing_0006.png",
+            "status": "review-pending",
+            "sha256": "C4E6E8C01D1C059B083684E12A71C00FF43BB8F030F97AB2540B717658934964",
+            "canvas": "1024x1536 RGBA",
+            "note": "v6 重建候選：深青、象牙、古銅與玉色機巧設計；成熟曲線、側身動勢與頭肩至靴具的工藝完整。"
           }
         ]
       },
       "battle": {
         "status": "review-pending",
-        "activeVersion": "0003",
+        "activeVersion": "0005",
         "history": [
           {
             "version": "0003",
@@ -1343,12 +1415,36 @@
             "gaze": "direct-to-camera",
             "sourceStanding": "standing/huang_yue_ying__黃月英__standing_0004.png",
             "note": "延續核定綠白文士造型；以展卷與機巧器具表現戰場施策，不改配長槍。全身入框，候選待審，未接入遊戲。"
+          },
+          {
+            "version": "0004",
+            "file": "battle/huang_yue_ying__黃月英__battle_0004.png",
+            "status": "review-pending",
+            "sha256": "2c9269fa9adc82f4ea0639a9257c881fe553e9f3739a685d130b81fb3035512e",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "tactical scroll and armillary signaling device",
+            "poseLabel": "踏步展卷、舉機巧信標指揮",
+            "gaze": "direct-to-camera",
+            "sourceStanding": "standing/huang_yue_ying__黃月英__standing_0005.png",
+            "note": "以 v4 服裝工藝基準重建同造型戰鬥施策姿勢；全身入框，候選待審，未接入遊戲。"
+          },
+          {
+            "version": "0005",
+            "file": "battle/huang_yue_ying__黃月英__battle_0005.png",
+            "status": "review-pending",
+            "sha256": "865ECA6A44E10F74FC96AF0DF633A0D32F5FD54B55DC3458E7DF3A52DD96EE8D",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "tactical scroll and armillary signaling device",
+            "poseLabel": "轉身展卷，舉星盤發令",
+            "gaze": "battlefield direction",
+            "sourceStanding": "standing/huang_yue_ying__黃月英__standing_0006.png",
+            "note": "沿用 v6 靜態造型與青銅機巧配件；全身、道具及透明邊界完整，候選待審。"
           }
         ]
       },
       "avatar": {
-        "activeVersion": "0002",
-        "status": "integrated",
+        "activeVersion": "0004",
+        "status": "review-pending",
         "history": [
           {
             "version": "0001",
@@ -1358,7 +1454,37 @@
           {
             "version": "0002",
             "file": "avatars/huang_yue_ying__黃月英__avatar_0002.png",
-            "status": "integrated"
+            "status": "superseded"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/huang_yue_ying__黃月英__avatar_0003.png",
+            "status": "review-pending",
+            "sha256": "df50e94a37ad32c76c978f664d9c29dd9bfd370551d1ea72460d2349610d5877",
+            "canvas": "720x720 RGBA",
+            "sourceBustFile": "busts/huang_yue_ying__黃月英__bust_0001.png",
+            "method": "crop-only; no redraw, rotation or retouch",
+            "cropBox": {
+              "x": 78,
+              "y": 0,
+              "width": 720,
+              "height": 720
+            }
+          },
+          {
+            "version": "0004",
+            "file": "avatars/huang_yue_ying__黃月英__avatar_0004.png",
+            "status": "review-pending",
+            "sha256": "F881F0CEF6BEC7A93650CB5BAB29759EF9D9E0DF638C98E89CEB825D4FDCB59B",
+            "canvas": "256x256 RGBA",
+            "sourceBustFile": "busts/huang_yue_ying__黃月英__bust_0002.png",
+            "method": "crop-only; no redraw, rotation or retouch",
+            "cropBox": {
+              "x": 150,
+              "y": 0,
+              "width": 600,
+              "height": 600
+            }
           }
         ]
       },
@@ -1385,6 +1511,42 @@
             "createdAt": "2026-11-21",
             "sourceFileForResize": "small_avatars/huang_yue_ying__黃月英__small_avatar_0001.png",
             "sourceSha256ForResize": "7545f5289977eb550965209a78390405877ec2b5da41a4c637fa6e97ab8493b5"
+          }
+        ]
+      },
+      "bust": {
+        "activeVersion": "0002",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "busts/huang_yue_ying__黃月英__bust_0001.png",
+            "status": "review-pending",
+            "sha256": "8d0a2e18362f8ecd74941706884c31649fc13329d0ec5a43cf58fa9869f1f147",
+            "canvas": "900x1000 RGBA",
+            "sourceStandingFile": "standing/huang_yue_ying__黃月英__standing_0005.png",
+            "method": "crop-only; no redraw, rotation or retouch",
+            "cropBox": {
+              "x": 62,
+              "y": 0,
+              "width": 900,
+              "height": 1000
+            }
+          },
+          {
+            "version": "0002",
+            "file": "busts/huang_yue_ying__黃月英__bust_0002.png",
+            "status": "review-pending",
+            "sha256": "3488346607F665410BD1F96D6EE332B5667071FD7855E7D2D695BEDF8F4E9C49",
+            "canvas": "900x1000 RGBA",
+            "sourceStandingFile": "standing/huang_yue_ying__黃月英__standing_0006.png",
+            "method": "crop-only; no redraw, rotation or retouch",
+            "cropBox": {
+              "x": 62,
+              "y": 0,
+              "width": 900,
+              "height": 1000
+            }
           }
         ]
       }
@@ -11015,26 +11177,49 @@
       "uid": "zhang-chun-hua",
       "name": "張春華",
       "standing": {
-        "status": "integrated",
+        "status": "review-pending",
         "history": [
           {
             "version": "0002",
             "file": "standing/zhang_chun_hua__張春華__standing_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "standing/zhang_chun_hua__張春華__standing_0003.png",
+            "status": "review-pending",
+            "sha256": "BA57F8CB82A77EAE201BEDEEAC6EB00186F0F4024A7AD97284E87FDE77102912",
+            "canvas": "1024x1536 RGBA",
+            "note": "v6 重建候選：成熟半寫實、酒紫石榴紅與古金配色；三分之四前後步、立體胸腰剪裁及全身刺繡工藝。"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "avatar": {
-        "status": "integrated",
+        "status": "review-pending",
         "history": [
           {
             "version": "0002",
             "file": "avatars/zhang_chun_hua__張春華__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/zhang_chun_hua__張春華__avatar_0003.png",
+            "status": "review-pending",
+            "sha256": "27042B31CEDE447F267F643F84EBD660014D445639AA869DCF365CC7D9859538",
+            "canvas": "256x256 RGBA",
+            "sourceBust": "busts/zhang_chun_hua__張春華__bust_0001.png",
+            "cropBox": {
+              "x": 150,
+              "y": 0,
+              "width": 600,
+              "height": 600
+            },
+            "note": "由半身候選裁出，保留完整髮型、臉部自然側角、肩線與上胸；未重畫。"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "smallAvatar": {
         "activeVersion": "0002",
@@ -11063,9 +11248,9 @@
         ]
       },
       "battle": {
-        "activeVersion": "0001",
+        "activeVersion": "0002",
         "status": "review-pending",
-        "poseLabel": "低身側步，斜劍護身",
+        "poseLabel": "前踏斜刺，轉肩發力",
         "weaponClass": "sword",
         "poseSelection": "AI-selected distinct pose",
         "history": [
@@ -11078,6 +11263,37 @@
             "sha256": "9a21f2d5d816a45301accacbd56ecdab907d9f28da52a4160c24aa31abed5ba2",
             "canvas": "1024x1536 RGBA",
             "qc": "Full-body three-quarter combat stance; eyes to camera; straight sword; crop/scale adjusted to x=128..896 safe width."
+          },
+          {
+            "version": "0002",
+            "file": "battle/zhang_chun_hua__張春華__battle_0002.png",
+            "status": "review-pending",
+            "poseLabel": "前踏斜刺，轉肩發力",
+            "weaponClass": "sword",
+            "sha256": "B7E4D7FB777F13C433D90E86BD80E60C04E8332FFDE4A0540585F602A903FCD1",
+            "canvas": "1024x1536 RGBA",
+            "qc": "v6 combat candidate keeps the v6 static identity and costume; distinct forward diagonal thrust; full figure and weapon within transparent margins."
+          }
+        ]
+      },
+      "bust": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "busts/zhang_chun_hua__張春華__bust_0001.png",
+            "status": "review-pending",
+            "sha256": "275F93D08452424D7F1F57D7F1BF50018D75FB549FE0584FC57B6BA6F81E3EF0",
+            "canvas": "900x1000 RGBA",
+            "sourceStanding": "standing/zhang_chun_hua__張春華__standing_0003.png",
+            "cropBox": {
+              "x": 62,
+              "y": 0,
+              "width": 900,
+              "height": 1000
+            },
+            "note": "依照靜態→半身→大頭順序，從 v6 靜態候選直接裁切，未重畫。"
           }
         ]
       }
@@ -11086,26 +11302,49 @@
       "uid": "xin-xian-ying",
       "name": "辛憲英",
       "standing": {
-        "status": "integrated",
+        "status": "review-pending",
         "history": [
           {
             "version": "0002",
             "file": "standing/xin_xian_ying__辛憲英__standing_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "standing/xin_xian_ying__辛憲英__standing_0003.png",
+            "status": "review-pending",
+            "sha256": "e5d0b461c9dc5103024a0c655dfbede1a7a7b34dc24d93b4081f18921893f43a",
+            "canvas": "1024x1536 RGBA",
+            "note": "v5重建候選：翡翠、玉白、古金與石榴紅策士造型；保留盤髮側辮與卷軸識別，待審。"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "avatar": {
-        "status": "integrated",
+        "status": "review-pending",
         "history": [
           {
             "version": "0002",
             "file": "avatars/xin_xian_ying__辛憲英__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/xin_xian_ying__辛憲英__avatar_0003.png",
+            "status": "review-pending",
+            "sha256": "513ddad1f10f89abcab069c5fc2366a07ff9f45946cf7386fdca4bb36c6a47d2",
+            "canvas": "256x256 RGBA",
+            "sourceBust": "busts/xin_xian_ying__辛憲英__bust_0001.png",
+            "cropBox": [
+              0,
+              0,
+              700,
+              700
+            ],
+            "resampling": "Lanczos proportional resize to 256x256"
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "smallAvatar": {
         "activeVersion": "0002",
@@ -11134,7 +11373,7 @@
         ]
       },
       "battle": {
-        "activeVersion": "0003",
+        "activeVersion": "0004",
         "status": "review-pending",
         "history": [
           {
@@ -11144,6 +11383,38 @@
             "sha256": "02da20c878740eafb59019fba0a20b372906cd5ee8744ec22c62085842ba5a8f",
             "canvas": "1024x1536 RGBA",
             "note": "Existing remote artwork discovered without a catalog record; kept as review candidate, not asserted as runtime-integrated."
+          },
+          {
+            "version": "0004",
+            "file": "battle/xin_xian_ying__辛憲英__battle_0004.png",
+            "status": "review-pending",
+            "sha256": "8c06267884ac3b0a45d26865d395d0742d50e8db7363c22c01f1be146bdce87e",
+            "canvas": "1024x1536 RGBA",
+            "poseLabel": "跨步展策、抬手前指",
+            "gaze": "toward-off-frame-action",
+            "sourceStanding": "standing/xin_xian_ying__辛憲英__standing_0003.png",
+            "note": "沿用靜態造型，以跨步展策和抬手指揮呈現臨戰施策，待審。"
+          }
+        ]
+      },
+      "bust": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "busts/xin_xian_ying__辛憲英__bust_0001.png",
+            "status": "review-pending",
+            "sha256": "ff78fe8ac5cab228e4014e2cc5726fac8fc95b036f1bdecf36b87d3426f7ce5c",
+            "canvas": "700x800 RGBA",
+            "sourceStanding": "standing/xin_xian_ying__辛憲英__standing_0003.png",
+            "cropBox": [
+              162,
+              80,
+              700,
+              800
+            ],
+            "note": "由靜態立繪等比裁切，保留頭肩與胸部。"
           }
         ]
       }
@@ -11428,15 +11699,30 @@
         "activeVersion": "0002"
       },
       "avatar": {
-        "status": "integrated",
+        "status": "review-pending",
         "history": [
           {
             "version": "0002",
             "file": "avatars/wu_guo_tai__吳國太__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/wu_guo_tai__吳國太__avatar_0003.png",
+            "status": "review-pending",
+            "sha256": "8511125c8e11caf30f9ff7bc16407a54bfd71c870cd6ee29a1dad1df87d99c9b",
+            "canvas": "174x177",
+            "sourceBust": "wu_guo_tai__吳國太__bust_0001.png",
+            "cropBox": [
+              92,
+              0,
+              266,
+              177
+            ],
+            "note": "Tighter geometric crop from bust; complete hairstyle and head ornament retained, shoulder line still visible."
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "battle": {
         "status": "review-pending",
@@ -11475,6 +11761,27 @@
             "qc": "Crop-only from approved standing art; head height approximately 72% of frame; face centered; original hair ornament, face, neck and shoulder tops retained; no chest; no redraw."
           }
         ]
+      },
+      "bust": {
+        "history": [
+          {
+            "version": "0001",
+            "file": "bust/wu_guo_tai__吳國太__bust_0001.png",
+            "status": "review-pending",
+            "sha256": "efdb065b7c45562567e588f8eb04c95e2a45caccb06b4329bb670ee809a3a615",
+            "canvas": "358x399",
+            "sourceStanding": "standing/wu_guo_tai__吳國太__standing_0002.png",
+            "cropBox": [
+              77,
+              0,
+              435,
+              399
+            ],
+            "note": "Geometric crop only; original identity, hair, costume and accessories unchanged."
+          }
+        ],
+        "activeVersion": "0001",
+        "status": "review-pending"
       }
     },
     {
@@ -11680,6 +11987,27 @@
           }
         ],
         "activeVersion": "0001"
+      },
+      "bust": {
+        "activeVersion": "0001",
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "busts/xiahou_shi__夏侯氏__bust_0001.png",
+            "status": "review-pending",
+            "sha256": "abfdbc2eb989e1c2daeca5a329b7870315969e461c5d79afdba6f9125e2b93ba",
+            "canvas": "320x430 RGBA",
+            "sourceStanding": "standing/xiahou_shi__夏侯氏__standing_0002.png",
+            "cropBox": [
+              100,
+              0,
+              420,
+              430
+            ],
+            "note": "Geometric crop from the approved static portrait; preserves original face, hair, outfit, bowl and hand gestures; head, shoulders and chest included, lower edge near waist."
+          }
+        ]
       }
     },
     {
@@ -12007,15 +12335,30 @@
         "activeVersion": "0002"
       },
       "avatar": {
-        "status": "integrated",
+        "status": "review-pending",
         "history": [
           {
             "version": "0002",
             "file": "avatars/sun_lu_ban__孫魯班__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/sun_lu_ban__孫魯班__avatar_0003.png",
+            "status": "review-pending",
+            "sha256": "f6c609aa64a98b6b0de0127d9cc7d3c54cb5c34a476a218e795e5d55171dca73",
+            "canvas": "420x420",
+            "sourceBust": "sun_lu_ban__孫魯班__bust_0001.png",
+            "cropBox": [
+              220,
+              0,
+              640,
+              420
+            ],
+            "note": "Direct crop from bust; head and hair silhouette preserved, both shoulders and neckline retained."
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "battle": {
         "status": "review-pending",
@@ -12092,6 +12435,27 @@
             "sourceSha256ForResize": "f367cb48ffb63774e64780caca703224303c00df03d43efa5c4d3d1b7bd057aa"
           }
         ]
+      },
+      "bust": {
+        "history": [
+          {
+            "version": "0001",
+            "file": "bust/sun_lu_ban__孫魯班__bust_0001.png",
+            "status": "review-pending",
+            "sha256": "55eee24a670e130b7af75ab34227a56f9c484e0d1f8c336796ec20e16d58c51a",
+            "canvas": "864x800",
+            "sourceStanding": "standing/sun_lu_ban__孫魯班__standing_0002.png",
+            "cropBox": [
+              80,
+              0,
+              944,
+              800
+            ],
+            "note": "Direct geometric crop from standing portrait; no redraw."
+          }
+        ],
+        "activeVersion": "0001",
+        "status": "review-pending"
       }
     },
     {
@@ -12109,15 +12473,30 @@
         "activeVersion": "0002"
       },
       "avatar": {
-        "status": "integrated",
+        "status": "review-pending",
         "history": [
           {
             "version": "0002",
             "file": "avatars/sun_lu_yu__孫魯育__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/sun_lu_yu__孫魯育__avatar_0003.png",
+            "status": "review-pending",
+            "sha256": "edc6c0eeae3b75c07eb0af36dedfdfb779fd98de3185bb14717e9d596bcd490b",
+            "canvas": "400x400",
+            "sourceBust": "sun_lu_yu__孫魯育__bust_0001.png",
+            "cropBox": [
+              240,
+              0,
+              640,
+              400
+            ],
+            "note": "Geometric crop only; identity and design unchanged."
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "smallAvatar": {
         "activeVersion": "0001",
@@ -12151,6 +12530,27 @@
             "qc": "Full figure and both shoes visible; straight blade and hand on hilt; transparent background; elegant, restrained expression. Review candidate only."
           }
         ]
+      },
+      "bust": {
+        "history": [
+          {
+            "version": "0001",
+            "file": "bust/sun_lu_yu__孫魯育__bust_0001.png",
+            "status": "review-pending",
+            "sha256": "5df8ce2a7b0f3271244bf9da27caea896f316a1929e4bf6311b12884de1e8407",
+            "canvas": "824x820",
+            "sourceStanding": "standing/sun_lu_yu__孫魯育__standing_0002.png",
+            "cropBox": [
+              100,
+              0,
+              924,
+              820
+            ],
+            "note": "Geometric crop only; identity and design unchanged."
+          }
+        ],
+        "activeVersion": "0001",
+        "status": "review-pending"
       }
     },
     {
@@ -12168,15 +12568,30 @@
         "activeVersion": "0002"
       },
       "avatar": {
-        "status": "integrated",
+        "status": "review-pending",
         "history": [
           {
             "version": "0002",
             "file": "avatars/zhao_e__趙娥__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/zhao_e__趙娥__avatar_0003.png",
+            "status": "review-pending",
+            "sha256": "3dafced720eb313687c1511206ecda25722ba6eebc3bc68d3867953875331f05",
+            "canvas": "220x220",
+            "sourceBust": "zhao_e__趙娥__bust_0001.png",
+            "cropBox": [
+              126,
+              0,
+              346,
+              220
+            ],
+            "note": "Direct geometric crop from bust; full face and head shape retained, shoulder line included."
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "smallAvatar": {
         "activeVersion": "0003",
@@ -12235,6 +12650,27 @@
             "note": "依使用者要求改為短刀；手指實握刀柄，刀刃自護手延伸，手腕與前臂自然對齊。保留趙娥赤棕戰衣、深色護甲與原有角色辨識。候選待審。"
           }
         ]
+      },
+      "bust": {
+        "history": [
+          {
+            "version": "0001",
+            "file": "bust/zhao_e__趙娥__bust_0001.png",
+            "status": "review-pending",
+            "sha256": "d77b5d272b93c879ca833e8789cb20c2555fc4c573c8cc7e7aa8477fc67da3d4",
+            "canvas": "464x380",
+            "sourceStanding": "standing/zhao_e__趙娥__standing_0002.png",
+            "cropBox": [
+              24,
+              20,
+              488,
+              400
+            ],
+            "note": "Direct geometric crop from standing portrait; no redraw."
+          }
+        ],
+        "activeVersion": "0001",
+        "status": "review-pending"
       }
     },
     {
@@ -12252,15 +12688,30 @@
         "activeVersion": "0002"
       },
       "avatar": {
-        "status": "integrated",
+        "status": "review-pending",
         "history": [
           {
             "version": "0002",
             "file": "avatars/yang_hui_yu__羊徽瑜__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/yang_hui_yu__羊徽瑜__avatar_0003.png",
+            "status": "review-pending",
+            "sha256": "3baf3bd13e5ce2c0374be80b3593ffbd3200b47d1e6101913fce80733bd42ba1",
+            "canvas": "205x207",
+            "sourceBust": "yang_hui_yu__羊徽瑜__bust_0001.png",
+            "cropBox": [
+              77,
+              0,
+              282,
+              207
+            ],
+            "note": "Geometric crop only; face, hair, ornaments and costume unchanged."
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "battle": {
         "status": "review-pending",
@@ -12330,35 +12781,81 @@
             "sourceSha256ForResize": "97a3a18f6e319bf5af78312eff1758de5ce313939afa02c7af7edd52afb38cdf"
           }
         ]
+      },
+      "bust": {
+        "history": [
+          {
+            "version": "0001",
+            "file": "bust/yang_hui_yu__羊徽瑜__bust_0001.png",
+            "status": "review-pending",
+            "sha256": "4aadd974eb27500909b1ff2ecf7e0f60e6b76e6f19220545805a7ace86ac0205",
+            "canvas": "358x399",
+            "sourceStanding": "standing/yang_hui_yu__羊徽瑜__standing_0002.png",
+            "cropBox": [
+              77,
+              0,
+              435,
+              399
+            ],
+            "note": "Geometric crop only; face, hair, ornaments and costume unchanged."
+          }
+        ],
+        "activeVersion": "0001",
+        "status": "review-pending"
       }
     },
     {
       "uid": "hua-man",
       "name": "花鬘",
       "standing": {
-        "status": "integrated",
+        "status": "review-pending",
         "history": [
           {
             "version": "0002",
             "file": "standing/hua_man__花鬘__standing_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "standing/hua_man__花鬘__standing_0003.png",
+            "status": "review-pending",
+            "sha256": "f579ce743a90028ee534c474e5ebbedca93e1572c4960fac0d16b6bd6a7f4358",
+            "canvas": "1024x1536",
+            "poseLabel": "three-quarter poised stance",
+            "weaponClass": "twin short curved blades",
+            "note": "New static master; identity and paired blades retained."
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "avatar": {
-        "status": "integrated",
+        "status": "review-pending",
         "history": [
           {
             "version": "0002",
             "file": "avatars/hua_man__花鬘__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/hua_man__花鬘__avatar_0003.png",
+            "status": "review-pending",
+            "sha256": "34b61267e3b8e14ffdc01eb886aaf642bddd33975cc675d5f4ef392d508ab8ca",
+            "canvas": "760x760",
+            "sourceBust": "hua_man__花鬘__bust_0001.png",
+            "cropBox": [
+              132,
+              0,
+              892,
+              760
+            ],
+            "note": "Direct crop from bust; complete head silhouette and ornaments preserved, both shoulders included."
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "battle": {
-        "activeVersion": "0001",
+        "activeVersion": "0002",
         "status": "review-pending",
         "displayStatus": "not-yet-verified",
         "history": [
@@ -12373,6 +12870,16 @@
             "sourceStanding": "standing/hua_man__花鬘__standing_0002.png",
             "weaponClass": "paired short crescent-hook blades",
             "note": "Character and weapon design follow approved standing art. Whole transparent layer was translated 27px right for centered safe framing; no crop or stretch."
+          },
+          {
+            "version": "0002",
+            "file": "battle/hua_man__花鬘__battle_0002.png",
+            "status": "review-pending",
+            "sha256": "d0f17c14c9cfb1df1c855f43e273887ad7515aab34e6414ca4c6ce28bc006bc5",
+            "canvas": "1024x1536",
+            "sourceStanding": "hua_man__花鬘__standing_0003.png",
+            "poseLabel": "cross-body twin-blade sweep and low guard",
+            "weaponClass": "twin short curved blades"
           }
         ]
       },
@@ -12438,6 +12945,27 @@
             "createdAt": "2026-11-20"
           }
         ]
+      },
+      "bust": {
+        "history": [
+          {
+            "version": "0001",
+            "file": "bust/hua_man__花鬘__bust_0001.png",
+            "status": "review-pending",
+            "sha256": "4cb394f80a637c458626b8010fb15618e1ac482b56251be20f14478e9c00e699",
+            "canvas": "1024x1050",
+            "sourceStanding": "hua_man__花鬘__standing_0003.png",
+            "cropBox": [
+              0,
+              0,
+              1024,
+              1050
+            ],
+            "note": "Direct crop from standing; no redraw."
+          }
+        ],
+        "activeVersion": "0001",
+        "status": "review-pending"
       }
     },
     {
@@ -12527,15 +13055,30 @@
         "activeVersion": "0002"
       },
       "avatar": {
-        "status": "integrated",
+        "status": "review-pending",
         "history": [
           {
             "version": "0002",
             "file": "avatars/cao_hua__曹華__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0004",
+            "file": "avatars/cao_hua__曹華__avatar_0004.png",
+            "status": "review-pending",
+            "sha256": "825d38738636de3eab4b4072b45903e236d5e3d82802ea49267563f41dfbf27a",
+            "canvas": "409x415",
+            "sourceBust": "cao_hua__曹華__bust_0001.png",
+            "cropBox": [
+              154,
+              0,
+              563,
+              415
+            ],
+            "note": "Geometric crop only; original character design unchanged."
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0004"
       },
       "battle": {
         "status": "review-pending",
@@ -12579,6 +13122,27 @@
             "createdAt": "2026-11-18"
           }
         ]
+      },
+      "bust": {
+        "history": [
+          {
+            "version": "0001",
+            "file": "bust/cao_hua__曹華__bust_0001.png",
+            "status": "review-pending",
+            "sha256": "2253132ff785bce6d6dade61133d83b9034a8efe136b28e03604c7edd750ebf4",
+            "canvas": "716x799",
+            "sourceStanding": "standing/cao_hua__曹華__standing_0002.png",
+            "cropBox": [
+              154,
+              0,
+              870,
+              799
+            ],
+            "note": "Geometric crop only; original character design unchanged."
+          }
+        ],
+        "activeVersion": "0001",
+        "status": "review-pending"
       }
     },
     {
@@ -12653,15 +13217,120 @@
         "activeVersion": "0002"
       },
       "avatar": {
-        "status": "integrated",
+        "status": "review-pending",
         "history": [
           {
             "version": "0002",
             "file": "avatars/xu_shi__徐氏__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/xu_shi__徐氏__avatar_0003.png",
+            "status": "superseded",
+            "sha256": "c097493f86ec61bcd8a792541b8aab9a3ec8820324e1d5eeacaac853ca393ace",
+            "canvas": "409x415",
+            "sourceBust": "xu_shi__徐氏__bust_0001.png",
+            "cropBox": [
+              164,
+              0,
+              573,
+              415
+            ],
+            "note": "Superseded by face-centered crop version 0008."
+          },
+          {
+            "version": "0004",
+            "file": "avatars/xu_shi__徐氏__avatar_0004.png",
+            "status": "superseded",
+            "sha256": "95d3276efff6867237cbf4e0c43f059d4023f877249ea2da258678e2c63f6280",
+            "canvas": "358x415",
+            "sourceBust": "xu_shi__徐氏__bust_0001.png",
+            "cropBox": [
+              236,
+              0,
+              594,
+              415
+            ],
+            "note": "Superseded by face-centered crop version 0008."
+          },
+          {
+            "version": "0005",
+            "file": "avatars/xu_shi__徐氏__avatar_0005.png",
+            "status": "superseded",
+            "sha256": "f302e8859facc73346eedcb738f1ecb863f140906f4529992fc597f2dee729e8",
+            "canvas": "512x415",
+            "sourceBust": "xu_shi__徐氏__bust_0001.png",
+            "cropBox": [
+              215,
+              0,
+              727,
+              415
+            ],
+            "note": "Superseded by face-centered crop version 0008."
+          },
+          {
+            "version": "0006",
+            "file": "avatars/xu_shi__徐氏__avatar_0006.png",
+            "status": "superseded",
+            "sha256": "08192ee6a9ec5d759318677f79122382ca0b53a6b0db4c45ea34d176477f947e",
+            "canvas": "563x415",
+            "sourceBust": "xu_shi__徐氏__bust_0001.png",
+            "cropBox": [
+              210,
+              0,
+              773,
+              415
+            ],
+            "note": "Superseded by face-centered crop version 0008."
+          },
+          {
+            "version": "0007",
+            "file": "avatars/xu_shi__徐氏__avatar_0007.png",
+            "status": "superseded",
+            "sha256": "7fc28f3c86e25135d6b7df3f5ff40fef06d2f04ca6e68a98426203e27d75107a",
+            "canvas": "635x415",
+            "sourceBust": "xu_shi__徐氏__bust_0001.png",
+            "cropBox": [
+              266,
+              0,
+              901,
+              415
+            ],
+            "note": "Superseded by face-centered crop version 0008."
+          },
+          {
+            "version": "0008",
+            "file": "avatars/xu_shi__徐氏__avatar_0008.png",
+            "status": "superseded",
+            "sha256": "1948875b842ef5d2b9984e09ad869c23fd853df533f361718e3112e600025c63",
+            "canvas": "380x415",
+            "sourceBust": "xu_shi__徐氏__bust_0001.png",
+            "cropBox": [
+              202,
+              0,
+              582,
+              415
+            ],
+            "note": "Superseded by face-centered shoulder crop version 0009."
+          },
+          {
+            "version": "0009",
+            "file": "avatars/xu_shi__徐氏__avatar_0009.png",
+            "status": "review-pending",
+            "sha256": "4ec339b7326a43234324db2899afcac735880f165e508b1be88593efd1bcd118",
+            "canvas": "430x430 RGBA",
+            "sourceBust": "xu_shi__徐氏__bust_0001.png",
+            "cropBox": [
+              309,
+              0,
+              739,
+              430
+            ],
+            "note": "Geometric crop only; measured face center aligned to canvas centerline; full hair ornament retained and both shoulder/chest areas visible, no redesign."
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0009"
       },
       "battle": {
         "activeVersion": "0001",
@@ -12698,6 +13367,27 @@
           }
         ],
         "activeVersion": "0001"
+      },
+      "bust": {
+        "history": [
+          {
+            "version": "0001",
+            "file": "bust/xu_shi__徐氏__bust_0001.png",
+            "status": "review-pending",
+            "sha256": "326cf263e9b2988bb91d504e312f7394bf3b24356b9f32634a79d9d7b13b9390",
+            "canvas": "778x799",
+            "sourceStanding": "standing/xu_shi__徐氏__standing_0002.png",
+            "cropBox": [
+              123,
+              0,
+              901,
+              799
+            ],
+            "note": "Geometric crop only; original hair ornaments, face and costume design preserved."
+          }
+        ],
+        "activeVersion": "0001",
+        "status": "review-pending"
       }
     }
   ]
