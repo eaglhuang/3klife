@@ -19,7 +19,7 @@
       "goldCost": 0,
       "sleepSuccessRate": 50,
       "sleepFavorDelta": 0,
-      "sleepStaminaDelta": 10,
+      "sleepGoldDelta": 30,
       "caughtFavorDelta": -6,
       "caughtThresholdForTitle": 3,
       "unlockedTitle": "府中睡神"
