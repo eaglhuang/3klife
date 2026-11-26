@@ -59,3 +59,4 @@
 | `doc_task_3181` | docs/agent-briefs/tasks/PROG/PROG-2-10107.md | [PROG-2-10107] 放招微調：士氣鼓舞 TP 20 免傷兵、首年主將補通用計謀加速 15、奧義門檻方案 A |
 | `doc_task_3184` | docs/agent-briefs/tasks/PROG/PROG-2-10111.md | [PROG-2-10111] playtest character-intro-tabs 點名冊第一列沒開出人物介紹 |
 | `doc_task_3185` | docs/agent-briefs/tasks/PROG/PROG-2-10115.md | [PROG-2-10115] 名冊出現「敵軍」陣營武將 |
+| `doc_task_3186` | docs/agent-briefs/tasks/PROG/PROG-2-10116.md | [PROG-2-10116] 詳情表頭 enemy 標在野 |

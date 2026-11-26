@@ -18,7 +18,7 @@ export function createGeneralDetailFactionMetaSuite(): TestSuite {
 
     suite.test('在野與既有對照不變', () => {
         assert.equals('在野．先鋒', metaOf('neutral'));
-        assert.equals('敵軍．先鋒', metaOf('enemy'));
+        assert.equals('在野．先鋒', metaOf('enemy'));
     });
 
     return suite;

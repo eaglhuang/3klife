@@ -164,7 +164,7 @@ const STORY_SLOT_FALLBACK: Record<GeneralDetailStorySlot, (config: GeneralConfig
 
 const FACTION_DISPLAY: Record<string, string> = {
     player: '蜀漢',
-    enemy: '敵軍',
+    enemy: '在野',
     neutral: '在野',
 };
 
