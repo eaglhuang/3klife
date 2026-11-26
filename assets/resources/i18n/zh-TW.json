@@ -1553,8 +1553,13 @@
   "year1.toast.title": "獲得稱號「{0}」",
   "year1.toast.favor": "親子好感 +{0}",
   "ui.ceremony.act3.grandSlam": "新手滿貫！首年目標幾乎一網打盡，這開局連老江湖都想拜師！",
-  "ui.ceremony.crowd.cheer.1": "關羽撫鬚：「好一個歲末金榜，諸位名門氣勢不凡！」",
-  "ui.ceremony.crowd.cheer.2": "張飛大嗓門：「俺明年也要帶娃來衝榜，誰都別搶！」",
-  "ui.ceremony.crowd.cheer.3": "諸葛亮搖扇：「名次有高低，來年局勢尚有變數，諸位加油。」",
-  "ui.ceremony.crowd.cheer.4": "曹操大笑：「哈哈！今年這熱鬧場面，不輸銅雀台大宴！」"
+  "ui.ceremony.crowd.cheer.1": "這榜單比我家年終獎金還刺激，先鼓掌再說！",
+  "ui.ceremony.crowd.cheer.2": "各位名門手別停，掌聲不收費，今天免費領到飽！",
+  "ui.ceremony.crowd.cheer.2.f": "各位名門手別停，掌聲不收費，姐妹們一起拍到手紅！",
+  "ui.ceremony.crowd.cheer.3": "第一名先別太得意，明年有人要來搶位置囉。",
+  "ui.ceremony.crowd.cheer.4": "我賭一包瓜子，今年的黑馬就在現場！",
+  "ui.ceremony.crowd.cheer.4.f": "本姑娘賭一包瓜子，今年的黑馬就在現場！",
+  "ui.ceremony.crowd.cheer.5": "沒上榜也別氣餒，今天主要是來蹭熱鬧的。",
+  "ui.ceremony.crowd.cheer.6": "領獎的記得笑一個，這張要放進家族相簿！",
+  "ui.ceremony.crowd.say": "{0}：{1}"
 }
