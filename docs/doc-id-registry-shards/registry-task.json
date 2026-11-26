@@ -17452,5 +17452,23 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10081.md",
     "title": "[PROG-2-10081] 奧義 C 組音效接入戰場奧義施放（蓄力／爆發／收尾）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3174",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10105.md",
+    "title": "[PROG-2-10105] UI 規格：戰場軍勢糧草常駐顯示與出牌不足提示＋內政任務詳情單屏重排（使用者 11/27 回饋）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3175",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10104.md",
+    "title": "[PROG-2-10104] 實作：戰場軍勢糧草常駐顯示、卡片費用章與不足說明面板",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3176",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10108.md",
+    "title": "[PROG-2-10108] 實作：內政任務詳情單屏三欄重排與固定底部行動列",
+    "category": "task"
   }
 ]
