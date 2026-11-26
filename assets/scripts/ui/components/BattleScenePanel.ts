@@ -314,6 +314,11 @@ export class BattleScenePanel extends Component {
         }
     }
 
+    /** 守城保底券持券兵種（null＝沒券）；符合的卡面顯示「保」小標（PROG-2-10041） */
+    public setGuardTicket(unitType: string | null): void {
+        this.tigerTallyComposite?.setGuardTicket(unitType);
+    }
+
     /**
      * 追加一行戰鬥日誌。
      * Unity 對照：battleLogPanel.AppendLine(text)

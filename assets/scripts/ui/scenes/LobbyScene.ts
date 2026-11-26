@@ -284,6 +284,14 @@ import { buildTallyCardCatalog, getTallyCardSummaries } from '../../core/config/
 import { DeckSelectController } from '../core/DeckSelectController';
 import { LeadSelectController } from '../core/LeadSelectController';
 import { UIScreenPreviewHost } from '../components/UIScreenPreviewHost';
+import { BondingAndEpithetPanel } from '../components/BondingAndEpithetPanel';
+import { JealousyPopupPanel } from '../components/JealousyPopupPanel';
+import { BondingJealousyRuntime, pairSynergyK, seedOfText } from '../../core/systems/BondingJealousyRuntime';
+import { YearEndCeremonyPanel } from '../components/YearEndCeremonyPanel';
+import { buildYearEndCeremonyResult } from '../../core/systems/YearEndCeremonyRuntime';
+import { BloodlineEpithetService } from '../../core/systems/BloodlineEpithetService';
+import { JealousyAndDynastyService } from '../../core/systems/JealousyAndDynastyService';
+import bondingConfig from '../../../resources/data/master/bonding-config.json';
 import { LobbyScreenRetention } from './LobbyScreenRetention';
 import { cyclePoolItem } from '../../core/systems/GeneralPoolCycle';
 import { SolidBackground } from '../components/SolidBackground';
@@ -338,7 +346,7 @@ const LOBBY_OPENER_MOUNT_IDS: ReadonlyArray<readonly [string, string]> = [
     ['_openJournalHub', 'JournalHub'], ['_openBattleReview', 'BattleReview'], ['_openTournament', 'Tournament'],
     ['_openWishAltar', 'WishAltar'], ['_openExtremeTask', 'ExtremeTask'], ['_openRelationGraph', 'RelationGraph'],
     ['_openJobChange', 'JobChange'], ['_openRecruitHall', 'RecruitHall'], ['_openRivalDiplomacy', 'RivalDiplomacy'],
-    ['_openDomestic', 'Domestic'], ['_openBondingSetup', 'BondingSetup'], ['_openDestinyShop', 'DestinyShop'],
+    ['_openDomestic', 'Domestic'], ['_openBondingSetup', 'BondingSetup'], ['_openBondingProposal', 'BondingProposal'], ['_openJealousyPopup', 'JealousyPopup'], ['_openDestinyShop', 'DestinyShop'],
     ['_openRetireReview', 'RetireReview'], ['_openUltimateCodex', 'UltimateCodex'], ['_openSpiritCodex', 'SpiritCodex'],
     ['_openSageOracle', 'SageOracle'], ['_openSortieSetup', 'SortieSetup'], ['_openEliteTroopCodex', 'EliteTroopCodex'], ['_openAcademyFlow', 'AcademyFlow'],
 ];
@@ -504,6 +512,19 @@ export class LobbyScene extends Component {
     private _defenseEncounters: EncounterConfig[] = [];
     private _yearEndDefense: YearEndDefenseConfig = DEFAULT_YEAR_END_DEFENSE;
     private _extremeTaskHost: UIScreenPreviewHost | null = null;
+    /** 提親機率面板（結緣畫面按鈕開啟，PROG-2-10043） */
+    private _bondingProposalHost: UIScreenPreviewHost | null = null;
+    private _bondingProposalPanel: BondingAndEpithetPanel | null = null;
+    private _bondingProposalTargetId: string | null = null;
+    /** 吃醋三選項彈窗（換季時由配偶事件觸發，PROG-2-10043） */
+    private _jealousyHost: UIScreenPreviewHost | null = null;
+    private _jealousyPanel: JealousyPopupPanel | null = null;
+    private _jealousySpouseId: string | null = null;
+    private readonly _bondingJealousy = new BondingJealousyRuntime();
+    /** 年終頒獎典禮（PROG-2-10046）：畫面、元件、以及年報出現後等季報關閉才開的待播年份（0 = 沒有待播） */
+    private _ceremonyHost: UIScreenPreviewHost | null = null;
+    private _ceremonyPanel: YearEndCeremonyPanel | null = null;
+    private _pendingCeremonyYear = 0;
     private _extremeTaskMessage = '';
     private _listPanel: GeneralListComposite | null = null;
     private _detailPanel: GeneralDetailComposite | null = null;
@@ -931,6 +952,9 @@ export class LobbyScene extends Component {
             { id: 'MentorCardDetail', run: () => this._mountMentorCardDetail() },
             { id: 'GeneralVersionGallery', run: () => this._mountGeneralVersionGallery() },
             { id: 'BondingSetup', run: () => this._mountBondingSetup() },
+            { id: 'BondingProposal', run: () => this._mountBondingProposal() },
+            { id: 'JealousyPopup', run: () => this._mountJealousyPopup() },
+            { id: 'YearEndCeremony', run: () => this._mountYearEndCeremony() },
             { id: 'JobChange', run: () => this._mountJobChange() },
             { id: 'Domestic', run: () => this._mountDomestic() },
             { id: 'RecruitHall', run: () => this._mountRecruitHall() },
@@ -2566,6 +2590,7 @@ export class LobbyScene extends Component {
 
         this._bondingHost = await this._mountPreviewScreenHost('BondingSetupHost', 'bonding-setup-screen', [
             { buttonId: 'btnCloseBond', handler: () => { this._closeBondingSetup(); } },
+            { buttonId: 'btnProposalOdds', handler: () => { this._openBondingProposal(); } },
             { buttonId: 'btnGoBeautyGacha', handler: () => { this._openGachaAtBeautyPool(); } },
             { buttonId: 'btnYuedanFilter', handler: () => { bonding.toggleYuedanFilter(); this._refreshBondingSetup(); } },
             { buttonId: 'btnRumorRoute', handler: () => { bonding.cycleRumorRoute(); this._refreshBondingSetup(); } },
@@ -3367,6 +3392,252 @@ export class LobbyScene extends Component {
             { buttonId: 'btnUpgrade', handler: () => { this._onUpgradeTerritory(); } },
         ]);
         this._govHallHost.node.active = false;
+    }
+
+    /** 面板用翻譯：走 i18n 四語系（沒有鍵時回鍵名，驗收會抓到） */
+    private readonly _panelT = (key: string, ...args: string[]): string => services().i18n.t(key, ...args);
+
+    private async _mountBondingProposal(): Promise<void> {
+        const host = await this._mountPreviewScreenHost('BondingProposalHost', 'bonding-proposal-screen', [
+            { buttonId: 'btnClose', handler: () => { this._closeBondingProposal(); } },
+            { buttonId: 'btnPropose', handler: () => { this._onClickBondingPropose(); } },
+            { buttonId: 'btnAge8', handler: () => { this._bondingProposalPanel?.onSelectEpithetAge(8); } },
+            { buttonId: 'btnAge12', handler: () => { this._bondingProposalPanel?.onSelectEpithetAge(12); } },
+            { buttonId: 'btnAge15', handler: () => { this._bondingProposalPanel?.onSelectEpithetAge(15); } },
+        ]);
+        const labelOf = (id: string): Label | null => host.binder.getNode(id)?.getComponent(Label) ?? null;
+        const panel = host.node.addComponent(BondingAndEpithetPanel);
+        panel.titleLabel = labelOf('bpTitle');
+        panel.breakdownLabel = labelOf('bpBreakdown');
+        panel.epithetStageLabel = labelOf('bpEpithet');
+        const theme = await services().specLoader.getThemeService().catch(() => null);
+        panel.setServices(this._panelT, theme);
+        host.binder.setTexts({
+            btnProposeLabel: this._panelT('ui.bonding.proposal.propose'),
+            btnCloseLabel: this._panelT('ui.bonding.proposal.close'),
+            btnAge8Label: this._panelT('ui.bonding.proposal.age', '8'),
+            btnAge12Label: this._panelT('ui.bonding.proposal.age', '12'),
+            btnAge15Label: this._panelT('ui.bonding.proposal.age', '15'),
+        });
+        this._bondingProposalHost = host;
+        this._bondingProposalPanel = panel;
+        host.node.active = false;
+    }
+
+    /** 結緣畫面的「提親機率」：用目前選的父母算真實好感 F、世交相性 K，顯示成功率分項與小名揭曉 */
+    private _openBondingProposal(): void {
+        const host = this._bondingProposalHost;
+        const panel = this._bondingProposalPanel;
+        const bonding = this._bonding;
+        if (!host || !panel || !bonding) {
+            this._showNotOpenYet();
+            return;
+        }
+        const session = services().session;
+        const motherId = bonding.motherId;
+        const mother = motherId ? session.roster.find((g) => g.id === motherId) : undefined;
+        if (!motherId || !mother) {
+            this._showToast(this._panelT('ui.bonding.proposal.none'));
+            return;
+        }
+        const father = bonding.fatherId ? session.roster.find((g) => g.id === bonding.fatherId) : undefined;
+        this._bondingProposalTargetId = motherId;
+        const state = this._bondingJealousy.proposalStateFor(motherId, session.bondAffinityOf(motherId), session.isSpouse(motherId));
+        const k = pairSynergyK(session.familySynergy, father as { familyUid?: string } | undefined, mother as { familyUid?: string });
+        const epithet = BloodlineEpithetService.drawBirthEpithet(seedOfText(`${bonding.fatherId ?? ''}|${motherId}`));
+        panel.bindProposalData(state, k, epithet, 8);
+        host.binder.setTexts({
+            bpTarget: this._panelT('ui.bonding.proposal.target', mother.name),
+            bpMessage: '',
+        });
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+    }
+
+    private _closeBondingProposal(): void {
+        if (this._bondingProposalHost) this._bondingProposalHost.node.active = false;
+    }
+
+    /** 提親：擲骰結果真的寫回好感（被拒 -12）與家族名單（成功且符合納配偶條件才入族） */
+    private _onClickBondingPropose(): void {
+        const panel = this._bondingProposalPanel;
+        const host = this._bondingProposalHost;
+        const targetId = this._bondingProposalTargetId;
+        if (!panel || !host || !targetId) return;
+        const session = services().session;
+        const name = session.roster.find((g) => g.id === targetId)?.name ?? targetId;
+        const setMessage = (text: string): void => host.binder.setTexts({ bpMessage: text });
+        if (session.isSpouse(targetId)) {
+            setMessage(this._panelT('ui.bonding.proposal.result.partner', name));
+            return;
+        }
+        const clock = session.gameTime;
+        const roll = Math.floor(Math.random() * 100);
+        const res = panel.onClickPropose(clock.currentYear, clock.currentSeason, roll);
+        this._bondingJealousy.commitProposal(targetId, panel.proposalState);
+        let text: string;
+        if (res.isMatchmakerFallback) {
+            text = this._panelT('ui.bonding.proposal.result.fallback', name, String(roll), String(res.rateUsed));
+        } else if (res.success) {
+            text = this._panelT('ui.bonding.proposal.result.success', name, String(roll), String(res.rateUsed));
+        } else {
+            session.giftFemale(targetId, bondingConfig.rejectFavorDelta);
+            text = this._panelT('ui.bonding.proposal.result.fail', name, String(roll), String(res.rateUsed));
+        }
+        if (res.success) {
+            const enrolled = session.enrollBondSpouse(targetId);
+            if (!enrolled.ok) text = this._panelT('ui.bonding.proposal.result.enrollBlocked', name);
+            else if (session.hasSaveService) void session.save().catch(() => undefined);
+        }
+        setMessage(text);
+        this._refreshBondingSetup();
+    }
+
+    private async _mountJealousyPopup(): Promise<void> {
+        const host = await this._mountPreviewScreenHost('JealousyPopupHost', 'jealousy-popup-screen', [
+            { buttonId: 'btnJealousyClose', handler: () => { this._closeJealousyPopup(); } },
+            { buttonId: 'btnOptionA', handler: () => { this._onSelectJealousyOption('A'); } },
+            { buttonId: 'btnOptionB', handler: () => { this._onSelectJealousyOption('B'); } },
+            { buttonId: 'btnOptionC', handler: () => { this._onSelectJealousyOption('C'); } },
+        ]);
+        const labelOf = (id: string): Label | null => host.binder.getNode(id)?.getComponent(Label) ?? null;
+        const panel = host.node.addComponent(JealousyPopupPanel);
+        panel.bodyLabel = labelOf('jpBody');
+        panel.titleUnlockedLabel = labelOf('jpTitleUnlocked');
+        const theme = await services().specLoader.getThemeService().catch(() => null);
+        panel.setServices(this._panelT, theme);
+        host.binder.setTexts({
+            jpTitle: this._panelT('ui.jealousy.popup.title'),
+            btnJealousyCloseLabel: this._panelT('ui.jealousy.popup.close'),
+        });
+        this._jealousyHost = host;
+        this._jealousyPanel = panel;
+        host.node.active = false;
+    }
+
+    /** 年終頒獎典禮（PROG-2-10046）：UCUF 畫面＋YearEndCeremonyPanel；名單與獎勵由 YearEndRankingService 以真實聲望結算 */
+    private async _mountYearEndCeremony(): Promise<void> {
+        const host = await this._mountPreviewScreenHost('YearEndCeremonyHost', 'year-end-ceremony-screen', [
+            { buttonId: 'btnYcSkip', handler: () => { this._ceremonyPanel?.skip(); } },
+            { buttonId: 'btnYcClose', handler: () => { this._closeYearEndCeremony(); } },
+        ]);
+        const nodeOf = (id: string): Node | null => host.binder.getNode(id) ?? null;
+        const labelOf = (id: string): Label | null => nodeOf(id)?.getComponent(Label) ?? null;
+        const panel = host.node.addComponent(YearEndCeremonyPanel);
+        panel.titleLabel = labelOf('ycTitle');
+        panel.standingsLabel = labelOf('ycStandings');
+        panel.dialogueLabel = labelOf('ycDialogue');
+        panel.rewardLabel = labelOf('ycReward');
+        panel.skipButton = nodeOf('btnYcSkip');
+        panel.closeButton = nodeOf('btnYcClose');
+        const theme = await services().specLoader.getThemeService().catch(() => null);
+        panel.setServices(this._panelT, theme);
+        host.binder.setTexts({
+            btnYcSkipLabel: this._panelT('ui.ceremony.skip'),
+            btnYcCloseLabel: this._panelT('ui.ceremony.close'),
+        });
+        this._ceremonyHost = host;
+        this._ceremonyPanel = panel;
+        host.node.active = false;
+    }
+
+    /** 有待播年份就開典禮；回傳是否真的開了。第 1 次看不給跳過，播完（或跳過）才記下「已看過」存檔 */
+    private _openYearEndCeremony(): boolean {
+        const host = this._ceremonyHost;
+        const panel = this._ceremonyPanel;
+        const year = this._pendingCeremonyYear;
+        if (!host || !panel || year <= 0) return false;
+        this._pendingCeremonyYear = 0;
+        const session = services().session;
+        const result = buildYearEndCeremonyResult(year, session.clanPrestige, this._panelT('ui.ceremony.house'));
+        panel.setOnFinished(() => { void session.markYearEndCeremonySeen().catch(() => undefined); });
+        panel.bindRankingResult(result, session.yearEndCeremonySeen);
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        return true;
+    }
+
+    private _closeYearEndCeremony(): void {
+        if (this._ceremonyHost) this._ceremonyHost.node.active = false;
+    }
+
+    /** 換季時的配偶事件：至少兩位配偶、且有人今年還沒哄過才吃醋（每位配偶每年一次由判定服務把關） */
+    private _maybeTriggerJealousy(): void {
+        const session = services().session;
+        if (this._jealousyHost?.node.active) return;
+        const spouseId = this._bondingJealousy.pickJealousySpouse(session.spouseIds(), session.gameTime.currentYear);
+        if (spouseId) this._openJealousyPopup(spouseId);
+    }
+
+    private _jealousyRealState(spouseId: string) {
+        const session = services().session;
+        return this._bondingJealousy.jealousyStateFor({
+            favor: session.bondAffinityOf(spouseId),
+            stamina: 0,
+            silver: session.silverLedger.silverBalance(),
+        });
+    }
+
+    private _openJealousyPopup(spouseId: string): void {
+        const host = this._jealousyHost;
+        const panel = this._jealousyPanel;
+        if (!host || !panel) return;
+        const session = services().session;
+        const name = session.roster.find((g) => g.id === spouseId)?.name ?? spouseId;
+        this._jealousySpouseId = spouseId;
+        panel.setSpouseName(name);
+        panel.bindJealousyState(this._jealousyRealState(spouseId));
+        const labels = panel.getOptionLabels(session.gameTime.currentYear);
+        host.binder.setTexts({
+            jpSpouse: this._panelT('ui.jealousy.popup.spouse', name),
+            jpHint: this._panelT('ui.jealousy.popup.hint', name),
+            btnOptionALabel: labels.A,
+            btnOptionBLabel: labels.B,
+            btnOptionCLabel: labels.C,
+            jpBody: '',
+            jpTitleUnlocked: '',
+        });
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+    }
+
+    private _closeJealousyPopup(): void {
+        if (this._jealousyHost) this._jealousyHost.node.active = false;
+        this._jealousySpouseId = null;
+    }
+
+    /** 選項結算：好感寫回真實好感系統、厚禮賠罪真的扣銀兩（不夠就不扣、不結算） */
+    private _onSelectJealousyOption(option: 'A' | 'B' | 'C'): void {
+        const panel = this._jealousyPanel;
+        const host = this._jealousyHost;
+        const spouseId = this._jealousySpouseId;
+        if (!panel || !host || !spouseId) return;
+        const session = services().session;
+        const year = session.gameTime.currentYear;
+        panel.bindJealousyState(this._jealousyRealState(spouseId));
+        if (option === 'B') {
+            const price = JealousyAndDynastyService.getOptionBPrice(year);
+            if (session.silverLedger.silverBalance() < price) {
+                this._showToast(this._panelT('ui.jealousy.popup.noSilver', String(price)));
+                return;
+            }
+        }
+        const silverBefore = panel.state.gold;
+        const out = panel.onSelectOption(option, year, spouseId, Math.floor(Math.random() * 100));
+        const res = out.resolution;
+        const silverGain = res.nextState.gold - silverBefore + res.goldCost;
+        if (!res.blockedByYearlyLimit) {
+            if (res.goldCost > 0) session.silverLedger.spendSilver(res.goldCost);
+            if (silverGain > 0) session.silverLedger.creditSilver(silverGain);
+            if (res.favorDelta !== 0) session.giftFemale(spouseId, res.favorDelta);
+            this._bondingJealousy.commitJealousy(panel.state);
+            if (session.hasSaveService) void session.save().catch(() => undefined);
+        }
+        host.binder.setTexts({
+            jpHint: res.blockedByYearlyLimit
+                ? ''
+                : this._panelT('ui.jealousy.popup.outcome', String(res.favorDelta), String(silverGain - res.goldCost)),
+        });
     }
 
     public openGovernorHall(): void {
@@ -4925,6 +5196,8 @@ ${spent}`,
             this._domesticHost,
             this._nurtureFlowHost,
             this._bondingHost,
+            this._bondingProposalHost,
+            this._jealousyHost,
             this._jobChangeHost,
             this._mercPanelHost,
             this._govHallHost,
@@ -5221,7 +5494,7 @@ ${spent}`,
                 const res = session.enrollMatchmakerSpouse(pickIndex);
                 if (res.ok) {
                     services().event.emit('SHOW_TOAST', {
-                        message: `良緣締結！${res.generalId ? (session.findGeneral(res.generalId)?.name ?? '') : ''}已成為主公家眷。`,
+                        message: `良緣締結！${res.generalId ? (session.roster.find((g) => g.id === res.generalId)?.name ?? '') : ''}已成為主公家眷。`,
                         duration: 3,
                     });
                     this._refreshWalletPreviewState();
@@ -5865,6 +6138,9 @@ ${spent}`,
         this._sessionEventUnsubscribers.push(
             services().event.on(GAME_SESSION_EVENTS.YearEnded, (payload?: unknown) => {
                 this._yearReport?.open(payload as YearReport | undefined);
+                // 歲末結算完成：記下本年，等季報關閉後開頒獎典禮
+                const year = (payload as YearReport | undefined)?.year ?? 0;
+                if (year > 0) this._pendingCeremonyYear = year;
             }),
         );
     }
@@ -6432,6 +6708,10 @@ ${spent}`,
                 this._openSeasonChronicle('season-advance');
                 this._syncSeasonEventPopup();
                 this._syncLineagePopup();
+                // 年終頒獎典禮排在季報之後（PROG-2-10046）；典禮播放期間不再疊吃醋彈窗，吃醋留到下一季
+                if (this._openYearEndCeremony()) return;
+                // 吃醋彈窗排在季報之後，才不會被季報蓋住（PROG-2-10043）
+                this._maybeTriggerJealousy();
             };
             // 季報每季都開（PROG-2-9155）：沒事的季也顯示簡短一句，官職預告才不會漏
             // 關閉要走 UIManager，遮罩與堆疊才會一起收（PROG-2-9122）

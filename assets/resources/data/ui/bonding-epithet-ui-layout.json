@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "orientationSupport": ["landscape", "portrait_ready"],
+  "skinToken": "settlement_parchment_gold",
+  "regions": {
+    "bondingBreakdownPanel": {
+      "anchorMin": [0.15, 0.2],
+      "anchorMax": [0.85, 0.8],
+      "paddingRatio": { "top": 0.06, "bottom": 0.06, "left": 0.05, "right": 0.05 },
+      "rowHeightRatio": 0.12
+    },
+    "epithetRevealCard": {
+      "anchorMin": [0.2, 0.25],
+      "anchorMax": [0.8, 0.75],
+      "paddingRatio": { "top": 0.08, "bottom": 0.08, "left": 0.06, "right": 0.06 }
+    }
+  }
+}

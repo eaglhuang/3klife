@@ -237,6 +237,27 @@ export const FLOAT_AVOID_MAX_SHIFT = 140;
  */
 export const FLOAT_AVOID_EDGE_REACH = 70;
 
+/** 跳字最寬允許多少像素；超過就等比縮字級，免得長句（攻擊 +40 生命 -96）蓋住名牌（PROG-2-10045） */
+export const FLOAT_MAX_WIDTH = 340;
+/** 縮字級的下限，再小在戰場上就看不清 */
+export const FLOAT_MIN_FONT_SIZE = 28;
+
+/**
+ * 長字縮放：依估算寬度把字級縮到不超過 FLOAT_MAX_WIDTH，但不低於 FLOAT_MIN_FONT_SIZE（也不放大）。純函式。
+ * 短字（傷害數字、兩三個中文字）寬度不到上限，原樣回傳設定字級。
+ */
+export function floatFitFontSize(text: string, fontSize: number): number {
+    const width = floatHalfWidth(text, { fontSize }) * 2;
+    if (width <= FLOAT_MAX_WIDTH) return fontSize;
+    const fitted = Math.floor((fontSize * FLOAT_MAX_WIDTH) / width);
+    return Math.max(Math.min(FLOAT_MIN_FONT_SIZE, fontSize), fitted);
+}
+
+/** 格子錨點：沒有單位 id 的字（地形、buff、毒、狀態）用「格子」當錨點，同格連發才會依序錯開 */
+export function cellFloatAnchor(lane: number, depth: number): string {
+    return `cell:${lane}:${depth}`;
+}
+
 /**
  * 估算跳字的半寬（像素）。數字與英文約 0.6 字寬，中日韓字約 1 字寬。純函式。
  * 用回彈後的大小（縮放 1）計算：彈出峰值只維持不到 0.1 秒、且還在起點，往上飄的大半段都是縮放 1。

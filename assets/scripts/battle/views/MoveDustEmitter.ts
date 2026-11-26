@@ -30,7 +30,8 @@ interface Particle {
   s1: number;
 }
 
-/** 產生柔邊圓點貼圖：白色、alpha 由中心向外平滑衰減，顏色交給 Sprite.color 上色。 */
+/** 產生圓點貼圖：白色、邊緣銳利（只留約 12% 半徑的細軟邊抗鋸齒），顏色交給 Sprite.color 上色；顆粒才不會糊成團。 */
+const DOT_EDGE_SOFT = 0.12;
 function makeSoftDotFrame(): SpriteFrame | null {
   try {
     const size = DOT_TEXTURE_SIZE;
@@ -41,8 +42,8 @@ function makeSoftDotFrame(): SpriteFrame | null {
     for (let y = 0; y < size; y++) {
       for (let x = 0; x < size; x++) {
         const d = Math.hypot(x - center, y - center) / (size / 2);
-        const falloff = Math.max(0, 1 - d);
-        const alpha = falloff * falloff * (3 - 2 * falloff); // smoothstep，邊緣柔
+        const t = Math.min(1, Math.max(0, (1 - d) / DOT_EDGE_SOFT));
+        const alpha = t * t * (3 - 2 * t); // 只在最外緣短距離 smoothstep，內部實心
         data.set([255, 255, 255, Math.round(alpha * 255)], (y * size + x) * 4);
       }
     }
@@ -108,7 +109,7 @@ export class MoveDustEmitter {
       const s = p.s0 + (p.s1 - p.s0) * u;
       p.node.setPosition(p.x0 + p.dx * e, p.y0 + p.dy * e, 0);
       p.node.setScale(s, s, 1);
-      p.color.a = Math.round(DUST_START_ALPHA * 255 * (1 - u * u)); // 前段維持濃度、後段才淡出，塵團看得清楚
+      p.color.a = Math.round(DUST_START_ALPHA * 255 * (1 - u * u * u)); // 大半壽命維持濃度、最後才淡出，顆粒看得清楚
       p.sprite.color = p.color;
     }
     // 單位疊層每幀重排 sibling index，容器要跟著送回最底

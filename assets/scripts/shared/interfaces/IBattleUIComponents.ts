@@ -118,6 +118,8 @@ export interface IBattleScenePanelLike {
     node: Node;
     wirePanels(panels: { battleHUD?: any, battleLogPanel?: any }): void;
     setCards(cards: any[]): void;
+    /** 守城保底券持券兵種；null 清除（PROG-2-10041） */
+    setGuardTicket?(unitType: string | null): void;
     setUltimateSkills(skills: any[]): void;
     /** reason：戰法不能施放時的短原因（PROG-2-0408），有值時取代計點行 */
     setTacticSummary(summary: string, points?: { current?: number; max?: number; enabled: boolean }, reason?: string | null, shortReason?: string): void;

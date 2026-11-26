@@ -18681,12 +18681,125 @@
       "priority": "P1",
       "owner": "antigravity",
       "file": "docs/agent-briefs/tasks/PROG/PROG-2-10027.md"
+    },
+    {
+      "id": "PROG-2-10033",
+      "title": "實作吃醋三選項（B 價格縮放、C 抓包 3 次解鎖府中睡神）與三連霸天下名門徽章",
+      "status": "done",
+      "priority": "P1",
+      "owner": "antigravity",
+      "file": "docs/agent-briefs/tasks/PROG/PROG-2-10033.md"
+    },
+    {
+      "id": "PROG-2-10029",
+      "title": "實作血統天賦小名 48 池、出生抽取、8/12/15 歲揭曉與成長拆解表",
+      "status": "done",
+      "priority": "P1",
+      "owner": "antigravity",
+      "file": "docs/agent-briefs/tasks/PROG/PROG-2-10029.md"
+    },
+    {
+      "id": "PROG-2-10036",
+      "title": "結緣成功率公式分項 UI 與小名 8/12/15 歲三段揭曉 ViewModel 與相對比例配置",
+      "status": "done",
+      "priority": "P1",
+      "owner": "antigravity",
+      "file": "docs/agent-briefs/tasks/PROG/PROG-2-10036.md"
+    },
+    {
+      "doc_id": "doc_task_3104",
+      "id": "PROG-2-10035",
+      "title": "大廳任務類視窗套用戰場結算風格（settle 皮膚家族）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "feature",
+      "phase": "M0",
+      "created": "2026-11-25",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "把戰場勝利結算窗樣式抽成主題 familyBindings.settle，任務詳情窗與極限任務窗改套。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "tsc 0；run-cli 全過；截圖"
+      ],
+      "deliverables": [
+        "theme-registry familyBindings.settle",
+        "ThemeService.skinStyleFor"
+      ],
+      "notes": "2026-11-25 | 狀態: done | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "id": "PROG-2-10037",
+      "title": "實作結緣公式分項與小名 8/12/15 歲三段揭曉可玩 UI 元件",
+      "status": "done",
+      "priority": "P1",
+      "owner": "antigravity",
+      "file": "docs/agent-briefs/tasks/PROG/PROG-2-10037.md"
+    },
+    {
+      "id": "PROG-2-10038",
+      "title": "實作吃醋三選項彈窗 UI（補齊 10033 i18n 鍵與第 1/2/3 次抓包三段台詞）",
+      "status": "done",
+      "priority": "P1",
+      "owner": "antigravity",
+      "file": "docs/agent-briefs/tasks/PROG/PROG-2-10038.md"
+    },
+    {
+      "id": "PROG-2-10043",
+      "title": "結緣提親機率面板與吃醋彈窗掛進遊戲（PROG-2-10037／10038 掛載整合）",
+      "status": "done",
+      "priority": "P1",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "file": "docs/agent-briefs/tasks/PROG/PROG-2-10043.md"
+    },
+    {
+      "id": "PROG-2-10044",
+      "title": "實作年終頒獎典禮三幕式 UI 元件與四語系對白",
+      "status": "done",
+      "priority": "P1",
+      "owner": "antigravity",
+      "file": "docs/agent-briefs/tasks/PROG/PROG-2-10044.md"
+    },
+    {
+      "id": "PROG-2-10046",
+      "title": "年終頒獎典禮三幕式面板掛進遊戲（PROG-2-10044 掛載整合）",
+      "status": "done",
+      "priority": "P1",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "file": "docs/agent-briefs/tasks/PROG/PROG-2-10046.md"
     }
   ],
   "summary": {
-    "done": 343,
+    "done": 352,
     "in_progress": 3,
     "open": 87,
-    "total": 433
+    "total": 442
   }
 }

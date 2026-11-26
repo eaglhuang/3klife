@@ -32,7 +32,8 @@ import { validateBattleStateReadModel, validateSortieLoadoutReadModel } from '..
 import { getEliteDeployCap, scenePresetIdOf } from '../../core/systems/SortieDeploy';
 import { BattleTutorialHint } from './BattleTutorialHint';
 import { DefenseDeployGuide } from './DefenseDeployGuide';
-import { withDefenseGuideFallback } from '../../core/systems/DefenseGuide';
+import { TroopType } from '../../core/config/Constants';
+import { guardTicketJustUsed, withDefenseGuideFallback } from '../../core/systems/DefenseGuide';
 import { BattleUIBridge, createBattleSceneContext } from './BattleUIBridge';
 import { TurnFlowManager } from './TurnFlowManager';
 import { setupCameraForBoard, initSceneBackground, addBackgroundSwitchUI, resolveSceneBackgroundId } from './BattleSceneSetup';
@@ -133,6 +134,8 @@ export class BattleScene extends Component {
   private deployRuntime: IDeployRuntimeLike | null = null;
   private tutorialHint: BattleTutorialHint | null = null;
   private defenseGuide: DefenseDeployGuide | null = null;
+  /** 守城保底券是否還在（用來偵測用券那一刻，PROG-2-10041） */
+  private guardTicketHeld = false;
   private skillTargetingFlow: BattleSkillTargetingFlow | null = null;
   private readonly sceneContext = createBattleSceneContext();
   private battleUIBridge: BattleUIBridge | null = null;
@@ -516,6 +519,8 @@ export class BattleScene extends Component {
         // 保底兵（PROG-2-10023）：沒卡或糧草不足以部署任何兵種時發一張步兵卡，閘門才不會卡死
         if (this.ctrl.grantDefenseGuardInfantry()) {
           this.deployRuntime?.showToast(lookup('ui.battle.defense.guard_granted', services().i18n.t('ui.general.aptitude.troop_infantry')), 5);
+          this.battleScenePanel?.setGuardTicket?.(TroopType.Infantry); // 能用券的卡面加「保」小標（PROG-2-10041）
+          this.guardTicketHeld = true;
         }
         this.defenseGuide = new DefenseDeployGuide(services().event, lookup, hint => services().event.emit('first-battle-guide', hint), 0);
       }
@@ -692,6 +697,12 @@ export class BattleScene extends Component {
   // ─── 回合推進（UI 事件驅動）──────────────────────────────────────────────
 
   private _onPlayerDeployed(): void {
+    // 保底券用掉了：清卡面「保」小標並提示一句（PROG-2-10041）
+    if (guardTicketJustUsed(this.guardTicketHeld, !!this.ctrl?.hasDefenseGuardInfantry)) {
+      this.guardTicketHeld = false;
+      this.battleScenePanel?.setGuardTicket?.(null);
+      this.deployRuntime?.showToast(withDefenseGuideFallback((key, ...args) => services().i18n.t(key, ...args))('ui.battle.defense.guard_used'), 3);
+    }
     this.turnFlowManager?.onPlayerDeployed();
   }
 

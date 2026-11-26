@@ -1,0 +1,131 @@
+{
+  "id": "year-end-ceremony-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "YearEndCeremonyRoot",
+    "id": "yearEndCeremonyRoot",
+    "width": 1920,
+    "height": 1080,
+    "children": [
+      {
+        "type": "panel",
+        "name": "YearEndCeremonyCard",
+        "id": "yearEndCeremonyCard",
+        "width": 920,
+        "height": 760,
+        "skinSlot": "yc.card.bg",
+        "layout": {
+          "type": "vertical",
+          "justifyContent": "start",
+          "spacingY": 14,
+          "paddingTop": 28,
+          "paddingRight": 30,
+          "paddingBottom": 28,
+          "paddingLeft": 30
+        },
+        "children": [
+          {
+            "type": "label",
+            "name": "YcTitle",
+            "id": "ycTitle",
+            "width": 860,
+            "height": 52,
+            "text": "歲末頒獎典禮",
+            "styleSlot": "yc.label.title"
+          },
+          {
+            "type": "label",
+            "name": "YcStandings",
+            "id": "ycStandings",
+            "width": 860,
+            "height": 150,
+            "text": "",
+            "styleSlot": "yc.label.standing"
+          },
+          {
+            "type": "label",
+            "name": "YcDialogue",
+            "id": "ycDialogue",
+            "width": 860,
+            "height": 190,
+            "text": "",
+            "styleSlot": "yc.label.body"
+          },
+          {
+            "type": "label",
+            "name": "YcReward",
+            "id": "ycReward",
+            "width": 860,
+            "height": 48,
+            "text": "",
+            "styleSlot": "yc.label.reward"
+          },
+          {
+            "type": "container",
+            "name": "YcButtonRow",
+            "id": "ycButtonRow",
+            "width": 860,
+            "height": 64,
+            "children": [
+              {
+                "type": "button",
+                "name": "BtnYcSkip",
+                "id": "btnYcSkip",
+                "width": 200,
+                "height": 64,
+                "skinSlot": "yc.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnYcSkipLabel",
+                    "id": "btnYcSkipLabel",
+                    "width": 200,
+                    "height": 40,
+                    "text": "跳過典禮",
+                    "styleSlot": "yc.label.button"
+                  }
+                ],
+                "widget": {
+                  "left": 0,
+                  "vCenter": true
+                }
+              },
+              {
+                "type": "button",
+                "name": "BtnYcClose",
+                "id": "btnYcClose",
+                "width": 200,
+                "height": 64,
+                "skinSlot": "yc.button.bg",
+                "children": [
+                  {
+                    "type": "label",
+                    "name": "BtnYcCloseLabel",
+                    "id": "btnYcCloseLabel",
+                    "width": 200,
+                    "height": 40,
+                    "text": "收下賞賜",
+                    "styleSlot": "yc.label.button"
+                  }
+                ],
+                "widget": {
+                  "right": 0,
+                  "vCenter": true
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

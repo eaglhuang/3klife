@@ -295,5 +295,50 @@ export function createThemeSystemSuite(): TestSuite {
         }
     });
 
+    // ── 風格家族 settle（戰場結算風格，大廳任務類視窗共用，PROG-2-10035）──
+    suite.test('settle 家族：每個 slotRole 都指向已定義的角色，且 @token 在 default 主題都有值', () => {
+        const fam = registry.familyBindings!.settle;
+        for (const role of Object.values(fam.slotRoles)) assert.isTrue(!!fam.roles[role], `缺角色 ${role}`);
+        const all = mergeThemes(registry, []).tokens;
+        for (const spec of Object.values(fam.roles)) {
+            for (const v of Object.values(spec)) {
+                if (typeof v === 'string' && v.startsWith('@')) assert.isTrue(all[v.slice(1)] !== undefined, `缺 token ${v}`);
+            }
+        }
+    });
+
+    suite.test('settle 家族：skinStyleFor 只對登記的 skin 回傳，大廳主風格 skin 不受影響', () => {
+        const svc = new ThemeService();
+        svc.setRegistry(registry);
+        for (const id of registry.familyBindings!.settle.appliesToSkins) assert.isTrue(svc.skinStyleFor(id)?.onlyForced === true, id);
+        assert.isTrue(svc.skinStyleFor('lobby-hall-screen.skin')?.onlyForced !== true);
+        assert.isTrue(svc.skinStyleFor('not-registered') === null);
+    });
+
+    suite.test('settle 家族：任務詳情窗各 slot 換成結算風格；未指定的 slot（進度條）原樣', () => {
+        const svc = new ThemeService();
+        svc.setRegistry(registry);
+        const skin = readJson<{ slots: Record<string, any> }>('assets/resources/ui-spec/skins/lobby-mission-detail-dialog-default.json').slots;
+        const out = restyleSkinSlots(skin, svc.skinStyleFor('lobby-mission-detail-dialog-default')!);
+        assert.equals('#FFF3D2', out['mission.dialog.section.bg'].color);
+        assert.equals('#2B2724', out['mission.dialog.btn.secondary'].color);
+        assert.equals('#8A5A1E', out['mission.dialog.btn.primary'].color);
+        assert.equals('#3B2410', out['mission.dialog.label.body'].color);
+        assert.equals(JSON.stringify(skin['mission.dialog.bar.fill.food']), JSON.stringify(out['mission.dialog.bar.fill.food']));
+        assert.equals('#8A5A1E', out['mission.dialog.badge.type'].color);
+        assert.equals('#FFF3D6', out['mission.dialog.label.dropdown'].color);
+        assert.equals('#8C5A1E', out['mission.dialog.fog.mask'].color);
+    });
+
+    suite.test('settle 家族：換冬季主題整套換色（卡片底與框線）', () => {
+        const svc = new ThemeService();
+        svc.setRegistry(registry);
+        svc.setTheme(['winter']);
+        const skin = readJson<{ slots: Record<string, any> }>('assets/resources/ui-spec/skins/extreme-task-screen.skin.json').slots;
+        const out = restyleSkinSlots(skin, svc.skinStyleFor('extreme-task-screen.skin')!);
+        assert.equals('#EEF2F6', out['et.card.bg'].color);
+        assert.equals('#A8C0DC', out['et.card.bg'].borderColor);
+    });
+
     return suite;
 }

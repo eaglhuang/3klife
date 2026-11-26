@@ -1077,6 +1077,8 @@ export class GameSession implements AcademyRecordPort {
     private _mentorGuideDone = false;
     /** 晉升縣府佐官「培育入學要帶教官，先去抽教官」提示已跳過（PROG-2-9167）；存於 resources.mentorUnlockPromptShown，舊存檔缺欄位視為未跳過 */
     private _mentorUnlockPromptShown = false;
+    /** 年終頒獎典禮已完整看過（PROG-2-10046）；第 2 次起才顯示跳過鈕。存於 resources.yearEndCeremonySeen，舊存檔缺欄位視為沒看過 */
+    private _yearEndCeremonySeen = false;
     /** 內政本季紀錄：同季只能選一項 */
     private _domesticLog: DomesticSeasonLog = { ...EMPTY_DOMESTIC_LOG };
     /** 治理事件（PROG-2-1773）：只在發生那一季有效 */
@@ -1608,6 +1610,16 @@ export class GameSession implements AcademyRecordPort {
         const spouse = buildGeneratedSpouse({ slot, epRange: config.generatedSpouseEp });
         const out = this.enrollSpouse(spouse, options);
         return out.ok || out.reason === 'duplicate' ? { ...out, generalId: spouse.id } : out;
+    }
+
+    /** 結緣好感（0~100）的唯讀查詢；提親機率面板與吃醋彈窗用（PROG-2-10043） */
+    public bondAffinityOf(generalId: string): number {
+        return this._bondAffinityOf(generalId);
+    }
+
+    /** 家族配偶的武將 id 清單（入族順序） */
+    public spouseIds(): string[] {
+        return this._family.members('spouse').map((m) => m.personId);
     }
 
     /** 結緣好感（0~100）：送禮好感欄與傭兵好感取高者（規格：沿用結緣系統好感欄；PROG-2-9583） */
@@ -3090,6 +3102,7 @@ export class GameSession implements AcademyRecordPort {
         this._openingRedFaceShown = false;
         this._mentorGuideDone = false;
         this._mentorUnlockPromptShown = false;
+        this._yearEndCeremonySeen = false;
         this._domesticLog = { ...EMPTY_DOMESTIC_LOG };
         this._governanceEvent = null;
         this._governanceBoosts = [];
@@ -7429,6 +7442,20 @@ export class GameSession implements AcademyRecordPort {
         return this._mentorGuideDone;
     }
 
+    /** 年終頒獎典禮是否已看過（有看過才允許跳過） */
+    public get yearEndCeremonySeen(): boolean {
+        return this._yearEndCeremonySeen;
+    }
+
+    /** 年終頒獎典禮播完：記下並存檔，下次起可跳過 */
+    public async markYearEndCeremonySeen(): Promise<void> {
+        if (this._yearEndCeremonySeen) return;
+        this._yearEndCeremonySeen = true;
+        if (this._autoSave && this._save) {
+            await this.save();
+        }
+    }
+
     /** 培育解鎖提示是否已跳過 */
     public get mentorUnlockPromptShown(): boolean {
         return this._mentorUnlockPromptShown;
@@ -7579,6 +7606,7 @@ export class GameSession implements AcademyRecordPort {
                 openingRedFaceShown: this._openingRedFaceShown,
                 mentorGuideDone: this._mentorGuideDone,
                 mentorUnlockPromptShown: this._mentorUnlockPromptShown,
+                yearEndCeremonySeen: this._yearEndCeremonySeen,
             },
             domestic: { ...this._domesticLog },
             ...(this._governanceEvent ? { governanceEvent: { ...this._governanceEvent } } : {}),
@@ -7956,6 +7984,7 @@ export class GameSession implements AcademyRecordPort {
         this._yearEndDefenseYear = normalizeYearEndDefenseYear(snapshot.resources?.yearEndDefenseYear);
         this._yearEndDefenseResult = normalizeYearEndDefenseResult(snapshot.resources?.yearEndDefenseResult);
         this._mentorUnlockPromptShown = normalizeFlag(snapshot.resources?.mentorUnlockPromptShown);
+        this._yearEndCeremonySeen = normalizeFlag(snapshot.resources?.yearEndCeremonySeen);
         this._domesticLog = normalizeDomesticLog(snapshot.domestic);
         this._governanceEvent = normalizeGovernanceEvent(snapshot.governanceEvent);
         this._governanceBoosts = normalizeGovernanceBoosts(snapshot.governanceBoosts);

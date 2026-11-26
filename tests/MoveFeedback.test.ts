@@ -56,14 +56,14 @@ export function createMoveFeedbackSuite(): TestSuite {
         }
     });
 
-    suite.test('陸上兵種出塵：步兵 4～7 顆、騎兵 7～10 顆且塵粒較大；沙漠多大、森林少小', () => {
+    suite.test('陸上兵種出塵：步兵 8～12 顆、騎兵 12～16 顆且塵粒較大；沙漠多大、森林少小', () => {
         const cav = moveDustFor(TroopType.Cavalry, TerrainType.Plain);
         const inf = moveDustFor(TroopType.Infantry, TerrainType.Plain);
         assert.equals('dust', inf.kind);
-        assert.equals(4, inf.particleMin);
-        assert.equals(7, inf.particleMax);
-        assert.equals(7, cav.particleMin);
-        assert.equals(10, cav.particleMax);
+        assert.equals(8, inf.particleMin);
+        assert.equals(12, inf.particleMax);
+        assert.equals(12, cav.particleMin);
+        assert.equals(16, cav.particleMax);
         assert.isTrue(cav.scale > inf.scale);
         const desert = moveDustFor(TroopType.Infantry, TerrainType.Desert);
         const forest = moveDustFor(TroopType.Infantry, TerrainType.Forest);
@@ -73,14 +73,14 @@ export function createMoveFeedbackSuite(): TestSuite {
 
     suite.test('每次落腳的粒子數落在區間內；隊員減量但至少 2 顆；不出塵為 0', () => {
         const inf = moveDustFor(TroopType.Infantry, TerrainType.Plain);
-        assert.equals(4, dustCountFor(inf, true, () => 0));
-        assert.equals(7, dustCountFor(inf, true, () => 0.999));
+        assert.equals(8, dustCountFor(inf, true, () => 0));
+        assert.equals(12, dustCountFor(inf, true, () => 0.999));
         const member = dustCountFor(inf, false, () => 0.999);
-        assert.isTrue(member >= 2 && member < 7, `隊員 ${member}`);
-        assert.equals(2, dustCountFor(inf, false, () => 0));
+        assert.isTrue(member >= 2 && member < 12, `隊員 ${member}`);
+        assert.equals(4, dustCountFor(inf, false, () => 0));
         assert.equals(0, dustCountFor(moveDustFor(TroopType.Navy), true));
         const cav = moveDustFor(TroopType.Cavalry, TerrainType.Plain);
-        assert.isTrue(dustCountFor(cav, true, () => 0) >= 7);
+        assert.isTrue(dustCountFor(cav, true, () => 0) >= 12);
     });
 
     suite.test('落腳節奏：每 0.4 動畫秒一次，倍率越高越密；停住或無效輸入不發', () => {
@@ -120,7 +120,9 @@ export function createMoveFeedbackSuite(): TestSuite {
             assert.isTrue(p.drift >= R.drift[0] && p.drift <= R.drift[1]);
             assert.isTrue(p.lifeSec >= R.lifeSec[0] && p.lifeSec <= R.lifeSec[1]);
             // 單顆終端大小（粒徑 × 放大）要小於 1 倍粒徑上限的 2 倍，避免又糊成一整塊
-            assert.isTrue(p.startSize * p.endScale <= 14 * 1.9 + 1e-6, '終端粒徑不得過大');
+            assert.isTrue(p.startSize * p.endScale <= R.startSize[1] * R.endScale[1] + 1e-6, '終端粒徑不得過大');
+            assert.isTrue(R.startSize[1] * R.endScale[1] <= 22, '單顆終端粒徑要小，粒子才不糊成團');
+            assert.isTrue(R.jitterX >= 40 && R.drift[1] >= 80, '散布要寬，粒子間才有空隙');
             assert.isTrue(p.color.r <= DUST_COLOR_LIGHT.r && p.color.r >= DUST_COLOR_DARK.r);
             assert.isTrue(p.color.g <= DUST_COLOR_LIGHT.g && p.color.g >= DUST_COLOR_DARK.g);
             assert.isTrue(p.color.b <= DUST_COLOR_LIGHT.b && p.color.b >= DUST_COLOR_DARK.b);

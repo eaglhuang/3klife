@@ -218,6 +218,33 @@
             ]
           },
           {
+            "type": "button",
+            "name": "BtnProposalOdds",
+            "id": "btnProposalOdds",
+            "widget": {
+              "bottom": 12,
+              "right": 216
+            },
+            "width": 180,
+            "height": 48,
+            "skinSlot": "bonding.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnProposalOddsLabel",
+                "id": "proposalOddsLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "提親機率",
+                "styleSlot": "bonding.label.button"
+              }
+            ]
+          },
+          {
             "type": "label",
             "name": "BondEmptyHint",
             "id": "bondEmptyHint",
