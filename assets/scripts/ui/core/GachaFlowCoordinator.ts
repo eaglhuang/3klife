@@ -1,5 +1,5 @@
 // @spec-source → 轉蛋系統.md (doc_spec_0042)；PROG-2-1429 依建檔紀錄補標出處
-import { Button, Color, Label, Node, Rect, Sprite, SpriteFrame, UIOpacity, UITransform, Widget, tween } from 'cc';
+import { Button, Color, Label, Node, Rect, Sprite, SpriteFrame, Tween, UIOpacity, UITransform, Widget, tween } from 'cc';
 import { fullScreenPanelScale } from './GachaFullScreenPanel';
 import { disableCharCache } from './LabelCjkCache';
 import { formatGachaLine, loadGachaLines, type GachaLineTable } from './GachaLines';
@@ -81,7 +81,14 @@ export interface GachaFlowCoordinatorOptions {
     onShowBanner?: (message: string) => void;
     /** 換人時先收掉上一位還沒播完的提示橫幅，避免它跟著新人物出現 */
     onClearBanner?: () => void;
+    /** 全螢幕揭曉時底部「點擊畫面繼續」提示的字（已查好語系）；沒給用預設中文（PROG-2-10064） */
+    tapContinueText?: () => string;
 }
+
+/** 揭曉提示節點名（掛在結果畫面的 stage 底下，重轉時重用） */
+const REVEAL_TAP_HINT_NODE = 'RevealTapHint';
+const REVEAL_TAP_HINT_DEFAULT = '點擊畫面繼續';
+const REVEAL_TAP_HINT_COLOR = new Color(245, 210, 122, 255);
 
 /**
  * 轉蛋流程各個「等資源」步驟的上限（毫秒，PROG-2-9404，issue #2223）：
@@ -512,15 +519,53 @@ export class GachaFlowCoordinator {
         };
         stage.off(Node.EventType.TOUCH_END);
         showcase.active = true; // 重轉後重新展示（上一輪可能已收起）
-        if (!hasHero) { place(sideCenter); showcase.active = !hideAfterReveal; if (hideAfterReveal) centerPanel(); panel.active = true; return; }
+        const hint = this._ensureRevealHint(stage);
+        if (!hasHero) { place(sideCenter); showcase.active = !hideAfterReveal; if (hideAfterReveal) centerPanel(); panel.active = true; this._setRevealHint(hint, false); return; }
         place(0);
         panel.active = false;
+        this._setRevealHint(hint, true);
         stage.on(Node.EventType.TOUCH_END, () => {
             stage.off(Node.EventType.TOUCH_END);
+            this._setRevealHint(hint, false);
             if (hideAfterReveal) { showcase.active = false; centerPanel(); }
             else place(sideCenter);
             panel.active = true;
         });
+    }
+
+    /**
+     * 揭曉提示「點擊畫面繼續」（PROG-2-10064，稽核 B2）：全螢幕展示最高稀有武將時，頂端置中的脈動金字，
+     * 告訴玩家要點畫面才進十連結果。節點掛在 stage 底下、整場只建一個，重轉時重用。
+     */
+    private _ensureRevealHint(stage: Node): Node {
+        const existing = stage.getChildByName(REVEAL_TAP_HINT_NODE);
+        if (existing) {
+            existing.getComponent(Label)!.string = this._options.tapContinueText?.() || REVEAL_TAP_HINT_DEFAULT;
+            return existing;
+        }
+        const node = new Node(REVEAL_TAP_HINT_NODE);
+        node.layer = stage.layer;
+        node.parent = stage;
+        node.addComponent(UITransform).setContentSize(720, 48);
+        const label = node.addComponent(Label);
+        label.string = this._options.tapContinueText?.() || REVEAL_TAP_HINT_DEFAULT;
+        label.fontSize = 32;
+        label.lineHeight = 40;
+        label.color = REVEAL_TAP_HINT_COLOR;
+        const widget = node.addComponent(Widget);
+        widget.isAlignTop = true; widget.top = 20; // 頂端：底部是武將名牌，放底部會疊字
+        widget.isAlignHorizontalCenter = true; widget.horizontalCenter = 0;
+        node.addComponent(UIOpacity);
+        return node;
+    }
+
+    private _setRevealHint(hint: Node, visible: boolean): void {
+        const opacity = hint.getComponent(UIOpacity);
+        if (opacity) Tween.stopAllByTarget(opacity);
+        hint.active = visible;
+        if (!visible || !opacity) return;
+        opacity.opacity = 255;
+        tween(opacity).repeatForever(tween().to(0.7, { opacity: 90 }).to(0.7, { opacity: 255 })).start();
     }
 
     /**

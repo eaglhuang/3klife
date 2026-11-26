@@ -55,6 +55,14 @@ export const SHOWCASE_PORTRAIT_SPEC: Readonly<PortraitFrameSpec> = {
     eyeFromTop: 150,
 };
 
+/** 開場六名將一頁橫排的立繪框（PROG-2-10064）：六欄並排，露上半身 */
+export const SHOWCASE_ROW_PORTRAIT_SPEC: Readonly<PortraitFrameSpec> = {
+    frameWidth: 280,
+    frameHeight: 380,
+    faceHeight: 70,
+    eyeFromTop: 100,
+};
+
 export function estimateFaceMarks(imageWidth: number, imageHeight: number): FaceMarks {
     const eyeY = imageHeight * 0.12;
     const half = imageHeight * 0.0325;

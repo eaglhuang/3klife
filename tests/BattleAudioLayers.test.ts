@@ -83,7 +83,7 @@ export function createBattleAudioLayersSuite(): TestSuite {
 
     suite.test('clipSource 開關：預設 cc0；cc0 把金屬擊打／肉體悶擊／單拍馬蹄換成 CC0 檔，pitched 回到變調代用版', () => {
         assert.equals('cc0', CFG.clipSource);
-        assert.equals('cc0_hit_metal', pickHitSfx('block', CFG, () => 0).clip);
+        assert.equals('cc0_block_metal_bright', pickHitSfx('block', CFG, () => 0).clip);
         assert.equals('cc0_hit_flesh', pickHitSfx('heavy', CFG, () => 0).clip);
         assert.equals('cc0_hoof_single', footstepClipFor(TroopType.Cavalry, CFG));
         assert.equals('hit_block', pickHitSfx('block', PITCHED, () => 0).clip);
@@ -96,7 +96,7 @@ export function createBattleAudioLayersSuite(): TestSuite {
             assert.equals('footstep_light', footstepClipFor(TroopType.Archer, cfg));
         }
         assert.equals('hit_light', resolveClipName('hit_light', CFG));
-        assert.equals('cc0_hit_metal', resolveClipName('hit_block', CFG));
+        assert.equals('cc0_block_metal_bright', resolveClipName('hit_block', CFG));
         assert.equals('hit_block', resolveClipName('hit_block', PITCHED));
     });
 

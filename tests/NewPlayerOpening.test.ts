@@ -34,16 +34,12 @@ export function createNewPlayerOpeningSuite(): TestSuite {
         assert.equals('開始宿命轉蛋', INTRO_PANELS[3].button);
     });
 
-    suite.test('OpeningIntroController 逐頁翻，翻完最後一頁才回傳 true，之後不再動作', () => {
+    suite.test('OpeningIntroController 單頁長卷：按略過一次就結束第一幕，之後不再動作（PROG-2-10064）', () => {
         const intro = new OpeningIntroController();
-        const seen: string[] = [];
-        for (let i = 0; i < INTRO_PANELS.length; i++) {
-            const view = intro.getFlowView();
-            seen.push(view.texts.introStep);
-            assert.isTrue(view.actives.introCard);
-            assert.equals(i === INTRO_PANELS.length - 1, intro.next());
-        }
-        assert.equals('1 / 4,2 / 4,3 / 4,4 / 4', seen.join(','));
+        const view = intro.getFlowView();
+        assert.isTrue(view.actives.introCard);
+        assert.isTrue(view.enabled.btnIntroNext);
+        assert.isTrue(intro.next());
         const done = intro.getFlowView();
         assert.isFalse(done.actives.introCard);
         assert.isFalse(done.enabled.btnIntroNext);

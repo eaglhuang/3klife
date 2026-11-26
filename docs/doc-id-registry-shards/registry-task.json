@@ -17300,19 +17300,13 @@
   {
     "id": "doc_task_3123",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10059.md",
-    "title": "[PROG-2-10059] 年底結算接成長事件：待處理事件佇列存檔、resolveBloodlineEvent 結算（屬性／好感／銀兩／聲望／小名碎片／同窗好友）",
+    "title": "[PROG-2-10059] 年底結算接成長事件：待處理事件佇列存檔、resolveBloodlineEvent 結算",
     "category": "task"
   },
   {
     "id": "doc_task_3124",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10060.md",
     "title": "[PROG-2-10060] 新手前 10～20 分鐘稽核小修：開場信按鈕、教學銀兩、結緣入口、任務牆獎勵提示",
-    "category": "task"
-  },
-  {
-    "id": "doc_task_3128",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10068.md",
-    "title": "[PROG-2-10068] 首年前 2 季季報彈窗精簡：任務回報與市井奇遇併進信箱，任務詳情加白話導讀",
     "category": "task"
   },
   {
@@ -17325,6 +17319,36 @@
     "id": "doc_task_3127",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10061.md",
     "title": "[PROG-2-10061] 首戰教學浮窗移到左下角（資料驅動、避開拇指區與接戰區）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3130",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10072.md",
+    "title": "[PROG-2-10072] 首戰節奏：預設 x2、縮短敵方回合等待、試玩腳本自動代打校正",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3133",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10075.md",
+    "title": "[PROG-2-10075] 同步騎馬匹 mounted-list（關羽）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3134",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10077.md",
+    "title": "[PROG-2-10077] 格擋音換成 Kenney impactMetal_light_001（CC0）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3135",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10064.md",
+    "title": "[PROG-2-10064] 新手開場點擊精簡：介紹合併自動長卷、六名將一頁亮相、SSR 揭曉加點擊提示",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3136",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10068.md",
+    "title": "[PROG-2-10068] 首年前 2 季季報彈窗精簡：任務回報與市井奇遇併進信箱，任務詳情加白話導讀",
     "category": "task"
   }
 ]
