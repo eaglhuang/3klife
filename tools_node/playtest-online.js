@@ -678,8 +678,26 @@ async function main() {
         );
     };
     const listButtons = () => page.evaluate(() => window.__pt.listButtons());
+    /**
+     * 年終頒獎典禮（PROG-2-10046）播放中：YearEndCeremonyHost 全螢幕吃輸入，首次不可跳過、三幕共約 23 秒，
+     * 播完才露出「收下賞賜」（BtnYcClose）。這是設計上的擋，不是殘留：等它播完、真滑鼠點收下、等宿主收起。
+     * 沒有典禮回傳 null；逾時（播完卻關不掉）才丟錯，這時才是真的殘留擋輸入。
+     */
+    const settleYearEndCeremony = async (maxMs = 70000) => {
+        const active = () => page.evaluate(() => window.__pt.activeNodeNames('^YearEndCeremonyHost$').length > 0);
+        if (!(await active())) return null;
+        const t0 = Date.now();
+        let claimed = false;
+        while (Date.now() - t0 < maxMs) {
+            if (!(await active())) return { claimed, waitedMs: Date.now() - t0 };
+            if (await clickButton('^BtnYcClose$')) claimed = true;
+            await delay(700);
+        }
+        throw new Error(`年終典禮 ${Math.round(maxMs / 1000)} 秒後宿主 YearEndCeremonyHost 仍作用中（${claimed ? '已按收下賞賜卻沒關' : '收下賞賜鈕一直沒出現'}），會擋住全部輸入`);
+    };
     /** 把殘留的面板關掉，直到大廳底欄（BtnCatShop）回來；回傳是否成功 */
     const backToLobbyBar = async () => {
+        await settleYearEndCeremony();
         const closers = '^(CharacterDs3Main_button_3|OpeningOfferDecline|GachaReturnToLobby|BtnBack|BtnScoutCancel|BtnNextTutorial|BtnRankUnlockOk|BtnClose\\w*)$';
         for (let i = 0; i < 12; i++) {
             const hit = await clickButton(closers);
@@ -1027,6 +1045,14 @@ async function main() {
             const startedAt = Date.now();
             for (let i = 0; i < 30 && quiet < 2; i++) {
                 await delay(1500);
+                // 年終典禮全螢幕擋輸入且要播約 23 秒：先等它收下賞賜收起，再處理底下的年報（等待時間不計入 30 輪上限）
+                const ceremony = await settleYearEndCeremony();
+                if (ceremony) {
+                    await shot(rec, `${shotTag}-${popups.length + 1}-year-end-ceremony`);
+                    popups.push({ kind: 'year-end-ceremony', click: 'BtnYcClose', attempt: 1, waitedMs: ceremony.waitedMs });
+                    quiet = 0; blockedStreak = 0;
+                    continue;
+                }
                 let handled = false;
                 let blockedSpec = null;
                 for (const popup of SEASON_POPUPS) {
@@ -1359,7 +1385,7 @@ async function main() {
             rec.detail.seasonAfter = after.text;
             if (after.ordinal !== before.ordinal + 1) throw new Error(`頂欄季別沒有前進一季：點之前「${before.text}」，彈窗全關後「${after.text || '讀不到'}」`);
             // 驗證 2：沒有顯示中的彈窗宿主、沒有 __ui-backdrop 壓在大廳之上
-            const leftovers = await page.evaluate(() => window.__pt.activeNodeNames('^(SeasonReportComposite|SeasonEventHost|SeasonChronicleHost|YearReportHost)$'));
+            const leftovers = await page.evaluate(() => window.__pt.activeNodeNames('^(SeasonReportComposite|SeasonEventHost|SeasonChronicleHost|YearReportHost|YearEndCeremonyHost)$'));
             const backdrops = await rm.backdropsOver('lobby-hall-screen.back');
             rec.detail.backdrops = backdrops;
             await shot(rec, 'lobby-after-advance');
