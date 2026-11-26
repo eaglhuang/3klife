@@ -30,3 +30,5 @@
 | `doc_task_3134` | docs/agent-briefs/tasks/PROG/PROG-2-10077.md | [PROG-2-10077] 格擋音換成 Kenney impactMetal_light_001（CC0） |
 | `doc_task_3135` | docs/agent-briefs/tasks/PROG/PROG-2-10064.md | [PROG-2-10064] 新手開場點擊精簡：介紹合併自動長卷、六名將一頁亮相、SSR 揭曉加點擊提示 |
 | `doc_task_3136` | docs/agent-briefs/tasks/PROG/PROG-2-10073.md | [PROG-2-10073] 戰前偵查面板：措辭降噪＋出征確認框疊字修正 |
+| `doc_task_3137` | docs/agent-briefs/tasks/PROG/PROG-2-10068.md | [PROG-2-10068] 首年前 2 季季報彈窗精簡：任務回報與市井奇遇併進信箱，任務詳情加白話導讀 |
+| `doc_task_3138` | docs/agent-briefs/tasks/PROG/PROG-2-10092.md | [PROG-2-10092] 季報信箱改名：信箱標題與入口走 i18n 四語系（PM 裁決 A） |

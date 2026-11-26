@@ -17370,6 +17370,12 @@
     "category": "task"
   },
   {
+    "id": "doc_task_3138",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10092.md",
+    "title": "[PROG-2-10092] 季報信箱改名：信箱標題與入口走 i18n 四語系（PM 裁決 A）",
+    "category": "task"
+  },
+  {
     "id": "doc_task_3128",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10070.md",
     "title": "[PROG-2-10070] 子嗣成長事件彈窗＋親子談話按鈕（最小可玩）",
