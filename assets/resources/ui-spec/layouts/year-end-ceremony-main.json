@@ -56,7 +56,24 @@
             "name": "YcDialogue",
             "id": "ycDialogue",
             "width": 860,
-            "height": 190,
+            "height": 120,
+            "text": "",
+            "styleSlot": "yc.label.body"
+          },
+          {
+            "type": "container",
+            "name": "YcCrowd",
+            "id": "ycCrowd",
+            "lazySlot": true,
+            "width": 860,
+            "height": 96
+          },
+          {
+            "type": "label",
+            "name": "YcCrowdLine",
+            "id": "ycCrowdLine",
+            "width": 860,
+            "height": 40,
             "text": "",
             "styleSlot": "yc.label.body"
           },

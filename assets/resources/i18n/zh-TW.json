@@ -1552,5 +1552,12 @@
   "year1.toast.reward": "（+{0} 銀兩）",
   "year1.toast.title": "獲得稱號「{0}」",
   "year1.toast.favor": "親子好感 +{0}",
-  "ui.ceremony.act3.grandSlam": "新手滿貫！首年目標幾乎一網打盡，這開局連老江湖都想拜師！"
+  "ui.ceremony.act3.grandSlam": "新手滿貫！首年目標幾乎一網打盡，這開局連老江湖都想拜師！",
+  "ui.ceremony.crowd.cheer.1": "這榜單比我家年終獎金還刺激，先鼓掌再說！",
+  "ui.ceremony.crowd.cheer.2": "各位名門手別停，掌聲不收費，今天免費領到飽！",
+  "ui.ceremony.crowd.cheer.3": "第一名先別太得意，明年有人要來搶位置囉。",
+  "ui.ceremony.crowd.cheer.4": "{0}賭一包瓜子，今年的黑馬就在現場！",
+  "ui.ceremony.crowd.cheer.5": "沒上榜也別氣餒，今天主要是來蹭熱鬧的。",
+  "ui.ceremony.crowd.cheer.6": "領獎的記得笑一個，這張要放進家族相簿！",
+  "ui.ceremony.crowd.say": "{0}：{1}"
 }

@@ -17,6 +17,7 @@ import { createBondingJealousyMountSuite } from './BondingJealousyMount.test';
 import { createYearEndCeremonyPanelSuite } from './YearEndCeremonyPanel.test';
 import { createYearEndCeremonyMountSuite } from './YearEndCeremonyMount.test';
 import { createYearEndCeremonyDataSuite } from './YearEndCeremonyData.test';
+import { createYearEndCeremonyCrowdSuite } from './YearEndCeremonyCrowd.test';
 import { createYear1GoalsSuite } from './Year1Goals.test';
 import { createBloodlineY3Y5EventsSuite } from './BloodlineY3Y5Events.test';
 import { createBloodlineChildLedgerSuite } from './BloodlineChildLedger.test';
@@ -91,6 +92,7 @@ if (typeof window === 'undefined') {
     runner.register(createYearEndCeremonyPanelSuite());
     runner.register(createYearEndCeremonyMountSuite());
     runner.register(createYearEndCeremonyDataSuite());
+    runner.register(createYearEndCeremonyCrowdSuite());
     runner.register(createYear1GoalsSuite());
     runner.register(createBloodlineY3Y5EventsSuite());
     runner.register(createBloodlineChildLedgerSuite());

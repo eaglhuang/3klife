@@ -1,0 +1,20 @@
+{
+  "maxCrowd": 6,
+  "lineIntervalSeconds": 2.6,
+  "crowdGenerals": [
+    { "generalId": "guan-yu", "name": "關羽", "gender": "男" },
+    { "generalId": "zhang-fei", "name": "張飛", "gender": "男" },
+    { "generalId": "zhao-yun", "name": "趙雲", "gender": "男" },
+    { "generalId": "zhuge-liang", "name": "諸葛亮", "gender": "男" },
+    { "generalId": "cao-cao", "name": "曹操", "gender": "男" },
+    { "generalId": "sun-quan", "name": "孫權", "gender": "男" }
+  ],
+  "cheerKeys": [
+    "ui.ceremony.crowd.cheer.1",
+    "ui.ceremony.crowd.cheer.2",
+    "ui.ceremony.crowd.cheer.3",
+    "ui.ceremony.crowd.cheer.4",
+    "ui.ceremony.crowd.cheer.5",
+    "ui.ceremony.crowd.cheer.6"
+  ]
+}

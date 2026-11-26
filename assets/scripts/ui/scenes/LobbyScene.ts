@@ -297,12 +297,14 @@ import { JealousyPopupPanel } from '../components/JealousyPopupPanel';
 import { BondingJealousyRuntime, pairSynergyK, seedOfText } from '../../core/systems/BondingJealousyRuntime';
 import { YearEndCeremonyPanel } from '../components/YearEndCeremonyPanel';
 import { buildYearEndCeremonyResult } from '../../core/systems/YearEndCeremonyRuntime';
+import { pickCeremonyCrowd } from '../../core/systems/YearEndCeremonyCrowd';
 import { claimYearEndRewards } from '../../core/systems/YearEndCeremonyReward';
 import { Year1GoalsPanel } from '../components/Year1GoalsPanel';
 import { Year1GoalsController, type Year1GoalsSessionPort } from '../core/Year1GoalsController';
 import { claimYear1GoalReward } from '../../core/systems/Year1GoalsReward';
 import type { YearEndRankingResult } from '../../core/systems/YearEndRankingService';
 import ceremonyRankingConfig from '../../../resources/data/master/year-end-ranking-config.json';
+import ceremonyCrowdConfig from '../../../resources/data/master/ceremony-crowd-lines.json';
 import { BloodlineEpithetService } from '../../core/systems/BloodlineEpithetService';
 import { JealousyAndDynastyService } from '../../core/systems/JealousyAndDynastyService';
 import bondingConfig from '../../../resources/data/master/bonding-config.json';
@@ -3687,6 +3689,9 @@ export class LobbyScene extends Component {
         panel.standingsLabel = labelOf('ycStandings');
         panel.dialogueLabel = labelOf('ycDialogue');
         panel.rewardLabel = labelOf('ycReward');
+        panel.crowdContainer = nodeOf('ycCrowd');
+        panel.crowdLineLabel = labelOf('ycCrowdLine');
+        panel.setNameTagStyle(await loadGeneralNameTagStyle());
         panel.skipButton = nodeOf('btnYcSkip');
         panel.closeButton = nodeOf('btnYcClose');
         const theme = await services().specLoader.getThemeService().catch(() => null);
@@ -3842,6 +3847,12 @@ export class LobbyScene extends Component {
         this._ceremonyResult = result;
         const playerScore = result.standings.find((entry) => entry.isPlayer)?.score ?? 0;
         void session.recordYearEndCeremonyScore(year, playerScore).catch(() => undefined);
+        // 觀禮武將（PROG-2-10106）：名冊好感高者優先，不足用資料檔名將補滿
+        panel.setCrowd(
+            pickCeremonyCrowd(session.roster, (id) => session.bondAffinityOf(id), ceremonyCrowdConfig),
+            ceremonyCrowdConfig.cheerKeys,
+            ceremonyCrowdConfig.lineIntervalSeconds,
+        );
         panel.setOnFinished(() => { void session.markYearEndCeremonySeen().catch(() => undefined); });
         panel.bindRankingResult(result, session.yearEndCeremonySeen);
         host.node.active = true;
@@ -7037,6 +7048,8 @@ ${spent}`,
             this._openSeasonChronicle('season-advance');
             this._syncSeasonEventPopup();
             this._syncLineagePopup();
+            // 快轉跨年時沒有季報：歲末結算記下的年份在這裡補開頒獎典禮
+            this._openYearEndCeremony();
         }
     }
 
@@ -7102,6 +7115,8 @@ ${spent}`,
         const session = services().session;
         if (!this.node?.isValid || !isYearEndRolloverPending(session.gameTime, session.yearEndDefenseYear)) return;
         await this._onClickAdvanceSeason();
+        // 守城後回大廳換年：季報若沒走到關閉回呼，待播年份仍在，這裡再補一次（沒有待播年份時什麼都不做）
+        if (this._pendingCeremonyYear > 0 && !this._ceremonyHost?.node.active) this._openYearEndCeremony();
     }
 
     private async _onClickAdvanceSeason(): Promise<void> {
@@ -7154,7 +7169,8 @@ ${spent}`,
                 // 季度戰報關了才輪到季報／事件／血統彈窗，兩者不會疊在一起搶點擊（建置版實測 06）
                 onRequestClose: () => { void Promise.resolve(services().ui.close(UIID.SeasonReport)).finally(followUps); },
             };
-            void services().ui.open(UIID.SeasonReport, payload);
+            // 季報沒註冊或開不了（背景面板還沒掛好）時 onRequestClose 永遠不會來：直接走後續流程，典禮才不會被吃掉
+            void Promise.resolve(services().ui.open(UIID.SeasonReport, payload)).then((opened) => { if (opened === false) followUps(); });
         } catch (error) {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 推進季度失敗', error);
             services().event.emit('SHOW_TOAST', { message: '推進季度失敗', duration: 2 });
