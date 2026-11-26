@@ -193,6 +193,8 @@ export const RETREAT_LOG_LINE = '我軍鳴金收兵，撤出戰場';
 /** PROG-2-10021：受擊音選檔／節流狀態（全場共用） */
 const hitSfxState = createHitSfxState();
 
+/** 手動部署確認提示的停留秒數（預設 1.2 秒會一路蓋住剛部署的格子） */
+const DEPLOY_CONFIRM_TOAST_SEC = 0.8;
 const DUEL_FALLBACK_TOTAL_SECONDS = 2.4;
 const DUEL_FALLBACK_MAX_GAP_SECONDS = 0.4;
 const DUEL_FALLBACK_MIN_GAP_SECONDS = 0.06;
@@ -667,7 +669,8 @@ export class BattleUIBridge {
         this.appendLog('剛部署的部隊下回合才行動');
       }
       c.boardRenderer?.clearDeployHint();
-      c.deployRuntime?.showToast(`我方已部署 ${unitName}（路線 ${data.lane + 1}）`);
+      // 自動代打連續部署時戰報已有紀錄，不再跳橫幅遮戰場；手動部署縮短停留（PROG-2-10045）
+      if (!this.autoPlay.active) c.deployRuntime?.showToast(`我方已部署 ${unitName}（路線 ${data.lane + 1}）`, DEPLOY_CONFIRM_TOAST_SEC);
     }
     this.refreshBattleViews();
     const unit = c.ctrl?.state.units.get(data.unitId) ?? null;
