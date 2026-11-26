@@ -286,7 +286,7 @@ export class HallWander {
       ty: cfg.start.y,
       idleLeft: 0,
       lockUntil: -1,
-      // 起點在地板帶左右外側＝輪替進場，先排隊
+      // 起點在地板帶左右外側＝輪替進場，先排隊（一次只放一位，見 admitNext）
       waiting: cfg.start.x < this.config.floor.x0 || cfg.start.x > this.config.floor.x1,
     });
     return true;
