@@ -39,5 +39,15 @@
 | `doc_task_3142` | docs/agent-briefs/tasks/PROG/PROG-2-10095.md | [PROG-2-10095] 天下沙盤領地：第 2 年解鎖、搞笑教學、放置效果預覽（實作） |
 | `doc_task_3143` | docs/agent-briefs/tasks/PROG/PROG-2-10096.md | [PROG-2-10096] 名將挑戰賽卡片：培育期推薦與一鍵前往培育（實作） |
 | `doc_task_3144` | docs/agent-briefs/tasks/PROG/PROG-2-10091.md | [PROG-2-10091] 索引健檢：虎符族文件補列與 keep.summary 更新 |
+| `doc_task_3150` | docs/agent-briefs/tasks/PROG/PROG-2-10101.md | [PROG-2-10101] 獲得面板規格（RewardPresenter：任何人物／物品獲得的統一出口） |
+| `doc_task_3151` | docs/agent-briefs/tasks/PROG/PROG-2-10102.md | [PROG-2-10102] 實作：獲得面板 RewardPresenter＋AcquirePanelController 並改接任務回報／季報／轉蛋收尾 |
 | `doc_task_3157` | docs/agent-briefs/tasks/PROG/PROG-2-10083.md | [PROG-2-10083] 大廳小人台詞依武將性別換自稱（女將不再說某） |
 | `doc_task_3161` | docs/agent-briefs/tasks/PROG/PROG-2-10090.md | [PROG-2-10090] 大廳小人待出場疊在畫面邊緣點不到 |
+| `doc_task_3164` | docs/agent-briefs/tasks/PROG/PROG-2-10098.md | [PROG-2-10098] 姻緣單一流程規格：相親 → 提親 → 成婚 → 結緣（11/26 修訂） |
+| `doc_task_3165` | docs/agent-briefs/tasks/PROG/PROG-2-10099.md | [PROG-2-10099] 姻緣單一流程實作：狀態機、結緣守門、存檔遷移、姻緣面板、吃醋事件 |
+| `doc_task_3166` | docs/agent-briefs/tasks/PROG/PROG-2-10086.md | [PROG-2-10086] playtest-online 整年實跑連鎖失敗：detached Frame 與大廳小人被擋根因修復 |
+| `doc_task_3172` | docs/agent-briefs/tasks/PROG/PROG-2-10081.md | [PROG-2-10081] 奧義 C 組音效接入戰場奧義施放（蓄力／爆發／收尾） |
+| `doc_task_3174` | docs/agent-briefs/tasks/PROG/PROG-2-10105.md | [PROG-2-10105] UI 規格：戰場軍勢糧草常駐顯示與出牌不足提示＋內政任務詳情單屏重排（使用者 11/27 回饋） |
+| `doc_task_3175` | docs/agent-briefs/tasks/PROG/PROG-2-10104.md | [PROG-2-10104] 實作：戰場軍勢糧草常駐顯示、卡片費用章與不足說明面板 |
+| `doc_task_3176` | docs/agent-briefs/tasks/PROG/PROG-2-10108.md | [PROG-2-10108] 實作：內政任務詳情單屏三欄重排與固定底部行動列 |
+| `doc_task_3178` | docs/agent-briefs/tasks/PROG/PROG-2-10100.md | [PROG-2-10100] 洪流／水流關卡：水淹特效與卡住沉浮 |
