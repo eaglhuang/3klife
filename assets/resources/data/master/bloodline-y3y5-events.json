@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "events": [
+    {
+      "id": "child_y3_stove_sugar",
+      "triggerYear": 3,
+      "titleKey": "bloodline.event.y3.title",
+      "descKey": "bloodline.event.y3.desc",
+      "options": [
+        {
+          "id": "A",
+          "labelKey": "bloodline.event.y3.optA",
+          "resultKey": "bloodline.event.y3.resA",
+          "effects": { "pol": 1, "favor": -2 }
+        },
+        {
+          "id": "B",
+          "labelKey": "bloodline.event.y3.optB",
+          "resultKey": "bloodline.event.y3.resB",
+          "effects": { "favor": 5, "epithetFragments": 1 }
+        }
+      ]
+    },
+    {
+      "id": "child_y4_academy_nap",
+      "triggerYear": 4,
+      "titleKey": "bloodline.event.y4.title",
+      "descKey": "bloodline.event.y4.desc",
+      "options": [
+        {
+          "id": "A",
+          "labelKey": "bloodline.event.y4.optA",
+          "resultKey": "bloodline.event.y4.resA",
+          "effects": { "int": 1, "gold": -50 }
+        },
+        {
+          "id": "B",
+          "labelKey": "bloodline.event.y4.optB",
+          "resultKey": "bloodline.event.y4.resB",
+          "effects": { "favor": 4 }
+        }
+      ]
+    },
+    {
+      "id": "child_y5_push_cart",
+      "triggerYear": 5,
+      "titleKey": "bloodline.event.y5.title",
+      "descKey": "bloodline.event.y5.desc",
+      "options": [
+        {
+          "id": "A",
+          "labelKey": "bloodline.event.y5.optA",
+          "resultKey": "bloodline.event.y5.resA",
+          "effects": { "str": 1, "prestige": 3 }
+        },
+        {
+          "id": "B",
+          "labelKey": "bloodline.event.y5.optB",
+          "resultKey": "bloodline.event.y5.resB",
+          "effects": { "cha": 1, "friendUnlocked": true }
+        }
+      ]
+    }
+  ]
+}
