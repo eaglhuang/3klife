@@ -1397,5 +1397,15 @@
   "ui.jealousy.popup.blocked": "今年已經哄過{0}了，換個時間再說",
   "ui.jealousy.popup.close": "關閉",
   "ui.jealousy.popup.noSilver": "銀兩不足 {0}，哄不動",
-  "ui.bonding.proposal.result.enrollBlocked": "{0}點頭了，但目前還不能納入家眷（好感或家族名額未達標）"
+  "ui.bonding.proposal.result.enrollBlocked": "{0}點頭了，但目前還不能納入家眷（好感或家族名額未達標）",
+  "ui.ceremony.skip": "跳過典禮",
+  "ui.ceremony.act1.intro": "歲末敲鑼！今年共 4 位名門同台較勁：{0}，誰能抱走金榜玉璧，馬上揭曉！",
+  "ui.ceremony.act2.top3": "恭喜本府榮登第 {0} 名！賞銀 {1} 兩、玉璧 {2} 顆！",
+  "ui.ceremony.roast.1": "評審團擦了擦眼鏡：「差一點點就上台領玉璧了，明年記得多帶幾個娃來撐場面！」",
+  "ui.ceremony.roast.2": "今年先拿 500 銀兩壓壓驚，隔壁老陳已經在偷笑了，明年討回來！",
+  "ui.ceremony.roast.3": "雖未進前三，但本府氣勢不輸人！明年榜首等著你！",
+  "ui.ceremony.surprise.dark_horse.1": "黑馬殺出！本府今年分數暴衝，獲頒年度黑馬獎，再賞 {0} 銀兩！",
+  "ui.ceremony.surprise.dark_horse.2": "爆冷奪下「年度黑馬獎」！評審團直呼看走眼，{0} 銀兩雙手奉上！",
+  "ui.ceremony.surprise.spoiled.1": "子嗣嘴甜得連評審都融化了，頒發「最會撒嬌獎」＋{0} 銀兩！",
+  "ui.ceremony.surprise.spoiled.2": "全場最會撒嬌非本府莫屬，{0} 銀兩拿去買糖吃！"
 }
