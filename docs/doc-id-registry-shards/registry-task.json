@@ -17272,5 +17272,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10054.md",
     "title": "[PROG-2-10054] 年終典禮 Host 擋輸入實跑修正：playtest 認得典禮、護欄測試",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3117",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10055.md",
+    "title": "[PROG-2-10055] 驗收併入 Antigravity 血統第 3~5 年成長小事件資料與四語系（僅資料，尚未接程式）",
+    "category": "task"
   }
 ]
