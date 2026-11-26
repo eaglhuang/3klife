@@ -17,7 +17,7 @@ import type { NpcContextOption, NpcDialogueKeywordSelection, NpcDialogueLocale, 
 import { EVENT_NPC_INTERACTION_COMPLETED } from '../../core/dialogue/NpcMemoryAdapter';
 import { services } from '../../core/managers/ServiceLoader';
 import { CompositePanel } from '../core/CompositePanel';
-import { factionDisplayName } from '../core/FactionDisplay';
+import { rosterFactionDisplayName } from '../core/FactionDisplay';
 import { loadGeneralAvatar } from '../core/GeneralAvatarLoader';
 import { sortGenerals } from '../core/GeneralListSort';
 import { UITemplateBinder } from '../core/UITemplateBinder';
@@ -351,7 +351,7 @@ export class GeneralListComposite extends CompositePanel {
             set('Cha',     g.cha   ?? 0);
             set('Luk',     g.luk   ?? 0);
             set('Troop',   this._bestTroop(g));
-            set('Faction', factionDisplayName(g.faction));
+            set('Faction', rosterFactionDisplayName(g.faction));
             this._renderedRowsByGeneralId.set(g.id, row);
             this._avatarRows.push({ row, generalId: g.id, requested: false });
 
