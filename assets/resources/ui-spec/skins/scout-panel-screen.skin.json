@@ -19,9 +19,14 @@
       "color": "backgroundMid",
       "alpha": 230
     },
-    "scout.confirm.bg": {
+    "scout.confirm.dim": {
       "kind": "color-rect",
       "color": "backgroundDeep",
+      "alpha": 255
+    },
+    "scout.confirm.bg": {
+      "kind": "color-rect",
+      "color": "backgroundMid",
       "alpha": 252
     },
     "scout.button.sortie.bg": {
