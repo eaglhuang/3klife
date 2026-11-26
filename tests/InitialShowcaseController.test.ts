@@ -1,8 +1,8 @@
 /**
  * InitialShowcaseController.test.ts — 六位初始名將逐一登場（OPEN-06，PROG-2-1365）headless 測試
  *
- * 鎖住：依規格順序翻六位、最後一位回傳 true、結束後不再動作；FlowView 文字對應名將資料；
- * 最後一位按鈕改為「前往宿命轉蛋」（PROG-2-2222：名將說完引導進轉蛋）；layout 含所有 FlowView key，skin 含全部 slot。
+ * 鎖住：六位同一頁橫排、按一次結束、結束後不再動作；FlowView 文字對應名將資料；
+ * 按鈕為「前往宿命轉蛋」（PROG-2-2222、PROG-2-10064）；layout 含所有 FlowView key，skin 含全部 slot。
  *
  * Unity 對照：EditMode Test 依序走訪 Showcase 清單，驗證每一筆的顯示資料與結束條件。
  */
@@ -25,43 +25,55 @@ function collectIds(node: any, ids: Set<string>): void {
 export function createInitialShowcaseControllerSuite(): TestSuite {
     const suite = new TestSuite('InitialShowcaseController (名將登場 OPEN-06 PROG-2-1365)');
 
-    suite.test('依規格順序逐位翻，翻完最後一位回傳 true，之後不再動作', () => {
-        const intro = new InitialShowcaseController();
-        for (let i = 0; i < INITIAL_SHOWCASE_ENTRIES.length - 1; i++) {
-            assert.isFalse(intro.next());
-            assert.equals(INITIAL_SHOWCASE_ENTRIES[i + 1].generalId, intro.current!.generalId);
-        }
-        assert.isTrue(intro.next());
-        assert.isTrue(intro.finished);
-        assert.isFalse(intro.next());
-        assert.isTrue(intro.current === null);
+    suite.test('六位名將同一頁，依規格順序橫排；按一次前往宿命轉蛋就結束，之後不再動作（PROG-2-10064）', () => {
+        const showcase = new InitialShowcaseController();
+        assert.equals(6, showcase.entries.length);
+        assert.equals(INITIAL_SHOWCASE_ENTRIES.map(e => e.generalId).join(','), showcase.entries.map(e => e.generalId).join(','));
+        assert.isFalse(showcase.finished);
+        assert.isTrue(showcase.next());
+        assert.isTrue(showcase.finished);
+        assert.isFalse(showcase.next());
+        assert.equals(0, showcase.entries.length);
     });
 
-    suite.test('FlowView 顯示目前名將的名字、稱號、台詞與因子標籤', () => {
+    suite.test('FlowView 同時顯示六位名將的名字、稱號、台詞；按鈕直接寫前往宿命轉蛋', () => {
         const view = new InitialShowcaseController().getFlowView();
-        const first = INITIAL_SHOWCASE_ENTRIES[0];
-        assert.equals(first.name, view.texts.showcaseName);
-        assert.equals(first.title, view.texts.showcaseTitle);
-        assert.equals(`「${first.formalLine}」`, view.texts.showcaseLine);
-        assert.equals(first.factorTags.join('・'), view.texts.showcaseFactors);
-        assert.equals(`1 / ${INITIAL_SHOWCASE_ENTRIES.length}`, view.texts.showcaseStep);
-        assert.equals('下一位', view.texts.btnShowcaseNextLabel);
+        INITIAL_SHOWCASE_ENTRIES.forEach((entry, i) => {
+            assert.equals(entry.name, view.texts[`showcaseName${i}`]);
+            assert.equals(entry.title, view.texts[`showcaseTitle${i}`]);
+            assert.equals(`「${entry.formalLine}」`, view.texts[`showcaseLine${i}`]);
+        });
+        assert.equals('前往宿命轉蛋', view.texts.btnShowcaseNextLabel);
         assert.isTrue(view.enabled.btnShowcaseNext);
+        assert.isTrue(view.actives.showcaseCard);
     });
 
-    suite.test('最後一位按鈕改為前往宿命轉蛋（PROG-2-2222）', () => {
-        const intro = new InitialShowcaseController();
-        for (let i = 0; i < INITIAL_SHOWCASE_ENTRIES.length - 1; i++) intro.next();
-        assert.equals('前往宿命轉蛋', intro.getFlowView().texts.btnShowcaseNextLabel);
+    suite.test('語系字串：標題與按鈕字可由呼叫端覆蓋；趣味版台詞可指定', () => {
+        const entries = INITIAL_SHOWCASE_ENTRIES;
+        const view = new InitialShowcaseController(entries, { heading: 'H', buttonLabel: 'Go', lineStyle: 'fun' }).getFlowView();
+        assert.equals('H', view.texts.showcaseHeading);
+        assert.equals('Go', view.texts.btnShowcaseNextLabel);
+        assert.equals(`「${entries[0].line}」`, view.texts.showcaseLine0);
     });
 
-    suite.test('全部看完後卡片隱藏、按鈕停用', () => {
-        const intro = new InitialShowcaseController();
-        for (let i = 0; i < INITIAL_SHOWCASE_ENTRIES.length; i++) intro.next();
-        const view = intro.getFlowView();
+    suite.test('結束後卡片隱藏、按鈕停用、文字清空', () => {
+        const showcase = new InitialShowcaseController();
+        showcase.next();
+        const view = showcase.getFlowView();
         assert.isFalse(view.actives.showcaseCard);
         assert.isFalse(view.enabled.btnShowcaseNext);
-        assert.equals('', view.texts.showcaseName);
+        assert.equals('', view.texts.showcaseName0);
+        assert.equals('', view.texts.btnShowcaseNextLabel);
+    });
+
+    suite.test('六欄立繪框在設計解析度內並排放得下，且按鈕錨在卡片底部（不寫死橫式座標）', () => {
+        const layout = readJson<any>('assets/resources/ui-spec/layouts/initial-showcase-main.json');
+        const card = layout.root.children.find((c: any) => c.id === 'showcaseCard');
+        assert.isTrue(card.width <= layout.canvas.designWidth);
+        const last = card.children.find((c: any) => c.id === 'showcasePortraitFrame5');
+        assert.isTrue(last.widget.left + last.width <= card.width, '第六欄超出卡片');
+        const button = card.children.find((c: any) => c.id === 'btnShowcaseNext');
+        assert.isDefined(button.widget.bottom);
     });
 
     suite.test('initial-showcase layout 含 FlowView 所有 key，skin 含全部 slot，screen 指向正確', () => {
