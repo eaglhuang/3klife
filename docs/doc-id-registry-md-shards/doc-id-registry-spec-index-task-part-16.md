@@ -39,4 +39,5 @@
 | `doc_task_3142` | docs/agent-briefs/tasks/PROG/PROG-2-10095.md | [PROG-2-10095] 天下沙盤領地：第 2 年解鎖、搞笑教學、放置效果預覽（實作） |
 | `doc_task_3143` | docs/agent-briefs/tasks/PROG/PROG-2-10096.md | [PROG-2-10096] 名將挑戰賽卡片：培育期推薦與一鍵前往培育（實作） |
 | `doc_task_3144` | docs/agent-briefs/tasks/PROG/PROG-2-10091.md | [PROG-2-10091] 索引健檢：虎符族文件補列與 keep.summary 更新 |
-| `doc_task_3156` | docs/agent-briefs/tasks/PROG/PROG-2-10081.md | [PROG-2-10081] 奧義 C 組音效接入戰場奧義施放（蓄力／爆發／收尾） |
+| `doc_task_3157` | docs/agent-briefs/tasks/PROG/PROG-2-10083.md | [PROG-2-10083] 大廳小人台詞依武將性別換自稱（女將不再說某） |
+| `doc_task_3163` | docs/agent-briefs/tasks/PROG/PROG-2-10081.md | [PROG-2-10081] 奧義 C 組音效接入戰場奧義施放（蓄力／爆發／收尾） |

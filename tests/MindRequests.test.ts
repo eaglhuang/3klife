@@ -272,7 +272,7 @@ export function createMindRequestsSuite(): TestSuite {
     });
 
     suite.test('模板守則：所有請求模板的槽位都被填滿，不留 {…}', () => {
-        const sample = { name: '甲', cite: '第3年夏的河北押運', n: '2', fame: '90', next: '100', title: '偏將軍', opponent: '呂布', partner: '關羽', label: '河北押運', season: '第3年夏', win: '3' };
+        const sample = { name: '甲', cite: '第3年夏的河北押運', n: '2', fame: '90', next: '100', title: '偏將軍', opponent: '呂布', partner: '關羽', label: '河北押運', season: '第3年夏', win: '3', self: '某' };
         const all: string[] = [];
         for (const table of [REQUEST_REDEEM, REQUEST_ASK_BATTLE, REQUEST_ASK_BATTLE_GRUDGE, REQUEST_COMPLAIN_IDLE]) {
             for (const list of Object.values(table)) all.push(...list);
