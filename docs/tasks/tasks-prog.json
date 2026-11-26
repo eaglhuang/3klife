@@ -19318,7 +19318,7 @@
       "title": "首年目標清單：資料、追蹤、一次性領獎與大廳進度條",
       "owner": "ClaudeCode_claude-opus-5-5",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-26",
@@ -19342,7 +19342,7 @@
         "assets/scripts/ui/core/Year1GoalsController.ts",
         "tests/Year1Goals.test.ts"
       ],
-      "notes": "2026-11-26 | 狀態: in-progress | 驗證: pending | 變更: 開卡 | 阻塞: 無",
+      "notes": "2026-11-26 | 狀態: done | 驗證: tsc 0 錯誤、run-cli 全過（含 Year1Goals 27 項）、compute-gate standard 13/14（僅既有模組邊界警告）、網頁版無頭 Chrome 1920 實跑進度條／Toast／開場隱藏 | 變更: 首年目標資料、追蹤、一次性領獎、大廳進度條、典禮新手滿貫 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",
@@ -19367,8 +19367,8 @@
     }
   ],
   "summary": {
-    "done": 359,
-    "in_progress": 5,
+    "done": 360,
+    "in_progress": 4,
     "open": 88,
     "total": 452
   }
