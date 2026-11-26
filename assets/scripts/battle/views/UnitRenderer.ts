@@ -91,7 +91,6 @@ import { FLOAT_MISS_TEXT, FLOAT_TEXT_STYLES, FloatTextType, cellFloatAnchor } fr
 import { lootTextPlacement } from "../shared/TacticVfxHooks";
 import { DEFEAT_VFX, defeatTextKeyOf, defeatTextOffsetOf,defeatVfxStats, isGeneralAvatarUnitId } from "./BattleFlowVfx";
 import { vitalityRingView, type VitalityRingView } from "../../core/systems/VitalityBarView";
-import { GeneralVitalityStrip } from "./GeneralVitalityStrip";
 import {
   DEFAULT_ENEMY_HERO_ASSET_ID,
   DEFAULT_PLAYER_HERO_ASSET_ID,
@@ -159,7 +158,6 @@ interface GeneralView {
   vitalityRing: Graphics;
   vitalityText: Label;
   /** 名牌血量列下方精力細條（PROG-2-9432） */
-  vitalityStrip: GeneralVitalityStrip;
   faction: Faction;
   usingHeroModel: boolean;
   heroLoading: boolean;
@@ -1499,7 +1497,6 @@ export class UnitRenderer extends Component {
     view.typeLabel.string = "將";
     view.hpLabel.string = `${Math.max(0, general.currentHp)}`;
     this.drawVitalityRing(view, vitalityRingView(general.vitality, general.maxVitality));
-    view.vitalityStrip.set(general.vitality, general.maxVitality);
     view.labelOpacity.opacity = 255;
     const label = this.projectClampedGeneralLabel(view);
 
@@ -1681,8 +1678,7 @@ export class UnitRenderer extends Component {
       ? new Color(255, 130, 130, 255)
       : new Color(160, 200, 255, 255);
     const ring = this.buildVitalityRing(labelNode, GENERAL_PLATE_WIDTH);
-    // 名牌上排（血量列）底緣在 y=2；細條貼在其正下方，名牌整體縮 0.7，6 單位約為畫面 4px
-    const vitalityStrip = new GeneralVitalityStrip(labelNode, { y: -3, width: 176, height: 6 });
+    // 武將 HUD 單一化：生命只留名牌上的活力圈，不另疊細條（PROG-2-10080）
 
     const modelRoot = new Node("ModelRoot");
     modelRoot.layer = Layers.Enum.DEFAULT;
@@ -1700,7 +1696,6 @@ export class UnitRenderer extends Component {
       labelOpacity: badge.opacity,
       vitalityRing: ring.graphics,
       vitalityText: ring.label,
-      vitalityStrip,
       faction,
       usingHeroModel: false,
       heroLoading: false,
