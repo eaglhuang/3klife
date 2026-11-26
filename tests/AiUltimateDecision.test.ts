@@ -32,6 +32,15 @@ export function createAiUltimateDecisionSuite(): TestSuite {
         assert.isFalse(aiShouldUseUltimate({ ...base, iq: 'MEDIUM', vitality: 51, enemyCount: 3 }));
     });
 
+    suite.test('委任代打（PROG-2-10107 方案 A）：中 IQ 敵勢門檻改 delegateMediumEnemyCount（預設 0），敵方 AI 仍 > 3', () => {
+        assert.equals(0, RULES.delegateMediumEnemyCount ?? -1);
+        // 敵方只剩 2 隊：敵方 AI 不放，委任代打放；精力門檻不變
+        assert.isFalse(aiShouldUseUltimate({ ...base, iq: 'MEDIUM', vitality: 51, enemyCount: 2 }));
+        assert.isTrue(aiShouldUseUltimate({ ...base, iq: 'MEDIUM', vitality: 51, enemyCount: 2, delegate: true }));
+        assert.isFalse(aiShouldUseUltimate({ ...base, iq: 'MEDIUM', vitality: 50, enemyCount: 2, delegate: true }));
+        assert.isFalse(aiShouldUseUltimate({ ...base, iq: 'MEDIUM', vitality: 51, enemyCount: 0, delegate: true }));
+    });
+
     suite.test('中 IQ：男將（上限 120）與女將（上限 100）同比例判斷一致', () => {
         // 男將 61/120 ≈ 50.8% 過門檻；女將 51/100 同樣過門檻
         assert.isTrue(aiShouldUseUltimate({ ...base, iq: 'MEDIUM', vitality: 61, maxVitality: 120, enemyCount: 4 }));

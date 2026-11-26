@@ -25,6 +25,8 @@
 > **總PM 11/22 裁決（PROG-2-9723）**：精力門檻由絕對值改為**比例**（精力 ÷ 最大精力）。理由：男將精力上限 120、女將 100，用絕對值會讓女將較早達標，用比例才公平。比例值放在 `assets/resources/data/ai-difficulty.json` 頂層 `ultimateRules`（`mediumVitalityRatio: 0.5`、`highLosingVitalityRatio: 0.3`），不寫死在程式。
 >
 > **適用範圍**：敵方 AI 與**委任代打**（玩家方自動代打）共用本層與第二層審批。委任代打的智力等級由委任品質對應（智力 ≥90 EXPERT 對 EXTREME，≥70 HIGH，≥50 MEDIUM，其餘 LOW）。代打主將 SP 滿時，才照同一套判斷決定要不要放奧義。**委任代打門檻至少中 IQ（總PM 11/22 裁決）**：委任智力 LOW 時，以 MEDIUM 判斷（精力 > 最大精力 50% 即可放）；下限寫在 `ultimateRules.delegateMinIq`，敵方 AI 的 LOW 維持不放。
+>
+> **委任放寬（方案 A，PROG-2-10107，總PM 11/27 裁決）**：委任代打的 MEDIUM 敵勢門檻由「敵方 > 3 隊」放寬為「敵方 > `ultimateRules.delegateMediumEnemyCount` 隊」（預設 0，即只要場上還有敵軍）；精力比例門檻不變；敵方 AI 仍用 `ULTIMATE_MEDIUM_ENEMY_COUNT = 3`，兩邊分流。
 
 本層檢定 AI 武將之體力儲備、敵方兵力規模與大局勝負走向：
 
@@ -32,7 +34,8 @@
 ```typescript
 if (iq === 'LOW') return false;
 if (iq === 'MEDIUM') {
-    return vitality > maxVitality * rules.mediumVitalityRatio && enemyCount > 3;
+    // 委任代打（delegate）改用 rules.delegateMediumEnemyCount（預設 0），敵方 AI 維持 3
+    return vitality > maxVitality * rules.mediumVitalityRatio && enemyCount > (delegate ? rules.delegateMediumEnemyCount : 3);
 }
 // HIGH / EXTREME / PERFECT
 return estimatedKills >= 2 || (isLosing && vitality > maxVitality * rules.highLosingVitalityRatio);

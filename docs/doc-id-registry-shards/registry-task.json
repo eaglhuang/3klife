@@ -17482,5 +17482,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10109.md",
     "title": "[PROG-2-10109] 台詞性別化第二批：老年自稱、AI prompt 與快取鍵、資料檔寫死自稱",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3181",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10107.md",
+    "title": "[PROG-2-10107] 放招微調：士氣鼓舞 TP 20 免傷兵、首年主將補通用計謀加速 15、奧義門檻方案 A",
+    "category": "task"
   }
 ]
