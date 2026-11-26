@@ -341,16 +341,16 @@
             "version": "0005",
             "file": "avatars/zhuge_liang__諸葛亮__avatar_0005.png",
             "status": "review-pending",
-            "sha256": "36a0552c68a2c68ca276716d1dbcccfff024a2ac5b6701dd046c1c0b826908fb",
+            "sha256": "960d707d1c545f2c9d5f5cf9b28a7cb14ac2cac7700ee1fd5d40b780379a59e5",
             "canvas": "256x256 RGBA",
             "sourceStandingFile": "standing/zhuge_liang__諸葛亮__standing_0006.png",
-            "method": "Image-generation refinement using the updated standing identity; transparent RGBA output.",
+            "method": "Image-generation horizontal composition correction following PM review; transparent RGBA output.",
             "crop": "complete-chest-bust; bottom at full chest edge, no abdomen or waist belt",
             "headOutlineCenterXPercent": 50,
             "headAngleDegreesApprox": 35,
-            "qc": "250px preview: three-quarter view, head centered, both shoulders and complete chest edge visible; no waist; transparent background.",
+            "qc": "250px centerline preview: head-outline center 50.0%; both shoulders visible across the frame; full chest edge visible, no waist; alpha preserved.",
             "createdAt": "2026-11-27",
-            "note": "Four-piece revision following PM order; review pending."
+            "note": "PM 2026-11-27 centering correction; head-outline center measured at 50.0%; review pending."
           }
         ]
       },
@@ -421,11 +421,11 @@
             "version": "0004",
             "file": "small_avatars/zhuge_liang__諸葛亮__small_avatar_0004.png",
             "status": "review-pending",
-            "sha256": "ad03109cd954b7f067edfcca0ed09463c599c8e063c7d3b93f23010d3faac242",
+            "sha256": "e8c8cd65562d6e9815f0d033cec6d189caaa09fc69bf0592fd525ec39e502527",
             "canvas": "256x256 RGBA",
             "sourceStandingVersion": "0006",
             "sourceStandingFile": "standing/zhuge_liang__諸葛亮__standing_0006.png",
-            "method": "Crop-only; uniform bilinear resize to 256x256 RGBA; no redraw or rotation.",
+            "method": "Image-generation horizontal composition correction following PM review; transparent RGBA output.",
             "cropBox": {
               "x": 429.48,
               "y": 160,
@@ -441,9 +441,9 @@
             "faceCenterXPercent": 55.3,
             "headAngleDegreesApprox": 35,
             "crop": "shoulder-line; upper cap edge cropped under PM ruling; lower cap half recognizable",
-            "qc": "125px thumbnail reviewed: head outline centered at 50%, head height 72.5%, lower half of official cap recognizable, shoulder line at lower edge; alpha preserved.",
+            "qc": "250px centerline preview: head-outline center 50.0%; head height retained at 72.5%; lower cap half recognizable; shoulder line at lower edge; alpha preserved.",
             "createdAt": "2026-11-27",
-            "note": "Crop top of tall cap under PM ruling dated 2026-11-27; no cap redesign."
+            "note": "PM 2026-11-27 centering correction; head-outline center measured at 50.0%; prior approved cap crop retained."
           }
         ]
       },
