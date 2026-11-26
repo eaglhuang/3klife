@@ -14,6 +14,8 @@ import { createBondingSuccessServiceSuite } from './BondingSuccessService.test';
 import { createBondingAndEpithetPanelSuite } from './BondingAndEpithetPanel.test';
 import { createJealousyPopupPanelSuite } from './JealousyPopupPanel.test';
 import { createBondingJealousyMountSuite } from './BondingJealousyMount.test';
+import { createYearEndCeremonyPanelSuite } from './YearEndCeremonyPanel.test';
+import { createYearEndCeremonyMountSuite } from './YearEndCeremonyMount.test';
 
 /**
  * 只在 Node.js CLI 環境（ts-node）下執行。
@@ -82,6 +84,8 @@ if (typeof window === 'undefined') {
     runner.register(createBondingAndEpithetPanelSuite());
     runner.register(createJealousyPopupPanelSuite());
     runner.register(createBondingJealousyMountSuite());
+    runner.register(createYearEndCeremonyPanelSuite());
+    runner.register(createYearEndCeremonyMountSuite());
 
     const summary = await runner.runAll(layerFilter);
 

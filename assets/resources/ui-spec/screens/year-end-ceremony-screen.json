@@ -1,0 +1,17 @@
+{
+  "id": "year-end-ceremony-screen",
+  "version": 1,
+  "uiId": "YearEndCeremony",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "year-end-ceremony-main",
+  "skin": "year-end-ceremony-screen.skin",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}
