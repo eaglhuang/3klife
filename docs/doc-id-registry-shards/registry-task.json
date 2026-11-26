@@ -17266,5 +17266,29 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10053.md",
     "title": "[PROG-2-10053] 年終榜單玩家分數基底 600 調 850（PM 11/26 校準）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3116",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10054.md",
+    "title": "[PROG-2-10054] 年終典禮 Host 擋輸入實跑修正：playtest 認得典禮、護欄測試",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3117",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10055.md",
+    "title": "[PROG-2-10055] 驗收併入 Antigravity 血統第 3~5 年成長小事件資料與四語系（僅資料，尚未接程式）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3118",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10056.md",
+    "title": "[PROG-2-10056] 武將四件組美術交付（典韋、賈詡、後續依序）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3120",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10057.md",
+    "title": "[PROG-2-10057] 血統第 3~5 年成長小事件：資料載入器、schema 驗證與觸發／一次性邏輯（核心基礎調查）",
+    "category": "task"
   }
 ]

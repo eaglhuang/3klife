@@ -18896,12 +18896,218 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_3116",
+      "id": "PROG-2-10054",
+      "title": "年終典禮 Host 擋輸入實跑修正：playtest 認得典禮、護欄測試",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "bugfix",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-26T12:52:58+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "年終典禮 YearEndCeremonyHost 播放中依設計全螢幕擋輸入，playtest 不認得典禮造成學府步驟失敗；補 playtest 典禮處理與擋輸入護欄測試。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-26 | 狀態: done | 驗證: tsc test=0、run-cli 9718 全過、線上 playtest-online --full-year --mind --academy 學府步驟 27~33 全 PASS（年終典禮被自動收下）、compute-gate standard | 變更: 根因＝典禮 YearEndCeremonyHost 播放中（約 23 秒、首次不可跳過）依設計全螢幕擋輸入，playtest 不認得典禮而在播放中誤判被擋；playtest-online 新增 settleYearEndCeremony（等播完按收下賞賜）並接進 backToLobbyBar／runSeasonPopups、殘留檢查加 YearEndCeremonyHost；新增擋輸入護欄測試 5 項（掛載收起、唯一開啟點、關閉釋放、面板播完釋放、腳本護欄） | 阻塞: 無（遊戲端宿主未播放時本就 active=false，無需改遊戲碼）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_3117",
+      "id": "PROG-2-10055",
+      "title": "驗收併入 Antigravity 血統第 3~5 年成長小事件資料與四語系（僅資料，尚未接程式）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-26T13:38:15+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "僅資料，尚未接程式。併入 antigravity/bloodline-y3y5-events-data（commit 6c8607e13）：bloodline-y3y5-events.json 與四語系 i18n 新增 key。事件觸發點、存檔欄位、UI 彈窗待另開實作卡。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "JSON 可解析且第3/4/5年各一件各兩選項",
+        "四語系新 key 一致且皆有值",
+        "meta uuid 不重複",
+        "run-cli 全過",
+        "compute-gate standard 通過"
+      ],
+      "deliverables": [
+        "assets/resources/data/master/bloodline-y3y5-events.json",
+        "assets/resources/data/master/bloodline-y3y5-events.json.meta",
+        "assets/resources/i18n/zh-TW.json",
+        "assets/resources/i18n/zh-CN.json",
+        "assets/resources/i18n/en.json",
+        "assets/resources/i18n/ja.json"
+      ],
+      "notes": "2026-11-26 | 狀態: done | 驗證: run-cli 9708 全過、compute-gate standard | 變更: 僅資料，尚未接程式（事件觸發點、存檔欄位、UI 彈窗待另開卡） | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_3118",
+      "id": "PROG-2-10056",
+      "title": "武將四件組美術交付（典韋、賈詡、後續依序）",
+      "owner": "codex-gpt-6.2-sol",
+      "priority": "P1",
+      "status": "open",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "傘卡：Codex 交付武將四件組美術（靜態立繪、戰鬥立繪、半身像 avatars、大頭像 small_avatars）所用的正式任務卡，讓 ATM 提交閘門可放行（先前無卡 taskless commit 被擋）。首批典韋、次批賈詡，後續依序。範圍限 artwork/general-art-library/** 與 artwork/general-art-library/catalog.json。status 保持 open，由 Codex 依 CLAUDE.md 硬規則 #0 自行 check、lock、改 in-progress。PR 只含四圖＋catalog＋本卡片檔。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "驗收標準以 C:/Users/User/.codex/skills/general-portrait-style/SKILL.md 為準",
+        "頭框中心 ±3%",
+        "臉部 30～45° 側轉",
+        "半身下緣胸底不見腰帶",
+        "大頭像獨立裁切（非由半身縮圖）",
+        "戰鬥姿態力道／優雅",
+        "服飾精細度達男女參考圖下限",
+        "PR diff 僅限 artwork/general-art-library/** 與 catalog.json 與本卡片檔"
+      ],
+      "deliverables": [
+        "artwork/general-art-library/**（每位武將靜態立繪、戰鬥立繪、avatars、small_avatars 四件組）",
+        "artwork/general-art-library/catalog.json"
+      ],
+      "notes": "2026-11-26 | 狀態: open | 驗證: pending | 變更: ClaudeCode_claude-opus-5-5 開傘卡，owner 指派 codex-gpt-6.2-sol，未上鎖 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_3120",
+      "id": "PROG-2-10057",
+      "title": "血統第 3~5 年成長小事件：資料載入器、schema 驗證與觸發／一次性邏輯（核心基礎調查）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "承 PROG-2-10055 資料：先交載入器、schema 驗證（含 gold→silver 修正）、觸發與一次性邏輯、存檔欄位 normalize、單元測試；並調查接進遊戲所缺的核心基礎。",
+      "related": [
+        "PROG-2-10055"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [
+        "assets/scripts/core/systems/BloodlineY3Y5Events.ts",
+        "tests/BloodlineY3Y5Events.test.ts"
+      ],
+      "notes": "2026-11-26 | 狀態: done | 驗證: run-cli 全過、tsc 0 錯、compute-gate standard | 變更: 載入器＋schema 驗證＋觸發／一次性／存檔 normalize 邏輯與單元測試；資料 gold 改 silver；未接進遊戲（核心基礎缺 4 項，見任務卡調查） | 阻塞: 無（接線需另開卡）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
-    "done": 352,
-    "in_progress": 5,
-    "open": 87,
-    "total": 444
+    "done": 356,
+    "in_progress": 4,
+    "open": 88,
+    "total": 448
   }
 }
