@@ -66,8 +66,11 @@ export const API_COMMANDS = Object.freeze({
     // 家族（配偶納入名冊；只送意圖，名冊與上限由權威端判定；PROG-2-9582）
     'family.enrollSpouse': { kind: 'cmd', revGuard: false },
     'family.matchmakerOffer': { kind: 'query', revGuard: false },
-    // 子嗣成長（親子好感、小名碎片、同窗好友；PROG-2-10058）：只讀帳本，寫入由權威端的成長事件結算入帳（PROG-2-10059）
+    // 子嗣成長（親子好感、小名碎片、同窗好友；PROG-2-10058）：帳本只讀，寫入由權威端的成長事件結算入帳
     'family.childLedger': { kind: 'query', revGuard: false },
+    // 子嗣成長事件（PROG-2-10059）：歲末排出的待決事件、玩家選擇後由權威端入帳（屬性、好感、銀兩、聲望、碎片、同窗好友）
+    'family.growthEvents': { kind: 'query', revGuard: false },
+    'family.resolveGrowthEvent': { kind: 'cmd', revGuard: false },
     // 偵錯（只有本機 adapter 掛處理器；網路 adapter 一律回 COMMAND_UNKNOWN，避免變成外掛入口）
     'debug.fastForward': { kind: 'cmd', revGuard: false },
     // 測試工具 2.0（PROG-2-9858）：資源、屬性、時間、存檔匯出入；同樣只有本機 adapter 掛處理器，且要綁定偵錯宿主才生效
@@ -685,6 +688,34 @@ export interface FamilyChildLedgerResult {
     epithetFragments: number;
     /** 子嗣 id → 已結識的同窗好友數 */
     classmateFriends: Record<string, number>;
+}
+
+/** family.growthEvents 的一筆待決事件（文字只給 i18n key，客戶端自己翻） */
+export interface FamilyGrowthEventView {
+    childId: string;
+    eventId: string;
+    /** 排入時的遊戲曆年 */
+    year: number;
+    titleKey: string;
+    descKey: string;
+    options: Array<{ id: 'A' | 'B'; labelKey: string }>;
+}
+
+/** family.growthEvents：目前等玩家決定的成長事件（每名孩子每年最多一件） */
+export interface FamilyGrowthEventsResult {
+    pending: FamilyGrowthEventView[];
+}
+
+/** family.resolveGrowthEvent：只送 childId、eventId、optionId；效果由權威端依事件表入帳，客戶端不得帶數值 */
+export interface FamilyResolveGrowthEventResult {
+    childId: string;
+    eventId: string;
+    optionId: 'A' | 'B';
+    resultKey: string;
+    /** 實際套用的效果（含屬性、好感、銀兩、聲望、小名碎片、同窗好友） */
+    effects: Record<string, number | boolean>;
+    /** 實扣的家族銀兩（沒支出則缺） */
+    silverSpent?: number;
 }
 
 // ── 偵錯（debug.fastForward；只有本機 adapter 提供）──

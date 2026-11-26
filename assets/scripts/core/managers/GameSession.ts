@@ -256,7 +256,9 @@ import type { NurtureAwakeningHooks } from '../services/NurtureService';
 import { buildStarterRoster, pickStartingLead, STARTER_CORE_GENERAL_ID, StarterRosterOptions } from '../services/StarterRosterService';
 import { buildStarterYouth, getStarterYouthConfig } from '../services/StarterYouthService';
 import { buildStarterSeedling, getStarterSeedlingConfig } from '../services/StarterSeedlingService';
-import type { ChildGrowthHost } from '../api/localserver/ChildGrowthCommands';
+import type { ChildGrowthHost, GrowthEventResolveOutcome } from '../api/localserver/ChildGrowthCommands';
+import { bloodlineSilverCost, emptyBloodlineEventState, loadBloodlineY3Y5Events, type BloodlineEventState, type BloodlineEventTable } from '../systems/BloodlineY3Y5Events';
+import { applyBloodlineEffectsToLedger, applyBloodlineStatDeltas, isEmptyBloodlineGrowth, normalizeBloodlineGrowthSave, queueBloodlineGrowthEvents, resolvePendingBloodlineEvent, type PendingBloodlineEvent } from '../systems/BloodlineGrowthSettlement';
 import { CHILD_FAVOR_DEFAULT, cloneChildLedger, childFavorOf, emptyChildLedger, isEmptyChildLedger, normalizeChildLedger, seedChildFavor, type BloodlineChildLedgerState } from '../systems/BloodlineChildLedger';
 import { resolveFactorColor } from '../systems/FactorInheritance';
 import { insertSpiritCard, replaceSpiritCard, setPrimarySpiritCard, unequipSpiritCard, type SpiritSlotFlowResult } from '../systems/SpiritSlotFlow';
@@ -610,6 +612,8 @@ export interface SeasonAdvancedPayload {
     clanStipendLine?: string;
     /** 立春子嗣天象（doc_spec_0312 §2，PROG-2-2106）；只有跨年進入春季且有符合門檻的子嗣才有 */
     omenLines?: string[];
+    /** 歲末新排入的血統成長事件（PROG-2-10059）；沒有時省略。玩家用 family.resolveGrowthEvent 選擇 */
+    growthEventsQueued?: PendingBloodlineEvent[];
     agingEvents: AgingEvent[];
     /** 本季新開獎的子嗣 */
     unveilings: UnveilingEvent[];
@@ -1013,6 +1017,10 @@ export class GameSession implements AcademyRecordPort {
     private _breedingBirthRecords: BreedingBirthRecord[] = [];
     /** 親子好感、天賦小名碎片、同窗好友旗標（PROG-2-10058）；存於 bloodlineChildLedger，舊存檔缺欄位視為空帳本 */
     private _childLedger: BloodlineChildLedgerState = emptyChildLedger();
+    /** 血統成長事件（PROG-2-10059）：已觸發紀錄與歲末排出的待決佇列，隨存檔 bloodlineGrowthEvents 保存；事件表首次用到才載入 */
+    private _bloodlineEventState: BloodlineEventState = emptyBloodlineEventState();
+    private _bloodlinePending: PendingBloodlineEvent[] = [];
+    private _bloodlineTable: BloodlineEventTable | null = null;
     /** 世家系統解鎖旗標（PM 暫定）：第一位子嗣誕生時寫入；舊檔以出生紀錄推導。 */
     private _familySystemUnlockedFlag = false;
     /** 結緣媒人首次紅娘叩門完成旗標（PROG-2-9613）：開場教學後首次換季完成後寫入，讀檔不重複 */
@@ -2677,7 +2685,7 @@ export class GameSession implements AcademyRecordPort {
         return cloneChildLedger(this._childLedger);
     }
 
-    /** 子嗣成長宿主（PROG-2-10058）：給 family.childLedger 命令讀帳本；寫入不開放，由權威端成長事件結算入帳 */
+    /** 子嗣成長宿主（PROG-2-10058／10059）：family.childLedger／growthEvents 讀、family.resolveGrowthEvent 選擇；入帳只在權威端 */
     public get childGrowthHost(): ChildGrowthHost {
         return {
             childLedger: () => ({
@@ -2686,7 +2694,87 @@ export class GameSession implements AcademyRecordPort {
                 epithetFragments: this._childLedger.epithetFragments,
                 classmateFriends: { ...this._childLedger.classmateFriends },
             }),
+            growthEvents: () => {
+                const table = this._bloodlineEvents();
+                return {
+                    pending: this._bloodlinePending.flatMap((p) => {
+                        const event = table.events.find((e) => e.id === p.eventId);
+                        return event ? [{ childId: p.childId, eventId: p.eventId, year: p.year, titleKey: event.titleKey, descKey: event.descKey, options: event.options.map((o) => ({ id: o.id, labelKey: o.labelKey })) }] : [];
+                    }),
+                };
+            },
+            resolveGrowthEvent: (childId, eventId, optionId) => this.resolveBloodlineEvent(childId, eventId, optionId),
         };
+    }
+
+    /** 事件表（首次用到才載入並驗證；資料不合格會丟例外，開機就看得到） */
+    private _bloodlineEvents(): BloodlineEventTable {
+        if (!this._bloodlineTable) this._bloodlineTable = loadBloodlineY3Y5Events();
+        return this._bloodlineTable;
+    }
+
+    /**
+     * 歲末排程（PROG-2-10059）：家族裡每位 9～11 歲的子嗣（含 7 歲起長大的幼苗、親生、義子與家臣子）各排至多一件成長事件進待決佇列。
+     * 只排佇列、不彈窗、不入帳；孩子名單＝家族登記的非配偶成員＋名冊上有父或母的武將，已過世者略過。
+     */
+    private _queueBloodlineGrowthEvents(year: number): PendingBloodlineEvent[] {
+        const roster = this._roster.getAll();
+        const childIds = new Set<string>(this._family.members().filter((m) => m.kind !== 'spouse').map((m) => m.personId));
+        for (const general of roster) {
+            const kin = general as GeneralConfig & { fatherId?: string; motherId?: string };
+            if (kin.fatherId || kin.motherId) childIds.add(general.id);
+        }
+        const children = roster.filter((g) => childIds.has(g.id) && !isGeneralDead(g)).map((g) => ({ id: g.id, age: g.age }));
+        const queued = queueBloodlineGrowthEvents(this._bloodlineEvents(), this._bloodlineEventState, this._bloodlinePending, children, year);
+        this._bloodlinePending = queued.pending;
+        return queued.added;
+    }
+
+    /** 待決成長事件（唯讀複本；文字只給 i18n key） */
+    public pendingBloodlineEvents(): PendingBloodlineEvent[] {
+        return this._bloodlinePending.map((p) => ({ ...p }));
+    }
+
+    /** 已觸發的成長事件紀錄（唯讀複本） */
+    public bloodlineEventRecords(): BloodlineEventState['records'] {
+        return this._bloodlineEventState.records.map((r) => ({ ...r }));
+    }
+
+    /**
+     * 玩家選擇成長事件選項（PROG-2-10059）：事件必須在待決佇列，同一孩子同一事件只能選一次。
+     * 入帳：五維加減（寫回名冊）、親子好感／小名碎片／同窗好友（帳本）、家族聲望、家族銀兩（走 silverLedger；餘額不足整件不生效）。
+     */
+    public resolveBloodlineEvent(childId: string, eventId: string, optionId: string): GrowthEventResolveOutcome {
+        const out = resolvePendingBloodlineEvent(this._bloodlineEvents(), this._bloodlineEventState, this._bloodlinePending, childId, eventId, optionId, this._clock.state.currentYear);
+        if (!out.ok) return { ok: false, reason: out.reason };
+        const { effects } = out;
+        const cost = bloodlineSilverCost(effects);
+        if (cost > 0 && !this.silverLedger.spendSilver(cost)) return { ok: false, reason: 'silver-low' };
+        if (typeof effects.silver === 'number' && effects.silver > 0) this.silverLedger.creditSilver(effects.silver);
+        this._bloodlineEventState = out.state;
+        this._bloodlinePending = out.pending;
+        this._childLedger = applyBloodlineEffectsToLedger(this._childLedger, childId, effects);
+        this._applyBloodlineStats(childId, effects);
+        if (typeof effects.prestige === 'number' && effects.prestige !== 0) {
+            const before = clanPrestigeTierOf(this._clanPrestige);
+            this._clanPrestige = Math.max(0, this._clanPrestige + effects.prestige);
+            const tier = clanPrestigeTierOf(this._clanPrestige);
+            this._emit(GAME_SESSION_EVENTS.ClanPrestigeChanged, { generalId: childId, gain: effects.prestige, prestige: this._clanPrestige, tier, tierUp: tier > before } satisfies ClanPrestigeChangedPayload);
+        }
+        if (this._autoSave && this._save) void this.save();
+        const applied: Record<string, number | boolean> = {};
+        for (const [key, value] of Object.entries(effects)) if (typeof value === 'number' || typeof value === 'boolean') applied[key] = value;
+        return { ok: true, result: { childId, eventId, optionId: out.option.id, resultKey: out.resultKey, effects: applied, ...(cost > 0 ? { silverSpent: cost } : {}) } };
+    }
+
+    private _applyBloodlineStats(childId: string, effects: Parameters<typeof applyBloodlineStatDeltas>[1]): void {
+        const roster = this._roster.getAll();
+        const child = roster.find((g) => g.id === childId);
+        if (!child) return;
+        const current = { str: child.str ?? child.stats?.str ?? 0, int: child.int ?? child.stats?.int ?? 0, lea: child.lea ?? child.stats?.lea ?? 0, pol: child.pol ?? child.stats?.pol ?? 0, cha: child.cha ?? child.stats?.cha ?? 0 };
+        const next = applyBloodlineStatDeltas(current, effects);
+        if (!next) return;
+        this._roster.replaceAll(roster.map((g) => (g.id === childId ? { ...g, ...next, stats: { ...(g.stats ?? {}), ...next } } : g)));
     }
 
     /** 單一子嗣的親子好感（沒紀錄回預設值） */
@@ -3071,6 +3159,8 @@ export class GameSession implements AcademyRecordPort {
         this._storyMeta = emptyStoryMeta();
         this._breedingBirthRecords = [];
         this._childLedger = emptyChildLedger();
+        this._bloodlineEventState = emptyBloodlineEventState();
+        this._bloodlinePending = [];
         this._familySystemUnlockedFlag = false;
         this._matchmakerFirstVisitDone = false;
         this._openingPhase = null;
@@ -6480,6 +6570,7 @@ export class GameSession implements AcademyRecordPort {
         const eventNotice = this.governanceEventNotice;
         const yuedanLines = advance.yearEnded ? yuedanBannerLines(this._roster.getAll()) : [];
         const omenLines = advance.yearEnded ? this._recordChildOmens() : [];
+        const growthEventsQueued = advance.yearEnded ? this._queueBloodlineGrowthEvents(advance.current.currentYear) : [];
         this._recordDeathEpitaphs(rosterBeforeLifecycle, agingEvents);
         // 新提親取代去年沒回覆的；同樣不消耗主亂數
         if (advance.yearEnded) {
@@ -6511,7 +6602,7 @@ export class GameSession implements AcademyRecordPort {
         const seasonReportSections = this._buildSeasonReportSections(governanceSeason, economyBase, hallMissionReport);
         this._seasonActivity = emptySeasonActivity();
         this._seasonEconomyBase = { ...this._cityEconomy };
-        const payload: SeasonAdvancedPayload = { seasonReportSections, ...(matchmakerOfferNotice ? { matchmakerOfferNotice } : {}), ...(nursingLines.length > 0 ? { nursingLines } : {}), ...(clanStipendLine ? { clanStipendLine } : {}), ...(forcedRetirements.length > 0 ? { forcedRetirements, forcedRetirementNames: forcedRetirements.map((id) => rosterBeforeLifecycle.find((general) => general.id === id)?.name ?? id) } : {}), ...(yuedanLines.length > 0 ? { yuedanLines } : {}), ...(omenLines.length > 0 ? { omenLines } : {}), ...(this._tallyFoodDiscountArmed ? { foodLowLine: FOOD_LOW_LINE } : {}), ...(treasures.length > 0 ? { prisonTreasureLines: treasures.map((entry) => prisonTreasureLine(entry.targetName, ITEM_DISPLAY_NAMES[ITEM_TREASURE])) } : {}), ...(governanceReport ? { governanceReport } : {}), ...(eventNotice ? { governanceEventLine: eventNotice } : {}), advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(hallMissionReport ? { hallMissionReport } : {}), ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids } : {}), ...(mercenaryDay.dayThreeUids.length > 0 ? { mercenaryDayThree: mercenaryDay.dayThreeUids } : {}), ...(mercenaryDay.trustUids.length > 0 ? { mercenaryTrust: mercenaryDay.trustUids } : {}) };
+        const payload: SeasonAdvancedPayload = { seasonReportSections, ...(matchmakerOfferNotice ? { matchmakerOfferNotice } : {}), ...(nursingLines.length > 0 ? { nursingLines } : {}), ...(clanStipendLine ? { clanStipendLine } : {}), ...(forcedRetirements.length > 0 ? { forcedRetirements, forcedRetirementNames: forcedRetirements.map((id) => rosterBeforeLifecycle.find((general) => general.id === id)?.name ?? id) } : {}), ...(yuedanLines.length > 0 ? { yuedanLines } : {}), ...(omenLines.length > 0 ? { omenLines } : {}), ...(growthEventsQueued.length > 0 ? { growthEventsQueued } : {}), ...(this._tallyFoodDiscountArmed ? { foodLowLine: FOOD_LOW_LINE } : {}), ...(treasures.length > 0 ? { prisonTreasureLines: treasures.map((entry) => prisonTreasureLine(entry.targetName, ITEM_DISPLAY_NAMES[ITEM_TREASURE])) } : {}), ...(governanceReport ? { governanceReport } : {}), ...(eventNotice ? { governanceEventLine: eventNotice } : {}), advance, agingEvents, unveilings: unveil.events, lifecycle, oracleTokensGranted: tokens.granted, yearReport, quarterlyReports, ...(hallMissionReport ? { hallMissionReport } : {}), ...(rivalBattles.length > 0 ? { rivalBattles } : {}), ...(departedUids.length > 0 ? { mercenaryDepartures: departedUids } : {}), ...(mercenaryDay.dayThreeUids.length > 0 ? { mercenaryDayThree: mercenaryDay.dayThreeUids } : {}), ...(mercenaryDay.trustUids.length > 0 ? { mercenaryTrust: mercenaryDay.trustUids } : {}) };
         if (this._autoSave && this._save) {
             await this.save();
         }
@@ -7736,6 +7827,7 @@ export class GameSession implements AcademyRecordPort {
             sortiePresets: { ...this._sortiePresets },
             ...(this._breedingBirthRecords.length > 0 ? { breedingBirthRecords: this.breedingBirthRecords() } : {}),
             ...(isEmptyChildLedger(this._childLedger) ? {} : { bloodlineChildLedger: cloneChildLedger(this._childLedger) }),
+            ...(isEmptyBloodlineGrowth(this._bloodlineEventState, this._bloodlinePending) ? {} : { bloodlineGrowthEvents: { records: this._bloodlineEventState.records.map((r) => ({ ...r })), pending: this._bloodlinePending.map((p) => ({ ...p })) } }),
         };
     }
 
@@ -8015,6 +8107,9 @@ export class GameSession implements AcademyRecordPort {
         this._sortiePresets = normalizeSortiePresets(snapshot.sortiePresets);
         this._breedingBirthRecords = normalizeBreedingBirthRecords(snapshot.breedingBirthRecords);
         this._childLedger = normalizeChildLedger(snapshot.bloodlineChildLedger);
+        const growth = normalizeBloodlineGrowthSave(snapshot.bloodlineGrowthEvents);
+        this._bloodlineEventState = growth.state;
+        this._bloodlinePending = growth.pending;
         this._travel = normalizeTravelCountdown(snapshot.travelCountdown);
         this._countdown = normalizeCountdownState(snapshot.countdown);
         const progress = normalizeDiscoveryProgress(snapshot.discoveryLevel, snapshot.discoveryExp);

@@ -17304,6 +17304,12 @@
     "category": "task"
   },
   {
+    "id": "doc_task_3123",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10059.md",
+    "title": "[PROG-2-10059] 年底結算接成長事件：待處理事件佇列存檔、resolveBloodlineEvent 結算（屬性／好感／銀兩／聲望／小名碎片／同窗好友）",
+    "category": "task"
+  },
+  {
     "id": "doc_task_3126",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10067.md",
     "title": "[PROG-2-10067] 新手教學結束後第一個目標：出征鈕脈動＋史小境提示",
