@@ -269,3 +269,4 @@
 | `doc_other_4239` | docs/ui-vibe-pipeline-shards/ui-skill-ops.md | UI Vibe Pipeline — Skill 與分工（§7 · When to Use · Procedure · References · §8–§9） |
 | `doc_other_4240` | docs/web-playtest-online.md | 線上試玩版無頭實玩驗收（playtest-online） |
 | `doc_other_4241` | docs/reports/q4-generals-bow-rule-and-route-1125.md | Q4 武將：持弓驗收規則 與 下一輪做法（11/25） |
+| `doc_other_4242` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-16.md | Doc ID Registry Markdown Index — Spec / Index / Task |

@@ -8,6 +8,7 @@
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
+| `doc_task_3108` | docs/agent-briefs/tasks/PROG/PROG-2-10045.md | [PROG-2-10045] 戰場 HUD／飄字打磨批次 |
 | `doc_task_3109` | docs/agent-briefs/tasks/PROG/PROG-2-10046.md | [PROG-2-10046] 年終頒獎典禮三幕式面板掛進遊戲 |
 | `doc_task_3110` | docs/agent-briefs/tasks/PROG/PROG-2-10044.md | PROG-2-10044 年終頒獎典禮三幕式 UI 元件 |
 | `doc_task_3111` | docs/agent-briefs/tasks/PROG/PROG-2-10031.md | [PROG-2-10031] 揚塵再加大加深與獎勵跳字間距略放大 |

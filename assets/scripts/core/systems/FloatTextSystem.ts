@@ -1,7 +1,7 @@
 // @spec-source → 見 docs/cross-reference-index.md
 import { Camera, Color, Font, Label, Node, Tween, tween, UIOpacity, UITransform, Vec3 } from "cc";
 import {
-    FLOAT_MISS_TEXT, FLOAT_TEXT_STYLES, FloatStaggerTracker, floatAvoidShift, floatEffectiveHeight, floatHalfWidth,
+    FLOAT_MISS_TEXT, FLOAT_TEXT_STYLES, FloatStaggerTracker, floatAvoidShift, floatEffectiveHeight, floatFitFontSize, floatHalfWidth,
     type FloatAvoidRect, type FloatTextStyle, type FloatTextType,
 } from "./FloatTextStyle";
 
@@ -114,7 +114,8 @@ export class FloatTextSystem {
         // ── 設定外觀（重用 tmpColor，避免每次跳字配置 Color） ──
         const font = this.customFonts.get(type) ?? null;
         if (font) entry.label.font = font;
-        entry.label.fontSize = config.fontSize;
+        const fontSize = floatFitFontSize(text, config.fontSize);
+        entry.label.fontSize = fontSize;
         entry.label.isBold = config.isBold;
         entry.label.string = text;
         // alpha = 255 固定在 label.color，整體淡出由 UIOpacity 控制（避免相互干擾）
@@ -146,7 +147,7 @@ export class FloatTextSystem {
         // PROG-2-9415：往上飄的路徑會蓋到棋盤 buff 格的圖示與倍數時，水平挪到旁邊，兩邊都看得清楚
         const avoid = this.avoidProvider?.();
         if (avoid && avoid.length > 0) {
-            startX += floatAvoidShift(startX, startY, floatHalfWidth(text, config), floatEffectiveHeight(config) / 2, config.risePixels, avoid);
+            startX += floatAvoidShift(startX, startY, floatHalfWidth(text, { fontSize }), floatEffectiveHeight(config) / 2, config.risePixels, avoid);
         }
         entry.node.setPosition(startX, startY, 0);
         entry.node.setScale(config.startScale, config.startScale, 1);

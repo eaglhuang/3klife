@@ -87,7 +87,7 @@ import type { TileBuffBadge } from "../shared/TileBuffBadge";
 import { BADGE_HIT_PRIORITY_SEC, badgeRectFromExtent, easePlateOffset, stackBadgeOffsets, unionExtent, type LabelRect, type LocalExtent, type StackBadgeEntry } from "../shared/GeneralPlateAvoidance";
 import { buildUnitStatusContext, computeUnitStatusIcons, gainedTones, newlyGainedKinds, type StatusIconKind } from "../shared/UnitStatusIcons";
 import { services } from "../../core/managers/ServiceLoader";
-import { FLOAT_MISS_TEXT, FLOAT_TEXT_STYLES, FloatTextType } from "../../core/systems/FloatTextStyle";
+import { FLOAT_MISS_TEXT, FLOAT_TEXT_STYLES, FloatTextType, cellFloatAnchor } from "../../core/systems/FloatTextStyle";
 import { lootTextPlacement } from "../shared/TacticVfxHooks";
 import { DEFEAT_VFX, defeatTextKeyOf, defeatTextOffsetOf,defeatVfxStats, isGeneralAvatarUnitId } from "./BattleFlowVfx";
 import { vitalityRingView, type VitalityRingView } from "../../core/systems/VitalityBarView";
@@ -1367,7 +1367,8 @@ export class UnitRenderer extends Component {
   public playBuffConsumeValue(lane: number, depth: number, text: string, floatType: FloatTextType = 'status'): void {
     const worldPos = this.getUnitWorldPosition(lane, depth);
     if (!worldPos) return;
-    this.spawnFloatText(text, floatType, worldPos);
+    // 帶格子錨點：同一格短時間連發的地形／buff／狀態字會依序錯開，不再疊成一團（PROG-2-10045）
+    this.spawnFloatText(text, floatType, worldPos, cellFloatAnchor(lane, depth));
   }
 
   /**
@@ -2111,7 +2112,7 @@ export class UnitRenderer extends Component {
   public playPoisonFloat(lane: number, depth: number, text: string): void {
     const worldPos = this.getUnitWorldPosition(lane, depth);
     if (!worldPos) return;
-    this.spawnFloatText(text, 'poison', worldPos);
+    this.spawnFloatText(text, 'poison', worldPos, cellFloatAnchor(lane, depth));
   }
 
   /**
