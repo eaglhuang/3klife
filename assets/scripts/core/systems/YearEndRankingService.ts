@@ -38,6 +38,8 @@ export interface YearEndRankingResult {
     surpriseAward: SurpriseAward | null;
     roastMessage: string | null;
     nextYearHint: string;
+    /** 首年目標達新手滿貫（>=5/6）：典禮第 3 幕多念一行賀詞，不影響榜單分數與名次（PROG-2-10062） */
+    newbieGrandSlam?: boolean;
 }
 
 /** 玩家榜單分數的原料；欄位來源見 GameSession.yearEndScoreInputs，缺的欄位呼叫端以 0 帶入 */

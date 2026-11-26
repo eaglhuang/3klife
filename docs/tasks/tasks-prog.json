@@ -19475,12 +19475,65 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_3125",
+      "id": "PROG-2-10062",
+      "title": "首年目標清單：資料、追蹤、一次性領獎與大廳進度條",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-26T17:27:21+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "Antigravity 首年目標清單（6 目標、總獎 650 銀兩）進遊戲：master JSON＋載入器＋schema 驗證、掛既有事件的追蹤、存檔向後相容、reward.claim 一次性領獎、大廳首年目標進度條＋下一步按鈕＋完成 Toast、典禮新手滿貫賀詞。",
+      "related": [
+        "PROG-2-10046",
+        "PROG-2-10027",
+        "PROG-2-9607"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [
+        "assets/resources/data/master/year1-goals.json",
+        "assets/scripts/core/systems/Year1Goals.ts",
+        "assets/scripts/ui/core/Year1GoalsController.ts",
+        "tests/Year1Goals.test.ts"
+      ],
+      "notes": "2026-11-26 | 狀態: done | 驗證: tsc 0 錯誤、run-cli 全過（含 Year1Goals 27 項）、compute-gate standard 13/14（僅既有模組邊界警告）、網頁版無頭 Chrome 1920 實跑進度條／Toast／開場隱藏 | 變更: 首年目標資料、追蹤、一次性領獎、大廳進度條、典禮新手滿貫 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
-    "done": 361,
+    "done": 362,
     "in_progress": 5,
     "open": 88,
-    "total": 455
+    "total": 456
   }
 }
