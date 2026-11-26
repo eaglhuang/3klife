@@ -49,7 +49,7 @@ export interface BattleAudioLayersConfig {
 
 export const DEFAULT_BATTLE_AUDIO_LAYERS: BattleAudioLayersConfig = {
   clipSource: 'cc0',
-  cc0Clips: { hit_block: 'cc0_hit_metal', hit_heavy: 'cc0_hit_flesh', footstep_hoof: 'cc0_hoof_single' },
+  cc0Clips: { hit_block: 'cc0_block_metal_bright', hit_heavy: 'cc0_hit_flesh', footstep_hoof: 'cc0_hoof_single' },
   hit: {
     heavyMaxHpRatio: 0.2,
     critIsHeavy: true,
