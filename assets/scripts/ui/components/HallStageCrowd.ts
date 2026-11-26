@@ -213,6 +213,7 @@ export class HallStageCrowd extends Component {
     public react(reaction: Readonly<HallCrowdReaction>): void {
         let index = 0;
         for (const [generalId, head] of this._headPositions) {
+            if (this._actors.get(generalId)?.node.active === false) continue;
             const node = this._makeLabel(`react-${generalId}`, reaction.text, 34, MARK_COLOR);
             node.setPosition(head.x, head.y, 0);
             node.setScale(0.2, 0.2, 1);
@@ -311,6 +312,8 @@ export class HallStageCrowd extends Component {
             breathSec: pose.idleDelaySec, walkSec: 0,
         };
         this._bindTap(actor);
+        // 輪替進場的人先隱藏，等走動模擬放行、走進地板帶才顯示（PROG-2-10090）
+        if (data && arrive) this._setActorVisible(actor, false);
         return actor;
     }
 
@@ -367,6 +370,8 @@ export class HallStageCrowd extends Component {
             baseScaleX: data.generalScale, baseScaleY: data.generalScale, breathSec: 0, walkSec: 0,
         };
         this._bindTap(actor);
+        // 輪替進場的人先隱藏，等走動模擬放行、走進地板帶才顯示（PROG-2-10090）
+        if (data && arrive) this._setActorVisible(actor, false);
         return actor;
     }
 
@@ -442,6 +447,7 @@ export class HallStageCrowd extends Component {
     private _applyStaticState(actor: CrowdActor, state: WanderActorState, order: number, data: HallWanderData, dt: number): void {
         const decor = this._decor;
         if (!decor) return;
+        this._setActorVisible(actor, state.visible);
         const stage = wanderToStage({ x: state.x, y: state.y }, this._canvas);
         const walking = state.anim === WANDER_ANIMS.general.walk;
         actor.state = state;
@@ -465,6 +471,17 @@ export class HallStageCrowd extends Component {
         this._headPositions.set(state.id, new Vec3(stage.x, headY, 0));
     }
 
+    /**
+     * 排隊等進場／走在地板帶外側的人整組隱藏（本體、名牌、「!」標記），不佔點擊、不疊在畫面邊緣（PROG-2-10090）。
+     * 節點 active 為 false 時引擎不派觸控事件，左右面板旁不會有點不到的小人。
+     */
+    private _setActorVisible(actor: CrowdActor, visible: boolean): void {
+        if (actor.node.active !== visible) actor.node.active = visible;
+        const tagOn = visible && this._tagsVisible;
+        if (actor.tag.isValid && actor.tag.active !== tagOn) actor.tag.active = tagOn;
+        if (actor.mark?.isValid && actor.mark.active !== visible) actor.mark.active = visible;
+    }
+
     private _applyState(state: WanderActorState, order: number, data: HallWanderData, dt: number): void {
         const actor = this._actors.get(state.id);
         const decor = this._decor;
@@ -474,6 +491,7 @@ export class HallStageCrowd extends Component {
             return;
         }
         if (!decor) return;
+        this._setActorVisible(actor, state.visible);
         const stage = wanderToStage({ x: state.x, y: state.y }, this._canvas);
         const headY = stage.y + actor.placement.height + this._markRise(actor.placement, decor);
         actor.state = state;

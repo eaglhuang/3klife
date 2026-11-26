@@ -77,6 +77,11 @@ export interface WanderActorState {
   loop: true;
   /** True only while idling and not dialogue-locked — this is the clickable state. */
   clickable: boolean;
+  /**
+   * [3klife] 畫面上要不要顯示：排隊等進場（waiting）與走在地板帶外側的人都不顯示，也不接點擊。
+   * 否則多人同時輪替進場會疊在畫面邊緣、被左右面板蓋住點不到（PROG-2-10090）。
+   */
+  visible: boolean;
   targetX: number;
   targetY: number;
   idleLeft: number;
@@ -203,7 +208,16 @@ interface InternalActor {
   lockUntil: number;
   /** [3klife] 輪替退場中：走到地板帶外就移除，不再選新目標 */
   leaving?: boolean;
+  /** [3klife] 排隊等進場：起點在地板帶外側時先排隊，一次只放一位走進來（見 admitNext） */
+  waiting?: boolean;
+  /** [3klife] 被放行進場的時間（模擬秒），逾時就不再卡住後面的人 */
+  admittedAt?: number;
 }
+
+/** [3klife] 前一位進場者走進地板帶這麼深（設計像素），才放下一位，避免進場口疊在一起 */
+export const WANDER_ENTRY_CLEAR = 40;
+/** [3klife] 前一位進場者最久佔住進場口的秒數；被擋住或卡住也不拖累後面的人 */
+export const WANDER_ENTRY_TIMEOUT = 12;
 
 /** [3klife] 進退場時走到地板帶左右外側這麼遠的位置（設計像素），人在畫面外才移除／從這裡走進來 */
 export const WANDER_EXIT_MARGIN = 70;
@@ -249,6 +263,7 @@ export class HallWander {
    */
   step(dt: number): WanderActorState[] {
     const t = this.t;
+    this.admitNext();
     for (const a of this.actors) this.tick(a, t, dt);
     this.t = t + dt;
     this.sweepLeft();
@@ -271,6 +286,8 @@ export class HallWander {
       ty: cfg.start.y,
       idleLeft: 0,
       lockUntil: -1,
+      // 起點在地板帶左右外側＝輪替進場，先排隊（一次只放一位，見 admitNext）
+      waiting: cfg.start.x < this.config.floor.x0 || cfg.start.x > this.config.floor.x1,
     });
     return true;
   }
@@ -369,10 +386,32 @@ export class HallWander {
   }
 
   private isClickable(a: InternalActor): boolean {
-    return a.state === 'idle' && !this.isLocked(a);
+    return a.state === 'idle' && !this.isLocked(a) && this.isVisible(a);
+  }
+
+  /** [3klife] 排隊中或走在地板帶外側的人不顯示（左右面板會蓋住，點也點不到） */
+  private isVisible(a: InternalActor): boolean {
+    if (a.waiting) return false;
+    const f = this.config.floor;
+    return a.x >= f.x0 && a.x <= f.x1;
+  }
+
+  /** [3klife] 進場口一次只放一位：前一位走進地板帶 WANDER_ENTRY_CLEAR 以上（或逾時）才放下一位，依加入順序 */
+  private admitNext(): void {
+    const next = this.actors.find((a) => a.waiting);
+    if (!next) return;
+    const f = this.config.floor;
+    const busy = this.actors.some((a) => a.admittedAt !== undefined && !a.waiting && !a.leaving
+      && (a.x < f.x0 + WANDER_ENTRY_CLEAR || a.x > f.x1 - WANDER_ENTRY_CLEAR)
+      && this.t - a.admittedAt < WANDER_ENTRY_TIMEOUT);
+    if (busy) return;
+    next.waiting = false;
+    next.admittedAt = this.t;
+    next.idleLeft = 0;
   }
 
   private tick(a: InternalActor, t: number, dt: number): void {
+    if (a.waiting) return;
     if (this.isLocked(a, t)) {
       a.state = 'idle';
       return;
@@ -421,7 +460,7 @@ export class HallWander {
   private blockedBy(self: InternalActor, nx: number, ny: number): boolean {
     const min = this.config.minDistance! * 0.72;
     for (const o of this.actors) {
-      if (o === self) continue;
+      if (o === self || o.waiting) continue;
       const next = Math.hypot(nx - o.x, ny - o.y);
       // [3klife] 只有「正在靠近」才算擋住；起點本來就太近時要讓人走得開，否則兩人永遠互卡
       if (next < min && next < Math.hypot(self.x - o.x, self.y - o.y)) return true;
@@ -441,7 +480,7 @@ export class HallWander {
       if (Math.abs(dx) < 40 && this.rng.next() < 0.7) continue;
       let close = false;
       for (const o of this.actors) {
-        if (o === a) continue;
+        if (o === a || o.waiting) continue;
         const ox = o.state === 'walk' ? o.tx : o.x;
         const oy = o.state === 'walk' ? o.ty : o.y;
         if (Math.hypot(p.x - ox, p.y - oy) < min) {
@@ -495,6 +534,7 @@ export class HallWander {
       anim: a.state === 'walk' ? anims.walk : anims.idle,
       loop: true,
       clickable: this.isClickable(a),
+      visible: this.isVisible(a),
       targetX: a.tx,
       targetY: a.ty,
       idleLeft: a.idleLeft,

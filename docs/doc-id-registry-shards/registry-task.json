@@ -17412,7 +17412,13 @@
     "category": "task"
   },
   {
-    "id": "doc_task_3163",
+    "id": "doc_task_3161",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10090.md",
+    "title": "[PROG-2-10090] 大廳小人待出場疊在畫面邊緣點不到",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3167",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10081.md",
     "title": "[PROG-2-10081] 奧義 C 組音效接入戰場奧義施放（蓄力／爆發／收尾）",
     "category": "task"
