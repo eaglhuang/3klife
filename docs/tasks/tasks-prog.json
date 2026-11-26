@@ -19259,12 +19259,61 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_3128",
+      "id": "PROG-2-10070",
+      "title": "子嗣成長事件彈窗＋親子談話按鈕（最小可玩）",
+      "owner": "codex-gpt-5.4-mini",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "codex-gpt-5.4-mini",
+      "started_at": "2026-11-26T18:41:10+08:00",
+      "started_by_agent": "codex-gpt-5.4-mini",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "換年待決的血統成長事件彈窗（A／B 選項呼叫 family.resolveGrowthEvent，Toast 回報）；家族孩子面板加親子談話按鈕，每年一次好感增量放 JSON，3 句搞笑話題輪替，累計 childInteractionCountThisYear；承 PROG-2-10057／10058／10059。",
+      "related": [
+        "PROG-2-10057",
+        "PROG-2-10058"
+      ],
+      "depends": [
+        "PROG-2-10059"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-26 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
     "done": 359,
-    "in_progress": 4,
+    "in_progress": 5,
     "open": 88,
-    "total": 451
+    "total": 452
   }
 }

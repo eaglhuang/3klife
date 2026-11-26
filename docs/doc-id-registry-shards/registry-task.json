@@ -17298,15 +17298,21 @@
     "category": "task"
   },
   {
+    "id": "doc_task_3123",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10059.md",
+    "title": "[PROG-2-10059] 年底結算接成長事件：待處理事件佇列存檔、resolveBloodlineEvent 結算（屬性／好感／銀兩／聲望／小名碎片／同窗好友）",
+    "category": "task"
+  },
+  {
     "id": "doc_task_3124",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10060.md",
     "title": "[PROG-2-10060] 新手前 10～20 分鐘稽核小修：開場信按鈕、教學銀兩、結緣入口、任務牆獎勵提示",
     "category": "task"
   },
   {
-    "id": "doc_task_3123",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10059.md",
-    "title": "[PROG-2-10059] 年底結算接成長事件：待處理事件佇列存檔、resolveBloodlineEvent 結算（屬性／好感／銀兩／聲望／小名碎片／同窗好友）",
+    "id": "doc_task_3128",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10070.md",
+    "title": "[PROG-2-10070] 子嗣成長事件彈窗＋親子談話按鈕（最小可玩）",
     "category": "task"
   }
 ]
