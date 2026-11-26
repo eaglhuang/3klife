@@ -48,6 +48,7 @@ export const SYNC_PATCH_ROOT_KEYS: readonly string[] = [
     'questState',
     'storyMeta',
     'occupancy',
+    'seasonDigest',
     'familyState',
     'officerState',
     'sandtableMarkersPlaced',

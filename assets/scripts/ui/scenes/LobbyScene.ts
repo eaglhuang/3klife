@@ -186,7 +186,9 @@ import { canShowSeasonChronicle, SeasonChroniclePopupController } from '../core/
 import { LineageMilestonePopupController } from '../core/LineageMilestonePopupController';
 import { QuickSortiePopupController, resolveQuickSortie, type QuickSortieResolution } from '../core/QuickSortieController';
 import { FIELD_AUTO_BATTLE_JOURNAL } from '../../core/systems/OfflineBattleSnapshot';
-import type { ChronicleTrigger } from '../../core/systems/SeasonChronicle';
+import { cityEncounterDef, type ChronicleTrigger } from '../../core/systems/SeasonChronicle';
+import { buildChronicleDigestNote, buildMissionDigestNote, planSeasonAdvanceFlow, type SeasonDigestNote } from '../../core/systems/SeasonDigest';
+import { digestText, SEASON_DIGEST_TEXTS } from '../components/mind/SeasonDigestView';
 import { parseOpeningOfferTable } from '../../core/systems/OpeningOffer';
 import { SeasonPassController } from '../core/SeasonPassController';
 import type { AcademyGraduationResult } from '../../core/systems/nurture/AcademyGraduation';
@@ -1471,6 +1473,13 @@ export class LobbyScene extends Component {
             markRead: (id) => session.markMindRequestRead(id),
             resolve: (id, accept) => session.resolveMindRequest(id, accept),
             bringToFront: (node) => this._bringNodeToFront(node),
+            // 季報紀要（首年前幾季的任務回報、市井奇遇併進信箱，PROG-2-10068）
+            digest: () => session.seasonDigest,
+            lookup: (key, ...args) => services().i18n.t(key, ...args),
+            encounterOpen: (note) => this._digestEncounterOpen(note),
+            markDigestRead: (id) => { session.markSeasonDigestRead(id); },
+            dismissDigest: (id) => { session.dismissSeasonDigest(id); void session.save().catch(() => undefined); },
+            openDigest: (id) => { this._openChronicleFromDigest(id); },
         }, this.node);
         this._sessionEventUnsubscribers.push(services().event.on(GAME_SESSION_EVENTS.Loaded, () => { this._mindPanel?.refresh(); }));
     }
@@ -1672,7 +1681,46 @@ export class LobbyScene extends Component {
     private _openSeasonChronicle(trigger: ChronicleTrigger): void {
         const popup = this._seasonChroniclePopup;
         if (!popup?.host || !services().session.chronicleShouldOpen(trigger)) return;
+        // 首年前 2 季不彈季報：改收進信箱（紅點），玩家想看再從信箱點「去看看」（PROG-2-10068）
+        if (!planSeasonAdvanceFlow(services().session.gameTime.totalSeasonsElapsed).openChronicle) {
+            this._fileSeasonDigest(null);
+            return;
+        }
         popup.open();
+    }
+
+    /** 這則紀要對應的市井奇遇是否還能抉擇（只有本季季報可抉擇，往期已逝） */
+    private _digestEncounterOpen(note: SeasonDigestNote): boolean {
+        const chronicle = services().session.seasonChronicle;
+        return note.kind === 'chronicle' && chronicle.season === note.season && chronicle.encounterId !== null && chronicle.encounterChoice === null;
+    }
+
+    /** 信箱「去看看」：收起信箱、開三國季報（可抉擇奇遇）；看過就算已讀 */
+    private _openChronicleFromDigest(id: string): void {
+        const popup = this._seasonChroniclePopup;
+        if (!popup?.host) return;
+        services().session.markSeasonDigestRead(id);
+        this._mindPanel?.close();
+        popup.open();
+    }
+
+    /**
+     * 把純資訊報表（任務回報、三國季報／市井奇遇）寫進信箱紀要（PROG-2-10068）。
+     * 只寫純資訊的；需要玩家選擇的性格事件、血統里程碑照舊彈窗，不經這裡。有新增才提示一次。
+     */
+    private _fileSeasonDigest(missionReport: { settled: number; succeeded: number; lines: readonly string[] } | null | undefined): void {
+        const session = services().session;
+        const season = session.gameTime.totalSeasonsElapsed;
+        const chronicle = session.seasonChronicle;
+        const def = cityEncounterDef(chronicle.encounterId);
+        const notes = [
+            buildMissionDigestNote(season, missionReport),
+            buildChronicleDigestNote(season, { season: chronicle.season, trend: chronicle.trend, encounterTitle: def?.title, encounterDesc: def?.desc }),
+        ].filter((n): n is SeasonDigestNote => n !== null);
+        if (session.fileSeasonDigest(notes) === 0) return;
+        void session.save().catch(() => undefined);
+        this._mindPanel?.refresh();
+        services().event.emit('SHOW_TOAST', { message: digestText((key, ...args) => services().i18n.t(key, ...args), SEASON_DIGEST_TEXTS.toast), duration: 4 });
     }
 
     /** 季度通行證面板（ECO-13 Mock，PROG-2-2197） */
@@ -4862,6 +4910,15 @@ ${spent}`,
         return this._dispatchHallMission(taskId, generalId);
     }
 
+    /** 任務詳情的白話導讀：把「再探」「情報 N%」翻成人話（PROG-2-10068；四語系 ui.mission.jargon_guide） */
+    private _missionJargonGuide(missionId: string): string {
+        const detail = services().session.missionService?.getDetail(missionId, {});
+        const intel = detail && detail.ok ? detail.value.intel : 0;
+        const key = 'ui.mission.jargon_guide';
+        const text = services().i18n.t(key, String(Math.round(intel)));
+        return text === key ? `白話版：「再探」＝再派探子溜過去偷看一次（要吃糧草）；情報 ${Math.round(intel)}%＝你摸清了對方 ${Math.round(intel)}% 的底細，越高越不會踩雷。` : text;
+    }
+
     /** 組詳情視窗用的 state（§5、§6）：直接讀任務服務的投影（PROG-2-9152）；沒有該任務時回傳 null */
     private _hallDialogStateFor(missionId: string, selectedGeneralId: string | null): MissionDialogState | null {
         const session = services().session;
@@ -4876,6 +4933,7 @@ ${spent}`,
             hiddenRevealIntel: data.balance.hiddenRevealIntel,
             intelBands: data.balance.intelBands,
             selectedGeneralId,
+            jargonGuide: this._missionJargonGuide(missionId),
         });
     }
 
@@ -6987,8 +7045,11 @@ ${spent}`,
             this._refreshLobbyHallTopbar();
             this._refreshHallBoard();
             const hallLines = hallMissionReport?.lines ?? [];
+            // 首年前 2 季只彈戰報＋決策事件：任務回報與市井奇遇併進信箱，第 3 季起恢復完整流程（PROG-2-10068）
+            const flow = planSeasonAdvanceFlow(services().session.gameTime.totalSeasonsElapsed);
+            if (flow.fileDigest) this._fileSeasonDigest(hallMissionReport);
             // 本季所有任務回報合成一疊卡片：逐張點或全部略過，看完才開季報（PROG-2-9966）
-            await this._showMissionReportStack(hallMissionReport?.cards ?? []);
+            if (flow.showMissionStack) await this._showMissionReportStack(hallMissionReport?.cards ?? []);
             const followUps = (): void => {
                 this._openSeasonChronicle('season-advance');
                 this._syncSeasonEventPopup();
@@ -7006,6 +7067,7 @@ ${spent}`,
                 hallMissionLines: hallLines,
                 sections: seasonReportSections ?? [],
                 rankPreviewLine: nextRankPreviewLine(services().session.officerState.currentTier),
+                bondRowLimit: flow.bondRowLimit,
                 // 季度戰報關了才輪到季報／事件／血統彈窗，兩者不會疊在一起搶點擊（建置版實測 06）
                 onRequestClose: () => { void Promise.resolve(services().ui.close(UIID.SeasonReport)).finally(followUps); },
             };

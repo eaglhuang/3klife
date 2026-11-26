@@ -55,6 +55,7 @@ import type { QuestStateV1 } from '../../shared/quest/QuestTypes';
 import { normalizeFamilyState } from '../../shared/family/FamilyService';
 import { isEmptyFamilyState, type FamilyStateV1 } from '../../shared/family/FamilyTypes';
 import { normalizeStoryMeta, type StoryMeta } from '../../shared/story/StoryRules';
+import { normalizeSeasonDigest, type SeasonDigestNote } from '../systems/SeasonDigest';
 import { normalizeOccupancyRecords } from '../../shared/occupancy/OccupancyService';
 import type { OccupancyRecord } from '../../shared/occupancy/OccupancyTypes';
 import { normalizeDeck } from './PlayerDeckRules';
@@ -374,6 +375,8 @@ export interface PlayerSaveSnapshot {
     expertView?: boolean;
     /** 名門提親（G4 §E #4，PROG-2-1811）；舊存檔沒有此欄位 */
     marriageProposal?: MarriageProposal;
+    /** 季報紀要信箱（PROG-2-10068）；舊檔沒有此欄視為空 */
+    seasonDigest?: SeasonDigestNote[];
     /** 世交相性 K（G3 §F-2，PROG-2-1812）；舊存檔沒有此欄位 */
     familySynergy?: FamilySynergyLedger;
     /** 已譜牒密考的配對（PROG-2-1832）；舊存檔沒有此欄位 */
@@ -801,6 +804,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.rewardMeta !== undefined ? { rewardMeta: normalizeRewardMeta(snapshot.rewardMeta) } : {}),
         ...(snapshot.questState !== undefined ? { questState: normalizeQuestState(snapshot.questState) } : {}),
         ...(snapshot.storyMeta !== undefined ? { storyMeta: normalizeStoryMeta(snapshot.storyMeta) } : {}),
+        ...(normalizeSeasonDigest(snapshot.seasonDigest).length > 0 ? { seasonDigest: normalizeSeasonDigest(snapshot.seasonDigest) } : {}),
         ...(normalizeOccupancyRecords(snapshot.occupancy).length > 0 ? { occupancy: normalizeOccupancyRecords(snapshot.occupancy) } : {}),
         ...(isEmptyFamilyState(normalizeFamilyState(snapshot.familyState)) ? {} : { familyState: normalizeFamilyState(snapshot.familyState) }),
         ...(snapshot.legendaryMentoringUsedIds !== undefined ? { legendaryMentoringUsedIds: normalizeLegendaryMentoringUsedIds(snapshot.legendaryMentoringUsedIds) } : {}),
