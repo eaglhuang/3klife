@@ -119,6 +119,8 @@ export class SpineUnitOverlay {
    * 池只活在這個疊層實例內，clear()（場景銷毀時由 UnitRenderer 呼叫）會整池銷毀，不會跨場景殘留。
    */
   private readonly nodePool = new Map<string, Node[]>();
+  /** 戰前預載的骨架資料（PROG-2-10078）：持有一份引用，場景內不會被資源回收；clear() 時釋放。 */
+  private readonly preloaded = new Map<string, sp.SkeletonData>();
   private duel: { core: DuelPresentationCore; ids: [string, string]; resolve: (played: boolean) => void } | null = null;
   /** 地面層容器（格子 buff 標記、揚塵）：每幀排序後固定送回最底，依序排在 index 0、1…（PROG-2-9708） */
   private groundNodes: () => ReadonlyArray<Node | null> = () => [];
@@ -139,6 +141,51 @@ export class SpineUnitOverlay {
     entry.members = members;
     if (!this.duel?.ids.includes(id)) entry.core.follow({ x, y }, moving, dt);
     return !!entry.node?.isValid;
+  }
+
+  /**
+   * 戰前預載（PROG-2-10078）：先把這場會用到的兵種骨架資料載好並持有引用，再替每個骨架預建幾個閒置節點放進節點池。
+   * 原因：骨架資料（json、圖集、貼圖）第一次用到才 resources.load，騎兵的馬身骨架實測要 2 秒多，騎兵出現時整隊已跑出好幾格；
+   * 預載後單位建立時 resources.load 直接命中快取、節點直接從池取，當幀就能顯示。
+   * 載不到的素材不在這裡標記失敗（交給實際單位載入時處理後備素材）；整體有逾時保底，不拖住戰場載入畫面。
+   * @param prewarmNodes true = 每個骨架預建一整隊的閒置節點（帶頭者＋隊員）；false = 只載資料
+   */
+  public preload(configs: ReadonlyArray<UnitSpineConfig>, prewarmNodes = true, timeoutMs = 8000): Promise<void> {
+    ensureHitFlashMaterial(() => { /* 預熱材質：之後單位載入時不用再等 */ });
+    const paths = new Map<string, UnitSpineConfig>();
+    for (const config of configs) if (!this.failed.has(config.path) && !this.preloaded.has(config.path)) paths.set(config.path, config);
+    const jobs = Array.from(paths.values()).map(config => new Promise<void>(resolve => {
+      resources.load(config.path, sp.SkeletonData, (err, data) => {
+        if (err || !data) { resolve(); return; }
+        data.addRef();
+        this.preloaded.set(config.path, data);
+        if (prewarmNodes) this.prewarmNodes(config.path, data, 1 + (config.squad?.length ?? 0));
+        resolve();
+      });
+    }));
+    return new Promise<void>(resolve => {
+      const timer = setTimeout(resolve, timeoutMs);
+      void Promise.all(jobs).then(() => { clearTimeout(timer); resolve(); });
+    });
+  }
+
+  /** 已預載並持有引用的骨架數（測試與除錯用）。 */
+  public preloadedCount(): number { return this.preloaded.size; }
+
+  /** 替骨架預建閒置節點放進池（需要疊層父節點；沒有就略過）。已在池內的數量算在內，不重複建。 */
+  private prewarmNodes(path: string, data: sp.SkeletonData, count: number): void {
+    const parent = this.getParent();
+    if (!parent?.isValid || count <= 0) return;
+    const want = Math.min(count, SPINE_UNIT_POOL_MAX_PER_PATH) - (this.nodePool.get(path)?.length ?? 0);
+    const fresh: Node[] = [];
+    for (let i = 0; i < want; i += 1) {
+      const node = new Node('SpineUnit_pooled');
+      node.layer = this.layer(); node.addComponent(UITransform); parent.addChild(node);
+      const skeleton = node.addComponent(sp.Skeleton);
+      skeleton.premultipliedAlpha = false; skeleton.skeletonData = data;
+      fresh.push(node);
+    }
+    for (const node of fresh) this.releaseNode(path, node);
   }
 
   /** 這份素材是否已確定載不起來（缺檔或缺共用動作）；呼叫端據此改用後備素材，不讓單位退回方塊。 */
@@ -355,6 +402,8 @@ export class SpineUnitOverlay {
     // 整池銷毀：場景結束後不留任何閒置節點
     for (const nodes of this.nodePool.values()) for (const node of nodes) if (node.isValid) node.destroy();
     this.nodePool.clear();
+    for (const data of this.preloaded.values()) data.decRef();
+    this.preloaded.clear();
   }
 
   /** 目前池內閒置節點數（測試與除錯用）；不帶路徑回傳全部。 */

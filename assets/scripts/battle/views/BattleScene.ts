@@ -34,6 +34,8 @@ import { getEliteDeployCap, scenePresetIdOf } from '../../core/systems/SortieDep
 import { BattleTutorialHint } from './BattleTutorialHint';
 import { DefenseDeployGuide } from './DefenseDeployGuide';
 import { TroopType } from '../../core/config/Constants';
+import { AI_USABLE_TYPES } from '../controllers/EnemyAI';
+import { battleTroopPreloadList } from '../shared/UnitPresentationConfig';
 import { guardTicketJustUsed, withDefenseGuideFallback } from '../../core/systems/DefenseGuide';
 import { BattleUIBridge, createBattleSceneContext } from './BattleUIBridge';
 import { TurnFlowManager } from './TurnFlowManager';
@@ -415,6 +417,11 @@ export class BattleScene extends Component {
       this.sceneContext.unitRenderer = this.unitRenderer;
       this.sceneContext.boardCamera = this.getMainCamera();
       UCUFLogger.info(LogCategory.BATTLE, `[BattleScene] unitRenderer 已連結: ${!!this.unitRenderer}`);
+      // 戰前預載雙方兵種 Spine 與節點池（PROG-2-10078）：騎兵馬身骨架第一次載入要 2 秒多，不預載就會在戰場上出現得太晚
+      if (!isBattleCaptureMode) {
+        await this.unitRenderer?.prewarmTroopSpines(battleTroopPreloadList(AI_USABLE_TYPES, initialCards));
+        UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] 兵種 Spine 預載完成");
+      }
 
       this._deployPanelRuntime?.setController(this.ctrl);
       this._deployPanelRuntime?.registerDragDropCallback((screenX, screenY) => this.turnFlowManager?.doDeployRaycast(screenX, screenY));
