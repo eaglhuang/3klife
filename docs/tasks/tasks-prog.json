@@ -18903,7 +18903,7 @@
       "title": "年終典禮 Host 擋輸入實跑修正：playtest 認得典禮、護欄測試",
       "owner": "ClaudeCode_claude-opus-5-5",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "bugfix",
       "phase": "M0",
       "created": "2026-11-26",
@@ -18913,12 +18913,12 @@
       "chain_id": "",
       "chain_step": "",
       "sensor_triggered_by": "",
-      "description": "",
+      "description": "年終典禮 YearEndCeremonyHost 播放中依設計全螢幕擋輸入，playtest 不認得典禮造成學府步驟失敗；補 playtest 典禮處理與擋輸入護欄測試。",
       "related": [],
       "depends": [],
       "acceptance": [],
       "deliverables": [],
-      "notes": "2026-11-26 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "notes": "2026-11-26 | 狀態: done | 驗證: tsc test=0、run-cli 9718 全過、線上 playtest-online --full-year --mind --academy 學府步驟 27~33 全 PASS（年終典禮被自動收下）、compute-gate standard | 變更: 根因＝典禮 YearEndCeremonyHost 播放中（約 23 秒、首次不可跳過）依設計全螢幕擋輸入，playtest 不認得典禮而在播放中誤判被擋；playtest-online 新增 settleYearEndCeremony（等播完按收下賞賜）並接進 backToLobbyBar／runSeasonPopups、殘留檢查加 YearEndCeremonyHost；新增擋輸入護欄測試 5 項（掛載收起、唯一開啟點、關閉釋放、面板播完釋放、腳本護欄） | 阻塞: 無（遊戲端宿主未播放時本就 active=false，無需改遊戲碼）",
       "brief": {
         "style": "classic",
         "label": "",
@@ -18943,8 +18943,8 @@
     }
   ],
   "summary": {
-    "done": 353,
-    "in_progress": 5,
+    "done": 354,
+    "in_progress": 4,
     "open": 87,
     "total": 445
   }
