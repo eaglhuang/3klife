@@ -439,6 +439,7 @@
   "ui.battle.skill.source_tactic": "戰法",
   "ui.battle.skill.charging": "{0}蓄力中，SP 不足",
   "ui.battle.autoplay.no_sortie": "這場戰鬥沒有出征軍勢，自動代打只會自動結束回合",
+  "ui.battle.tutorial.speed_x2": "首戰已用 2 倍速加快節奏，可隨時按右上角速度鈕切回 1 倍。",
   "ui.battle.delegate.unavailable": "這場戰鬥沒有出征軍勢，無法委任",
   "ui.battle.last_spurt.entered": "第 {0} 回合・殘局爆發！破釜沉舟",
   "ui.battle.stamina.exhausted_player": "我軍主將體力耗盡，殘局爆發失效",

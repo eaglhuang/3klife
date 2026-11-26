@@ -17322,8 +17322,14 @@
     "category": "task"
   },
   {
-    "id": "doc_task_3132",
-    "path": "docs/agent-briefs/tasks/PROG-2-10075.md",
+    "id": "doc_task_3130",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10072.md",
+    "title": "[PROG-2-10072] 首戰節奏：預設 x2、縮短敵方回合等待、試玩腳本自動代打校正",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3133",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10075.md",
     "title": "[PROG-2-10075] 同步騎馬匹 mounted-list（關羽）",
     "category": "task"
   }
