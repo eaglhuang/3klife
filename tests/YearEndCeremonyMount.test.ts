@@ -21,6 +21,11 @@ import {
     type CeremonyAct,
 } from '../assets/scripts/core/systems/YearEndCeremonyRuntime';
 
+/** 湊出剛好 score 分的原料（只動年收入：分數 = 600 + 年收入×0.1），score 須 ≥ 600 */
+function inputForScore(score: number) {
+    return { annualIncome: (score - 600) * 10, prestige: 0, childCount: 0, spouseCount: 0, academyScore: 0 };
+}
+
 const ROOT = path.resolve(__dirname, '..');
 const readJson = <T = any>(rel: string): T => JSON.parse(fs.readFileSync(path.join(ROOT, rel), 'utf8')) as T;
 const LOCALES = ['zh-TW', 'zh-CN', 'en', 'ja'];
@@ -54,21 +59,24 @@ export function createYearEndCeremonyMountSuite(): TestSuite {
     });
 
     suite.test('結算：4 位名門，玩家名次與獎勵取自 YearEndRankingService 真資料', () => {
-        const high = buildYearEndCeremonyResult(1, 1200, '本府');
-        assert.equals(high.standings.length, 4);
-        assert.equals(high.playerRank, 2);
-        assert.equals(high.playerReward.gold, 1200);
-        const low = buildYearEndCeremonyResult(1, 0, '本府');
-        assert.equals(low.playerRank, 4);
+        const high = buildYearEndCeremonyResult(1, inputForScore(1300), '本府');
+        assert.equals(high.standings.length, 5);
+        assert.equals(high.playerRank, 1);
+        assert.equals(high.playerReward.gold, 2000);
+        const mid = buildYearEndCeremonyResult(1, inputForScore(1100), '本府');
+        assert.equals(mid.playerRank, 3);
+        assert.equals(mid.playerReward.gold, 1000);
+        const low = buildYearEndCeremonyResult(1, inputForScore(600), '本府');
+        assert.equals(low.playerRank, 5);
         assert.equals(low.playerReward.gold, 500);
     });
 
     suite.test('三幕文字在四語系都沒有原始 key 與殘留佔位（前三名／落榜／驚喜獎）', () => {
         const scenarios = [
-            buildYearEndCeremonyResult(1, 1200, 'H'),
-            buildYearEndCeremonyResult(2, 0, 'H'),
-            buildYearEndCeremonyResult(3, 1200, 'H', ['dark_horse']),
-            buildYearEndCeremonyResult(2, 1200, 'H', ['spoiled']),
+            buildYearEndCeremonyResult(1, inputForScore(1200), 'H'),
+            buildYearEndCeremonyResult(2, inputForScore(600), 'H'),
+            buildYearEndCeremonyResult(3, inputForScore(1200), 'H', { lastYearScore: 800, childInteractions: 0 }),
+            buildYearEndCeremonyResult(2, inputForScore(1200), 'H', { lastYearScore: null, childInteractions: 3 }),
         ];
         for (const locale of LOCALES) {
             const t = translatorOf(locale);
@@ -89,9 +97,9 @@ export function createYearEndCeremonyMountSuite(): TestSuite {
 
     suite.test('第 3 幕：有驚喜獎念賀詞，沒有念明年展望（帶明年冠軍賞）', () => {
         const t = translatorOf('zh-TW');
-        const surprise = buildYearEndCeremonyResult(1, 1200, 'H', ['dark_horse']);
+        const surprise = buildYearEndCeremonyResult(2, inputForScore(1200), 'H', { lastYearScore: 800, childInteractions: 0 });
         assert.isTrue(ceremonyActDialogue(surprise, 3, t).includes('500'));
-        const plain = buildYearEndCeremonyResult(1, 1200, 'H');
+        const plain = buildYearEndCeremonyResult(1, inputForScore(1200), 'H');
         assert.isTrue(ceremonyActDialogue(plain, 3, t).includes('2300'));
     });
 

@@ -1399,7 +1399,7 @@
   "ui.jealousy.popup.noSilver": "銀兩不足 {0}，哄不動",
   "ui.bonding.proposal.result.enrollBlocked": "{0}點頭了，但目前還不能納入家眷（好感或家族名額未達標）",
   "ui.ceremony.skip": "跳過典禮",
-  "ui.ceremony.act1.intro": "歲末敲鑼！今年共 4 位名門同台較勁：{0}，誰能抱走金榜玉璧，馬上揭曉！",
+  "ui.ceremony.act1.intro": "歲末敲鑼！今年共 {1} 位名門同台較勁：{0}，誰能抱走金榜玉璧，馬上揭曉！",
   "ui.ceremony.act2.top3": "恭喜本府榮登第 {0} 名！賞銀 {1} 兩、玉璧 {2} 顆！",
   "ui.ceremony.roast.1": "評審團擦了擦眼鏡：「差一點點就上台領玉璧了，明年記得多帶幾個娃來撐場面！」",
   "ui.ceremony.roast.2": "今年先拿 500 銀兩壓壓驚，隔壁老陳已經在偷笑了，明年討回來！",
@@ -1418,5 +1418,12 @@
   "ui.ceremony.close": "收下賞賜",
   "ui.ceremony.act3.hint.top": "表現亮眼！第 {0} 年冠軍賞將提升到 {1} 銀兩＋{2} 玉璧，繼續保持領先！",
   "ui.ceremony.act3.hint.out": "第 {0} 年冠軍賞將提升到 {1} 銀兩＋{2} 玉璧，多培養子嗣、累積戰功，明年再來衝榜！",
-  "ui.ceremony.house": "本府"
+  "ui.ceremony.house": "本府",
+  "npc.house.chendeng": "陳登",
+  "npc.house.zhangzhao": "張昭",
+  "npc.house.shenpei": "審配",
+  "npc.house.jushou": "沮授",
+  "ui.ceremony.claimed": "已入帳：銀兩 +{0}（餘額 {1}）、玉璧 +{2}",
+  "ui.ceremony.claimed_again": "本年賞賜早已入帳，不會重複發放",
+  "ui.ceremony.claim_failed": "入帳暫時失敗，請稍後再按一次收下賞賜"
 }

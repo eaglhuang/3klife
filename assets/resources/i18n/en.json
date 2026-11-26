@@ -1398,7 +1398,7 @@
   "ui.jealousy.popup.noSilver": "Not enough Silver ({0} needed)",
   "ui.bonding.proposal.result.enrollBlocked": "{0} agreed, but cannot join the family yet (favor or family slots not met)",
   "ui.ceremony.skip": "Skip Ceremony",
-  "ui.ceremony.act1.intro": "Year-End Gong! 4 Noble Houses compete: {0}. Who claims the Jade?",
+  "ui.ceremony.act1.intro": "Year-End Gong! {1} Noble Houses compete: {0}. Who claims the Jade?",
   "ui.ceremony.act2.top3": "Rank #{0}! Awarded {1} Silver and {2} Jade!",
   "ui.ceremony.roast.1": "Judges wiped their glasses: So close! Bring more heirs next year!",
   "ui.ceremony.roast.2": "Take 500 Silver for comfort; neighbors are grinning, win it back next year!",
@@ -1417,5 +1417,12 @@
   "ui.ceremony.close": "Accept the prize",
   "ui.ceremony.act3.hint.top": "Splendid! Next year (Year {0}) the champion prize rises to {1} silver + {2} jade. Keep leading!",
   "ui.ceremony.act3.hint.out": "Next year (Year {0}) the champion prize rises to {1} silver + {2} jade. Raise more heirs, earn more merit, and take another run at the board!",
-  "ui.ceremony.house": "Your House"
+  "ui.ceremony.house": "Your House",
+  "npc.house.chendeng": "Chen Deng",
+  "npc.house.zhangzhao": "Zhang Zhao",
+  "npc.house.shenpei": "Shen Pei",
+  "npc.house.jushou": "Ju Shou",
+  "ui.ceremony.claimed": "Received: Silver +{0} (balance {1}), Jade +{2}",
+  "ui.ceremony.claimed_again": "This year's prize was already received; no double payout",
+  "ui.ceremony.claim_failed": "Payout failed for now; please press Accept the prize again later"
 }
