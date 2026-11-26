@@ -3639,7 +3639,7 @@
           {
             "version": "0004",
             "file": "avatars/xun_yu__荀彧__avatar_0004.png",
-            "status": "review-pending",
+            "status": "superseded",
             "sha256": "D3BC419698589CB5F160AAEC743A947F105944884BF01A06C34711ADE6B7BCBD",
             "canvas": "1254x1254 RGBA",
             "source": "standing/xun_yu__荀彧__standing_0003.png",
@@ -3647,10 +3647,23 @@
             "cropBox": "x=440,y=185,w=300,h=395; square padded left=60.5,right=34.5",
             "headOutlineCenterXPercent": 50.1,
             "headAngleDegreesApprox": 30,
-            "note": "獨立胸像取景；下緣到完整胸部底線且無腰帶，羽扇整件在畫框外、髮簪完整；頭部與肩線約30°側轉，含冠輪廓中心50.1%。"
+            "note": "退回：下緣延伸到腰部並帶入腰封飾件，不符合完整胸部底線規則。"
+          },
+          {
+            "version": "0005",
+            "file": "avatars/xun_yu__荀彧__avatar_0005.png",
+            "status": "review-pending",
+            "sha256": "D57F03AB70E0E4D309C48BB5FB606601E98CFBCEB329CCB8510F4F75CB066DC2",
+            "canvas": "1254x1254 RGBA",
+            "source": "standing/xun_yu__荀彧__standing_0003.png",
+            "reference": "avatars/xun_yu__荀彧__avatar_0004.png",
+            "method": "image-gen framing correction; chest-bottom bust",
+            "headOutlineCenterXPercent": 50,
+            "headAngleDegreesApprox": 30,
+            "qc": "125px then 250px preview: clean-shaven, crown and face complete, head visually centered; chest garment lower edge complete; no abdomen or waist belt visible. Pending PM review."
           }
         ],
-        "activeVersion": "0004",
+        "activeVersion": "0005",
         "status": "review-pending"
       },
       "smallAvatar": {
