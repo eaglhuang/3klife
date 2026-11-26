@@ -1407,5 +1407,16 @@
   "ui.ceremony.surprise.dark_horse.1": "黑馬殺出！本府今年分數暴衝，獲頒年度黑馬獎，再賞 {0} 銀兩！",
   "ui.ceremony.surprise.dark_horse.2": "爆冷奪下「年度黑馬獎」！評審團直呼看走眼，{0} 銀兩雙手奉上！",
   "ui.ceremony.surprise.spoiled.1": "子嗣嘴甜得連評審都融化了，頒發「最會撒嬌獎」＋{0} 銀兩！",
-  "ui.ceremony.surprise.spoiled.2": "全場最會撒嬌非本府莫屬，{0} 銀兩拿去買糖吃！"
+  "ui.ceremony.surprise.spoiled.2": "全場最會撒嬌非本府莫屬，{0} 銀兩拿去買糖吃！",
+  "ui.ceremony.title": "第 {0} 年歲末頒獎典禮",
+  "ui.ceremony.act.1": "第一幕・名門入場",
+  "ui.ceremony.act.2": "第二幕・揭曉名次",
+  "ui.ceremony.act.3": "第三幕・驚喜與展望",
+  "ui.ceremony.standing": "第 {0} 名　{1}　{2} 分",
+  "ui.ceremony.player": "★ {0}",
+  "ui.ceremony.reward": "本年賞賜：{0} 銀兩、{1} 玉璧",
+  "ui.ceremony.close": "收下賞賜",
+  "ui.ceremony.act3.hint.top": "表現亮眼！第 {0} 年冠軍賞將提升到 {1} 銀兩＋{2} 玉璧，繼續保持領先！",
+  "ui.ceremony.act3.hint.out": "第 {0} 年冠軍賞將提升到 {1} 銀兩＋{2} 玉璧，多培養子嗣、累積戰功，明年再來衝榜！",
+  "ui.ceremony.house": "本府"
 }

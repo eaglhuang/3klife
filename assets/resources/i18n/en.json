@@ -1406,5 +1406,16 @@
   "ui.ceremony.surprise.dark_horse.1": "Dark Horse! Huge score surge wins {0} bonus Silver!",
   "ui.ceremony.surprise.dark_horse.2": "Upset victory! Judges were amazed - {0} Silver awarded!",
   "ui.ceremony.surprise.spoiled.1": "Heirs charmed the judges! Most Adorable Award +{0} Silver!",
-  "ui.ceremony.surprise.spoiled.2": "Sweetest house in town! Take {0} Silver for treats!"
+  "ui.ceremony.surprise.spoiled.2": "Sweetest house in town! Take {0} Silver for treats!",
+  "ui.ceremony.title": "Year {0} Year-End Awards",
+  "ui.ceremony.act.1": "Act 1: The Houses Enter",
+  "ui.ceremony.act.2": "Act 2: The Ranking Revealed",
+  "ui.ceremony.act.3": "Act 3: Surprises and Outlook",
+  "ui.ceremony.standing": "#{0}  {1}  {2} pts",
+  "ui.ceremony.player": "★ {0}",
+  "ui.ceremony.reward": "This year's prize: {0} silver, {1} jade",
+  "ui.ceremony.close": "Accept the prize",
+  "ui.ceremony.act3.hint.top": "Splendid! Next year (Year {0}) the champion prize rises to {1} silver + {2} jade. Keep leading!",
+  "ui.ceremony.act3.hint.out": "Next year (Year {0}) the champion prize rises to {1} silver + {2} jade. Raise more heirs, earn more merit, and take another run at the board!",
+  "ui.ceremony.house": "Your House"
 }

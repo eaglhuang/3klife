@@ -287,6 +287,8 @@ import { UIScreenPreviewHost } from '../components/UIScreenPreviewHost';
 import { BondingAndEpithetPanel } from '../components/BondingAndEpithetPanel';
 import { JealousyPopupPanel } from '../components/JealousyPopupPanel';
 import { BondingJealousyRuntime, pairSynergyK, seedOfText } from '../../core/systems/BondingJealousyRuntime';
+import { YearEndCeremonyPanel } from '../components/YearEndCeremonyPanel';
+import { buildYearEndCeremonyResult } from '../../core/systems/YearEndCeremonyRuntime';
 import { BloodlineEpithetService } from '../../core/systems/BloodlineEpithetService';
 import { JealousyAndDynastyService } from '../../core/systems/JealousyAndDynastyService';
 import bondingConfig from '../../../resources/data/master/bonding-config.json';
@@ -519,6 +521,10 @@ export class LobbyScene extends Component {
     private _jealousyPanel: JealousyPopupPanel | null = null;
     private _jealousySpouseId: string | null = null;
     private readonly _bondingJealousy = new BondingJealousyRuntime();
+    /** 年終頒獎典禮（PROG-2-10046）：畫面、元件、以及年報出現後等季報關閉才開的待播年份（0 = 沒有待播） */
+    private _ceremonyHost: UIScreenPreviewHost | null = null;
+    private _ceremonyPanel: YearEndCeremonyPanel | null = null;
+    private _pendingCeremonyYear = 0;
     private _extremeTaskMessage = '';
     private _listPanel: GeneralListComposite | null = null;
     private _detailPanel: GeneralDetailComposite | null = null;
@@ -948,6 +954,7 @@ export class LobbyScene extends Component {
             { id: 'BondingSetup', run: () => this._mountBondingSetup() },
             { id: 'BondingProposal', run: () => this._mountBondingProposal() },
             { id: 'JealousyPopup', run: () => this._mountJealousyPopup() },
+            { id: 'YearEndCeremony', run: () => this._mountYearEndCeremony() },
             { id: 'JobChange', run: () => this._mountJobChange() },
             { id: 'Domestic', run: () => this._mountDomestic() },
             { id: 'RecruitHall', run: () => this._mountRecruitHall() },
@@ -3506,6 +3513,52 @@ export class LobbyScene extends Component {
         this._jealousyHost = host;
         this._jealousyPanel = panel;
         host.node.active = false;
+    }
+
+    /** 年終頒獎典禮（PROG-2-10046）：UCUF 畫面＋YearEndCeremonyPanel；名單與獎勵由 YearEndRankingService 以真實聲望結算 */
+    private async _mountYearEndCeremony(): Promise<void> {
+        const host = await this._mountPreviewScreenHost('YearEndCeremonyHost', 'year-end-ceremony-screen', [
+            { buttonId: 'btnYcSkip', handler: () => { this._ceremonyPanel?.skip(); } },
+            { buttonId: 'btnYcClose', handler: () => { this._closeYearEndCeremony(); } },
+        ]);
+        const nodeOf = (id: string): Node | null => host.binder.getNode(id) ?? null;
+        const labelOf = (id: string): Label | null => nodeOf(id)?.getComponent(Label) ?? null;
+        const panel = host.node.addComponent(YearEndCeremonyPanel);
+        panel.titleLabel = labelOf('ycTitle');
+        panel.standingsLabel = labelOf('ycStandings');
+        panel.dialogueLabel = labelOf('ycDialogue');
+        panel.rewardLabel = labelOf('ycReward');
+        panel.skipButton = nodeOf('btnYcSkip');
+        panel.closeButton = nodeOf('btnYcClose');
+        const theme = await services().specLoader.getThemeService().catch(() => null);
+        panel.setServices(this._panelT, theme);
+        host.binder.setTexts({
+            btnYcSkipLabel: this._panelT('ui.ceremony.skip'),
+            btnYcCloseLabel: this._panelT('ui.ceremony.close'),
+        });
+        this._ceremonyHost = host;
+        this._ceremonyPanel = panel;
+        host.node.active = false;
+    }
+
+    /** 有待播年份就開典禮；回傳是否真的開了。第 1 次看不給跳過，播完（或跳過）才記下「已看過」存檔 */
+    private _openYearEndCeremony(): boolean {
+        const host = this._ceremonyHost;
+        const panel = this._ceremonyPanel;
+        const year = this._pendingCeremonyYear;
+        if (!host || !panel || year <= 0) return false;
+        this._pendingCeremonyYear = 0;
+        const session = services().session;
+        const result = buildYearEndCeremonyResult(year, session.clanPrestige, this._panelT('ui.ceremony.house'));
+        panel.setOnFinished(() => { void session.markYearEndCeremonySeen().catch(() => undefined); });
+        panel.bindRankingResult(result, session.yearEndCeremonySeen);
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        return true;
+    }
+
+    private _closeYearEndCeremony(): void {
+        if (this._ceremonyHost) this._ceremonyHost.node.active = false;
     }
 
     /** 換季時的配偶事件：至少兩位配偶、且有人今年還沒哄過才吃醋（每位配偶每年一次由判定服務把關） */
@@ -6082,6 +6135,9 @@ ${spent}`,
         this._sessionEventUnsubscribers.push(
             services().event.on(GAME_SESSION_EVENTS.YearEnded, (payload?: unknown) => {
                 this._yearReport?.open(payload as YearReport | undefined);
+                // 歲末結算完成：記下本年，等季報關閉後開頒獎典禮
+                const year = (payload as YearReport | undefined)?.year ?? 0;
+                if (year > 0) this._pendingCeremonyYear = year;
             }),
         );
     }
@@ -6649,6 +6705,8 @@ ${spent}`,
                 this._openSeasonChronicle('season-advance');
                 this._syncSeasonEventPopup();
                 this._syncLineagePopup();
+                // 年終頒獎典禮排在季報之後（PROG-2-10046）；典禮播放期間不再疊吃醋彈窗，吃醋留到下一季
+                if (this._openYearEndCeremony()) return;
                 // 吃醋彈窗排在季報之後，才不會被季報蓋住（PROG-2-10043）
                 this._maybeTriggerJealousy();
             };

@@ -1,10 +1,10 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-11-25
-> 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 15/15 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
+> 生成日期: 2026-11-26
+> 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 15/16 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
-## 任務卡類 (`doc_task`) — Part 10/10
+## 任務卡類 (`doc_task`) — Part 10/11
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
@@ -291,6 +291,7 @@
 | `doc_task_3100` | docs/agent-briefs/tasks/PROG/PROG-2-10033.md | PROG-2-10033 吃醋三選項與三連霸「天下名門」徽章 |
 | `doc_task_3101` | docs/agent-briefs/tasks/PROG/PROG-2-10029.md | PROG-2-10029 實作血統天賦小名與成長拆解表 |
 | `doc_task_3102` | docs/agent-briefs/tasks/PROG/PROG-2-10036.md | PROG-2-10036 結緣公式分項 UI 與小名三段揭曉 ViewModel |
+| `doc_task_3104` | docs/agent-briefs/tasks/PROG/PROG-2-10035.md | [PROG-2-10035] 大廳任務類視窗套用戰場結算風格（settle 皮膚家族） |
 | `doc_task_3105` | docs/agent-briefs/tasks/PROG/PROG-2-10037.md | PROG-2-10037 結緣公式分項與小名三段揭曉可玩 UI 元件 |
 | `doc_task_3106` | docs/agent-briefs/tasks/PROG/PROG-2-10038.md | PROG-2-10038 吃醋三選項彈窗 UI 與 10033 i18n 補鍵 |
-| `doc_task_3107` | docs/agent-briefs/tasks/PROG/PROG-2-10043.md | PROG-2-10043 結緣提親機率面板與吃醋彈窗掛進遊戲 |
+| `doc_task_3107` | docs/agent-briefs/tasks/PROG/PROG-2-10043.md | [PROG-2-10043] 結緣提親機率面板與吃醋彈窗掛進遊戲 |

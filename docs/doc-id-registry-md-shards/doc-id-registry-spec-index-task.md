@@ -1,8 +1,8 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-11-25
+> 生成日期: 2026-11-26
 > 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片索引。
-> 本分片已再切成 15 個 part；每份不超過 300 行。
+> 本分片已再切成 16 個 part；每份不超過 300 行。
 
 | Part | 路徑 | 行數 |
 |------|------|-----:|
@@ -20,4 +20,5 @@
 | 12 | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-12.md | 298 |
 | 13 | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-13.md | 298 |
 | 14 | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-14.md | 298 |
-| 15 | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-15.md | 297 |
+| 15 | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-15.md | 298 |
+| 16 | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-16.md | 15 |

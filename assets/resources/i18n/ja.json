@@ -1338,5 +1338,16 @@
   "ui.ceremony.surprise.dark_horse.1": "ダークホース登場！年間急上昇賞で銀両{0}を追加獲得！",
   "ui.ceremony.surprise.dark_horse.2": "大番狂わせ！審査員も驚きの銀両{0}を進呈！",
   "ui.ceremony.surprise.spoiled.1": "甘え上手賞！審査員もメロメロで銀両{0}を獲得！",
-  "ui.ceremony.surprise.spoiled.2": "会場一の愛嬌！おやつ代の銀両{0}をどうぞ！"
+  "ui.ceremony.surprise.spoiled.2": "会場一の愛嬌！おやつ代の銀両{0}をどうぞ！",
+  "ui.ceremony.title": "第{0}年 歳末授賞式",
+  "ui.ceremony.act.1": "第一幕・名門入場",
+  "ui.ceremony.act.2": "第二幕・順位発表",
+  "ui.ceremony.act.3": "第三幕・サプライズと展望",
+  "ui.ceremony.standing": "第{0}位　{1}　{2}点",
+  "ui.ceremony.player": "★ {0}",
+  "ui.ceremony.reward": "今年の褒賞：銀{0}両、玉璧{1}個",
+  "ui.ceremony.close": "褒賞を受け取る",
+  "ui.ceremony.act3.hint.top": "お見事！第{0}年の優勝賞は銀{1}両＋玉璧{2}個に上がります。この調子で首位を守ろう！",
+  "ui.ceremony.act3.hint.out": "第{0}年の優勝賞は銀{1}両＋玉璧{2}個に上がります。子孫を育て戦功を重ねて、来年また挑もう！",
+  "ui.ceremony.house": "わが家"
 }
