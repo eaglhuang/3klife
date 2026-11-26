@@ -17370,6 +17370,12 @@
     "category": "task"
   },
   {
+    "id": "doc_task_3138",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10092.md",
+    "title": "[PROG-2-10092] 季報信箱改名：信箱標題與入口走 i18n 四語系（PM 裁決 A）",
+    "category": "task"
+  },
+  {
     "id": "doc_task_3144",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10081.md",
     "title": "[PROG-2-10081] 奧義 C 組音效接入戰場奧義施放（蓄力／爆發／收尾）",
