@@ -83,7 +83,7 @@ export function createBadgeBatchLayersSuite(): TestSuite {
         const src = read('assets/scripts/battle/views/UnitRenderer.ts');
         assert.isTrue(src.includes('this.buildBadge(labelNode, 170, 34, unit.type, badgeLayers)'));
         // 武將名牌維持 Graphics 版（不傳 layers）
-        assert.isTrue(src.includes('this.buildBadge(labelNode, GENERAL_PLATE_WIDTH, GENERAL_PLATE_HEIGHT)'));
+        assert.isTrue(src.includes('this.buildBadge(labelNode, GENERAL_PLATE_WIDTH, GENERAL_PLATE_HEIGHT, null, null, true)'));
         // PROG-2-9718：改走 setCacheModeDeferred（固定外框的強制重排延後），仍是 BITMAP
         assert.equals(2, src.split(', Label.CacheMode.BITMAP)').length - 1);
         // 快取模式要在 SHRINK 之後才切，否則節點會先被縮成空字串的寬度
