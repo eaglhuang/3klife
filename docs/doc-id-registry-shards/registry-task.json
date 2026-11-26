@@ -17278,5 +17278,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10055.md",
     "title": "[PROG-2-10055] 驗收併入 Antigravity 血統第 3~5 年成長小事件資料與四語系（僅資料，尚未接程式）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3118",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10056.md",
+    "title": "[PROG-2-10056] 武將四件組美術交付（典韋、賈詡、後續依序）",
+    "category": "task"
   }
 ]
