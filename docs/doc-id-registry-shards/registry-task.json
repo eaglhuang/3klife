@@ -17290,5 +17290,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10057.md",
     "title": "[PROG-2-10057] 血統第 3~5 年成長小事件：資料載入器、schema 驗證與觸發／一次性邏輯（核心基礎調查）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3121",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10058.md",
+    "title": "[PROG-2-10058] 幼苗與親子資料基礎：開局送 7 歲幼苗、親子好感、小名碎片帳本、同窗好友旗標",
+    "category": "task"
   }
 ]

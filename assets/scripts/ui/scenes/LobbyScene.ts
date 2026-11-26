@@ -1030,7 +1030,8 @@ export class LobbyScene extends Component {
                 services().loadSkills(),
                 services().loadVfxEffects(),
                 services().loadSeasonModifiers(),
-                services().loadStarterYouthConfig()
+                services().loadStarterYouthConfig(),
+                services().loadStarterSeedlingConfig()
             ]);
             
             this._generals = await this._loadGenerals();

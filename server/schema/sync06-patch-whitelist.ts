@@ -138,6 +138,7 @@ export const SYNC_PATCH_ROOT_KEYS: readonly string[] = [
     'countdown',
     'sortiePresets',
     'breedingBirthRecords',
+    'bloodlineChildLedger',
     'annualRanking',
     'friendships',
     'friendshipPairs',
