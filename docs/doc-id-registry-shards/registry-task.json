@@ -17328,9 +17328,21 @@
     "category": "task"
   },
   {
+    "id": "doc_task_3128",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10070.md",
+    "title": "[PROG-2-10070] 子嗣成長事件彈窗＋親子談話按鈕（最小可玩）",
+    "category": "task"
+  },
+  {
     "id": "doc_task_3130",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10072.md",
     "title": "[PROG-2-10072] 首戰節奏：預設 x2、縮短敵方回合等待、試玩腳本自動代打校正",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3131",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10074.md",
+    "title": "[PROG-2-10074] 整年放招 0 次修正：計謀起手 20／火計 25、教學戰委任放招旁路、playtest 放招計數",
     "category": "task"
   },
   {
@@ -17364,9 +17376,81 @@
     "category": "task"
   },
   {
-    "id": "doc_task_3131",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10074.md",
-    "title": "[PROG-2-10074] 整年放招 0 次修正：計謀起手 20／火計 25、教學戰委任放招旁路、一般戰條件不符自動換招、playtest 放招計數",
+    "id": "doc_task_3138",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10092.md",
+    "title": "[PROG-2-10092] 季報信箱改名：信箱標題與入口走 i18n 四語系（PM 裁決 A）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3141",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10094.md",
+    "title": "[PROG-2-10094] 天下沙盤領地解鎖教學與挑戰賽培育指引規格（11/26 修訂）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3142",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10095.md",
+    "title": "[PROG-2-10095] 天下沙盤領地：第 2 年解鎖、搞笑教學、放置效果預覽（實作）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3143",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10096.md",
+    "title": "[PROG-2-10096] 名將挑戰賽卡片：培育期推薦與一鍵前往培育（實作）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3144",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10091.md",
+    "title": "[PROG-2-10091] 索引健檢：虎符族文件補列與 keep.summary 更新",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3150",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10101.md",
+    "title": "[PROG-2-10101] 獲得面板規格（RewardPresenter：任何人物／物品獲得的統一出口）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3151",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10102.md",
+    "title": "[PROG-2-10102] 實作：獲得面板 RewardPresenter＋AcquirePanelController 並改接任務回報／季報／轉蛋收尾",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3157",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10083.md",
+    "title": "[PROG-2-10083] 大廳小人台詞依武將性別換自稱（女將不再說某）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3161",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10090.md",
+    "title": "[PROG-2-10090] 大廳小人待出場疊在畫面邊緣點不到",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3164",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10098.md",
+    "title": "[PROG-2-10098] 姻緣單一流程規格：相親 → 提親 → 成婚 → 結緣（11/26 修訂）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3165",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10099.md",
+    "title": "[PROG-2-10099] 姻緣單一流程實作：狀態機、結緣守門、存檔遷移、姻緣面板、吃醋事件",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3166",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10086.md",
+    "title": "[PROG-2-10086] playtest-online 整年實跑連鎖失敗：detached Frame 與大廳小人被擋根因修復",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3172",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10081.md",
+    "title": "[PROG-2-10081] 奧義 C 組音效接入戰場奧義施放（蓄力／爆發／收尾）",
     "category": "task"
   }
 ]

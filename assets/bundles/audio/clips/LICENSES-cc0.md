@@ -16,3 +16,13 @@ Kenney 原始 License.txt：Creative Commons Zero, CC0；個人、教育、商�
 | 檔名 | 用途 | 來源（素材頁） | 作者 | 授權 | 下載日期 | 規格與加工 |
 |------|------|----------------|------|------|----------|------------|
 | cc0_block_metal_bright.ogg | 格擋音（hit_block，更亮的金屬碰撞；取代 cc0_hit_metal，後者保留未刪） | https://kenney.nl/assets/impact-sounds （Impact Sounds 1.0，原檔 impactMetal_light_001.ogg） | Kenney（www.kenney.nl） | CC0 1.0（https://creativecommons.org/publicdomain/zero/1.0/） | 2026-11-26 | 原檔直接使用、未加工（OGG 立體聲、6967 bytes）；light 級響度低於原 medium 級，音量沿用 block.volume [0.8,1.0] |
+
+## 2026-11-26 追加（PROG-2-10081，奧義 C 組）
+
+三檔皆為 Freesound CC0（Creative Commons 0），可商用、不強制署名；下載前已逐頁複核授權為 CC0 1.0，下載日期 2026-11-26。Freesound 上傳者可事後改授權，來源頁網址留作日後查核。原檔 SHA256 見筆記夾 audio-downloads-1126\manifest.md。加工一律：立體聲左右平均轉單聲道、裁短、尾端淡出、正規化後降到指定峰值、編碼為 OGG Vorbis 單聲道 44100Hz。
+
+| 檔名 | 用途 | 來源（素材頁） | 作者 | 授權 | 下載日期 | 規格與加工 |
+|------|------|----------------|------|------|----------|------------|
+| ult_c_charge.ogg | 奧義蓄力（cutin 音效鍵 whoosh） | https://freesound.org/people/florianreichelt/sounds/683096/ （Woosh，原檔 683096__florianreichelt__woosh.mp3） | florianreichelt | CC0 1.0 | 2026-11-26 | 取 0～1.6 秒（原 1.73 秒），尾 80ms 淡出，峰值 0.5；16049 bytes |
+| ult_c_burst.ogg | 奧義爆發號角（cutin 音效鍵 roar） | https://freesound.org/people/adharca/sounds/539956/ （war horn，原檔 539956__adharca__war-horn.wav） | adharca | CC0 1.0 | 2026-11-26 | 取 0～2.4 秒（原 4.36 秒），尾 500ms 淡出，峰值 0.85；25749 bytes |
+| ult_c_tail.ogg | 奧義收尾深沉號角（cutin 音效鍵 ult_c_tail） | https://freesound.org/people/anderson91santos/sounds/714562/ （War Horn Dark Cinematic Sound Effect，原檔 .m4a） | anderson91santos | CC0 1.0 | 2026-11-26 | 取 0～3.2 秒（原 12.45 秒，AAC 以 Chrome Web Audio 解碼），尾 1 秒淡出，峰值 0.7；23849 bytes |
