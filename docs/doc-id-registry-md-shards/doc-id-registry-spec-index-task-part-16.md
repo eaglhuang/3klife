@@ -29,3 +29,4 @@
 | `doc_task_3133` | docs/agent-briefs/tasks/PROG/PROG-2-10075.md | [PROG-2-10075] 同步騎馬匹 mounted-list（關羽） |
 | `doc_task_3134` | docs/agent-briefs/tasks/PROG/PROG-2-10077.md | [PROG-2-10077] 格擋音換成 Kenney impactMetal_light_001（CC0） |
 | `doc_task_3135` | docs/agent-briefs/tasks/PROG/PROG-2-10064.md | [PROG-2-10064] 新手開場點擊精簡：介紹合併自動長卷、六名將一頁亮相、SSR 揭曉加點擊提示 |
+| `doc_task_3136` | docs/agent-briefs/tasks/PROG/PROG-2-10073.md | [PROG-2-10073] 戰前偵查面板：措辭降噪＋出征確認框疊字修正 |

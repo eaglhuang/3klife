@@ -1857,6 +1857,42 @@ async function main() {
             return d;
         }, { skipIfFailed: true });
 
+        // ── 6a-2. 戰前偵查面板（選用 --scout-panel，PROG-2-10073）：首戰通關後下一關必備對策缺口＝高風險，
+        //    直接開偵查面板，截面板、按「出征」截確認框、按「再想想」截回面板，最後「暫不出征」確認回 false ──
+        if (args['scout-panel']) {
+            await step('scout-panel', async (rec) => {
+                await requireLobby();
+                await backToLobbyBar();
+                // 面板是開場後背景逐個掛載，等 ScoutPanel 掛好才開（最多 90 秒）
+                await waitUntil(() => page.evaluate(() => { const walk = (n) => { for (const c of n.components) if (c && typeof c._askScoutBeforeSortie === 'function') return c; for (const ch of n.children) { const r = walk(ch); if (r) return r; } return null; }; const l = walk(window.cc.director.getScene()); return !!(l && l._scoutPanelHost); }), 90000, 'ScoutPanel 90 秒內沒掛好');
+                const opened = await page.evaluate(() => {
+                    const walk = (n) => { for (const c of n.components) if (c && typeof c._askScoutBeforeSortie === 'function') return c; for (const ch of n.children) { const r = walk(ch); if (r) return r; } return null; };
+                    const lobby = walk(window.cc.director.getScene());
+                    if (!lobby) return false;
+                    window.__scoutResult = 'pending';
+                    lobby._askScoutBeforeSortie().then((v) => { window.__scoutResult = v; });
+                    return true;
+                });
+                if (!opened) throw new Error('找不到 LobbyScene 元件');
+                await delay(3500);
+                rec.detail.diag = await page.evaluate(() => { const walk = (n) => { for (const c of n.components) if (c && typeof c._askScoutBeforeSortie === 'function') return c; for (const ch of n.children) { const r = walk(ch); if (r) return r; } return null; }; const l = walk(window.cc.director.getScene()); return { result: window.__scoutResult, host: !!(l && l._scoutPanelHost), active: !!(l && l._scoutPanelHost && l._scoutPanelHost.node.active), encounter: l && l._currentEncounter ? (l._currentEncounter() || {}).id : null }; });
+                await shot(rec, 'scout-panel');
+                rec.detail.panelTexts = (await rm.allTexts()).filter((t) => /偵查|建議|加強|風險|怎麼換|出征/.test(t)).slice(0, 20);
+                if (!(await clickButton('^BtnScoutSortie$'))) throw new Error('點不到 BtnScoutSortie');
+                await delay(1000);
+                await shot(rec, 'scout-confirm');
+                rec.detail.confirmTexts = (await rm.allTexts()).filter((t) => /兵勢|強行|再想想/.test(t)).slice(0, 10);
+                if (!(await clickButton('^BtnScoutConfirmNo$'))) throw new Error('點不到「再想想」');
+                await delay(800);
+                await shot(rec, 'scout-back');
+                if (!(await clickButton('^BtnScoutCancel$'))) throw new Error('點不到「暫不出征」');
+                await delay(800);
+                rec.detail.result = await page.evaluate(() => window.__scoutResult);
+                if (rec.detail.result !== false) throw new Error(`暫不出征後結果應為 false，實為 ${rec.detail.result}`);
+                return rec.detail;
+            }, { skipIfFailed: true });
+        }
+
         // ── 6b. 轉蛋（排最後：返回大廳後底欄是否還在，本身就是檢查項）：切每個池子一次，切一輪後右欄節點不疊加 ──
         await step('gacha-pools', async (rec) => {
             await requireLobby();

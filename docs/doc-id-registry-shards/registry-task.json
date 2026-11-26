@@ -17344,5 +17344,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10064.md",
     "title": "[PROG-2-10064] 新手開場點擊精簡：介紹合併自動長卷、六名將一頁亮相、SSR 揭曉加點擊提示",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3136",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10073.md",
+    "title": "[PROG-2-10073] 戰前偵查面板：措辭降噪＋出征確認框疊字修正",
+    "category": "task"
   }
 ]
