@@ -5,6 +5,9 @@ import { presentLobbyLead } from '../core/LobbyLeadPresentation';
 import { openingLetterBodyWithFunLine } from '../../core/systems/FunLineLibrary';
 import { placeTutorialTarget } from '../core/OnboardingTargetHighlight';
 import { onboardingActionIdAt, resolveTutorialTargets } from '../core/OnboardingTargetResolver';
+import { SortieHintController } from '../core/SortieHintController';
+import { SortieHintPulseView } from '../core/SortieHintPulseView';
+import { findUcufNode } from '../core/UcufNodeLookup';
 import { ERA_SHIFT_TEXT, formatHegemonRise } from '../../core/systems/RivalRulerLines';
 import { nationDef } from '../../core/systems/RivalNations';
 import type { SkinSlot } from '../core/UISpecTypes';
@@ -14,7 +17,7 @@ import { inspiredTacticName } from '../../core/systems/InspiredTacticMap';
 import { skillNameOf } from '../../core/systems/skill/SkillCatalog';
 import { parseLimitedPoolWindows } from '../../core/systems/LimitedPoolSchedule';
 import { expandLimitedPoolRotations, parseLimitedPoolRotations } from '../../core/systems/LimitedPoolRotation';
-import { _decorator, assetManager, AudioClip, BlockInputEvents, Button, Canvas, Color, Component, director, instantiate, JsonAsset, Label, Mask, Node, Sprite, sys, tween, UITransform, Widget, resources, input, Input, EventKeyboard, KeyCode } from 'cc';
+import { _decorator, assetManager, AudioClip, BlockInputEvents, Button, Canvas, Color, Component, director, instantiate, JsonAsset, Label, Mask, Node, Sprite, sys, tween, Tween, UIOpacity, UITransform, Widget, resources, input, Input, EventKeyboard, KeyCode } from 'cc';
 import { MindRequestPanel } from '../components/mind/MindRequestPanel';
 import { installAdaptiveResolution } from '../core/AdaptiveResolution';
 import { computeSubMenuCenterX, LobbyHallScreenBinder, type HallActorTapView, type LobbyHallDockId, type LobbyHallPanelId, type LobbyHallWallId } from '../core/LobbyHallScreenBinder';
@@ -185,7 +188,9 @@ import { canShowSeasonChronicle, SeasonChroniclePopupController } from '../core/
 import { LineageMilestonePopupController } from '../core/LineageMilestonePopupController';
 import { QuickSortiePopupController, resolveQuickSortie, type QuickSortieResolution } from '../core/QuickSortieController';
 import { FIELD_AUTO_BATTLE_JOURNAL } from '../../core/systems/OfflineBattleSnapshot';
-import type { ChronicleTrigger } from '../../core/systems/SeasonChronicle';
+import { cityEncounterDef, type ChronicleTrigger } from '../../core/systems/SeasonChronicle';
+import { buildChronicleDigestNote, buildMissionDigestNote, planSeasonAdvanceFlow, type SeasonDigestNote } from '../../core/systems/SeasonDigest';
+import { digestText, SEASON_DIGEST_TEXTS } from '../components/mind/SeasonDigestView';
 import { parseOpeningOfferTable } from '../../core/systems/OpeningOffer';
 import { SeasonPassController } from '../core/SeasonPassController';
 import type { AcademyGraduationResult } from '../../core/systems/nurture/AcademyGraduation';
@@ -236,14 +241,14 @@ import { buildPoolDetailRows, checkGachaAffordable, planGachaButton, syncMainPoo
 import { bindGachaPoolDetail, setGachaTexts, textLabelOf, updateGachaWalletStrip, raiseGachaWalletStrip } from '../core/GachaScreenExtras';
 import { GachaPoolSwitcher } from '../core/GachaPoolSwitcher';
 import { PORTRAIT_GALLERY_PAGE_SIZE } from '../core/PortraitGallery';
-import { FaceMarks, PORTRAIT_FRAME_SPEC, PortraitFrameSpec, SHOWCASE_PORTRAIT_SPEC, buildPortraitHeadReference, fitPortraitByHead, fitPortraitInFrame, fitSilhouetteToFrame } from '../core/PortraitFrameFit';
+import { FaceMarks, PORTRAIT_FRAME_SPEC, PortraitFrameSpec, SHOWCASE_ROW_PORTRAIT_SPEC, buildPortraitHeadReference, fitPortraitByHead, fitPortraitInFrame, fitSilhouetteToFrame } from '../core/PortraitFrameFit';
 import { buildDupPopupAliases } from '../core/GachaResultCardTheme';
 import { LobbyOpeningPanels } from '../core/LobbyOpeningPanels';
 import { INTRO_TICK_SEC, OpeningIntroController } from '../core/OpeningIntroController';
 import { InitialShowcaseController } from '../core/InitialShowcaseController';
 import { PortraitSwapGuard } from '../core/PortraitSwapGuard';
 import { INITIAL_SHOWCASE_ENTRIES } from '../../core/systems/InitialGeneralShowcase';
-import { createNewPlayerOpeningFlow, OPENING_INTRO_DONE, SHOWCASE_DONE_EVENT, shouldMountOpeningFirst } from '../../core/systems/NewPlayerOpening';
+import { createNewPlayerOpeningFlow, INTRO_PANELS, OPENING_INTRO_DONE, SHOWCASE_DONE_EVENT, shouldMountOpeningFirst } from '../../core/systems/NewPlayerOpening';
 import { OPENING_BEAUTY_POOL_ID, openingBeautyCandidates } from '../../core/systems/OpeningBeauty';
 import type { OpeningFlowController } from '../../core/systems/OpeningFlowController';
 import type { GachaConfig } from '../../core/models/GachaConfig';
@@ -623,6 +628,8 @@ export class LobbyScene extends Component {
     /** 幕府大廳（UI-2-0149）：另開入口，與主大廳並存 */
     private _lobbyHallHost: UIScreenPreviewHost | null = null;
     private _lobbyHall: LobbyHallScreenBinder | null = null;
+    /** 教學結束後「去出征」提示（PROG-2-10067）：只管教學結束到第一戰這一段 */
+    private _sortieHint: SortieHintController | null = null;
     private _hallThemeConfig: HallThemeConfig | null = null;
     private _lobbyBackdrop: LobbyBackdrop | null = null;
     private _lobbyBackdropConfig: HallThemeConfig | null = null;
@@ -695,7 +702,7 @@ export class LobbyScene extends Component {
     private _rankUnlockHost: UIScreenPreviewHost | null = null;
     private readonly _duplicatePull = new DuplicatePullPopupController();
     private _scoutPanelHost: UIScreenPreviewHost | null = null;
-    private readonly _scoutPanel = new ScoutPanelController();
+    private readonly _scoutPanel = new ScoutPanelController((key, ...args) => services().i18n.t(key, ...args));
     private _tacticCounterTags: TacticCounterTagTable | null = null;
     /** 季節天氣機率表（PROG-2-9735，data/battle-weather-season）；載入前或載入失敗時抽天氣一律退回晴天 */
     private _weatherSeasonTable: BattleWeatherSeasonTable | null = null;
@@ -1475,6 +1482,13 @@ export class LobbyScene extends Component {
             markRead: (id) => session.markMindRequestRead(id),
             resolve: (id, accept) => session.resolveMindRequest(id, accept),
             bringToFront: (node) => this._bringNodeToFront(node),
+            // 季報紀要（首年前幾季的任務回報、市井奇遇併進信箱，PROG-2-10068）
+            digest: () => session.seasonDigest,
+            lookup: (key, ...args) => services().i18n.t(key, ...args),
+            encounterOpen: (note) => this._digestEncounterOpen(note),
+            markDigestRead: (id) => { session.markSeasonDigestRead(id); },
+            dismissDigest: (id) => { session.dismissSeasonDigest(id); void session.save().catch(() => undefined); },
+            openDigest: (id) => { this._openChronicleFromDigest(id); },
         }, this.node);
         this._sessionEventUnsubscribers.push(services().event.on(GAME_SESSION_EVENTS.Loaded, () => { this._mindPanel?.refresh(); }));
     }
@@ -1677,7 +1691,46 @@ export class LobbyScene extends Component {
     private _openSeasonChronicle(trigger: ChronicleTrigger): void {
         const popup = this._seasonChroniclePopup;
         if (!popup?.host || !services().session.chronicleShouldOpen(trigger)) return;
+        // 首年前 2 季不彈季報：改收進信箱（紅點），玩家想看再從信箱點「去看看」（PROG-2-10068）
+        if (!planSeasonAdvanceFlow(services().session.gameTime.totalSeasonsElapsed).openChronicle) {
+            this._fileSeasonDigest(null);
+            return;
+        }
         popup.open();
+    }
+
+    /** 這則紀要對應的市井奇遇是否還能抉擇（只有本季季報可抉擇，往期已逝） */
+    private _digestEncounterOpen(note: SeasonDigestNote): boolean {
+        const chronicle = services().session.seasonChronicle;
+        return note.kind === 'chronicle' && chronicle.season === note.season && chronicle.encounterId !== null && chronicle.encounterChoice === null;
+    }
+
+    /** 信箱「去看看」：收起信箱、開三國季報（可抉擇奇遇）；看過就算已讀 */
+    private _openChronicleFromDigest(id: string): void {
+        const popup = this._seasonChroniclePopup;
+        if (!popup?.host) return;
+        services().session.markSeasonDigestRead(id);
+        this._mindPanel?.close();
+        popup.open();
+    }
+
+    /**
+     * 把純資訊報表（任務回報、三國季報／市井奇遇）寫進信箱紀要（PROG-2-10068）。
+     * 只寫純資訊的；需要玩家選擇的性格事件、血統里程碑照舊彈窗，不經這裡。有新增才提示一次。
+     */
+    private _fileSeasonDigest(missionReport: { settled: number; succeeded: number; lines: readonly string[] } | null | undefined): void {
+        const session = services().session;
+        const season = session.gameTime.totalSeasonsElapsed;
+        const chronicle = session.seasonChronicle;
+        const def = cityEncounterDef(chronicle.encounterId);
+        const notes = [
+            buildMissionDigestNote(season, missionReport),
+            buildChronicleDigestNote(season, { season: chronicle.season, trend: chronicle.trend, encounterTitle: def?.title, encounterDesc: def?.desc }),
+        ].filter((n): n is SeasonDigestNote => n !== null);
+        if (session.fileSeasonDigest(notes) === 0) return;
+        void session.save().catch(() => undefined);
+        this._mindPanel?.refresh();
+        services().event.emit('SHOW_TOAST', { message: digestText((key, ...args) => services().i18n.t(key, ...args), SEASON_DIGEST_TEXTS.toast), duration: 4 });
     }
 
     /** 季度通行證面板（ECO-13 Mock，PROG-2-2197） */
@@ -3148,8 +3201,9 @@ export class LobbyScene extends Component {
                 advanceOpening: event => { this._advanceOpening(event); },
                 rollDestinyRound: () => this._rollDestinyRound(),
                 presentDestinyPool: (view, actions) => this._presentDestinyPool(view, actions),
-                closeDestinyPool: () => { if (this._destinyPoolHost) this._destinyPoolHost.node.active = false; },
+                closeDestinyPool: () => { this._hideDestinyPrelude(); if (this._destinyPoolHost) this._destinyPoolHost.node.active = false; },
                 onOverlayChanged: () => { this._refreshPopupAvailability(); },
+                onOnboardingRefreshed: () => { this._sortieHint?.refresh(); },
                 openingLetterText: () => ({ title: services().i18n.t('copy.letter.opening.title'), body: openingLetterBodyWithFunLine(services().i18n.t('copy.letter.opening.body'), services().session.magistrateUid ?? ''), button: services().i18n.t('copy.letter.opening.button') }),
                 warn: (message, error) => UCUFLogger.warn(LogCategory.DATA, message, error),
                 // 幕府大堂開著時城市畫面被整個蓋住：改框大堂上的同功能入口（PROG-2-2226）
@@ -3177,15 +3231,30 @@ export class LobbyScene extends Component {
     private async _presentDestinyPool(view: DestinyPoolView, actions: { reroll: () => void; confirm: () => void }): Promise<Node | null> {
         const results = buildDestinyOpeningResults(view.rolledIds, this._generals);
         if (results.length === 0) return null;
-        const host = this._destinyPoolHost ?? await this._mountPreviewScreenHost('DestinyPoolHost', GACHA_PULL_RESULT_SCREEN_ID, [], false);
-        this._destinyPoolHost = host;
+        // 本輪宿命名將名字先行：結果畫面（皮膚、立繪）載入期間先看得到是誰
+        const core = this._generals.find(g => g.id === view.coreId);
+        if (core && this._destinyPrelude) this._showDestinyPrelude(core.name, view.quote);
+        const host = await this._ensureDestinyPoolHost();
         if (!host.node.getComponent(BlockInputEvents)) host.node.addComponent(BlockInputEvents);
         await this._getGachaFlowCoordinator().presentDestinyPool(host, results, {
             heroId: view.coreId, quote: view.quote, message: view.message, resets: view.resets,
             onReroll: actions.reroll, onConfirm: actions.confirm,
         });
         host.node.active = true;
+        this._hideDestinyPrelude();
         return host.node;
+    }
+
+    /** 宿命池結果畫面宿主：名將亮相時就先預載，揭曉時不必再等下載與建構；只建一次（失敗時清掉重來）。 */
+    private _destinyPoolHostLoad: Promise<UIScreenPreviewHost> | null = null;
+
+    private _ensureDestinyPoolHost(): Promise<UIScreenPreviewHost> {
+        this._destinyPoolHostLoad ??= (this._destinyPoolHost
+            ? Promise.resolve(this._destinyPoolHost)
+            : this._mountPreviewScreenHost('DestinyPoolHost', GACHA_PULL_RESULT_SCREEN_ID, [], false))
+            .then(host => { this._destinyPoolHost = host; return host; })
+            .catch(error => { this._destinyPoolHostLoad = null; throw error; });
+        return this._destinyPoolHostLoad;
     }
 
     /** 少年名將三選一畫面的宿主與目前選項（PROG-2-9194） */
@@ -3348,6 +3417,7 @@ export class LobbyScene extends Component {
         }
         await this._ensureWeatherSeasonTable();
         const params = this._buildBattleEntryParams(undefined, encounter);
+        void this._sortieHint?.complete();
         services().scene.switchScene(SceneName.Battle, { ...params, tutorial: false, teachingSpirit: null });
     }
 
@@ -4154,6 +4224,8 @@ export class LobbyScene extends Component {
     }
 
     public openDestinyOpening(): void {
+        // 抽籤、結果畫面準備期間先放「宿命降臨」光字，不讓玩家對著黑畫面空等（PROG-2-10064，稽核 B2）
+        this._showDestinyPrelude();
         if (this._openingPanels?.openDestiny()) return;
         // 面板沒掛上（例如網路慢、轉蛋設定第一次沒載到）先重掛一次，不要直接跳過新手十連抽（issue #2099）
         void this._mountDestinyOpening()
@@ -4162,8 +4234,56 @@ export class LobbyScene extends Component {
                 if (this._openingPanels?.openDestiny()) return;
                 // 重掛仍開不起來（例如轉蛋設定缺失）：不讓玩家卡在空畫面，照舊顯示大廳（PROG-2-1620）
                 this._openingUnavailable = true;
+                this._hideDestinyPrelude();
                 void services().ui.open(UIID.LobbyMain);
             });
+    }
+
+    /** 宿命降臨前導節點：只建一個，抽出本輪宿命名將後換成名字先行，結果畫面準備好就收掉。 */
+    private _destinyPrelude: { node: Node; title: Label; sub: Label } | null = null;
+
+    private _showDestinyPrelude(heroName = '', quote = ''): void {
+        let prelude = this._destinyPrelude;
+        if (!prelude) {
+            const node = new Node('DestinyPrelude');
+            node.layer = this.node.layer;
+            node.parent = this.node;
+            node.addComponent(UITransform).setContentSize(1600, 360);
+            const widget = node.addComponent(Widget);
+            widget.isAlignHorizontalCenter = true; widget.horizontalCenter = 0;
+            widget.isAlignVerticalCenter = true; widget.verticalCenter = 0;
+            const makeLabel = (name: string, size: number, y: number, color: Color): Label => {
+                const child = new Node(name);
+                child.layer = node.layer;
+                child.parent = node;
+                child.setPosition(0, y, 0);
+                child.addComponent(UITransform).setContentSize(1600, size + 16);
+                const label = child.addComponent(Label);
+                label.fontSize = size;
+                label.lineHeight = size + 12;
+                label.color = color;
+                return label;
+            };
+            const title = makeLabel('Title', 112, 40, new Color(245, 210, 122, 255));
+            const sub = makeLabel('Sub', 36, -90, new Color(232, 226, 210, 255));
+            const opacity = node.addComponent(UIOpacity);
+            tween(opacity).repeatForever(tween().to(0.8, { opacity: 120 }).to(0.8, { opacity: 255 })).start();
+            prelude = this._destinyPrelude = { node, title, sub };
+        }
+        // 還沒抽出人選：只顯示「宿命降臨中」；抽出後名字先行，立繪稍後才載完
+        prelude.title.string = heroName ? `✦ ${heroName} ✦` : '✦';
+        prelude.sub.string = heroName && quote ? `「${quote}」` : services().i18n.t('ui.opening.destiny.prelude');
+        prelude.node.active = true;
+        this._bringNodeToFront(prelude.node);
+    }
+
+    private _hideDestinyPrelude(): void {
+        const prelude = this._destinyPrelude;
+        if (!prelude) return;
+        this._destinyPrelude = null;
+        const opacity = prelude.node.getComponent(UIOpacity);
+        if (opacity) Tween.stopAllByTarget(opacity);
+        prelude.node.destroy();
     }
 
     /**
@@ -4171,7 +4291,10 @@ export class LobbyScene extends Component {
      * 幕序在 NewPlayerOpening，這裡只綁按鈕、套 FlowView，並依目前幕開關兩個面板。
      */
     private async _mountOpeningIntro(): Promise<void> {
-        this._intro = new OpeningIntroController();
+        const i18n = services().i18n;
+        // 四段原文在語系檔有對應 key；查不到（回傳鍵名）就用 INTRO_PANELS 原文
+        const introTexts = INTRO_PANELS.map((panel, i) => { const t = i18n.t(`ui.opening.intro.p${i + 1}`); return t === `ui.opening.intro.p${i + 1}` ? panel.text : t; });
+        this._intro = new OpeningIntroController(INTRO_PANELS, { texts: introTexts, skipLabel: i18n.t('ui.opening.intro.skip') });
         this._openingFlow = createNewPlayerOpeningFlow();
         this._introHost = await this._mountPreviewScreenHost('OpeningIntroHost', 'opening-intro-screen', [
             { buttonId: 'btnIntroNext', handler: () => { this._onClickIntroNext(); } },
@@ -4310,18 +4433,20 @@ export class LobbyScene extends Component {
         this.schedule(this._tickIntro, INTRO_TICK_SEC);
     }
 
-    /** 漩渦等自動播放分鏡每步推進；非自動播放時不動作。 */
+    /** 第一幕長卷每步推進；播完自動進下一幕。 */
     private _tickIntro(dt?: number): void {
         if (!this._intro?.autoPlaying) {
             return;
         }
-        // 用實際經過時間推進：背景載入拖慢幀率時，漩渦不會被拉長成十幾秒（#2107-7）
+        // 用實際經過時間推進：背景載入拖慢幀率時，長卷不會被拉長（#2107-7）
         const stepSec = typeof dt === 'number' && dt > 0 ? dt : INTRO_TICK_SEC;
+        const shown = this._intro.revealedCount;
         if (this._intro.tick(stepSec * 1000)) {
             this._finishIntro();
             return;
         }
-        this._refreshIntro();
+        // 只有多浮現一段文字時才重畫，不必每步都套 FlowView
+        if (this._intro.revealedCount !== shown) this._refreshIntro();
     }
 
     /** 幕切換後開對應畫面：第一幕後開信再名將登場，名將登場後進宿命轉蛋。 */
@@ -4331,9 +4456,14 @@ export class LobbyScene extends Component {
     }
 
     private async _showInitialShowcase(): Promise<void> {
-        this._showcase = new InitialShowcaseController();
-        // 六位名將的立繪先預載，按下一位時不用等下載（PROG-2-2236）
+        this._showcase = new InitialShowcaseController(INITIAL_SHOWCASE_ENTRIES, {
+            heading: services().i18n.t('ui.opening.showcase.heading'),
+            buttonLabel: services().i18n.t('ui.opening.showcase.btn'),
+        });
+        // 六位名將的立繪先預載，亮相一頁同時要畫六張（PROG-2-2236）
         for (const entry of INITIAL_SHOWCASE_ENTRIES) void loadGeneralPortrait(entry.generalId);
+        // 宿命池結果畫面趁亮相時間先建好，揭曉時不再黑畫面空等（PROG-2-10064）
+        void this._ensureDestinyPoolHost().catch(error => { UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 宿命池結果畫面預載失敗', error); });
         if (!this._showcaseHost) {
             this._showcaseHost = await this._mountPreviewScreenHost('InitialShowcaseHost', 'initial-showcase-screen', [
                 { buttonId: 'btnShowcaseNext', handler: () => { this._onClickShowcaseNext(); } },
@@ -4362,11 +4492,9 @@ export class LobbyScene extends Component {
             return;
         }
         applyFlowView(binder, this._showcase.getFlowView());
-        // 名將立繪（UI-2-0160）：臉部標記對齊，框外裁掉；沒立繪時退回剪影頭像
-        const generalId = this._showcase.current?.generalId;
-        if (generalId) {
-            this._applyFramePortraits(binder, 'showcase', [generalId], () => ['showcasePortraitMask', 'showcasePortrait'], SHOWCASE_PORTRAIT_SPEC);
-        }
+        // 六位名將立繪（UI-2-0160）：臉部標記對齊，框外裁掉；沒立繪時退回剪影頭像
+        this._applyFramePortraits(binder, 'showcase', this._showcase.entries.map(entry => entry.generalId),
+            i => [`showcasePortraitMask${i}`, `showcasePortrait${i}`], SHOWCASE_ROW_PORTRAIT_SPEC);
     }
 
     private _onClickIntroNext(): void {
@@ -4739,6 +4867,15 @@ ${spent}`,
         return this._dispatchHallMission(taskId, generalId);
     }
 
+    /** 任務詳情的白話導讀：把「再探」「情報 N%」翻成人話（PROG-2-10068；四語系 ui.mission.jargon_guide） */
+    private _missionJargonGuide(missionId: string): string {
+        const detail = services().session.missionService?.getDetail(missionId, {});
+        const intel = detail && detail.ok ? detail.value.intel : 0;
+        const key = 'ui.mission.jargon_guide';
+        const text = services().i18n.t(key, String(Math.round(intel)));
+        return text === key ? `白話版：「再探」＝再派探子溜過去偷看一次（要吃糧草）；情報 ${Math.round(intel)}%＝你摸清了對方 ${Math.round(intel)}% 的底細，越高越不會踩雷。` : text;
+    }
+
     /** 組詳情視窗用的 state（§5、§6）：直接讀任務服務的投影（PROG-2-9152）；沒有該任務時回傳 null */
     private _hallDialogStateFor(missionId: string, selectedGeneralId: string | null): MissionDialogState | null {
         const session = services().session;
@@ -4753,6 +4890,7 @@ ${spent}`,
             hiddenRevealIntel: data.balance.hiddenRevealIntel,
             intelBands: data.balance.intelBands,
             selectedGeneralId,
+            jargonGuide: this._missionJargonGuide(missionId),
         });
     }
 
@@ -4991,6 +5129,7 @@ ${spent}`,
             sortie: 'sortie', generals: 'generals', domestic: 'domestic', training: 'nurture', shop: 'shop',
         };
         const dock = (id: LobbyHallDockId): void => {
+            if (id === 'sortie') void this._sortieHint?.complete();
             this._lobbyHall?.hideBubble();
             this._cityHubCategory = toggleCategory(this._cityHubCategory, dockCategory[id]);
             this._refreshCityHub();
@@ -5029,6 +5168,7 @@ ${spent}`,
             mapLayout,
         });
         host.node.active = false;
+        this._sortieHint = this._createSortieHint(host.node);
         // 頂欄先用真資料，不讓設計稿的年季文字閃一下（PROG-2-9130）
         this._refreshLobbyHallTopbar();
         // 換季勢力圖聚焦（UI-2-0151）：大廳開著就播，沒開就留到下次開大廳播一次
@@ -5229,6 +5369,27 @@ ${spent}`,
         this._openingPanels?.refreshOnboarding();
         // 大堂剛啟用的這一幀 Widget 尚未對齊，下一幀再定位一次聚焦框（PROG-2-2226）
         this.scheduleOnce(() => { this._openingPanels?.refreshOnboarding(); }, 0);
+        this._sortieHint?.refresh();
+    }
+
+    /** 教學結束後出征鈕脈動＋史小境一句提示；脈動節點掛在大廳底欄出征鈕下，重用不重建（PROG-2-10067） */
+    private _createSortieHint(hallRoot: Node): SortieHintController {
+        const pulse = new SortieHintPulseView(() => findUcufNode(hallRoot, 'lobby-hall-screen.dock-sortie') as Node | null);
+        return new SortieHintController({
+            onboarding: () => services().session.onboarding,
+            clearedStageCount: () => services().session.clearedStageIds.length,
+            // 開場面板（信、宿命轉蛋、教學）還蓋著時不提示
+            hallVisible: () => hallRoot.active && (this._openingPanels?.activeHostNodes().length ?? 0) === 0,
+            setPulse: on => pulse.setPulse(on),
+            say: () => services().event.emit('SHOW_TOAST', { message: services().i18n.t('ui.onboarding.sortie_hint'), duration: 6 }),
+            markDone: async () => {
+                try {
+                    await services().session.completeSortieHint();
+                } catch (error) {
+                    UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 出征提示存檔失敗', error);
+                }
+            },
+        });
     }
 
     /** 幕府大廳左右牆（UI-2-0153）：左軍務、右內政，資料同任務板；任務資料沒載到時維持設計稿文字 */
@@ -6804,6 +6965,7 @@ ${spent}`,
         });
         await this._ensureWeatherSeasonTable();
         const params = this._buildBattleEntryParams(undefined, encounter);
+        void this._sortieHint?.complete();
         services().scene.switchScene(SceneName.Battle, {
             ...params,
             ...(knownInvader ? { enemyGeneralId: knownInvader.generalId } : {}),
@@ -6841,8 +7003,11 @@ ${spent}`,
             this._refreshLobbyHallTopbar();
             this._refreshHallBoard();
             const hallLines = hallMissionReport?.lines ?? [];
+            // 首年前 2 季只彈戰報＋決策事件：任務回報與市井奇遇併進信箱，第 3 季起恢復完整流程（PROG-2-10068）
+            const flow = planSeasonAdvanceFlow(services().session.gameTime.totalSeasonsElapsed);
+            if (flow.fileDigest) this._fileSeasonDigest(hallMissionReport);
             // 本季所有任務回報合成一疊卡片：逐張點或全部略過，看完才開季報（PROG-2-9966）
-            await this._showMissionReportStack(hallMissionReport?.cards ?? []);
+            if (flow.showMissionStack) await this._showMissionReportStack(hallMissionReport?.cards ?? []);
             const followUps = (): void => {
                 this._openSeasonChronicle('season-advance');
                 this._syncSeasonEventPopup();
@@ -6862,6 +7027,7 @@ ${spent}`,
                 hallMissionLines: hallLines,
                 sections: seasonReportSections ?? [],
                 rankPreviewLine: nextRankPreviewLine(services().session.officerState.currentTier),
+                bondRowLimit: flow.bondRowLimit,
                 // 季度戰報關了才輪到季報／事件／血統彈窗，兩者不會疊在一起搶點擊（建置版實測 06）
                 onRequestClose: () => { void Promise.resolve(services().ui.close(UIID.SeasonReport)).finally(followUps); },
             };
@@ -9358,6 +9524,7 @@ ${spent}`,
             },
             onShowBanner: (message) => services().event.emit('SHOW_TOAST', { message, duration: 3, key: GACHA_SHOWCASE_TOAST_KEY }),
             onClearBanner: () => services().event.emit('HIDE_TOAST', { key: GACHA_SHOWCASE_TOAST_KEY }),
+            tapContinueText: () => services().i18n.t('ui.gacha.reveal.tap_continue'),
             onWalletChanged: () => {
                 this._refreshSinglePlayerModeToggleVisuals();
                 this._refreshWalletPreviewState();
@@ -9607,6 +9774,7 @@ ${spent}`,
         if (siege && params.playerGeneralId) {
             await services().session.spendSiegeLifespan(params.playerGeneralId);
         }
+        void this._sortieHint?.complete();
         services().scene.switchScene(SceneName.Battle, params);
     }
 

@@ -322,81 +322,105 @@
             "styleSlot": "scout.label.body"
           },
           {
-            "type": "panel",
+            "type": "container",
             "name": "ScoutConfirm",
             "id": "scoutConfirm",
             "widget": {
-              "hCenter": true,
-              "vCenter": true
+              "top": 0,
+              "bottom": 0,
+              "left": 0,
+              "right": 0
             },
-            "width": 760,
-            "height": 320,
-            "skinSlot": "scout.confirm.bg",
             "children": [
               {
-                "type": "label",
-                "name": "ScoutConfirmBody",
-                "id": "scoutConfirmBody",
+                "type": "panel",
+                "name": "ScoutConfirmDim",
                 "widget": {
-                  "top": 60,
-                  "left": 40,
-                  "right": 40
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
                 },
-                "height": 80,
-                "text": "兵勢凶險，仍可強行出征",
-                "styleSlot": "scout.label.confirm"
+                "skinSlot": "scout.confirm.dim"
               },
               {
-                "type": "button",
-                "name": "BtnScoutConfirmNo",
-                "id": "btnScoutConfirmNo",
+                "type": "panel",
+                "name": "ScoutConfirmBox",
+                "id": "scoutConfirmBox",
                 "widget": {
-                  "bottom": 40,
-                  "left": 60
+                  "hCenter": true,
+                  "vCenter": true
                 },
-                "width": 280,
-                "height": 68,
-                "skinSlot": "scout.button.cancel.bg",
+                "width": 760,
+                "height": 320,
+                "skinSlot": "scout.confirm.bg",
                 "children": [
                   {
                     "type": "label",
-                    "name": "BtnScoutConfirmNoLabel",
-                    "id": "scoutConfirmNoLabel",
+                    "name": "ScoutConfirmBody",
+                    "id": "scoutConfirmBody",
                     "widget": {
-                      "vCenter": true,
-                      "left": 0,
-                      "right": 0
+                      "top": 60,
+                      "left": 40,
+                      "right": 40
                     },
-                    "height": 40,
-                    "text": "再想想",
-                    "styleSlot": "scout.label.button"
-                  }
-                ]
-              },
-              {
-                "type": "button",
-                "name": "BtnScoutConfirmYes",
-                "id": "btnScoutConfirmYes",
-                "widget": {
-                  "bottom": 40,
-                  "right": 60
-                },
-                "width": 280,
-                "height": 68,
-                "skinSlot": "scout.button.risk.bg",
-                "children": [
+                    "height": 80,
+                    "text": "兵勢凶險，仍可強行出征",
+                    "styleSlot": "scout.label.confirm"
+                  },
                   {
-                    "type": "label",
-                    "name": "BtnScoutConfirmYesLabel",
-                    "id": "scoutConfirmYesLabel",
+                    "type": "button",
+                    "name": "BtnScoutConfirmNo",
+                    "id": "btnScoutConfirmNo",
                     "widget": {
-                      "vCenter": true,
-                      "left": 0,
-                      "right": 0
+                      "bottom": 40,
+                      "left": 60
                     },
-                    "height": 40,
-                    "text": "強行出征",
-                    "styleSlot": "scout.label.button"
+                    "width": 280,
+                    "height": 68,
+                    "skinSlot": "scout.button.cancel.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnScoutConfirmNoLabel",
+                        "id": "scoutConfirmNoLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 40,
+                        "text": "再想想",
+                        "styleSlot": "scout.label.button"
+                      }
+                    ]
+                  },
+                  {
+                    "type": "button",
+                    "name": "BtnScoutConfirmYes",
+                    "id": "btnScoutConfirmYes",
+                    "widget": {
+                      "bottom": 40,
+                      "right": 60
+                    },
+                    "width": 280,
+                    "height": 68,
+                    "skinSlot": "scout.button.risk.bg",
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "BtnScoutConfirmYesLabel",
+                        "id": "scoutConfirmYesLabel",
+                        "widget": {
+                          "vCenter": true,
+                          "left": 0,
+                          "right": 0
+                        },
+                        "height": 40,
+                        "text": "強行出征",
+                        "styleSlot": "scout.label.button"
+                      }
+                    ]
                   }
                 ]
               }

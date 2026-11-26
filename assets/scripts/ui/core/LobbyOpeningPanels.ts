@@ -55,6 +55,8 @@ export interface LobbyOpeningPanelPorts {
     onOverlayChanged?: () => void;
     warn: (message: string, error?: unknown) => void;
     focusTutorial?: (host: LobbyOpeningPanelHost, step: number) => void;
+    /** 每次重整新手引導後通知（教學剛結束時用來接「去出征」提示，PROG-2-10067） */
+    onOnboardingRefreshed?: () => void;
 }
 
 /** 大廳開場面板接線；Scene 保留 Cocos 掛載與公開入口。 */
@@ -117,6 +119,7 @@ export class LobbyOpeningPanels {
         if (!host || !onboarding) return;
         host.node.active = onboarding.shouldShow();
         this._ports.onOverlayChanged?.();
+        this._ports.onOnboardingRefreshed?.();
         if (!host.node.active) return;
         this._ports.bringToFront(host.node);
         if (host.binder) applyFlowView(host.binder, onboarding.getFlowView());

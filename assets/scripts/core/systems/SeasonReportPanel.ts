@@ -95,8 +95,10 @@ export function buildSeasonReportPanelTexts(
     rankPreviewLine: string = '',
     sections: readonly SeasonReportSection[] = [],
     lookup?: SeasonReportTextLookup,
+    /** 結緣名單最多列幾位（首年前幾季精簡用，PROG-2-10068）；沒給用預設列數 */
+    rowLimit: number = SEASON_REPORT_PANEL_ROWS,
 ): Record<string, string> {
-    const rows = buildSeasonReportPanelRows(reports, SEASON_REPORT_PANEL_ROWS, lookup);
+    const rows = buildSeasonReportPanelRows(reports, Math.min(rowLimit, SEASON_REPORT_PANEL_ROWS), lookup);
     const qualified = reports.filter((report) => report.bondRecommended).length;
     const hidden = Math.max(0, qualified - rows.length);
     const nothingToReport = rows.length === 0 && hallMissionLines.length === 0 && sections.length === 0;
