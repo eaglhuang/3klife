@@ -17328,6 +17328,12 @@
     "category": "task"
   },
   {
+    "id": "doc_task_3128",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10070.md",
+    "title": "[PROG-2-10070] 子嗣成長事件彈窗＋親子談話按鈕（最小可玩）",
+    "category": "task"
+  },
+  {
     "id": "doc_task_3130",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10072.md",
     "title": "[PROG-2-10072] 首戰節奏：預設 x2、縮短敵方回合等待、試玩腳本自動代打校正",
@@ -17376,9 +17382,15 @@
     "category": "task"
   },
   {
-    "id": "doc_task_3144",
+    "id": "doc_task_3154",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10081.md",
     "title": "[PROG-2-10081] 奧義 C 組音效接入戰場奧義施放（蓄力／爆發／收尾）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3155",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10091.md",
+    "title": "[PROG-2-10091] 索引健檢：虎符族文件補列與 keep.summary 更新",
     "category": "task"
   }
 ]

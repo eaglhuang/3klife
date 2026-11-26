@@ -258,10 +258,11 @@ import type { NurtureAwakeningHooks } from '../services/NurtureService';
 import { buildStarterRoster, pickStartingLead, STARTER_CORE_GENERAL_ID, StarterRosterOptions } from '../services/StarterRosterService';
 import { buildStarterYouth, getStarterYouthConfig } from '../services/StarterYouthService';
 import { buildStarterSeedling, getStarterSeedlingConfig } from '../services/StarterSeedlingService';
-import type { ChildGrowthHost, GrowthEventResolveOutcome } from '../api/localserver/ChildGrowthCommands';
+import type { ChildGrowthHost, ChildTalkOutcome, GrowthEventResolveOutcome } from '../api/localserver/ChildGrowthCommands';
+import { childTalkTopicFor, loadChildTalkConfig, type ChildTalkConfig } from '../systems/ChildTalk';
 import { bloodlineSilverCost, emptyBloodlineEventState, loadBloodlineY3Y5Events, type BloodlineEventState, type BloodlineEventTable } from '../systems/BloodlineY3Y5Events';
 import { applyBloodlineEffectsToLedger, applyBloodlineStatDeltas, isEmptyBloodlineGrowth, normalizeBloodlineGrowthSave, queueBloodlineGrowthEvents, resolvePendingBloodlineEvent, type PendingBloodlineEvent } from '../systems/BloodlineGrowthSettlement';
-import { CHILD_FAVOR_DEFAULT, cloneChildLedger, childFavorOf, emptyChildLedger, isEmptyChildLedger, normalizeChildLedger, seedChildFavor, type BloodlineChildLedgerState } from '../systems/BloodlineChildLedger';
+import { CHILD_FAVOR_DEFAULT, addChildFavor, addChildInteraction, childInteractionCountOf, childTalkCountOf, childTalkedThisYear, cloneChildLedger, childFavorOf, recordChildTalk, emptyChildLedger, isEmptyChildLedger, normalizeChildLedger, seedChildFavor, type BloodlineChildLedgerState } from '../systems/BloodlineChildLedger';
 import { resolveFactorColor } from '../systems/FactorInheritance';
 import { insertSpiritCard, replaceSpiritCard, setPrimarySpiritCard, unequipSpiritCard, type SpiritSlotFlowResult } from '../systems/SpiritSlotFlow';
 import type { FactorColor, FactorDefinition, FactorDictionary } from '../systems/FactorInheritance';
@@ -1037,6 +1038,8 @@ export class GameSession implements AcademyRecordPort {
     private _breedingBirthRecords: BreedingBirthRecord[] = [];
     /** 親子好感、天賦小名碎片、同窗好友旗標（PROG-2-10058）；存於 bloodlineChildLedger，舊存檔缺欄位視為空帳本 */
     private _childLedger: BloodlineChildLedgerState = emptyChildLedger();
+    /** 親子談話話題表（PROG-2-10070，延後載入） */
+    private _childTalkCfg: ChildTalkConfig | null = null;
     /** 血統成長事件（PROG-2-10059）：已觸發紀錄與歲末排出的待決佇列，隨存檔 bloodlineGrowthEvents 保存；事件表首次用到才載入 */
     private _bloodlineEventState: BloodlineEventState = emptyBloodlineEventState();
     private _bloodlinePending: PendingBloodlineEvent[] = [];
@@ -2762,12 +2765,19 @@ export class GameSession implements AcademyRecordPort {
     /** 子嗣成長宿主（PROG-2-10058／10059）：family.childLedger／growthEvents 讀、family.resolveGrowthEvent 選擇；入帳只在權威端 */
     public get childGrowthHost(): ChildGrowthHost {
         return {
-            childLedger: () => ({
-                favor: { ...this._childLedger.favor },
-                favorDefault: CHILD_FAVOR_DEFAULT,
-                epithetFragments: this._childLedger.epithetFragments,
-                classmateFriends: { ...this._childLedger.classmateFriends },
-            }),
+            childLedger: () => {
+                const year = this._clock.state.currentYear;
+                const children = this._familyChildren();
+                return {
+                    favor: { ...this._childLedger.favor },
+                    favorDefault: CHILD_FAVOR_DEFAULT,
+                    epithetFragments: this._childLedger.epithetFragments,
+                    classmateFriends: { ...this._childLedger.classmateFriends },
+                    children: children.map((g) => ({ id: g.id, name: g.name, age: Math.floor((g.age ?? 0) + 1e-9) })),
+                    talkedThisYear: children.filter((g) => childTalkedThisYear(this._childLedger, g.id, year)).map((g) => g.id),
+                    interactionCountThisYear: childInteractionCountOf(this._childLedger, year),
+                };
+            },
             growthEvents: () => {
                 const table = this._bloodlineEvents();
                 return {
@@ -2778,7 +2788,50 @@ export class GameSession implements AcademyRecordPort {
                 };
             },
             resolveGrowthEvent: (childId, eventId, optionId) => this.resolveBloodlineEvent(childId, eventId, optionId),
+            talkToChild: (childId) => this.talkToChild(childId),
         };
+    }
+
+    /** 親子談話話題表（首次用到才載入並驗證） */
+    private _childTalkConfig(): ChildTalkConfig {
+        if (!this._childTalkCfg) this._childTalkCfg = loadChildTalkConfig();
+        return this._childTalkCfg;
+    }
+
+    /** 本年親子互動次數（談話與成長事件選擇；跨年自動歸零）；首年目標清單的 y1_first_talk 讀這個 */
+    public get childInteractionCountThisYear(): number {
+        return childInteractionCountOf(this._childLedger, this._clock.state.currentYear);
+    }
+
+    /**
+     * 親子談話（PROG-2-10070）：每名孩子每年一次；話題依該孩子累計談話次數輪替，好感增量由話題表決定。
+     * 入帳：好感、談話紀錄、本年互動次數；成功後存檔。
+     */
+    public talkToChild(childId: string): ChildTalkOutcome {
+        if (!this._familyChildren().some((g) => g.id === childId)) return { ok: false, reason: 'unknown-child' };
+        const year = this._clock.state.currentYear;
+        if (childTalkedThisYear(this._childLedger, childId, year)) return { ok: false, reason: 'already-talked' };
+        const topic = childTalkTopicFor(this._childTalkConfig(), childTalkCountOf(this._childLedger, childId));
+        const before = childFavorOf(this._childLedger, childId);
+        let next = addChildFavor(this._childLedger, childId, topic.favorDelta);
+        next = recordChildTalk(next, childId, year);
+        this._childLedger = next;
+        const favor = childFavorOf(next, childId);
+        // 首年目標清單：真正的親子談話一次（y1_first_talk）
+        this.recordChildInteraction();
+        if (this._autoSave && this._save) void this.save();
+        return { ok: true, result: { childId, topicId: topic.id, lineKey: topic.lineKey, favorDelta: favor - before, favor, interactionCountThisYear: childInteractionCountOf(next, year) } };
+    }
+
+    /** 家族裡活著的孩子：家族登記的非配偶成員＋名冊上有父或母的武將（歲末成長事件與親子談話共用） */
+    private _familyChildren(): GeneralConfig[] {
+        const roster = this._roster.getAll();
+        const childIds = new Set<string>(this._family.members().filter((m) => m.kind !== 'spouse').map((m) => m.personId));
+        for (const general of roster) {
+            const kin = general as GeneralConfig & { fatherId?: string; motherId?: string };
+            if (kin.fatherId || kin.motherId) childIds.add(general.id);
+        }
+        return roster.filter((g) => childIds.has(g.id) && !isGeneralDead(g));
     }
 
     /** 事件表（首次用到才載入並驗證；資料不合格會丟例外，開機就看得到） */
@@ -2792,13 +2845,7 @@ export class GameSession implements AcademyRecordPort {
      * 只排佇列、不彈窗、不入帳；孩子名單＝家族登記的非配偶成員＋名冊上有父或母的武將，已過世者略過。
      */
     private _queueBloodlineGrowthEvents(year: number): PendingBloodlineEvent[] {
-        const roster = this._roster.getAll();
-        const childIds = new Set<string>(this._family.members().filter((m) => m.kind !== 'spouse').map((m) => m.personId));
-        for (const general of roster) {
-            const kin = general as GeneralConfig & { fatherId?: string; motherId?: string };
-            if (kin.fatherId || kin.motherId) childIds.add(general.id);
-        }
-        const children = roster.filter((g) => childIds.has(g.id) && !isGeneralDead(g)).map((g) => ({ id: g.id, age: g.age }));
+        const children = this._familyChildren().map((g) => ({ id: g.id, age: g.age }));
         const queued = queueBloodlineGrowthEvents(this._bloodlineEvents(), this._bloodlineEventState, this._bloodlinePending, children, year);
         this._bloodlinePending = queued.pending;
         return queued.added;
@@ -2827,7 +2874,7 @@ export class GameSession implements AcademyRecordPort {
         if (typeof effects.silver === 'number' && effects.silver > 0) this.silverLedger.creditSilver(effects.silver);
         this._bloodlineEventState = out.state;
         this._bloodlinePending = out.pending;
-        this._childLedger = applyBloodlineEffectsToLedger(this._childLedger, childId, effects);
+        this._childLedger = addChildInteraction(applyBloodlineEffectsToLedger(this._childLedger, childId, effects), this._clock.state.currentYear);
         this._applyBloodlineStats(childId, effects);
         if (typeof effects.prestige === 'number' && effects.prestige !== 0) {
             const before = clanPrestigeTierOf(this._clanPrestige);
