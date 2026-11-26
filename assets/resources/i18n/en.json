@@ -946,6 +946,7 @@
   "MATCHMAKER_GOTO_COMMERCE": "Earn Silver",
   "MATCHMAKER_ENROLL_BUTTON": "Take as Spouse (Gift: %{cost} Silver)",
   "ui.hall.btn.expedition": "Expedition",
+  "ui.onboarding.sortie_hint": "Shi Xiaojing: Stop browsing and hit \"Expedition\"! The enemy is already at the gate shouting your name.",
   "ui.hall.btn.generals": "Generals",
   "ui.hall.btn.domestic": "Domestic",
   "ui.hall.btn.domestic_network": "Domestic / Network",

@@ -936,6 +936,7 @@
   "MATCHMAKER_GOTO_COMMERCE": "銀両を調達する",
   "MATCHMAKER_ENROLL_BUTTON": "配偶者に迎える（結納金 %{cost} 銀両）",
   "ui.hall.btn.expedition": "出陣",
+  "ui.onboarding.sortie_hint": "史小境：見てないで「出陣」を押して！敵はもう門の前であなたの名前を呼んでますよ。",
   "ui.hall.btn.generals": "武将",
   "ui.hall.btn.domestic": "内政",
   "ui.hall.btn.domestic_network": "内政 / 人脈",
