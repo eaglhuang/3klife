@@ -19313,6 +19313,52 @@
       }
     },
     {
+      "doc_id": "doc_task_3132",
+      "id": "PROG-2-10075",
+      "title": "同步騎馬匹 mounted-list（關羽）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-26T20:31:36+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "馬匹同步腳本新增 guan_yu 騎馬（bay）一筆至 mounted-list.json。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [
+        "assets/resources/data/mounted-list.json"
+      ],
+      "notes": "2026-11-26 | 狀態: done | 驗證: JSON 解析通過、與主目錄馬匹同步腳本產出一致（CRLF 轉 LF） | 變更: mounted-list.json 新增 guan_yu 騎馬（bay）一筆 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
       "doc_id": "",
       "id": "PROG-2-10064",
       "title": "新手開場點擊精簡：介紹合併自動長卷、六名將一頁亮相、SSR 揭曉加點擊提示",
@@ -19369,9 +19415,9 @@
     }
   ],
   "summary": {
-    "done": 359,
-    "in_progress": 4,
+    "done": 360,
+    "in_progress": 5,
     "open": 88,
-    "total": 453
+    "total": 454
   }
 }
