@@ -1,13 +1,13 @@
 // @spec-source → 開場首戰五路教學戰流程控制器與提示浮窗狀態機規格書；PROG-2-2212 第一版
 import { EVENT_NAMES, Faction, SP_PER_KILL } from '../../core/config/Constants';
-import { FirstBattleOperationGuide } from '../../core/systems/FirstBattleOperationGuide';
+import { FirstBattleOperationGuide, type OperationHint } from '../../core/systems/FirstBattleOperationGuide';
 import { SkillSourceType } from '../../shared/SkillRuntimeContract';
 export class BattleTutorialHint {
     private readonly _guide = new FirstBattleOperationGuide();
     private readonly _unsubscribes: Array<() => void> = [];
     constructor(events: { on(name: string, handler: (data: any) => void): () => void },
         private readonly _showToast: (message: string) => void,
-        private readonly _showGuide?: (hint: { message: string; target: string } | null) => void,
+        private readonly _showGuide?: (hint: OperationHint | null) => void,
         private readonly _spStatus?: () => { current: number; max: number }) {
         const advance = (event: Parameters<FirstBattleOperationGuide['advance']>[0]): void => {
             if (this._guide.advance(event)) this._showCurrent();
@@ -33,8 +33,13 @@ export class BattleTutorialHint {
     private _showCurrent(): void {
         const base = this._guide.hint;
         const sp = this._spStatus?.();
-        const hint = base && this._guide.step === 'ultimate'
-            ? { ...base, message: `${base.message} 每擊殺 +${SP_PER_KILL}；${sp ? `目前 ${sp.current}/${sp.max}，本將消耗 ${sp.max} SP。` : '消耗值依HUD的本將SP上限。'}` } : base;
+        const hint: OperationHint | null = base && this._guide.step === 'ultimate'
+            ? {
+                ...base,
+                message: `${base.message} 每擊殺 +${SP_PER_KILL}；${sp ? `目前 ${sp.current}/${sp.max}，本將消耗 ${sp.max} SP。` : '消耗值依HUD的本將SP上限。'}`,
+                suffixKey: sp ? 'battle.guide.step.ultimateSp' : 'battle.guide.step.ultimateNoSp',
+                suffixArgs: sp ? [String(SP_PER_KILL), String(sp.current), String(sp.max)] : [String(SP_PER_KILL)],
+            } : base;
         this._showGuide?.(hint);
         if (hint && !this._showGuide) this._showToast(hint.message);
     }
