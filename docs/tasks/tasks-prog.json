@@ -19311,12 +19311,58 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_3132",
+      "id": "PROG-2-10075",
+      "title": "同步騎馬匹 mounted-list（關羽）",
+      "owner": "codex-gpt-5.4-mini",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "codex-gpt-5.4-mini",
+      "started_at": "2026-11-26T20:31:36+08:00",
+      "started_by_agent": "codex-gpt-5.4-mini",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "馬匹同步腳本新增 guan_yu 騎馬（bay）一筆至 mounted-list.json。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [
+        "assets/resources/data/mounted-list.json"
+      ],
+      "notes": "2026-11-26 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
-    "done": 359,
-    "in_progress": 4,
+    "done": 360,
+    "in_progress": 5,
     "open": 88,
-    "total": 451
+    "total": 453
   }
 }

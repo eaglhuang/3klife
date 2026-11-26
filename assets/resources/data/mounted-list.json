@@ -1,5 +1,26 @@
 {
   "generals": {
+    "guan_yu": {
+      "bay": {
+        "animations": {
+          "attack_bow": "attack_bow",
+          "attack_shield": "attack_shield",
+          "attack_spear": "attack_spear",
+          "cast": "cast",
+          "charge": "charge",
+          "dodge": "dodge",
+          "fall": "fall",
+          "gallop": "gallop",
+          "hit": "hit",
+          "idle": "idle",
+          "retreat": "retreat",
+          "walk": "walk"
+        },
+        "mirror_skin": "hand_mirror",
+        "skeleton": "spine/generals/guan_yu_mounted/guan_yu__mount_horse_bay.json",
+        "skin": "default"
+      }
+    },
     "lu_bu": {
       "bay": {
         "animations": {
