@@ -110,18 +110,17 @@ export function createMissionDetailPresenterSuite(): TestSuite {
         assert.isTrue((s.actionBlockedText['re-scout'] ?? '').includes('連鎖'), '再探鈕停用原因說明要靠連鎖或特殊來源');
     });
 
-    suite.test('白話導讀：未派出且情報未滿時接在情報內文最後一行；鎖定與情報已完整不加（PROG-2-10068）', () => {
+    suite.test('白話導讀：未派出且情報未滿時接在情報提示列下面；鎖定與情報已完整不加（PROG-2-10068）', () => {
         const guide = '白話版：「再探」＝再派探子偷看一次';
         const open = buildMissionDialogState(fake(detail({ intel: 42 }), [cand('A')]), 'M1', wall, ctx({ jargonGuide: guide }))!;
         assert.isTrue(open.intelHintLabel.includes('情報 42%，再探或等待可提高'), '原提示列保留');
-        assert.isFalse(open.intelHintLabel.includes('白話'), '提示列不放導讀（字太小）');
-        assert.isTrue(open.intelBody.endsWith('\n' + guide), open.intelBody);
+        assert.isTrue(open.intelHintLabel.endsWith('\n' + guide), open.intelHintLabel);
         const none = buildMissionDialogState(fake(detail({ intel: 42 }), [cand('A')]), 'M1', wall, ctx())!;
-        assert.isFalse(none.intelBody.includes('白話'), '沒給導讀就不加');
+        assert.isFalse(none.intelHintLabel.includes('白話'), '沒給導讀就不加');
         const locked = buildMissionDialogState(fake(detail({ status: 'ACTIVE', intel: 78, intelBand: 'clear' }), [cand('A')], card({ status: 'ACTIVE' })), 'M1', wall, ctx({ jargonGuide: guide }))!;
-        assert.isFalse(locked.intelBody.includes('白話'), '鎖定中不加');
+        assert.isFalse(locked.intelHintLabel.includes('白話'), '鎖定中不加');
         const full = buildMissionDialogState(fake(detail({ intel: 100, intelBand: 'full', canRecon: false }), [cand('A')]), 'M1', wall, ctx({ jargonGuide: guide }))!;
-        assert.isFalse(full.intelBody.includes('白話'), '情報已完整不加');
+        assert.isFalse(full.intelHintLabel.includes('白話'), '情報已完整不加');
     });
 
     suite.test('再探浮字：「情報 +25 → 78%」，並限制在 0～100', () => {
