@@ -31,7 +31,7 @@
           "id": "A",
           "labelKey": "bloodline.event.y4.optA",
           "resultKey": "bloodline.event.y4.resA",
-          "effects": { "int": 1, "gold": -50 }
+          "effects": { "int": 1, "silver": -50 }
         },
         {
           "id": "B",

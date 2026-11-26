@@ -19053,12 +19053,61 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_3120",
+      "id": "PROG-2-10057",
+      "title": "血統第 3~5 年成長小事件：資料載入器、schema 驗證與觸發／一次性邏輯（核心基礎調查）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "承 PROG-2-10055 資料：先交載入器、schema 驗證（含 gold→silver 修正）、觸發與一次性邏輯、存檔欄位 normalize、單元測試；並調查接進遊戲所缺的核心基礎。",
+      "related": [
+        "PROG-2-10055"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [
+        "assets/scripts/core/systems/BloodlineY3Y5Events.ts",
+        "tests/BloodlineY3Y5Events.test.ts"
+      ],
+      "notes": "2026-11-26 | 狀態: done | 驗證: run-cli 全過、tsc 0 錯、compute-gate standard | 變更: 載入器＋schema 驗證＋觸發／一次性／存檔 normalize 邏輯與單元測試；資料 gold 改 silver；未接進遊戲（核心基礎缺 4 項，見任務卡調查） | 阻塞: 無（接線需另開卡）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
-    "done": 355,
+    "done": 356,
     "in_progress": 4,
     "open": 88,
-    "total": 447
+    "total": 448
   }
 }
