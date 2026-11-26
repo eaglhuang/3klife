@@ -322,5 +322,34 @@ export function createLobbyWanderCoreSuite(): TestSuite {
         assert.equals(1, w.drawOrder().length);
     });
 
+    suite.test('輪替進場排隊（PROG-2-10090）：多人同時進場時，排隊的不顯示、不可點，依序放行', () => {
+        const w = new HallWander({ ...config(20261113, []), actors: [] });
+        const x = LOBBY_DESIGN.floor.x0 - WANDER_EXIT_MARGIN;
+        const ys = [856, 866, 872, 924, 926, 860, 856, 862];
+        ys.forEach((y, i) => w.addActor({ id: `e${i}`, tier: 'general', speed: SPEED, start: { x, y } }));
+        let sawVisibleOffFloor = false;
+        let sawClickableHidden = false;
+        let allVisibleAt = -1;
+        for (let t = 0; t < 120; t += DT) {
+            const states = w.step(DT);
+            const f = LOBBY_DESIGN.floor;
+            // 在地板帶外側但已顯示：會疊在畫面邊緣被面板蓋住
+            if (states.some((s) => s.visible && (s.x < f.x0 || s.x > f.x1))) sawVisibleOffFloor = true;
+            if (states.some((s) => !s.visible && s.clickable)) sawClickableHidden = true;
+            // 一次只放一位：第 1 秒內最多 1 位離開進場點（其餘仍排隊、位置不動）
+            if (t < 1) assert.equals(true, states.filter((s) => s.x !== x).length <= 1, '一次只放一位');
+            if (allVisibleAt < 0 && states.every((s) => s.visible)) allVisibleAt = t;
+        }
+        assert.equals(false, sawVisibleOffFloor, '地板帶外側的人不可顯示');
+        assert.equals(false, sawClickableHidden, '隱藏的人不可點');
+        assert.equals(true, allVisibleAt >= 0 && allVisibleAt < 90, `8 人 90 秒內都要走進場（實際 ${allVisibleAt.toFixed(1)}）`);
+    });
+
+    suite.test('輪替進場排隊：起點在地板內的（站位上的）不排隊、一開始就顯示可點', () => {
+        const w = new HallWander(config());
+        const states = w.step(DT);
+        assert.equals(true, states.every((s) => s.visible));
+    });
+
     return suite;
 }
