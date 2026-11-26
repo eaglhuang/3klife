@@ -654,6 +654,7 @@ export class BattleController {
         this.delegateUltimateIq(this.delegateQuality),
         this.state.aiUltimateRules,
         ultimate?.ultimateId ?? '',
+        true,
       )));
       if (ultimate && shouldCast) {
         done.ultimate = this.triggerPlayerBattleSkill(ultimate.skillId, SkillSourceType.Ultimate, {
@@ -1227,6 +1228,7 @@ export class BattleController {
     iq: AiIqLevel,
     rules: AiUltimateRules | null,
     ultimateId: string,
+    delegate = false,
   ): boolean {
     if (!rules) return false;
     const foe = faction === Faction.Enemy ? Faction.Player : Faction.Enemy;
@@ -1243,6 +1245,7 @@ export class BattleController {
       estimatedKills,
       isLosing,
       rules,
+      delegate,
     }) && aiUltimateFamilyPermits(findUltimateFamily(ultimateId), {
       estimatedKills,
       enemyCount: foeCount,
