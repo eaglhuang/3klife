@@ -47,4 +47,7 @@
 | `doc_task_3165` | docs/agent-briefs/tasks/PROG/PROG-2-10099.md | [PROG-2-10099] 姻緣單一流程實作：狀態機、結緣守門、存檔遷移、姻緣面板、吃醋事件 |
 | `doc_task_3166` | docs/agent-briefs/tasks/PROG/PROG-2-10086.md | [PROG-2-10086] playtest-online 整年實跑連鎖失敗：detached Frame 與大廳小人被擋根因修復 |
 | `doc_task_3172` | docs/agent-briefs/tasks/PROG/PROG-2-10081.md | [PROG-2-10081] 奧義 C 組音效接入戰場奧義施放（蓄力／爆發／收尾） |
-| `doc_task_3177` | docs/agent-briefs/tasks/PROG/PROG-2-10100.md | [PROG-2-10100] 洪流／水流關卡：水淹特效與卡住沉浮 |
+| `doc_task_3174` | docs/agent-briefs/tasks/PROG/PROG-2-10105.md | [PROG-2-10105] UI 規格：戰場軍勢糧草常駐顯示與出牌不足提示＋內政任務詳情單屏重排（使用者 11/27 回饋） |
+| `doc_task_3175` | docs/agent-briefs/tasks/PROG/PROG-2-10104.md | [PROG-2-10104] 實作：戰場軍勢糧草常駐顯示、卡片費用章與不足說明面板 |
+| `doc_task_3176` | docs/agent-briefs/tasks/PROG/PROG-2-10108.md | [PROG-2-10108] 實作：內政任務詳情單屏三欄重排與固定底部行動列 |
+| `doc_task_3178` | docs/agent-briefs/tasks/PROG/PROG-2-10100.md | [PROG-2-10100] 洪流／水流關卡：水淹特效與卡住沉浮 |

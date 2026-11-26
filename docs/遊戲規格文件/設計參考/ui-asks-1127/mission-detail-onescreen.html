@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-TW"><head><meta charset="utf-8"><title>內政任務詳情單屏重排 mockup（1920x1080）</title>
+<style>
+:root{--gold:#e8c46a;--panel:#2a2018;--line:#6b5230;--ok:#7fd48a;--bad:#ff6a5a;--warn:#ffb84d;--soft:#cdbb97;--ink:#f3e7cc}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:1920px;height:1080px;overflow:hidden;font-family:"Microsoft JhengHei","PingFang TC",sans-serif;color:var(--ink);background:linear-gradient(#2d3a2a,#1a1f18);position:relative}
+.mask{position:absolute;inset:0;background:#000a}
+/* 對話框：錨點置中，寬 84%、高 90%（直式時改 96% x 94%，欄位改上下堆疊） */
+.dlg{position:absolute;left:8%;right:8%;top:5%;bottom:5%;background:var(--panel);border:3px solid var(--gold);border-radius:18px;display:flex;flex-direction:column;overflow:hidden}
+.head{height:84px;flex:none;display:flex;align-items:center;gap:18px;padding:0 28px;background:linear-gradient(#4a3820,#34261a);border-bottom:2px solid var(--line)}
+.head h2{font-size:34px}
+.chip{border-radius:14px;padding:3px 14px;font-size:18px;font-weight:700;border:2px solid var(--gold);background:#0005}
+.chip.diff{color:var(--warn)}.chip.time{color:var(--soft)}
+.head .close{margin-left:auto;width:44px;height:44px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-size:24px}
+.body{flex:1;min-height:0;display:grid;grid-template-columns:30fr 36fr 34fr;gap:20px;padding:20px 24px}
+.col{display:flex;flex-direction:column;gap:14px;min-height:0}
+.card{background:#0004;border:2px solid var(--line);border-radius:12px;padding:12px 16px}
+.card h3{font-size:19px;color:var(--gold);margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.card h3 .ic{width:28px;height:28px;border-radius:50%;background:#0006;border:2px solid var(--gold);display:grid;place-items:center;font-size:15px}
+.brief{font-size:19px;line-height:1.55}
+.more{font-size:15px;color:var(--gold);margin-top:6px}
+/* 情報 */
+.meter{height:16px;border-radius:8px;background:#0007;overflow:hidden;border:1px solid #0009;margin:4px 0 10px}
+.meter i{display:block;height:100%;width:50%;background:linear-gradient(90deg,#b58a2c,#e8c46a)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:8px 14px;font-size:19px;align-items:center}
+.kv .k{color:var(--soft);font-size:16px}
+.fog{background:repeating-linear-gradient(45deg,#ffffff10 0 8px,#ffffff05 8px 16px);border:1px dashed #fff4;border-radius:8px;padding:6px 10px;color:var(--soft);font-size:18px;display:flex;justify-content:space-between;align-items:center}
+.fog u{font-size:14px;color:var(--gold);text-decoration:none;border:1px solid var(--gold);border-radius:10px;padding:1px 8px}
+/* 行動人物 */
+.gen{display:flex;gap:14px;align-items:center}
+.avatar{width:96px;height:96px;border-radius:12px;background:linear-gradient(#586a8a,#33405a);display:grid;place-items:center;font-size:44px;border:2px solid var(--gold);flex:none}
+.gen .info{flex:1;font-size:18px;line-height:1.5}
+.gen .info b{font-size:24px}
+.sel{margin-top:10px;border:2px solid var(--gold);border-radius:10px;padding:8px 12px;font-size:19px;display:flex;justify-content:space-between;background:#4a3820}
+.vol{display:inline-block;background:#2f6a3a;border-radius:10px;padding:1px 10px;font-size:15px;margin-left:6px}
+.rate{font-size:44px;font-weight:900;color:var(--ok);line-height:1}
+.rate small{font-size:17px;color:var(--soft);font-weight:600;margin-left:6px}
+/* 耗費獎勵 */
+.res4{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.res4 div{background:#0005;border-radius:8px;padding:6px 10px;font-size:19px;display:flex;justify-content:space-between}
+.res4 .bad{border:2px solid var(--bad);color:var(--bad)}
+.rew{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rew .r{background:#0005;border-radius:10px;padding:8px 12px;font-size:19px}
+.rew .r small{display:block;color:var(--soft);font-size:14px}
+.rew .r.perfect{border:1px dashed var(--gold)}
+/* 底部固定按鈕列 */
+.foot{height:104px;flex:none;border-top:2px solid var(--line);background:#1d1610;display:flex;align-items:center;gap:20px;padding:0 28px}
+.ai{display:flex;align-items:center;gap:12px;font-size:18px;color:var(--soft);flex:1}
+.tog{width:64px;height:32px;border-radius:16px;background:#2f6a3a;position:relative;flex:none}.tog::after{content:"";position:absolute;right:4px;top:4px;width:24px;height:24px;border-radius:50%;background:#fff}
+.btns{display:flex;gap:14px;flex:none}
+.btn{width:200px;height:64px;border-radius:12px;border:2px solid var(--gold);background:#4a3820;font-size:24px;font-weight:800;display:flex;flex-direction:column;align-items:center;justify-content:center;line-height:1.1}
+.btn small{font-size:13px;font-weight:600;color:var(--soft)}
+.btn.pri{background:linear-gradient(#c9a24a,#8c6a22);color:#1b1410}.btn.pri small{color:#3a2a10}
+.btn.dis{opacity:.45;border-color:#7a6a58}
+.note{position:absolute;left:8px;bottom:8px;width:230px;font-size:12px;line-height:1.45;background:#000c;border:1px solid #fff4;border-radius:8px;padding:8px;color:#ddd;z-index:5}
+.note b{color:var(--gold)}
+</style></head><body>
+<div class="mask"></div>
+<div class="note"><b>1920x1080 單屏</b>：對話框 84%x90%，三欄比例 30:36:34，標題固定 84px、底部按鈕列固定 104px，中間內容區不捲動。直式：欄位改上下堆疊，次要卡片收成「摘要＋展開」。</div>
+<div class="dlg">
+  <div class="head"><h2>疏通水利，增收糧賦</h2><span class="chip">內政</span><span class="chip diff">菁英</span><span class="chip time">2 季・剩 2 季到期</span><span class="chip">情報 50%</span><span class="close">✕</span></div>
+  <div class="body">
+    <!-- 欄 1：任務概要＋情報 -->
+    <div class="col">
+      <div class="card"><h3><span class="ic">任</span>任務概要</h3>
+        <div class="brief">河道年年淤塞，農戶怨聲載道。派人去勘查、徵工、疏通，今年收成才有指望。</div><div class="more">展開全文 ▾</div></div>
+      <div class="card"><h3><span class="ic">報</span>情報揭示　50%</h3>
+        <div class="meter"><i></i></div>
+        <div class="kv"><span class="k">重點屬性</span><span>政治（pol）</span>
+          <span class="k">成功率</span><span>55%～85%（區間）</span></div>
+        <div class="fog" style="margin-top:10px"><span>地方阻力・完美加成　???</span><u>再探後揭示</u></div>
+      </div>
+      <div class="card" style="flex:1"><h3><span class="ic">獎</span>獎勵</h3>
+        <div class="rew"><div class="r"><small>基礎獎勵</small>黃金 250<br>糧草 175</div><div class="r perfect"><small>完美加成 +50%</small><span style="color:var(--soft)">達成條件：???</span></div></div>
+        <div class="kv" style="margin-top:10px"><span class="k">另得</span><span>武將經驗 120・官職經驗</span></div></div>
+    </div>
+    <!-- 欄 2：行動人物 -->
+    <div class="col">
+      <div class="card" style="flex:1"><h3><span class="ic">將</span>行動人物</h3>
+        <div class="gen"><div class="avatar">🧑</div><div class="info"><b>諸葛亮</b><span class="vol">自告奮勇</span><br>政 98・智 100　精力 80/100</div></div>
+        <div class="sel"><span>更換武將（共 6 人可派）</span><span>▾</span></div>
+        <div style="margin-top:16px"><span class="rate">78%</span><small>預估成功率（含自告奮勇 +50%）</small></div>
+        <div class="kv" style="margin-top:14px"><span class="k">精力耗費</span><span>10（剩 70）</span><span class="k">派出後</span><span>2 季後回報，期間不可他用</span></div>
+        <div class="more" style="margin-top:10px">不可派的 3 位（點開看原因）▾</div>
+      </div>
+    </div>
+    <!-- 欄 3：耗費＋委任說明 -->
+    <div class="col">
+      <div class="card"><h3><span class="ic">費</span>派出耗費</h3>
+        <div class="res4"><div><span>黃金</span><b>80</b></div><div><span>糧草</span><b>100</b></div><div><span>精力</span><b>10</b></div><div><span>耗時</span><b>2 季</b></div></div>
+        <div style="margin-top:8px;font-size:15px;color:var(--bad)">付不起的項目會變紅框並標「差多少」，「執行」「委任」停用並寫原因。</div></div>
+      <div class="card"><h3><span class="ic">委</span>AI 委任</h3>
+        <div class="brief" style="font-size:18px">系統幫你挑成功率最高的人派出去，做完留紀錄給你回看。</div>
+        <div class="kv" style="margin-top:8px"><span class="k">本次人選</span><span>諸葛亮（78%）</span></div></div>
+      <div class="card" style="flex:1"><h3><span class="ic">探</span>再探／等待</h3>
+        <div class="kv"><span class="k">再探</span><span>花 50 糧，情報直升 100%</span><span class="k">等待</span><span>期限 +1 季，情報 +25%（限 1 次）</span></div></div>
+    </div>
+  </div>
+  <div class="foot">
+    <div class="ai"><span class="tog"></span>允許 AI 委任（此任務可用）</div>
+    <div class="btns">
+      <div class="btn">再探<small>糧草 −50</small></div>
+      <div class="btn dis">等待<small>已等待過</small></div>
+      <div class="btn pri">執行<small>自己選人派出</small></div>
+      <div class="btn">委任<small>系統代選</small></div>
+    </div>
+  </div>
+</div>
+</body></html>
