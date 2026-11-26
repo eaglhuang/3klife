@@ -2505,7 +2505,7 @@
           {
             "version": "0001",
             "file": "battle/dian_wei__典韋__battle_0001.png",
-            "status": "review-pending",
+            "status": "superseded",
             "poseSelection": "C"
           },
           {
@@ -2521,7 +2521,7 @@
           {
             "version": "0003",
             "file": "battle/dian_wei__典韋__battle_0003.png",
-            "status": "review-pending",
+            "status": "superseded",
             "sha256": "cb2e5e7595e0164f9ba10ea2f06fb4755d0de884f7ea9e35faf699ac4507da90",
             "canvas": "1024x1536 RGBA",
             "weaponClass": "paired-axes",
@@ -2532,46 +2532,111 @@
             "qc": "125px preview checked: complete figure, both axes and hands visible; transparent background; alpha bbox x=140..882, y=81..1452 within central 75% width; no visible halo.",
             "createdAt": "2026-11-18",
             "note": "New battle candidate; user review pending."
+          },
+          {
+            "version": "0004",
+            "file": "battle/dian_wei__典韋__battle_0004.png",
+            "status": "review-pending",
+            "sha256": "6345CA748972EB951E46BDD506321393DCA7E0E84193FC51F7CD21094F65D08C",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "paired-axes",
+            "poseLabel": "C：低重心雙斧斜向發力",
+            "sourcePortraitFile": "standing/dian_wei__典韋__standing_0003.png",
+            "method": "Image generation using standing identity and approved male finish-quality reference; transparent RGBA output.",
+            "headOutlineBoundsPx": [486, 548],
+            "headOutlineCenterXPercent": 50.5,
+            "headAngleDegreesApprox": 30,
+            "qc": "125/250px progressive preview: low forceful stance, twin axe heads and both grip points visible; headbox near center; transparent background; no clipped hands, axes or boots.",
+            "createdAt": "2026-11-26",
+            "note": "Four-piece Dian Wei revision; PM review pending."
           }
         ],
-        "activeVersion": "0003"
+        "activeVersion": "0004"
       },
       "standing": {
-        "status": "integrated",
+        "status": "review-pending",
         "history": [
           {
             "version": "0002",
             "file": "standing/dian_wei__典韋__standing_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "standing/dian_wei__典韋__standing_0003.png",
+            "status": "review-pending",
+            "sha256": "022A8712C7F75BB41FB3A05848A96D38F771CFF17AFCE25F92E8309642A29ED2",
+            "canvas": "1024x1536 RGBA",
+            "method": "Image generation using official Dian Wei identity and approved male finish-quality reference; transparent RGBA output.",
+            "headOutlineBoundsPx": [466, 558],
+            "headOutlineCenterXPercent": 50.0,
+            "headAngleDegreesApprox": 35,
+            "qc": "125/250px progressive preview: full figure, paired axes and armor details visible; headbox centered; clean transparent background and complete margins.",
+            "createdAt": "2026-11-26",
+            "note": "Four-piece Dian Wei revision; PM review pending."
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "avatar": {
-        "status": "integrated",
+        "status": "review-pending",
         "history": [
           {
             "version": "0002",
             "file": "avatars/dian_wei__典韋__avatar_0002.png",
             "status": "integrated"
+          },
+          {
+            "version": "0003",
+            "file": "avatars/dian_wei__典韋__avatar_0003.png",
+            "status": "review-pending",
+            "sha256": "8264BBAECFAFB839C71D51C1F3E3015FCEEC569E2ED8146BCFCA16FDFF5E70E5",
+            "canvas": "256x256 RGBA",
+            "source": "standing/dian_wei__典韋__standing_0003.png",
+            "method": "Image generation using standing identity reference; uniform resize to 256x256 RGBA.",
+            "crop": "complete-chest-bust; bottom at full chest armor edge, no waist belt",
+            "headOutlineBoundsPx": [96, 160],
+            "headOutlineCenterXPercent": 50.0,
+            "headAngleDegreesApprox": 35,
+            "qc": "250px preview: both shoulders and complete chest armor visible; bottom stops above waist/belt; side angle and head centering checked.",
+            "createdAt": "2026-11-26",
+            "note": "Four-piece Dian Wei revision; PM review pending."
           }
         ],
-        "activeVersion": "0002"
+        "activeVersion": "0003"
       },
       "smallAvatar": {
-        "activeVersion": "0001",
+        "activeVersion": "0002",
         "status": "review-pending",
         "history": [
           {
             "version": "0001",
             "file": "small_avatars/dian_wei__典韋__small_avatar_0001.png",
-            "status": "review-pending",
+            "status": "superseded",
             "sha256": "59433cebe77e524e087047e63f9db3b4c5e96ce11f0bf82c51659c8a5922916a",
             "canvas": "1254x1254 RGBA",
             "source": "standing/dian_wei__典韋__standing_0002.png",
             "crop": "shoulder-line",
             "cropBox": "x=372,y=10,w=300,h=300",
             "qc": "125px preview: direct crop from approved standing art; headband, full face and chin visible, face centered, shoulder armor edge only."
+          },
+          {
+            "version": "0002",
+            "file": "small_avatars/dian_wei__典韋__small_avatar_0002.png",
+            "status": "review-pending",
+            "sha256": "E58B3DCE1CB500CA626A92DF0DB16D1D27E1C55C994C65801D13054E57F8FD54",
+            "canvas": "1254x1254 RGBA",
+            "source": "standing/dian_wei__典韋__standing_0003.png",
+            "reference": "avatars/dian_wei__典韋__avatar_0003.png",
+            "method": "Image generation using standing and bust identity references; shoulder-line square framing.",
+            "crop": "shoulder-line",
+            "headOutlineBoundsPx": [570, 684],
+            "headOutlineCenterXPercent": 50.0,
+            "headHeightPercent": 60,
+            "headAngleDegreesApprox": 35,
+            "qc": "250px preview: full skull-to-chin headbox centered, 60% head height, both upper shoulder surfaces visible, transparent RGBA.",
+            "createdAt": "2026-11-26",
+            "note": "Four-piece Dian Wei revision; PM review pending."
           }
         ]
       }
