@@ -17328,6 +17328,12 @@
     "category": "task"
   },
   {
+    "id": "doc_task_3131",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10074.md",
+    "title": "[PROG-2-10074] 整年放招 0 次修正：計謀起手 20／火計 25、教學戰委任放招旁路、playtest 放招計數",
+    "category": "task"
+  },
+  {
     "id": "doc_task_3133",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10075.md",
     "title": "[PROG-2-10075] 同步騎馬匹 mounted-list（關羽）",
@@ -17358,9 +17364,9 @@
     "category": "task"
   },
   {
-    "id": "doc_task_3131",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10074.md",
-    "title": "[PROG-2-10074] 整年放招 0 次修正：計謀起手 20／火計 25、教學戰委任放招旁路、一般戰條件不符自動換招、playtest 放招計數",
+    "id": "doc_task_3152",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10090.md",
+    "title": "[PROG-2-10090] 大廳小人待出場疊在畫面邊緣點不到",
     "category": "task"
   }
 ]
