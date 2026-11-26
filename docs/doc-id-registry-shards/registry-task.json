@@ -17404,5 +17404,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10091.md",
     "title": "[PROG-2-10091] 索引健檢：虎符族文件補列與 keep.summary 更新",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3157",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10083.md",
+    "title": "[PROG-2-10083] 大廳小人台詞依武將性別換自稱（女將不再說某）",
+    "category": "task"
   }
 ]

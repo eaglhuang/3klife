@@ -19631,12 +19631,64 @@
         "metrics_summary": []
       },
       "completed_at": "2026-11-26T23:10:00+08:00"
+    },
+    {
+      "doc_id": "doc_task_3157",
+      "id": "PROG-2-10083",
+      "title": "大廳小人台詞依武將性別換自稱（女將不再說某）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "小喬泡泡說「某心裡踏實」：離線台詞模板只依性格分類且寫死「某」。新增 SpeakerVoice 共用聲線（性別＋性格＋年齡→{self}），Mind 模板全改 {self}；補單元測試。其餘台詞來源（事件／戰場／AI prompt／資料檔）列清單另開卡。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [
+        "assets/scripts/core/mind/SpeakerVoice.ts",
+        "assets/scripts/core/mind/MindBarks.ts",
+        "assets/scripts/core/mind/MindLineTemplates.ts",
+        "assets/scripts/core/mind/MindRequests.ts",
+        "assets/scripts/core/mind/OfflineGeneralMindService.ts",
+        "assets/scripts/core/mind/MindTypes.ts",
+        "tests/MindGenderSelf.test.ts"
+      ],
+      "notes": "2026-11-27 | 狀態: done | 驗證: run-cli 9812 全過、tsc 0 錯、compute-gate standard 通過 | 變更: SpeakerVoice 共用自稱、Mind 模板 {self}、MindGenderSelf 測試 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
-    "done": 364,
-    "in_progress": 5,
+    "done": 367,
+    "in_progress": 4,
     "open": 88,
-    "total": 458
+    "total": 459
   }
 }
