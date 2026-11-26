@@ -17406,13 +17406,19 @@
     "category": "task"
   },
   {
-    "id": "doc_task_3158",
+    "id": "doc_task_3157",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10083.md",
+    "title": "[PROG-2-10083] 大廳小人台詞依武將性別換自稱（女將不再說某）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3164",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10098.md",
     "title": "[PROG-2-10098] 姻緣單一流程規格：相親 → 提親 → 成婚 → 結緣（11/26 修訂）",
     "category": "task"
   },
   {
-    "id": "doc_task_3159",
+    "id": "doc_task_3165",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10099.md",
     "title": "[PROG-2-10099] 姻緣單一流程實作：狀態機、結緣守門、存檔遷移、姻緣面板、吃醋事件",
     "category": "task"

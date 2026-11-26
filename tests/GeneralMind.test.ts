@@ -132,7 +132,7 @@ export function createGeneralMindSuite(): TestSuite {
             }
         }
         assert.isTrue(lines.size >= 1);
-        const braveTexts = BARK_FAIL.Brave.map(t => t.replace('{label}', '河北押運'));
+        const braveTexts = BARK_FAIL.Brave.map(t => t.replace('{label}', '河北押運').replace(/\{self\}/g, '某'));
         for (const text of lines) assert.isTrue(braveTexts.includes(text), '用豪爽型模板');
         // 連失兩回
         task(s, 'b', 2, 'FAIL');
@@ -152,7 +152,7 @@ export function createGeneralMindSuite(): TestSuite {
         assert.equals('', s.barkFor('zhang-fei', 'LOBBY', 1, ctx(BRAVE, 1)).text, '沒事件不說');
         task(s, 'a', 1, 'SUCCESS');
         const texts = [0, 1, 2, 3, 4, 5].map(seed => s.barkFor('zhang-fei', 'LOBBY', seed, ctx(BRAVE, 1)));
-        const okSet = [...BARK_SUCCESS.Brave.map(t => t.replace('{label}', '河北押運')), ...BARK_MOOD.HIGH.Brave];
+        const okSet = [...BARK_SUCCESS.Brave.map(t => t.replace('{label}', '河北押運').replace(/\{self\}/g, '某')), ...BARK_MOOD.HIGH.Brave.map(t => t.replace(/\{self\}/g, '某'))];
         for (const l of texts) assert.isTrue(okSet.includes(l.text), `成功後只說得意或高昂：${l.text}`);
         assert.equals('', s.barkFor('zhang-fei', 'LOBBY', 1, ctx(BRAVE, 30)).text, '久遠記憶不引用，心情已回 NORMAL');
         assert.isTrue(BARK_IDLE.Loyal.length > 0);
