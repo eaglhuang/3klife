@@ -1,5 +1,7 @@
 // PROG-2-10100：洪流漂流姿態（沉浮＋傾斜）與水花粒子的純邏輯測試
 import { FLOOD_DRIFT_TUNING, FLOOD_SPLASH_SPEC, dustCountFor, floodDriftSample, rollDustParticle } from '../assets/scripts/battle/shared/MoveFeedback';
+import { readFileSync } from 'fs';
+import { join } from 'path';
 import { TestSuite, assert } from './TestRunner';
 
 export function createFloodDriftSuite(): TestSuite {
@@ -33,6 +35,15 @@ export function createFloodDriftSuite(): TestSuite {
         assert.isTrue(p.lifeSec < 0.8 && p.lifeSec > 0.3, `壽命 ${p.lifeSec}`);
         assert.isTrue(p.color.b > p.color.r, `水花應偏青白而非土黃 ${JSON.stringify(p.color)}`);
         assert.isTrue(p.rise > 25, '水花應飄得比塵高');
+    });
+
+    suite.test('水流強制位移的完成訊號只看世界節點 tween（Spine 單位的 visualNode 隱藏、tween 不前進，否則 movingUnits 永遠清不掉）', () => {
+        const src = readFileSync(join(__dirname, '../assets/scripts/battle/views/UnitRenderer.ts'), 'utf8');
+        const fn = src.slice(src.indexOf('private playRiverCurrentMoveTween'), src.indexOf('public playGeneralHitAnimation('));
+        assert.isFalse(fn.includes('completedParts'), '不可再等兩段 tween 都完成');
+        assert.isTrue(fn.includes('this.movingUnits.delete(unit.id)') && fn.includes('this.carriedUnits.delete(unit.id)'), '完成時清移動中與漂流狀態');
+        const visualTween = fn.slice(fn.lastIndexOf('tween(view.visualNode)'));
+        assert.isFalse(visualTween.includes('.call('), 'visualNode 的 tween 不當完成條件');
     });
 
     return suite;

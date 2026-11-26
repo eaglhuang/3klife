@@ -944,29 +944,25 @@ export class UnitRenderer extends Component {
     view.visualNode.setPosition(originalVisualPos);
     view.visualNode.setRotationFromEuler(originalVisualEuler);
 
-    let completedParts = 0;
-    const finish = (): void => {
-      completedParts += 1;
-      if (completedParts < 2) {
-        return;
-      }
-      this.movingUnits.delete(unit.id);
-      this.carriedUnits.delete(unit.id);
-      view.worldNode.setWorldPosition(toPos);
-      view.visualNode.setPosition(originalVisualPos);
-      view.visualNode.setRotationFromEuler(originalVisualEuler);
-    };
-
+    // 以世界節點的位移 tween 作為完成訊號（PROG-2-10100）：有 Spine 的單位 visualNode 是隱藏的（active=false），
+    // 隱藏節點上的 tween 不會前進；以前要等兩段 tween 都完成，movingUnits 永遠清不掉，單位被水沖過一次
+    // 就一直被當成「移動中」（回合流程卡到逾時、疊層持續走路）。visualNode 的沉浮只是 3D 棋子的點綴，不當完成條件。
     tween(view.worldNode)
       .to(BATTLE_VISUAL_TIMING.moveAdvanceSec, { worldPosition: toPos }, { easing: 'linear' })
-      .call(finish)
+      .call(() => {
+        Tween.stopAllByTarget(view.visualNode);
+        this.movingUnits.delete(unit.id);
+        this.carriedUnits.delete(unit.id);
+        view.worldNode.setWorldPosition(toPos);
+        view.visualNode.setPosition(originalVisualPos);
+        view.visualNode.setRotationFromEuler(originalVisualEuler);
+      })
       .start();
 
     tween(view.visualNode)
       .to(sinkSec, { position: sinkVisualPos, eulerAngles: sinkVisualEuler }, { easing: 'quadOut' })
       .to(carrySec, { position: sinkVisualPos, eulerAngles: sinkVisualEuler }, { easing: 'linear' })
       .to(sinkSec, { position: originalVisualPos, eulerAngles: originalVisualEuler }, { easing: 'quadIn' })
-      .call(finish)
       .start();
   }
 
