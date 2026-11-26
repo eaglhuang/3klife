@@ -139,7 +139,7 @@ import { DISPATCH_JOB_CATALOG, dispatchBoardRows, findDispatchJob, type Dispatch
 import { registerBloodlineNames } from '../utils/PlayerFacingText';
 import { buildMercenaryPoolRows, filterPoolGeneralIds, type MercenaryPoolRow } from '../systems/MercenaryPoolPresenter';
 import { fallenOfficerOrigins } from '../systems/FallenOfficerMarket';
-import { acknowledgeOnboardingSegment, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
+import { acknowledgeOnboardingSegment, completeSortieHint, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
 import { carryOpeningLetterOnNewGame, FRESH_OPENING_LETTER, markOpeningLetterSeen, normalizeOpeningLetterState, OpeningLetterState } from '../systems/OpeningLetter';
 import { remarkRandomOf } from '../systems/SageRemarks';
 import { OfflineGeneralMindService } from '../mind/OfflineGeneralMindService';
@@ -1214,6 +1214,16 @@ export class GameSession implements AcademyRecordPort {
         this._onboarding = result.state;
         if (this._autoSave && this._save) await this.save();
         return result;
+    }
+
+    /**
+     * 玩家點了出征或進了戰鬥：關掉「去出征」提示並存檔（PROG-2-10067）。
+     * 沒有待辦提示時不動作、不存檔，可重複呼叫。
+     */
+    public async completeSortieHint(): Promise<void> {
+        if (this._onboarding.sortieHintPending !== true) return;
+        this._onboarding = completeSortieHint(this._onboarding);
+        if (this._autoSave && this._save) await this.save();
     }
 
     public get inventory(): PlayerInventory {

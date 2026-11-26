@@ -946,6 +946,7 @@
   "MATCHMAKER_GOTO_COMMERCE": "前往筹措银两",
   "MATCHMAKER_ENROLL_BUTTON": "纳为配偶（需礼金 %{cost} 银两）",
   "ui.hall.btn.expedition": "出征",
+  "ui.onboarding.sortie_hint": "史小境：别看了，点「出征」！对面已经在门口喊你名字了。",
   "ui.hall.btn.generals": "武将",
   "ui.hall.btn.domestic": "内政",
   "ui.hall.btn.domestic_network": "内政 / 人脉",
