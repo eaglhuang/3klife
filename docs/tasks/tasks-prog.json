@@ -18842,12 +18842,66 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_3115",
+      "id": "PROG-2-10053",
+      "title": "年終榜單玩家分數基底 600 調 850（PM 11/26 校準）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-26T12:14:49+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "year-end-ranking-config.json scoreFormula.base 600→850，目標新手第1年 900~1050；同步更新單元測試",
+      "related": [
+        "PROG-2-10050"
+      ],
+      "depends": [],
+      "acceptance": [
+        "base=850",
+        "YearEndCeremonyData／Mount 測試同步",
+        "run-cli 全過"
+      ],
+      "deliverables": [
+        "assets/resources/data/master/year-end-ranking-config.json",
+        "tests/YearEndCeremonyData.test.ts",
+        "tests/YearEndCeremonyMount.test.ts"
+      ],
+      "notes": "2026-11-26 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
     "done": 352,
-    "in_progress": 4,
+    "in_progress": 5,
     "open": 87,
-    "total": 443
+    "total": 444
   }
 }

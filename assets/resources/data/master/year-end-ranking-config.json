@@ -32,7 +32,7 @@
   "minRosterSize": 5,
   "scoreFormula": {
     "_comment": "玩家榜單分數：base + round(annualIncome×incomeRate) + prestige×prestigeWeight + childCount×childWeight + spouseCount×spouseWeight + academyScore（Antigravity 11/26 規格）。annualIncome＝本年家族銀兩入帳合計。",
-    "base": 600,
+    "base": 850,
     "incomeRate": 0.1,
     "prestigeWeight": 2,
     "childWeight": 80,

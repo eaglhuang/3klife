@@ -17260,5 +17260,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10050.md",
     "title": "[PROG-2-10050] 年終典禮補完：分數公式、賞賜入帳、驚喜獎、NPC i18n、演出強化",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3115",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10053.md",
+    "title": "[PROG-2-10053] 年終榜單玩家分數基底 600 調 850（PM 11/26 校準）",
+    "category": "task"
   }
 ]
