@@ -19349,7 +19349,8 @@
         "server/schema/sync06-patch-whitelist.ts",
         "tests/SeasonDigest.test.ts",
         "tests/mission/MissionDetailPresenter.test.ts",
-        "tools_node/playtest-online.js"
+        "tools_node/playtest-online.js",
+        "assets/resources/ui-spec/layouts/lobby-mission-detail-dialog-main.json"
       ],
       "notes": "2026-11-26 | 狀態: done | 驗證: run-cli 全過、tsc 0 錯、compute-gate standard 通過（僅既有 ui->battle 警告）、web 建置＋無頭 Chrome 1920 實玩（前 2 季只彈戰報＋事件，第 3 季完整，信箱紅點＋紀要列）| 變更: 新增 SeasonDigest／SeasonDigestView、MindRequestPanel 紀要列與紅點、存檔 seasonDigest（sync06 白名單同步）、任務詳情白話導讀（四語系）、playtest-online 增加信箱步驟 | 阻塞: none",
       "brief": {
