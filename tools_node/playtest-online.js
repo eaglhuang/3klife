@@ -1491,6 +1491,33 @@ async function main() {
             return rec.detail;
         }, { skipIfFailed: true });
 
+        // ── 3d. 季報紀要信箱（PROG-2-10068）：前 2 季任務回報與市井奇遇進信箱；有未讀紀要時入口要有紅點、點開看得到「季報紀要」列；第 3 季起不寫紀要則略過 ──
+        await step('lobby-season-digest-mailbox', async (rec) => {
+            await requireLobby();
+            await backToLobbyBar();
+            await closeMissionLayers();
+            await waitToastGone();
+            const state = await page.evaluate(() => {
+                let entry = null; let dot = null;
+                const walk = (n) => { if (n.name === 'BtnMindMailbox' && n.activeInHierarchy) { entry = n; const d = n.getChildByName('UnreadDot'); dot = d ? d.active : null; } n.children.forEach(walk); };
+                walk(window.cc.director.getScene());
+                return { entry: !!entry, dotActive: dot };
+            });
+            rec.detail.mailbox = state;
+            if (!state.entry) { rec.detail.note = '信箱入口不在（沒有待辦也沒有紀要），略過'; return rec.detail; }
+            await shot(rec, 'digest-entry');
+            await rm.click({ name: '^BtnMindMailbox$' }, '信箱入口');
+            await delay(800);
+            const texts = (await rm.textsUnder('^MindMailboxPanel$')) || [];
+            rec.detail.panelTexts = texts.slice(0, 12);
+            await shot(rec, 'digest-panel');
+            const hasDigest = texts.some((t) => /季報紀要/.test(t));
+            rec.detail.hasDigestRow = hasDigest;
+            await rm.tryClick({ name: '^BtnMindClose$' });
+            await delay(500);
+            return rec.detail;
+        }, { skipIfFailed: true });
+
         // ── 5. 人物介紹：第一位武將 → 每個分頁截圖 → 「命」分頁檢查血統樹 ──
         // ── 武將心智（PROG-2-9146，--mind）：派任務、換季之後點大廳小人讀泡泡台詞（要引用過去的決定或說出心情），並統計自告奮勇「!」標記 ──
         // 第一次進來時補經歷（呼叫大廳的 qaInjectMindHistory，PROG-2-9150）：小人泡泡會引用那次任務，下一次換季武將來信

@@ -253,7 +253,7 @@
                         "name": "IntelFogMask",
                         "id": "intelFogMask",
                         "widget": { "left": 16, "right": 16, "bottom": 14 },
-                        "height": 58,
+                        "height": 84,
                         "skinSlot": "mission.dialog.fog.mask",
                         "_doc": "情報度未滿 100% 時顯示；內容由 intelRevealPercent / intelFogVisible 決定。",
                         "bind": "intelFogVisible",
@@ -261,8 +261,9 @@
                           {
                             "type": "label",
                             "name": "IntelFogLabel",
-                            "widget": { "top": 17, "left": 0, "right": 0 },
-                            "height": 20,
+                            "widget": { "top": 10, "left": 0, "right": 0 },
+                            "height": 64,
+                            "_doc": "PROG-2-10068：提示列可帶白話導讀共兩行，高度留 3 行（原 20 會讓兩行字縮成小字）。",
                             "text": "目前情報仍不完整，派探子再探可看得更清楚",
                             "styleSlot": "mission.dialog.label.muted"
                           }

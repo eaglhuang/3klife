@@ -19412,12 +19412,75 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_3137",
+      "id": "PROG-2-10068",
+      "title": "首年前 2 季季報彈窗精簡：任務回報與市井奇遇併進信箱，任務詳情加白話導讀",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-26T18:25:07+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "11/26 新手稽核 C6：首次推進一季連彈 5 層報表。Y1 春夏只彈戰報＋1 個決策事件，任務回報與市井奇遇併進信箱（未讀紅點），任務詳情行話加白話導讀；第 3 季起維持完整流程。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [
+        "assets/scripts/core/systems/SeasonDigest.ts",
+        "assets/scripts/ui/components/mind/SeasonDigestView.ts",
+        "assets/scripts/ui/components/mind/MindRequestPanel.ts",
+        "assets/scripts/core/managers/GameSession.ts",
+        "assets/scripts/core/services/PlayerSaveService.ts",
+        "assets/scripts/core/systems/SeasonReportPanel.ts",
+        "assets/scripts/ui/components/SeasonReportComposite.ts",
+        "assets/scripts/ui/mission/MissionDetailPresenter.ts",
+        "assets/scripts/ui/scenes/LobbyScene.ts",
+        "assets/resources/i18n/zh-TW.json",
+        "assets/resources/i18n/zh-CN.json",
+        "assets/resources/i18n/en.json",
+        "assets/resources/i18n/ja.json",
+        "server/schema/sync06-patch-whitelist.ts",
+        "tests/SeasonDigest.test.ts",
+        "tests/mission/MissionDetailPresenter.test.ts",
+        "tools_node/playtest-online.js",
+        "assets/resources/ui-spec/layouts/lobby-mission-detail-dialog-main.json"
+      ],
+      "notes": "2026-11-26 | 狀態: done | 驗證: run-cli 全過、tsc 0 錯、compute-gate standard 通過（僅既有 ui->battle 警告）、web 建置＋無頭 Chrome 1920 實玩（前 2 季只彈戰報＋事件，第 3 季完整，信箱紅點＋紀要列）| 變更: 新增 SeasonDigest／SeasonDigestView、MindRequestPanel 紀要列與紅點、存檔 seasonDigest（sync06 白名單同步）、任務詳情白話導讀（四語系）、playtest-online 增加信箱步驟 | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
-    "done": 360,
+    "done": 361,
     "in_progress": 5,
     "open": 88,
-    "total": 454
+    "total": 455
   }
 }
