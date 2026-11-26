@@ -14,6 +14,7 @@ import { DEFAULT_ITEM_CONFIG, type ItemConfigV1 } from '../../../shared/item/Ite
 import { DEFAULT_REWARD_CONFIG, type RewardConfigV1 } from '../../../shared/reward/RewardConfig';
 import { DEFAULT_STORY_CONFIG, type StoryConfigV1 } from '../../../shared/story/StoryConfig';
 import { registerFamilyCommands, type FamilyHost } from './FamilyCommands';
+import { registerChildGrowthCommands, type ChildGrowthHost } from './ChildGrowthCommands';
 import { registerDebugCommands, type DebugHost } from './DebugCommands';
 import { registerItemCommands, type ItemAuthority } from './ItemCommands';
 import { registerStoryCommands, type StoryAuthority, type StoryEffectHandler, type StoryPorts } from './StoryCommands';
@@ -40,6 +41,8 @@ export interface LocalApiBundle {
     setDebugHost(host: DebugHost | null): void;
     /** 綁定家族宿主（配偶納入名冊；PROG-2-9582） */
     setFamilyHost(host: FamilyHost | null): void;
+    /** 綁定子嗣成長宿主（親子好感、小名碎片、同窗好友帳本；PROG-2-10058） */
+    setChildGrowthHost(host: ChildGrowthHost | null): void;
     /** 綁定學府宿主（單機＝GameSession）：save.read／save.write（domain=academy）與 rng.issueSeed */
     setAcademyHost(host: AcademyHost | null): void;
     setItemAuthority(authority: ItemAuthority | null): void;
@@ -74,6 +77,7 @@ export function createLocalApi(store: LocalSaveStore, opts: LocalApiAdapterOptio
     let occupancyHost: OccupancyHost | null = null;
     let debugHost: DebugHost | null = null;
     let familyHost: FamilyHost | null = null;
+    let childGrowthHost: ChildGrowthHost | null = null;
     let academyHost: AcademyHost | null = null;
     let rewardAuthority: RewardAuthority | null = null;
     let rewardConfig: RewardConfigV1 = DEFAULT_REWARD_CONFIG;
@@ -95,6 +99,7 @@ export function createLocalApi(store: LocalSaveStore, opts: LocalApiAdapterOptio
     registerStoryCommands(api, () => ({ authority: storyAuthority, config: storyConfig, handlers: storyHandlers, ...storyHooks }));
     registerOccupancyCommands(api, () => occupancyHost);
     registerFamilyCommands(api, () => familyHost);
+    registerChildGrowthCommands(api, () => childGrowthHost);
     registerDebugCommands(api, () => debugHost, () => wallet);
     registerAcademyHostCommands(api, () => academyHost);
     registerQuestCommands(api, () => ({ authority: questAuthority, config: questConfig, kinds: questKinds, ...questHooks }));
@@ -103,6 +108,7 @@ export function createLocalApi(store: LocalSaveStore, opts: LocalApiAdapterOptio
         setWallet: (next) => { wallet = next; },
         setDebugHost: (next) => { debugHost = next; },
         setFamilyHost: (next) => { familyHost = next; },
+        setChildGrowthHost: (next) => { childGrowthHost = next; },
         setItemAuthority: (next) => { authority = next; },
         setItemConfig: (next) => { config = next; },
         setRewardAuthority: (next) => { rewardAuthority = next; },

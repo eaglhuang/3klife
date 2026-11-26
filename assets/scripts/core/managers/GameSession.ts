@@ -255,6 +255,9 @@ import {
 import type { NurtureAwakeningHooks } from '../services/NurtureService';
 import { buildStarterRoster, pickStartingLead, STARTER_CORE_GENERAL_ID, StarterRosterOptions } from '../services/StarterRosterService';
 import { buildStarterYouth, getStarterYouthConfig } from '../services/StarterYouthService';
+import { buildStarterSeedling, getStarterSeedlingConfig } from '../services/StarterSeedlingService';
+import type { ChildGrowthHost } from '../api/localserver/ChildGrowthCommands';
+import { CHILD_FAVOR_DEFAULT, cloneChildLedger, childFavorOf, emptyChildLedger, isEmptyChildLedger, normalizeChildLedger, seedChildFavor, type BloodlineChildLedgerState } from '../systems/BloodlineChildLedger';
 import { resolveFactorColor } from '../systems/FactorInheritance';
 import { insertSpiritCard, replaceSpiritCard, setPrimarySpiritCard, unequipSpiritCard, type SpiritSlotFlowResult } from '../systems/SpiritSlotFlow';
 import type { FactorColor, FactorDefinition, FactorDictionary } from '../systems/FactorInheritance';
@@ -1008,6 +1011,8 @@ export class GameSession implements AcademyRecordPort {
     private _rewardApi: IApiClient | null = null;
     /** 結緣成功的本機端紀錄（BRD-12）；隨既有玩家存檔保存（PROG-2-1146） */
     private _breedingBirthRecords: BreedingBirthRecord[] = [];
+    /** 親子好感、天賦小名碎片、同窗好友旗標（PROG-2-10058）；存於 bloodlineChildLedger，舊存檔缺欄位視為空帳本 */
+    private _childLedger: BloodlineChildLedgerState = emptyChildLedger();
     /** 世家系統解鎖旗標（PM 暫定）：第一位子嗣誕生時寫入；舊檔以出生紀錄推導。 */
     private _familySystemUnlockedFlag = false;
     /** 結緣媒人首次紅娘叩門完成旗標（PROG-2-9613）：開場教學後首次換季完成後寫入，讀檔不重複 */
@@ -2657,6 +2662,28 @@ export class GameSession implements AcademyRecordPort {
         return normalizeBreedingBirthRecords(this._breedingBirthRecords);
     }
 
+    /** 親子好感、天賦小名碎片、同窗好友旗標的唯讀複本（PROG-2-10058）；寫入只在 GameSession 內，玩法與 UI 走 family.* 命令 */
+    public childLedger(): BloodlineChildLedgerState {
+        return cloneChildLedger(this._childLedger);
+    }
+
+    /** 子嗣成長宿主（PROG-2-10058）：給 family.childLedger 命令讀帳本；寫入不開放，由權威端成長事件結算入帳 */
+    public get childGrowthHost(): ChildGrowthHost {
+        return {
+            childLedger: () => ({
+                favor: { ...this._childLedger.favor },
+                favorDefault: CHILD_FAVOR_DEFAULT,
+                epithetFragments: this._childLedger.epithetFragments,
+                classmateFriends: { ...this._childLedger.classmateFriends },
+            }),
+        };
+    }
+
+    /** 單一子嗣的親子好感（沒紀錄回預設值） */
+    public childFavor(childId: string): number {
+        return childFavorOf(this._childLedger, childId);
+    }
+
     /** 解析全球征途階段（MVP-13）：指定階段已啟用就用它；未知或未啟用則回到第一個可玩階段 */
     public resolveCampaignStage(requestedId: string | undefined): CampaignStageDef {
         if (requestedId !== undefined && isCampaignStagePlayable(requestedId)) {
@@ -3033,6 +3060,7 @@ export class GameSession implements AcademyRecordPort {
         this._family.reset();
         this._storyMeta = emptyStoryMeta();
         this._breedingBirthRecords = [];
+        this._childLedger = emptyChildLedger();
         this._familySystemUnlockedFlag = false;
         this._matchmakerFirstVisitDone = false;
         this._openingPhase = null;
@@ -3146,6 +3174,16 @@ export class GameSession implements AcademyRecordPort {
                 initialRoster.push(buildStarterYouth(adult, youthConfig));
                 // Q-F1：開局少年是「開局義子特例」——標記義子、進家譜、可入學、不遺傳血統
                 this._family.seedStarterAdoptee(youthId, this._clock.state.totalSeasonsElapsed);
+            }
+        }
+        // 開局幼苗（PROG-2-10058）：7 歲自家孩子，與親生子嗣共用名冊武將＋家族登記；父＝核心主將，來源 starter
+        if (options.includeStarterSeedling !== false) {
+            const seedlingConfig = options.starterSeedlingConfig ?? getStarterSeedlingConfig();
+            if (!initialRoster.some(general => general.id === seedlingConfig.childId)) {
+                const seedling = buildStarterSeedling(initialRoster, { coreGeneralId: coreId, config: seedlingConfig, random: this._random });
+                initialRoster.push(seedling);
+                this._family.seedStarterSeedling(seedling.id, seedling.fatherId ? [seedling.fatherId] : [], this._clock.state.totalSeasonsElapsed);
+                this._childLedger = seedChildFavor(this._childLedger, seedling.id, seedlingConfig.initialFavor);
             }
         }
         this._roster.replaceAll(normalizeRosterRoles(initialRoster));
@@ -7687,6 +7725,7 @@ export class GameSession implements AcademyRecordPort {
             ...(this._travel ? { travelCountdown: { ...this._travel } } : {}),
             sortiePresets: { ...this._sortiePresets },
             ...(this._breedingBirthRecords.length > 0 ? { breedingBirthRecords: this.breedingBirthRecords() } : {}),
+            ...(isEmptyChildLedger(this._childLedger) ? {} : { bloodlineChildLedger: cloneChildLedger(this._childLedger) }),
         };
     }
 
@@ -7965,6 +8004,7 @@ export class GameSession implements AcademyRecordPort {
         this._sortieSupport = { strategistUid: null, deputyUid: null };
         this._sortiePresets = normalizeSortiePresets(snapshot.sortiePresets);
         this._breedingBirthRecords = normalizeBreedingBirthRecords(snapshot.breedingBirthRecords);
+        this._childLedger = normalizeChildLedger(snapshot.bloodlineChildLedger);
         this._travel = normalizeTravelCountdown(snapshot.travelCountdown);
         this._countdown = normalizeCountdownState(snapshot.countdown);
         const progress = normalizeDiscoveryProgress(snapshot.discoveryLevel, snapshot.discoveryExp);

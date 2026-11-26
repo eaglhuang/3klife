@@ -1,6 +1,7 @@
 // @spec-source → 新手開場規格書.md §6、§7.2、§8
 import type { GeneralConfig } from '../models/GeneralUnit';
 import type { StarterYouthConfig } from './StarterYouthService';
+import type { StarterSeedlingConfig } from './StarterSeedlingService';
 
 export const STARTER_GENERAL_IDS = ['zhang-fei', 'wei-yan', 'xiahou-dun', 'zhang-he', 'sun-ce', 'gan-ning'] as const;
 export type StarterGeneralId = typeof STARTER_GENERAL_IDS[number];
@@ -34,6 +35,10 @@ export interface StarterRosterOptions {
     includeStarterYouth?: boolean;
     /** 覆寫少年名將設定（未提供時用 starter-youth-config.json） */
     starterYouthConfig?: StarterYouthConfig;
+    /** 是否附贈 7 歲幼苗（預設 true；僅新局流程使用，舊存檔不補送；PROG-2-10058） */
+    includeStarterSeedling?: boolean;
+    /** 覆寫幼苗設定（未提供時用 starter-seedling-config.json） */
+    starterSeedlingConfig?: StarterSeedlingConfig;
 }
 
 function copyValue<T>(value: T): T {
