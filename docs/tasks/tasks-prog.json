@@ -18896,12 +18896,69 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-10055",
+      "title": "驗收併入 Antigravity 血統第 3~5 年成長小事件資料與四語系（僅資料，尚未接程式）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-26T13:38:15+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "僅資料，尚未接程式。併入 antigravity/bloodline-y3y5-events-data（commit 6c8607e13）：bloodline-y3y5-events.json 與四語系 i18n 新增 key。事件觸發點、存檔欄位、UI 彈窗待另開實作卡。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "JSON 可解析且第3/4/5年各一件各兩選項",
+        "四語系新 key 一致且皆有值",
+        "meta uuid 不重複",
+        "run-cli 全過",
+        "compute-gate standard 通過"
+      ],
+      "deliverables": [
+        "assets/resources/data/master/bloodline-y3y5-events.json",
+        "assets/resources/data/master/bloodline-y3y5-events.json.meta",
+        "assets/resources/i18n/zh-TW.json",
+        "assets/resources/i18n/zh-CN.json",
+        "assets/resources/i18n/en.json",
+        "assets/resources/i18n/ja.json"
+      ],
+      "notes": "2026-11-26 | 狀態: done | 驗證: run-cli 9708 全過、compute-gate standard | 變更: 僅資料，尚未接程式（事件觸發點、存檔欄位、UI 彈窗待另開卡） | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
-    "done": 352,
+    "done": 353,
     "in_progress": 5,
     "open": 87,
-    "total": 444
+    "total": 445
   }
 }
