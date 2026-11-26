@@ -1,0 +1,14 @@
+{
+  "_comment": "首戰教學浮窗擺放（PROG-2-10061）：只用錨點與畫面寬高比例；region 之外（右下拇指區、下緣操作鈕）不放；forbidden 為區域內另禁放的矩形（接戰區核心）。cards 為展開卡尺寸候選：寬度 = 畫面寬 × widthRatio 夾在 min/max，高度為設計像素。",
+  "anchor": "bottom-left",
+  "margin": 16,
+  "step": 16,
+  "region": { "x": 0, "y": 0.6, "width": 0.56, "height": 0.4 },
+  "forbidden": [
+    { "x": 0.3, "y": 0.3, "width": 0.45, "height": 0.3 }
+  ],
+  "cards": [
+    { "widthRatio": 0.34, "minWidth": 360, "maxWidth": 720, "height": 248 },
+    { "widthRatio": 0.26, "minWidth": 360, "maxWidth": 480, "height": 308 }
+  ]
+}
