@@ -18,15 +18,34 @@ function renderEditorHookManifest(manifest) {
 }
 
 function renderAlwaysStep(step) {
-  return [
-    step.run,
-    'RESULT=$?',
+  const lines = [];
+  if (step.comment) {
+    lines.push(...String(step.comment).split('\n').map((line) => `# ${line}`));
+  }
+  if (step.fallback) {
+    // Worktrees that lack the primary tool (for example the mailbox branch,
+    // which still runs this hook through core.hooksPath) run the fallback.
+    lines.push(`if [ -f ${step.fallback.whenMissing} ]; then`);
+    lines.push(`  ${step.run}`);
+    lines.push('  RESULT=$?');
+    lines.push('else');
+    if (step.fallback.announce) {
+      lines.push(`  echo "${step.fallback.announce}"`);
+    }
+    lines.push(`  ${step.fallback.run}`);
+    lines.push('  RESULT=$?');
+    lines.push('fi');
+  } else {
+    lines.push(step.run, 'RESULT=$?');
+  }
+  lines.push(
     '',
     'if [ $RESULT -ne 0 ]; then',
     ...step.failMessages.map((message) => `  echo "${message}"`),
     '  exit $RESULT',
     'fi',
-  ];
+  );
+  return lines;
 }
 
 function renderMatchAssignment(step) {
@@ -68,6 +87,9 @@ function renderStagedMatchStep(step) {
 function renderPreCommitHook(preCommit) {
   const lines = ['#!/bin/sh', ''];
   const steps = preCommit.steps || [];
+  if (steps.some((step) => step.fallback)) {
+    lines.push('HOOK_DIR=$(cd "$(dirname "$0")" && pwd)', '');
+  }
   steps.forEach((step, index) => {
     if (step.kind === 'always') {
       lines.push(...renderAlwaysStep(step));

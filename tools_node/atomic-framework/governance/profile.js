@@ -107,6 +107,14 @@ function validateGovernanceProfile(profile) {
         validateString(errors, step.kind, `gitHooks.preCommit.steps[${index}].kind`);
         validateString(errors, step.run, `gitHooks.preCommit.steps[${index}].run`);
         validateStringArray(errors, step.failMessages, `gitHooks.preCommit.steps[${index}].failMessages`);
+        if (step.fallback !== undefined) {
+          if (step.kind !== 'always' || !step.fallback || typeof step.fallback !== 'object') {
+            errors.push(`gitHooks.preCommit.steps[${index}].fallback must be an object on an always step`);
+          } else {
+            validateString(errors, step.fallback.whenMissing, `gitHooks.preCommit.steps[${index}].fallback.whenMissing`);
+            validateString(errors, step.fallback.run, `gitHooks.preCommit.steps[${index}].fallback.run`);
+          }
+        }
         if (step.kind === 'staged-match') {
           validateString(errors, step.variableName, `gitHooks.preCommit.steps[${index}].variableName`);
           validateString(errors, step.diffFilter, `gitHooks.preCommit.steps[${index}].diffFilter`);

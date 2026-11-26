@@ -53,7 +53,13 @@
         {
           "id": "encoding-integrity",
           "kind": "always",
+          "comment": "Worktrees that do not carry tools_node (e.g. the mailbox branch, which still\nruns this hook via core.hooksPath) use the built-in staged BOM/U+FFFD check.",
           "run": "node tools_node/check-encoding-integrity.js --staged",
+          "fallback": {
+            "whenMissing": "tools_node/check-encoding-integrity.js",
+            "announce": "[pre-commit] tools_node/check-encoding-integrity.js not found in this worktree; running built-in staged encoding check",
+            "run": "node \"$HOOK_DIR/staged-encoding-fallback.js\""
+          },
           "failMessages": [
             "pre-commit blocked: encoding integrity check failed."
           ]

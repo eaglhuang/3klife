@@ -20020,6 +20020,9 @@
       "deliverables": [
         ".githooks/pre-commit",
         ".githooks/staged-encoding-fallback.js",
+        "tools_node/adapters/atm-3klife/governance-profile.json",
+        "tools_node/atomic-framework/governance/renderers.js",
+        "tools_node/atomic-framework/governance/profile.js",
         "tools_node/test/precommit-encoding-fallback.test.js"
       ],
       "notes": "2026-11-27 | 狀態: in-progress | 驗證: pending | 變更: ATM專家應 3klife總PM 要求開卡 | 阻塞: 無",
