@@ -443,6 +443,42 @@ function installPageHelpers() {
             return out;
         },
         /**
+         * 委任放招計數（PROG-2-10074）：包住控制器的 runDelegateSkillPhase，逐次記回合、奧義／計謀是否放出與當下 SP／計謀點。
+         * 每個控制器只包一次；委任未開（delegateQuality 為空）時 delegating 為 false，用來確認自動代打真的開啟。
+         */
+        hookDelegateCasts: () => {
+            const comp = window.__ptBattleComp;
+            const ctrl = comp && comp.sceneContext ? comp.sceneContext.ctrl : null;
+            if (!ctrl || typeof ctrl.runDelegateSkillPhase !== 'function') return false;
+            if (ctrl.__ptCastHooked) return true;
+            const orig = ctrl.runDelegateSkillPhase.bind(ctrl);
+            window.__ptCasts = [];
+            ctrl.runDelegateSkillPhase = () => {
+                const g = ctrl.state && ctrl.state.playerGeneral;
+                let tp = null;
+                try { tp = ctrl.getPlayerTacticPointState(); } catch (e) { tp = null; }
+                const res = orig();
+                window.__ptCasts.push({ round: window.__ptRound, ultimate: Boolean(res && res.ultimate), tactic: Boolean(res && res.tactic), sp: g ? g.currentSp : null, tp: tp ? tp.current : null, delegating: Boolean(ctrl.delegateQuality), t: Math.round(performance.now()) });
+                return res;
+            };
+            ctrl.__ptCastHooked = true;
+            return true;
+        },
+        /** 放招彙整：呼叫次數、奧義／計謀放出次數、第一招出現在第幾回合 */
+        castSummary: () => {
+            const calls = window.__ptCasts || [];
+            const hit = calls.filter((c) => c.ultimate || c.tactic);
+            return {
+                calls: calls.length,
+                ultimateCount: calls.filter((c) => c.ultimate).length,
+                tacticCount: calls.filter((c) => c.tactic).length,
+                castTotal: calls.filter((c) => c.ultimate).length + calls.filter((c) => c.tactic).length,
+                firstCastRound: hit.length ? hit[0].round : null,
+                delegating: calls.length ? calls[calls.length - 1].delegating : null,
+                log: calls,
+            };
+        },
+        /**
          * 每回合各段演出實測秒數取樣器（PROG-2-9803）：每 50ms 讀一次 battleState，
          * 把狀態切成連續區段：idle＝我方可操作、advance＝回合推進中、enemyThinking＝敵軍思考中、duel＝單挑、ult＝奧義演出。
          * 每段記起迄時間與所屬回合（window.__ptRound 由 QA 迴圈更新）。
@@ -1716,11 +1752,18 @@ async function main() {
             const battleShotMs = Number(args['battle-shots']) || 0;
             let lastBattleShotAt = 0;
             let battleShotIndex = 0;
+            let castShotTaken = false;
             while (!settled) {
                 if (battleShotMs > 0 && Date.now() - lastBattleShotAt >= battleShotMs) {
                     lastBattleShotAt = Date.now();
                     battleShotIndex += 1;
                     await page.screenshot({ path: path.join(outDir, `bt-${String(battleShotIndex).padStart(3, '0')}.png`) }).catch(() => {});
+                }
+                // 放招計數（PROG-2-10074）：包住委任放招階段；第一次放出招時擷取畫面
+                await page.evaluate(() => window.__pt.hookDelegateCasts()).catch(() => false);
+                if (!castShotTaken) {
+                    const cs = await page.evaluate(() => window.__pt.castSummary()).catch(() => null);
+                    if (cs && cs.castTotal > 0) { castShotTaken = true; await shot(rec, 'first-cast').catch(() => undefined); }
                 }
                 if (opts.probeTactic && !tacticProbe) {
                     const st = await page.evaluate(() => window.__pt.battleState()).catch(() => null);
@@ -1765,6 +1808,14 @@ async function main() {
             }
             rec.detail.settledBy = settled;
             rec.detail.battleMs = Date.now() - battleT0;
+            {
+                const cs = await page.evaluate(() => window.__pt.castSummary()).catch(() => null);
+                if (cs) {
+                    rec.detail.casts = cs;
+                    (report.casts = report.casts || []).push({ step: rec.name, ...cs });
+                    console.log(`[playtest] 放招：${rec.name} 委任階段 ${cs.calls} 次、放招 ${cs.castTotal} 次（奧義 ${cs.ultimateCount}／計謀 ${cs.tacticCount}），第一招在第 ${cs.firstCastRound ?? '—'} 回合，自動代打${cs.delegating ? '已開啟' : '未開啟'}`);
+                }
+            }
             if (opts.probeTactic) {
                 const fb = rec.detail.firstBattle;
                 if (!fb.tactic) fb.tactic = { ok: false, reason: 'NEVER_ATTEMPTED（戰鬥期間沒有出現我方可放招的時機）', attempts: tacticAttempts, noEnemyPolls };

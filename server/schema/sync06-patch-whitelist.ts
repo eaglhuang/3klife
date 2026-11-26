@@ -106,6 +106,7 @@ export const SYNC_PATCH_ROOT_KEYS: readonly string[] = [
     'femaleSources',
     'pendingLifespanDeaths',
     'yearAgingEvents',
+    'year1Goals',
     'gachaPity',
     'gachaWallet',
     'resources',
