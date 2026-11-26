@@ -13,7 +13,8 @@
  * Unity 對照：BattleUIManager（掛 Canvas 根的 Coordinator Component）
  */
 import { _decorator, Component, Node, UITransform, Widget, Button, Label, Vec3 } from 'cc';
-import { battleCoachPlacement, battleCoachIsObstacle, type CoachRect } from '../core/BattleCoachPlacement';
+import { battleCoachPlacement, battleCoachIsObstacle, parseCoachPlacementConfig, DEFAULT_COACH_PLACEMENT, type CoachPlacementConfig, type CoachRect } from '../core/BattleCoachPlacement';
+import type { OperationHint } from '../../core/systems/FirstBattleOperationGuide';
 import { UIScreenPreviewHost } from './UIScreenPreviewHost';
 import { placeTutorialTarget } from '../core/OnboardingTargetHighlight';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
@@ -72,11 +73,30 @@ export class BattleScenePanel extends Component {
     private _guideHost: UIScreenPreviewHost | null = null;
     private _guideMount: Promise<void> | null = null;
     private _guideMinimized = false;
+    /** 玩家在「預設收成頁籤」的步驟主動展開過的提示 key；換步驟即失效 */
+    private _guideTabOverrideKey: string | null = null;
     private _guideControlsBound = false;
     private readonly _guideLayoutTick = (): void => { this._layoutOperationGuide(); };
-    private _guideHint: { message: string; target: string } | null = null;
+    private _guideHint: OperationHint | null = null;
+    /** 教學浮窗擺放資料（data/battle-coach-placement.json）；載入前／失敗時用內建預設 */
+    private _coachConfig: CoachPlacementConfig = DEFAULT_COACH_PLACEMENT;
+    private _coachConfigLoad: Promise<void> | null = null;
+    private _loadCoachConfig(): Promise<void> {
+        this._coachConfigLoad ??= services().resource.loadJson<unknown>('data/battle-coach-placement')
+            .then(raw => { this._coachConfig = parseCoachPlacementConfig(raw); })
+            .catch(() => { this._coachConfig = DEFAULT_COACH_PLACEMENT; });
+        return this._coachConfigLoad;
+    }
+    /** 教學文字走 i18n；查不到（回傳 key 本身）就用 zh-TW 後備文字 */
+    private _guideText(hint: OperationHint): string {
+        const i18n = services().i18n;
+        const base = hint.key ? i18n.t(hint.key) : hint.message;
+        if (hint.key && base === hint.key) return hint.message;
+        const suffix = hint.suffixKey ? i18n.t(hint.suffixKey, ...(hint.suffixArgs ?? [])) : '';
+        return suffix && suffix !== hint.suffixKey ? `${base} ${suffix}` : base;
+    }
 
-    private async _showOperationGuide(hint: { message: string; target: string } | null): Promise<void> {
+    private async _showOperationGuide(hint: OperationHint | null): Promise<void> {
         this._guideHint = hint;
         if (!hint) { if (this._guideHost) this._guideHost.node.active = false; return; }
         if (!this._guideHost) {
@@ -91,7 +111,7 @@ export class BattleScenePanel extends Component {
             this._guideHost = node.addComponent(UIScreenPreviewHost);
             this._guideMount = this._guideHost.showScreen('battle-operation-guide-screen');
         }
-        try { await this._guideMount; }
+        try { await Promise.all([this._guideMount, this._loadCoachConfig()]); }
         catch (error) { UCUFLogger.error(LogCategory.UI, '首戰操作提示載入失敗', error); return; }
         if (!this.node.isValid || !this._guideHost.node.isValid) return;
         const current = this._guideHint;
@@ -103,7 +123,7 @@ export class BattleScenePanel extends Component {
             binder?.getNode('guidePrevious')?.on(Button.EventType.CLICK, () => services().event.emit('first-battle-guide-previous', undefined), this);
             binder?.getNode('guideNext')?.on(Button.EventType.CLICK, () => services().event.emit('first-battle-guide-next', undefined), this);
             binder?.getNode('guideMinimize')?.on(Button.EventType.CLICK, () => { this._guideMinimized = true; this._layoutOperationGuide(); }, this);
-            binder?.getNode('guideResume')?.on(Button.EventType.CLICK, () => { this._guideMinimized = false; this._layoutOperationGuide(); }, this);
+            binder?.getNode('guideResume')?.on(Button.EventType.CLICK, () => { this._guideMinimized = false; this._guideTabOverrideKey = this._guideHint?.key ?? null; this._layoutOperationGuide(); }, this);
             this.schedule(this._guideLayoutTick, 0.25);
         }
         this._layoutOperationGuide();
@@ -138,19 +158,22 @@ export class BattleScenePanel extends Component {
             for (const child of n.children) visit(child, covered || blocks);
         };
         if (this.node.parent) visit(this.node.parent);
-        const expanded = !this._guideMinimized && battleCoachPlacement(root.width,root.height,obstacles);
+        const tabbedStep = !!current.key && this._coachConfig.tabHintKeys.includes(current.key) && this._guideTabOverrideKey !== current.key;
+        const expanded = !this._guideMinimized && !tabbedStep && battleCoachPlacement(root.width,root.height,obstacles,false,this._coachConfig);
         const compact = !expanded;
-        const rect = expanded || battleCoachPlacement(root.width,root.height,obstacles,true);
+        const rect = expanded || battleCoachPlacement(root.width,root.height,obstacles,true,this._coachConfig);
         binder?.setActives({ guideCard: !!rect && !compact, guideResume: !!rect && compact });
-        binder?.setTexts({ guideText: current.message });
+        binder?.setTexts({ guideText: this._guideText(current) });
         const panel = binder?.getNode(compact ? 'guideResume' : 'guideCard');
         if (panel && rect) {
             const widget = panel.getComponent(Widget);
             if (widget) widget.enabled = false;
             panel.getComponent(UITransform)?.setContentSize(rect.width,rect.height);
+            // 先排子節點：引擎的 Widget.updateAlignment 會連父節點的（已停用）版面 widget 一起套回，
+            // 把位置拉回版面預設的上方置中；所以最後才設定浮窗位置。
+            for (const child of panel.children) child.getComponent(Widget)?.updateAlignment();
             panel.setPosition(rect.x+rect.width/2-root.width*root.anchorX,
                 root.height*(1-root.anchorY)-rect.y-rect.height/2,0);
-            for (const child of panel.children) child.getComponent(Widget)?.updateAlignment();
         }
         placeTutorialTarget(binder, compact ? null : target);
     }
@@ -292,7 +315,7 @@ export class BattleScenePanel extends Component {
 
     private _subscribeEvents(): void {
         this._unsubs.push(
-            services().event.on('first-battle-guide', hint => { void this._showOperationGuide(hint as { message: string; target: string } | null); }),
+            services().event.on('first-battle-guide', hint => { void this._showOperationGuide(hint as OperationHint | null); }),
             // [P3-R1c] 訂閱 UI_EVENTS.CardSelected（由 TigerTallyPanel._onCardClick 發送）
             // 取代舊有的 onCardSelect 函式指標注入，消除 _wireCallbacks 的時序依賴
             services().event.on(UI_EVENTS.CardSelected, (payload: { index: number; data: TallyCardData }) => {

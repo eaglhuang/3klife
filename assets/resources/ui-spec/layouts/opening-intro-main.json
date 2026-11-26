@@ -29,7 +29,7 @@
           "vCenter": true
         },
         "width": 1400,
-        "height": 600,
+        "height": 640,
         "skinSlot": "oi.card.bg",
         "children": [
           {
@@ -37,53 +37,41 @@
             "name": "IntroText",
             "id": "introText",
             "widget": {
-              "top": 60,
+              "top": 50,
               "left": 60
             },
-            "height": 300,
+            "height": 540,
             "text": "",
             "styleSlot": "oi.label.body",
             "width": 1280
-          },
+          }
+        ]
+      },
+      {
+        "type": "button",
+        "name": "BtnIntroNext",
+        "id": "btnIntroNext",
+        "widget": {
+          "bottom": 56,
+          "right": 72
+        },
+        "width": 220,
+        "height": 64,
+        "skinSlot": "oi.button.bg",
+        "_doc": "PROG-2-10064：右下「略過」；長卷自動播完，不必點擊",
+        "children": [
           {
             "type": "label",
-            "name": "IntroStep",
-            "id": "introStep",
+            "name": "BtnIntroNextLabel",
+            "id": "btnIntroNextLabel",
             "widget": {
-              "top": 480,
-              "left": 60
+              "vCenter": true,
+              "left": 0,
+              "right": 0
             },
-            "height": 30,
-            "text": "",
-            "styleSlot": "oi.label.meta",
-            "width": 300
-          },
-          {
-            "type": "button",
-            "name": "BtnIntroNext",
-            "id": "btnIntroNext",
-            "widget": {
-              "top": 460,
-              "left": 1060
-            },
-            "width": 280,
-            "height": 64,
-            "skinSlot": "oi.button.bg",
-            "children": [
-              {
-                "type": "label",
-                "name": "BtnIntroNextLabel",
-                "id": "btnIntroNextLabel",
-                "widget": {
-                  "vCenter": true,
-                  "left": 0,
-                  "right": 0
-                },
-                "height": 40,
-                "text": "繼續",
-                "styleSlot": "oi.label.button"
-              }
-            ]
+            "height": 40,
+            "text": "略過",
+            "styleSlot": "oi.label.button"
           }
         ]
       }

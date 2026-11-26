@@ -64,7 +64,7 @@ puppeteer-core 從本 repo 的 `node_modules` 找；在 git worktree 內會自�
 
 - 大廳選單用底欄 `BtnCat*` 加子選單文字（`BtnSub0..4` 同名，靠鈕上文字辨認：商店→轉蛋、武將→武將名冊、出征→戰場）；`lobby-menu-map` 步驟會把每個分類的子選單記進報告。
 - 人物介紹分頁用鈕上文字首字（將／屬／命／技／寶／兵）辨認；血統樹底板量 `Ds3BloodlineTree`（左區；`TabBloodlineContent` 是右欄 560 寬的分頁內容，不是血統樹）。
-- 開場順序：介紹頁 `BtnIntroNext` → 信 `BtnCloseOpeningLetter` → 六名將登場 `BtnShowcaseNext` → 宿命池（轉蛋系統十連結果畫面，確定鈕 `GachaPullResult_close`）→ 教學 `BtnNextTutorial`。舊的 `BtnDestinyRoll`／`BtnDestinyConfirm`／`BtnFrame0` 選將面板已於 2026-11-12 改版移除（PROG-2-9104）。
+- 開場順序（PROG-2-10064 起）：介紹單頁自動長卷（右下略過 `BtnIntroNext`，預設不點、等它播完；`--skip-intro` 才點）→ 信 `BtnCloseOpeningLetter` → 六名將一頁亮相（`BtnShowcaseNext` 按一次）→ 宿命池揭曉（出現 `RevealTapHint`「點擊畫面繼續」就點畫面）→ 十連結果確定鈕 `GachaPullResult_close` → 少年 `BtnYouthPick0` → 教學 `BtnNextTutorial`。報告 detail 有 `totalClicks`、`openingMs`、`clickLog`（稽核 B1 目標 ≤ 8 次點擊、≤ 30 秒）。舊的 `BtnDestinyRoll`／`BtnDestinyConfirm`／`BtnFrame0` 選將面板已於 2026-11-12 改版移除（PROG-2-9104）。
 - 大廳對話泡泡用 UCUF 語意 id `lobby-hall-screen.bubble`（節點上的 `_ucufId`）判斷；轉換器產生的節點名是 `LobbyHallScreen_div_N` 流水號，不能用名稱找（PROG-2-9107）。
 - 節點名稱以程式為準（例如開場按鈕 `BtnIntroNext`、`BtnShowcaseNext`；大廳走動小人為 `crowd-<武將>`）。若遊戲改名，報告的「逾時」或「找不到…」會直接指出缺哪個名稱。
 - 本工具不改遊戲程式；發現的問題只寫進報告。

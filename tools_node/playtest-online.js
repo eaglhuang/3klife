@@ -44,6 +44,8 @@
  *   --browser   Chrome 路徑（也可用環境變數 CHROME_PATH）
  *   --stuck     單步卡住上限毫秒數（預設 120000）
  *   --mind      選用：換季後點大廳小人讀泡泡台詞（武將心智，PROG-2-9146）
+ *   --opening-only 選用：只跑開機與新玩家開場兩步（量開場點擊數與秒數，PROG-2-10064）
+ *   --skip-intro   選用：開場第一幕長卷改按右下「略過」（預設等它自動播完，PROG-2-10064）
  *   --rank-unlock  選用：官職晉升解鎖節奏（PROG-2-9151）：鎖頭按鈕、點鎖頭提示、晉升彈窗與晉升後解鎖
  *   --jade      選用：玉的用途（商店看玉、許願祭壇用玉買加速卡，PROG-2-9149）
  *   --year      選用：原步驟後接一年循環（每季內政／任務牆／戰鬥／抽卡／培育／推進一季），輸出 year-report.json（PROG-2-9141）
@@ -52,6 +54,7 @@
  *   --skill-prefer <id>  --full-year 優先放的計謀（預設 tactic-fire-scheme，需 WINDY）；--min-casts <n> 整年最少放招次數（預設 1）
  *   --no-set-lead  --year 時不替玩家指定出戰主將（主將未定時戰場無出征帳本、自動代打不出兵，會打輸；用來重現）
  *   --no-tactic-probe  不做首戰計謀探針（預設首戰記錄天氣、試放一次計謀並量格子特效，輸出在 report.battles，PROG-2-10010）
+ *   --battle-shots <毫秒>  戰鬥中每隔這麼久截一張 bt-<序號>.png（PROG-2-10072）
  *   --no-auto-play  戰鬥改逐回合手按結束回合（預設開場按一次「自動」走自動代打，PROG-2-9711）
  *   --academy   選用：學府實玩（PROG-2-9192）：推進到第 2 年第 1 季 → 入學潁川（核對入學令 −1）→ 36 回合 → 結業彈窗 → 回大廳；
  *               另在複製存檔的第二情境用 ?qaAcademy=11 驗快進入口。輸出 academy-report.json（回合數、打斷、評級、前後季數、節點數、
@@ -330,7 +333,17 @@ function installPageHelpers() {
             if (sc.isAdvancingTurn) {
                 walk(scene(), (node) => { if (!thinking && node.name === 'EnemyThinking' && node.activeInHierarchy) thinking = true; });
             }
+            // 自動代打是否真的開啟（PROG-2-10072）：讀戰場橋接層旗標；x2 速度鈕亮起（UIOpacity 180）＝目前為 x2
+            const bridge = comp.battleUIBridge || null;
+            let speedX2 = null;
+            walk(scene(), (node) => {
+                if (speedX2 !== null || node.name !== 'BtnSpeed' || !node.activeInHierarchy) return;
+                const op = node.getComponent && node.getComponent('cc.UIOpacity');
+                speedX2 = Boolean(op && op.opacity === 180);
+            });
             return {
+                autoPlay: Boolean(bridge && bridge.isAutoPlayActive),
+                speedX2,
                 advancing: Boolean(sc.isAdvancingTurn),
                 duelPanel: Boolean(sc.isDuelPanelActive),
                 ultCutin: Boolean(sc.isUltCutinActive),
@@ -579,7 +592,9 @@ async function main() {
     async function step(name, fn, { skipIfFailed = false } = {}) {
         stepIndex += 1;
         // --family-only：只跑開場與家族步驟，其餘略過（配偶實玩單獨驗收用，省下整輪 10 分鐘）
-        const skippedByFamilyOnly = Boolean(args['family-only']) && !/^(boot-login-lobby|new-player-opening|family-)/.test(name);
+        const skippedByFamilyOnly = args['opening-only']
+            ? !/^(boot-login-lobby|new-player-opening)/.test(name)
+            : Boolean(args['family-only']) && !/^(boot-login-lobby|new-player-opening|family-)/.test(name);
         const rec = { index: stepIndex, name, ok: false, durationMs: 0, screenshot: null, reason: null, detail: {}, console: [], pageErrors: [] };
         if (skippedByFamilyOnly) {
             rec.reason = '--family-only，略過';
@@ -781,14 +796,21 @@ async function main() {
         // 現行開場（PROG-2-9104 核對）：介紹頁 → 信 → 六名將登場 → 宿命池 → 挑少年名將（PROG-2-9194，點第一位）→ 新手教學。
         // 宿命轉蛋 2026-11-12 起改為轉蛋系統的一池（PROG-2-2243），用十連結果畫面 GachaPullResult 顯示、
         // 單鍵確定（GachaPullResult_close）十位全收；舊的 BtnDestinyRoll／BtnDestinyConfirm／BtnFrame0 選將面板已不掛。
-        const openingSeq = ['BtnIntroNext', 'BtnCloseOpeningLetter', 'BtnShowcaseNext', 'GachaPullResult_close', 'BtnYouthPick0', 'BtnNextTutorial'];
+        // PROG-2-10064：第一幕改單頁自動長卷（BtnIntroNext 是右下「略過」，預設不點、等它自己播完；--skip-intro 才點）；
+        // 六名將一頁亮相（BtnShowcaseNext 只按一次）；SSR 揭曉有「點擊畫面繼續」提示（RevealTapHint 出現就立刻點畫面）。
+        const openingSeq = ['BtnCloseOpeningLetter', 'BtnShowcaseNext', 'GachaPullResult_close', 'BtnYouthPick0', 'BtnNextTutorial'];
+        const skipIntro = Boolean(args['skip-intro']);
         await step('new-player-opening', async (rec) => {
             // 依規格順序點；BtnIntroNext 是多頁「繼續」（實測 IntroStep 1/4…），可重複點直到消失。
             // 若目前可按的是後面的步驟（實際順序與規格不同），就先點它並記在 outOfOrder，不當成失敗。
             const clicked = [];
             const outOfOrder = [];
             const done = new Set();
-            const REPEATABLE = ['BtnIntroNext', 'BtnShowcaseNext', 'BtnNextTutorial']; // 多頁「繼續」鈕，可重複點直到消失
+            const REPEATABLE = ['BtnNextTutorial']; // 多頁「繼續」鈕，可重複點直到消失（教學 3 頁）
+            const openingT0 = Date.now();
+            const clickLog = []; // 每次點擊的相對秒數與目標（點擊數與耗時的取證）
+            const logClick = (what) => clickLog.push({ sec: Math.round((Date.now() - openingT0) / 100) / 10, what });
+            const shot = new Set();
             const retries = {};
             const deadline = Date.now() + stuckMs;
             let idleSince = null;
@@ -798,6 +820,25 @@ async function main() {
                 const pending = openingSeq.filter((n) => !done.has(n) || REPEATABLE.includes(n));
                 const hasIntro = visible.some((n) => REPEATABLE.includes(n));
                 const candidates = pending.filter((n) => visible.includes(n));
+                // 第一幕長卷自動播放中：預設不點、不算閒置，等它播完；--skip-intro 才按右下略過
+                if (visible.includes('BtnIntroNext')) {
+                    if (!shot.has('intro')) { shot.add('intro'); await delay(1500); await page.screenshot({ path: path.join(outDir, '02-opening-intro-scroll.png') }); }
+                    if (skipIntro && await clickButton('^BtnIntroNext$')) { clicked.push('BtnIntroNext'); logClick('BtnIntroNext(略過)'); await delay(800); continue; }
+                    idleSince = null;
+                    await delay(400);
+                    if (Date.now() > deadline) throw new Error(`開場超時（超過 ${Math.round(stuckMs / 1000)} 秒）；第一幕長卷沒有自動結束`);
+                    continue;
+                }
+                // 全螢幕揭曉的「點擊畫面繼續」提示出現：像玩家一樣立刻點畫面，不必等閒置 5 秒
+                if (!candidates.length && await page.evaluate(() => window.__pt.activeNodeNames('^RevealTapHint$').length > 0)) {
+                    if (!shot.has('reveal')) { shot.add('reveal'); await page.screenshot({ path: path.join(outDir, '02-opening-ssr-reveal-hint.png') }); }
+                    await page.mouse.click(Math.round(viewport.width / 2), Math.round(viewport.height / 2));
+                    rec.detail.screenTaps = (rec.detail.screenTaps || 0) + 1;
+                    logClick('點畫面(SSR 揭曉)');
+                    idleSince = null;
+                    await delay(800);
+                    continue;
+                }
                 if (!candidates.length) {
                     if (done.size === openingSeq.length && !hasIntro) break;
                     // 連續 45 秒沒有任何規格中的按鈕可按，視為開場結束；沒出現的步驟記為缺漏（不默默略過）
@@ -814,6 +855,7 @@ async function main() {
                     if (Date.now() - idleSince > 5000) {
                         await page.mouse.click(Math.round(viewport.width / 2), Math.round(viewport.height / 2));
                         rec.detail.screenTaps = (rec.detail.screenTaps || 0) + 1;
+                        logClick('點畫面(閒置 5 秒後)');
                     }
                     if (Date.now() - idleSince > 45000) {
                         missing = openingSeq.filter((n) => !done.has(n) && !REPEATABLE.includes(n));
@@ -829,9 +871,11 @@ async function main() {
                 const expected = openingSeq.find((n) => !done.has(n));
                 if (!REPEATABLE.includes(name) && name !== expected) outOfOrder.push(`規格順序為 ${expected}，實際先出現 ${name}`);
                 if (name === 'BtnYouthPick0') await page.screenshot({ path: path.join(outDir, '02a-youth-pick.png') });
+                if (name === 'BtnShowcaseNext' && !shot.has('showcase')) { shot.add('showcase'); await delay(1500); await page.screenshot({ path: path.join(outDir, '02-opening-showcase-row.png') }); }
                 const hit = await clickButton(`^${name}$`);
                 if (hit) {
                     clicked.push(hit);
+                    logClick(name);
                     done.add(name);
                     await delay(1200);
                 }
@@ -841,6 +885,10 @@ async function main() {
             rec.detail.outOfOrder = Array.from(new Set(outOfOrder));
             rec.detail.retries = retries;
             rec.detail.clickedCount = clicked.length;
+            // 開場點擊總數（按鈕＋點畫面）與耗時：稽核 B1 目標 ≤ 8 次、進大廳 ≤ 30 秒
+            rec.detail.clickLog = clickLog;
+            rec.detail.totalClicks = clickLog.length;
+            rec.detail.openingMs = Date.now() - openingT0;
             if (missing.length) {
                 rec.detail.missing = missing;
                 throw new Error(`開場按鈕未依規格出現：缺 ${missing.join('、')}（已點 ${[...done].join('、')}；畫面按鈕 ${(await listButtons()).join('、') || '無'}）`);
@@ -1585,9 +1633,16 @@ async function main() {
          */
         /** 已在戰場（BattleScene）後：加速、佈陣、打到結算、回大廳。runBattle 與年終守城（換季後自動進戰場）共用 */
         const driveBattle = async (rec, opts, battleT0) => {
-            // 加速（若有）
+            // 等戰場載入完成（PROG-2-10072）：讀取畫面（「正在準備戰鬥」）時按 BtnAuto 會落空，自動代打沒開成功、每回合靠補按結束回合
+            const readyDeadline = Date.now() + 60000;
+            while (Date.now() < readyDeadline) {
+                const st = await page.evaluate(() => window.__pt.battleState()).catch(() => null);
+                if (st && !st.advancing && st.canAdvance !== null && st.speedX2 !== null) break;
+                await delay(500);
+            }
             await delay(1500);
-            await clickButton('^BtnFastForward$');
+            // 首戰預設 x2（PROG-2-10072）：記錄開場速度；舊的 BtnFastForward 按鈕不存在，保留點擊會誤切回 x1，已移除
+            rec.detail.speedX2AtStart = (await page.evaluate(() => window.__pt.battleState()).catch(() => null) || {}).speedX2 ?? null;
             // 首戰教學框：收起；再把第一張兵卡拖到我方底線第 3 路（座標以 1920x1080 截圖比例換算）
             await clickByText('.*', '^\\s*收起\\s*$');
             await delay(800);
@@ -1602,7 +1657,16 @@ async function main() {
             await delay(1000);
             // 自動代打（PROG-2-9707／9711）：開場按一次「自動」＝委任出兵＋每回合自動結束回合；只按一次，再按會跳到極速決戰
             // --no-auto-play 可改回逐回合手按結束回合
-            const autoPlay = !args['no-auto-play'] && opts.autoPlay !== false && Boolean(await clickButton('^BtnAuto$'));
+            let autoPlay = false;
+            if (!args['no-auto-play'] && opts.autoPlay !== false) {
+                // 按一次後驗證旗標真的亮起；沒亮才再按（最多 3 次，避免第二次按成極速決戰：亮起後絕不再按）
+                for (let attempt = 0; attempt < 3 && !autoPlay; attempt += 1) {
+                    if (!await clickButton('^BtnAuto$')) { await delay(1000); continue; }
+                    await delay(800);
+                    const st = await page.evaluate(() => window.__pt.battleState()).catch(() => null);
+                    autoPlay = Boolean(st && st.autoPlay);
+                }
+            }
             rec.detail.autoPlay = autoPlay;
             rec.detail.endTurnFallbacks = 0;
             await delay(800);
@@ -1621,7 +1685,16 @@ async function main() {
             let probeStartedAt = null;
             const firstBattle = { weather: null, tactic: null };
             rec.detail.firstBattle = firstBattle;
+            // --battle-shots <毫秒>：戰鬥中每隔這麼久截一張 bt-<序號>.png（看 x2 下飄字與受擊是否看得清，PROG-2-10072）
+            const battleShotMs = Number(args['battle-shots']) || 0;
+            let lastBattleShotAt = 0;
+            let battleShotIndex = 0;
             while (!settled) {
+                if (battleShotMs > 0 && Date.now() - lastBattleShotAt >= battleShotMs) {
+                    lastBattleShotAt = Date.now();
+                    battleShotIndex += 1;
+                    await page.screenshot({ path: path.join(outDir, `bt-${String(battleShotIndex).padStart(3, '0')}.png`) }).catch(() => {});
+                }
                 if (opts.probeTactic && !tacticProbe) {
                     const st = await page.evaluate(() => window.__pt.battleState()).catch(() => null);
                     if (st && st.weather && !firstBattle.weather) firstBattle.weather = st.weather;
