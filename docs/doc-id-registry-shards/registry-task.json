@@ -17518,5 +17518,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10111.md",
     "title": "[PROG-2-10111] playtest character-intro-tabs 點名冊第一列沒開出人物介紹",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3185",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10115.md",
+    "title": "[PROG-2-10115] 名冊出現「敵軍」陣營武將",
+    "category": "task"
   }
 ]
