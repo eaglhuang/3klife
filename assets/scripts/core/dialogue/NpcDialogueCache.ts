@@ -105,10 +105,10 @@ export function classifyNpcDialogue(response: Readonly<NpcDialogueResponse>, now
     };
 }
 
-/** 快取鍵：同武將、同情境、同語系、同一組關鍵詞（不分順序）視為同一請求。 */
+/** 快取鍵：同武將、同情境、同語系、同一組關鍵詞（不分順序）、同一自稱（性別／年齡不同自稱就不同）視為同一請求。 */
 export function npcDialogueCacheKey(request: Readonly<NpcDialogueRequest>): string {
     const keywords = [...request.selectedKeywordKeys].sort().join(',');
-    return [request.generalId, request.contextKey ?? '', request.locale ?? 'zh-TW', request.speechContextMode ?? '', keywords].join('|');
+    return [request.generalId, request.contextKey ?? '', request.locale ?? 'zh-TW', request.speechContextMode ?? '', keywords, request.selfPronoun ?? ''].join('|');
 }
 
 export class NpcDialogueCache {

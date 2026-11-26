@@ -9,7 +9,7 @@ import { personalityTypeOf } from '../mind/MindRules';
 
 /** GameSession 中台詞系統用得到的唯讀面（測試可用替身） */
 export interface DialogueSessionView {
-    readonly roster: ReadonlyArray<{ id: string }>;
+    readonly roster: ReadonlyArray<{ id: string; gender?: string; age?: number }>;
     readonly rivals: { readonly nations: ReadonlyArray<{ id: string; territories: number }> };
     readonly territories: ReadonlyArray<unknown>;
     readonly gameTime: { readonly totalSeasonsElapsed: number };
@@ -24,6 +24,10 @@ export function createGameDialogueStateSource(session: DialogueSessionView, frie
         personalityOf: (id) => {
             const g = find(id);
             return g ? personalityTypeOf(g as unknown as Parameters<typeof personalityTypeOf>[0]) : undefined;
+        },
+        voiceOf: (id) => {
+            const g = find(id);
+            return g ? { gender: g.gender, age: g.age } : undefined;
         },
         mindMoodOf: (id) => session.mindMoodOf(id),
         friendshipOf: (id, target: DialogueTarget) => {

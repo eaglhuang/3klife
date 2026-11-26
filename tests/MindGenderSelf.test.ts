@@ -57,6 +57,11 @@ export function createMindGenderSelfSuite(): TestSuite {
         assert.equals('我', selfOf({ gender: '女', type: 'Brave', age: 10 }));
         assert.equals('我', selfOf({ gender: '男', type: 'Wise', age: 15 }));
         assert.equals('某', selfOf({ gender: '男', type: 'Wise', age: 16 }));
+        assert.equals('老夫', selfOf({ gender: '男', type: 'Playful', age: 60 }));
+        assert.equals('某', selfOf({ gender: '男', type: 'Wise', age: 59 }));
+        assert.equals('老身', selfOf({ gender: '女', type: 'Brave', age: 75 }));
+        assert.equals('妾身', selfOf({ gender: '女', type: 'Wise', age: 59 }));
+        assert.equals('ELDER', voiceAgeGroupOf(60));
         assert.equals('F', voiceGenderOf('female'));
         assert.equals('ADULT', voiceAgeGroupOf(undefined));
         assert.equals(selfOf({ gender: '女', type: 'Wise' }), voiceSlots({ gender: '女', type: 'Wise' }).self);
@@ -152,6 +157,25 @@ export function createMindGenderSelfSuite(): TestSuite {
         assert.equals(a, b);
         assert.isTrue(a.includes('本姑娘'), a);
         assert.isTrue(Templates.requestText('REDEEM', 'Brave', { ...DUMMY }, 7).includes('某'));
+    });
+
+    suite.test('資料檔守門：轉蛋登場台詞含男性自稱的，必須是男武將專屬（每將一句，不共用）', () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        const fs = require('fs') as typeof import('fs');
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        const path = require('path') as typeof import('path');
+        const dataDir = path.resolve(__dirname, '..', 'assets', 'resources', 'data');
+        const rawGenerals = JSON.parse(fs.readFileSync(path.join(dataDir, 'generals.json'), 'utf-8')) as unknown;
+        const list = (Array.isArray(rawGenerals) ? rawGenerals : Object.values(rawGenerals as Record<string, unknown>)) as Array<{ id?: string; gender?: string }>;
+        const genderOf = new Map(list.map((g) => [g.id, g.gender] as const));
+        const lines = (JSON.parse(fs.readFileSync(path.join(dataDir, 'general-gacha-lines.json'), 'utf-8')) as { lines: Record<string, string> }).lines;
+        let checked = 0;
+        for (const [id, text] of Object.entries(lines)) {
+            if (!/某|老夫|大丈夫|在下|鬚眉/.test(text)) continue;
+            checked++;
+            assert.equals('男', genderOf.get(id), `${id} 的台詞含男性自稱但不是男武將：${text}`);
+        }
+        assert.isTrue(checked >= 6, '至少掃到太史慈、陶謙、劉焉等男將專屬句');
     });
 
     return suite;

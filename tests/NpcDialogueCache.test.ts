@@ -88,6 +88,13 @@ export function createInsightAchievementSuite(): TestSuite {
         assert.equals('capped', evaluateInsight(meta, 'a', 'x1', 'd', { dailyCap: 1, seenLimit: 2 }).decision);
     });
 
+    suite.test('自稱不同（性別／年齡不同）快取鍵不同', () => {
+        const male = npcDialogueCacheKey({ ...REQ, selfPronoun: '某' });
+        assert.isTrue(male !== npcDialogueCacheKey({ ...REQ, selfPronoun: '妾身' }), '女將不共用男將快取');
+        assert.isTrue(male !== npcDialogueCacheKey({ ...REQ, selfPronoun: '老夫' }), '老者不共用');
+        assert.equals(male, npcDialogueCacheKey({ ...REQ, selfPronoun: '某' }));
+    });
+
     return suite;
 }
 

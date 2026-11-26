@@ -198,5 +198,28 @@ export function createAnnualRankingHistorySuite(): TestSuite {
         assert.isTrue(stats.honors[2].isChampion);
     });
 
+    suite.test('祝賀回話的 {self} 依性別／年齡代入；資料檔不寫死「某」', () => {
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        const fs = require('fs') as typeof import('fs');
+        // eslint-disable-next-line @typescript-eslint/no-require-imports
+        const path = require('path') as typeof import('path');
+        const real = JSON.parse(fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'resources', 'data', 'annual-ranking-congratulation.json'), 'utf-8')) as CongratulationDialogues;
+        for (const cat of Object.values(real.categories)) for (const t of cat.templates) assert.isTrue(!t.includes('某'), `寫死某：${t}`);
+        const ids = Object.keys(real.categories).flatMap((c) => real.categories[c].templates.map((_, i) => `${c}-${i}`));
+        assert.isTrue(ids.length > 0);
+        let sawFemale = false;
+        for (let y = 1; y <= 30; y++) {
+            FriendshipService.resetInstance();
+            const c = new AnnualRankingCongratulation(real, 5);
+            const f = c.congratulate(y, 'g_f', 'fierce', undefined, { gender: '女', type: 'Brave' });
+            assert.isTrue(!/\{\w+\}/.test(f.barkText ?? ''), f.barkText);
+            assert.isTrue(!(f.barkText ?? '').includes('某'), f.barkText);
+            if ((f.barkText ?? '').includes('本姑娘')) sawFemale = true;
+            const m = new AnnualRankingCongratulation(real, 5).congratulate(y, 'g_m', 'fierce', undefined, { gender: '男', type: 'Brave' });
+            assert.isTrue(!/\{\w+\}/.test(m.barkText ?? ''), m.barkText);
+        }
+        assert.isTrue(sawFemale, '女將豪放回話應出現本姑娘');
+    });
+
     return suite;
 }

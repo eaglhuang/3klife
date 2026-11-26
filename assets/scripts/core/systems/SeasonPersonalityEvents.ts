@@ -88,7 +88,7 @@ export const SEASON_PERSONALITY_EVENTS: readonly SeasonPersonalityEventDef[] = O
     },
     {
         id: 'DRILL_TRAINING', archetype: 'Warlike', title: '校場苦練',
-        desc: '{Name}：「在下筋骨發癢，自往校場閉門苦練十日！」',
+        desc: '{Name}：「我筋骨發癢，自往校場閉門苦練十日！」',
         options: [
             { label: '親往校閱', effect: { strExp: 20 }, note: '武力經驗 +20' },
             { label: '由他自練', effect: { strExp: 10 }, note: '武力經驗 +10' },

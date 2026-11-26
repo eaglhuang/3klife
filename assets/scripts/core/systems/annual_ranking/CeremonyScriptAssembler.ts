@@ -113,7 +113,7 @@ export class CeremonyScriptAssembler {
       speakerAvatar: hosts[1].avatarSpritePath,
       dialogueText: year === 1
         ? `……好！` // 司馬徽經典名梗
-        : `與 ${hosts[0].name} 一同登台主持，乃在下莫大榮幸！今夜就讓我們揭曉全天下最強風雲人物！`,
+        : `與 ${hosts[0].name} 一同登台主持，乃我莫大榮幸！今夜就讓我們揭曉全天下最強風雲人物！`,
       durationMs: 2500
     });
 
