@@ -17406,6 +17406,18 @@
     "category": "task"
   },
   {
+    "id": "doc_task_3150",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10101.md",
+    "title": "[PROG-2-10101] 獲得面板規格（RewardPresenter：任何人物／物品獲得的統一出口）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3151",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10102.md",
+    "title": "[PROG-2-10102] 實作：獲得面板 RewardPresenter＋AcquirePanelController 並改接任務回報／季報／轉蛋收尾",
+    "category": "task"
+  },
+  {
     "id": "doc_task_3157",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10083.md",
     "title": "[PROG-2-10083] 大廳小人台詞依武將性別換自稱（女將不再說某）",
