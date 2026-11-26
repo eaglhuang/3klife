@@ -1,0 +1,17 @@
+{
+  "id": "year1-goals-screen",
+  "version": 1,
+  "uiId": "Year1Goals",
+  "layer": "Popup",
+  "bundle": "lobby_ui",
+  "layout": "year1-goals-main",
+  "skin": "year1-goals-screen.skin",
+  "validation": {
+    "devices": [
+      "phone-16-9",
+      "phone-19_5-9",
+      "tablet-4-3"
+    ],
+    "allowMissingSkin": false
+  }
+}

@@ -17310,6 +17310,12 @@
     "category": "task"
   },
   {
+    "id": "doc_task_3125",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10062.md",
+    "title": "[PROG-2-10062] 首年目標清單：資料、追蹤、一次性領獎與大廳進度條",
+    "category": "task"
+  },
+  {
     "id": "doc_task_3126",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10067.md",
     "title": "[PROG-2-10067] 新手教學結束後第一個目標：出征鈕脈動＋史小境提示",
@@ -17322,9 +17328,21 @@
     "category": "task"
   },
   {
+    "id": "doc_task_3128",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10070.md",
+    "title": "[PROG-2-10070] 子嗣成長事件彈窗＋親子談話按鈕（最小可玩）",
+    "category": "task"
+  },
+  {
     "id": "doc_task_3130",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10072.md",
     "title": "[PROG-2-10072] 首戰節奏：預設 x2、縮短敵方回合等待、試玩腳本自動代打校正",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3131",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10074.md",
+    "title": "[PROG-2-10074] 整年放招 0 次修正：計謀起手 20／火計 25、教學戰委任放招旁路、一般戰條件不符自動換招、playtest 放招計數",
     "category": "task"
   },
   {
@@ -17359,6 +17377,12 @@
   },
   {
     "id": "doc_task_3138",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10092.md",
+    "title": "[PROG-2-10092] 季報信箱改名：信箱標題與入口走 i18n 四語系（PM 裁決 A）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3153",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10083.md",
     "title": "[PROG-2-10083] 大廳小人台詞依武將性別換自稱（女將不再說某）",
     "category": "task"

@@ -141,6 +141,7 @@ import { registerBloodlineNames } from '../utils/PlayerFacingText';
 import { buildMercenaryPoolRows, filterPoolGeneralIds, type MercenaryPoolRow } from '../systems/MercenaryPoolPresenter';
 import { fallenOfficerOrigins } from '../systems/FallenOfficerMarket';
 import { acknowledgeOnboardingSegment, completeSortieHint, FRESH_ONBOARDING, normalizeOnboardingState, OnboardingResult, OnboardingState } from '../systems/OnboardingTutorial';
+import { applyYear1GoalEvent, copyYear1GoalsState, createEmptyYear1GoalsState, getYear1GoalTable, markYear1GoalClaimed, normalizeYear1GoalsState, type Year1GoalDef, type Year1GoalEvent, type Year1GoalsState } from '../systems/Year1Goals';
 import { carryOpeningLetterOnNewGame, FRESH_OPENING_LETTER, markOpeningLetterSeen, normalizeOpeningLetterState, OpeningLetterState } from '../systems/OpeningLetter';
 import { remarkRandomOf } from '../systems/SageRemarks';
 import { OfflineGeneralMindService } from '../mind/OfflineGeneralMindService';
@@ -257,10 +258,11 @@ import type { NurtureAwakeningHooks } from '../services/NurtureService';
 import { buildStarterRoster, pickStartingLead, STARTER_CORE_GENERAL_ID, StarterRosterOptions } from '../services/StarterRosterService';
 import { buildStarterYouth, getStarterYouthConfig } from '../services/StarterYouthService';
 import { buildStarterSeedling, getStarterSeedlingConfig } from '../services/StarterSeedlingService';
-import type { ChildGrowthHost, GrowthEventResolveOutcome } from '../api/localserver/ChildGrowthCommands';
+import type { ChildGrowthHost, ChildTalkOutcome, GrowthEventResolveOutcome } from '../api/localserver/ChildGrowthCommands';
+import { childTalkTopicFor, loadChildTalkConfig, type ChildTalkConfig } from '../systems/ChildTalk';
 import { bloodlineSilverCost, emptyBloodlineEventState, loadBloodlineY3Y5Events, type BloodlineEventState, type BloodlineEventTable } from '../systems/BloodlineY3Y5Events';
 import { applyBloodlineEffectsToLedger, applyBloodlineStatDeltas, isEmptyBloodlineGrowth, normalizeBloodlineGrowthSave, queueBloodlineGrowthEvents, resolvePendingBloodlineEvent, type PendingBloodlineEvent } from '../systems/BloodlineGrowthSettlement';
-import { CHILD_FAVOR_DEFAULT, cloneChildLedger, childFavorOf, emptyChildLedger, isEmptyChildLedger, normalizeChildLedger, seedChildFavor, type BloodlineChildLedgerState } from '../systems/BloodlineChildLedger';
+import { CHILD_FAVOR_DEFAULT, addChildFavor, addChildInteraction, childInteractionCountOf, childTalkCountOf, childTalkedThisYear, cloneChildLedger, childFavorOf, recordChildTalk, emptyChildLedger, isEmptyChildLedger, normalizeChildLedger, seedChildFavor, type BloodlineChildLedgerState } from '../systems/BloodlineChildLedger';
 import { resolveFactorColor } from '../systems/FactorInheritance';
 import { insertSpiritCard, replaceSpiritCard, setPrimarySpiritCard, unequipSpiritCard, type SpiritSlotFlowResult } from '../systems/SpiritSlotFlow';
 import type { FactorColor, FactorDefinition, FactorDictionary } from '../systems/FactorInheritance';
@@ -501,6 +503,8 @@ export const GAME_SESSION_EVENTS = {
     Saved: 'game-session-saved',
     /** 祠堂軍功聲望變動（PROG-2-1910/1912）；payload: ClanPrestigeChangedPayload */
     ClanPrestigeChanged: 'game-session-clan-prestige-changed',
+    /** payload: Year1GoalsChangedPayload（首年目標有新完成、衝刺結算或已領獎；大廳據此刷新進度條與領獎，PROG-2-10062） */
+    Year1GoalsChanged: 'game-session-year1-goals-changed',
     /** payload: GeneralConfig[]（本次新加入名冊的武將） */
     RosterChanged: 'game-session-roster-changed',
     /** payload: undefined（第一次打贏戰鬥；新手開場第四幕紅顏的觸發點，只發一次） */
@@ -522,6 +526,16 @@ export const GAME_SESSION_EVENTS = {
     /** payload: BloodlineStageAwakenedPayload（五階奧義覺醒成功時廣播，覺醒過場用；BML-06，PROG-2-2056） */
     BloodlineStageAwakened: 'game-session-bloodline-stage-awakened',
 } as const;
+
+/** Year1GoalsChanged 事件內容（PROG-2-10062） */
+export interface Year1GoalsChangedPayload {
+    /** 本次新完成的目標 id */
+    newlyCompleted: string[];
+    /** 本次剛標記為已領獎的目標 id */
+    claimedGoalId?: string;
+    /** 本次剛結算的衝刺名次（年末榜單） */
+    sprintRank?: number;
+}
 
 export interface BloodlineStageCapRaisedPayload {
     generalId: string;
@@ -936,6 +950,10 @@ export class GameSession implements AcademyRecordPort {
     private _inventory: PlayerInventory = { ...STARTER_INVENTORY };
     private _oracleCount = 0;
     private _onboarding: OnboardingState = { ...FRESH_ONBOARDING };
+    /** 首年目標清單進度；存檔欄位 year1Goals（PROG-2-10062），舊存檔沒有此欄位視為全空 */
+    private _year1Goals: Year1GoalsState = createEmptyYear1GoalsState();
+    /** 納配偶時內部會呼叫 enrollGenerals，那不算「招募」 */
+    private _enrollingSpouse = false;
     /** 開場信件已讀狀態；存檔欄位 openingLetter（PROG-2-1304） */
     private _openingLetter: OpeningLetterState = { ...FRESH_OPENING_LETTER };
     /** 結義點數（轉蛋滿轉溢出獲得，傭兵轉永久用）；存檔欄位 bondPoints */
@@ -1020,6 +1038,8 @@ export class GameSession implements AcademyRecordPort {
     private _breedingBirthRecords: BreedingBirthRecord[] = [];
     /** 親子好感、天賦小名碎片、同窗好友旗標（PROG-2-10058）；存於 bloodlineChildLedger，舊存檔缺欄位視為空帳本 */
     private _childLedger: BloodlineChildLedgerState = emptyChildLedger();
+    /** 親子談話話題表（PROG-2-10070，延後載入） */
+    private _childTalkCfg: ChildTalkConfig | null = null;
     /** 血統成長事件（PROG-2-10059）：已觸發紀錄與歲末排出的待決佇列，隨存檔 bloodlineGrowthEvents 保存；事件表首次用到才載入 */
     private _bloodlineEventState: BloodlineEventState = emptyBloodlineEventState();
     private _bloodlinePending: PendingBloodlineEvent[] = [];
@@ -1225,6 +1245,54 @@ export class GameSession implements AcademyRecordPort {
         this._onboarding = result.state;
         if (this._autoSave && this._save) await this.save();
         return result;
+    }
+
+    /** 首年目標清單進度（唯讀副本；PROG-2-10062） */
+    public get year1Goals(): Year1GoalsState {
+        return copyYear1GoalsState(this._year1Goals);
+    }
+
+    /**
+     * 回報一個首年目標事件（戰鬥勝利、招募、內政、親子互動、配偶數、年末名次）。
+     * 只在資料指定的年份（第 1 年）有效；回傳本次新完成的目標，有變動時發 Year1GoalsChanged。
+     * 不在這裡存檔：呼叫點多半已在同一流程存檔，領獎標記（markYear1GoalClaimed）一定會存。
+     */
+    public reportYear1Goal(event: Year1GoalEvent): Year1GoalDef[] {
+        const result = applyYear1GoalEvent(getYear1GoalTable(), this._year1Goals, event, this._clock.state.currentYear);
+        this._year1Goals = result.state;
+        if (result.newlyCompleted.length > 0 || result.sprint) {
+            this._emit(GAME_SESSION_EVENTS.Year1GoalsChanged, {
+                newlyCompleted: result.newlyCompleted.map((goal) => goal.id),
+                ...(result.sprint ? { sprintRank: result.sprint.rank } : {}),
+            } satisfies Year1GoalsChangedPayload);
+        }
+        return result.newlyCompleted;
+    }
+
+    /** 對帳：用現有狀態補判「打贏過戰鬥」「已有配偶」（舊存檔、事件發生在目標清單上線前也能補到）；大廳載入與換季時呼叫 */
+    public syncYear1Goals(): Year1GoalDef[] {
+        const done: Year1GoalDef[] = [];
+        if (this._firstBattleCleared) done.push(...this.reportYear1Goal({ type: 'battle-win' }));
+        done.push(...this.reportYear1Goal({ type: 'spouse-count', count: this._family.spouseCount() }));
+        return done;
+    }
+
+    /** 真正的親子談話一次（親子談話按鈕上線後由它呼叫；目前由替代判定頂著） */
+    public recordChildInteraction(): Year1GoalDef[] {
+        return this.reportYear1Goal({ type: 'child-talk' });
+    }
+
+    /** 年末典禮結算出玩家名次：判定首年榜單衝刺目標（同一年只結算一次） */
+    public recordYear1Sprint(year: number, playerRank: number): Year1GoalDef[] {
+        return this.reportYear1Goal({ type: 'year-end-rank', year, rank: playerRank });
+    }
+
+    /** 標記某目標的銀兩已入帳並存檔（reward.claim 成功或重送回「已領過」之後呼叫）；重複標記不變 */
+    public async markYear1GoalClaimed(goalId: string): Promise<void> {
+        if (this._year1Goals.claimed.includes(goalId)) return;
+        this._year1Goals = markYear1GoalClaimed(this._year1Goals, goalId);
+        this._emit(GAME_SESSION_EVENTS.Year1GoalsChanged, { newlyCompleted: [], claimedGoalId: goalId } satisfies Year1GoalsChangedPayload);
+        if (this._autoSave && this._save) await this.save();
     }
 
     /**
@@ -1631,8 +1699,10 @@ export class GameSession implements AcademyRecordPort {
         if (!config) return { ok: false, reason: 'no-config' };
         if (this._family.get(general.id) || this._rosterRead().some((g) => g.id === general.id)) return { ok: false, reason: 'duplicate' };
         if (!this._family.canAddSpouse(config, options.hallLevel ?? 1)) return { ok: false, reason: 'cap-reached' };
-        this.enrollGenerals([general]);
+        this._enrollingSpouse = true;
+        try { this.enrollGenerals([general]); } finally { this._enrollingSpouse = false; }
         this._family.addSpouse(general.id, this._clock.state.totalSeasonsElapsed, config, options.hallLevel ?? 1);
+        this.reportYear1Goal({ type: 'spouse-count', count: this._family.spouseCount() });
         return { ok: true };
     }
 
@@ -1691,10 +1761,12 @@ export class GameSession implements AcademyRecordPort {
         const hallLevel = options.hallLevel ?? 1;
         if (!this._family.canAddSpouse(config, hallLevel)) return { ok: false, reason: 'cap-reached' };
         if (rivalOrigin) {
-            this.enrollGenerals([{ ...general, homeNationId: rivalOrigin } as GeneralConfig]);
+            this._enrollingSpouse = true;
+            try { this.enrollGenerals([{ ...general, homeNationId: rivalOrigin } as GeneralConfig]); } finally { this._enrollingSpouse = false; }
             this._rivals = dropOwnedRivalOfficers(this._rivals, new Set([generalId]));
         }
         this._family.addSpouse(generalId, this._clock.state.totalSeasonsElapsed, config, hallLevel);
+        this.reportYear1Goal({ type: 'spouse-count', count: this._family.spouseCount() });
         return { ok: true, generalId };
     }
 
@@ -2102,6 +2174,8 @@ export class GameSession implements AcademyRecordPort {
     /** 送禮：回傳該武將更新後的好感（0~100） */
     public giftFemale(uid: string, giftValue: number): number {
         this._femaleSystem = giftToFemale(this._femaleSystem, uid, giftValue);
+        // 首年目標「第一次親子談話」的替代判定：府內送禮算一次
+        if (giftValue > 0) this.reportYear1Goal({ type: 'home-gift' });
         return this._femaleSystem.giftAffection[uid] ?? 0;
     }
 
@@ -2691,12 +2765,19 @@ export class GameSession implements AcademyRecordPort {
     /** 子嗣成長宿主（PROG-2-10058／10059）：family.childLedger／growthEvents 讀、family.resolveGrowthEvent 選擇；入帳只在權威端 */
     public get childGrowthHost(): ChildGrowthHost {
         return {
-            childLedger: () => ({
-                favor: { ...this._childLedger.favor },
-                favorDefault: CHILD_FAVOR_DEFAULT,
-                epithetFragments: this._childLedger.epithetFragments,
-                classmateFriends: { ...this._childLedger.classmateFriends },
-            }),
+            childLedger: () => {
+                const year = this._clock.state.currentYear;
+                const children = this._familyChildren();
+                return {
+                    favor: { ...this._childLedger.favor },
+                    favorDefault: CHILD_FAVOR_DEFAULT,
+                    epithetFragments: this._childLedger.epithetFragments,
+                    classmateFriends: { ...this._childLedger.classmateFriends },
+                    children: children.map((g) => ({ id: g.id, name: g.name, age: Math.floor((g.age ?? 0) + 1e-9) })),
+                    talkedThisYear: children.filter((g) => childTalkedThisYear(this._childLedger, g.id, year)).map((g) => g.id),
+                    interactionCountThisYear: childInteractionCountOf(this._childLedger, year),
+                };
+            },
             growthEvents: () => {
                 const table = this._bloodlineEvents();
                 return {
@@ -2707,7 +2788,50 @@ export class GameSession implements AcademyRecordPort {
                 };
             },
             resolveGrowthEvent: (childId, eventId, optionId) => this.resolveBloodlineEvent(childId, eventId, optionId),
+            talkToChild: (childId) => this.talkToChild(childId),
         };
+    }
+
+    /** 親子談話話題表（首次用到才載入並驗證） */
+    private _childTalkConfig(): ChildTalkConfig {
+        if (!this._childTalkCfg) this._childTalkCfg = loadChildTalkConfig();
+        return this._childTalkCfg;
+    }
+
+    /** 本年親子互動次數（談話與成長事件選擇；跨年自動歸零）；首年目標清單的 y1_first_talk 讀這個 */
+    public get childInteractionCountThisYear(): number {
+        return childInteractionCountOf(this._childLedger, this._clock.state.currentYear);
+    }
+
+    /**
+     * 親子談話（PROG-2-10070）：每名孩子每年一次；話題依該孩子累計談話次數輪替，好感增量由話題表決定。
+     * 入帳：好感、談話紀錄、本年互動次數；成功後存檔。
+     */
+    public talkToChild(childId: string): ChildTalkOutcome {
+        if (!this._familyChildren().some((g) => g.id === childId)) return { ok: false, reason: 'unknown-child' };
+        const year = this._clock.state.currentYear;
+        if (childTalkedThisYear(this._childLedger, childId, year)) return { ok: false, reason: 'already-talked' };
+        const topic = childTalkTopicFor(this._childTalkConfig(), childTalkCountOf(this._childLedger, childId));
+        const before = childFavorOf(this._childLedger, childId);
+        let next = addChildFavor(this._childLedger, childId, topic.favorDelta);
+        next = recordChildTalk(next, childId, year);
+        this._childLedger = next;
+        const favor = childFavorOf(next, childId);
+        // 首年目標清單：真正的親子談話一次（y1_first_talk）
+        this.recordChildInteraction();
+        if (this._autoSave && this._save) void this.save();
+        return { ok: true, result: { childId, topicId: topic.id, lineKey: topic.lineKey, favorDelta: favor - before, favor, interactionCountThisYear: childInteractionCountOf(next, year) } };
+    }
+
+    /** 家族裡活著的孩子：家族登記的非配偶成員＋名冊上有父或母的武將（歲末成長事件與親子談話共用） */
+    private _familyChildren(): GeneralConfig[] {
+        const roster = this._roster.getAll();
+        const childIds = new Set<string>(this._family.members().filter((m) => m.kind !== 'spouse').map((m) => m.personId));
+        for (const general of roster) {
+            const kin = general as GeneralConfig & { fatherId?: string; motherId?: string };
+            if (kin.fatherId || kin.motherId) childIds.add(general.id);
+        }
+        return roster.filter((g) => childIds.has(g.id) && !isGeneralDead(g));
     }
 
     /** 事件表（首次用到才載入並驗證；資料不合格會丟例外，開機就看得到） */
@@ -2721,13 +2845,7 @@ export class GameSession implements AcademyRecordPort {
      * 只排佇列、不彈窗、不入帳；孩子名單＝家族登記的非配偶成員＋名冊上有父或母的武將，已過世者略過。
      */
     private _queueBloodlineGrowthEvents(year: number): PendingBloodlineEvent[] {
-        const roster = this._roster.getAll();
-        const childIds = new Set<string>(this._family.members().filter((m) => m.kind !== 'spouse').map((m) => m.personId));
-        for (const general of roster) {
-            const kin = general as GeneralConfig & { fatherId?: string; motherId?: string };
-            if (kin.fatherId || kin.motherId) childIds.add(general.id);
-        }
-        const children = roster.filter((g) => childIds.has(g.id) && !isGeneralDead(g)).map((g) => ({ id: g.id, age: g.age }));
+        const children = this._familyChildren().map((g) => ({ id: g.id, age: g.age }));
         const queued = queueBloodlineGrowthEvents(this._bloodlineEvents(), this._bloodlineEventState, this._bloodlinePending, children, year);
         this._bloodlinePending = queued.pending;
         return queued.added;
@@ -2756,7 +2874,7 @@ export class GameSession implements AcademyRecordPort {
         if (typeof effects.silver === 'number' && effects.silver > 0) this.silverLedger.creditSilver(effects.silver);
         this._bloodlineEventState = out.state;
         this._bloodlinePending = out.pending;
-        this._childLedger = applyBloodlineEffectsToLedger(this._childLedger, childId, effects);
+        this._childLedger = addChildInteraction(applyBloodlineEffectsToLedger(this._childLedger, childId, effects), this._clock.state.currentYear);
         this._applyBloodlineStats(childId, effects);
         if (typeof effects.prestige === 'number' && effects.prestige !== 0) {
             const before = clanPrestigeTierOf(this._clanPrestige);
@@ -3227,6 +3345,7 @@ export class GameSession implements AcademyRecordPort {
         this._bondPoints = 0;
         this._borrowLedger = { records: [] };
         this._onboarding = { ...FRESH_ONBOARDING };
+        this._year1Goals = createEmptyYear1GoalsState();
         this._openingLetter = { ...FRESH_OPENING_LETTER };
         this._military = { ...STARTER_MILITARY };
         this._yearAgingEvents = [];
@@ -4043,6 +4162,7 @@ export class GameSession implements AcademyRecordPort {
         this._military = { ...this._military, food: result.stock.food, cityTroops: result.stock.cityTroops };
         this._fame = result.stock.fame;
         this._domesticLog = result.log;
+        this.reportYear1Goal({ type: 'domestic' });
         if (result.output?.resource === 'gold' && result.granted > 0) grantGold(result.granted);
         if (this._autoSave && this._save) await this.save();
         return result;
@@ -6325,6 +6445,8 @@ export class GameSession implements AcademyRecordPort {
         const current = this._roster.getAll();
         const applied = applyActiveLifespanToRoster(current, generalId, command, this._random);
         if (!applied) return null;
+        // 首年目標「第一次親子談話」的替代判定：培育互動算一次
+        if (command === 'nurture') this.reportYear1Goal({ type: 'nurture' });
         this._preLifespanRoster ??= current;
         this._roster.replaceAll(applied.roster);
         for (const event of applied.result.events) {
@@ -7146,6 +7268,8 @@ export class GameSession implements AcademyRecordPort {
         }
         if (added.length > 0) {
             this._emit(GAME_SESSION_EVENTS.RosterChanged, added);
+            // 納配偶內部也走這裡，但那是結緣不是招募（首年目標）
+            if (!this._enrollingSpouse) this.reportYear1Goal({ type: 'recruit' });
         }
         // 三國日報素材（暫定判定）：轉蛋抽到新武將算成功，全是重複算失敗
         if (options.rebirthOnDuplicate && (added.length > 0 || duplicates.length > 0)) {
@@ -7223,6 +7347,7 @@ export class GameSession implements AcademyRecordPort {
         if (result === 'player-win' && options.teachingSpirit) this.completeTeachingBattle(options.teachingSpirit);
         const firstClear = result === 'player-win' && !this._firstBattleCleared;
         if (firstClear) this._firstBattleCleared = true;
+        if (result === 'player-win') this.reportYear1Goal({ type: 'battle-win' });
         // 年終守城打完（勝敗平都算）記下年份：不可重打，回到大廳後自動換年（PROG-2-9426）
         const defenseFought = Boolean(options.defense) && (result === 'player-win' || result === 'enemy-win' || result === 'draw');
         if (defenseFought) this._yearEndDefenseYear = this._clock.state.currentYear;
@@ -7839,6 +7964,7 @@ export class GameSession implements AcademyRecordPort {
             prison: this.prison,
             ...(pending.length > 0 ? { pendingLifespanDeaths: pending } : {}),
             onboarding: { ...this._onboarding },
+            year1Goals: copyYear1GoalsState(this._year1Goals),
             openingLetter: { ...this._openingLetter },
             bondPoints: this._bondPoints,
             friendBorrowLedger: { records: [...this._borrowLedger.records] },
@@ -8120,6 +8246,7 @@ export class GameSession implements AcademyRecordPort {
         this._preLifespanRoster = preLifespanBaseline(snapshot.roster, (snapshot.pendingLifespanDeaths ?? []).map((death) => death.generalId));
         this._nurture?.restoreState(snapshot.nurture);
         this._onboarding = normalizeOnboardingState(snapshot.onboarding);
+        this._year1Goals = normalizeYear1GoalsState(snapshot.year1Goals);
         this._openingLetter = normalizeOpeningLetterState(snapshot.openingLetter);
         this._bondPoints = normalizeBondPoints(snapshot.bondPoints);
         this._borrowLedger = normalizeBorrowLedger(snapshot.friendBorrowLedger);
