@@ -427,6 +427,8 @@ export const view = {
 /** Spine 組件最小型別替身（只供 SpineGeneralOverlay 型別檢查；測試以執行期 stub 替換實作）。 */
 export namespace sp {
     export class SkeletonData {
+        addRef(): void { /* mock */ }
+        decRef(): void { /* mock */ }
         getRuntimeData(): { findAnimation(name: string): unknown; findSkin(name: string): unknown } { return { findAnimation: () => null, findSkin: () => null }; }
     }
     export class Skeleton {

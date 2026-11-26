@@ -4,7 +4,7 @@
  */
 import { assert, TestSuite } from './TestRunner';
 import { SPINE_UNIT_POOL_MAX_PER_PATH, SpineUnitOverlay } from '../assets/scripts/battle/views/SpineGeneralOverlay';
-import { soldierSpineConfig } from '../assets/scripts/battle/shared/UnitPresentationConfig';
+import { battleTroopPreloadList, soldierSpineConfig } from '../assets/scripts/battle/shared/UnitPresentationConfig';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type Any = any;
@@ -53,7 +53,8 @@ class FakeSkeleton {
   getCurrent(): null { return null; }
 }
 class FakeSkeletonData {}
-const skeletonData = { getRuntimeData: () => ({ findAnimation: (name: string) => ({ name }), findSkin: (name: string) => ({ name }) }) };
+let addRefs = 0, decRefs = 0;
+const skeletonData = { addRef: () => { addRefs += 1; }, decRef: () => { decRefs += 1; }, getRuntimeData: () => ({ findAnimation: (name: string) => ({ name }), findSkin: (name: string) => ({ name }) }) };
 
 /** 暫時把全域 cc 替身換成可驗疊層的版本，跑完還原，不影響其他 suite。 */
 function withStub<T>(fn: () => T): T {
@@ -115,6 +116,54 @@ export function createSpineUnitPoolSuite(): TestSuite {
     assert.isTrue(flashesOf(skel).every(f => f === 0), '再畫一格仍不殘留閃白');
     overlay.clear();
   }));
+
+  suite.test('戰前預載（PROG-2-10078）：載好骨架、預建一整隊節點進池、單位上場直接取用', async () => {
+    const root = new FakeNode('root');
+    let overlay: SpineUnitOverlay = null as unknown as SpineUnitOverlay;
+    addRefs = 0; decRefs = 0;
+    await withStub(() => { overlay = new SpineUnitOverlay(() => root as Any, () => 1); return overlay.preload([squadCfg, squadCfg]); });
+    assert.equals(1, overlay.preloadedCount(), '同路徑只載一份');
+    assert.equals(1, addRefs, '持有一份引用');
+    assert.equals(3, overlay.pooledCount(squadCfg.path), '帶頭者＋兩名隊員的節點已進池');
+    assert.isTrue(root.children.every(n => !n.active), '池內節點隱藏');
+  });
+
+  suite.test('預載後單位上場從池取節點、不多建；clear 釋放預載引用', () => withStub(() => {
+    const root = new FakeNode('root');
+    const overlay = new SpineUnitOverlay(() => root as Any, () => 1);
+    addRefs = 0; decRefs = 0;
+    void overlay.preload([squadCfg]);
+    const pooled = [...root.children];
+    assert.equals(3, pooled.length);
+    overlay.sync('p1', squadCfg, 0, 0, 1, false, 0, true, 3); overlay.update(0);
+    assert.equals(3, root.children.length, '沒有多建節點');
+    assert.isTrue(pooled.every(n => n.active), '取出後啟用');
+    assert.equals(0, overlay.pooledCount(squadCfg.path));
+    overlay.clear();
+    assert.equals(1, decRefs, 'clear 釋放預載引用');
+    assert.equals(0, overlay.preloadedCount());
+  }));
+
+  suite.test('預載載入失敗不標記失敗、也不拋錯', async () => {
+    const root = new FakeNode('root');
+    let overlay: SpineUnitOverlay = null as unknown as SpineUnitOverlay;
+    await withStub(() => {
+      overlay = new SpineUnitOverlay(() => root as Any, () => 1);
+      cc.resources = { load: (_p: string, _t: unknown, cb: (e: unknown, d: unknown) => void) => cb(new Error('缺檔'), null) };
+      return overlay.preload([squadCfg]);
+    });
+    assert.isFalse(overlay.hasFailed(squadCfg.path), '交給實際單位載入時再判斷後備');
+    assert.equals(0, overlay.preloadedCount());
+  });
+
+  suite.test('預載清單：敵方取 AI 兵種池、我方取手牌，同素材只留一筆（PROG-2-10078）', () => {
+    const list = battleTroopPreloadList(['cavalry', 'infantry', 'infantry'], [
+      { unitType: 'Cavalry', tacticId: 'tiger-tally-cavalry' }, { unitType: 'infantry', tacticId: 'tiger-tally-xian-zhen' }, { unitType: '' }, {},
+    ]);
+    const key = (t: { troop: string; isEnemy: boolean }): string => `${t.isEnemy ? 'e' : 'p'}:${t.troop}`;
+    assert.equals(['e:cavalry', 'e:infantry', 'p:cavalry', 'p:infantry'].join(), list.map(key).join(), '敵我各自一份、空卡略過');
+    assert.equals('tiger-tally-xian-zhen', list.find(t => key(t) === 'p:infantry')?.tallyTemplateId, '精銳外觀模板 id 帶進來');
+  });
 
   suite.test('小隊隊員一起回收與重用', () => withStub(() => {
     const root = new FakeNode('root');
