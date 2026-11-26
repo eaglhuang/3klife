@@ -19,6 +19,8 @@ export const SEASON_DIGEST_TEXTS = Object.freeze({
     open: { key: 'ui.season_digest.btn_open', fallback: '去看看' },
     ack: { key: 'ui.season_digest.btn_ack', fallback: '知道了' },
     unread: { key: 'ui.season_digest.unread', fallback: '新' },
+    mailboxTitle: { key: 'ui.season_digest.mailbox_title', fallback: '季報信箱' },
+    mailboxEntry: { key: 'ui.season_digest.mailbox_entry', fallback: '季報信箱' },
     toast: { key: 'ui.season_digest.toast', fallback: '任務回報和市井奇遇先收進右下角「信箱」了，不急著看，報表不會跑。' },
 });
 
