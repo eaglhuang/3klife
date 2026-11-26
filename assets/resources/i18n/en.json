@@ -426,6 +426,7 @@
   "ui.battle.skill.source_tactic": "Tactic",
   "ui.battle.skill.charging": "{0} charging, not enough SP",
   "ui.battle.autoplay.no_sortie": "No sortie force in this battle: Auto-play will only end turns automatically",
+  "ui.battle.tutorial.speed_x2": "The first battle runs at 2x speed to keep things brisk. Tap the speed button at the top right to switch back to 1x.",
   "ui.battle.delegate.unavailable": "No sortie force in this battle: delegation unavailable",
   "ui.battle.last_spurt.entered": "Turn {0} · Last Spurt!",
   "ui.battle.stamina.exhausted_player": "Our general is exhausted: Last Spurt lost",

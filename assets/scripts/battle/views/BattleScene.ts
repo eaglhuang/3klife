@@ -28,6 +28,7 @@ import { Camera, view } from "cc";
 import { loadDamageFonts, prewarmVfxPools, prewarmBattleAudioClips, loadEncounter, loadEnemyScale, createGeneral, loadGeneralConfig, buildTallyCards, buildUltimateSkills, buildTacticSummary, loadBattleSkillMetadata, resolveBattleSortieInput, buildOrderLoyalty, playerPowerOfGeneral } from './BattleSceneLoader';
 import { BattleSkillTargetingFlow } from './BattleSkillTargetingFlow';
 import { BattleSceneFlow } from './BattleSceneFlow';
+import { setBattleTimeScale } from './BattleTimeScale';
 import { validateBattleStateReadModel, validateSortieLoadoutReadModel } from '../../core/systems/ReadModelValidators';
 import { getEliteDeployCap, scenePresetIdOf } from '../../core/systems/SortieDeploy';
 import { BattleTutorialHint } from './BattleTutorialHint';
@@ -506,6 +507,13 @@ export class BattleScene extends Component {
         onAutoPlayStarted: () => this.turnFlowManager?.scheduleAutoPlayEndTurn(),
       });
       this.refreshBattleViews();
+      // 首戰預設倍速（PROG-2-10072）：訂閱事件後才設，離場時 unsubscribeEvents 會還原為 x1
+      if (battleParams.tutorial) {
+        const speed = GAME_CONFIG.tutorialDefaultBattleSpeed;
+        setBattleTimeScale(speed);
+        this.battleLogPanel?.setSpeed?.(speed);
+        if (speed === 2) this.battleLogPanel?.append(services().i18n.t('ui.battle.tutorial.speed_x2'));
+      }
       if (battleParams.tutorial) {
         this.tutorialHint = new BattleTutorialHint(services().event,
           msg => this.deployRuntime?.showToast(msg, 5),

@@ -163,6 +163,7 @@ export class BattleLogComposite extends CompositePanel {
         this._btnDelegate?.on(Button.EventType.CLICK, this._onDelegateClick, this);
         this._btnAuto?.on(Button.EventType.CLICK,    this._onAutoClick,    this);
         this._btnSpeed?.on(Button.EventType.CLICK,   this._onSpeedClick,   this);
+        this._syncSpeedButton();
         binder.getNode('BtnSetting')?.on(Button.EventType.CLICK, this._onSettingClick, this);
 
         // BtnCollapse：折疊 / 展開日誌
@@ -233,10 +234,27 @@ export class BattleLogComposite extends CompositePanel {
         services().event.emit(EVENT_NAMES.DelegateToggled, !this._delegateActive);
     }
 
+    /**
+     * 由戰場橋接層指定速度（首戰教學預設 x2，PROG-2-10072）：只同步按鈕外觀與內部狀態，
+     * 實際倍率由橋接層自己呼叫 setBattleTimeScale；玩家仍可按速度鈕切回 x1。
+     */
+    public setSpeed(speed: 1 | 2): void {
+        this._speed = speed;
+        this._syncSpeedButton();
+    }
+
+    /** x2 亮起（opacity 180）；速度鈕可能還沒掛 UIOpacity（首戰一開場就是 x2），亮起時補掛 */
+    private _syncSpeedButton(): void {
+        const btn = this._btnSpeed;
+        if (!btn) return;
+        const op = btn.getComponent(UIOpacity) ?? (this._speed === 2 ? btn.addComponent(UIOpacity) : null);
+        if (op) op.opacity = this._speed === 2 ? 180 : 255;
+    }
+
+    /** 戰鬥速度切換（x1 ↔ x2） */
     private _onSpeedClick(): void {
         this._speed = this._speed === 1 ? 2 : 1;
-        const op = this._btnSpeed?.getComponent('cc.UIOpacity') as any;
-        if (op) op.opacity = this._speed === 2 ? 180 : 255;
+        this._syncSpeedButton();
         services().event.emit(EVENT_NAMES.BattleSpeedToggled, this._speed);
         UCUFLogger.info(LogCategory.UI, `[BattleLogComposite] BattleSpeed → ${this._speed}x`);
     }
