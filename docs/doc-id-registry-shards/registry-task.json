@@ -17248,5 +17248,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10041.md",
     "title": "[PROG-2-10041] 保底步兵券標示與弓兵放箭時機",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3114",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10050.md",
+    "title": "[PROG-2-10050] 年終典禮補完：分數公式、賞賜入帳、驚喜獎、NPC i18n、演出強化",
+    "category": "task"
   }
 ]

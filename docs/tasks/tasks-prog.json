@@ -18794,12 +18794,60 @@
       "priority": "P1",
       "owner": "ClaudeCode_claude-opus-5-5",
       "file": "docs/agent-briefs/tasks/PROG/PROG-2-10046.md"
+    },
+    {
+      "doc_id": "doc_task_3114",
+      "id": "PROG-2-10050",
+      "title": "年終典禮補完：分數公式、賞賜入帳、驚喜獎、NPC i18n、演出強化",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "feature",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-26T09:46:25+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依 Antigravity 11/26 規格：分數公式與係數進資料 JSON；收下賞賜經 reward.claim 入帳（銀兩＋玉璧）並以 grantKey 防重領；驚喜獎真實判定；NPC 名門名稱改 i18n key；名次揭曉金銀銅框 Tween 與敲鑼掌聲音效時機。",
+      "related": [
+        "PROG-2-10027"
+      ],
+      "depends": [
+        "PROG-2-10046"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-26 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
     "done": 352,
-    "in_progress": 3,
+    "in_progress": 4,
     "open": 87,
-    "total": 442
+    "total": 443
   }
 }
