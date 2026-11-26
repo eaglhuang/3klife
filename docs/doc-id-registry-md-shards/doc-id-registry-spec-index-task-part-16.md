@@ -51,3 +51,6 @@
 | `doc_task_3175` | docs/agent-briefs/tasks/PROG/PROG-2-10104.md | [PROG-2-10104] 實作：戰場軍勢糧草常駐顯示、卡片費用章與不足說明面板 |
 | `doc_task_3176` | docs/agent-briefs/tasks/PROG/PROG-2-10108.md | [PROG-2-10108] 實作：內政任務詳情單屏三欄重排與固定底部行動列 |
 | `doc_task_3178` | docs/agent-briefs/tasks/PROG/PROG-2-10100.md | [PROG-2-10100] 洪流／水流關卡：水淹特效與卡住沉浮 |
+| `doc_task_3179` | docs/agent-briefs/tasks/PROG/PROG-2-10109.md | [PROG-2-10109] 台詞性別化第二批：老年自稱、AI prompt 與快取鍵、資料檔寫死自稱 |
+| `doc_task_3180` | docs/agent-briefs/tasks/PROG/PROG-2-10113.md | [PROG-2-10113] Antigravity 試玩三 bug |
+| `doc_task_3181` | docs/agent-briefs/tasks/PROG/PROG-2-10107.md | [PROG-2-10107] 放招微調：士氣鼓舞 TP 20 免傷兵、首年主將補通用計謀加速 15、奧義門檻方案 A |
