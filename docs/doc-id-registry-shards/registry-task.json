@@ -17346,6 +17346,12 @@
     "category": "task"
   },
   {
+    "id": "doc_task_3136",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10073.md",
+    "title": "[PROG-2-10073] 戰前偵查面板：措辭降噪＋出征確認框疊字修正",
+    "category": "task"
+  },
+  {
     "id": "doc_task_3131",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10074.md",
     "title": "[PROG-2-10074] 整年放招 0 次修正：計謀起手 20／火計 25、教學戰委任放招旁路、一般戰條件不符自動換招、playtest 放招計數",

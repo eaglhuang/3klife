@@ -27,7 +27,7 @@ export function createNewcomerGuidanceSuite(): TestSuite {
     suite.test('鼓舞缺口有操作路徑，不虛構已擁有物品或強制鎖出征', () => {
         const help = scoutLoadoutHelp(['鼓舞']);
         assert.contains(help, '武將→主將→「技」'); assert.contains(help, '【鼓舞】');
-        assert.contains(help, '未裝備不算'); assert.contains(help, '先行出征');
+        assert.contains(help, '沒裝備不算'); assert.contains(help, '直接出征');
         assert.equals('', scoutLoadoutHelp([]));
         assert.contains(SCOUT_PANEL_TEXTS.noIntel, '尚未偵查');
         assert.contains(SCOUT_PANEL_TEXTS.noIntel, '不代表沒有風險');
