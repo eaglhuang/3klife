@@ -1,0 +1,24 @@
+{
+  "childId": "child_starter_seedling",
+  "age": 7,
+  "genderStrategy": "random",
+  "nameByGender": {
+    "男": "{fatherName}之少主",
+    "女": "{fatherName}之千金"
+  },
+  "statRange": { "min": 18, "max": 30 },
+  "lukRange": { "min": 40, "max": 60 },
+  "epRange": { "min": 62, "max": 72 },
+  "epRating": "B",
+  "rarityTier": "rare",
+  "characterCategory": "general",
+  "hpRatio": 0.4,
+  "vitality": 100,
+  "maxVitality": 100,
+  "initialFavor": 30,
+  "fallbackGenes": [
+    { "id": "gene_str", "level": 1, "isLocked": true },
+    { "id": "gene_int", "level": 1, "isLocked": true }
+  ],
+  "_note": "暫定（PM 定，數值日後可調）：開局送一位 7 歲幼苗，一年（4 季）長 1 歲；第 2 年 8 歲出現天賦徵兆、第 6 年 12 歲顯露、第 9 年 15 歲覺醒（後續卡接）；入學 15 歲。幼苗是義子來源 starter，與親生子嗣共用名冊武將＋家族登記表；statRange 為 7 歲孩子的起始五維，initialFavor 為親子好感起始值（0~100）。"
+}

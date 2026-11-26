@@ -19028,7 +19028,7 @@
         "PR diff 僅限 artwork/general-art-library/** 與 catalog.json 與本卡片檔"
       ],
       "deliverables": [
-        "artwork/general-art-library/**（每位武將靜態立繪、戰鬥立繪、avatars、small_avatars 四件組）",
+        "artwork/general-art-library/**",
         "artwork/general-art-library/catalog.json"
       ],
       "notes": "2026-11-26 | 狀態: open | 驗證: pending | 變更: ClaudeCode_claude-opus-5-5 開傘卡，owner 指派 codex-gpt-6.2-sol，未上鎖 | 阻塞: 無",
@@ -19104,7 +19104,61 @@
       }
     },
     {
-      "doc_id": "doc_task_3122",
+      "doc_id": "doc_task_3121",
+      "id": "PROG-2-10058",
+      "title": "幼苗與親子資料基礎：開局送 7 歲幼苗、親子好感、小名碎片帳本、同窗好友旗標",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-26T15:53:07+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "新局第 1 年送一位 7 歲幼苗（共用子嗣資料：名冊武將＋家族登記），並補親子好感、天賦小名碎片帳本、同窗好友旗標存檔（舊存檔相容）與 family.childLedger 查詢；承 PROG-2-10057 的核心基礎缺口 1～4。",
+      "related": [
+        "PROG-2-10057",
+        "PROG-2-10059"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [
+        "assets/scripts/core/systems/BloodlineChildLedger.ts",
+        "assets/scripts/core/services/StarterSeedlingService.ts",
+        "assets/resources/data/starter-seedling-config.json",
+        "tests/BloodlineChildLedger.test.ts",
+        "assets/scripts/core/api/localserver/ChildGrowthCommands.ts",
+        "assets/scripts/shared/family/FamilyService.ts"
+      ],
+      "notes": "2026-11-26 | 狀態: done | 驗證: run-cli 全過（9758）、tsc 0 錯、compute-gate standard | 變更: 開局 7 歲幼苗、親子好感／小名碎片／同窗好友帳本存檔（舊檔相容）、family.childLedger 查詢、單元測試；既有開局測試名冊數 +1 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_3124",
       "id": "PROG-2-10060",
       "title": "新手前 10～20 分鐘稽核小修：開場信按鈕、教學銀兩、結緣入口、任務牆獎勵提示",
       "owner": "ClaudeCode_claude-opus-5-5",
@@ -19134,7 +19188,7 @@
         "tests/OpeningLetterLobby.test.ts",
         "tests/NewcomerGuidance.test.ts"
       ],
-      "notes": "2026-11-26 | 狀態: done | 驗證: run-cli 9739 全過、tsc 0 錯、compute-gate standard 通過（僅既有 ui->battle 警告） | 變更: 開場信按鈕字、教學銀兩、結緣入口、任務牆獎勵提示＋單元測試 | 阻塞: 無（畫面效果未在可實跑建置驗證；SSR 揭曉缺點擊提示等中／大項見稽核清單）",
+      "notes": "2026-11-26 | 狀態: done | 驗證: run-cli 全過、tsc 0 錯、compute-gate standard 通過（僅既有 ui->battle 警告） | 變更: 開場信按鈕字、教學銀兩、結緣入口、任務牆獎勵提示＋單元測試 | 阻塞: 無（畫面效果未在可實跑建置驗證；SSR 揭曉缺點擊提示等中／大項見稽核清單）",
       "brief": {
         "style": "classic",
         "label": "",
@@ -19159,9 +19213,9 @@
     }
   ],
   "summary": {
-    "done": 357,
+    "done": 358,
     "in_progress": 4,
     "open": 88,
-    "total": 449
+    "total": 450
   }
 }

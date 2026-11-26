@@ -111,12 +111,12 @@ export function createMvpLoopE2ESuite(): TestSuite {
         const adapter = new MemoryStorageAdapter();
         const session = createSession(adapter);
         await session.startNewGameWithStarters(20261015, realGenerals(), { coreGeneralId: locked as typeof STARTER_CORE_GENERAL_ID });
-        assert.equals(7, session.roster.length);
+        assert.equals(8, session.roster.length, '六位名將＋少年名將＋7 歲幼苗');
         assert.equals(locked, session.leadGeneralId);
 
         // 過一季：七人都還活著，主將仍可出戰
         await session.advanceSeason();
-        assert.equals(7, session.roster.length, '第一季不應有人死亡');
+        assert.equals(8, session.roster.length, '第一季不應有人死亡');
         assert.isTrue(session.checkDeployable(locked).eligible, '過一季後主將仍可出戰');
 
         // 首戰：名冊武將 → 戰場武將設定 → 真的初始化並推進戰鬥
@@ -200,7 +200,7 @@ export function createMvpLoopE2ESuite(): TestSuite {
             const session = createSession(new MemoryStorageAdapter());
             await session.startNewGameWithStarters(1, realGenerals(), { coreGeneralId: locked as typeof STARTER_CORE_GENERAL_ID });
             assert.equals(id, session.leadGeneralId, `${id} 應成為出戰主將`);
-            assert.equals(7, session.roster.length);
+            assert.equals(8, session.roster.length);
         }
     });
 

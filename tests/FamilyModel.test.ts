@@ -204,13 +204,15 @@ export function createFamilyModelSuite(): TestSuite {
 
     suite.test('新開局：開局少年登記為開局義子特例；存檔欄位 familyState 往返；沒有家族資料時不寫欄位', async () => {
         const { session, storage } = await newGame();
-        const youth = session.familyHost.service.members('adopted');
+        const adopted = session.familyHost.service.members('adopted');
+        assert.equals(2, adopted.length, '開局少年與 7 歲幼苗（PROG-2-10058）都是開局義子特例');
+        const youth = adopted.filter((m) => m.personId !== 'child_starter_seedling');
         assert.equals(1, youth.length);
         assert.equals('starter', youth[0].adoptSource);
         assert.isTrue(!!session.roster.find((g) => g.id === youth[0].personId && (g as { youth?: unknown }).youth));
         await session.save();
         const raw = await new PlayerSaveService(storage).load();
-        assert.equals(1, raw!.familyState!.members.length);
+        assert.equals(2, raw!.familyState!.members.length);
         const loaded = new GameSession(5);
         loaded.setSaveService(new PlayerSaveService(storage));
         assert.isTrue(await loaded.load());
