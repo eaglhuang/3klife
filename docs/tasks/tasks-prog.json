@@ -18999,7 +18999,63 @@
       }
     },
     {
-      "doc_id": "doc_task_3119",
+      "doc_id": "doc_task_3118",
+      "id": "PROG-2-10056",
+      "title": "武將四件組美術交付（典韋、賈詡、後續依序）",
+      "owner": "codex-gpt-6.2-sol",
+      "priority": "P1",
+      "status": "open",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "傘卡：Codex 交付武將四件組美術（靜態立繪、戰鬥立繪、半身像 avatars、大頭像 small_avatars）所用的正式任務卡，讓 ATM 提交閘門可放行（先前無卡 taskless commit 被擋）。首批典韋、次批賈詡，後續依序。範圍限 artwork/general-art-library/** 與 artwork/general-art-library/catalog.json。status 保持 open，由 Codex 依 CLAUDE.md 硬規則 #0 自行 check、lock、改 in-progress。PR 只含四圖＋catalog＋本卡片檔。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "驗收標準以 C:/Users/User/.codex/skills/general-portrait-style/SKILL.md 為準",
+        "頭框中心 ±3%",
+        "臉部 30～45° 側轉",
+        "半身下緣胸底不見腰帶",
+        "大頭像獨立裁切（非由半身縮圖）",
+        "戰鬥姿態力道／優雅",
+        "服飾精細度達男女參考圖下限",
+        "PR diff 僅限 artwork/general-art-library/** 與 catalog.json 與本卡片檔"
+      ],
+      "deliverables": [
+        "artwork/general-art-library/**（每位武將靜態立繪、戰鬥立繪、avatars、small_avatars 四件組）",
+        "artwork/general-art-library/catalog.json"
+      ],
+      "notes": "2026-11-26 | 狀態: open | 驗證: pending | 變更: ClaudeCode_claude-opus-5-5 開傘卡，owner 指派 codex-gpt-6.2-sol，未上鎖 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_3120",
       "id": "PROG-2-10057",
       "title": "血統第 3~5 年成長小事件：資料載入器、schema 驗證與觸發／一次性邏輯（核心基礎調查）",
       "owner": "ClaudeCode_claude-opus-5-5",
@@ -19009,8 +19065,8 @@
       "phase": "M0",
       "created": "2026-11-26",
       "created_by_agent": "ClaudeCode_claude-opus-5-5",
-      "started_at": "2026-11-26T14:27:01+08:00",
-      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
       "chain_id": "",
       "chain_step": "",
       "sensor_triggered_by": "",
@@ -19049,9 +19105,9 @@
     }
   ],
   "summary": {
-    "done": 355,
-    "in_progress": 5,
-    "open": 87,
-    "total": 447
+    "done": 356,
+    "in_progress": 4,
+    "open": 88,
+    "total": 448
   }
 }
