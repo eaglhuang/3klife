@@ -1324,7 +1324,7 @@
   "ui.jealousy.popup.title": "家庭のやきもち",
   "ui.jealousy.popup.hint": "{0}がやきもちを焼いています！対応を選んでください（配偶者ごとに年1回）",
   "ui.jealousy.popup.spouse": "やきもちの配偶者：{0}",
-  "ui.jealousy.popup.outcome": "結果：好感 {0}、気力 {1}、銀両 -{2}",
+  "ui.jealousy.popup.outcome": "結果：好感 {0}、銀両 {1}",
   "ui.jealousy.popup.blocked": "今年はすでに{0}をなだめました。また今度に",
   "ui.jealousy.popup.close": "閉じる",
   "ui.jealousy.popup.noSilver": "銀両が足りません（{0}必要）",

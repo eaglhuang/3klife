@@ -3569,10 +3569,13 @@ export class LobbyScene extends Component {
                 return;
             }
         }
+        const silverBefore = panel.state.gold;
         const out = panel.onSelectOption(option, year, spouseId, Math.floor(Math.random() * 100));
         const res = out.resolution;
+        const silverGain = res.nextState.gold - silverBefore + res.goldCost;
         if (!res.blockedByYearlyLimit) {
             if (res.goldCost > 0) session.silverLedger.spendSilver(res.goldCost);
+            if (silverGain > 0) session.silverLedger.creditSilver(silverGain);
             if (res.favorDelta !== 0) session.giftFemale(spouseId, res.favorDelta);
             this._bondingJealousy.commitJealousy(panel.state);
             if (session.hasSaveService) void session.save().catch(() => undefined);
@@ -3580,7 +3583,7 @@ export class LobbyScene extends Component {
         host.binder.setTexts({
             jpHint: res.blockedByYearlyLimit
                 ? ''
-                : this._panelT('ui.jealousy.popup.outcome', String(res.favorDelta), String(res.staminaDelta), String(res.goldCost)),
+                : this._panelT('ui.jealousy.popup.outcome', String(res.favorDelta), String(silverGain - res.goldCost)),
         });
     }
 

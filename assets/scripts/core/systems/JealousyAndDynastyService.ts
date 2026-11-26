@@ -35,7 +35,7 @@ export interface DynastyBadgeCheckResult {
 
 /**
  * 吃醋三選項與三連霸「天下名門」徽章純邏輯服務（PROG-2-10033）
- * 所有機率、價格公式、精力變化、每年每配偶上限與徽章效果皆從 jealousy-and-dynasty-config.json 讀取。
+ * 所有機率、價格公式、銀兩變化、每年每配偶上限與徽章效果皆從 jealousy-and-dynasty-config.json 讀取。
  */
 export class JealousyAndDynastyService {
     public static getOptionBPrice(year: number): number {
@@ -115,7 +115,7 @@ export class JealousyAndDynastyService {
             };
         }
 
-        // Option C: 50% 得 0 並精力 +10；50% 得 -6 並觸發搞笑劇情（抓包 3 次解鎖「府中睡神」）
+        // Option C: 50% 得銀兩 +30；50% 得 -6 並觸發搞笑劇情（抓包 3 次解鎖「府中睡神」）
         const sleepSuccess = rollPercent < config.jealousy.optionC.sleepSuccessRate;
         if (sleepSuccess) {
             return {

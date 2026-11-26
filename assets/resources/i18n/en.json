@@ -1392,7 +1392,7 @@
   "ui.jealousy.popup.title": "Household Jealousy",
   "ui.jealousy.popup.hint": "{0} is jealous! Pick a response (once per spouse per year)",
   "ui.jealousy.popup.spouse": "Jealous spouse: {0}",
-  "ui.jealousy.popup.outcome": "Result: Favor {0}, Stamina {1}, Silver -{2}",
+  "ui.jealousy.popup.outcome": "Result: Favor {0}, Silver {1}",
   "ui.jealousy.popup.blocked": "You already soothed {0} this year; try again later",
   "ui.jealousy.popup.close": "Close",
   "ui.jealousy.popup.noSilver": "Not enough Silver ({0} needed)",

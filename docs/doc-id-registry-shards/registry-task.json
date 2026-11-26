@@ -17224,5 +17224,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10045.md",
     "title": "[PROG-2-10045] 戰場 HUD／飄字打磨批次（飄字疊字、部署提示遮擋、長字縮放）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3111",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10049.md",
+    "title": "[PROG-2-10049] 吃醋選項 C 改銀兩獎勵（驗收合併 Antigravity 分支）",
+    "category": "task"
   }
 ]
