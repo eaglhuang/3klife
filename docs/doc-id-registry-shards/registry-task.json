@@ -17470,5 +17470,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10108.md",
     "title": "[PROG-2-10108] 實作：內政任務詳情單屏三欄重排與固定底部行動列",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3178",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10100.md",
+    "title": "[PROG-2-10100] 洪流／水流關卡：水淹特效與卡住沉浮",
+    "category": "task"
   }
 ]
