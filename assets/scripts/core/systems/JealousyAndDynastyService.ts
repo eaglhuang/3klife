@@ -123,12 +123,12 @@ export class JealousyAndDynastyService {
                 blockedByYearlyLimit: false,
                 goldCost: 0,
                 favorDelta: config.jealousy.optionC.sleepFavorDelta,
-                staminaDelta: config.jealousy.optionC.sleepStaminaDelta,
+                staminaDelta: 0,
                 triggeredComedyStory: false,
                 newlyUnlockedTitle: null,
                 nextState: {
                     ...state,
-                    stamina: state.stamina + config.jealousy.optionC.sleepStaminaDelta,
+                    gold: state.gold + config.jealousy.optionC.sleepGoldDelta,
                     spouseYearTriggerCount: nextTriggers,
                 },
             };

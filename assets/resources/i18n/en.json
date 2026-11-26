@@ -1373,7 +1373,7 @@
   "ui.bonding.title": "Bonding Rate: {0}%",
   "ui.jealousy.optionA.label": "Sincere Apology (Free, {0}% +{1} / {2}% {3})",
   "ui.jealousy.optionB.label": "Generous Gift ({0} Silver for +{1} Favor)",
-  "ui.jealousy.optionC.label": "Play Dumb (Free, {0}% Stamina +{1} / {2}% Caught {3})",
+  "ui.jealousy.optionC.label": "Play Dumb (Free, {0}% Silver +{1} / {2}% Caught {3})",
   "ui.jealousy.title.sleep_god": "Household Sleep God",
   "ui.dynasty.badge.tianxia_mingmen.desc": "3-Year Champion: Academy +{0}%, Salary +{1}%",
   "ui.jealousy.caught.1": "Caught #1: Pretended to recite memorials while drooling on the bamboo slips!",

@@ -1305,7 +1305,7 @@
   "ui.bonding.title": "縁組成功率：{0}%",
   "ui.jealousy.optionA.label": "誠意の慰め（無料、{0}% +{1} / {2}% {3}）",
   "ui.jealousy.optionB.label": "豪華な贈り物（銀両 {0} で好感 +{1}）",
-  "ui.jealousy.optionC.label": "とぼける（無料、{0}% 精力 +{1} / {2}% 発覚 {3}）",
+  "ui.jealousy.optionC.label": "とぼける（無料、{0}% 銀両 +{1} / {2}% 発覚 {3}）",
   "ui.jealousy.title.sleep_god": "屋敷の眠り神",
   "ui.dynasty.badge.tianxia_mingmen.desc": "3年連続首位：私塾 +{0}%、俸禄 +{1}%",
   "ui.jealousy.caught.1": "発覚1回目：出師表を暗唱するふりをして竹簡によだれを垂らした！",
