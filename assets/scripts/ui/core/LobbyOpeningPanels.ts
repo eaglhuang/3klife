@@ -50,7 +50,7 @@ export interface LobbyOpeningPanelPorts {
     /** 確定開局後收掉宿命池畫面 */
     closeDestinyPool?: () => void;
     /** 開場信件的標題與本文（已查好 i18n 的字串） */
-    openingLetterText?: () => { title: string; body: string };
+    openingLetterText?: () => { title: string; body: string; button?: string };
     /** 開場面板完成顯示／退場後，通知宿主重查延後彈窗。 */
     onOverlayChanged?: () => void;
     warn: (message: string, error?: unknown) => void;
@@ -156,7 +156,8 @@ export class LobbyOpeningPanels {
         this._ports.bringToFront(host.node);
         if (host.binder) {
             const text = this._ports.openingLetterText?.() ?? { title: '', body: '' };
-            host.binder.setTexts({ openingLetterTitle: text.title, openingLetterBody: text.body });
+            // 信裡寫「就按下：啟動宿命轉蛋」，按鈕字要跟信對得上；沒給 button 就維持版面原字
+            host.binder.setTexts({ openingLetterTitle: text.title, openingLetterBody: text.body, ...(text.button ? { btnCloseOpeningLetterLabel: text.button } : {}) });
         }
     }
 

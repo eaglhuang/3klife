@@ -50,7 +50,7 @@ export function createOneYearBondingLoopSuite(): TestSuite {
 
         // 驗證初始資源與名冊（6 位初始名將 + 1 位開局紅顏貂蟬 + 1 位 14 歲少年名將；PROG-2-9194 取代 4 歲幼苗）
         const initialRoster = roster.getAll();
-        assert.equals(8, initialRoster.length, '新帳號應含 6 位初始名將 + 1 位開局紅顏 + 1 位 14 歲少年名將');
+        assert.equals(9, initialRoster.length, '新帳號應含 6 位初始名將 + 1 位開局紅顏 + 1 位 14 歲少年名將 + 1 位 7 歲幼苗');
         assert.equals(undefined, initialRoster.find((g) => g.id === 'starter-royal-child'), '新開局不再送 4 歲宗室幼苗');
         const youthId = getStarterYouthConfig().defaultPickId;
         const starterYouth = initialRoster.find((g) => g.id === youthId);
@@ -153,7 +153,7 @@ export function createOneYearBondingLoopSuite(): TestSuite {
         session.setSaveService(new PlayerSaveService(new MemoryStorageAdapter()));
         session.setAutoSave(false);
 
-        await session.startNewGameWithStarters(888, generals, { includeStarterYouth: false });
+        await session.startNewGameWithStarters(888, generals, { includeStarterYouth: false, includeStarterSeedling: false });
         const females = roster.getAll().filter((g) => g.gender === '女');
         assert.equals(0, females.length, '若未配置開局紅顏，初始 6 名將全為男性，無女方可供結緣');
         assert.equals(undefined, roster.getAll().find((g) => g.id === 'starter-royal-child'));

@@ -53,11 +53,11 @@ export function createStarterRosterSuite(): TestSuite {
         session.setRandomSource(() => 0.99);
         await session.advanceSeason();
         await session.startNewGameWithStarters(2, data());
-        assert.equals(7, session.roster.length, '六位名將＋一位少年名將');
+        assert.equals(8, session.roster.length, '六位名將＋一位少年名將＋一位 7 歲幼苗');
         assert.equals(STARTER_CORE_GENERAL_ID, session.leadGeneralId);
         assert.equals(JSON.stringify(new GameSession(2).gameTime), JSON.stringify(session.gameTime));
         const snapshot = await save.load();
-        assert.equals(7, snapshot!.roster.length);
+        assert.equals(8, snapshot!.roster.length);
         assert.equals(STARTER_CORE_GENERAL_ID, snapshot!.leadGeneralId);
     });
     suite.test('既有 startNewGame 保留名冊，仍清除主將與時鐘', async () => {

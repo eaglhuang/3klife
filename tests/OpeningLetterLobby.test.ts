@@ -44,7 +44,7 @@ async function fixture(session: GameSession, isNewPlayer: boolean) {
         refreshSeasonHud: () => undefined,
         notifyBeauty: () => undefined,
         advanceOpening: () => undefined,
-        openingLetterText: () => ({ title: '標題', body: '第一段\n\n第二段' }),
+        openingLetterText: () => ({ title: '標題', body: '第一段\n\n第二段', button: '啟動宿命轉蛋' }),
         warn: () => undefined,
     } as unknown as LobbyOpeningPanelPorts;
     const panels = new LobbyOpeningPanels(ports);
@@ -62,6 +62,8 @@ export function createOpeningLetterLobbySuite(): TestSuite {
         assert.isTrue(host.node.active);
         assert.equals('標題', host.texts.openingLetterTitle);
         assert.equals('第一段\n\n第二段', host.texts.openingLetterBody);
+        // 信裡寫「就按下：啟動宿命轉蛋」，按鈕字要對得上
+        assert.equals('啟動宿命轉蛋', host.texts.btnCloseOpeningLetterLabel);
     });
 
     suite.test('新局在宿命開局開始前不開啟', async () => {

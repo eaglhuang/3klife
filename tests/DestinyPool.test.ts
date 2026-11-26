@@ -108,7 +108,7 @@ export function createDestinyPoolSuite(): TestSuite {
         const session = newSession();
         assert.equals(core, await startNewGameFromDestiny(session, 20261109, generals, state));
         assert.equals(core, session.leadGeneralId);
-        const adultIds = session.roster.filter((g) => !isYouthGeneral(g)).map((g) => g.id).sort().join(',');
+        const adultIds = session.roster.filter((g) => !isYouthGeneral(g) && g.id !== 'child_starter_seedling').map((g) => g.id).sort().join(',');
         assert.equals([...state.rolled].sort().join(','), adultIds);
         assert.equals(1, session.roster.filter((g) => isYouthGeneral(g)).length);
     });
@@ -118,7 +118,7 @@ export function createDestinyPoolSuite(): TestSuite {
         const fillers = destinyFillerIds(generals);
         const session = newSession();
         await session.startNewGameWithStarters(1, generals, { coreGeneralId: 'zhang-fei', rosterIds: ['zhang-fei', ...fillers] });
-        assert.equals(fillers.length + 2, session.roster.length);
+        assert.equals(fillers.length + 3, session.roster.length, '填充名將＋核心＋少年名將＋7 歲幼苗');
     });
 
     suite.test('尚未鎖定不能開新局，名冊不被動到', async () => {
