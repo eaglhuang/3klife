@@ -1,0 +1,117 @@
+{
+  "id": "year1-goals-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "Year1GoalsRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "Year1GoalsCard",
+        "id": "year1GoalsCard",
+        "widget": {
+          "top": 108,
+          "hCenter": true
+        },
+        "width": 760,
+        "height": 92,
+        "skinSlot": "y1.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "Y1Progress",
+            "id": "y1Progress",
+            "widget": {
+              "top": 8,
+              "left": 20
+            },
+            "height": 30,
+            "text": "首年目標 0/6",
+            "styleSlot": "y1.label.progress",
+            "width": 220
+          },
+          {
+            "type": "panel",
+            "name": "Y1BarTrack",
+            "id": "y1BarTrack",
+            "widget": {
+              "top": 14,
+              "left": 250,
+              "right": 20
+            },
+            "height": 18,
+            "skinSlot": "y1.bar.track",
+            "children": [
+              {
+                "type": "panel",
+                "name": "Y1BarFill",
+                "id": "y1BarFill",
+                "widget": {
+                  "left": 0,
+                  "vCenter": true
+                },
+                "width": 200,
+                "height": 18,
+                "skinSlot": "y1.bar.fill"
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "Y1Hint",
+            "id": "y1Hint",
+            "widget": {
+              "top": 48,
+              "left": 20,
+              "right": 170
+            },
+            "height": 34,
+            "text": "",
+            "styleSlot": "y1.label.hint"
+          },
+          {
+            "type": "button",
+            "name": "BtnY1Next",
+            "id": "btnY1Next",
+            "widget": {
+              "top": 44,
+              "right": 16
+            },
+            "width": 130,
+            "height": 40,
+            "skinSlot": "y1.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnY1NextLabel",
+                "id": "btnY1NextLabel",
+                "widget": {
+                  "hCenter": true,
+                  "vCenter": true
+                },
+                "height": 30,
+                "text": "前往",
+                "styleSlot": "y1.label.button",
+                "width": 120
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

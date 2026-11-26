@@ -5,7 +5,7 @@
  * 帳本與事件進度屬於重要存檔狀態：客戶端只能經命令讀取與「選擇」，不直接碰 GameSession 欄位，也不得自帶數值；
  * 效果由權威端（單機＝GameSession）依事件表入帳，扣銀兩走家族銀兩帳本。
  */
-import type { FamilyChildLedgerResult, FamilyGrowthEventsResult, FamilyResolveGrowthEventResult } from '../../../shared/api/ApiCommands';
+import type { FamilyChildLedgerResult, FamilyGrowthEventsResult, FamilyResolveGrowthEventResult, FamilyTalkToChildResult } from '../../../shared/api/ApiCommands';
 import { ApiError, type ApiErrorKey } from '../../../shared/api/ApiErrors';
 import type { LocalApiAdapter } from './LocalApiAdapter';
 
@@ -15,11 +15,16 @@ export type GrowthEventResolveOutcome =
     | { ok: true; result: FamilyResolveGrowthEventResult }
     | { ok: false; reason: GrowthEventResolveFailure };
 
+export type ChildTalkOutcome =
+    | { ok: true; result: FamilyTalkToChildResult }
+    | { ok: false; reason: 'unknown-child' | 'already-talked' };
+
 /** 權威端的子嗣成長宿主：單機由 GameSession 提供，連線時由伺服器取代 */
 export interface ChildGrowthHost {
     childLedger(): FamilyChildLedgerResult;
     growthEvents(): FamilyGrowthEventsResult;
     resolveGrowthEvent(childId: string, eventId: string, optionId: string): GrowthEventResolveOutcome;
+    talkToChild(childId: string): ChildTalkOutcome;
 }
 
 const RESOLVE_ARGS = ['childId', 'eventId', 'optionId'] as const;
@@ -30,6 +35,11 @@ const REASON_ERROR: Record<GrowthEventResolveFailure, [ApiErrorKey, string]> = {
     'already-triggered': ['FAMILY_GROWTH_NOT_PENDING', '這件成長事件已經處理過了'],
     'unknown-option': ['FAMILY_GROWTH_OPTION_UNKNOWN', '沒有這個選項'],
     'silver-low': ['INSUFFICIENT_BALANCE', '家族銀兩不足，孩子的小心願先欠著'],
+};
+
+const TALK_ERROR: Record<'unknown-child' | 'already-talked', [ApiErrorKey, string]> = {
+    'unknown-child': ['FAMILY_CHILD_UNKNOWN', '家裡沒有這個孩子'],
+    'already-talked': ['FAMILY_CHILD_TALKED', '今年已經跟這個孩子談過了，明年再聊'],
 };
 
 export function registerChildGrowthCommands(adapter: LocalApiAdapter, getHost: () => ChildGrowthHost | null): void {
@@ -52,6 +62,18 @@ export function registerChildGrowthCommands(adapter: LocalApiAdapter, getHost: (
         const out = requireHost().resolveGrowthEvent(args.childId as string, args.eventId as string, args.optionId as string);
         if (!out.ok) {
             const [key, message] = REASON_ERROR[out.reason];
+            throw new ApiError(key, message);
+        }
+        return { result: out.result };
+    });
+
+    adapter.register('family.talkToChild', (args) => {
+        const extra = Object.keys(args).find((key) => key !== 'childId');
+        if (extra) throw new ApiError('FORBIDDEN_FIELD', `命令不得帶欄位 ${extra}`);
+        if (typeof args.childId !== 'string' || !args.childId) throw new ApiError('INVALID_SCHEMA', 'childId 必須是非空字串');
+        const out = requireHost().talkToChild(args.childId);
+        if (!out.ok) {
+            const [key, message] = TALK_ERROR[out.reason];
             throw new ApiError(key, message);
         }
         return { result: out.result };

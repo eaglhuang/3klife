@@ -12,7 +12,7 @@
  */
 import * as fs from 'fs';
 import * as path from 'path';
-import { EVENT_NAMES, Faction, TroopType } from '../assets/scripts/core/config/Constants';
+import { EVENT_NAMES, Faction, TroopType, Weather } from '../assets/scripts/core/config/Constants';
 import { BattleController } from '../assets/scripts/battle/controllers/BattleController';
 import { GeneralUnit } from '../assets/scripts/core/models/GeneralUnit';
 import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
@@ -132,6 +132,39 @@ export function createAiDelegateUltimateFlowSuite(): TestSuite {
     suite.test('沒有難度表（ultimateRules 未設定）：即使條件成立也不放', () => {
         const { ctrl } = delegateBattle({ int: 90, playerTroops: 1, enemyTroops: 3, difficulty: null });
         assert.equals(0, runDelegateCountingUltimates(ctrl));
+    });
+
+    suite.test('教學戰旁路（PROG-2-10074）：IQ／敵方隊數不符（MEDIUM、敵 2 隊），教學戰 SP 滿仍放；一般戰不放', () => {
+        const normal = delegateBattle({ int: 60, playerTroops: 2, enemyTroops: 2, difficulty: 'normal' });
+        assert.equals(0, runDelegateCountingUltimates(normal.ctrl), '一般戰條件不符不放');
+        const tutorial = delegateBattle({ int: 60, playerTroops: 2, enemyTroops: 2, difficulty: 'normal' });
+        tutorial.ctrl.tutorialBattle = true;
+        assert.equals(1, runDelegateCountingUltimates(tutorial.ctrl), '教學戰 SP 滿就放');
+    });
+
+    suite.test('換招（PROG-2-10074 方案 D）：主戰法火計沒起風放不出，委任改放戰法槽內條件達成的第二招；起風則仍放火計', () => {
+        const FIRE = { id: 'tactic-fire-scheme', battleSkillId: 'zhou-yu-inferno', tcond: [{ kind: 'weather', allowed: ['WINDY'] }] };
+        const ALT = { id: 'tactic-alt', battleSkillId: TEST_BATTLE_SKILL_ID, targetMode: 'enemyAll' };
+        const build = (weather: Weather): { ctrl: BattleController; used: string[] } => {
+            const { ctrl, player } = delegateBattle({ int: 90, playerTroops: 3, enemyTroops: 2, difficulty: null });
+            (player as unknown as { tacticSlots: unknown[] }).tacticSlots = [
+                { slotId: 's1', tacticId: FIRE.id, source: 'inborn' }, { slotId: 's2', tacticId: ALT.id, source: 'inborn' },
+            ];
+            (ctrl as unknown as { tacticDefinitionMap: Map<string, unknown> }).tacticDefinitionMap = new Map<string, unknown>([[FIRE.id, FIRE], [ALT.id, ALT]]);
+            ctrl.state.weather = weather;
+            const used: string[] = [];
+            services().event.on(EVENT_NAMES.GeneralSkillUsed, (d?: { faction?: Faction; sourceType?: SkillSourceType; skillId?: string }) => {
+                if (d?.faction === Faction.Player && d.sourceType === SkillSourceType.SeedTactic) used.push(String(d.skillId));
+            });
+            return { ctrl, used };
+        };
+        const calm = build(Weather.Clear);
+        assert.equals(true, calm.ctrl.runDelegateSkillPhase().tactic, '無風時應換招放出第二招');
+        assert.equals(TEST_BATTLE_SKILL_ID, calm.used[0]);
+        const windy = build(Weather.Windy);
+        windy.ctrl.runDelegateSkillPhase();
+        assert.equals(true, windy.used.length <= 1, '起風只放一招');
+        assert.equals(true, windy.used[0] !== TEST_BATTLE_SKILL_ID, '起風時主戰法火計優先，不換招');
     });
 
     return suite;

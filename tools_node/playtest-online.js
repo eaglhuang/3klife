@@ -443,6 +443,42 @@ function installPageHelpers() {
             return out;
         },
         /**
+         * 委任放招計數（PROG-2-10074）：包住控制器的 runDelegateSkillPhase，逐次記回合、奧義／計謀是否放出與當下 SP／計謀點。
+         * 每個控制器只包一次；委任未開（delegateQuality 為空）時 delegating 為 false，用來確認自動代打真的開啟。
+         */
+        hookDelegateCasts: () => {
+            const comp = window.__ptBattleComp;
+            const ctrl = comp && comp.sceneContext ? comp.sceneContext.ctrl : null;
+            if (!ctrl || typeof ctrl.runDelegateSkillPhase !== 'function') return false;
+            if (ctrl.__ptCastHooked) return true;
+            const orig = ctrl.runDelegateSkillPhase.bind(ctrl);
+            window.__ptCasts = [];
+            ctrl.runDelegateSkillPhase = () => {
+                const g = ctrl.state && ctrl.state.playerGeneral;
+                let tp = null;
+                try { tp = ctrl.getPlayerTacticPointState(); } catch (e) { tp = null; }
+                const res = orig();
+                window.__ptCasts.push({ round: window.__ptRound, ultimate: Boolean(res && res.ultimate), tactic: Boolean(res && res.tactic), sp: g ? g.currentSp : null, tp: tp ? tp.current : null, delegating: Boolean(ctrl.delegateQuality), t: Math.round(performance.now()) });
+                return res;
+            };
+            ctrl.__ptCastHooked = true;
+            return true;
+        },
+        /** 放招彙整：呼叫次數、奧義／計謀放出次數、第一招出現在第幾回合 */
+        castSummary: () => {
+            const calls = window.__ptCasts || [];
+            const hit = calls.filter((c) => c.ultimate || c.tactic);
+            return {
+                calls: calls.length,
+                ultimateCount: calls.filter((c) => c.ultimate).length,
+                tacticCount: calls.filter((c) => c.tactic).length,
+                castTotal: calls.filter((c) => c.ultimate).length + calls.filter((c) => c.tactic).length,
+                firstCastRound: hit.length ? hit[0].round : null,
+                delegating: calls.length ? calls[calls.length - 1].delegating : null,
+                log: calls,
+            };
+        },
+        /**
          * 每回合各段演出實測秒數取樣器（PROG-2-9803）：每 50ms 讀一次 battleState，
          * 把狀態切成連續區段：idle＝我方可操作、advance＝回合推進中、enemyThinking＝敵軍思考中、duel＝單挑、ult＝奧義演出。
          * 每段記起迄時間與所屬回合（window.__ptRound 由 QA 迴圈更新）。
@@ -557,6 +593,7 @@ async function main() {
     let stepIndex = 0;
     let exitCode = 1;
     let reachedLobby = false;
+    let shuttingDown = false; // 收尾關瀏覽器時不再印框架卸除診斷
 
     /** 把 console error／pageerror／失敗請求收進 collector（主頁與 qa 第二情境共用） */
     function attachCollectors(p) {
@@ -568,6 +605,9 @@ async function main() {
             collector.push(isOnline && isKnownEnvError(text) ? 'known-env-error' : 'console-error', text);
         });
         p.on('pageerror', (error) => collector.push('pageerror', (error && error.stack) || error));
+        // 頁面生命週期診斷：頁面崩潰／關閉／主框架被換掉都會讓後續步驟連鎖報 detached Frame，先把原因印出來
+        p.on('error', (error) => console.error(`[playtest] 頁面崩潰（renderer crash）：${(error && error.message) || error}`));
+        p.on('framedetached', (frame) => { if (frame === p.mainFrame() && !shuttingDown) console.error(`[playtest] 主框架被卸除：${frame.url().slice(0, 120) || '(無網址)'}`); });
         p.on('requestfailed', (request) => {
             if (IGNORED_CONSOLE_PATTERNS.some((re) => re.test(request.url()))) return;
             const failedText = `${request.method()} ${request.url()} (${request.failure() && request.failure().errorText})`;
@@ -614,6 +654,7 @@ async function main() {
         const t0 = Date.now();
         if (perfProbe) await perfProbe.begin().catch(() => {});
         rm.takeBlocked(); // 清掉前一步殘留的「被擋住」紀錄
+        if (await ensurePageAlive(`步驟 ${name} 開始前頁面已失效`)) rec.detail.pageRecovered = true;
         try {
             const detail = await fn(rec);
             if (detail) Object.assign(rec.detail, detail);
@@ -731,6 +772,41 @@ async function main() {
         if (!(await clickButton('^' + cat + '$'))) return null;
         await delay(1200);
         return clickByText('^BtnSub', textRe);
+    };
+
+    /**
+     * 頁面存活檢查與復原（PROG-2-10086）：整年實跑時 headless 分頁偶爾在長戰鬥後崩潰（renderer crash／主框架被換掉），
+     * 之後每一步都報「Attempted to use detached Frame」連鎖失敗（11/26 發布後實跑 82 步只過 20 步）。
+     * 存檔在同一個瀏覽器情境的 IndexedDB，所以在同情境開新分頁、重載登入就能回到大廳繼續（等同玩家重開網頁）。
+     */
+    const pageAlive = async () => {
+        if (!page || page.isClosed()) return false;
+        try { return (await Promise.race([page.evaluate(() => 1), delay(8000).then(() => 'timeout')])) === 1; } catch (_) { return false; }
+    };
+    const recoverPage = async (why) => {
+        const t0 = Date.now();
+        const dead = page;
+        page = await context.newPage();
+        await page.setViewport(viewport);
+        attachCollectors(page);
+        if (typeof args.inject === 'string') await page.evaluateOnNewDocument(fs.readFileSync(path.resolve(projectRoot, args.inject), 'utf8'));
+        if (dead) await dead.close().catch(() => undefined);
+        await page.goto(target, { waitUntil: 'load', timeout: stuckMs });
+        await waitUntil(() => page.evaluate(() => Boolean(window.cc && window.cc.director && window.cc.director.getScene())), stuckMs, '頁面復原後引擎未就緒');
+        await installHelpers();
+        await waitUntil(async () => (await scene()) === 'LoginScene', stuckMs, '頁面復原後未進入 LoginScene');
+        await waitLoginStartReady();
+        await clickLoginStart();
+        await waitUntil(async () => (await scene()) === 'LobbyScene', stuckMs, '頁面復原後未進入 LobbyScene');
+        await waitUntil(async () => (await page.evaluate((re) => window.__pt.textsMatching(re), '正在準備|載入中|Loading|啟動遇到問題')).length === 0 && (await page.evaluate(() => window.__pt.hasButton('^BtnCatShop$'))), stuckMs, '頁面復原後大廳沒準備好');
+        const rec = { atStep: stepIndex, why, ms: Date.now() - t0 };
+        (report.pageRecoveries = report.pageRecoveries || []).push(rec);
+        console.error(`[playtest] 頁面已復原（${why}，${rec.ms}ms）：新分頁重載登入回大廳`);
+    };
+    /** 步驟開始前呼叫：頁面死了就復原；復原失敗交給步驟自己失敗 */
+    const ensurePageAlive = async (why) => {
+        if (!reachedLobby || (await pageAlive())) return false;
+        try { await recoverPage(why); return true; } catch (e) { console.error(`[playtest] 頁面復原失敗：${String((e && e.message) || e).split('\n')[0]}`); return false; }
     };
 
     try {
@@ -1716,11 +1792,18 @@ async function main() {
             const battleShotMs = Number(args['battle-shots']) || 0;
             let lastBattleShotAt = 0;
             let battleShotIndex = 0;
+            let castShotTaken = false;
             while (!settled) {
                 if (battleShotMs > 0 && Date.now() - lastBattleShotAt >= battleShotMs) {
                     lastBattleShotAt = Date.now();
                     battleShotIndex += 1;
                     await page.screenshot({ path: path.join(outDir, `bt-${String(battleShotIndex).padStart(3, '0')}.png`) }).catch(() => {});
+                }
+                // 放招計數（PROG-2-10074）：包住委任放招階段；第一次放出招時擷取畫面
+                await page.evaluate(() => window.__pt.hookDelegateCasts()).catch(() => false);
+                if (!castShotTaken) {
+                    const cs = await page.evaluate(() => window.__pt.castSummary()).catch(() => null);
+                    if (cs && cs.castTotal > 0) { castShotTaken = true; await shot(rec, 'first-cast').catch(() => undefined); }
                 }
                 if (opts.probeTactic && !tacticProbe) {
                     const st = await page.evaluate(() => window.__pt.battleState()).catch(() => null);
@@ -1765,6 +1848,14 @@ async function main() {
             }
             rec.detail.settledBy = settled;
             rec.detail.battleMs = Date.now() - battleT0;
+            {
+                const cs = await page.evaluate(() => window.__pt.castSummary()).catch(() => null);
+                if (cs) {
+                    rec.detail.casts = cs;
+                    (report.casts = report.casts || []).push({ step: rec.name, ...cs });
+                    console.log(`[playtest] 放招：${rec.name} 委任階段 ${cs.calls} 次、放招 ${cs.castTotal} 次（奧義 ${cs.ultimateCount}／計謀 ${cs.tacticCount}），第一招在第 ${cs.firstCastRound ?? '—'} 回合，自動代打${cs.delegating ? '已開啟' : '未開啟'}`);
+                }
+            }
             if (opts.probeTactic) {
                 const fb = rec.detail.firstBattle;
                 if (!fb.tactic) fb.tactic = { ok: false, reason: 'NEVER_ATTEMPTED（戰鬥期間沒有出現我方可放招的時機）', attempts: tacticAttempts, noEnemyPolls };
@@ -2265,6 +2356,7 @@ async function main() {
             };
             /** 每個子步驟前的保險：不在大廳就想辦法回去，最後才重整 */
             const ensureLobby = async () => {
+                await ensurePageAlive('年循環子步驟前頁面已失效');
                 for (let i = 0; i < 6 && (await scene()) !== 'LobbyScene'; i++) {
                     await clickByText('.*', '返回大廳');
                     await clickButton('^(GachaReturnToLobby|BtnBack|BtnClose|BtnCloseSortie|BtnBattleReviewClose|BtnReturnLobby|BtnConfirm)$');
@@ -3125,6 +3217,7 @@ async function main() {
         fs.writeFileSync(path.join(outDir, 'report.json'), JSON.stringify(report, null, 2), 'utf8');
         if (page) await page.close().catch(() => undefined);
         if (context) await context.close().catch(() => undefined);
+        shuttingDown = true;
         if (browser) await browser.close().catch(() => undefined);
         if (staticServer) staticServer.server.close();
         exitCode = report.passed ? 0 : (report.fatal && report.steps.length === 0 ? 2 : 1);
