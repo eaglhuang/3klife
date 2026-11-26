@@ -13,6 +13,7 @@ import { citeOf, replyText, requestText, type AdviseVariant, type MindSlots } fr
 import {
     MIND_CONFIG,
     type MindContext,
+    type MindGeneralView,
     type MindEvent,
     type MindEventInput,
     type MindLedger,
@@ -79,8 +80,12 @@ function lastWithLabel(events: readonly MindEvent[], predicate: (e: MindEvent) =
 
 const WORK_KINDS: ReadonlySet<string> = new Set(['TASK_DONE', 'BATTLE_RESULT', 'DUEL']);
 
-function slotsFor(name: string, extra: Record<string, string>): MindSlots {
-    return { name, ...extra };
+/** 把名冊的性別／年齡轉成槽位字串（SpeakerVoice 的 {self} 由此代入）；沒有就不放，視為男成年 */
+export function genderSlotsOf(general: Readonly<MindGeneralView> | undefined): Record<string, string> {
+    const out: Record<string, string> = {};
+    if (general?.gender !== undefined) out.gender = general.gender;
+    if (general?.age !== undefined) out.age = String(general.age);
+    return out;
 }
 
 function seasonLabelOf(ctx: Readonly<MindContext>): ((season: number) => string) | undefined {
@@ -109,6 +114,7 @@ export function planRequests(input: Readonly<RequestPlanInput>): MindRequest[] {
         const general = ctx.general ?? { id: generalId };
         const name = ctx.nameOf?.(generalId) ?? general.name ?? generalId;
         const type = personalityTypeOf(ctx.general);
+        const slotsFor = (n: string, extra: Record<string, string>): MindSlots => ({ name: n, ...genderSlotsOf(ctx.general), ...extra });
         const vector = personalityVector(general);
         const events = input.events[generalId] ?? [];
         const ledger = input.ledger[generalId];
@@ -258,6 +264,7 @@ export function planRequests(input: Readonly<RequestPlanInput>): MindRequest[] {
 /** 抗命信：只是一封信，不改任何任務規則；呼叫端自己決定要不要真的換人 */
 export function buildDefyLetter(args: {
     generalId: string; name: string; season: number; seed: number; type: Parameters<typeof requestText>[1];
+    gender?: string; age?: string;
     refEvent?: MindEvent; seasonLabel?: (season: number) => string;
 }): MindRequest {
     const cite = citeOf(args.refEvent?.label, args.refEvent?.season, args.seasonLabel);
@@ -269,7 +276,7 @@ export function buildDefyLetter(args: {
         expiresSeason: args.season + MIND_CONFIG.request.expireAfterSeasons,
         status: 'PENDING',
         major: true,
-        text: requestText('DEFY_LETTER', args.type, { name: args.name, cite }, args.seed),
+        text: requestText('DEFY_LETTER', args.type, { name: args.name, cite, ...(args.gender !== undefined ? { gender: args.gender } : {}), ...(args.age !== undefined ? { age: args.age } : {}) }, args.seed),
         reasonCodes: ['DEFY_LOW_LOYALTY_INSULTED'],
         ref: args.refEvent ? { label: args.refEvent.label, season: args.refEvent.season, eventId: args.refEvent.id } : {},
         read: false,
@@ -294,7 +301,7 @@ export function effectsOfResolution(request: Readonly<MindRequest>, accept: bool
     const type = personalityTypeOf(ctx.general);
     const name = ctx.nameOf?.(request.generalId) ?? ctx.general?.name ?? request.generalId;
     const cite = citeOf(request.ref?.label, request.ref?.season, ctx.seasonLabel);
-    const slots: MindSlots = { name, cite };
+    const slots: MindSlots = { name, cite, ...genderSlotsOf(ctx.general) };
     const base = { generalId: request.generalId, season };
     const rid = (suffix: string): string => `${request.id}:${suffix}`;
     const tagCode = request.reasonCodes.find(c => c.startsWith('TAG:'));

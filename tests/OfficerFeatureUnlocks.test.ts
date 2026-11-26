@@ -54,17 +54,16 @@ export function createOfficerFeatureUnlocksSuite(): TestSuite {
         for (const action of actions) assert.isTrue(parsed.features.some((f) => f.lobbyAction === action), `選單項目 ${action} 沒有登記解鎖階位`);
     });
 
-    suite.test('PROG-2-9187：新檔第 1 年第 1 季（官職階位 1）的開獎・培育與關係圖鑑可用，支援卡、祠堂仍鎖並寫明條件', () => {
+    suite.test('PROG-2-9187：新檔第 1 年第 1 季（官職階位 1）的開獎・培育與關係圖鑑可用，支援卡仍鎖並寫明條件；祠堂因親子談話改為開局開放（PROG-2-10070）', () => {
         load();
         assert.isTrue(isLobbyActionUnlocked('nurture', 1), '開獎・培育開局應開放');
         assert.isTrue(isFeatureUnlocked('NURTURE_FLOW', 1));
         assert.isTrue(isLobbyActionUnlocked('relationGraph', 1), '關係圖鑑開局應開放');
         assert.isFalse(newlyUnlocked(1, 5).some((f) => f.id === 'NURTURE_FLOW' || f.id === 'RELATION_GRAPH'), '不再算晉升解鎖');
-        for (const action of ['supportCard', 'shrine']) {
-            const lock = lobbyActionLock(action, 1);
-            assert.isTrue(lock.locked, `${action} 開局無內容，維持鎖定`);
-            assert.equals('縣府佐官', lock.requiredTitle);
-        }
+        const supportLock = lobbyActionLock('supportCard', 1);
+        assert.isTrue(supportLock.locked, 'supportCard 開局無內容，維持鎖定');
+        assert.equals('縣府佐官', supportLock.requiredTitle);
+        assert.isFalse(lobbyActionLock('shrine', 1).locked, '祠堂有親子談話，開局就能進');
         assert.equals('🔒支援卡\n縣府佐官開放', lockedActionLabel('支援卡', lobbyActionLock('supportCard', 1)));
         // 大廳底欄「培育」分類的選單項目：開獎・培育不帶鎖
         const nurtureCategory = LOBBY_CATEGORIES.find((c) => c.id === 'nurture');
@@ -117,7 +116,7 @@ export function createOfficerFeatureUnlocksSuite(): TestSuite {
 
     suite.test('newlyUnlocked：單階、連升多階、沒晉升', () => {
         load();
-        assert.equals('RECRUIT_HALL,SUPPORT_CARD,MERCENARY,SEASON_PASS,SHRINE,QUEST_NORMAL', newlyUnlocked(1, 2).map((f) => f.id).join(','));
+        assert.equals('RECRUIT_HALL,SUPPORT_CARD,MERCENARY,SEASON_PASS,QUEST_NORMAL', newlyUnlocked(1, 2).map((f) => f.id).join(','));
         const multi = newlyUnlocked(1, 3).map((f) => f.id);
         assert.isTrue(multi.includes('SUPPORT_CARD') && multi.includes('SANDTABLE'), '連升兩階兩階的功能都列出');
         assert.equals(0, newlyUnlocked(3, 3).length);

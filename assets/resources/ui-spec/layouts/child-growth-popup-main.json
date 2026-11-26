@@ -1,0 +1,184 @@
+{
+  "id": "child-growth-popup-main",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "safeAreaConstrained": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "container",
+    "name": "ChildGrowthRoot",
+    "widget": {
+      "top": 0,
+      "bottom": 0,
+      "left": 0,
+      "right": 0
+    },
+    "children": [
+      {
+        "type": "panel",
+        "name": "ChildGrowthCard",
+        "id": "childGrowthCard",
+        "widget": {
+          "hCenter": true,
+          "vCenter": true
+        },
+        "width": 800,
+        "height": 600,
+        "skinSlot": "cg.card.bg",
+        "children": [
+          {
+            "type": "label",
+            "name": "CgTitle",
+            "id": "cgTitle",
+            "widget": {
+              "top": 24,
+              "left": 28,
+              "right": 28
+            },
+            "height": 48,
+            "text": "孩子的成長小事",
+            "styleSlot": "cg.label.title"
+          },
+          {
+            "type": "label",
+            "name": "CgChild",
+            "id": "cgChild",
+            "widget": {
+              "top": 80,
+              "left": 28,
+              "right": 28
+            },
+            "height": 36,
+            "text": "",
+            "styleSlot": "cg.label.body"
+          },
+          {
+            "type": "label",
+            "name": "CgDesc",
+            "id": "cgDesc",
+            "widget": {
+              "top": 124,
+              "left": 28,
+              "right": 28
+            },
+            "height": 40,
+            "text": "",
+            "styleSlot": "cg.label.body"
+          },
+          {
+            "type": "label",
+            "name": "CgHint",
+            "id": "cgHint",
+            "widget": {
+              "top": 172,
+              "left": 28,
+              "right": 28
+            },
+            "height": 36,
+            "text": "",
+            "styleSlot": "cg.label.hint"
+          },
+          {
+            "type": "button",
+            "name": "BtnGrowthA",
+            "id": "btnGrowthA",
+            "widget": {
+              "top": 224,
+              "left": 28,
+              "right": 28
+            },
+            "height": 80,
+            "skinSlot": "cg.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnGrowthALabel",
+                "id": "btnGrowthALabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 40,
+                "text": "",
+                "styleSlot": "cg.label.button"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "BtnGrowthB",
+            "id": "btnGrowthB",
+            "widget": {
+              "top": 320,
+              "left": 28,
+              "right": 28
+            },
+            "height": 80,
+            "skinSlot": "cg.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnGrowthBLabel",
+                "id": "btnGrowthBLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 40,
+                "text": "",
+                "styleSlot": "cg.label.button"
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "CgMore",
+            "id": "cgMore",
+            "widget": {
+              "top": 424,
+              "left": 28,
+              "right": 28
+            },
+            "height": 36,
+            "text": "",
+            "styleSlot": "cg.label.hint"
+          },
+          {
+            "type": "button",
+            "name": "BtnGrowthClose",
+            "id": "btnGrowthClose",
+            "widget": {
+              "bottom": 24,
+              "right": 28
+            },
+            "width": 200,
+            "height": 56,
+            "skinSlot": "cg.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnGrowthCloseLabel",
+                "id": "btnGrowthCloseLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 40,
+                "text": "稍後再說",
+                "styleSlot": "cg.label.button"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -92,8 +92,11 @@ export const STRATEGIST_TACTIC_CAP_MAX = 30;
 export const STRATEGIST_TACTIC_START_MAX = 15;
 /** 計謀點基礎上限（暫定：戰場部署 §I 範例 Max_Tactic_Points 48 − Strategist_Max_Tactic_Bonus 18 反推） */
 export const BASE_TACTIC_CAP = 30;
-/** 計謀點基礎開局值（暫定：§I 範例 Current 21 − Strategist_Start_Tactic_Bonus 9 反推） */
-export const BASE_TACTIC_START = 12;
+/**
+ * 計謀點基礎開局值。PM 2026-11-26 裁決 12→20：一般戰整年放招 0 次，開場 20 點＋每回合 +5，
+ * 火計（25）第 2 回合即付得起。
+ */
+export const BASE_TACTIC_START = 20;
 /**
  * 計謀點每回合回復（暫定：規格未定回復速率）。
  * 原本 +2：開局 12 點、戰法成本 15~80，三十回合內多數戰法放不出一次；改 +5 後 30 點的戰法約第 5 回合可放。
@@ -502,7 +505,7 @@ export const TACTIC_TP_COST_OVERRIDE: Readonly<Record<string, number>> = {
     TAC_EIGHT_ARRAY: 80,
     TAC_WEI_MIGHT: 70,
     TAC_DRAGON_GALL: 60,
-    TAC_FIRE_ATTACK: 35,
+    TAC_FIRE_ATTACK: 25,
     TAC_RED_CLIFF: 90,
     TAC_FIRE_ARROW: 25,
     TAC_ARROW_RAIN: 50,

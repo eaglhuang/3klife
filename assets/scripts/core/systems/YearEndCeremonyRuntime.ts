@@ -90,8 +90,13 @@ export function ceremonyStandingsText(result: YearEndRankingResult, t: CeremonyT
         .join('\n');
 }
 
-/** 各幕對白；第 3 幕有驚喜獎念賀詞，沒有就念明年展望 */
+/** 各幕對白；第 3 幕有驚喜獎念賀詞，沒有就念明年展望；首年目標達新手滿貫（PROG-2-10062）再加一行賀詞 */
 export function ceremonyActDialogue(result: YearEndRankingResult, act: CeremonyAct, t: CeremonyTranslate): string {
+    const base = ceremonyActBaseDialogue(result, act, t);
+    return act === 3 && result.newbieGrandSlam ? `${base}\n${t('ui.ceremony.act3.grandSlam')}` : base;
+}
+
+function ceremonyActBaseDialogue(result: YearEndRankingResult, act: CeremonyAct, t: CeremonyTranslate): string {
     if (act === 1) {
         return t('ui.ceremony.act1.intro', result.standings.map((s) => ceremonyDisplayName(s, t)).join('、'), String(result.standings.length));
     }
