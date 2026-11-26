@@ -17328,9 +17328,21 @@
     "category": "task"
   },
   {
+    "id": "doc_task_3128",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10070.md",
+    "title": "[PROG-2-10070] 子嗣成長事件彈窗＋親子談話按鈕（最小可玩）",
+    "category": "task"
+  },
+  {
     "id": "doc_task_3130",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10072.md",
     "title": "[PROG-2-10072] 首戰節奏：預設 x2、縮短敵方回合等待、試玩腳本自動代打校正",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3131",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10074.md",
+    "title": "[PROG-2-10074] 整年放招 0 次修正：計謀起手 20／火計 25、教學戰委任放招旁路、playtest 放招計數",
     "category": "task"
   },
   {
@@ -17364,21 +17376,33 @@
     "category": "task"
   },
   {
-    "id": "doc_task_3131",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10074.md",
-    "title": "[PROG-2-10074] 整年放招 0 次修正：計謀起手 20／火計 25、教學戰委任放招旁路、一般戰條件不符自動換招、playtest 放招計數",
-    "category": "task"
-  },
-  {
     "id": "doc_task_3138",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10092.md",
     "title": "[PROG-2-10092] 季報信箱改名：信箱標題與入口走 i18n 四語系（PM 裁決 A）",
     "category": "task"
   },
   {
-    "id": "doc_task_3128",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10070.md",
-    "title": "[PROG-2-10070] 子嗣成長事件彈窗＋親子談話按鈕（最小可玩）",
+    "id": "doc_task_3169",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10105.md",
+    "title": "[PROG-2-10105] UI 規格：戰場軍勢糧草常駐顯示與出牌不足提示＋內政任務詳情單屏重排（使用者 11/27 回饋）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3170",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10104.md",
+    "title": "[PROG-2-10104] 實作：戰場軍勢糧草常駐顯示、卡片費用章與不足說明面板",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3171",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10108.md",
+    "title": "[PROG-2-10108] 實作：內政任務詳情單屏三欄重排與固定底部行動列",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3172",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10091.md",
+    "title": "[PROG-2-10091] 索引健檢：虎符族文件補列與 keep.summary 更新",
     "category": "task"
   }
 ]
