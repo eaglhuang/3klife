@@ -17452,5 +17452,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10081.md",
     "title": "[PROG-2-10081] 奧義 C 組音效接入戰場奧義施放（蓄力／爆發／收尾）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3177",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10100.md",
+    "title": "[PROG-2-10100] 洪流／水流關卡：水淹特效與卡住沉浮",
+    "category": "task"
   }
 ]
