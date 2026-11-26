@@ -2,7 +2,8 @@
 /**
  * OpeningAct1Cues — 第一幕四個分鏡的演出提示（純邏輯，不依賴 cc）
  *
- * 文字與翻頁由 OpeningIntroController 與 INTRO_PANELS 處理（PROG-2-0646）；
+ * 文字由 OpeningIntroController 與 INTRO_PANELS 處理（PROG-2-0646）；PROG-2-10064 起第一幕四段合併成單頁自動長卷，
+ * 不再逐頁點擊翻頁，requiresClick 只保留為分鏡資料（畫面層不再依它翻頁）；
  * 本檔只決定每一分鏡用哪種演出、要不要點擊才進下一幕、要疊哪些特效。
  * 畫面層讀 getAct1Cue(panelId)，把演出類型與疊加效果對應到節點。
  *
