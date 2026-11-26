@@ -1,7 +1,7 @@
 {
   "schemaId": "atm.actorRegistry",
   "specVersion": "0.1.0",
-  "generatedAt": "2026-11-15T16:32:49.897Z",
+  "generatedAt": "2026-11-22T15:28:26.730Z",
   "actors": [
     {
       "actorId": "antigravity-gemini",
@@ -158,6 +158,26 @@
       "gitEmail": "codex-gpt-6.1-sol@atm.local",
       "createdAt": "2026-11-11T18:45:05.335Z",
       "updatedAt": "2026-11-12T02:46:15.899Z"
+    },
+    {
+      "actorId": "codex-gpt-6.2-astra",
+      "actorKind": "ai-agent",
+      "displayName": "codex-gpt-6.2-astra",
+      "editor": "codex",
+      "gitName": "codex-gpt-6.2-astra",
+      "gitEmail": "codex-gpt-6.2-astra@atm.local",
+      "createdAt": "2026-11-22T15:28:26.728Z",
+      "updatedAt": "2026-11-22T15:28:26.728Z"
+    },
+    {
+      "actorId": "codex-gpt-6.2-sol",
+      "actorKind": "ai-agent",
+      "displayName": "codex-gpt-6.2-sol",
+      "editor": "codex",
+      "gitName": "codex-gpt-6.2-sol",
+      "gitEmail": "codex-gpt-6.2-sol@atm.local",
+      "createdAt": "2026-11-20T16:56:57.804Z",
+      "updatedAt": "2026-11-20T16:56:57.804Z"
     },
     {
       "actorId": "cursor-gpt-5.2",
