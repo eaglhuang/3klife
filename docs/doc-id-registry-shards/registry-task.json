@@ -17430,6 +17430,18 @@
     "category": "task"
   },
   {
+    "id": "doc_task_3164",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10098.md",
+    "title": "[PROG-2-10098] 姻緣單一流程規格：相親 → 提親 → 成婚 → 結緣（11/26 修訂）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3165",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10099.md",
+    "title": "[PROG-2-10099] 姻緣單一流程實作：狀態機、結緣守門、存檔遷移、姻緣面板、吃醋事件",
+    "category": "task"
+  },
+  {
     "id": "doc_task_3166",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10086.md",
     "title": "[PROG-2-10086] playtest-online 整年實跑連鎖失敗：detached Frame 與大廳小人被擋根因修復",
