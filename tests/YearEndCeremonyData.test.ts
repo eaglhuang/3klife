@@ -79,31 +79,31 @@ async function newBundle() {
     return { session, gacha, api: bundle.api };
 }
 
-/** 指定分數的榜單結果（用年收入湊分數：分數 = 600 + 年收入 x 0.1） */
+/** 指定分數的榜單結果（用年收入湊分數：分數 = 850 + 年收入 x 0.1） */
 function resultWithScore(year: number, score: number, context: { lastYearScore: number | null; childInteractions: number } = { lastYearScore: null, childInteractions: 0 }) {
-    return buildYearEndCeremonyResult(year, { ...ZERO, annualIncome: (score - 600) * 10 }, '本府', context);
+    return buildYearEndCeremonyResult(year, { ...ZERO, annualIncome: (score - 850) * 10 }, '本府', context);
 }
 
 export function createYearEndCeremonyDataSuite(): TestSuite {
     const suite = new TestSuite('YearEndCeremonyData (年終典禮資料與入帳 PROG-2-10050)');
 
-    suite.test('分數公式：新手算例 1050 分（收入 1600、聲望 50、1 子、1 配偶、學府 50），無子嗣學府 920', () => {
-        assert.equals(1050, computeYearEndScore({ annualIncome: 1600, prestige: 50, childCount: 1, spouseCount: 1, academyScore: 50 }));
-        assert.equals(920, computeYearEndScore({ annualIncome: 1600, prestige: 50, childCount: 0, spouseCount: 1, academyScore: 0 }));
-        assert.equals(600, computeYearEndScore(ZERO));
+    suite.test('分數公式：新手算例 1300 分（基底 850，PM 11/26 校準）（收入 1600、聲望 50、1 子、1 配偶、學府 50），無子嗣學府 1170', () => {
+        assert.equals(1300, computeYearEndScore({ annualIncome: 1600, prestige: 50, childCount: 1, spouseCount: 1, academyScore: 50 }));
+        assert.equals(1170, computeYearEndScore({ annualIncome: 1600, prestige: 50, childCount: 0, spouseCount: 1, academyScore: 0 }));
+        assert.equals(850, computeYearEndScore(ZERO));
     });
 
     suite.test('分數公式：係數取自資料 JSON；缺欄位／非數字／負數一律當 0', () => {
         const f = rankingConfig.scoreFormula;
-        assert.equals(600, f.base);
+        assert.equals(850, f.base);
         assert.equals(0.1, f.incomeRate);
         assert.equals(2, f.prestigeWeight);
         assert.equals(80, f.childWeight);
         assert.equals(60, f.spouseWeight);
         const broken = { annualIncome: NaN, prestige: -5, childCount: Infinity, spouseCount: undefined as unknown as number, academyScore: -1 };
-        assert.equals(600, computeYearEndScore(broken));
+        assert.equals(850, computeYearEndScore(broken));
         // 年收入先四捨五入再加：1234 x 0.1 = 123.4 -> 123
-        assert.equals(723, computeYearEndScore({ ...ZERO, annualIncome: 1234 }));
+        assert.equals(973, computeYearEndScore({ ...ZERO, annualIncome: 1234 }));
     });
 
     suite.test('學府成績分：取本年結業最高評級；沒人結業或評級不認得為 0', () => {

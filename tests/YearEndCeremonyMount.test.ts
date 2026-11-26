@@ -21,9 +21,9 @@ import {
     type CeremonyAct,
 } from '../assets/scripts/core/systems/YearEndCeremonyRuntime';
 
-/** 湊出剛好 score 分的原料（只動年收入：分數 = 600 + 年收入×0.1），score 須 ≥ 600 */
+/** 湊出剛好 score 分的原料（只動年收入：分數 = 850 + 年收入×0.1，基底 850，PM 11/26 校準），score 須 ≥ 850 */
 function inputForScore(score: number) {
-    return { annualIncome: (score - 600) * 10, prestige: 0, childCount: 0, spouseCount: 0, academyScore: 0 };
+    return { annualIncome: (score - 850) * 10, prestige: 0, childCount: 0, spouseCount: 0, academyScore: 0 };
 }
 
 const ROOT = path.resolve(__dirname, '..');
@@ -66,7 +66,7 @@ export function createYearEndCeremonyMountSuite(): TestSuite {
         const mid = buildYearEndCeremonyResult(1, inputForScore(1100), '本府');
         assert.equals(mid.playerRank, 3);
         assert.equals(mid.playerReward.gold, 1000);
-        const low = buildYearEndCeremonyResult(1, inputForScore(600), '本府');
+        const low = buildYearEndCeremonyResult(1, inputForScore(850), '本府');
         assert.equals(low.playerRank, 5);
         assert.equals(low.playerReward.gold, 500);
     });
@@ -74,7 +74,7 @@ export function createYearEndCeremonyMountSuite(): TestSuite {
     suite.test('三幕文字在四語系都沒有原始 key 與殘留佔位（前三名／落榜／驚喜獎）', () => {
         const scenarios = [
             buildYearEndCeremonyResult(1, inputForScore(1200), 'H'),
-            buildYearEndCeremonyResult(2, inputForScore(600), 'H'),
+            buildYearEndCeremonyResult(2, inputForScore(850), 'H'),
             buildYearEndCeremonyResult(3, inputForScore(1200), 'H', { lastYearScore: 800, childInteractions: 0 }),
             buildYearEndCeremonyResult(2, inputForScore(1200), 'H', { lastYearScore: null, childInteractions: 3 }),
         ];
