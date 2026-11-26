@@ -17248,5 +17248,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10041.md",
     "title": "[PROG-2-10041] 保底步兵券標示與弓兵放箭時機",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3113",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10049.md",
+    "title": "[PROG-2-10049] 吃醋選項 C 改銀兩獎勵（驗收合併 Antigravity 分支）",
+    "category": "task"
   }
 ]
