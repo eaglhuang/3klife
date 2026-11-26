@@ -19210,12 +19210,64 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_3126",
+      "id": "PROG-2-10067",
+      "title": "新手教學結束後第一個目標：出征鈕脈動＋史小境提示",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-26T17:57:11+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "新手體驗稽核 K1：教學結束後大廳沒有指向出征的提示。教學完成後大廳出征鈕呼吸光暈脈動（單一節點 tween、不開粒子）＋史小境搞笑一句提示（i18n 四語系）；玩家點出征或進入戰鬥後取消並標記完成（存檔欄位 sortieHintPending，舊存檔向後相容）。與首年目標清單的下一步提示分段互不重複。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [
+        "assets/scripts/core/systems/OnboardingTutorial.ts",
+        "assets/scripts/core/managers/GameSession.ts",
+        "assets/scripts/ui/core/SortieHintPulse.ts",
+        "assets/scripts/ui/core/LobbyOpeningPanels.ts",
+        "assets/scripts/ui/scenes/LobbyScene.ts",
+        "assets/resources/i18n/*.json",
+        "tests/SortieHint.test.ts"
+      ],
+      "notes": "2026-11-26 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
     "done": 358,
-    "in_progress": 4,
+    "in_progress": 5,
     "open": 88,
-    "total": 450
+    "total": 451
   }
 }

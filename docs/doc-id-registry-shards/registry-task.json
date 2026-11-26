@@ -17302,5 +17302,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10060.md",
     "title": "[PROG-2-10060] 新手前 10～20 分鐘稽核小修：開場信按鈕、教學銀兩、結緣入口、任務牆獎勵提示",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3126",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10067.md",
+    "title": "[PROG-2-10067] 新手教學結束後第一個目標：出征鈕脈動＋史小境提示",
+    "category": "task"
   }
 ]
