@@ -207,12 +207,56 @@ async function testTaskCardOpenerInProgressPromotion() {
   }
 }
 
+async function testTaskCardOpenerEmitsAtmImportableFrontmatter() {
+  const taskId = 'ATM-FLOW-9004';
+  cleanupRealProjectArtifacts(taskId);
+  try {
+    await runTaskCardOpenerOptions({
+      id: taskId,
+      explicitId: taskId,
+      title: 'Task id flow regression',
+      deliverables: ['temp/example-output.json', 'artwork/example/**'],
+      mdOutArg: `temp/${taskId}.md`,
+      jsonOutArg: `temp/${taskId}.json`,
+    });
+    const markdown = fs.readFileSync(path.join(projectRoot, 'temp', `${taskId}.md`), 'utf8');
+    const frontmatter = markdown.split('---')[1] || '';
+    assert(new RegExp(`^task_id: "?${taskId}"?$`, 'm').test(frontmatter), 'card front matter should declare task_id for ATM tasks import');
+    assert(/^title: /m.test(frontmatter), 'card front matter should declare title for ATM tasks import');
+  } finally {
+    cleanupRealProjectArtifacts(taskId);
+  }
+
+  const narrativeTaskId = 'ATM-FLOW-9005';
+  cleanupRealProjectArtifacts(narrativeTaskId);
+  try {
+    let rejected = false;
+    try {
+      await runTaskCardOpenerOptions({
+        id: narrativeTaskId,
+        explicitId: narrativeTaskId,
+        title: 'Task id flow regression',
+        deliverables: ['artwork/example/**（每位武將四件組）'],
+        mdOutArg: `temp/${narrativeTaskId}.md`,
+        jsonOutArg: `temp/${narrativeTaskId}.json`,
+      });
+    } catch (error) {
+      rejected = /--deliverables must be repository paths only/.test(String(error.message));
+    }
+    assert(rejected, 'deliverables with narrative text should be rejected before writing the card');
+    assert(!fs.existsSync(path.join(projectRoot, 'temp', `${narrativeTaskId}.md`)), 'rejected card should not be written');
+  } finally {
+    cleanupRealProjectArtifacts(narrativeTaskId);
+  }
+}
+
 async function main() {
   testGuardReservationAndPromotion();
   testReserveNextAndRelease();
   await testTaskCardOpenerHelpUsesInjectedIo();
   await testTaskCardOpenerOpenCardsDoNotLeaveFormalLocks();
   await testTaskCardOpenerInProgressPromotion();
+  await testTaskCardOpenerEmitsAtmImportableFrontmatter();
   resetTempRoot();
   console.log('task-id guard flow tests passed');
 }

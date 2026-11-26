@@ -19,6 +19,7 @@ import { createYearEndCeremonyMountSuite } from './YearEndCeremonyMount.test';
 import { createYearEndCeremonyDataSuite } from './YearEndCeremonyData.test';
 import { createYear1GoalsSuite } from './Year1Goals.test';
 import { createBloodlineY3Y5EventsSuite } from './BloodlineY3Y5Events.test';
+import { createBloodlineChildLedgerSuite } from './BloodlineChildLedger.test';
 
 /**
  * 只在 Node.js CLI 環境（ts-node）下執行。
@@ -92,6 +93,7 @@ if (typeof window === 'undefined') {
     runner.register(createYearEndCeremonyDataSuite());
     runner.register(createYear1GoalsSuite());
     runner.register(createBloodlineY3Y5EventsSuite());
+    runner.register(createBloodlineChildLedgerSuite());
 
     const summary = await runner.runAll(layerFilter);
 

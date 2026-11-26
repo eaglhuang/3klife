@@ -66,6 +66,11 @@ export const API_COMMANDS = Object.freeze({
     // 家族（配偶納入名冊；只送意圖，名冊與上限由權威端判定；PROG-2-9582）
     'family.enrollSpouse': { kind: 'cmd', revGuard: false },
     'family.matchmakerOffer': { kind: 'query', revGuard: false },
+    // 子嗣成長（親子好感、小名碎片、同窗好友；PROG-2-10058）：帳本只讀，寫入由權威端的成長事件結算入帳
+    'family.childLedger': { kind: 'query', revGuard: false },
+    // 子嗣成長事件（PROG-2-10059）：歲末排出的待決事件、玩家選擇後由權威端入帳（屬性、好感、銀兩、聲望、碎片、同窗好友）
+    'family.growthEvents': { kind: 'query', revGuard: false },
+    'family.resolveGrowthEvent': { kind: 'cmd', revGuard: false },
     // 偵錯（只有本機 adapter 掛處理器；網路 adapter 一律回 COMMAND_UNKNOWN，避免變成外掛入口）
     'debug.fastForward': { kind: 'cmd', revGuard: false },
     // 測試工具 2.0（PROG-2-9858）：資源、屬性、時間、存檔匯出入；同樣只有本機 adapter 掛處理器，且要綁定偵錯宿主才生效
@@ -670,6 +675,46 @@ export interface FamilyEnrollSpouseResult {
     /** false＝這位配偶早已在名冊（冪等重送） */
     created: boolean;
     /** 本次實扣的家族銀兩（媒人禮金；其他來源不扣則缺） */
+    silverSpent?: number;
+}
+
+/** family.childLedger：子嗣成長帳本唯讀檢視（好感只含有紀錄的孩子；沒紀錄者客戶端視為預設好感） */
+export interface FamilyChildLedgerResult {
+    /** 子嗣 id → 親子好感（0~100） */
+    favor: Record<string, number>;
+    /** 沒有好感紀錄的孩子的預設好感 */
+    favorDefault: number;
+    /** 天賦小名圖鑑碎片總數 */
+    epithetFragments: number;
+    /** 子嗣 id → 已結識的同窗好友數 */
+    classmateFriends: Record<string, number>;
+}
+
+/** family.growthEvents 的一筆待決事件（文字只給 i18n key，客戶端自己翻） */
+export interface FamilyGrowthEventView {
+    childId: string;
+    eventId: string;
+    /** 排入時的遊戲曆年 */
+    year: number;
+    titleKey: string;
+    descKey: string;
+    options: Array<{ id: 'A' | 'B'; labelKey: string }>;
+}
+
+/** family.growthEvents：目前等玩家決定的成長事件（每名孩子每年最多一件） */
+export interface FamilyGrowthEventsResult {
+    pending: FamilyGrowthEventView[];
+}
+
+/** family.resolveGrowthEvent：只送 childId、eventId、optionId；效果由權威端依事件表入帳，客戶端不得帶數值 */
+export interface FamilyResolveGrowthEventResult {
+    childId: string;
+    eventId: string;
+    optionId: 'A' | 'B';
+    resultKey: string;
+    /** 實際套用的效果（含屬性、好感、銀兩、聲望、小名碎片、同窗好友） */
+    effects: Record<string, number | boolean>;
+    /** 實扣的家族銀兩（沒支出則缺） */
     silverSpent?: number;
 }
 

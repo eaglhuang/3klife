@@ -12,6 +12,8 @@ import { isSandtableTerritory } from '../systems/SandtableTerritories';
 import type { BreedingBirthRecord } from '../systems/BreedingBirthRecord';
 import type { AnnualRankingSaveData } from '../systems/annual_ranking/AnnualRankingManager';
 import { normalizeBreedingBirthRecords } from '../systems/BreedingBirthRecordSave';
+import { isEmptyChildLedger, normalizeChildLedger, type BloodlineChildLedgerState } from '../systems/BloodlineChildLedger';
+import { isEmptyBloodlineGrowth, normalizeBloodlineGrowthSave, type BloodlineGrowthSave } from '../systems/BloodlineGrowthSettlement';
 import { normalizeTravelCountdown, type TravelCountdown } from '../systems/TravelCountdown';
 import { readCardStarState } from '../systems/TigerTallyStar';
 import { normalizeCityEconomy } from '../systems/CityEconomy';
@@ -394,6 +396,10 @@ export interface PlayerSaveSnapshot {
     sortiePresets?: Readonly<Record<string, { strategistUid: string | null; deputyUid: string | null }>>;
     /** 出生紀錄（PROG-2-1146）：child.UID 去重；舊檔缺省為空，不回填歷史資料。 */
     breedingBirthRecords?: BreedingBirthRecord[];
+    /** 親子好感、天賦小名碎片、同窗好友旗標（PROG-2-10058）；空帳本不寫，舊檔缺值讀回為空帳本，版號不升（自帶 v） */
+    bloodlineChildLedger?: BloodlineChildLedgerState;
+    /** 血統成長事件（PROG-2-10059）：已觸發紀錄與待決佇列；舊存檔缺欄位視為空 */
+    bloodlineGrowthEvents?: BloodlineGrowthSave;
     /** 史境天下風雲榜年度指標與歷年排名（PROG-2-9601 PR2） */
     annualRanking?: AnnualRankingSaveData;
     /** 武將友誼值（PROG-2-9601 PR3 第8框架種子，稀疏儲存）：武將 ID → 友誼點數 (-100~100，負值為敵意區間；舊存檔皆 ≥0 故相容) */
@@ -679,6 +685,8 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         gameTime: GameClock.normalize(snapshot.gameTime as GameTimeState),
         roster: snapshot.roster,
         ...(snapshot.breedingBirthRecords !== undefined ? { breedingBirthRecords: normalizeBreedingBirthRecords(snapshot.breedingBirthRecords) } : {}),
+        ...(isEmptyChildLedger(normalizeChildLedger(snapshot.bloodlineChildLedger)) ? {} : { bloodlineChildLedger: normalizeChildLedger(snapshot.bloodlineChildLedger) }),
+        ...(isEmptyBloodlineGrowth(normalizeBloodlineGrowthSave(snapshot.bloodlineGrowthEvents).state, normalizeBloodlineGrowthSave(snapshot.bloodlineGrowthEvents).pending) ? {} : { bloodlineGrowthEvents: { records: normalizeBloodlineGrowthSave(snapshot.bloodlineGrowthEvents).state.records, pending: normalizeBloodlineGrowthSave(snapshot.bloodlineGrowthEvents).pending } }),
         ...(snapshot.nurture ? { nurture: snapshot.nurture } : {}),
         deck: normalizeDeck(snapshot.deck),
         ...(snapshot.leadGeneralId ? { leadGeneralId: snapshot.leadGeneralId } : {}),

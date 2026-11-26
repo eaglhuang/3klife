@@ -13,8 +13,11 @@ import { MemoryStorageAdapter } from '../assets/scripts/core/storage/MemoryStora
 import { PlayerSaveService } from '../assets/scripts/core/services/PlayerSaveService';
 import { STARTER_GENERAL_IDS } from '../assets/scripts/core/services/StarterRosterService';
 import { isYouthGeneral } from '../assets/scripts/core/services/StarterYouthService';
+
 import { isDestinyStar } from '../assets/scripts/core/systems/DestinyPool';
 import { DestinyOpeningController, DESTINY_INTRO } from '../assets/scripts/ui/core/DestinyOpeningController';
+
+const SEEDLING_ID = 'child_starter_seedling';
 
 function readJson<T>(relative: string): T {
     return JSON.parse(readFileSync(join(__dirname, '..', relative), 'utf8')) as T;
@@ -77,8 +80,9 @@ export function createDestinyOpeningControllerSuite(): TestSuite {
         assert.isTrue(controller.started);
         assert.equals(view.coreId, session.leadGeneralId);
         assert.equals(view.coreId, started[0]);
-        assert.equals([...view.rolledIds].sort().join(','), session.roster.filter(g => !isYouthGeneral(g)).map(g => g.id).sort().join(','));
+        assert.equals([...view.rolledIds].sort().join(','), session.roster.filter(g => !isYouthGeneral(g) && g.id !== SEEDLING_ID).map(g => g.id).sort().join(','));
         assert.equals(1, session.roster.filter(g => isYouthGeneral(g)).length, '新開局恰有一位少年名將');
+        assert.equals(1, session.roster.filter(g => g.id === SEEDLING_ID).length, '新開局恰有一位 7 歲幼苗（PROG-2-10058）');
         assert.equals(undefined, session.roster.find(g => g.id === 'starter-royal-child'), '不再送 4 歲宗室幼苗');
         assert.isFalse(controller.reroll(), '確定後不能再重轉');
         assert.isFalse(await controller.confirm(), '不能重複開局');

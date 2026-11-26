@@ -32,6 +32,14 @@ export function createLobbyHallWallViewSuite(): TestSuite {
         assert.isTrue(!view.rows[1].pinned);
     });
 
+    suite.test('任務卡有獎勵提示就優先顯示（新手牆上要看得到好處），沒有才退回獎勵字／官階', () => {
+        const hints: Record<string, string> = { '1': '糧草／武將經驗？', '2': '' };
+        const view = buildLobbyHallWallView([row('1'), row('2', { rewardText: '' }), row('3', { rewardText: '' })], 8, undefined, (r) => hints[r.taskId] ?? '');
+        assert.equals(view.rows[0].meta, '糧草／武將經驗？');
+        assert.equals(view.rows[1].meta, '官階 2 以上');
+        assert.equals(view.rows[2].meta, '官階 2 以上');
+    });
+
     suite.test('沒有任務時計數為 0，無列', () => {
         const view = buildLobbyHallWallView([], 8);
         assert.equals(view.countText, '0 / 8');

@@ -56,6 +56,7 @@ import { ITEM_FERTILITY_ARMED } from "../systems/PlayerInventory";
 import { UCUFLogger, LogCategory } from "../utils/UCUFLogger";
 import { normalizeVfxEffectTable } from "../config/VfxEffectConfig";
 import { STARTER_YOUTH_CONFIG_JSON, configureStarterYouth, type StarterYouthConfig } from "../services/StarterYouthService";
+import { STARTER_SEEDLING_CONFIG_JSON, configureStarterSeedling, type StarterSeedlingConfig } from "../services/StarterSeedlingService";
 import { normalizeSeasonModifiers, seasonModifiersOf, setActiveSeasonModifiers } from "../systems/SeasonModifiers";
 import { CHILD_APTITUDE_RULES_JSON, configureChildAptitudeRules, type ChildAptitudeRulesConfig } from "../systems/ChildAptitudeInheritance";
 import { configureFamilyCompatibilityRules, computeFamilyCompatibilityK, FAMILY_COMPATIBILITY_RULES_JSON, type FamilyCompatibilityRulesConfig } from "../systems/FamilyCompatibility";
@@ -398,6 +399,8 @@ export class ServiceLoader {
             enrollMatchmaker: async (pick) => { await this.loadBloodlineRuleTables(); return this.session.spouseHost.enrollMatchmaker(pick); },
             enrollClanProposal: async (proposalId) => { await this.loadBloodlineRuleTables(); return this.session.spouseHost.enrollClanProposal(proposalId); },
         });
+        // 子嗣成長帳本（PROG-2-10058）：親子好感、小名碎片、同窗好友只讀命令；寫入由 GameSession 權威入帳
+        this.localApi.setChildGrowthHost(this.session.childGrowthHost);
         // 學府修業（PROG-2-9215）：紀錄讀寫（save.read／save.write domain=academy）與種子簽發（rng.issueSeed）由 GameSession 提供
         this.localApi.setAcademyHost(this.session.academyHost);
         // 物品庫存（PROG-2-9203）：家庭倉庫＝玩家庫存表；季結的定期發放與入學／退還都走 item.* 命令
@@ -634,6 +637,16 @@ export class ServiceLoader {
             configureStarterYouth(raw);
         } catch (e) {
             UCUFLogger.warn(LogCategory.DATA, '[ServiceLoader] starter-youth-config.json 載入失敗，使用內建預設:', e);
+        }
+    }
+
+    /** 載入開局 7 歲幼苗設定（PROG-2-10058）；失敗時退回內建預設 */
+    public async loadStarterSeedlingConfig(): Promise<void> {
+        try {
+            const raw = await this.resource.loadJson<Partial<StarterSeedlingConfig>>(STARTER_SEEDLING_CONFIG_JSON);
+            configureStarterSeedling(raw);
+        } catch (e) {
+            UCUFLogger.warn(LogCategory.DATA, '[ServiceLoader] starter-seedling-config.json 載入失敗，使用內建預設:', e);
         }
     }
 

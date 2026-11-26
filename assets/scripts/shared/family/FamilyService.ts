@@ -202,6 +202,16 @@ export class FamilyService {
     }
 
     /**
+     * 宿主初始化：登記「開局幼苗」（PROG-2-10058，7 歲，父＝核心主將）。
+     * 與開局義子特例同為 kind=adopted、adoptSource=starter（進家譜、可入學、不遺傳血統），差別只在有父親紀錄；冪等。
+     */
+    public seedStarterSeedling(personId: string, parentIds: readonly string[], joinedAt: number): FamilyMemberRecord {
+        const existing = this.get(personId);
+        if (existing) return existing;
+        return this.addFamilyMember({ personId, kind: 'adopted', adoptSource: 'starter', parentIds: [...parentIds], branchId: null, joinedAt });
+    }
+
+    /**
      * 結緣誕生親生子嗣登記（PROG-2-9973）：寫入家族登記表 kind='biological'；冪等，已在名冊就保留原紀錄。
      */
     public recordBiologicalChild(personId: string, parentIds: readonly string[], joinedAt: number): FamilyMemberRecord {
