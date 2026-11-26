@@ -147,7 +147,7 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         await flush();
         assert.isFalse(f.hosts.get('DestinyOpeningHost')!.node.active);
         assert.equals('hud,destiny-locked', f.events.filter(e => e === 'hud' || e === 'destiny-locked').join(','));
-        assert.equals(12, f.session.roster.length);
+        assert.equals(13, f.session.roster.length);
         const tutorial = f.hosts.get('OnboardingTutorialHost')!;
         assert.isTrue(tutorial.node.active);
         assert.equals('1 / 3', tutorial.texts.tutorialStep);
@@ -210,7 +210,7 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         assert.equals(4, calls);
         assert.equals(3, persisted);
         assert.equals(1, f.events.filter(e => e.startsWith('beauty:')).length);
-        assert.equals(12, f.session.roster.length);
+        assert.equals(13, f.session.roster.length);
         assert.isFalse(f.hosts.get('DestinyOpeningHost')!.node.active);
         assert.isTrue(f.hosts.get('OnboardingTutorialHost')!.node.active);
         assert.equals('1 / 3', f.hosts.get('OnboardingTutorialHost')!.texts.tutorialStep);
@@ -241,7 +241,7 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
             // Match LobbyScene's load-result decision; do not mock load or ready.
             const loaded = await restored.load();
             assert.isTrue(loaded);
-            assert.equals(11, restored.roster.length);
+            assert.equals(12, restored.roster.length);
             assert.equals(original.session.leadGeneralId, restored.leadGeneralId);
             const expected = progress === 'missing' ? 0 : progress;
             assert.equals(expected, restored.onboarding.nextIndex);
@@ -269,7 +269,7 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         await flush();
         f.click('DestinyOpeningHost', 'btnDestinyConfirm');
         await flush();
-        assert.equals(12, f.session.roster.length);
+        assert.equals(13, f.session.roster.length);
         assert.equals(1, f.events.filter(e => e.startsWith('beauty:')).length);
         assert.isTrue(f.events.findIndex(e => e.startsWith('beauty:')) < f.events.indexOf('hud'));
         assert.isTrue(f.events.indexOf('hud') < f.events.indexOf('destiny-locked'));
@@ -292,7 +292,7 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
         f.click('DestinyOpeningHost', 'btnDestinyConfirm');
         await flush();
         assert.equals(2, calls);
-        assert.equals(12, f.session.roster.length);
+        assert.equals(13, f.session.roster.length);
         assert.isTrue(f.hosts.get('DestinyOpeningHost')!.node.active);
         assert.isFalse(f.hosts.get('OnboardingTutorialHost')!.node.active);
         assert.equals(0, f.events.filter(e => e.startsWith('beauty:') || e === 'hud' || e === 'destiny-locked').length);
@@ -328,7 +328,7 @@ export function createLobbyOpeningPanelsSuite(): TestSuite {
             const loaded = await restored.load();
             assert.isTrue(loaded);
             assert.isTrue(service.lastLoadRecoveredFromBackup());
-            assert.equals(withBeauty ? 12 : 11, restored.roster.length);
+            assert.equals(withBeauty ? 13 : 12, restored.roster.length);
             assert.equals(original.session.leadGeneralId, restored.leadGeneralId);
             assert.equals(0, restored.onboarding.nextIndex);
             const f = fixture(true, !loaded, restored);

@@ -19028,7 +19028,7 @@
         "PR diff 僅限 artwork/general-art-library/** 與 catalog.json 與本卡片檔"
       ],
       "deliverables": [
-        "artwork/general-art-library/**（每位武將靜態立繪、戰鬥立繪、avatars、small_avatars 四件組）",
+        "artwork/general-art-library/**",
         "artwork/general-art-library/catalog.json"
       ],
       "notes": "2026-11-26 | 狀態: open | 驗證: pending | 變更: ClaudeCode_claude-opus-5-5 開傘卡，owner 指派 codex-gpt-6.2-sol，未上鎖 | 阻塞: 無",
@@ -19102,12 +19102,221 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_3121",
+      "id": "PROG-2-10058",
+      "title": "幼苗與親子資料基礎：開局送 7 歲幼苗、親子好感、小名碎片帳本、同窗好友旗標",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-26T15:53:07+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "新局第 1 年送一位 7 歲幼苗（共用子嗣資料：名冊武將＋家族登記），並補親子好感、天賦小名碎片帳本、同窗好友旗標存檔（舊存檔相容）與 family.childLedger 查詢；承 PROG-2-10057 的核心基礎缺口 1～4。",
+      "related": [
+        "PROG-2-10057",
+        "PROG-2-10059"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [
+        "assets/scripts/core/systems/BloodlineChildLedger.ts",
+        "assets/scripts/core/services/StarterSeedlingService.ts",
+        "assets/resources/data/starter-seedling-config.json",
+        "tests/BloodlineChildLedger.test.ts",
+        "assets/scripts/core/api/localserver/ChildGrowthCommands.ts",
+        "assets/scripts/shared/family/FamilyService.ts"
+      ],
+      "notes": "2026-11-26 | 狀態: done | 驗證: run-cli 全過（9758）、tsc 0 錯、compute-gate standard | 變更: 開局 7 歲幼苗、親子好感／小名碎片／同窗好友帳本存檔（舊檔相容）、family.childLedger 查詢、單元測試；既有開局測試名冊數 +1 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_3124",
+      "id": "PROG-2-10060",
+      "title": "新手前 10～20 分鐘稽核小修：開場信按鈕、教學銀兩、結緣入口、任務牆獎勵提示",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "11/26 新手體驗稽核找到的小問題：開場信寫「就按下：啟動宿命轉蛋」按鈕卻是「關閉」（改為啟動宿命轉蛋，新 i18n key copy.letter.opening.button 四語系）；新手教學第 1 頁沒交代銀兩（補一句）；紅顏 toast 只說可到結緣沒說在哪（改武將→結緣）；大廳任務牆每列副標都是無意義的「官階 1 以上」（改顯示任務卡目前看得到的獎勵提示）。中／大問題另列稽核清單，不在本卡。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [
+        "assets/scripts/ui/core/LobbyOpeningPanels.ts",
+        "assets/scripts/ui/core/OnboardingFlowController.ts",
+        "assets/scripts/ui/core/DestinyOpeningController.ts",
+        "assets/scripts/core/systems/LobbyHallWallView.ts",
+        "assets/scripts/ui/scenes/LobbyScene.ts",
+        "assets/resources/i18n/*.json",
+        "tests/LobbyHallWallView.test.ts",
+        "tests/OpeningLetterLobby.test.ts",
+        "tests/NewcomerGuidance.test.ts"
+      ],
+      "notes": "2026-11-26 | 狀態: done | 驗證: run-cli 全過、tsc 0 錯、compute-gate standard 通過（僅既有 ui->battle 警告） | 變更: 開場信按鈕字、教學銀兩、結緣入口、任務牆獎勵提示＋單元測試 | 阻塞: 無（畫面效果未在可實跑建置驗證；SSR 揭曉缺點擊提示等中／大項見稽核清單）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_3123",
+      "id": "PROG-2-10059",
+      "title": "年底結算接成長事件：待處理事件佇列存檔、resolveBloodlineEvent 結算",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-26T16:59:17+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "年底結算呼叫 dueBloodlineEvent 產生待處理事件佇列並存檔（本卡不做彈窗）；提供 resolveBloodlineEvent(childId,eventId,choice) 發放獎勵，每名孩子每年最多一件，承 PROG-2-10057、PROG-2-10058。",
+      "related": [
+        "PROG-2-10057",
+        "PROG-2-10058"
+      ],
+      "depends": [
+        "PROG-2-10058"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-26 | 狀態: done | 驗證: run-cli 全過（9770）、tsc 0 錯、compute-gate standard | 變更: 歲末結算排出血統成長事件待決佇列並存檔 bloodlineGrowthEvents（舊檔相容）、resolveBloodlineEvent 入帳、family.growthEvents／resolveGrowthEvent 與 E370／E371、單元測試 | 阻塞: 無（彈窗畫面不在本卡）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_3126",
+      "id": "PROG-2-10067",
+      "title": "新手教學結束後第一個目標：出征鈕脈動＋史小境提示",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-26T17:57:11+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "新手體驗稽核 K1：教學結束後大廳沒有指向出征的提示。教學完成後大廳出征鈕呼吸光暈脈動（單一節點 tween、不開粒子）＋史小境搞笑一句提示（i18n 四語系）；玩家點出征或進入戰鬥後取消並標記完成（存檔欄位 sortieHintPending，舊存檔向後相容）。與首年目標清單的下一步提示分段互不重複。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [
+        "assets/scripts/core/systems/OnboardingTutorial.ts",
+        "assets/scripts/core/managers/GameSession.ts",
+        "assets/scripts/ui/core/SortieHintPulse.ts",
+        "assets/scripts/ui/core/LobbyOpeningPanels.ts",
+        "assets/scripts/ui/scenes/LobbyScene.ts",
+        "assets/resources/i18n/*.json",
+        "tests/SortieHint.test.ts"
+      ],
+      "notes": "2026-11-26 | 狀態: done | 驗證: run-cli 全過（9768 passed）、tsc 0 錯、compute-gate standard 通過（僅既有 ui->battle 警告） | 變更: 教學完成後大廳出征鈕脈動（SortieHintPulseView 單一光暈節點 tween）＋史小境一句提示（i18n ui.onboarding.sortie_hint 四語系）；存檔欄位 onboarding.sortieHintPending，舊存檔缺欄位視為無提示；點出征或進戰鬥關閉並存檔；與首年目標清單「下一步」分段互不重複 | 阻塞: 無（畫面未在可實跑建置截圖，只做單元測試）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
-    "done": 356,
+    "done": 359,
     "in_progress": 4,
     "open": 88,
-    "total": 448
+    "total": 451
   }
 }

@@ -38,6 +38,11 @@ export const ONBOARDING_SEGMENTS: readonly OnboardingSegment[] = Object.freeze([
 export interface OnboardingState {
     /** 下一段要顯示的索引；等於段數時表示已完成。 */
     nextIndex: number;
+    /**
+     * 教學剛結束、玩家還沒走向第一戰（PROG-2-10067）：true 時大廳「出征」鈕脈動＋史小境提示。
+     * 只在最後一段確認時設為 true，點出征或進戰鬥後清掉；舊存檔沒有此欄位，一律視為 false（不會對老玩家補提示）。
+     */
+    sortieHintPending?: boolean;
 }
 
 export type OnboardingRejectReason = 'out-of-order' | 'already-complete';
@@ -76,7 +81,22 @@ export function acknowledgeOnboardingSegment(source: OnboardingState, segmentId:
         return { state, ok: false, reason: 'out-of-order', completed: false };
     }
     state.nextIndex = source.nextIndex + 1;
+    if (isOnboardingComplete(state)) state.sortieHintPending = true;
     return { state, ok: true, acknowledged: expected, completed: isOnboardingComplete(state) };
+}
+
+/**
+ * 是否該顯示「去出征」提示：教學已完成、提示尚未被消掉、且玩家還沒打贏過任何關卡
+ * （已有戰績的玩家即使欄位殘留也不再提示）。
+ */
+export function isSortieHintActive(state: OnboardingState, clearedStageCount: number): boolean {
+    return state.sortieHintPending === true && isOnboardingComplete(state) && clearedStageCount <= 0;
+}
+
+/** 玩家點了出征或進了戰鬥：關閉提示。沒有待辦提示時回傳同值副本。 */
+export function completeSortieHint(source: OnboardingState): OnboardingState {
+    const { sortieHintPending: _pending, ...rest } = source;
+    return rest;
 }
 
 /**
@@ -86,5 +106,8 @@ export function normalizeOnboardingState(raw: unknown): OnboardingState {
     if (typeof raw !== 'object' || raw === null) return { ...FRESH_ONBOARDING };
     const value = (raw as { nextIndex?: unknown }).nextIndex;
     if (typeof value !== 'number' || !Number.isInteger(value) || value < 0) return { ...FRESH_ONBOARDING };
-    return { nextIndex: Math.min(value, ONBOARDING_SEGMENTS.length) };
+    const nextIndex = Math.min(value, ONBOARDING_SEGMENTS.length);
+    // 欄位只在確實為 true 且教學已完成時保留；缺欄位（舊存檔）或其他值一律當作沒有提示
+    const pending = (raw as { sortieHintPending?: unknown }).sortieHintPending === true && nextIndex >= ONBOARDING_SEGMENTS.length;
+    return pending ? { nextIndex, sortieHintPending: true } : { nextIndex };
 }

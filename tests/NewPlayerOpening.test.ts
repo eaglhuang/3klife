@@ -92,7 +92,7 @@ export function createNewPlayerOpeningSuite(): TestSuite {
         const locked = destinyLockedEvent(destiny.state)!;
         assert.equals(null, flow.advance(locked));
         assert.equals(destiny.state.locked, session.leadGeneralId);
-        assert.equals(11, session.roster.length);
+        assert.equals(12, session.roster.length);
     });
 
     suite.test('開場後半：宿命鎖定存檔 → 重開不再是新玩家 → 首戰勝利 → 紅顏只彈一次（存讀往返）', async () => {
