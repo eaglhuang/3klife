@@ -1374,7 +1374,7 @@
   "ui.bonding.title": "結緣成功率：{0}%",
   "ui.jealousy.optionA.label": "誠懇安撫（免費，{0}% +{1} / {2}% {3}）",
   "ui.jealousy.optionB.label": "厚禮賠罪（{0} 銀兩換 +{1} 好感）",
-  "ui.jealousy.optionC.label": "裝傻打混（免費，{0}% 精力 +{1} / {2}% 抓包 {3}）",
+  "ui.jealousy.optionC.label": "裝傻打混（免費，{0}% 銀兩 +{1} / {2}% 抓包 {3}）",
   "ui.jealousy.title.sleep_god": "府中睡神",
   "ui.dynasty.badge.tianxia_mingmen.desc": "連續三年名列榜首，私塾 +{0}%、俸祿 +{1}%",
   "ui.jealousy.caught.1": "第 1 次抓包：你假裝在背《出師表》，結果口水流在竹簡上被抓個正著！",

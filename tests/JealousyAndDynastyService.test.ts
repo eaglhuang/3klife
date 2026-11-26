@@ -29,7 +29,7 @@ export function createJealousyAndDynastyServiceSuite(): TestSuite {
         }
     });
 
-    suite.test('吃醋 C 選項 50% 精力 +10、50% 抓包 -6 且每位配偶每年限 1 次，抓包 3 次解鎖府中睡神', () => {
+    suite.test('吃醋 C 選項 50% 銀兩 +30、50% 抓包 -6 且每位配偶每年限 1 次，抓包 3 次解鎖府中睡神', () => {
         let state: JealousyState = {
             favor: 50,
             stamina: 50,
@@ -40,8 +40,8 @@ export function createJealousyAndDynastyServiceSuite(): TestSuite {
         };
 
         const cSleep = JealousyAndDynastyService.resolveJealousyOption(state, 'C', 1, 'sp1', 10);
-        if (cSleep.staminaDelta !== 10 || cSleep.favorDelta !== 0 || cSleep.triggeredComedyStory) {
-            throw new Error('C 選項 50% 睡著應精力 +10 且好感 0');
+        if (cSleep.nextState.gold !== 1030 || cSleep.favorDelta !== 0 || cSleep.triggeredComedyStory) {
+            throw new Error('C 選項 50% 睡著應銀兩 +30 且好感 0');
         }
         state = cSleep.nextState;
 

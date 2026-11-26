@@ -55,7 +55,7 @@ export class JealousyPopupPanel extends Component {
         return {
             A: this._t(jealousyI18n.optionKeys.A, String(cfg.optionA.successRate), String(cfg.optionA.successFavorDelta), String(100 - cfg.optionA.successRate), String(cfg.optionA.failFavorDelta)),
             B: this._t(jealousyI18n.optionKeys.B, String(JealousyAndDynastyService.getOptionBPrice(year)), String(cfg.optionB.favorDelta)),
-            C: this._t(jealousyI18n.optionKeys.C, String(cfg.optionC.sleepSuccessRate), String(cfg.optionC.sleepStaminaDelta), String(100 - cfg.optionC.sleepSuccessRate), String(cfg.optionC.caughtFavorDelta)),
+            C: this._t(jealousyI18n.optionKeys.C, String(cfg.optionC.sleepSuccessRate), String(cfg.optionC.sleepGoldDelta), String(100 - cfg.optionC.sleepSuccessRate), String(cfg.optionC.caughtFavorDelta)),
         };
     }
 
@@ -148,7 +148,7 @@ export class JealousyPopupPanel extends Component {
             this._lastRenderedText = i18n.t(
                 jealousyI18n.optionKeys.C,
                 String(cfgC.sleepSuccessRate),
-                String(cfgC.sleepStaminaDelta),
+                String(cfgC.sleepGoldDelta),
                 String(100 - cfgC.sleepSuccessRate),
                 String(cfgC.caughtFavorDelta),
             );
