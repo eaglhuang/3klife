@@ -134,5 +134,13 @@ export function createAiDelegateUltimateFlowSuite(): TestSuite {
         assert.equals(0, runDelegateCountingUltimates(ctrl));
     });
 
+    suite.test('教學戰旁路（PROG-2-10074）：IQ／敵方隊數不符（MEDIUM、敵 2 隊），教學戰 SP 滿仍放；一般戰不放', () => {
+        const normal = delegateBattle({ int: 60, playerTroops: 2, enemyTroops: 2, difficulty: 'normal' });
+        assert.equals(0, runDelegateCountingUltimates(normal.ctrl), '一般戰條件不符不放');
+        const tutorial = delegateBattle({ int: 60, playerTroops: 2, enemyTroops: 2, difficulty: 'normal' });
+        tutorial.ctrl.tutorialBattle = true;
+        assert.equals(1, runDelegateCountingUltimates(tutorial.ctrl), '教學戰 SP 滿就放');
+    });
+
     return suite;
 }

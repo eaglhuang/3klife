@@ -329,13 +329,22 @@ export function createSortieDeploySuite(): TestSuite {
 
     suite.test('計謀點：沒帶參謀官時，成本最高的自帶戰法也能在回合上限內存夠', () => {
         let state = createSortieState({ commandCapacity: 8000, cityTroops: 10000, food: 100 });
-        const cost = getTacticTpCost('tactic-fire-scheme');
-        assert.equals(true, cost > state.tacticMax, '前提：火計成本高於基礎上限');
+        const cost = getTacticTpCost('tactic-insp-shield');
+        assert.equals(true, cost > state.tacticMax, '前提：護盾成本（35）高於基礎上限');
         state = ensureTacticCapCovers(state, cost);
         let turns = 0;
         while (state.tacticCurrent < cost && turns < 30) { state = regenTactic(state); turns += 1; }
         assert.equals(true, spendTactic(state, cost).ok);
         assert.equals(true, turns <= 6, `應在第 6 回合前存夠，實際 ${turns}`);
+    });
+
+    suite.test('計謀起手 20 點、火計 25 點：一般戰第 2 回合起即付得起（PROG-2-10074）', () => {
+        assert.equals(20, BASE_TACTIC_START);
+        assert.equals(25, getTacticTpCost('tactic-fire-scheme'));
+        let state = createSortieState({ commandCapacity: 8000, cityTroops: 10000, food: 100 });
+        assert.equals(false, spendTactic(state, 25).ok, '開場 20 點付不起火計');
+        state = regenTactic(state);
+        assert.equals(true, spendTactic(state, 25).ok, '第 2 回合（+5 後）付得起火計');
     });
 
     suite.test('戰鬥控制器：參謀官計謀點進帳本，花費與回合回復生效', () => {

@@ -647,13 +647,14 @@ export class BattleController {
     if (general.canUseSkill()) {
       const ultimate = buildUltimateSkills(general)[0];
       // 委任代打同敵方：SP 滿還要過奧義判斷（IQ 比例門檻＋家族審批），不符合就留著 SP 不放（PROG-2-9723）
-      const shouldCast = !!ultimate && !!this.delegateQuality && this.shouldFactionCastUltimate(
+      // 教學戰旁路（PROG-2-10074）：首戰 SP 滿就放，不過 IQ／敵方隊數判斷，讓新手首戰一定看到放招
+      const shouldCast = !!ultimate && (this._tutorialBattle || (!!this.delegateQuality && this.shouldFactionCastUltimate(
         Faction.Player,
         general,
         this.delegateUltimateIq(this.delegateQuality),
         this.state.aiUltimateRules,
         ultimate?.ultimateId ?? '',
-      );
+      )));
       if (ultimate && shouldCast) {
         done.ultimate = this.triggerPlayerBattleSkill(ultimate.skillId, SkillSourceType.Ultimate, {
           targetMode: resolveBattleSkillTargetMode(ultimate.skillId, BattleSkillTargetMode.EnemyAll),
