@@ -15,6 +15,14 @@ export const HALL_REFRESH_SECONDS = 60;
 export const HALL_SPOT_RANGE = Object.freeze({ min: 6, max: 8 });
 export const HALL_OCCUPANT_RANGE = Object.freeze({ min: 3, max: 5 });
 
+/** 大廳小人沿用成年男女共用模型，沒有孩童造型前，未滿此歲數的孩子不進大廳走動（5 歲起入幼幼班） */
+export const HALL_MIN_AGE = 5;
+
+/** 年齡不明（舊資料）視為可進大廳；有年齡才套門檻 */
+export function canWalkHall(age: number | undefined): boolean {
+    return age === undefined || !Number.isFinite(age) || age >= HALL_MIN_AGE;
+}
+
 export interface HallCandidate {
     id: string;
     favorite: boolean;

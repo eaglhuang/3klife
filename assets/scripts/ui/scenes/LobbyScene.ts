@@ -18,6 +18,7 @@ import { skillNameOf } from '../../core/systems/skill/SkillCatalog';
 import { parseLimitedPoolWindows } from '../../core/systems/LimitedPoolSchedule';
 import { expandLimitedPoolRotations, parseLimitedPoolRotations } from '../../core/systems/LimitedPoolRotation';
 import { _decorator, assetManager, AudioClip, BlockInputEvents, Button, Canvas, Color, Component, director, instantiate, JsonAsset, Label, Mask, Node, Sprite, sys, tween, Tween, UIOpacity, UITransform, Widget, resources, input, Input, EventKeyboard, KeyCode } from 'cc';
+import { isChildSpeaker, pickChildLine } from '../../core/systems/HallChildLines';
 import { MindRequestPanel } from '../components/mind/MindRequestPanel';
 import { installAdaptiveResolution } from '../core/AdaptiveResolution';
 import { computeSubMenuCenterX, LobbyHallScreenBinder, type HallActorTapView, type LobbyHallDockId, type LobbyHallPanelId, type LobbyHallWallId } from '../core/LobbyHallScreenBinder';
@@ -1930,9 +1931,9 @@ export class LobbyScene extends Component {
         const guard = buildAcademyEmptyGuardViewState({ candidateAges, minEnrollAge });
 
         if (!guard.canOpenEnrollView) {
-            let message = guard.messageKey ? services().i18n.t(guard.messageKey, guard.messageParams?.minAge ?? minEnrollAge) : '學府尚未招募及冠門生';
+            let message = guard.messageKey ? services().i18n.t(guard.messageKey, String(guard.messageParams?.minAge ?? minEnrollAge)) : '學府尚未招募及冠門生';
             if (guard.messageKey === 'ui.academy.empty_guard.too_young_desc') {
-                message = services().i18n.t(guard.messageKey, guard.messageParams?.currentAge ?? 0, guard.messageParams?.minAge ?? minEnrollAge, guard.messageParams?.yearsRemaining ?? 1);
+                message = services().i18n.t(guard.messageKey, String(guard.messageParams?.currentAge ?? 0), String(guard.messageParams?.minAge ?? minEnrollAge), String(guard.messageParams?.yearsRemaining ?? 1));
             }
             services().event.emit('SHOW_TOAST', { message, duration: 3.5 });
 
@@ -5366,6 +5367,10 @@ ${spent}`,
         const session = services().session;
         const profile = session.hallStageProfile(generalId);
         if (!profile) return null;
+        // 孩童（未滿 16 歲）不講成年台詞：任務自薦、心智記憶、中台成年句都跳過，走孩童版短句
+        if (isChildSpeaker(session.roster.find((g) => g.id === generalId)?.age)) {
+            return { name: profile.name, text: pickChildLine(this._mindBarkTaps++) };
+        }
         // 大廳通用導流隊列（PROG-2-9613）：若有待引導項（晉升、媒人叩門等），掛標記者優先出導流泡泡
         const activeGuide = this._guideQueue.peek();
         if (activeGuide && generalId === (this._guideQueue.anchorGeneralId ?? this._promotionGuideGeneralId)) {

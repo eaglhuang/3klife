@@ -35,5 +35,13 @@ export function createToastMotionSuite(): TestSuite {
         assert.equals(420, toastCenterY(420, true, NaN, 112));
     });
 
+    suite.test('彈窗開著的提示條不蓋住結緣卡底部按鈕列（卡 880 高置中於 1080，按鈕列離卡底 28px 以上）', () => {
+        const toastTop = toastCenterY(420, true, 1080, 112) + 56;
+        const cardBottom = -440;
+        const buttonRowTop = cardBottom + 28 + 48;
+        assert.isTrue(toastTop <= cardBottom + 16, '提示條頂緣最多只能侵入卡片底緣 16px（空白邊）');
+        assert.isTrue(toastTop < buttonRowTop);
+    });
+
     return suite;
 }
