@@ -3611,12 +3611,36 @@ export class LobbyScene extends Component {
         refresh();
     }
 
+    /** 進度條要畫在大廳殿內（LobbyHallHost）之上，否則被殿內底圖蓋住；殿內還沒掛好就稍後再試（最多 30 次） */
+    private _raiseYear1Host(): void {
+        const host = this.node.getChildByName('Year1GoalsHost');
+        const hall = this.node.getChildByName('LobbyHallHost');
+        if (!host) return;
+        if (!hall) {
+            if (this._year1RaiseTries++ < 30) { this.unschedule(this._retryYear1Goals); this.scheduleOnce(this._retryYear1Goals, 1); }
+            return;
+        }
+        if (host.getSiblingIndex() < hall.getSiblingIndex()) host.setSiblingIndex(hall.getSiblingIndex());
+    }
+
+    private _year1RaiseTries = 0;
+
+    private readonly _retryYear1Goals = (): void => { void this._settleYear1Goals(); };
+
     /** 對帳（補判已打贏、已有配偶）→ 刷新進度條 → 領獎；領獎完成再刷一次 */
     private async _settleYear1Goals(): Promise<void> {
         const goals = this._year1Goals;
         const panel = this._year1Panel;
         if (!goals || !panel) return;
+        // 新玩家開場（信、名將登場、宿命轉蛋）期間不顯示進度條也不領獎；開場結束後再接手
+        if (this._isOpeningInProgress() || services().session.openingPhase !== null) {
+            panel.node.active = false;
+            this.unschedule(this._retryYear1Goals);
+            this.scheduleOnce(this._retryYear1Goals, 1);
+            return;
+        }
         services().session.syncYear1Goals();
+        this._raiseYear1Host();
         panel.refresh(goals.getView());
         await goals.settle();
         if (this.node?.isValid) panel.refresh(goals.getView());
