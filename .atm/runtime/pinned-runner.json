@@ -5,11 +5,11 @@
   "command": "node atm.mjs next --json",
   "status": "replaced",
   "sourceKind": "internal-build-sync",
-  "sourcePath": "C:\\Users\\User\\atm-wt\\charter\\release\\atm-onefile\\atm.mjs",
-  "sha256": "ca1c9b4930dbbe126b1134e25cdc2ceefc46167a637fafe1b91c28255bb3cc01",
-  "existingSha256": "43d939be3290158991643b7c8835500a51a4e916cbedec2ec2f83387cd4395ca",
-  "sizeBytes": 5562135,
-  "frameworkVersion": "0.1.30",
-  "sourceCommit": "09c2a530aa0ed3371cecd3f927b596a9efcff99e",
-  "generatedAt": "2026-11-15T21:39:43.595Z"
+  "sourcePath": "C:\\Users\\User\\atm-wt\\aaf-0131\\release\\atm-onefile\\atm.mjs",
+  "sha256": "ac7a761a4f18a586f9af99fdd9745d43756282052484eec537c1efb79bbc80d6",
+  "existingSha256": "ca1c9b4930dbbe126b1134e25cdc2ceefc46167a637fafe1b91c28255bb3cc01",
+  "sizeBytes": 5378863,
+  "frameworkVersion": "0.1.31",
+  "sourceCommit": "5b6b2edf3de1dc3f9e472df8162493527d9bd26d",
+  "generatedAt": "2026-11-26T20:30:49.475Z"
 }
