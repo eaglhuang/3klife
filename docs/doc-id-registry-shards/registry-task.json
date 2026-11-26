@@ -17216,17 +17216,41 @@
   {
     "id": "doc_task_3107",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10043.md",
-    "title": "PROG-2-10043 結緣提親機率面板與吃醋彈窗掛進遊戲",
+    "title": "[PROG-2-10043] 結緣提親機率面板與吃醋彈窗掛進遊戲",
     "category": "task"
   },
   {
     "id": "doc_task_3108",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10045.md",
-    "title": "[PROG-2-10045] 戰場 HUD／飄字打磨批次（飄字疊字、部署提示遮擋、長字縮放）",
+    "title": "[PROG-2-10045] 戰場 HUD／飄字打磨批次",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3109",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10046.md",
+    "title": "[PROG-2-10046] 年終頒獎典禮三幕式面板掛進遊戲",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3110",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10044.md",
+    "title": "PROG-2-10044 年終頒獎典禮三幕式 UI 元件",
     "category": "task"
   },
   {
     "id": "doc_task_3111",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10031.md",
+    "title": "[PROG-2-10031] 揚塵再加大加深與獎勵跳字間距略放大",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3112",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10041.md",
+    "title": "[PROG-2-10041] 保底步兵券標示與弓兵放箭時機",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3113",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10049.md",
     "title": "[PROG-2-10049] 吃醋選項 C 改銀兩獎勵（驗收合併 Antigravity 分支）",
     "category": "task"

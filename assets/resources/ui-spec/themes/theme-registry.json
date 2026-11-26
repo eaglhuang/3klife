@@ -247,6 +247,7 @@
         "extreme-task-screen.skin",
         "bonding-proposal-screen.skin",
         "jealousy-popup-screen.skin",
+        "year-end-ceremony-screen.skin",
         "result-popup-default"
       ],
       "slotRoles": {
@@ -282,6 +283,13 @@
         "jp.label.title": "labelTitle",
         "jp.label.body": "labelValue",
         "jp.label.button": "labelButton",
+        "yc.card.bg": "panel",
+        "yc.button.bg": "buttonGold",
+        "yc.label.title": "labelTitle",
+        "yc.label.body": "labelValue",
+        "yc.label.button": "labelButton",
+        "yc.label.standing": "labelValue",
+        "yc.label.reward": "labelHeading",
         "popup.detail.bg": "inset",
         "popup.avatar.ring": "avatarRing",
         "mission.dialog.dropdown.btn": "buttonDark",

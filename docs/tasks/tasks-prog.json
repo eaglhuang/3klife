@@ -18778,12 +18778,28 @@
       "priority": "P1",
       "owner": "ClaudeCode_claude-opus-5-5",
       "file": "docs/agent-briefs/tasks/PROG/PROG-2-10043.md"
+    },
+    {
+      "id": "PROG-2-10044",
+      "title": "實作年終頒獎典禮三幕式 UI 元件與四語系對白",
+      "status": "done",
+      "priority": "P1",
+      "owner": "antigravity",
+      "file": "docs/agent-briefs/tasks/PROG/PROG-2-10044.md"
+    },
+    {
+      "id": "PROG-2-10046",
+      "title": "年終頒獎典禮三幕式面板掛進遊戲（PROG-2-10044 掛載整合）",
+      "status": "done",
+      "priority": "P1",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "file": "docs/agent-briefs/tasks/PROG/PROG-2-10046.md"
     }
   ],
   "summary": {
-    "done": 350,
+    "done": 352,
     "in_progress": 3,
     "open": 87,
-    "total": 440
+    "total": 442
   }
 }
