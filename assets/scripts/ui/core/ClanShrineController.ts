@@ -4,9 +4,13 @@
  *
  * 開窗時向宿主取聲望與供奉狀態並刷新；領取供奉走宿主注入的 claim（GameSession.claimShrineOffering）；
  * 聲望變動時刷新並在升階時提示。掛載、套 view 與提示都由宿主注入。
+ * 親子談話（PROG-2-10070）：宿主給了 child 依賴時，畫面多一塊「家族孩子」區：顯示目前孩子與親子好感、
+ * 「親子談話」（每名孩子每年一次，經 family.talkToChild）與「換一位」按鈕。
  */
 import { CLAN_PRESTIGE_TIER_NAMES } from '../../core/systems/GenerationalLegacy';
+import type { FamilyChildLedgerResult, FamilyTalkToChildResult } from '../../shared/api/ApiCommands';
 import { clanShrineView, type ClanShrineView } from './ClanShrineView';
+import { childTalkView, CHILD_NEXT_BUTTON_ID, CHILD_TALK_BUTTON_ID, clampChildIndex, type ChildTalkTranslate } from './ChildTalkView';
 import type { MentorHoldingsButtonBinding, MentorHoldingsHostLike } from './MentorHoldingsController';
 
 export interface ClanShrineDeps<H extends MentorHoldingsHostLike> {
@@ -20,10 +24,24 @@ export interface ClanShrineDeps<H extends MentorHoldingsHostLike> {
     offeringPills: number;
     now(): number;
     toast(message: string): void;
+    /** 親子談話區塊（可省略：沒給就不顯示、不綁按鈕） */
+    child?: ClanShrineChildDeps;
+}
+
+export interface ClanShrineChildDeps {
+    /** 家族孩子與親子好感（family.childLedger）；取不到回 null */
+    snapshot(): Promise<FamilyChildLedgerResult | null>;
+    /** 談話（family.talkToChild）；失敗回 reason */
+    talk(childId: string): Promise<{ ok: true; result: FamilyTalkToChildResult } | { ok: false; reason: 'already-talked' | 'unknown-child' | 'error' }>;
+    t: ChildTalkTranslate;
 }
 
 export class ClanShrineController<H extends MentorHoldingsHostLike> {
     private _host: H | null = null;
+    private _children: FamilyChildLedgerResult | null = null;
+    private _childIndex = 0;
+    private _lastTalk: { childId: string; line: string } | null = null;
+    private _talking = false;
 
     constructor(private readonly _deps: ClanShrineDeps<H>) {}
 
@@ -31,6 +49,10 @@ export class ClanShrineController<H extends MentorHoldingsHostLike> {
         this._host = await this._deps.mountHost([
             { buttonId: 'btnCloseShrine', handler: () => this.setOpen(false) },
             { buttonId: 'btnClaimShrine', handler: () => { void this.claim(); } },
+            ...(this._deps.child ? [
+                { buttonId: CHILD_TALK_BUTTON_ID, handler: () => { void this.talkToCurrentChild(); } },
+                { buttonId: CHILD_NEXT_BUTTON_ID, handler: () => { this.nextChild(); } },
+            ] : []),
         ]);
         this.setOpen(false);
     }
@@ -40,18 +62,71 @@ export class ClanShrineController<H extends MentorHoldingsHostLike> {
     }
 
     public setOpen(open: boolean): void {
-        if (open) this.refresh();
+        if (open) {
+            this.refresh();
+            void this.refreshChildren();
+        }
         if (this._host) this._host.node.active = open;
     }
 
     public refresh(): void {
         if (!this._host) return;
-        this._deps.apply(this._host, clanShrineView({
+        const base = clanShrineView({
             prestige: this._deps.prestige(),
             tier: this._deps.tier(),
             canClaim: this._deps.canClaim(this._deps.now()),
             offeringPills: this._deps.offeringPills,
-        }));
+        });
+        const child = this._deps.child;
+        if (!child) {
+            this._deps.apply(this._host, base);
+            return;
+        }
+        const talk = childTalkView({ snapshot: this._children, index: this._childIndex, lastTalk: this._lastTalk, t: child.t });
+        this._deps.apply(this._host, {
+            texts: { ...base.texts, ...talk.texts },
+            actives: { ...base.actives, ...talk.actives },
+            enabled: { ...base.enabled, ...talk.enabled },
+        });
+    }
+
+    /** 重讀家族孩子與親子好感後刷新（開窗與談話後呼叫） */
+    public async refreshChildren(): Promise<void> {
+        const child = this._deps.child;
+        if (!child) return;
+        this._children = await child.snapshot();
+        this._childIndex = clampChildIndex(this._childIndex, this._children?.children.length ?? 0);
+        this.refresh();
+    }
+
+    /** 換下一位孩子（只有一位時不動） */
+    public nextChild(): void {
+        const count = this._children?.children.length ?? 0;
+        if (count <= 1) return;
+        this._childIndex = (this._childIndex + 1) % count;
+        this.refresh();
+    }
+
+    /** 跟目前選到的孩子談話：成功顯示話題與好感增量，今年談過就只提示 */
+    public async talkToCurrentChild(): Promise<boolean> {
+        const child = this._deps.child;
+        const target = this._children?.children[clampChildIndex(this._childIndex, this._children.children.length)];
+        if (!child || !target || this._talking) return false;
+        this._talking = true;
+        try {
+            const out = await child.talk(target.id);
+            if (!out.ok) {
+                this._deps.toast(child.t(out.reason === 'already-talked' ? 'ui.child.talk.already' : 'ui.child.talk.none'));
+                await this.refreshChildren();
+                return false;
+            }
+            this._lastTalk = { childId: target.id, line: child.t(out.result.lineKey) };
+            this._deps.toast(child.t('ui.child.talk.gain', String(out.result.favorDelta)));
+            await this.refreshChildren();
+            return true;
+        } finally {
+            this._talking = false;
+        }
     }
 
     /** 領今天的供奉；不符資格時只提示 */

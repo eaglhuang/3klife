@@ -71,6 +71,8 @@ export const API_COMMANDS = Object.freeze({
     // 子嗣成長事件（PROG-2-10059）：歲末排出的待決事件、玩家選擇後由權威端入帳（屬性、好感、銀兩、聲望、碎片、同窗好友）
     'family.growthEvents': { kind: 'query', revGuard: false },
     'family.resolveGrowthEvent': { kind: 'cmd', revGuard: false },
+    // 親子談話（PROG-2-10070）：每名孩子每年一次，好感增量與話題由權威端依話題表決定，客戶端只送 childId
+    'family.talkToChild': { kind: 'cmd', revGuard: false },
     // 偵錯（只有本機 adapter 掛處理器；網路 adapter 一律回 COMMAND_UNKNOWN，避免變成外掛入口）
     'debug.fastForward': { kind: 'cmd', revGuard: false },
     // 測試工具 2.0（PROG-2-9858）：資源、屬性、時間、存檔匯出入；同樣只有本機 adapter 掛處理器，且要綁定偵錯宿主才生效
@@ -688,6 +690,33 @@ export interface FamilyChildLedgerResult {
     epithetFragments: number;
     /** 子嗣 id → 已結識的同窗好友數 */
     classmateFriends: Record<string, number>;
+    /** 家族裡活著的孩子（親子談話面板列名用） */
+    children: FamilyChildView[];
+    /** 今年已談過話的孩子 id */
+    talkedThisYear: string[];
+    /** 本年親子互動次數（談話與成長事件選擇；跨年歸零，供首年目標清單） */
+    interactionCountThisYear: number;
+}
+
+/** 家族孩子的顯示資料 */
+export interface FamilyChildView {
+    id: string;
+    name: string;
+    /** 整歲 */
+    age: number;
+}
+
+/** family.talkToChild：只送 childId；話題與好感增量由權威端依話題表決定 */
+export interface FamilyTalkToChildResult {
+    childId: string;
+    topicId: string;
+    /** 談話內容的 i18n key */
+    lineKey: string;
+    /** 這次好感實際增加量（好感已滿則為 0） */
+    favorDelta: number;
+    /** 談完後的親子好感 */
+    favor: number;
+    interactionCountThisYear: number;
 }
 
 /** family.growthEvents 的一筆待決事件（文字只給 i18n key，客戶端自己翻） */
