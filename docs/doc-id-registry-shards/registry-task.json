@@ -17412,7 +17412,13 @@
     "category": "task"
   },
   {
-    "id": "doc_task_3162",
+    "id": "doc_task_3161",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10090.md",
+    "title": "[PROG-2-10090] 大廳小人待出場疊在畫面邊緣點不到",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3166",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10086.md",
     "title": "[PROG-2-10086] playtest-online 整年實跑連鎖失敗：detached Frame 與大廳小人被擋根因修復",
     "category": "task"
