@@ -248,6 +248,20 @@ export function troopSpineConfig(troop: string, isEnemy = false, tallyTemplateId
   return config;
 }
 /**
+ * 戰前要預載 Spine 的兵種清單（PROG-2-10078）：敵方取 AI 可用兵種池，我方取手牌虎符（含精銳外觀的模板 id）。
+ * 相同素材路徑只留一筆，所以兩邊都有的兵種仍會各載自己的藍／紅版本。
+ */
+export function battleTroopPreloadList(enemyTroops: ReadonlyArray<string>,
+  playerCards: ReadonlyArray<{ unitType?: string | null; tacticId?: string | null }>): Array<{ troop: string; isEnemy: boolean; tallyTemplateId: string | null }> {
+  const out = new Map<string, { troop: string; isEnemy: boolean; tallyTemplateId: string | null }>();
+  const add = (troop: string, isEnemy: boolean, tallyTemplateId: string | null): void => {
+    out.set(troopSpineConfig(troop, isEnemy, tallyTemplateId).path, { troop, isEnemy, tallyTemplateId });
+  };
+  for (const troop of enemyTroops) add(troop, true, null);
+  for (const card of playerCards) if (card.unitType) add(card.unitType.trim().toLowerCase(), false, card.tacticId ?? null);
+  return Array.from(out.values());
+}
+/**
  * 兵種素材載不起來時逐層退回：精銳外觀 → 兵種外觀 → 槍兵／弓兵。
  * 原因：兵種專屬素材是私有美術、不進倉庫，沒放素材的環境不能讓單位退回方塊。
  */
