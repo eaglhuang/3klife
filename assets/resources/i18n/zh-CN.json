@@ -1532,5 +1532,9 @@
   "year1.toast.reward": "（+{0} 银两）",
   "year1.toast.title": "获得称号「{0}」",
   "year1.toast.favor": "亲子好感 +{0}",
-  "ui.ceremony.act3.grandSlam": "新手满贯！首年目标几乎一网打尽，这开局连老江湖都想拜师！"
+  "ui.ceremony.act3.grandSlam": "新手满贯！首年目标几乎一网打尽，这开局连老江湖都想拜师！",
+  "ui.ceremony.crowd.cheer.1": "关羽抚须：「好一个岁末金榜，诸位名门气势不凡！」",
+  "ui.ceremony.crowd.cheer.2": "张飞大嗓门：「俺明年也要带娃来冲榜，谁都别抢！」",
+  "ui.ceremony.crowd.cheer.3": "诸葛亮摇扇：「名次有高低，来年局势尚有变数，诸位加油。」",
+  "ui.ceremony.crowd.cheer.4": "曹操大笑：「哈哈！今年这热闹场面，不输铜雀台大宴！」"
 }

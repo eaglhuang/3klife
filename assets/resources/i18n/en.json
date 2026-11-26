@@ -1532,5 +1532,9 @@
   "year1.toast.reward": " (+{0} silver)",
   "year1.toast.title": "Title earned: \"{0}\"",
   "year1.toast.favor": "Parent-child favor +{0}",
-  "ui.ceremony.act3.grandSlam": "Rookie Grand Slam! Nearly every Year 1 goal cleared, even veterans want to take notes!"
+  "ui.ceremony.act3.grandSlam": "Rookie Grand Slam! Nearly every Year 1 goal cleared, even veterans want to take notes!",
+  "ui.ceremony.crowd.cheer.1": "Guan Yu strokes his beard: \"A grand year-end ranking indeed!\"",
+  "ui.ceremony.crowd.cheer.2": "Zhang Fei shouts: \"Next year I am bringing my heirs for top 3!\"",
+  "ui.ceremony.crowd.cheer.3": "Zhuge Liang fans gently: \"Every house still has a chance next year.\"",
+  "ui.ceremony.crowd.cheer.4": "Cao Cao laughs: \"Hahaha! Livelier than the Bronze Sparrow banquet!\""
 }
