@@ -26,4 +26,6 @@
 | `doc_task_3126` | docs/agent-briefs/tasks/PROG/PROG-2-10067.md | [PROG-2-10067] 新手教學結束後第一個目標：出征鈕脈動＋史小境提示 |
 | `doc_task_3127` | docs/agent-briefs/tasks/PROG/PROG-2-10061.md | [PROG-2-10061] 首戰教學浮窗移到左下角（資料驅動、避開拇指區與接戰區） |
 | `doc_task_3130` | docs/agent-briefs/tasks/PROG/PROG-2-10072.md | [PROG-2-10072] 首戰節奏：預設 x2、縮短敵方回合等待、試玩腳本自動代打校正 |
+| `doc_task_3133` | docs/agent-briefs/tasks/PROG/PROG-2-10075.md | [PROG-2-10075] 同步騎馬匹 mounted-list（關羽） |
 | `doc_task_3134` | docs/agent-briefs/tasks/PROG/PROG-2-10077.md | [PROG-2-10077] 格擋音換成 Kenney impactMetal_light_001（CC0） |
+| `doc_task_3135` | docs/agent-briefs/tasks/PROG/PROG-2-10064.md | [PROG-2-10064] 新手開場點擊精簡：介紹合併自動長卷、六名將一頁亮相、SSR 揭曉加點擊提示 |

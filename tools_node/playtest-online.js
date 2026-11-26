@@ -44,6 +44,8 @@
  *   --browser   Chrome 路徑（也可用環境變數 CHROME_PATH）
  *   --stuck     單步卡住上限毫秒數（預設 120000）
  *   --mind      選用：換季後點大廳小人讀泡泡台詞（武將心智，PROG-2-9146）
+ *   --opening-only 選用：只跑開機與新玩家開場兩步（量開場點擊數與秒數，PROG-2-10064）
+ *   --skip-intro   選用：開場第一幕長卷改按右下「略過」（預設等它自動播完，PROG-2-10064）
  *   --rank-unlock  選用：官職晉升解鎖節奏（PROG-2-9151）：鎖頭按鈕、點鎖頭提示、晉升彈窗與晉升後解鎖
  *   --jade      選用：玉的用途（商店看玉、許願祭壇用玉買加速卡，PROG-2-9149）
  *   --year      選用：原步驟後接一年循環（每季內政／任務牆／戰鬥／抽卡／培育／推進一季），輸出 year-report.json（PROG-2-9141）
@@ -590,7 +592,9 @@ async function main() {
     async function step(name, fn, { skipIfFailed = false } = {}) {
         stepIndex += 1;
         // --family-only：只跑開場與家族步驟，其餘略過（配偶實玩單獨驗收用，省下整輪 10 分鐘）
-        const skippedByFamilyOnly = Boolean(args['family-only']) && !/^(boot-login-lobby|new-player-opening|family-)/.test(name);
+        const skippedByFamilyOnly = args['opening-only']
+            ? !/^(boot-login-lobby|new-player-opening)/.test(name)
+            : Boolean(args['family-only']) && !/^(boot-login-lobby|new-player-opening|family-)/.test(name);
         const rec = { index: stepIndex, name, ok: false, durationMs: 0, screenshot: null, reason: null, detail: {}, console: [], pageErrors: [] };
         if (skippedByFamilyOnly) {
             rec.reason = '--family-only，略過';
@@ -792,14 +796,21 @@ async function main() {
         // 現行開場（PROG-2-9104 核對）：介紹頁 → 信 → 六名將登場 → 宿命池 → 挑少年名將（PROG-2-9194，點第一位）→ 新手教學。
         // 宿命轉蛋 2026-11-12 起改為轉蛋系統的一池（PROG-2-2243），用十連結果畫面 GachaPullResult 顯示、
         // 單鍵確定（GachaPullResult_close）十位全收；舊的 BtnDestinyRoll／BtnDestinyConfirm／BtnFrame0 選將面板已不掛。
-        const openingSeq = ['BtnIntroNext', 'BtnCloseOpeningLetter', 'BtnShowcaseNext', 'GachaPullResult_close', 'BtnYouthPick0', 'BtnNextTutorial'];
+        // PROG-2-10064：第一幕改單頁自動長卷（BtnIntroNext 是右下「略過」，預設不點、等它自己播完；--skip-intro 才點）；
+        // 六名將一頁亮相（BtnShowcaseNext 只按一次）；SSR 揭曉有「點擊畫面繼續」提示（RevealTapHint 出現就立刻點畫面）。
+        const openingSeq = ['BtnCloseOpeningLetter', 'BtnShowcaseNext', 'GachaPullResult_close', 'BtnYouthPick0', 'BtnNextTutorial'];
+        const skipIntro = Boolean(args['skip-intro']);
         await step('new-player-opening', async (rec) => {
             // 依規格順序點；BtnIntroNext 是多頁「繼續」（實測 IntroStep 1/4…），可重複點直到消失。
             // 若目前可按的是後面的步驟（實際順序與規格不同），就先點它並記在 outOfOrder，不當成失敗。
             const clicked = [];
             const outOfOrder = [];
             const done = new Set();
-            const REPEATABLE = ['BtnIntroNext', 'BtnShowcaseNext', 'BtnNextTutorial']; // 多頁「繼續」鈕，可重複點直到消失
+            const REPEATABLE = ['BtnNextTutorial']; // 多頁「繼續」鈕，可重複點直到消失（教學 3 頁）
+            const openingT0 = Date.now();
+            const clickLog = []; // 每次點擊的相對秒數與目標（點擊數與耗時的取證）
+            const logClick = (what) => clickLog.push({ sec: Math.round((Date.now() - openingT0) / 100) / 10, what });
+            const shot = new Set();
             const retries = {};
             const deadline = Date.now() + stuckMs;
             let idleSince = null;
@@ -809,6 +820,25 @@ async function main() {
                 const pending = openingSeq.filter((n) => !done.has(n) || REPEATABLE.includes(n));
                 const hasIntro = visible.some((n) => REPEATABLE.includes(n));
                 const candidates = pending.filter((n) => visible.includes(n));
+                // 第一幕長卷自動播放中：預設不點、不算閒置，等它播完；--skip-intro 才按右下略過
+                if (visible.includes('BtnIntroNext')) {
+                    if (!shot.has('intro')) { shot.add('intro'); await delay(1500); await page.screenshot({ path: path.join(outDir, '02-opening-intro-scroll.png') }); }
+                    if (skipIntro && await clickButton('^BtnIntroNext$')) { clicked.push('BtnIntroNext'); logClick('BtnIntroNext(略過)'); await delay(800); continue; }
+                    idleSince = null;
+                    await delay(400);
+                    if (Date.now() > deadline) throw new Error(`開場超時（超過 ${Math.round(stuckMs / 1000)} 秒）；第一幕長卷沒有自動結束`);
+                    continue;
+                }
+                // 全螢幕揭曉的「點擊畫面繼續」提示出現：像玩家一樣立刻點畫面，不必等閒置 5 秒
+                if (!candidates.length && await page.evaluate(() => window.__pt.activeNodeNames('^RevealTapHint$').length > 0)) {
+                    if (!shot.has('reveal')) { shot.add('reveal'); await page.screenshot({ path: path.join(outDir, '02-opening-ssr-reveal-hint.png') }); }
+                    await page.mouse.click(Math.round(viewport.width / 2), Math.round(viewport.height / 2));
+                    rec.detail.screenTaps = (rec.detail.screenTaps || 0) + 1;
+                    logClick('點畫面(SSR 揭曉)');
+                    idleSince = null;
+                    await delay(800);
+                    continue;
+                }
                 if (!candidates.length) {
                     if (done.size === openingSeq.length && !hasIntro) break;
                     // 連續 45 秒沒有任何規格中的按鈕可按，視為開場結束；沒出現的步驟記為缺漏（不默默略過）
@@ -825,6 +855,7 @@ async function main() {
                     if (Date.now() - idleSince > 5000) {
                         await page.mouse.click(Math.round(viewport.width / 2), Math.round(viewport.height / 2));
                         rec.detail.screenTaps = (rec.detail.screenTaps || 0) + 1;
+                        logClick('點畫面(閒置 5 秒後)');
                     }
                     if (Date.now() - idleSince > 45000) {
                         missing = openingSeq.filter((n) => !done.has(n) && !REPEATABLE.includes(n));
@@ -840,9 +871,11 @@ async function main() {
                 const expected = openingSeq.find((n) => !done.has(n));
                 if (!REPEATABLE.includes(name) && name !== expected) outOfOrder.push(`規格順序為 ${expected}，實際先出現 ${name}`);
                 if (name === 'BtnYouthPick0') await page.screenshot({ path: path.join(outDir, '02a-youth-pick.png') });
+                if (name === 'BtnShowcaseNext' && !shot.has('showcase')) { shot.add('showcase'); await delay(1500); await page.screenshot({ path: path.join(outDir, '02-opening-showcase-row.png') }); }
                 const hit = await clickButton(`^${name}$`);
                 if (hit) {
                     clicked.push(hit);
+                    logClick(name);
                     done.add(name);
                     await delay(1200);
                 }
@@ -852,6 +885,10 @@ async function main() {
             rec.detail.outOfOrder = Array.from(new Set(outOfOrder));
             rec.detail.retries = retries;
             rec.detail.clickedCount = clicked.length;
+            // 開場點擊總數（按鈕＋點畫面）與耗時：稽核 B1 目標 ≤ 8 次、進大廳 ≤ 30 秒
+            rec.detail.clickLog = clickLog;
+            rec.detail.totalClicks = clickLog.length;
+            rec.detail.openingMs = Date.now() - openingT0;
             if (missing.length) {
                 rec.detail.missing = missing;
                 throw new Error(`開場按鈕未依規格出現：缺 ${missing.join('、')}（已點 ${[...done].join('、')}；畫面按鈕 ${(await listButtons()).join('、') || '無'}）`);

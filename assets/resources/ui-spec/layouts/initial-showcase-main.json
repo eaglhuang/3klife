@@ -28,122 +28,567 @@
           "hCenter": true,
           "vCenter": true
         },
-        "width": 1400,
-        "height": 600,
+        "width": 1800,
+        "height": 800,
         "skinSlot": "oi.card.bg",
+        "_doc": "PROG-2-10064：六名將一頁橫排；立繪 Mask 由 LobbyScene 掛上，立繪依臉部標記對齊；每位名將一個 Column 容器（避免卡片子節點超過 20 的版面守門）",
         "children": [
           {
-            "type": "panel",
-            "name": "ShowcasePortraitFrame",
-            "id": "showcasePortraitFrame",
-            "widget": {
-              "top": 20,
-              "left": 1020
-            },
-            "width": 360,
-            "height": 560,
-            "skinSlot": "oi.portrait.frame",
-            "_doc": "UI-2-0160：名將登場立繪；Mask 由 LobbyScene 掛上，立繪依臉部標記對齊",
-            "children": [
-              {
-                "type": "container",
-                "name": "ShowcasePortraitMask",
-                "id": "showcasePortraitMask",
-                "widget": {
-                  "top": 0,
-                  "bottom": 0,
-                  "left": 0,
-                  "right": 0
-                },
-                "width": 360,
-                "height": 560,
-                "children": [
-                  {
-                    "type": "image",
-                    "name": "ShowcasePortrait",
-                    "id": "showcasePortrait",
-                    "width": 360,
-                    "height": 560,
-                    "skinSlot": "oi.portrait"
-                  }
-                ]
-              }
-            ]
-          },
-          {
             "type": "label",
-            "name": "ShowcaseName",
-            "id": "showcaseName",
+            "name": "ShowcaseHeading",
+            "id": "showcaseHeading",
             "widget": {
-              "top": 40,
-              "left": 60
+              "top": 24,
+              "left": 40
             },
-            "width": 920,
+            "width": 1720,
             "height": 50,
             "text": "",
             "styleSlot": "oi.label.title"
           },
           {
-            "type": "label",
-            "name": "ShowcaseTitle",
-            "id": "showcaseTitle",
+            "type": "container",
+            "name": "ShowcaseColumn0",
+            "id": "showcaseColumn0",
             "widget": {
-              "top": 100,
-              "left": 60
+              "top": 90,
+              "left": 22
             },
-            "width": 920,
-            "height": 30,
-            "text": "",
-            "styleSlot": "oi.label.meta"
+            "width": 280,
+            "height": 680,
+            "children": [
+              {
+                "type": "panel",
+                "name": "ShowcasePortraitFrame0",
+                "id": "showcasePortraitFrame0",
+                "widget": {
+                  "top": 0,
+                  "left": 0
+                },
+                "width": 280,
+                "height": 380,
+                "skinSlot": "oi.portrait.frame",
+                "children": [
+                  {
+                    "type": "container",
+                    "name": "ShowcasePortraitMask0",
+                    "id": "showcasePortraitMask0",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 280,
+                    "height": 380,
+                    "children": [
+                      {
+                        "type": "image",
+                        "name": "ShowcasePortrait0",
+                        "id": "showcasePortrait0",
+                        "width": 280,
+                        "height": 380,
+                        "skinSlot": "oi.portrait"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "ShowcaseName0",
+                "id": "showcaseName0",
+                "widget": {
+                  "top": 392,
+                  "left": 0
+                },
+                "width": 280,
+                "height": 40,
+                "text": "",
+                "styleSlot": "oi.label.name"
+              },
+              {
+                "type": "label",
+                "name": "ShowcaseTitle0",
+                "id": "showcaseTitle0",
+                "widget": {
+                  "top": 436,
+                  "left": 0
+                },
+                "width": 280,
+                "height": 56,
+                "text": "",
+                "styleSlot": "oi.label.meta"
+              },
+              {
+                "type": "label",
+                "name": "ShowcaseLine0",
+                "id": "showcaseLine0",
+                "widget": {
+                  "top": 500,
+                  "left": 0
+                },
+                "width": 280,
+                "height": 120,
+                "text": "",
+                "styleSlot": "oi.label.body"
+              }
+            ]
           },
           {
-            "type": "label",
-            "name": "ShowcaseLine",
-            "id": "showcaseLine",
+            "type": "container",
+            "name": "ShowcaseColumn1",
+            "id": "showcaseColumn1",
             "widget": {
-              "top": 170,
-              "left": 60
+              "top": 90,
+              "left": 317
             },
-            "width": 920,
-            "height": 240,
-            "text": "",
-            "styleSlot": "oi.label.body"
+            "width": 280,
+            "height": 680,
+            "children": [
+              {
+                "type": "panel",
+                "name": "ShowcasePortraitFrame1",
+                "id": "showcasePortraitFrame1",
+                "widget": {
+                  "top": 0,
+                  "left": 0
+                },
+                "width": 280,
+                "height": 380,
+                "skinSlot": "oi.portrait.frame",
+                "children": [
+                  {
+                    "type": "container",
+                    "name": "ShowcasePortraitMask1",
+                    "id": "showcasePortraitMask1",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 280,
+                    "height": 380,
+                    "children": [
+                      {
+                        "type": "image",
+                        "name": "ShowcasePortrait1",
+                        "id": "showcasePortrait1",
+                        "width": 280,
+                        "height": 380,
+                        "skinSlot": "oi.portrait"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "ShowcaseName1",
+                "id": "showcaseName1",
+                "widget": {
+                  "top": 392,
+                  "left": 0
+                },
+                "width": 280,
+                "height": 40,
+                "text": "",
+                "styleSlot": "oi.label.name"
+              },
+              {
+                "type": "label",
+                "name": "ShowcaseTitle1",
+                "id": "showcaseTitle1",
+                "widget": {
+                  "top": 436,
+                  "left": 0
+                },
+                "width": 280,
+                "height": 56,
+                "text": "",
+                "styleSlot": "oi.label.meta"
+              },
+              {
+                "type": "label",
+                "name": "ShowcaseLine1",
+                "id": "showcaseLine1",
+                "widget": {
+                  "top": 500,
+                  "left": 0
+                },
+                "width": 280,
+                "height": 120,
+                "text": "",
+                "styleSlot": "oi.label.body"
+              }
+            ]
           },
           {
-            "type": "label",
-            "name": "ShowcaseFactors",
-            "id": "showcaseFactors",
+            "type": "container",
+            "name": "ShowcaseColumn2",
+            "id": "showcaseColumn2",
             "widget": {
-              "top": 420,
-              "left": 60
+              "top": 90,
+              "left": 612
             },
-            "width": 920,
-            "height": 30,
-            "text": "",
-            "styleSlot": "oi.label.meta"
+            "width": 280,
+            "height": 680,
+            "children": [
+              {
+                "type": "panel",
+                "name": "ShowcasePortraitFrame2",
+                "id": "showcasePortraitFrame2",
+                "widget": {
+                  "top": 0,
+                  "left": 0
+                },
+                "width": 280,
+                "height": 380,
+                "skinSlot": "oi.portrait.frame",
+                "children": [
+                  {
+                    "type": "container",
+                    "name": "ShowcasePortraitMask2",
+                    "id": "showcasePortraitMask2",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 280,
+                    "height": 380,
+                    "children": [
+                      {
+                        "type": "image",
+                        "name": "ShowcasePortrait2",
+                        "id": "showcasePortrait2",
+                        "width": 280,
+                        "height": 380,
+                        "skinSlot": "oi.portrait"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "ShowcaseName2",
+                "id": "showcaseName2",
+                "widget": {
+                  "top": 392,
+                  "left": 0
+                },
+                "width": 280,
+                "height": 40,
+                "text": "",
+                "styleSlot": "oi.label.name"
+              },
+              {
+                "type": "label",
+                "name": "ShowcaseTitle2",
+                "id": "showcaseTitle2",
+                "widget": {
+                  "top": 436,
+                  "left": 0
+                },
+                "width": 280,
+                "height": 56,
+                "text": "",
+                "styleSlot": "oi.label.meta"
+              },
+              {
+                "type": "label",
+                "name": "ShowcaseLine2",
+                "id": "showcaseLine2",
+                "widget": {
+                  "top": 500,
+                  "left": 0
+                },
+                "width": 280,
+                "height": 120,
+                "text": "",
+                "styleSlot": "oi.label.body"
+              }
+            ]
           },
           {
-            "type": "label",
-            "name": "ShowcaseStep",
-            "id": "showcaseStep",
+            "type": "container",
+            "name": "ShowcaseColumn3",
+            "id": "showcaseColumn3",
             "widget": {
-              "top": 480,
-              "left": 60
+              "top": 90,
+              "left": 907
             },
-            "width": 300,
-            "height": 30,
-            "text": "",
-            "styleSlot": "oi.label.meta"
+            "width": 280,
+            "height": 680,
+            "children": [
+              {
+                "type": "panel",
+                "name": "ShowcasePortraitFrame3",
+                "id": "showcasePortraitFrame3",
+                "widget": {
+                  "top": 0,
+                  "left": 0
+                },
+                "width": 280,
+                "height": 380,
+                "skinSlot": "oi.portrait.frame",
+                "children": [
+                  {
+                    "type": "container",
+                    "name": "ShowcasePortraitMask3",
+                    "id": "showcasePortraitMask3",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 280,
+                    "height": 380,
+                    "children": [
+                      {
+                        "type": "image",
+                        "name": "ShowcasePortrait3",
+                        "id": "showcasePortrait3",
+                        "width": 280,
+                        "height": 380,
+                        "skinSlot": "oi.portrait"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "ShowcaseName3",
+                "id": "showcaseName3",
+                "widget": {
+                  "top": 392,
+                  "left": 0
+                },
+                "width": 280,
+                "height": 40,
+                "text": "",
+                "styleSlot": "oi.label.name"
+              },
+              {
+                "type": "label",
+                "name": "ShowcaseTitle3",
+                "id": "showcaseTitle3",
+                "widget": {
+                  "top": 436,
+                  "left": 0
+                },
+                "width": 280,
+                "height": 56,
+                "text": "",
+                "styleSlot": "oi.label.meta"
+              },
+              {
+                "type": "label",
+                "name": "ShowcaseLine3",
+                "id": "showcaseLine3",
+                "widget": {
+                  "top": 500,
+                  "left": 0
+                },
+                "width": 280,
+                "height": 120,
+                "text": "",
+                "styleSlot": "oi.label.body"
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "name": "ShowcaseColumn4",
+            "id": "showcaseColumn4",
+            "widget": {
+              "top": 90,
+              "left": 1202
+            },
+            "width": 280,
+            "height": 680,
+            "children": [
+              {
+                "type": "panel",
+                "name": "ShowcasePortraitFrame4",
+                "id": "showcasePortraitFrame4",
+                "widget": {
+                  "top": 0,
+                  "left": 0
+                },
+                "width": 280,
+                "height": 380,
+                "skinSlot": "oi.portrait.frame",
+                "children": [
+                  {
+                    "type": "container",
+                    "name": "ShowcasePortraitMask4",
+                    "id": "showcasePortraitMask4",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 280,
+                    "height": 380,
+                    "children": [
+                      {
+                        "type": "image",
+                        "name": "ShowcasePortrait4",
+                        "id": "showcasePortrait4",
+                        "width": 280,
+                        "height": 380,
+                        "skinSlot": "oi.portrait"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "ShowcaseName4",
+                "id": "showcaseName4",
+                "widget": {
+                  "top": 392,
+                  "left": 0
+                },
+                "width": 280,
+                "height": 40,
+                "text": "",
+                "styleSlot": "oi.label.name"
+              },
+              {
+                "type": "label",
+                "name": "ShowcaseTitle4",
+                "id": "showcaseTitle4",
+                "widget": {
+                  "top": 436,
+                  "left": 0
+                },
+                "width": 280,
+                "height": 56,
+                "text": "",
+                "styleSlot": "oi.label.meta"
+              },
+              {
+                "type": "label",
+                "name": "ShowcaseLine4",
+                "id": "showcaseLine4",
+                "widget": {
+                  "top": 500,
+                  "left": 0
+                },
+                "width": 280,
+                "height": 120,
+                "text": "",
+                "styleSlot": "oi.label.body"
+              }
+            ]
+          },
+          {
+            "type": "container",
+            "name": "ShowcaseColumn5",
+            "id": "showcaseColumn5",
+            "widget": {
+              "top": 90,
+              "left": 1497
+            },
+            "width": 280,
+            "height": 680,
+            "children": [
+              {
+                "type": "panel",
+                "name": "ShowcasePortraitFrame5",
+                "id": "showcasePortraitFrame5",
+                "widget": {
+                  "top": 0,
+                  "left": 0
+                },
+                "width": 280,
+                "height": 380,
+                "skinSlot": "oi.portrait.frame",
+                "children": [
+                  {
+                    "type": "container",
+                    "name": "ShowcasePortraitMask5",
+                    "id": "showcasePortraitMask5",
+                    "widget": {
+                      "top": 0,
+                      "bottom": 0,
+                      "left": 0,
+                      "right": 0
+                    },
+                    "width": 280,
+                    "height": 380,
+                    "children": [
+                      {
+                        "type": "image",
+                        "name": "ShowcasePortrait5",
+                        "id": "showcasePortrait5",
+                        "width": 280,
+                        "height": 380,
+                        "skinSlot": "oi.portrait"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "label",
+                "name": "ShowcaseName5",
+                "id": "showcaseName5",
+                "widget": {
+                  "top": 392,
+                  "left": 0
+                },
+                "width": 280,
+                "height": 40,
+                "text": "",
+                "styleSlot": "oi.label.name"
+              },
+              {
+                "type": "label",
+                "name": "ShowcaseTitle5",
+                "id": "showcaseTitle5",
+                "widget": {
+                  "top": 436,
+                  "left": 0
+                },
+                "width": 280,
+                "height": 56,
+                "text": "",
+                "styleSlot": "oi.label.meta"
+              },
+              {
+                "type": "label",
+                "name": "ShowcaseLine5",
+                "id": "showcaseLine5",
+                "widget": {
+                  "top": 500,
+                  "left": 0
+                },
+                "width": 280,
+                "height": 120,
+                "text": "",
+                "styleSlot": "oi.label.body"
+              }
+            ]
           },
           {
             "type": "button",
             "name": "BtnShowcaseNext",
             "id": "btnShowcaseNext",
             "widget": {
-              "top": 480,
-              "left": 700
+              "bottom": 16,
+              "hCenter": true
             },
-            "width": 280,
+            "width": 360,
             "height": 64,
             "skinSlot": "oi.button.bg",
             "children": [
@@ -157,7 +602,7 @@
                   "right": 0
                 },
                 "height": 40,
-                "text": "下一位",
+                "text": "前往宿命轉蛋",
                 "styleSlot": "oi.label.button"
               }
             ]
