@@ -66,7 +66,7 @@ export function createScoutPanelSuite(): TestSuite {
         assert.equals('呂布・飛將', view.texts.scoutEnemyBody);
         assert.equals('攻城', view.texts.scoutMechanicBody);
         assert.equals(SCOUT_PANEL_TEXTS.noIntel, view.texts.scoutRiskBody);
-        assert.equals('⚠ 缺少：鼓舞', view.texts.scoutLoadoutMissing);
+        assert.equals('⚠ 可再加強：鼓舞（提振士氣）', view.texts.scoutLoadoutMissing);
         assert.isTrue(view.actives.scoutLoadoutMissing);
         assert.isFalse(view.actives.scoutLoadoutReady || view.actives.scoutLoadoutRisk || view.actives.scoutLoadoutNone);
     });
@@ -96,7 +96,8 @@ export function createScoutPanelSuite(): TestSuite {
         const result = ctrl.ask(buildLobbyScout(SIEGE, LU_BU, [], TAGS));
         const before = ctrl.getView();
         assert.isTrue(before.actives.scoutLoadoutRisk);
-        assert.equals('☠ 高風險：缺少破城、鼓舞', before.texts.scoutLoadoutRisk);
+        assert.equals('⚠ 建議先換上：破城（攻城門用）、鼓舞（提振士氣）；不換也能打，只是會比較吃力', before.texts.scoutLoadoutRisk);
+        assert.isFalse(before.texts.scoutLoadoutRisk.includes('☠'));
         assert.isTrue(before.enabled.btnScoutSortie);
         assert.isFalse(ctrl.sortie());
         assert.isTrue(ctrl.getView().actives.scoutConfirm);
@@ -115,6 +116,29 @@ export function createScoutPanelSuite(): TestSuite {
         assert.isFalse(await first);
         ctrl.cancel();
         assert.isFalse(await second);
+    });
+
+    suite.test('文案走 i18n：lookup 有翻譯用翻譯，查不到退回 zh-TW；四語系鍵齊全', () => {
+        const ctrl = new ScoutPanelController((key, ...args) => (key === 'scout.loadoutRisk' ? `RISK:${args[0]}` : key === 'scout.tag.siege' ? 'gates' : key));
+        void ctrl.ask(buildLobbyScout(SIEGE, LU_BU, [], TAGS));
+        const view = ctrl.getView();
+        assert.equals('RISK:破城（gates）、鼓舞（提振士氣）', view.texts.scoutLoadoutRisk);
+        assert.equals('出征', view.texts.scoutSortieLabel);
+        const keys = Object.keys(SCOUT_PANEL_TEXTS).map((k) => `scout.${k}`);
+        for (const lang of ['zh-TW', 'zh-CN', 'en', 'ja']) {
+            const table = JSON.parse(fs.readFileSync(path.join(__dirname, `../assets/resources/i18n/${lang}.json`), 'utf8')) as Record<string, string>;
+            for (const key of keys) assert.isTrue(typeof table[key] === 'string' && table[key].length > 0, `${lang} ${key}`);
+            for (const code of ['siege', 'anti_stealth', 'breakthrough', 'anti_water', 'night']) assert.isTrue(!!table[`scout.tag.${code}`], `${lang} tag.${code}`);
+        }
+    });
+
+    suite.test('確認框是整張卡的遮罩＋置中盒，不會跟底下四區塊疊字', () => {
+        type Node = { id?: string; skinSlot?: string; widget?: Record<string, unknown>; children?: Node[] };
+        const layout = readSpec<{ root: Node }>('layouts/scout-panel-main.json');
+        const confirm = layout.root.children![1].children!.find((n) => n.id === 'scoutConfirm')!;
+        assert.equals(0, confirm.widget!.top as number); assert.equals(0, confirm.widget!.left as number);
+        assert.isTrue(confirm.children!.some((c) => c.skinSlot === 'scout.confirm.dim'));
+        assert.isTrue(confirm.children!.some((c) => c.id === 'scoutConfirmBox'));
     });
 
     suite.test('大廳接線：出征前先開偵查面板，取消就不開戰', () => {

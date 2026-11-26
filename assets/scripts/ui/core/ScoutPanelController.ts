@@ -32,7 +32,10 @@ export interface LobbyScout {
     weatherLine?: string;
 }
 
-/** 面板文案；確認框一句取自規格 §2，其餘為暫定 */
+/**
+ * 面板文案（zh-TW 預設；實際顯示走 i18n 的 scout.* 鍵，四語系；lookup 取不到時才用本表）。
+ * 確認框一句取自規格 §2；PROG-2-10073 起風險措辭改白話降噪（不用骷髏、不嚇新手），出征兩次確認與預設「再想想」不變。
+ */
 export const SCOUT_PANEL_TEXTS = {
     title: '戰前偵查',
     enemyHeading: '敵首情報',
@@ -41,15 +44,37 @@ export const SCOUT_PANEL_TEXTS = {
     loadoutHeading: '推薦檢核',
     noIntel: '尚未偵查：目前沒有可用情報，未列出不代表沒有風險。',
     loadoutReady: '✔ 已具備對策',
-    loadoutMissing: '⚠ 缺少：{gaps}',
-    loadoutRisk: '☠ 高風險：缺少{gaps}',
+    loadoutMissing: '⚠ 可再加強：{gaps}',
+    loadoutRisk: '⚠ 建議先換上：{gaps}；不換也能打，只是會比較吃力',
     loadoutNone: '本關未指定推薦對策',
+    loadoutHelpDefault: '對策比對的是目前主將已裝備的戰法，不是整個背包；仍可自行決定是否出征。',
+    loadoutHelp: '怎麼換：回大廳→武將→主將→「技」，裝上有【{gaps}】標記的戰法（背包有但沒裝備不算）。還沒有也沒關係，可以直接出征。',
     sortie: '出征',
     cancel: '暫不出征',
     confirmBody: '兵勢凶險，仍可強行出征',
     confirmYes: '強行出征',
     confirmNo: '再想想',
 } as const;
+
+/** 對策標籤的白話說明（新手看不懂「破城」「反隱」）；鍵＝i18n scout.tag.<code>，值＝zh-TW 預設 */
+const TAG_PLAIN: Readonly<Record<string, { code: string; hint: string }>> = {
+    破城: { code: 'siege', hint: '攻城門用' },
+    反隱: { code: 'anti_stealth', hint: '識破伏兵' },
+    突破: { code: 'breakthrough', hint: '衝破敵陣' },
+    避水陣: { code: 'anti_water', hint: '防水攻' },
+    夜戰: { code: 'night', hint: '夜間作戰' },
+    水攻: { code: 'water', hint: '水淹敵軍' },
+    火攻: { code: 'fire', hint: '火燒敵軍' },
+    遠攻: { code: 'ranged', hint: '遠程攻擊' },
+    守城: { code: 'defend', hint: '固守城池' },
+    鼓舞: { code: 'rally', hint: '提振士氣' },
+    抗混亂: { code: 'anti_chaos', hint: '抵抗混亂' },
+    牽制: { code: 'pin', hint: '拖住敵人' },
+    直取敵首: { code: 'snipe', hint: '直攻敵將' },
+};
+
+/** i18n 查詢函式（services().i18n.t 的形狀）；回傳等於 key 視為沒有翻譯 */
+export type ScoutTextLookup = (key: string, ...args: string[]) => string;
 
 /** 關卡沒填主題時，以戰場類型補核心機制（暫定） */
 const BATTLE_KIND_MECHANIC: Readonly<Record<string, string>> = { siege: '攻城戰' };
@@ -83,6 +108,26 @@ export class ScoutPanelController {
     private _scout: LobbyScout | null = null;
     private _confirming = false;
     private _resolve: ((sortie: boolean) => void) | null = null;
+
+    constructor(private readonly _lookup?: ScoutTextLookup) {}
+
+    /** 文案取 i18n scout.<key>；沒接 lookup 或查不到就用 zh-TW 預設，{gaps} 以 {0} 傳入 */
+    private _text(key: keyof typeof SCOUT_PANEL_TEXTS, gaps?: string): string {
+        const fallback = SCOUT_PANEL_TEXTS[key];
+        const i18nKey = `scout.${key}`;
+        const found = this._lookup ? this._lookup(i18nKey, gaps ?? '') : i18nKey;
+        const text = found && found !== i18nKey ? found : fallback;
+        return gaps === undefined ? text : text.replace('{gaps}', gaps).replace('{0}', gaps);
+    }
+
+    /** 缺口標籤改白話：「破城（攻城門用）」；查不到白話就只顯示標籤本身 */
+    private _gapLabel(tag: string): string {
+        const plain = TAG_PLAIN[tag];
+        if (!plain) return tag;
+        const key = `scout.tag.${plain.code}`;
+        const hint = this._lookup ? this._lookup(key) : key;
+        return `${tag}（${hint && hint !== key ? hint : plain.hint}）`;
+    }
 
     /** 開啟面板；前一輪還沒結束時，前一輪視為暫不出征 */
     ask(scout: LobbyScout): Promise<boolean> {
@@ -129,30 +174,30 @@ export class ScoutPanelController {
     getView(): ScoutPanelView {
         const scout = this._scout;
         const intel = scout?.intel ?? null;
-        const gaps = intel?.loadoutGaps.join('、') ?? '';
+        const gaps = (intel?.loadoutGaps ?? []).map((tag) => this._gapLabel(tag)).join('、');
         const state = scout?.hasRecommendation ? intel?.loadoutState ?? null : null;
-        const t = SCOUT_PANEL_TEXTS;
+        const tx = (key: keyof typeof SCOUT_PANEL_TEXTS): string => this._text(key);
         return {
             texts: {
-                scoutTitle: t.title,
-                scoutEnemyHeading: t.enemyHeading,
-                scoutEnemyBody: enemyText(intel?.enemyLeader ?? null),
+                scoutTitle: tx('title'),
+                scoutEnemyHeading: tx('enemyHeading'),
+                scoutEnemyBody: intel?.enemyLeader ? enemyText(intel.enemyLeader) : tx('noIntel'),
                 // 本場天氣接在標題後同一行（沿用既有欄位，不動版面；機制內文已經很長，放內文會被縮到看不清）
-                scoutMechanicHeading: scout?.weatherLine ? `${t.mechanicHeading}　${scout.weatherLine}` : t.mechanicHeading,
-                scoutMechanicBody: intel && intel.coreMechanics.length > 0 ? intel.coreMechanics.join('、') : t.noIntel,
-                scoutRiskHeading: t.riskHeading,
-                scoutRiskBody: intel && intel.riskTags.length > 0 ? intel.riskTags.map((tag) => `【${tag}】`).join(' ') : t.noIntel,
-                scoutLoadoutHeading: t.loadoutHeading,
-                scoutLoadoutHelp: intel?.loadoutGaps.length ? scoutLoadoutHelp(intel.loadoutGaps) : '對策比對的是目前主將已裝備的戰法，不是整個背包；仍可自行決定是否出征。',
-                scoutLoadoutReady: t.loadoutReady,
-                scoutLoadoutMissing: t.loadoutMissing.replace('{gaps}', gaps),
-                scoutLoadoutRisk: t.loadoutRisk.replace('{gaps}', gaps),
-                scoutLoadoutNone: t.loadoutNone,
-                scoutSortieLabel: t.sortie,
-                scoutCancelLabel: t.cancel,
-                scoutConfirmBody: t.confirmBody,
-                scoutConfirmYesLabel: t.confirmYes,
-                scoutConfirmNoLabel: t.confirmNo,
+                scoutMechanicHeading: scout?.weatherLine ? `${tx('mechanicHeading')}　${scout.weatherLine}` : tx('mechanicHeading'),
+                scoutMechanicBody: intel && intel.coreMechanics.length > 0 ? intel.coreMechanics.join('、') : tx('noIntel'),
+                scoutRiskHeading: tx('riskHeading'),
+                scoutRiskBody: intel && intel.riskTags.length > 0 ? intel.riskTags.map((tag) => `【${tag}】`).join(' ') : tx('noIntel'),
+                scoutLoadoutHeading: tx('loadoutHeading'),
+                scoutLoadoutHelp: intel?.loadoutGaps.length ? this._text('loadoutHelp', intel.loadoutGaps.join('、')) : tx('loadoutHelpDefault'),
+                scoutLoadoutReady: tx('loadoutReady'),
+                scoutLoadoutMissing: this._text('loadoutMissing', gaps),
+                scoutLoadoutRisk: this._text('loadoutRisk', gaps),
+                scoutLoadoutNone: tx('loadoutNone'),
+                scoutSortieLabel: tx('sortie'),
+                scoutCancelLabel: tx('cancel'),
+                scoutConfirmBody: tx('confirmBody'),
+                scoutConfirmYesLabel: tx('confirmYes'),
+                scoutConfirmNoLabel: tx('confirmNo'),
             },
             actives: {
                 scoutLoadoutReady: state === 'ready',
@@ -177,8 +222,8 @@ export class ScoutPanelController {
     }
 }
 
-/** 僅提供裝備路徑，不虛構玩家持有的戰法或敵軍站位。 */
+/** 僅提供裝備路徑，不虛構玩家持有的戰法或敵軍站位（預設 zh-TW；畫面走 ScoutPanelController 的 i18n 版） */
 export function scoutLoadoutHelp(gaps: readonly string[]): string {
     if (gaps.length === 0) return '';
-    return `返回大廳→武將→主將→「技」，裝備帶【${gaps.join('、')}】標籤的戰法；背包有但未裝備不算。若尚未持有，可稍後取得或先行出征。`;
+    return SCOUT_PANEL_TEXTS.loadoutHelp.replace('{gaps}', gaps.join('、'));
 }

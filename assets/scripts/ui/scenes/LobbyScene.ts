@@ -691,7 +691,7 @@ export class LobbyScene extends Component {
     private _rankUnlockHost: UIScreenPreviewHost | null = null;
     private readonly _duplicatePull = new DuplicatePullPopupController();
     private _scoutPanelHost: UIScreenPreviewHost | null = null;
-    private readonly _scoutPanel = new ScoutPanelController();
+    private readonly _scoutPanel = new ScoutPanelController((key, ...args) => services().i18n.t(key, ...args));
     private _tacticCounterTags: TacticCounterTagTable | null = null;
     /** 季節天氣機率表（PROG-2-9735，data/battle-weather-season）；載入前或載入失敗時抽天氣一律退回晴天 */
     private _weatherSeasonTable: BattleWeatherSeasonTable | null = null;
