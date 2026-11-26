@@ -64,6 +64,7 @@
             "type": "container",
             "name": "YcCrowd",
             "id": "ycCrowd",
+            "lazySlot": true,
             "width": 860,
             "height": 96
           },
