@@ -17356,5 +17356,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10068.md",
     "title": "[PROG-2-10068] 首年前 2 季季報彈窗精簡：任務回報與市井奇遇併進信箱，任務詳情加白話導讀",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3140",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10086.md",
+    "title": "[PROG-2-10086] playtest-online 整年實跑連鎖失敗：detached Frame 與大廳小人被擋根因修復",
+    "category": "task"
   }
 ]

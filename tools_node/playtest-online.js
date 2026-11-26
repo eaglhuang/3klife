@@ -557,6 +557,7 @@ async function main() {
     let stepIndex = 0;
     let exitCode = 1;
     let reachedLobby = false;
+    let shuttingDown = false; // 收尾關瀏覽器時不再印框架卸除診斷
 
     /** 把 console error／pageerror／失敗請求收進 collector（主頁與 qa 第二情境共用） */
     function attachCollectors(p) {
@@ -568,6 +569,9 @@ async function main() {
             collector.push(isOnline && isKnownEnvError(text) ? 'known-env-error' : 'console-error', text);
         });
         p.on('pageerror', (error) => collector.push('pageerror', (error && error.stack) || error));
+        // 頁面生命週期診斷：頁面崩潰／關閉／主框架被換掉都會讓後續步驟連鎖報 detached Frame，先把原因印出來
+        p.on('error', (error) => console.error(`[playtest] 頁面崩潰（renderer crash）：${(error && error.message) || error}`));
+        p.on('framedetached', (frame) => { if (frame === p.mainFrame() && !shuttingDown) console.error(`[playtest] 主框架被卸除：${frame.url().slice(0, 120) || '(無網址)'}`); });
         p.on('requestfailed', (request) => {
             if (IGNORED_CONSOLE_PATTERNS.some((re) => re.test(request.url()))) return;
             const failedText = `${request.method()} ${request.url()} (${request.failure() && request.failure().errorText})`;
@@ -614,6 +618,7 @@ async function main() {
         const t0 = Date.now();
         if (perfProbe) await perfProbe.begin().catch(() => {});
         rm.takeBlocked(); // 清掉前一步殘留的「被擋住」紀錄
+        if (await ensurePageAlive(`步驟 ${name} 開始前頁面已失效`)) rec.detail.pageRecovered = true;
         try {
             const detail = await fn(rec);
             if (detail) Object.assign(rec.detail, detail);
@@ -731,6 +736,41 @@ async function main() {
         if (!(await clickButton('^' + cat + '$'))) return null;
         await delay(1200);
         return clickByText('^BtnSub', textRe);
+    };
+
+    /**
+     * 頁面存活檢查與復原（PROG-2-10086）：整年實跑時 headless 分頁偶爾在長戰鬥後崩潰（renderer crash／主框架被換掉），
+     * 之後每一步都報「Attempted to use detached Frame」連鎖失敗（11/26 發布後實跑 82 步只過 20 步）。
+     * 存檔在同一個瀏覽器情境的 IndexedDB，所以在同情境開新分頁、重載登入就能回到大廳繼續（等同玩家重開網頁）。
+     */
+    const pageAlive = async () => {
+        if (!page || page.isClosed()) return false;
+        try { return (await Promise.race([page.evaluate(() => 1), delay(8000).then(() => 'timeout')])) === 1; } catch (_) { return false; }
+    };
+    const recoverPage = async (why) => {
+        const t0 = Date.now();
+        const dead = page;
+        page = await context.newPage();
+        await page.setViewport(viewport);
+        attachCollectors(page);
+        if (typeof args.inject === 'string') await page.evaluateOnNewDocument(fs.readFileSync(path.resolve(projectRoot, args.inject), 'utf8'));
+        if (dead) await dead.close().catch(() => undefined);
+        await page.goto(target, { waitUntil: 'load', timeout: stuckMs });
+        await waitUntil(() => page.evaluate(() => Boolean(window.cc && window.cc.director && window.cc.director.getScene())), stuckMs, '頁面復原後引擎未就緒');
+        await installHelpers();
+        await waitUntil(async () => (await scene()) === 'LoginScene', stuckMs, '頁面復原後未進入 LoginScene');
+        await waitLoginStartReady();
+        await clickLoginStart();
+        await waitUntil(async () => (await scene()) === 'LobbyScene', stuckMs, '頁面復原後未進入 LobbyScene');
+        await waitUntil(async () => (await page.evaluate((re) => window.__pt.textsMatching(re), '正在準備|載入中|Loading|啟動遇到問題')).length === 0 && (await page.evaluate(() => window.__pt.hasButton('^BtnCatShop$'))), stuckMs, '頁面復原後大廳沒準備好');
+        const rec = { atStep: stepIndex, why, ms: Date.now() - t0 };
+        (report.pageRecoveries = report.pageRecoveries || []).push(rec);
+        console.error(`[playtest] 頁面已復原（${why}，${rec.ms}ms）：新分頁重載登入回大廳`);
+    };
+    /** 步驟開始前呼叫：頁面死了就復原；復原失敗交給步驟自己失敗 */
+    const ensurePageAlive = async (why) => {
+        if (!reachedLobby || (await pageAlive())) return false;
+        try { await recoverPage(why); return true; } catch (e) { console.error(`[playtest] 頁面復原失敗：${String((e && e.message) || e).split('\n')[0]}`); return false; }
     };
 
     try {
@@ -2265,6 +2305,7 @@ async function main() {
             };
             /** 每個子步驟前的保險：不在大廳就想辦法回去，最後才重整 */
             const ensureLobby = async () => {
+                await ensurePageAlive('年循環子步驟前頁面已失效');
                 for (let i = 0; i < 6 && (await scene()) !== 'LobbyScene'; i++) {
                     await clickByText('.*', '返回大廳');
                     await clickButton('^(GachaReturnToLobby|BtnBack|BtnClose|BtnCloseSortie|BtnBattleReviewClose|BtnReturnLobby|BtnConfirm)$');
@@ -3125,6 +3166,7 @@ async function main() {
         fs.writeFileSync(path.join(outDir, 'report.json'), JSON.stringify(report, null, 2), 'utf8');
         if (page) await page.close().catch(() => undefined);
         if (context) await context.close().catch(() => undefined);
+        shuttingDown = true;
         if (browser) await browser.close().catch(() => undefined);
         if (staticServer) staticServer.server.close();
         exitCode = report.passed ? 0 : (report.fatal && report.steps.length === 0 ? 2 : 1);
