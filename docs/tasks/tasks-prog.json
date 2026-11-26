@@ -19633,7 +19633,7 @@
       "completed_at": "2026-11-26T23:10:00+08:00"
     },
     {
-      "doc_id": "doc_task_3148",
+      "doc_id": "doc_task_3158",
       "id": "PROG-2-10098",
       "title": "姻緣單一流程規格：相親 → 提親 → 成婚 → 結緣（11/26 修訂）",
       "owner": "ClaudeCode_claude-opus-5-5",
@@ -19648,7 +19648,7 @@
       "chain_id": "",
       "chain_step": "",
       "sensor_triggered_by": "",
-      "description": "使用者 11/26 裁決：相親與結緣併成單一流程。在 doc_spec_1241 加第 16 章（shard-d，doc_spec_1332）：狀態機、守門矩陣、提親公式（採 Antigravity 11/26 對照表）、媒人加權、第 1 年第 3 季紅娘 80% 保底、吃醋事件、存檔遷移、JSON、UI 錨點、i18n、驗收。純設計不含程式。",
+      "description": "使用者 11/26 裁決：相親與結緣併成單一流程。在 doc_spec_1241 加第 16 章（shard-d，doc_spec_1338）：狀態機、守門矩陣、提親公式（採 Antigravity 11/26 對照表）、媒人加權、第 1 年第 3 季紅娘 80% 保底、吃醋事件、存檔遷移、JSON、UI 錨點、i18n、驗收。純設計不含程式。",
       "related": [
         "PROG-2-9224",
         "PROG-2-10099"
@@ -19658,7 +19658,7 @@
       "deliverables": [
         "docs/遊戲規格文件/系統規格書/家族子嗣與血統總規格書-shards/shard-d.md"
       ],
-      "notes": "2026-11-27 | 狀態: done | 驗證: compute-gate standard 13/14（僅既有 import-boundary 警告）、rebuild-crossref --validate、doc-id-registry --verify 通過 | 變更: doc_spec_1241 加第 16 章（shard-d＝doc_spec_1332）、索引、cross-ref 列、實作卡 PROG-2-10099 | 阻塞: Q-M1～Q-M8 待使用者裁決",
+      "notes": "2026-11-27 | 狀態: done | 驗證: compute-gate standard 13/14（僅既有 import-boundary 警告）、rebuild-crossref --validate、doc-id-registry --verify 通過 | 變更: doc_spec_1241 加第 16 章（shard-d＝doc_spec_1338）、索引、cross-ref 列、實作卡 PROG-2-10099 | 阻塞: Q-M1～Q-M8 待使用者裁決",
       "brief": {
         "style": "classic",
         "label": "",
@@ -19682,7 +19682,7 @@
       }
     },
     {
-      "doc_id": "doc_task_3149",
+      "doc_id": "doc_task_3159",
       "id": "PROG-2-10099",
       "title": "姻緣單一流程實作：狀態機、結緣守門、存檔遷移、姻緣面板、吃醋事件",
       "owner": "ClaudeCode_claude-opus-5-5",
@@ -19697,7 +19697,7 @@
       "chain_id": "",
       "chain_step": "",
       "sensor_triggered_by": "",
-      "description": "依 doc_spec_1332（家族子嗣與血統總規格書 shard-d 第 16 章）實作姻緣單一流程。第一階段 M1～M3：courtship-config.json、CourtshipStage 純邏輯、結緣守門 mother-not-spouse、媒人說親改入相親名單、存檔欄位與舊檔遷移。第二階段 M4～M6：吃醋事件、姻緣面板與大廳單一入口、四語系 i18n、驗收 TC-MAR-01～14。只開不做。",
+      "description": "依 doc_spec_1338（家族子嗣與血統總規格書 shard-d 第 16 章）實作姻緣單一流程。第一階段 M1～M3：courtship-config.json、CourtshipStage 純邏輯、結緣守門 mother-not-spouse、媒人說親改入相親名單、存檔欄位與舊檔遷移。第二階段 M4～M6：吃醋事件、姻緣面板與大廳單一入口、四語系 i18n、驗收 TC-MAR-01～14。只開不做。",
       "related": [
         "PROG-2-10098",
         "PROG-2-9224"

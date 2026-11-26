@@ -77,6 +77,11 @@
 | doc_spec_1236（年終守城戰） |—|doc_spec_0049、doc_spec_0376、doc_spec_0525、doc_spec_1182、doc_spec_1184、doc_spec_1186|
 | doc_data_0002 |—|doc_data_0001、doc_spec_0040|
 | doc_spec_0007 |doc_spec_0002、doc_ui_0027|doc_spec_0040、doc_spec_0044、doc_spec_0012、doc_spec_0041、doc_spec_0032|
+| doc_spec_1333 |doc_spec_0457|doc_spec_0014、doc_spec_0002|
+| doc_spec_1334 |doc_spec_1333|doc_spec_0457、doc_spec_0007|
+| doc_spec_1335 |doc_spec_1334|doc_spec_0457|
+| doc_spec_1336 |doc_spec_0007|doc_spec_0007|
+| doc_spec_1337 |doc_spec_1336|doc_spec_0007、doc_spec_1334|
 | doc_spec_0020 |doc_spec_0002、doc_spec_0039|doc_spec_0032、doc_spec_0037、doc_spec_0014、doc_spec_0022、doc_spec_0018|
 | doc_spec_0039** |—|doc_spec_0038、doc_spec_0041、doc_spec_0030、doc_spec_0044、doc_spec_0040、doc_ui_0001、doc_spec_0020（E-4/E-5 場景戰法觸發）|
 | doc_spec_0044 |doc_spec_0007、doc_ui_0001|doc_spec_0040、doc_spec_0039、doc_spec_0026、doc_spec_0032|
@@ -255,7 +260,7 @@
 | doc_id | 規格書 | 說明 |
 |---|---|---|
 | doc_spec_1241 | 家族子嗣與血統總規格書.md | 總綱：配偶三來源與上場、待產哺乳 OCC、子嗣、繼承與家門奇才、主角不死、分家外嫁、義子、家臣子嗣、共用框架對應、JSON、實作卡切分（上游：doc_spec_1233、1180、1179、1181、1182；分規格：0268、0530、0531、0580、0011、0181~0185、0446、0532） |
-| doc_spec_1332 | 家族子嗣與血統總規格書-shards/shard-d.md（第 16 章） | 11/26 修訂：姻緣單一流程（相親 → 提親 → 成婚 → 結緣）：單一狀態機與守門矩陣、結緣母方須為配偶、提親成功率公式、媒人加權、第 1 年第 3 季紅娘 80% 保底、吃醋事件、存檔遷移、courtship-config.json、姻緣面板錨點、i18n 鍵、驗收 TC-MAR-01～14（上游：doc_spec_1241、0268、0530、0531；實作卡 PROG-2-10099） |
+| doc_spec_1338 | 家族子嗣與血統總規格書-shards/shard-d.md（第 16 章） | 11/26 修訂：姻緣單一流程（相親 → 提親 → 成婚 → 結緣）：單一狀態機與守門矩陣、結緣母方須為配偶、提親成功率公式、媒人加權、第 1 年第 3 季紅娘 80% 保底、吃醋事件、存檔遷移、courtship-config.json、姻緣面板錨點、i18n 鍵、驗收 TC-MAR-01～14（上游：doc_spec_1241、0268、0530、0531；實作卡 PROG-2-10099） |
 | doc_spec_1179（第 13、14 章） | 學府修業畫面與接線設計.md | 學府新版規則（人源只收自家子嗣、入學加分、修業變化、失敗與結業影響）、教官就是武將（教官卡退場）；shard-h、shard-i |
 
 ### 學府支援卡與教官池（PROG-2-9230，11/21 下午裁決，恢復並改寫教官卡）
@@ -274,6 +279,7 @@
 
 > 「依 11/21 裁決修訂」註記（PROG-2-9224）：doc_spec_1179（shard-d／e／f／g）、1233（shard-a／b）、1181（shard-g）、1180（shard-k／n）、0310、0482、0318、0562、0563、0569 及教官卡相關規格（教官系統（支援卡）、教官支援卡四大原型／詞條 Schema、教官訓練格爆發、教官精力欄位、教官靈感戰法六招、名將身後傳承）。
 
+> 「11/26 修訂」註記（PROG-2-10094）：doc_spec_1333～1335 為世界沙盤（doc_spec_0457）領地第 2 年解鎖／教學／放置效果預覽附則；doc_spec_1336～1337 為名將挑戰賽系統（doc_spec_0007）賽季卡培育期準備指引附則；實作卡 PROG-2-10095、10096。
 ### 虎符族（PROG-2-10091 索引健檢補列，2026-11-26）
 
 | Doc ID | 標題 | 相對路徑 | 摘要說明 |

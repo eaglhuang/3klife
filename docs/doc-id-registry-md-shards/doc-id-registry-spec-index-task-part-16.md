@@ -23,12 +23,19 @@
 | `doc_task_3121` | docs/agent-briefs/tasks/PROG/PROG-2-10058.md | [PROG-2-10058] 幼苗與親子資料基礎：開局送 7 歲幼苗、親子好感、小名碎片帳本、同窗好友旗標 |
 | `doc_task_3123` | docs/agent-briefs/tasks/PROG/PROG-2-10059.md | [PROG-2-10059] 年底結算接成長事件：待處理事件佇列存檔、resolveBloodlineEvent 結算 |
 | `doc_task_3124` | docs/agent-briefs/tasks/PROG/PROG-2-10060.md | [PROG-2-10060] 新手前 10～20 分鐘稽核小修：開場信按鈕、教學銀兩、結緣入口、任務牆獎勵提示 |
+| `doc_task_3125` | docs/agent-briefs/tasks/PROG/PROG-2-10062.md | [PROG-2-10062] 首年目標清單：資料、追蹤、一次性領獎與大廳進度條 |
 | `doc_task_3126` | docs/agent-briefs/tasks/PROG/PROG-2-10067.md | [PROG-2-10067] 新手教學結束後第一個目標：出征鈕脈動＋史小境提示 |
 | `doc_task_3127` | docs/agent-briefs/tasks/PROG/PROG-2-10061.md | [PROG-2-10061] 首戰教學浮窗移到左下角（資料驅動、避開拇指區與接戰區） |
+| `doc_task_3128` | docs/agent-briefs/tasks/PROG/PROG-2-10070.md | [PROG-2-10070] 子嗣成長事件彈窗＋親子談話按鈕（最小可玩） |
 | `doc_task_3130` | docs/agent-briefs/tasks/PROG/PROG-2-10072.md | [PROG-2-10072] 首戰節奏：預設 x2、縮短敵方回合等待、試玩腳本自動代打校正 |
+| `doc_task_3131` | docs/agent-briefs/tasks/PROG/PROG-2-10074.md | [PROG-2-10074] 整年放招 0 次修正：計謀起手 20／火計 25、教學戰委任放招旁路、playtest 放招計數 |
 | `doc_task_3133` | docs/agent-briefs/tasks/PROG/PROG-2-10075.md | [PROG-2-10075] 同步騎馬匹 mounted-list（關羽） |
 | `doc_task_3134` | docs/agent-briefs/tasks/PROG/PROG-2-10077.md | [PROG-2-10077] 格擋音換成 Kenney impactMetal_light_001（CC0） |
 | `doc_task_3135` | docs/agent-briefs/tasks/PROG/PROG-2-10064.md | [PROG-2-10064] 新手開場點擊精簡：介紹合併自動長卷、六名將一頁亮相、SSR 揭曉加點擊提示 |
 | `doc_task_3136` | docs/agent-briefs/tasks/PROG/PROG-2-10073.md | [PROG-2-10073] 戰前偵查面板：措辭降噪＋出征確認框疊字修正 |
 | `doc_task_3137` | docs/agent-briefs/tasks/PROG/PROG-2-10068.md | [PROG-2-10068] 首年前 2 季季報彈窗精簡：任務回報與市井奇遇併進信箱，任務詳情加白話導讀 |
 | `doc_task_3138` | docs/agent-briefs/tasks/PROG/PROG-2-10092.md | [PROG-2-10092] 季報信箱改名：信箱標題與入口走 i18n 四語系（PM 裁決 A） |
+| `doc_task_3141` | docs/agent-briefs/tasks/PROG/PROG-2-10094.md | [PROG-2-10094] 天下沙盤領地解鎖教學與挑戰賽培育指引規格（11/26 修訂） |
+| `doc_task_3142` | docs/agent-briefs/tasks/PROG/PROG-2-10095.md | [PROG-2-10095] 天下沙盤領地：第 2 年解鎖、搞笑教學、放置效果預覽（實作） |
+| `doc_task_3143` | docs/agent-briefs/tasks/PROG/PROG-2-10096.md | [PROG-2-10096] 名將挑戰賽卡片：培育期推薦與一鍵前往培育（實作） |
+| `doc_task_3144` | docs/agent-briefs/tasks/PROG/PROG-2-10091.md | [PROG-2-10091] 索引健檢：虎符族文件補列與 keep.summary 更新 |
