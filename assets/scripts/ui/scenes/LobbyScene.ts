@@ -14,7 +14,7 @@ import { inspiredTacticName } from '../../core/systems/InspiredTacticMap';
 import { skillNameOf } from '../../core/systems/skill/SkillCatalog';
 import { parseLimitedPoolWindows } from '../../core/systems/LimitedPoolSchedule';
 import { expandLimitedPoolRotations, parseLimitedPoolRotations } from '../../core/systems/LimitedPoolRotation';
-import { _decorator, BlockInputEvents, Button, Canvas, Color, Component, director, instantiate, JsonAsset, Label, Mask, Node, Sprite, sys, UITransform, Widget, resources, input, Input, EventKeyboard, KeyCode } from 'cc';
+import { _decorator, assetManager, AudioClip, BlockInputEvents, Button, Canvas, Color, Component, director, instantiate, JsonAsset, Label, Mask, Node, Sprite, sys, tween, UITransform, Widget, resources, input, Input, EventKeyboard, KeyCode } from 'cc';
 import { MindRequestPanel } from '../components/mind/MindRequestPanel';
 import { installAdaptiveResolution } from '../core/AdaptiveResolution';
 import { computeSubMenuCenterX, LobbyHallScreenBinder, type HallActorTapView, type LobbyHallDockId, type LobbyHallPanelId, type LobbyHallWallId } from '../core/LobbyHallScreenBinder';
@@ -289,6 +289,9 @@ import { JealousyPopupPanel } from '../components/JealousyPopupPanel';
 import { BondingJealousyRuntime, pairSynergyK, seedOfText } from '../../core/systems/BondingJealousyRuntime';
 import { YearEndCeremonyPanel } from '../components/YearEndCeremonyPanel';
 import { buildYearEndCeremonyResult } from '../../core/systems/YearEndCeremonyRuntime';
+import { claimYearEndRewards } from '../../core/systems/YearEndCeremonyReward';
+import type { YearEndRankingResult } from '../../core/systems/YearEndRankingService';
+import ceremonyRankingConfig from '../../../resources/data/master/year-end-ranking-config.json';
 import { BloodlineEpithetService } from '../../core/systems/BloodlineEpithetService';
 import { JealousyAndDynastyService } from '../../core/systems/JealousyAndDynastyService';
 import bondingConfig from '../../../resources/data/master/bonding-config.json';
@@ -525,6 +528,8 @@ export class LobbyScene extends Component {
     private _ceremonyHost: UIScreenPreviewHost | null = null;
     private _ceremonyPanel: YearEndCeremonyPanel | null = null;
     private _pendingCeremonyYear = 0;
+    private _ceremonyResult: YearEndRankingResult | null = null;
+    private _ceremonyClaiming = false;
     private _extremeTaskMessage = '';
     private _listPanel: GeneralListComposite | null = null;
     private _detailPanel: GeneralDetailComposite | null = null;
@@ -3519,7 +3524,7 @@ export class LobbyScene extends Component {
     private async _mountYearEndCeremony(): Promise<void> {
         const host = await this._mountPreviewScreenHost('YearEndCeremonyHost', 'year-end-ceremony-screen', [
             { buttonId: 'btnYcSkip', handler: () => { this._ceremonyPanel?.skip(); } },
-            { buttonId: 'btnYcClose', handler: () => { this._closeYearEndCeremony(); } },
+            { buttonId: 'btnYcClose', handler: () => { void this._claimYearEndCeremonyReward(); } },
         ]);
         const nodeOf = (id: string): Node | null => host.binder.getNode(id) ?? null;
         const labelOf = (id: string): Label | null => nodeOf(id)?.getComponent(Label) ?? null;
@@ -3532,6 +3537,14 @@ export class LobbyScene extends Component {
         panel.closeButton = nodeOf('btnYcClose');
         const theme = await services().specLoader.getThemeService().catch(() => null);
         panel.setServices(this._panelT, theme);
+        // 敲鑼／掌聲：clip 名取自資料表，null＝目前沒有合適音檔（待補），不播
+        for (const clip of Object.values(ceremonyRankingConfig.ceremonyAudio)) {
+            if (clip) this._ensureCeremonyClip(clip);
+        }
+        panel.setOnCue((cue) => {
+            const clip = ceremonyRankingConfig.ceremonyAudio[cue];
+            if (clip) services().audio.playSfx(clip);
+        });
         host.binder.setTexts({
             btnYcSkipLabel: this._panelT('ui.ceremony.skip'),
             btnYcCloseLabel: this._panelT('ui.ceremony.close'),
@@ -3539,6 +3552,18 @@ export class LobbyScene extends Component {
         this._ceremonyHost = host;
         this._ceremonyPanel = panel;
         host.node.active = false;
+    }
+
+    /** 典禮要的單一音效：大廳平常沒載入 audio bundle，只取這一個 clip（不整包載入，省手機記憶體）；失敗就靜音 */
+    private _ensureCeremonyClip(name: string): void {
+        const audio = services().audio;
+        if (audio.hasClip(name)) return;
+        const loadClip = (bundle: { load: (path: string, type: typeof AudioClip, cb: (err: Error | null, clip: AudioClip) => void) => void }): void => {
+            bundle.load(`clips/${name}`, AudioClip, (err, clip) => { if (!err && clip) audio.registerClip(name, clip); });
+        };
+        const existing = assetManager.getBundle('audio');
+        if (existing) { loadClip(existing); return; }
+        assetManager.loadBundle('audio', (err, bundle) => { if (!err && bundle) loadClip(bundle); });
     }
 
     /** 有待播年份就開典禮；回傳是否真的開了。第 1 次看不給跳過，播完（或跳過）才記下「已看過」存檔 */
@@ -3549,7 +3574,11 @@ export class LobbyScene extends Component {
         if (!host || !panel || year <= 0) return false;
         this._pendingCeremonyYear = 0;
         const session = services().session;
-        const result = buildYearEndCeremonyResult(year, session.clanPrestige, this._panelT('ui.ceremony.house'));
+        const { scoreInput, context } = session.yearEndScoreInputs();
+        const result = buildYearEndCeremonyResult(year, scoreInput, this._panelT('ui.ceremony.house'), context);
+        this._ceremonyResult = result;
+        const playerScore = result.standings.find((entry) => entry.isPlayer)?.score ?? 0;
+        void session.recordYearEndCeremonyScore(year, playerScore).catch(() => undefined);
         panel.setOnFinished(() => { void session.markYearEndCeremonySeen().catch(() => undefined); });
         panel.bindRankingResult(result, session.yearEndCeremonySeen);
         host.node.active = true;
@@ -3559,6 +3588,32 @@ export class LobbyScene extends Component {
 
     private _closeYearEndCeremony(): void {
         if (this._ceremonyHost) this._ceremonyHost.node.active = false;
+    }
+
+    /**
+     * 「收下賞賜」：經 reward.claim 入帳銀兩與玉璧（grantKey 防重領，重按或重開遊戲都不會重發），
+     * 成功後顯示入帳結果，停一下再關閉；失敗保留視窗讓玩家再按一次。
+     */
+    private async _claimYearEndCeremonyReward(): Promise<void> {
+        const result: YearEndRankingResult | null = this._ceremonyResult;
+        const panel = this._ceremonyPanel;
+        if (!result || !panel || this._ceremonyClaiming) return;
+        this._ceremonyClaiming = true;
+        try {
+            const outcome = await claimYearEndRewards(services().api, result);
+            if (!outcome.ok) {
+                panel.showClaimMessage(this._panelT('ui.ceremony.claim_failed'));
+                return;
+            }
+            services().session.excludeFromYearSilverIncome(outcome.silver);
+            panel.showClaimMessage(outcome.alreadyClaimed
+                ? this._panelT('ui.ceremony.claimed_again')
+                : this._panelT('ui.ceremony.claimed', String(outcome.silver), String(outcome.silverBalance ?? ''), String(outcome.gems)));
+            this._ceremonyResult = null;
+            tween(this._ceremonyHost!.node).delay(1.6).call(() => this._closeYearEndCeremony()).start();
+        } finally {
+            this._ceremonyClaiming = false;
+        }
     }
 
     /** 換季時的配偶事件：至少兩位配偶、且有人今年還沒哄過才吃醋（每位配偶每年一次由判定服務把關） */

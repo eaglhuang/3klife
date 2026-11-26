@@ -1330,7 +1330,7 @@
   "ui.jealousy.popup.noSilver": "銀両が足りません（{0}必要）",
   "ui.bonding.proposal.result.enrollBlocked": "{0}は承諾しましたが、まだ家族に迎えられません（好感または家族枠が未達）",
   "ui.ceremony.skip": "式典をスキップ",
-  "ui.ceremony.act1.intro": "年末の銅鑼！今年は4つの名門が競う：{0}。玉璧を掴むのは誰だ！",
+  "ui.ceremony.act1.intro": "年末の銅鑼！今年は{1}つの名門が競う：{0}。玉璧を掴むのは誰だ！",
   "ui.ceremony.act2.top3": "第{0}位おめでとう！銀両{1}・玉璧{2}を獲得！",
   "ui.ceremony.roast.1": "審査員も惜しがった！来年はもっと子息を連れてこよう！",
   "ui.ceremony.roast.2": "今年は慰労の銀両500で我慢、来年は必ず雪辱しよう！",
@@ -1349,5 +1349,12 @@
   "ui.ceremony.close": "褒賞を受け取る",
   "ui.ceremony.act3.hint.top": "お見事！第{0}年の優勝賞は銀{1}両＋玉璧{2}個に上がります。この調子で首位を守ろう！",
   "ui.ceremony.act3.hint.out": "第{0}年の優勝賞は銀{1}両＋玉璧{2}個に上がります。子孫を育て戦功を重ねて、来年また挑もう！",
-  "ui.ceremony.house": "わが家"
+  "ui.ceremony.house": "わが家",
+  "npc.house.chendeng": "陳登",
+  "npc.house.zhangzhao": "張昭",
+  "npc.house.shenpei": "審配",
+  "npc.house.jushou": "沮授",
+  "ui.ceremony.claimed": "受領済み：銀両 +{0}（残高 {1}）、玉璧 +{2}",
+  "ui.ceremony.claimed_again": "今年の褒賞はすでに受け取り済みです（二重付与なし）",
+  "ui.ceremony.claim_failed": "付与に失敗しました。しばらくしてからもう一度お試しください"
 }

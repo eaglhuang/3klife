@@ -60,6 +60,8 @@ import type { GeneralConfig } from '../models/GeneralUnit';
 import { advanceDaughtersOneYear, assignDaughterRoute, daughtersAwaitingRoute, type AssignDaughterResult, type DaughterRecord, type DaughterRoute } from '../systems/DaughterComingOfAge';
 import { isAcademyRecordActive, normalizeAcademyRecord, type AcademyRecordPort, type PersistedAcademyRecord } from '../services/GameAcademySaveStore';
 import { formatSeasonLabel, GameClock, GameTimeState, SeasonAdvanceResult, SEASONS_PER_YEAR } from '../systems/GameClock';
+import { academyScoreOfGrades, type YearEndScoreInput } from '../systems/YearEndRankingService';
+import { normalizeLastCeremonyScore, normalizeYearSilverIncome, type CeremonyContext, type LastCeremonyScore } from '../systems/YearEndCeremonyRuntime';
 import { buildYearReport, normalizeYearAgingEvents, normalizeYearEndDefenseResult, YearReport, type YearEndDefenseResult } from '../systems/YearReport';
 import { backfillTallyTroopTypes, mainTroopTypeOf } from '../systems/TigerTally';
 import { normalizeCountdownState, createCountdown, OPENING_TRAVEL_DURATION_MS, OPENING_TRAVEL_TARGET_ID, type CountdownState } from '../systems/CountdownManager';
@@ -1079,6 +1081,10 @@ export class GameSession implements AcademyRecordPort {
     private _mentorUnlockPromptShown = false;
     /** 年終頒獎典禮已完整看過（PROG-2-10046）；第 2 次起才顯示跳過鈕。存於 resources.yearEndCeremonySeen，舊存檔缺欄位視為沒看過 */
     private _yearEndCeremonySeen = false;
+    /** 本年家族銀兩入帳合計（典禮分數的「年收入」）；典禮結算時取走並歸零，存於 resources.yearSilverIncome（PROG-2-10050） */
+    private _yearSilverIncome = 0;
+    /** 上一次典禮的玩家榜單分數（黑馬獎比較基準）；存於 resources.lastCeremonyScore */
+    private _lastCeremonyScore: LastCeremonyScore | null = null;
     /** 內政本季紀錄：同季只能選一項 */
     private _domesticLog: DomesticSeasonLog = { ...EMPTY_DOMESTIC_LOG };
     /** 治理事件（PROG-2-1773）：只在發生那一季有效 */
@@ -1494,6 +1500,7 @@ export class GameSession implements AcademyRecordPort {
         const amount = config.clanStipendBase + spouses * config.clanStipendPerSpouse;
         if (amount <= 0) return null;
         this._family.creditSilver(amount, config.startingSilver);
+        this._yearSilverIncome += amount;
         return `家族俸祿入帳：銀兩 +${amount}（目前 ${this._family.silverBalance(config.startingSilver)}）`;
     }
 
@@ -1526,7 +1533,7 @@ export class GameSession implements AcademyRecordPort {
         return {
             silverBalance: () => this._family.silverBalance(this._familyConfig?.startingSilver ?? 0),
             spendSilver: (amount) => this._savedSilver(this._family.trySpendSilver(amount, start())),
-            creditSilver: (amount) => { this._family.creditSilver(amount, start()); this._savedSilver(true); },
+            creditSilver: (amount) => { this._family.creditSilver(amount, start()); if (Number.isInteger(amount) && amount > 0) this._yearSilverIncome += amount; this._savedSilver(true); },
         };
     }
 
@@ -3103,6 +3110,8 @@ export class GameSession implements AcademyRecordPort {
         this._mentorGuideDone = false;
         this._mentorUnlockPromptShown = false;
         this._yearEndCeremonySeen = false;
+        this._yearSilverIncome = 0;
+        this._lastCeremonyScore = null;
         this._domesticLog = { ...EMPTY_DOMESTIC_LOG };
         this._governanceEvent = null;
         this._governanceBoosts = [];
@@ -7447,6 +7456,44 @@ export class GameSession implements AcademyRecordPort {
         return this._yearEndCeremonySeen;
     }
 
+    /**
+     * 年終典禮的榜單原料（PROG-2-10050）：年收入＝本年家族銀兩入帳合計、聲望＝clanPrestige、
+     * 子嗣＝家族名冊的親生／義子／家臣子嗣、配偶＝目前在本家的配偶、學府＝近 4 季結業子嗣的最高評級分。
+     * 子嗣互動次數目前沒有資料來源，固定回 0（撒嬌獎暫不會觸發，待互動系統記錄後接上）。
+     */
+    public yearEndScoreInputs(): { scoreInput: YearEndScoreInput; context: CeremonyContext } {
+        const totalSeasons = this._clock.state.totalSeasonsElapsed;
+        const grades = this._roster.getAll().flatMap((g) => {
+            const rating = (g as { graduationRating?: string }).graduationRating;
+            const at = (g as { graduatedSeason?: number }).graduatedSeason;
+            return rating && typeof at === 'number' && at > totalSeasons - 4 && at <= totalSeasons ? [rating] : [];
+        });
+        const members = this._family.members();
+        return {
+            scoreInput: {
+                annualIncome: this._yearSilverIncome,
+                prestige: this._clanPrestige,
+                childCount: members.filter((m) => m.kind !== 'spouse').length,
+                spouseCount: members.filter((m) => m.kind === 'spouse').length,
+                academyScore: academyScoreOfGrades(grades),
+            },
+            context: { lastYearScore: this._lastCeremonyScore?.score ?? null, childInteractions: 0 },
+        };
+    }
+
+    /** 典禮結算完成：記下本年分數（明年黑馬獎的比較基準）並讓年收入歸零重算；同一年重複呼叫只留第一次 */
+    public async recordYearEndCeremonyScore(year: number, score: number): Promise<void> {
+        if (this._lastCeremonyScore && this._lastCeremonyScore.year >= year) return;
+        this._lastCeremonyScore = { year, score: Math.max(0, Math.round(score)) };
+        this._yearSilverIncome = 0;
+        if (this._autoSave && this._save) await this.save();
+    }
+
+    /** 典禮賞賜入帳的銀兩不算明年的「年收入」：從本年計數扣回，避免獎金反過來墊高下年分數 */
+    public excludeFromYearSilverIncome(amount: number): void {
+        if (Number.isFinite(amount) && amount > 0) this._yearSilverIncome = Math.max(0, this._yearSilverIncome - amount);
+    }
+
     /** 年終頒獎典禮播完：記下並存檔，下次起可跳過 */
     public async markYearEndCeremonySeen(): Promise<void> {
         if (this._yearEndCeremonySeen) return;
@@ -7607,6 +7654,8 @@ export class GameSession implements AcademyRecordPort {
                 mentorGuideDone: this._mentorGuideDone,
                 mentorUnlockPromptShown: this._mentorUnlockPromptShown,
                 yearEndCeremonySeen: this._yearEndCeremonySeen,
+                ...(this._yearSilverIncome > 0 ? { yearSilverIncome: this._yearSilverIncome } : {}),
+                ...(this._lastCeremonyScore ? { lastCeremonyScore: { ...this._lastCeremonyScore } } : {}),
             },
             domestic: { ...this._domesticLog },
             ...(this._governanceEvent ? { governanceEvent: { ...this._governanceEvent } } : {}),
@@ -7985,6 +8034,8 @@ export class GameSession implements AcademyRecordPort {
         this._yearEndDefenseResult = normalizeYearEndDefenseResult(snapshot.resources?.yearEndDefenseResult);
         this._mentorUnlockPromptShown = normalizeFlag(snapshot.resources?.mentorUnlockPromptShown);
         this._yearEndCeremonySeen = normalizeFlag(snapshot.resources?.yearEndCeremonySeen);
+        this._yearSilverIncome = normalizeYearSilverIncome(snapshot.resources?.yearSilverIncome);
+        this._lastCeremonyScore = normalizeLastCeremonyScore(snapshot.resources?.lastCeremonyScore);
         this._domesticLog = normalizeDomesticLog(snapshot.domestic);
         this._governanceEvent = normalizeGovernanceEvent(snapshot.governanceEvent);
         this._governanceBoosts = normalizeGovernanceBoosts(snapshot.governanceBoosts);

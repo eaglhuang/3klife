@@ -16,6 +16,7 @@ import { createJealousyPopupPanelSuite } from './JealousyPopupPanel.test';
 import { createBondingJealousyMountSuite } from './BondingJealousyMount.test';
 import { createYearEndCeremonyPanelSuite } from './YearEndCeremonyPanel.test';
 import { createYearEndCeremonyMountSuite } from './YearEndCeremonyMount.test';
+import { createYearEndCeremonyDataSuite } from './YearEndCeremonyData.test';
 
 /**
  * 只在 Node.js CLI 環境（ts-node）下執行。
@@ -86,6 +87,7 @@ if (typeof window === 'undefined') {
     runner.register(createBondingJealousyMountSuite());
     runner.register(createYearEndCeremonyPanelSuite());
     runner.register(createYearEndCeremonyMountSuite());
+    runner.register(createYearEndCeremonyDataSuite());
 
     const summary = await runner.runAll(layerFilter);
 

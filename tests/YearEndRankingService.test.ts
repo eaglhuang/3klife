@@ -4,19 +4,23 @@ import { YearEndRankingService } from '../assets/scripts/core/systems/YearEndRan
 export function createYearEndRankingServiceSuite(): TestSuite {
     const suite = new TestSuite('YearEndRankingService');
 
-    suite.test('NPC 補位至 4 人且分數落在基準 85% ~ 110%', () => {
+    suite.test('NPC 補位至 5 人（4 位名門＋玩家）且分數落在年度基準 85% ~ 110%', () => {
         const res = YearEndRankingService.evaluateYearEndRanking(1, [
             { id: 'player', name: '主公', score: 1000, isPlayer: true },
         ]);
-        if (res.standings.length !== 4) {
-            throw new Error(`預期 4 人榜單，實際 ${res.standings.length}`);
+        if (res.standings.length !== 5) {
+            throw new Error(`預期 5 人榜單，實際 ${res.standings.length}`);
         }
         const npcs = res.standings.filter((s) => s.isNpcFill);
-        if (npcs.length !== 3) {
-            throw new Error(`預期補位 3 名 NPC，實際 ${npcs.length}`);
+        if (npcs.length !== 4) {
+            throw new Error(`預期補位 4 名 NPC，實際 ${npcs.length}`);
+        }
+        if (npcs.some((n) => !n.nameKey || !n.nameKey.startsWith('npc.house.'))) {
+            throw new Error('NPC 名門必須帶 npc.house.* 的 i18n key');
         }
         for (const npc of npcs) {
-            if (npc.score < 850 || npc.score > 1100) {
+            const base = YearEndRankingService.getNpcBaseScore(1);
+            if (npc.score < Math.round(base * 0.85) || npc.score > Math.round(base * 1.1)) {
                 throw new Error(`NPC 分數 ${npc.score} 超出 85%~110% 範圍`);
             }
         }

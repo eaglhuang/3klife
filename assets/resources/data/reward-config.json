@@ -127,6 +127,69 @@
       "effects": [{ "kind": "insight", "tier": "step", "friendship": 2 }],
       "sources": ["insight"],
       "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_YEAR_END_RANK_1_Y1",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "silver", "amount": 2000 }, { "kind": "currency", "id": "gems", "amount": 150 }],
+      "sources": ["yearEnd"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_YEAR_END_RANK_1_Y2",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "silver", "amount": 2300 }, { "kind": "currency", "id": "gems", "amount": 160 }],
+      "sources": ["yearEnd"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_YEAR_END_RANK_1_Y3",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "silver", "amount": 2600 }, { "kind": "currency", "id": "gems", "amount": 170 }],
+      "sources": ["yearEnd"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_YEAR_END_RANK_1_Y4",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "silver", "amount": 2900 }, { "kind": "currency", "id": "gems", "amount": 180 }],
+      "sources": ["yearEnd"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_YEAR_END_RANK_1_Y5",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "silver", "amount": 3200 }, { "kind": "currency", "id": "gems", "amount": 190 }],
+      "sources": ["yearEnd"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_YEAR_END_RANK_2",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "silver", "amount": 1200 }, { "kind": "currency", "id": "gems", "amount": 100 }],
+      "sources": ["yearEnd"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_YEAR_END_RANK_3",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "silver", "amount": 1000 }, { "kind": "currency", "id": "gems", "amount": 80 }],
+      "sources": ["yearEnd"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_YEAR_END_RANK_4_10",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "silver", "amount": 500 }],
+      "sources": ["yearEnd"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_YEAR_END_SURPRISE",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "silver", "amount": 500 }],
+      "sources": ["yearEnd"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
     }
   ],
   "insight": {

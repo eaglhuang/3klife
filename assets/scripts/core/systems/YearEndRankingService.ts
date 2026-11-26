@@ -3,6 +3,8 @@ import rankingConfig from '../../../resources/data/master/year-end-ranking-confi
 export interface RankingCandidateInput {
     id: string;
     name: string;
+    /** i18n key（NPC 名門用）；有值時畫面以翻譯結果為準，name 只當後備文字 */
+    nameKey?: string;
     score: number;
     isPlayer: boolean;
     /** 額外標籤，用於驚喜獎判定（例如 'dark_horse', 'spoiled'） */
@@ -38,6 +40,61 @@ export interface YearEndRankingResult {
     nextYearHint: string;
 }
 
+/** 玩家榜單分數的原料；欄位來源見 GameSession.yearEndScoreInputs，缺的欄位呼叫端以 0 帶入 */
+export interface YearEndScoreInput {
+    /** 本年家族銀兩入帳合計 */
+    annualIncome: number;
+    /** 家族聲望 clanPrestige */
+    prestige: number;
+    childCount: number;
+    spouseCount: number;
+    /** 學府成績分（見 academyScoreOfGrades） */
+    academyScore: number;
+}
+
+export interface SurpriseInput {
+    score: number;
+    /** 去年榜單分數；第 1 年或沒紀錄為 null（不發黑馬） */
+    lastYearScore: number | null;
+    /** 當年子嗣互動次數 */
+    childInteractions: number;
+}
+
+function nonNegative(value: number): number {
+    return Number.isFinite(value) && value > 0 ? value : 0;
+}
+
+/** 玩家榜單分數：係數全在 year-end-ranking-config.json 的 scoreFormula */
+export function computeYearEndScore(input: YearEndScoreInput): number {
+    const f = rankingConfig.scoreFormula;
+    return Math.round(
+        f.base
+        + Math.round(nonNegative(input.annualIncome) * f.incomeRate)
+        + nonNegative(input.prestige) * f.prestigeWeight
+        + nonNegative(input.childCount) * f.childWeight
+        + nonNegative(input.spouseCount) * f.spouseWeight
+        + nonNegative(input.academyScore),
+    );
+}
+
+/** 學府成績分：本年結業子嗣中最高評級的分數；沒人結業或評級不認得為 0 */
+export function academyScoreOfGrades(grades: readonly string[]): number {
+    const table = rankingConfig.academyGradePoints as unknown as Record<string, number>;
+    return grades.reduce((best, grade) => Math.max(best, typeof table[grade] === 'number' ? table[grade] : 0), 0);
+}
+
+/**
+ * 驚喜獎判定：黑馬（總分較去年成長達門檻）優先於撒嬌（子嗣互動達門檻），每年至多回 1 個標籤。
+ * 去年分數為 null／0 視為沒有比較基準，不發黑馬。
+ */
+export function judgeSurpriseTags(input: SurpriseInput): string[] {
+    const rules = rankingConfig.surpriseRules;
+    const last = input.lastYearScore;
+    if (last !== null && last > 0 && (input.score - last) / last >= rules.darkHorseMinGrowth) return ['dark_horse'];
+    if (input.childInteractions >= rules.spoiledMinInteractions) return ['spoiled'];
+    return [];
+}
+
 /**
  * 年末排行榜與頒獎典禮純邏輯服務（PROG-2-10027）
  * 所有獎勵、NPC 補位比例、第 2~5 年冠軍曲線與驚喜獎皆從 year-end-ranking-config.json 讀取。
@@ -61,6 +118,13 @@ export class YearEndRankingService {
         return { gold: 0, jade: 0 };
     }
 
+    /** NPC 名門的分數基準：只看年份，與玩家分數無關（第 5 年之後沿用第 5 年） */
+    public static getNpcBaseScore(year: number): number {
+        const table = rankingConfig.npcBaseScoreByYear as unknown as Record<string, number>;
+        const clamped = Math.max(1, Math.min(5, Math.floor(year) || 1));
+        return table[String(clamped)] ?? table['1'];
+    }
+
     public static evaluateYearEndRanking(
         year: number,
         candidates: RankingCandidateInput[],
@@ -72,9 +136,7 @@ export class YearEndRankingService {
             isNpcFill: false,
         }));
 
-        const baseScore = list.length > 0
-            ? Math.max(100, Math.round(list.reduce((sum, c) => sum + c.score, 0) / list.length))
-            : 100;
+        const baseScore = this.getNpcBaseScore(year);
 
         let fillIndex = 0;
         const pool = rankingConfig.npcFillPool;
@@ -86,6 +148,7 @@ export class YearEndRankingService {
             list.push({
                 id: `${npc.id}_y${year}`,
                 name: npc.name,
+                nameKey: npc.nameKey,
                 score: Math.round(baseScore * ratio),
                 isPlayer: false,
                 isNpcFill: true,

@@ -1,24 +1,109 @@
 {
   "npcFillPool": [
-    { "id": "npc_fill_1", "name": "陳登" },
-    { "id": "npc_fill_2", "name": "張昭" },
-    { "id": "npc_fill_3", "name": "審配" },
-    { "id": "npc_fill_4", "name": "沮授" }
+    {
+      "id": "npc_fill_1",
+      "name": "陳登",
+      "nameKey": "npc.house.chendeng"
+    },
+    {
+      "id": "npc_fill_2",
+      "name": "張昭",
+      "nameKey": "npc.house.zhangzhao"
+    },
+    {
+      "id": "npc_fill_3",
+      "name": "審配",
+      "nameKey": "npc.house.shenpei"
+    },
+    {
+      "id": "npc_fill_4",
+      "name": "沮授",
+      "nameKey": "npc.house.jushou"
+    }
   ],
-  "npcFillDefaultRatios": [0.85, 0.95, 1.02, 1.1],
+  "npcFillDefaultRatios": [
+    0.85,
+    0.95,
+    1.02,
+    1.1
+  ],
   "npcFillMinRatio": 0.85,
   "npcFillMaxRatio": 1.1,
-  "minRosterSize": 4,
-  "championRewardsByYear": {
-    "1": { "gold": 2000, "jade": 150, "title": "金榜魁首" },
-    "2": { "gold": 2300, "jade": 160, "title": "金榜魁首" },
-    "3": { "gold": 2600, "jade": 170, "title": "金榜魁首" },
-    "4": { "gold": 2900, "jade": 180, "title": "金榜魁首" },
-    "5": { "gold": 3200, "jade": 190, "title": "金榜魁首" }
+  "minRosterSize": 5,
+  "scoreFormula": {
+    "_comment": "玩家榜單分數：base + round(annualIncome×incomeRate) + prestige×prestigeWeight + childCount×childWeight + spouseCount×spouseWeight + academyScore（Antigravity 11/26 規格）。annualIncome＝本年家族銀兩入帳合計。",
+    "base": 600,
+    "incomeRate": 0.1,
+    "prestigeWeight": 2,
+    "childWeight": 80,
+    "spouseWeight": 60
   },
-  "rank2Reward": { "gold": 1200, "jade": 100, "title": "榜眼英才" },
-  "rank3Reward": { "gold": 1000, "jade": 80, "title": "探花俊彥" },
-  "rank4To10Reward": { "gold": 500, "jade": 0 },
+  "academyGradePoints": {
+    "_comment": "學府成績分：本年結業子嗣中最高評級對應分數；沒人結業為 0",
+    "S": 50,
+    "A": 35,
+    "B": 20,
+    "C": 10
+  },
+  "npcBaseScoreByYear": {
+    "_comment": "NPC 名門分數基準（與玩家分數無關，否則玩家永遠第 2 名）；實際分數＝基準×補位比例。第 5 年之後沿用第 5 年。新手第 1 年預期 900～1050 分，落在第 3～5 名",
+    "1": 1100,
+    "2": 1250,
+    "3": 1400,
+    "4": 1550,
+    "5": 1700
+  },
+  "surpriseRules": {
+    "_comment": "驚喜獎判定；每年全榜至多 1 個，黑馬優先；第 1 年無去年分數不發黑馬",
+    "darkHorseMinGrowth": 0.25,
+    "spoiledMinInteractions": 3
+  },
+  "ceremonyAudio": {
+    "_comment": "典禮音效對應 audio bundle 既有 clip 名；null 代表目前沒有合適音檔（待補）",
+    "gong": "boom",
+    "applause": null
+  },
+  "championRewardsByYear": {
+    "1": {
+      "gold": 2000,
+      "jade": 150,
+      "title": "金榜魁首"
+    },
+    "2": {
+      "gold": 2300,
+      "jade": 160,
+      "title": "金榜魁首"
+    },
+    "3": {
+      "gold": 2600,
+      "jade": 170,
+      "title": "金榜魁首"
+    },
+    "4": {
+      "gold": 2900,
+      "jade": 180,
+      "title": "金榜魁首"
+    },
+    "5": {
+      "gold": 3200,
+      "jade": 190,
+      "title": "金榜魁首"
+    }
+  },
+  "rank2Reward": {
+    "gold": 1200,
+    "jade": 100,
+    "title": "榜眼英才"
+  },
+  "rank3Reward": {
+    "gold": 1000,
+    "jade": 80,
+    "title": "探花俊彥"
+  },
+  "rank4To10Reward": {
+    "gold": 500,
+    "jade": 0
+  },
   "surpriseAwards": {
     "dark_horse": {
       "id": "surprise_dark_horse",
