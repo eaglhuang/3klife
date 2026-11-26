@@ -11617,290 +11617,290 @@
   },
   {
     "id": "doc_other_4195",
-    "path": "docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-16.md",
     "title": "Doc ID Registry Markdown Index — Spec / Index / Task",
     "category": "other"
   },
   {
     "id": "doc_other_4196",
+    "path": "docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md",
+    "title": "Doc ID Registry Markdown Index — Spec / Index / Task",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_4197",
     "path": "docs/doc-id-registry-md-shards/doc-id-registry-stats.md",
     "title": "Doc ID Registry Markdown Index — 分類統計",
     "category": "other"
   },
   {
-    "id": "doc_other_4197",
+    "id": "doc_other_4198",
     "path": "docs/doc-id-registry-md-shards/doc-id-registry-tech-ui-art.md",
     "title": "Doc ID Registry Markdown Index — Tech / UI / Art / Data",
     "category": "other"
   },
   {
-    "id": "doc_other_4198",
+    "id": "doc_other_4199",
     "path": "docs/doc-id-registry.md",
     "title": "文件代號 Registry (doc-id-registry)",
     "category": "other"
   },
   {
-    "id": "doc_other_4199",
+    "id": "doc_other_4200",
     "path": "docs/ecosystem/capability-sandbox-audit.md",
     "title": "Capability Sandbox & Security Audit — ATM Optional Governance Plugin",
     "category": "other"
   },
   {
-    "id": "doc_other_4200",
+    "id": "doc_other_4201",
     "path": "docs/ecosystem/language-adapter-roadmap.md",
     "title": "多語言 Adapter 擴張計畫",
     "category": "other"
   },
   {
-    "id": "doc_other_4201",
+    "id": "doc_other_4202",
     "path": "docs/ecosystem/performance-budget-police.md",
     "title": "Performance Budget Police — ATM Optional Governance Plugin",
     "category": "other"
   },
   {
-    "id": "doc_other_4202",
+    "id": "doc_other_4203",
     "path": "docs/ecosystem/registry-db-vector-decision.md",
     "title": "跨專案 Registry / DB / Vector — Core vs Plugin 決策文件",
     "category": "other"
   },
   {
-    "id": "doc_other_4203",
+    "id": "doc_other_4204",
     "path": "docs/i18n/base-shorten-batch1.md",
     "title": "底座組 en 短標籤縮短（PROG-2-0896）",
     "category": "other"
   },
   {
-    "id": "doc_other_4204",
+    "id": "doc_other_4205",
     "path": "docs/i18n/copy-review-checklist-2026-10-27.md",
     "title": "正式版文案人工審稿清單（COPY-06，2026-10-27）",
     "category": "other"
   },
   {
-    "id": "doc_other_4205",
+    "id": "doc_other_4206",
     "path": "docs/i18n/overflow-report-2026-10-21.md",
     "title": "i18n 寬度風險報告（2026-10-21）",
     "category": "other"
   },
   {
-    "id": "doc_other_4206",
+    "id": "doc_other_4207",
     "path": "docs/i18n/system-lobby-toast-overflow-report.md",
     "title": "系統共用／大廳／網路／提示 i18n 補全 — 版位風險摘要（PROG-2-0886，第 1 批）",
     "category": "other"
   },
   {
-    "id": "doc_other_4207",
+    "id": "doc_other_4208",
     "path": "docs/keep-memory/gotcha_atm-claim-session-traps.md",
     "title": "ATM claim / session 陷阱",
     "category": "other"
   },
   {
-    "id": "doc_other_4208",
+    "id": "doc_other_4209",
     "path": "docs/keep-memory/gotcha_atm-close-sequence.md",
     "title": "ATM 收口標準序（約 20 次任務收口驗證，2026-07-12/13）",
     "category": "other"
   },
   {
-    "id": "doc_other_4209",
+    "id": "doc_other_4210",
     "path": "docs/keep-memory/gotcha_atm-plan41-acc3-product-proof-window.md",
     "title": "Plan 4.1 ACC-3 只算封印 window 的 command 區間聯集",
     "category": "other"
   },
   {
-    "id": "doc_other_4210",
+    "id": "doc_other_4211",
     "path": "docs/keep-memory/gotcha_atm-skill-template-sync.md",
     "title": "skill 分發鏈：安裝副本 vs 源頭模板",
     "category": "other"
   },
   {
-    "id": "doc_other_4211",
+    "id": "doc_other_4212",
     "path": "docs/keep-memory/gotcha_atm-two-captain-close-storm.md",
     "title": "雙隊長 close 風暴收斂戰術（MEM lane 實戰，2026-07-14/15）",
     "category": "other"
   },
   {
-    "id": "doc_other_4212",
+    "id": "doc_other_4213",
     "path": "docs/keep-memory/gotcha_atm-two-captain-concurrency.md",
     "title": "雙隊長並行守則（2026-07-12/13 與 codex-backlog-captain 12 小時實戰）",
     "category": "other"
   },
   {
-    "id": "doc_other_4213",
+    "id": "doc_other_4214",
     "path": "docs/keep-memory/gotcha_planning-root-authority-resolution.md",
     "title": "Gotcha: Planning Root Authority Resolution & Ambiguity Fail-Closed",
     "category": "other"
   },
   {
-    "id": "doc_other_4214",
+    "id": "doc_other_4215",
     "path": "docs/keep-memory/status_atm-plan41-0407-close-wait.md",
     "title": "0407 close 等待 0406（2026-08-23）",
     "category": "other"
   },
   {
-    "id": "doc_other_4215",
+    "id": "doc_other_4216",
     "path": "docs/keep-memory/status_atm-plan41-common-frozen-publication.md",
     "title": "Plan 4.1 共同 frozen publication（2026-08-23）",
     "category": "other"
   },
   {
-    "id": "doc_other_4216",
+    "id": "doc_other_4217",
     "path": "docs/keep.registry.md",
     "title": "keep.registry — 跨專案記憶入口登錄表",
     "category": "other"
   },
   {
-    "id": "doc_other_4217",
+    "id": "doc_other_4218",
     "path": "docs/reports/3klife-cross-repo-packet-warning-baseline.md",
     "title": "3KLife Cross-Repo Packet Warning Baseline",
     "category": "other"
   },
   {
-    "id": "doc_other_4218",
+    "id": "doc_other_4219",
     "path": "docs/reports/3klife-legacy-baseline-warning-baseline.md",
     "title": "3KLife Legacy Baseline Warning Baseline",
     "category": "other"
   },
   {
-    "id": "doc_other_4219",
+    "id": "doc_other_4220",
     "path": "docs/reports/3klife-manual-done-closeback-backfill.md",
     "title": "3KLife manual done closeback backfill",
     "category": "other"
   },
   {
-    "id": "doc_other_4220",
+    "id": "doc_other_4221",
     "path": "docs/reports/3klife-planning-only-warning-baseline.md",
     "title": "3KLife Planning-only Warning Baseline",
     "category": "other"
   },
   {
-    "id": "doc_other_4221",
+    "id": "doc_other_4222",
     "path": "docs/reports/3klife-stale-claim-and-lock-cleanup.md",
     "title": "3KLife Stale Claim And Lock Cleanup",
     "category": "other"
   },
   {
-    "id": "doc_other_4222",
+    "id": "doc_other_4223",
     "path": "docs/reports/3klife-stale-runtime-lock-cleanup-closeout.md",
     "title": "3KLife Stale Runtime Lock Cleanup Closeout",
     "category": "other"
   },
   {
-    "id": "doc_other_4223",
+    "id": "doc_other_4224",
     "path": "docs/reports/3klife-task-audit-debt-triage.md",
     "title": "3KLife Task Audit Debt Triage",
     "category": "other"
   },
   {
-    "id": "doc_other_4224",
+    "id": "doc_other_4225",
     "path": "docs/reports/3klife-transition-event-missing-backfill.md",
     "title": "3KLife Transition Event Missing Backfill",
     "category": "other"
   },
   {
-    "id": "doc_other_4225",
+    "id": "doc_other_4226",
     "path": "docs/reports/3klife-transition-evidence-missing-backfill.md",
     "title": "3KLife transition evidence missing backfill",
     "category": "other"
   },
   {
-    "id": "doc_other_4226",
+    "id": "doc_other_4227",
     "path": "docs/reports/PROG-2-2210-web-source-assets.md",
     "title": "PROG-2-2210 網頁來源資產量測",
     "category": "other"
   },
   {
-    "id": "doc_other_4227",
-    "path": "docs/RFC_PROCESS.md",
-    "title": "AI Atomic Framework — RFC 與社群貢獻流程",
-    "category": "other"
-  },
-  {
     "id": "doc_other_4228",
-    "path": "docs/tech/npc-brain-武將互動記憶系統.md",
-    "title": "NPC Brain Memory System",
-    "category": "other"
-  },
-  {
-    "id": "doc_other_4229",
-    "path": "docs/tech/npc-brain-memory/api-contract.md",
-    "title": "NPC Brain Memory System — API & Contract（§6-§8）",
-    "category": "other"
-  },
-  {
-    "id": "doc_other_4230",
-    "path": "docs/tech/npc-brain-memory/data-model.md",
-    "title": "NPC Brain Memory System — Data Model（§4-§5）",
-    "category": "other"
-  },
-  {
-    "id": "doc_other_4231",
-    "path": "docs/tech/npc-brain-memory/ops.md",
-    "title": "NPC Brain Memory System — Ops & Milestones（§9-§12）",
-    "category": "other"
-  },
-  {
-    "id": "doc_other_4232",
-    "path": "docs/ucuf-tech-shards/ucuf-core.md",
-    "title": "UCUF 技術文件 — 現況與核心（實作現況 · 目錄 · §1–§6）",
-    "category": "other"
-  },
-  {
-    "id": "doc_other_4233",
-    "path": "docs/ucuf-tech-shards/ucuf-evolution.md",
-    "title": "UCUF 技術文件 — 演進建議、遷移方案、規則引擎（§17–§19）",
-    "category": "other"
-  },
-  {
-    "id": "doc_other_4234",
-    "path": "docs/ucuf-tech-shards/ucuf-infra.md",
-    "title": "UCUF 技術文件 — 遷移、規格、資源、日誌、診斷、測試（§7–§12）",
-    "category": "other"
-  },
-  {
-    "id": "doc_other_4235",
-    "path": "docs/ucuf-tech-shards/ucuf-runtime.md",
-    "title": "UCUF 技術文件 — 記憶體、資料綁定、語系、效能（§13–§16）",
-    "category": "other"
-  },
-  {
-    "id": "doc_other_4236",
-    "path": "docs/ui-i18n/bloodline-overflow-report.md",
-    "title": "血脈頁語系譯文與寬度風險摘要（PROG-2-0742）",
-    "category": "other"
-  },
-  {
-    "id": "doc_other_4237",
-    "path": "docs/ui-vibe-pipeline-shards/ui-json-cocos.md",
-    "title": "UI Vibe Pipeline — JSON 契約與 Cocos 模組（§4–§6）",
-    "category": "other"
-  },
-  {
-    "id": "doc_other_4238",
-    "path": "docs/ui-vibe-pipeline-shards/ui-pipeline-tail.md",
-    "title": "UI Vibe Pipeline — 量產與管線（§10–§16）",
-    "category": "other"
-  },
-  {
-    "id": "doc_other_4239",
-    "path": "docs/ui-vibe-pipeline-shards/ui-skill-ops.md",
-    "title": "UI Vibe Pipeline — Skill 與分工（§7 · When to Use · Procedure · References · §8–§9）",
-    "category": "other"
-  },
-  {
-    "id": "doc_other_4240",
-    "path": "docs/web-playtest-online.md",
-    "title": "線上試玩版無頭實玩驗收（playtest-online）",
-    "category": "other"
-  },
-  {
-    "id": "doc_other_4241",
     "path": "docs/reports/q4-generals-bow-rule-and-route-1125.md",
     "title": "Q4 武將：持弓驗收規則 與 下一輪做法（11/25）",
     "category": "other"
   },
   {
+    "id": "doc_other_4229",
+    "path": "docs/RFC_PROCESS.md",
+    "title": "AI Atomic Framework — RFC 與社群貢獻流程",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_4230",
+    "path": "docs/tech/npc-brain-武將互動記憶系統.md",
+    "title": "NPC Brain Memory System",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_4231",
+    "path": "docs/tech/npc-brain-memory/api-contract.md",
+    "title": "NPC Brain Memory System — API & Contract（§6-§8）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_4232",
+    "path": "docs/tech/npc-brain-memory/data-model.md",
+    "title": "NPC Brain Memory System — Data Model（§4-§5）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_4233",
+    "path": "docs/tech/npc-brain-memory/ops.md",
+    "title": "NPC Brain Memory System — Ops & Milestones（§9-§12）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_4234",
+    "path": "docs/ucuf-tech-shards/ucuf-core.md",
+    "title": "UCUF 技術文件 — 現況與核心（實作現況 · 目錄 · §1–§6）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_4235",
+    "path": "docs/ucuf-tech-shards/ucuf-evolution.md",
+    "title": "UCUF 技術文件 — 演進建議、遷移方案、規則引擎（§17–§19）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_4236",
+    "path": "docs/ucuf-tech-shards/ucuf-infra.md",
+    "title": "UCUF 技術文件 — 遷移、規格、資源、日誌、診斷、測試（§7–§12）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_4237",
+    "path": "docs/ucuf-tech-shards/ucuf-runtime.md",
+    "title": "UCUF 技術文件 — 記憶體、資料綁定、語系、效能（§13–§16）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_4238",
+    "path": "docs/ui-i18n/bloodline-overflow-report.md",
+    "title": "血脈頁語系譯文與寬度風險摘要（PROG-2-0742）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_4239",
+    "path": "docs/ui-vibe-pipeline-shards/ui-json-cocos.md",
+    "title": "UI Vibe Pipeline — JSON 契約與 Cocos 模組（§4–§6）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_4240",
+    "path": "docs/ui-vibe-pipeline-shards/ui-pipeline-tail.md",
+    "title": "UI Vibe Pipeline — 量產與管線（§10–§16）",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_4241",
+    "path": "docs/ui-vibe-pipeline-shards/ui-skill-ops.md",
+    "title": "UI Vibe Pipeline — Skill 與分工（§7 · When to Use · Procedure · References · §8–§9）",
+    "category": "other"
+  },
+  {
     "id": "doc_other_4242",
-    "path": "docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-16.md",
-    "title": "Doc ID Registry Markdown Index — Spec / Index / Task",
+    "path": "docs/web-playtest-online.md",
+    "title": "線上試玩版無頭實玩驗收（playtest-online）",
     "category": "other"
   }
 ]

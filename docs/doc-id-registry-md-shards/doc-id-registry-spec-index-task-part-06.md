@@ -9,7 +9,6 @@
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
 | `doc_task_0001` | docs/legacy/agent-collaboration/tasks_index_worldbuilding_2026-04-02.md | 世界觀後續任務索引 |
-| `doc_task_0002` | docs/agent-briefs/tasks_index.md | Tasks Index / UI Quality |
 | `doc_task_0003` | docs/agent-briefs/tasks/HARN/HARN-ARCH-0001.md | [HARN-ARCH-0001] 建立 UI Bridge 介面層（模組邊界修復前置） |
 | `doc_task_0004` | docs/agent-briefs/tasks/HARN/HARN-ARCH-0002.md | [HARN-ARCH-0002] 修復 battle → ui 的非法引用（22 筆） |
 | `doc_task_0005` | docs/agent-briefs/tasks/HARN/HARN-ARCH-0003.md | [HARN-ARCH-0003] 修復 ui→battle / core→ui / core→tools / tools→battle 的非法引用（14 筆） |
@@ -295,3 +294,4 @@
 | `doc_task_0293` | docs/agent-briefs/tasks/ATM/ATM-1-0010.md | [ATM-1-0010] Upstream docs neutrality audit |
 | `doc_task_0294` | docs/agent-briefs/tasks/ATM/ATM-2-0010.md | [ATM-2-0010] RuleGuard Read-Only Validator |
 | `doc_task_0295` | docs/agent-briefs/tasks/ATM/ATM-1-0009.md | [ATM-1-0009] Self-hosting alpha proof |
+| `doc_task_0296` | docs/agent-briefs/tasks/ATM/ATM-0-0011.md | [ATM-0-0011] Context budget 治理補強與文件回寫 |

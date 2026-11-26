@@ -8,53 +8,53 @@
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
-| `doc_task_3108` | docs/agent-briefs/tasks/PROG/PROG-2-10045.md | [PROG-2-10045] 戰場 HUD／飄字打磨批次 |
-| `doc_task_3109` | docs/agent-briefs/tasks/PROG/PROG-2-10046.md | [PROG-2-10046] 年終頒獎典禮三幕式面板掛進遊戲 |
-| `doc_task_3110` | docs/agent-briefs/tasks/PROG/PROG-2-10044.md | PROG-2-10044 年終頒獎典禮三幕式 UI 元件 |
-| `doc_task_3111` | docs/agent-briefs/tasks/PROG/PROG-2-10031.md | [PROG-2-10031] 揚塵再加大加深與獎勵跳字間距略放大 |
-| `doc_task_3112` | docs/agent-briefs/tasks/PROG/PROG-2-10041.md | [PROG-2-10041] 保底步兵券標示與弓兵放箭時機 |
-| `doc_task_3113` | docs/agent-briefs/tasks/PROG/PROG-2-10049.md | [PROG-2-10049] 吃醋選項 C 改銀兩獎勵（驗收合併 Antigravity 分支） |
-| `doc_task_3114` | docs/agent-briefs/tasks/PROG/PROG-2-10050.md | [PROG-2-10050] 年終典禮補完：分數公式、賞賜入帳、驚喜獎、NPC i18n、演出強化 |
-| `doc_task_3115` | docs/agent-briefs/tasks/PROG/PROG-2-10053.md | [PROG-2-10053] 年終榜單玩家分數基底 600 調 850（PM 11/26 校準） |
-| `doc_task_3116` | docs/agent-briefs/tasks/PROG/PROG-2-10054.md | [PROG-2-10054] 年終典禮 Host 擋輸入實跑修正：playtest 認得典禮、護欄測試 |
-| `doc_task_3117` | docs/agent-briefs/tasks/PROG/PROG-2-10055.md | [PROG-2-10055] 驗收併入 Antigravity 血統第 3~5 年成長小事件資料與四語系（僅資料，尚未接程式） |
-| `doc_task_3118` | docs/agent-briefs/tasks/PROG/PROG-2-10056.md | [PROG-2-10056] 武將四件組美術交付（典韋、賈詡、後續依序） |
-| `doc_task_3120` | docs/agent-briefs/tasks/PROG/PROG-2-10057.md | [PROG-2-10057] 血統第 3~5 年成長小事件：資料載入器、schema 驗證與觸發／一次性邏輯（核心基礎調查） |
-| `doc_task_3121` | docs/agent-briefs/tasks/PROG/PROG-2-10058.md | [PROG-2-10058] 幼苗與親子資料基礎：開局送 7 歲幼苗、親子好感、小名碎片帳本、同窗好友旗標 |
-| `doc_task_3123` | docs/agent-briefs/tasks/PROG/PROG-2-10059.md | [PROG-2-10059] 年底結算接成長事件：待處理事件佇列存檔、resolveBloodlineEvent 結算 |
-| `doc_task_3124` | docs/agent-briefs/tasks/PROG/PROG-2-10060.md | [PROG-2-10060] 新手前 10～20 分鐘稽核小修：開場信按鈕、教學銀兩、結緣入口、任務牆獎勵提示 |
-| `doc_task_3125` | docs/agent-briefs/tasks/PROG/PROG-2-10062.md | [PROG-2-10062] 首年目標清單：資料、追蹤、一次性領獎與大廳進度條 |
-| `doc_task_3126` | docs/agent-briefs/tasks/PROG/PROG-2-10067.md | [PROG-2-10067] 新手教學結束後第一個目標：出征鈕脈動＋史小境提示 |
-| `doc_task_3127` | docs/agent-briefs/tasks/PROG/PROG-2-10061.md | [PROG-2-10061] 首戰教學浮窗移到左下角（資料驅動、避開拇指區與接戰區） |
-| `doc_task_3128` | docs/agent-briefs/tasks/PROG/PROG-2-10070.md | [PROG-2-10070] 子嗣成長事件彈窗＋親子談話按鈕（最小可玩） |
-| `doc_task_3130` | docs/agent-briefs/tasks/PROG/PROG-2-10072.md | [PROG-2-10072] 首戰節奏：預設 x2、縮短敵方回合等待、試玩腳本自動代打校正 |
-| `doc_task_3131` | docs/agent-briefs/tasks/PROG/PROG-2-10074.md | [PROG-2-10074] 整年放招 0 次修正：計謀起手 20／火計 25、教學戰委任放招旁路、playtest 放招計數 |
-| `doc_task_3133` | docs/agent-briefs/tasks/PROG/PROG-2-10075.md | [PROG-2-10075] 同步騎馬匹 mounted-list（關羽） |
-| `doc_task_3134` | docs/agent-briefs/tasks/PROG/PROG-2-10077.md | [PROG-2-10077] 格擋音換成 Kenney impactMetal_light_001（CC0） |
-| `doc_task_3135` | docs/agent-briefs/tasks/PROG/PROG-2-10064.md | [PROG-2-10064] 新手開場點擊精簡：介紹合併自動長卷、六名將一頁亮相、SSR 揭曉加點擊提示 |
-| `doc_task_3136` | docs/agent-briefs/tasks/PROG/PROG-2-10073.md | [PROG-2-10073] 戰前偵查面板：措辭降噪＋出征確認框疊字修正 |
-| `doc_task_3137` | docs/agent-briefs/tasks/PROG/PROG-2-10068.md | [PROG-2-10068] 首年前 2 季季報彈窗精簡：任務回報與市井奇遇併進信箱，任務詳情加白話導讀 |
-| `doc_task_3138` | docs/agent-briefs/tasks/PROG/PROG-2-10092.md | [PROG-2-10092] 季報信箱改名：信箱標題與入口走 i18n 四語系（PM 裁決 A） |
-| `doc_task_3141` | docs/agent-briefs/tasks/PROG/PROG-2-10094.md | [PROG-2-10094] 天下沙盤領地解鎖教學與挑戰賽培育指引規格（11/26 修訂） |
-| `doc_task_3142` | docs/agent-briefs/tasks/PROG/PROG-2-10095.md | [PROG-2-10095] 天下沙盤領地：第 2 年解鎖、搞笑教學、放置效果預覽（實作） |
-| `doc_task_3143` | docs/agent-briefs/tasks/PROG/PROG-2-10096.md | [PROG-2-10096] 名將挑戰賽卡片：培育期推薦與一鍵前往培育（實作） |
-| `doc_task_3144` | docs/agent-briefs/tasks/PROG/PROG-2-10091.md | [PROG-2-10091] 索引健檢：虎符族文件補列與 keep.summary 更新 |
-| `doc_task_3145` | docs/agent-briefs/tasks/PROG/PROG-2-10078.md | [PROG-2-10078] 戰場小兵 Spine 骨架預載與節點池預熱（騎兵出現延遲） |
-| `doc_task_3146` | docs/agent-briefs/tasks/PROG/PROG-2-10079.md | [PROG-2-10079] 戰場音效預載與同檔池化（馬蹄聲首次延遲） |
-| `doc_task_3147` | docs/agent-briefs/tasks/PROG/PROG-2-10080.md | [PROG-2-10080] 將軍專屬單一 HUD：合併兵種徽章與武將名牌、放大騎兵將領 |
-| `doc_task_3150` | docs/agent-briefs/tasks/PROG/PROG-2-10101.md | [PROG-2-10101] 獲得面板規格（RewardPresenter：任何人物／物品獲得的統一出口） |
-| `doc_task_3151` | docs/agent-briefs/tasks/PROG/PROG-2-10102.md | [PROG-2-10102] 實作：獲得面板 RewardPresenter＋AcquirePanelController 並改接任務回報／季報／轉蛋收尾 |
-| `doc_task_3157` | docs/agent-briefs/tasks/PROG/PROG-2-10083.md | [PROG-2-10083] 大廳小人台詞依武將性別換自稱（女將不再說某） |
-| `doc_task_3161` | docs/agent-briefs/tasks/PROG/PROG-2-10090.md | [PROG-2-10090] 大廳小人待出場疊在畫面邊緣點不到 |
-| `doc_task_3164` | docs/agent-briefs/tasks/PROG/PROG-2-10098.md | [PROG-2-10098] 姻緣單一流程規格：相親 → 提親 → 成婚 → 結緣（11/26 修訂） |
-| `doc_task_3165` | docs/agent-briefs/tasks/PROG/PROG-2-10099.md | [PROG-2-10099] 姻緣單一流程實作：狀態機、結緣守門、存檔遷移、姻緣面板、吃醋事件 |
-| `doc_task_3166` | docs/agent-briefs/tasks/PROG/PROG-2-10086.md | [PROG-2-10086] playtest-online 整年實跑連鎖失敗：detached Frame 與大廳小人被擋根因修復 |
-| `doc_task_3172` | docs/agent-briefs/tasks/PROG/PROG-2-10081.md | [PROG-2-10081] 奧義 C 組音效接入戰場奧義施放（蓄力／爆發／收尾） |
-| `doc_task_3174` | docs/agent-briefs/tasks/PROG/PROG-2-10105.md | [PROG-2-10105] UI 規格：戰場軍勢糧草常駐顯示與出牌不足提示＋內政任務詳情單屏重排（使用者 11/27 回饋） |
-| `doc_task_3175` | docs/agent-briefs/tasks/PROG/PROG-2-10104.md | [PROG-2-10104] 實作：戰場軍勢糧草常駐顯示、卡片費用章與不足說明面板 |
-| `doc_task_3176` | docs/agent-briefs/tasks/PROG/PROG-2-10108.md | [PROG-2-10108] 實作：內政任務詳情單屏三欄重排與固定底部行動列 |
-| `doc_task_3178` | docs/agent-briefs/tasks/PROG/PROG-2-10100.md | [PROG-2-10100] 洪流／水流關卡：水淹特效與卡住沉浮 |
-| `doc_task_3179` | docs/agent-briefs/tasks/PROG/PROG-2-10109.md | [PROG-2-10109] 台詞性別化第二批：老年自稱、AI prompt 與快取鍵、資料檔寫死自稱 |
-| `doc_task_3180` | docs/agent-briefs/tasks/PROG/PROG-2-10113.md | [PROG-2-10113] Antigravity 試玩三 bug |
-| `doc_task_3181` | docs/agent-briefs/tasks/PROG/PROG-2-10107.md | [PROG-2-10107] 放招微調：士氣鼓舞 TP 20 免傷兵、首年主將補通用計謀加速 15、奧義門檻方案 A |
-| `doc_task_3183` | docs/agent-briefs/tasks/PROG/PROG-2-10111.md | [PROG-2-10111] playtest character-intro-tabs 點名冊第一列沒開出人物介紹 |
+| `doc_task_5457` | docs/agent-briefs/tasks/UI/UI-2-0132.md | UI-2-0132 幕府大廳設計稿改為轉換器友善結構 |
+| `doc_task_5458` | docs/agent-briefs/tasks/UI/UI-2-0133.md | UI-2-0133 比對預覽 style 屬性雙引號跳脫 |
+| `doc_task_5459` | docs/agent-briefs/tasks/UI/UI-2-0134.md | UI-2-0134 幕府大廳資產 meta |
+| `doc_task_5460` | docs/agent-briefs/tasks/UI/UI-2-0135.md | UI-2-0135 幕府大廳 Q 版武將圖移入 assets |
+| `doc_task_5461` | docs/agent-briefs/tasks/UI/UI-2-0136.md | UI-2-0136 幕府大廳 Q 版武將站位規劃 |
+| `doc_task_5462` | docs/agent-briefs/tasks/UI/UI-2-0137.md | UI-2-0137 幕府大廳 Q 版武將站位畫面元件 |
+| `doc_task_5463` | docs/agent-briefs/tasks/UI/UI-2-0138.md | UI-2-0138 幕府大廳在場武將資料餵送 |
+| `doc_task_5464` | docs/agent-briefs/tasks/UI/UI-2-0139.md | UI-2-0139 幕府大廳舞台導演 |
+| `doc_task_5465` | docs/agent-briefs/tasks/UI/UI-2-0140.md | UI-2-0140 幕府大廳在場武將檔案查詢 |
+| `doc_task_5466` | docs/agent-briefs/tasks/UI/UI-2-0141.md | UI-2-0141 幕府大廳 lobby-hall-screen 部署 |
+| `doc_task_5467` | docs/agent-briefs/tasks/UI/UI-2-0142.md | UI-2-0142 幕府大廳舞台控制器 |
+| `doc_task_5468` | docs/agent-briefs/tasks/UI/UI-2-0143.md | UI-2-0143 幕府大廳季節粒子特效 |
+| `doc_task_5469` | docs/agent-briefs/tasks/UI/UI-2-0144.md | UI-2-0144 幕府大廳主題解析 |
+| `doc_task_5470` | docs/agent-briefs/tasks/UI/UI-2-0145.md | UI-2-0145 幕府大廳設計稿補 runtime 綁定 id |
+| `doc_task_5471` | docs/agent-briefs/tasks/UI/UI-2-0146.md | UI-2-0146 UCUF 節點依 id 查找 |
+| `doc_task_5472` | docs/agent-briefs/tasks/UI/UI-2-0147.md | UI-2-0147 幕府大廳主題套用器 |
+| `doc_task_5473` | docs/agent-briefs/tasks/UI/UI-2-0148.md | UI-2-0148 幕府大廳主題套用的 Cocos 節點實作 |
+| `doc_task_5474` | docs/agent-briefs/tasks/UI/UI-2-0149.md | UI-2-0149 幕府大廳另開入口 |
+| `doc_task_5475` | docs/agent-briefs/tasks/UI/UI-2-0150.md | UI-2-0150 幕府大廳掛上 Q 版武將人群 |
+| `doc_task_5476` | docs/agent-briefs/tasks/UI/UI-2-0151.md | UI-2-0151 幕府大廳勢力圖接上換季聚焦 |
+| `doc_task_5477` | docs/agent-briefs/tasks/UI/UI-2-0152.md | UI-2-0152 幕府大廳任務牆、祭壇、世家點擊接線 |
+| `doc_task_5478` | docs/agent-briefs/tasks/UI/UI-2-0153.md | UI-2-0153 幕府大廳左右任務牆顯示真實任務 |
+| `doc_task_5479` | docs/agent-briefs/tasks/UI/UI-2-0154.md | UI-2-0154 幕府大廳許願祭壇面板顯示即時許願池 |
+| `doc_task_5480` | docs/agent-briefs/tasks/UI/UI-2-0155.md | UI-2-0155 幕府大廳節慶槽跟隨 lobby-hub 目前節慶 |
+| `doc_task_5481` | docs/agent-briefs/tasks/UI/UI-2-0156.md | UI-2-0156 遊戲入口（標題畫面）設計稿 |
+| `doc_task_5482` | docs/agent-briefs/tasks/UI/UI-2-0157.md | UI-2-0157 遊戲入口標題畫面 title-screen 轉換部署 |
+| `doc_task_5483` | docs/agent-briefs/tasks/UI/UI-2-0158.md | UI-2-0158 遊戲入口標題畫面接到 LoginScene |
+| `doc_task_5484` | docs/agent-briefs/tasks/UI/UI-2-0159.md | UI-2-0159 主大廳背景沿用幕府大廳季節背景 |
+| `doc_task_5485` | docs/agent-briefs/tasks/UI/UI-2-0160.md | UI-2-0160 開場名將登場卡補立繪 |
+| `doc_task_5486` | docs/agent-briefs/tasks/UI/UI-2-0161.md | UI-2-0161 人物頁總覽補齊外觀 |
+| `doc_task_5487` | docs/agent-briefs/tasks/UI/UI-2-0163.md | UI-2-0163 人物頁改用 character_v3 轉換版 |
+| `doc_task_5488` | docs/agent-briefs/tasks/UI/UI-2-0164.md | UI-2-0164 字型檔名改為全域唯一 |
+| `doc_task_5489` | docs/agent-briefs/tasks/UI/UI-2-0165.md | UI-2-0165 人物頁屬性分頁接真實武將資料 |
+| `doc_task_5490` | docs/agent-briefs/tasks/UI/UI-2-0166.md | UI-2-0166 人物頁命／技／寶／兵分頁接真實武將資料 |
+| `doc_task_5491` | docs/agent-briefs/tasks/UI/UI-2-0167.md | UI-2-0167 人物頁總覽收尾與入口接回 |
+| `doc_task_5492` | docs/agent-briefs/tasks/UI/UI-2-0168.md | UI-2-0168 人物頁命分頁左區血統樹 |
+| `doc_task_5493` | docs/agent-briefs/tasks/UI/UI-2-0169.md | UI-2-0169 修人物頁改版造成的單元測試回歸與總 TP 消失 |
+| `doc_task_5494` | docs/agent-briefs/tasks/UI/UI-2-0170.md | UI-2-0170 人物頁兵分頁虎符槽接真實資料與裝備操作 |
+| `doc_task_5495` | docs/agent-briefs/tasks/UI/UI-2-0172.md | [UI-2-0172] 戰鬥立繪路徑解析與戰法特寫載入 |
+| `doc_task_5496` | docs/tasks/TASK-DGB-0000.md | TASK-DGB-0000 Default Governance Profile 計畫定稿與中立性掃描 |
+| `doc_task_5497` | docs/tasks/TASK-DGB-0001.md | TASK-DGB-0001 Profile schema 與 compatibility matrix 接線 |
+| `doc_task_5498` | docs/tasks/TASK-DGB-0002.md | TASK-DGB-0002 Encoding Guard profile 升級 |
+| `doc_task_5499` | docs/tasks/TASK-DGB-0003.md | TASK-DGB-0003 Context Budget policy 配置化 |
+| `doc_task_5500` | docs/tasks/TASK-DGB-0004.md | TASK-DGB-0004 Document Identity registry schema / resolver |
+| `doc_task_5501` | docs/tasks/TASK-DGB-0005.md | TASK-DGB-0005 Document Sharding manager / health check |
+| `doc_task_5502` | docs/tasks/TASK-DGB-0006.md | TASK-DGB-0006 Markdown task card adapter |
+| `doc_task_5503` | docs/tasks/TASK-DGB-0007.md | TASK-DGB-0007 Scope Guard / dirty tree validator |
+| `doc_task_5504` | docs/tasks/TASK-DGB-0008.md | TASK-DGB-0008 Handoff / turn artifact schema |
+| `doc_task_5505` | docs/tasks/TASK-DGB-0009.md | TASK-DGB-0009 Project Memory optional capability 與 conflict finder |
+| `doc_task_5506` | docs/tasks/TASK-DGB-0010.md | TASK-DGB-0010 Upgrade plan / backup / rollback validation |
