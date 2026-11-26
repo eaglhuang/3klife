@@ -17334,6 +17334,12 @@
     "category": "task"
   },
   {
+    "id": "doc_task_3131",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10074.md",
+    "title": "[PROG-2-10074] 整年放招 0 次修正：計謀起手 20／火計 25、教學戰委任放招旁路、一般戰條件不符自動換招、playtest 放招計數",
+    "category": "task"
+  },
+  {
     "id": "doc_task_3133",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10075.md",
     "title": "[PROG-2-10075] 同步騎馬匹 mounted-list（關羽）",
@@ -17364,9 +17370,15 @@
     "category": "task"
   },
   {
-    "id": "doc_task_3131",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10074.md",
-    "title": "[PROG-2-10074] 整年放招 0 次修正：計謀起手 20／火計 25、教學戰委任放招旁路、一般戰條件不符自動換招、playtest 放招計數",
+    "id": "doc_task_3148",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10098.md",
+    "title": "[PROG-2-10098] 姻緣單一流程規格：相親 → 提親 → 成婚 → 結緣（11/26 修訂）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3149",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10099.md",
+    "title": "[PROG-2-10099] 姻緣單一流程實作：狀態機、結緣守門、存檔遷移、姻緣面板、吃醋事件",
     "category": "task"
   }
 ]
