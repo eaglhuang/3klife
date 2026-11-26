@@ -50,7 +50,7 @@ export function moveFootstepFor(troopType: TroopType | string | null | undefined
   return { ...spec };
 }
 
-export type MoveDustKind = 'dust' | 'none';
+export type MoveDustKind = 'dust' | 'splash' | 'none';
 
 export interface MoveDustSpec {
   kind: MoveDustKind;
@@ -91,6 +91,27 @@ export function moveDustFor(troopType: TroopType | string | null | undefined, te
     particleMin: Math.max(2, Math.round(base.particleMin * factor)),
     particleMax: Math.max(3, Math.round(base.particleMax * factor)),
   };
+}
+
+/** 水淹水花（PROG-2-10100）：被洪流沖走或卡在水流格時，腳點濺起的濁浪；共用揚塵粒子池，只換顏色與飄散。 */
+export const FLOOD_SPLASH_SPEC: MoveDustSpec = { kind: 'splash', scale: 1.15, particleMin: 5, particleMax: 8 };
+/** 水花顏色（濁黃綠到泛白的浪頭），兩端之間隨機取。 */
+export const SPLASH_COLOR_MUD = { r: 112, g: 138, b: 120 } as const;
+export const SPLASH_COLOR_FOAM = { r: 214, g: 232, b: 236 } as const;
+/** 漂流中每隔幾秒濺一次水花。 */
+export const FLOOD_SPLASH_INTERVAL_SEC = 0.45;
+
+/** 漂流（被水沖走／卡在水流格）的沉浮幅度（像素）與傾斜（度）、週期（秒）。 */
+export const FLOOD_DRIFT_TUNING = { bobPx: 5, tiltDeg: 9, periodSec: 1.1 } as const;
+
+/**
+ * 漂流姿態（純函式）：上下沉浮加左右搖晃，兩者相位差 90 度，看起來像失去平衡、在水裡載浮載沉。
+ * phase 給小隊隊員錯開（0～1）；clock 為秒。回傳 dy（像素，向上為正）與 angle（度，逆時針為正）。
+ */
+export function floodDriftSample(clock: number, phase = 0): { dy: number; angle: number } {
+  if (!Number.isFinite(clock) || clock < 0) return { dy: 0, angle: 0 };
+  const w = (clock / FLOOD_DRIFT_TUNING.periodSec + phase) * Math.PI * 2;
+  return { dy: FLOOD_DRIFT_TUNING.bobPx * Math.sin(w), angle: FLOOD_DRIFT_TUNING.tiltDeg * Math.sin(w + Math.PI / 2) };
 }
 
 /** 走路一步（落腳到下一次落腳）的動畫秒數：walk 一個週期 0.8 秒、左右腳各一步，落腳在 0.4 與 0.8 秒。 */
@@ -178,6 +199,14 @@ export function rollDustParticle(spec: MoveDustSpec, rand: () => number = Math.r
   const between = (lo: number, hi: number): number => lo + (hi - lo) * rand();
   const t = rand();
   const lerp = (a: number, b: number): number => Math.round(a + (b - a) * t);
+  if (spec.kind === 'splash') {
+    // 水花（PROG-2-10100）：飄得高、散得開、壽命短，顏色偏濁水；不吃塵粒的調校範圍
+    return {
+      startSize: between(14, 22) * spec.scale, endScale: between(1.4, 2.0), rise: between(35, 60), drift: between(-25, 25),
+      jitterX: between(-16, 16), jitterY: between(-4, 4), lifeSec: between(0.45, 0.7),
+      color: { r: lerp(SPLASH_COLOR_MUD.r, SPLASH_COLOR_FOAM.r), g: lerp(SPLASH_COLOR_MUD.g, SPLASH_COLOR_FOAM.g), b: lerp(SPLASH_COLOR_MUD.b, SPLASH_COLOR_FOAM.b) },
+    };
+  }
   const r = DUST_PARTICLE_RANGES;
   return {
     startSize: between(r.startSize[0], r.startSize[1]) * spec.scale,

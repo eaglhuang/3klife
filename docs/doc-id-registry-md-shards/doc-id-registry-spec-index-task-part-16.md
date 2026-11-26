@@ -43,4 +43,14 @@
 | `doc_task_3151` | docs/agent-briefs/tasks/PROG/PROG-2-10102.md | [PROG-2-10102] 實作：獲得面板 RewardPresenter＋AcquirePanelController 並改接任務回報／季報／轉蛋收尾 |
 | `doc_task_3157` | docs/agent-briefs/tasks/PROG/PROG-2-10083.md | [PROG-2-10083] 大廳小人台詞依武將性別換自稱（女將不再說某） |
 | `doc_task_3161` | docs/agent-briefs/tasks/PROG/PROG-2-10090.md | [PROG-2-10090] 大廳小人待出場疊在畫面邊緣點不到 |
+| `doc_task_3164` | docs/agent-briefs/tasks/PROG/PROG-2-10098.md | [PROG-2-10098] 姻緣單一流程規格：相親 → 提親 → 成婚 → 結緣（11/26 修訂） |
+| `doc_task_3165` | docs/agent-briefs/tasks/PROG/PROG-2-10099.md | [PROG-2-10099] 姻緣單一流程實作：狀態機、結緣守門、存檔遷移、姻緣面板、吃醋事件 |
 | `doc_task_3166` | docs/agent-briefs/tasks/PROG/PROG-2-10086.md | [PROG-2-10086] playtest-online 整年實跑連鎖失敗：detached Frame 與大廳小人被擋根因修復 |
+| `doc_task_3172` | docs/agent-briefs/tasks/PROG/PROG-2-10081.md | [PROG-2-10081] 奧義 C 組音效接入戰場奧義施放（蓄力／爆發／收尾） |
+| `doc_task_3174` | docs/agent-briefs/tasks/PROG/PROG-2-10105.md | [PROG-2-10105] UI 規格：戰場軍勢糧草常駐顯示與出牌不足提示＋內政任務詳情單屏重排（使用者 11/27 回饋） |
+| `doc_task_3175` | docs/agent-briefs/tasks/PROG/PROG-2-10104.md | [PROG-2-10104] 實作：戰場軍勢糧草常駐顯示、卡片費用章與不足說明面板 |
+| `doc_task_3176` | docs/agent-briefs/tasks/PROG/PROG-2-10108.md | [PROG-2-10108] 實作：內政任務詳情單屏三欄重排與固定底部行動列 |
+| `doc_task_3178` | docs/agent-briefs/tasks/PROG/PROG-2-10100.md | [PROG-2-10100] 洪流／水流關卡：水淹特效與卡住沉浮 |
+| `doc_task_3179` | docs/agent-briefs/tasks/PROG/PROG-2-10109.md | [PROG-2-10109] 台詞性別化第二批：老年自稱、AI prompt 與快取鍵、資料檔寫死自稱 |
+| `doc_task_3180` | docs/agent-briefs/tasks/PROG/PROG-2-10113.md | [PROG-2-10113] Antigravity 試玩三 bug |
+| `doc_task_3181` | docs/agent-briefs/tasks/PROG/PROG-2-10107.md | [PROG-2-10107] 放招微調：士氣鼓舞 TP 20 免傷兵、首年主將補通用計謀加速 15、奧義門檻方案 A |

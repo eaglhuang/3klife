@@ -1830,8 +1830,9 @@ async function main() {
                 if ((await scene()) === 'LobbyScene') { settled = 'auto-lobby'; break; }
                 if (await page.evaluate(() => window.__pt.scenePresence('BattleReview'))) { settled = 'review'; break; }
                 if ((await page.evaluate(() => window.__pt.textsMatching('^(勝利|失敗|戰敗|平手)$'))).length) { settled = 'review'; break; }
-                const roundTexts = await page.evaluate(() => window.__pt.textsMatching('^第\\s*\\d+\\s*回合$'));
-                const round = roundTexts.length ? Number(String(roundTexts[0]).replace(/\D/g, '')) : -1;
+                const roundTexts = await page.evaluate(() => window.__pt.textsMatching('^第\\s*\\d+(?:\\s*/\\s*\\d+)?\\s*回合$'));
+                // 守城戰 HUD 顯示「第 3/12 回合」（有回合上限），只取第一個數字（PROG-2-10107）
+                const round = roundTexts.length ? Number((String(roundTexts[0]).match(/\d+/) || ['-1'])[0]) : -1;
                 if (round !== lastRound) { lastRound = round; lastProgressAt = Date.now(); }
                 rec.detail.lastRound = lastRound;
                 await page.evaluate((r) => { window.__ptRound = r; }, lastRound);

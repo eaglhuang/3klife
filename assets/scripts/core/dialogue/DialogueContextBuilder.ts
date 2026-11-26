@@ -12,6 +12,8 @@
  * Unity 對照：像一個 RequestFactory.Build(ctx)，回傳 Result<Request, Missing[]>。
  */
 import type { NpcDialogueRequest } from '../services/NpcDialogueService';
+import { selfOf, voiceGenderOf, type VoiceProfile } from '../mind/SpeakerVoice';
+import type { GeneralPersonalityType } from '../models/GeneralUnit';
 
 export const DIALOGUE_MOOD_RULES_JSON = 'data/dialogue-mood-rules';
 
@@ -143,6 +145,8 @@ export type DialogueTarget = { kind: 'player' } | { kind: 'general'; id: string;
 /** 遊戲狀態來源（由 GameSession 轉接；測試用替身）。回 undefined 代表「查不到」，會被當成缺欄位。 */
 export interface DialogueStateSource {
     personalityOf(generalId: string): string | undefined;
+    /** 說話者的性別／年齡（名冊欄位）；沒提供或查不到視為男成年。性別年齡會進 prompt 與快取鍵，讓女將／少年／老者不共用台詞 */
+    voiceOf?(generalId: string): Pick<VoiceProfile, 'gender' | 'age'> | undefined;
     mindMoodOf(generalId: string): string | undefined;
     /** 說話者對對象的好感度（−100～100） */
     friendshipOf(generalId: string, target: DialogueTarget): number | undefined;
@@ -176,9 +180,9 @@ export interface DialogueBuildOk {
 export interface DialogueBuildFail { ok: false; missing: string[]; invalid: string[] }
 export type DialogueBuildResult = DialogueBuildOk | DialogueBuildFail;
 
-export function dialogueCacheKey(r: { generalId: string; contextKey: string; eventId?: string; mood: string; relationBucket: number; worldPhase: string; scene: string; interactionType: string; target: DialogueTarget }): string {
+export function dialogueCacheKey(r: { generalId: string; contextKey: string; eventId?: string; mood: string; relationBucket: number; worldPhase: string; scene: string; interactionType: string; target: DialogueTarget; selfPronoun?: string }): string {
     const t = r.target.kind === 'general' ? `g:${r.target.id}` : 'player';
-    return [r.generalId, r.contextKey, r.eventId ?? '', r.mood, r.relationBucket, r.worldPhase, r.scene, r.interactionType, t].join('|');
+    return [r.generalId, r.contextKey, r.eventId ?? '', r.mood, r.relationBucket, r.worldPhase, r.scene, r.interactionType, t, r.selfPronoun ?? ''].join('|');
 }
 
 export function buildDialogueRequest(input: DialogueBuildInput, source: DialogueStateSource, rules: DialogueRulesConfig | null): DialogueBuildResult {
@@ -221,6 +225,8 @@ export function buildDialogueRequest(input: DialogueBuildInput, source: Dialogue
         mindMood: mind as MindMoodName, bucket, contextKey: input.contextKey, witness,
         recentActionId: source.recentActionOf(input.generalId, target, rules.recentEvents.withinSeasons),
     }, rules);
+    const voice = source.voiceOf?.(input.generalId);
+    const selfPronoun = selfOf({ gender: voice?.gender, age: voice?.age, type: personality as GeneralPersonalityType });
     const interaction: Record<string, unknown> = { type: def.interactionType, targetKind: target.kind };
     if (input.eventId) interaction.eventId = input.eventId;
     if (target.kind === 'general') { interaction.targetId = target.id; if (target.name) interaction.targetName = target.name; }
@@ -234,13 +240,16 @@ export function buildDialogueRequest(input: DialogueBuildInput, source: Dialogue
         ...(input.saveId ? { saveId: input.saveId } : {}),
         schemaVersion: 2,
         personality: personality as string,
+        gender: voiceGenderOf(voice?.gender),
+        ...(voice?.age !== undefined ? { age: voice.age } : {}),
+        selfPronoun,
         mood,
         relationBucket: bucket,
         worldPhase: phase,
         scene,
         interaction,
     };
-    const cacheKey = dialogueCacheKey({ generalId: input.generalId, contextKey: input.contextKey, eventId: input.eventId, mood, relationBucket: bucket, worldPhase: phase, scene, interactionType: def.interactionType, target });
+    const cacheKey = dialogueCacheKey({ generalId: input.generalId, contextKey: input.contextKey, eventId: input.eventId, mood, relationBucket: bucket, worldPhase: phase, scene, interactionType: def.interactionType, target, selfPronoun });
     return { ok: true, request, cacheKey, mood, relationBucket: bucket };
 }
 

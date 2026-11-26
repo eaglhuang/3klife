@@ -499,7 +499,8 @@ export const TACTIC_TP_COST_OVERRIDE: Readonly<Record<string, number>> = {
     TAC_COMBO_ATTACK: 20,
     TAC_SWORN_FURY: 45,
     TAC_HEAL: 25,
-    TAC_INSPIRE: 30,
+    // 士氣鼓舞 30→20（PROG-2-10107，總PM 11/27 裁決）
+    TAC_INSPIRE: 20,
     TAC_HASTE: 15,
     TAC_SHIELD: 35,
     TAC_EIGHT_ARRAY: 80,

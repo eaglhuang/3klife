@@ -9,7 +9,7 @@ import {
     applyDuelAftermath, DUEL_VICTORY_FAME, planDuelAftermath, type DuelOutcomeRecord,
 } from '../assets/scripts/core/systems/DuelAftermath';
 import { ResultDetailsBuffer } from '../assets/scripts/shared/ResultDetailsBuffer';
-import { EPITAPH_TEXT } from '../assets/scripts/core/systems/ChildUnveiling';
+import { epitaphTextOf } from '../assets/scripts/core/systems/ChildUnveiling';
 
 function duel(over: Partial<DuelOutcomeRecord>): DuelOutcomeRecord {
     return { winner: Faction.Player, loser: Faction.Enemy, winnerGeneralId: 'g-1', loserGeneralId: 'enemy-1', killed: false, fled: true, tutorial: false, ...over };
@@ -90,7 +90,7 @@ export function createDuelAftermathSuite(): TestSuite {
         await session.recordBattle(['g-1'], 'enemy-win', { stageId: 's1', duelOutcomes: [duel(lost)] });
         const dead = session.roster.find((g) => g.id === 'g-1') as unknown as { status?: string };
         assert.equals('dead', dead.status);
-        assert.isTrue(session.queryJournal({ generalUid: 'g-1' }).some((e) => e.summary.includes(EPITAPH_TEXT.BattleDeath)));
+        assert.isTrue(session.queryJournal({ generalUid: 'g-1' }).some((e) => e.summary.includes(epitaphTextOf('BattleDeath'))));
         const notices = session.consumeTallyNotices();
         assert.isTrue(notices.some((l) => l.includes('單挑落敗被斬')));
         // 名將陣亡走既有 _settleDeaths：英靈卡同步產出（虎符卡依既有產卡資格，戰績為零時不產）

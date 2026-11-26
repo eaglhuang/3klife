@@ -19683,12 +19683,320 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_3164",
+      "id": "PROG-2-10098",
+      "title": "姻緣單一流程規格：相親 → 提親 → 成婚 → 結緣（11/26 修訂）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "spec",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "使用者 11/26 裁決：相親與結緣併成單一流程。在 doc_spec_1241 加第 16 章（shard-d，doc_spec_1338）：狀態機、守門矩陣、提親公式（採 Antigravity 11/26 對照表）、媒人加權、第 1 年第 3 季紅娘 80% 保底、吃醋事件、存檔遷移、JSON、UI 錨點、i18n、驗收。純設計不含程式。",
+      "related": [
+        "PROG-2-9224",
+        "PROG-2-10099"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [
+        "docs/遊戲規格文件/系統規格書/家族子嗣與血統總規格書-shards/shard-d.md"
+      ],
+      "notes": "2026-11-27 | 狀態: done | 驗證: compute-gate standard 13/14（僅既有 import-boundary 警告）、rebuild-crossref --validate、doc-id-registry --verify 通過 | 變更: doc_spec_1241 加第 16 章（shard-d＝doc_spec_1338）、索引、cross-ref 列、實作卡 PROG-2-10099 | 阻塞: Q-M1～Q-M8 待使用者裁決",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_3165",
+      "id": "PROG-2-10099",
+      "title": "姻緣單一流程實作：狀態機、結緣守門、存檔遷移、姻緣面板、吃醋事件",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "open",
+      "type": "feature",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依 doc_spec_1338（家族子嗣與血統總規格書 shard-d 第 16 章）實作姻緣單一流程。第一階段 M1～M3：courtship-config.json、CourtshipStage 純邏輯、結緣守門 mother-not-spouse、媒人說親改入相親名單、存檔欄位與舊檔遷移。第二階段 M4～M6：吃醋事件、姻緣面板與大廳單一入口、四語系 i18n、驗收 TC-MAR-01～14。只開不做。",
+      "related": [
+        "PROG-2-10098",
+        "PROG-2-9224"
+      ],
+      "depends": [
+        "PROG-2-10098"
+      ],
+      "acceptance": [],
+      "deliverables": [
+        "assets/resources/data/courtship-config.json"
+      ],
+      "notes": "2026-11-26 | 狀態: open | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_3174",
+      "id": "PROG-2-10105",
+      "title": "UI 規格：戰場軍勢糧草常駐顯示與出牌不足提示＋內政任務詳情單屏重排（使用者 11/27 回饋）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "兩份規格書（doc_spec_1341、doc_spec_1342）＋兩張 HTML mockup＋選擇題；不改遊戲程式；實作卡 PROG-2-10104、PROG-2-10108",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [
+        "docs/遊戲規格文件/系統規格書/戰場軍勢糧草常駐顯示與出牌不足提示規格書.md",
+        "docs/遊戲規格文件/系統規格書/內政任務詳情單屏重排與固定底部行動列規格書.md",
+        "docs/遊戲規格文件/設計參考/ui-asks-1127/"
+      ],
+      "notes": "2026-11-27 | 狀態: done | 驗證: compute-gate quick | 變更: 新增兩份規格書、mockup、索引登記、兩張實作卡（todo） | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_3175",
+      "id": "PROG-2-10104",
+      "title": "實作：戰場軍勢糧草常駐顯示、卡片費用章與不足說明面板",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "todo",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依戰場軍勢糧草常駐顯示與出牌不足提示規格書（doc_spec_1341）實作：BattleResourceBar、DeployCardCost、describeDeployShortfall、i18n 四語系、單元測試",
+      "related": [
+        "PROG-2-10105"
+      ],
+      "depends": [
+        "PROG-2-10105"
+      ],
+      "acceptance": [],
+      "deliverables": [
+        "assets/scripts/core/systems/SortieDeployScripts.ts",
+        "assets/scripts/ui/components/DeployComposite.ts",
+        "assets/scripts/ui/components/DeployPanel.ts",
+        "assets/scripts/ui/components/BattleHUD.ts",
+        "assets/resources/i18n/zh-TW.json",
+        "tests/SortieDeployShortfall.test.ts"
+      ],
+      "notes": "2026-11-26 | 狀態: todo | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_3176",
+      "id": "PROG-2-10108",
+      "title": "實作：內政任務詳情單屏三欄重排與固定底部行動列",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "todo",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依內政任務詳情單屏重排規格書（doc_spec_1342）改 lobby-mission-detail-dialog-main.json 與 LobbyMissionDetailDialogComposite.ts；橫式三欄、直式單欄、無捲動",
+      "related": [
+        "PROG-2-10105"
+      ],
+      "depends": [
+        "PROG-2-10105"
+      ],
+      "acceptance": [],
+      "deliverables": [
+        "assets/resources/ui-spec/layouts/lobby-mission-detail-dialog-main.json",
+        "assets/scripts/ui/components/LobbyMissionDetailDialogComposite.ts",
+        "assets/resources/i18n/zh-TW.json"
+      ],
+      "notes": "2026-11-26 | 狀態: todo | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_3180",
+      "id": "PROG-2-10113",
+      "title": "Antigravity 試玩三 bug：學府佔位符、結緣橫幅擋按鈕、幼兒進大廳與成年台詞",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-27",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-27T02:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "學府佔位符回歸測試、結緣橫幅不擋按鈕、未滿5歲不進大廳與孩童台詞",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [
+        "assets/scripts/core/systems/ToastMotion.ts",
+        "assets/scripts/core/systems/HallCharacterRoll.ts",
+        "assets/scripts/core/systems/HallChildLines.ts",
+        "assets/scripts/core/managers/GameSession.ts",
+        "assets/scripts/ui/scenes/LobbyScene.ts",
+        "tests/I18nPlaceholderFill.test.ts",
+        "tests/HallChildLines.test.ts",
+        "tests/ToastMotion.test.ts"
+      ],
+      "notes": "2026-11-26 | 狀態: done | 驗證: run-cli 全過（9806）、tsc 0 錯、compute-gate quick 通過 | 變更: 信箱標題與入口文字改走 i18n 四語系（季報信箱） | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
-    "done": 367,
+    "done": 370,
     "in_progress": 4,
-    "open": 88,
-    "total": 459
+    "open": 91,
+    "total": 465
   }
 }
