@@ -60,3 +60,5 @@
 | `doc_task_3184` | docs/agent-briefs/tasks/PROG/PROG-2-10111.md | [PROG-2-10111] playtest character-intro-tabs 點名冊第一列沒開出人物介紹 |
 | `doc_task_3185` | docs/agent-briefs/tasks/PROG/PROG-2-10115.md | [PROG-2-10115] 名冊出現「敵軍」陣營武將 |
 | `doc_task_3186` | docs/agent-briefs/tasks/PROG/PROG-2-10116.md | [PROG-2-10116] 詳情表頭 enemy 標在野 |
+| `doc_task_3187` | docs/agent-briefs/tasks/PROG/PROG-2-10117.md | [PROG-2-10117] pre-commit 編碼檢查在缺 tools_node 的 worktree（mailbox 分支）改走內建檢查 |
+| `doc_task_3188` | docs/agent-briefs/tasks/PROG/PROG-2-10118.md | [PROG-2-10118] 戰場部隊徽章避讓武將本體 |
