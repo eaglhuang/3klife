@@ -19991,12 +19991,65 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_3187",
+      "id": "PROG-2-10117",
+      "title": "pre-commit 編碼檢查在缺 tools_node 的 worktree（mailbox 分支）改走內建檢查",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-27T05:38:11+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "core.hooksPath 指向主樹 .githooks，mailbox 分支的 detached worktree 也會跑 master 的 pre-commit；但 hook 以相對路徑呼叫 tools_node/check-encoding-integrity.js，mailbox 分支沒有 tools_node，每封信 commit 都失敗，各 AI 只能先用 git archive 解出 tools_node 才能過。改為：工具存在時照舊執行；不存在時改跑內建零依賴檢查（對 staged 文字檔從 index 讀內容，擋 UTF-8 BOM 與 U+FFFD），不再整個失敗。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "在有 tools_node 的 worktree 行為不變，仍執行 check-encoding-integrity.js --staged",
+        "在無 tools_node 的 worktree，staged 文字檔含 BOM 或 U+FFFD 時 commit 被擋並列出檔名",
+        "在無 tools_node 的 worktree，乾淨的 .md commit 可直接成功，不需 git archive",
+        "回歸測試覆蓋上述三種情境"
+      ],
+      "deliverables": [
+        ".githooks/pre-commit",
+        ".githooks/staged-encoding-fallback.js",
+        "tools_node/test/precommit-encoding-fallback.test.js"
+      ],
+      "notes": "2026-11-27 | 狀態: in-progress | 驗證: pending | 變更: ATM專家應 3klife總PM 要求開卡 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
     "done": 370,
-    "in_progress": 4,
+    "in_progress": 5,
     "open": 91,
-    "total": 465
+    "total": 466
   }
 }

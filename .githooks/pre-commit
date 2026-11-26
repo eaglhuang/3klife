@@ -1,7 +1,17 @@
 #!/bin/sh
 
-node tools_node/check-encoding-integrity.js --staged
-RESULT=$?
+HOOK_DIR=$(cd "$(dirname "$0")" && pwd)
+
+# Worktrees that do not carry tools_node (e.g. the mailbox branch, which still
+# runs this hook via core.hooksPath) use the built-in staged BOM/U+FFFD check.
+if [ -f tools_node/check-encoding-integrity.js ]; then
+  node tools_node/check-encoding-integrity.js --staged
+  RESULT=$?
+else
+  echo "[pre-commit] tools_node/check-encoding-integrity.js not found in this worktree; running built-in staged encoding check"
+  node "$HOOK_DIR/staged-encoding-fallback.js"
+  RESULT=$?
+fi
 
 if [ $RESULT -ne 0 ]; then
   echo "pre-commit blocked: encoding integrity check failed."
