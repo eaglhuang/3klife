@@ -19945,7 +19945,7 @@
       "title": "Antigravity 試玩三 bug：學府佔位符、結緣橫幅擋按鈕、幼兒進大廳與成年台詞",
       "owner": "ClaudeCode_claude-opus-5-5",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-27",
@@ -19994,8 +19994,8 @@
     }
   ],
   "summary": {
-    "done": 369,
-    "in_progress": 5,
+    "done": 370,
+    "in_progress": 4,
     "open": 91,
     "total": 465
   }
