@@ -17446,5 +17446,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10086.md",
     "title": "[PROG-2-10086] playtest-online 整年實跑連鎖失敗：detached Frame 與大廳小人被擋根因修復",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3172",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10081.md",
+    "title": "[PROG-2-10081] 奧義 C 組音效接入戰場奧義施放（蓄力／爆發／收尾）",
+    "category": "task"
   }
 ]
