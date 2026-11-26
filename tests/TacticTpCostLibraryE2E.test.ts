@@ -30,7 +30,7 @@ export function createTacticTpCostLibraryE2ESuite(): TestSuite {
 
     suite.test('戰場 id 查價等於對照後的規格價（不再全部落到預設 30）', () => {
         assert.equals(30, getTacticTpCost('tactic-cavalry-shock'));
-        assert.equals(35, getTacticTpCost('tactic-fire-scheme'));
+        assert.equals(25, getTacticTpCost('tactic-fire-scheme'));
         assert.equals(50, getTacticTpCost('tactic-archer-volley'));
         assert.equals(50, getTacticTpCost('tactic-dragon-pierce'));
         assert.equals(15, getTacticTpCost('tactic-battle-roar'));

@@ -1,0 +1,54 @@
+{
+  "id": "year1-goals-screen.skin",
+  "version": 1,
+  "bundle": "lobby_ui",
+  "atlasPolicy": "lobby_ui",
+  "slots": {
+    "y1.card.bg": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 236
+    },
+    "y1.bar.track": {
+      "kind": "color-rect",
+      "color": "backgroundDeep",
+      "alpha": 200
+    },
+    "y1.bar.fill": {
+      "kind": "color-rect",
+      "color": "primary",
+      "alpha": 230
+    },
+    "y1.button.bg": {
+      "kind": "color-rect",
+      "color": "primary",
+      "alpha": 200
+    },
+    "y1.label.progress": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 24,
+      "lineHeight": 30,
+      "color": "secondaryLight",
+      "overflow": "SHRINK",
+      "isBold": true
+    },
+    "y1.label.hint": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 22,
+      "lineHeight": 30,
+      "color": "secondaryLight",
+      "overflow": "SHRINK"
+    },
+    "y1.label.button": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 22,
+      "lineHeight": 28,
+      "color": "secondaryLight",
+      "overflow": "SHRINK",
+      "isBold": true
+    }
+  }
+}

@@ -177,7 +177,8 @@ export function buildPlaceholderCutinConfig(generalId: string, generalName: stri
         shakeFrames: 8,
         // 暫代圖以前完全靜音（PROG-2-9435）：補切入風聲與命中吼聲，走下方的替代音表
         // PROG-2-9859：實測前 0.3 秒有聲、之後 1.3 秒空白直到 fireball；中段補一記重擊、結尾補一記命中，整段不再冷場
-        sfx: [{ key: 'whoosh', offset: -0.04 }, { key: 'roar', offset: 0.03 }, { key: 'hit_heavy', offset: 0.6 }, { key: 'hit', offset: 0.98 }],
+        // PROG-2-10081：奧義 C 組——蓄力 whoosh、爆發號角 roar 對到命中頓格 0.6 秒、收尾 ult_c_tail 在 0.98 秒（深沉號角漸弱）
+        sfx: [{ key: 'whoosh', offset: -0.04 }, { key: 'roar', offset: 0.6 }, { key: 'hit_heavy', offset: 0.6 }, { key: CUTIN_ULT_TAIL_CLIP, offset: 0.98 }],
       },
     ],
     textOverlays: [{ panelIndex: 0, delay: 0.1, fadeIn: 0.133, generalName, skillName }],
@@ -229,11 +230,15 @@ export const placeholderCutinRegistry = new PlaceholderCutinRegistry();
  * clip 依檔名推測、未實機試聽，聽起來不對只改這張表。語音（voice）不替代：沒有配音寧可不出聲。
  */
 export const CUTIN_SFX_FALLBACK: Readonly<Record<string, string>> = {
-  whoosh: 'wave',
+  // PROG-2-10081：奧義音效定案 C 組（CC0，授權見 audio/clips/LICENSES-cc0.md）：蓄力 Woosh、爆發 war horn
+  whoosh: 'ult_c_charge',
   hit: 'hurt',
   hit_heavy: 'boom',
-  roar: 'thunder',
+  roar: 'ult_c_burst',
 };
+
+/** 奧義收尾音（PROG-2-10081）：深沉號角漸弱，暫代分鏡在第一格尾端播；專屬分鏡可直接用此 key */
+export const CUTIN_ULT_TAIL_CLIP = 'ult_c_tail';
 
 /** 分鏡音效 key → 實際要播的 clip 名；不在替代表就原樣播 */
 export function resolveCutinSfxClip(key: string): string {
