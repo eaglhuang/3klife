@@ -101,7 +101,7 @@ function pickTier(tiers: number[], ridingTier: number): number | undefined {
 function mountedConfig(cacheKey: string, path: string, foot: number, clips: UnitSpineConfig['clips'], castClip?: ActionClip): UnitSpineConfig {
   let config = mountedCache.get(cacheKey);
   if (!config) {
-    config = { path, displayScale: 0.12, labelToFoot: 230, footOffset: { x: foot, y: 0 },
+    config = { path, displayScale: 0.17, labelToFoot: 230, footOffset: { x: foot, y: 0 },
       walkGroundSpeed: 1251.14, speedMultiplier: 2, maxAnimationSpeed: MAX_WALK_ANIMATION_SPEED, mirrorSkin: 'hand_mirror',
       footfallIntervalSec: CAVALRY_GALLOP_PERIOD_SEC / 2, bobPx: 0, clips, ...(castClip ? { castClip } : {}) };
     mountedCache.set(cacheKey, config);
