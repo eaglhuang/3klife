@@ -2228,7 +2228,7 @@ export class UnitRenderer extends Component {
     const ringNode = new Node("VitalityRing");
     ringNode.layer = labelNode.layer;
     labelNode.addChild(ringNode);
-    ringNode.setPosition(-(badgeWidth / 2 + 5 + VITALITY_RING_RADIUS + 8), 0, 0);
+    ringNode.setPosition(-(badgeWidth / 2 + 5 + VITALITY_RING_RADIUS + 8), GENERAL_PLATE_HEIGHT / 2 + 2, 0); // 與單排名牌同高
     ringNode.addComponent(UITransform).setContentSize(VITALITY_RING_RADIUS * 2 + 12, VITALITY_RING_RADIUS * 2 + 12);
     const graphics = ringNode.addComponent(Graphics);
 
