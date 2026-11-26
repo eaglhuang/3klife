@@ -11,7 +11,7 @@ import { StatusEffect } from '../assets/scripts/shared/CommonEnums';
 import {
     STATUS_WAVE_MAX_SEC, StatusCueThrottle, statusFloatTypeOf, statusMakesTargetFlinch, statusPolarityOf, statusWaveDelaySec,
 } from '../assets/scripts/battle/shared/StatusApplyFeedback';
-import { buildPlaceholderCutinConfig, CUTIN_SFX_FALLBACK, resolveCutinSfxClip } from '../assets/scripts/shared/cutin/cutinSupport';
+import { buildPlaceholderCutinConfig, CUTIN_SFX_FALLBACK, CUTIN_ULT_TAIL_CLIP, resolveCutinSfxClip } from '../assets/scripts/shared/cutin/cutinSupport';
 import { FLOAT_TEXT_STYLES } from '../assets/scripts/core/systems/FloatTextStyle';
 
 export function createStatusApplyFeedbackSuite(): TestSuite {
@@ -75,10 +75,24 @@ export function createStatusApplyFeedbackSuite(): TestSuite {
     });
 
     suite.test('分鏡缺檔音效對到既有 clip；不在表上的 key 原樣播', () => {
-        assert.equals('thunder', resolveCutinSfxClip('roar'));
+        assert.equals('ult_c_burst', resolveCutinSfxClip('roar'));
+        assert.equals('ult_c_charge', resolveCutinSfxClip('whoosh'));
         assert.equals('boom', resolveCutinSfxClip('hit_heavy'));
         assert.equals('boom', resolveCutinSfxClip('boom'));
         for (const clip of Object.values(CUTIN_SFX_FALLBACK)) assert.isTrue(clip.length > 0);
+    });
+
+    suite.test('奧義 C 組音效（PROG-2-10081）：三個 clip 檔與 meta 都在，暫代分鏡第一格播收尾', () => {
+        const fs = require('fs'); const path = require('path');
+        const dir = path.resolve(__dirname, '../assets/bundles/audio/clips');
+        const clips = [resolveCutinSfxClip('whoosh'), resolveCutinSfxClip('roar'), CUTIN_ULT_TAIL_CLIP];
+        assert.equals(3, new Set(clips).size);
+        for (const c of clips) {
+            assert.isTrue(fs.existsSync(path.join(dir, `${c}.ogg`)), `${c}.ogg 存在`);
+            assert.isTrue(fs.existsSync(path.join(dir, `${c}.ogg.meta`)), `${c}.ogg.meta 存在`);
+        }
+        const keys = (buildPlaceholderCutinConfig('zhang-fei', '張飛').panels[0].sfx ?? []).map((c) => c.key);
+        assert.isTrue(keys.includes(CUTIN_ULT_TAIL_CLIP), keys.join(','));
     });
 
     suite.test('暫代圖分鏡不再靜音：第一格帶切入與命中音效', () => {

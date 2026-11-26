@@ -3,7 +3,7 @@
 
 > 這是 `keep.md` (doc_index_0011) 的「Current Status（§14–§18 · §24 · MCP）」分片。完整索引見 `docs/keep.md (doc_index_0011)` (doc_index_0011)。
 
-- 2026-11-27 UI 規格（PROG-2-10105）：戰場軍勢／糧草常駐顯示與出牌不足提示見 doc_spec_1339；大廳任務詳情單屏重排見 doc_spec_1340；mockup 在 `docs/遊戲規格文件/設計參考/ui-asks-1127/`。
+- 2026-11-27 UI 規格（PROG-2-10105）：戰場軍勢／糧草常駐顯示與出牌不足提示見 doc_spec_1341；大廳任務詳情單屏重排見 doc_spec_1342；mockup 在 `docs/遊戲規格文件/設計參考/ui-asks-1127/`。
 
 ## 14. MCP 工具鏈現況
 

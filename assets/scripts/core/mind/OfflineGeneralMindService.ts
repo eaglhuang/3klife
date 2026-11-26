@@ -9,7 +9,7 @@ import { moodFrom, moodScore, personalityTypeOf, personalityVector, ruleFor } fr
 import { emptyGeneralMind, normalizeGeneralMind, trimEvents, trimRequests } from './MindSave';
 import { experienceWeightOf, latestEventWithTag, shouldDefy, successDeltaOf, willingnessOf } from './MindLearning';
 import { citeOf, opinionLine } from './MindLineTemplates';
-import { buildDefyLetter, effectsOfResolution, expiryIgnoresPlayer, isMajorKind, nextAllowedAfterDenied, nextAllowedAfterGrantedMajor, nextAllowedAfterIssue, planRequests } from './MindRequests';
+import { buildDefyLetter, effectsOfResolution, expiryIgnoresPlayer, isMajorKind, nextAllowedAfterDenied, nextAllowedAfterGrantedMajor, nextAllowedAfterIssue, planRequests, genderSlotsOf } from './MindRequests';
 import {
     MIND_CONFIG,
     type GeneralMindSave,
@@ -137,6 +137,8 @@ export class OfflineGeneralMindService implements IGeneralMindService {
             now: ctx.season ?? this._now,
             seed,
             nameOf: ctx.nameOf,
+            ...(ctx.general?.gender !== undefined ? { gender: ctx.general.gender } : {}),
+            ...(ctx.general?.age !== undefined ? { age: ctx.general.age } : {}),
         });
     }
 
@@ -225,6 +227,7 @@ export class OfflineGeneralMindService implements IGeneralMindService {
             n: String(cause?.streak ?? 0),
             win: String(cause?.win ?? 0),
             partner: partnerId ? (ctx.nameOf?.(partnerId) ?? partnerId) : '',
+            ...genderSlotsOf(ctx.general),
         }, now);
         return { stance: r.stance, willingness: r.willingness, line, reasonCodes: r.reasonCodes, successDelta: successDeltaOf(r.stance) };
     }
@@ -238,7 +241,7 @@ export class OfflineGeneralMindService implements IGeneralMindService {
         if (this._state.requests.some(r => r.id === id)) return null;
         const lastInsult = [...events].reverse().find(e => e.kind === 'SCOLDED' || e.kind === 'PASSED_OVER' || e.kind === 'REQUEST_DENIED');
         const letter = buildDefyLetter({
-            generalId, name: ctx.nameOf?.(generalId) ?? ctx.general?.name ?? generalId, season: now,
+            ...genderSlotsOf(ctx.general), generalId, name: ctx.nameOf?.(generalId) ?? ctx.general?.name ?? generalId, season: now,
             seed: now, type: personalityTypeOf(ctx.general),
             ...(lastInsult ? { refEvent: { ...lastInsult, label: lastInsult.label ?? '被冷遇' } } : {}),
             ...(ctx.seasonLabel ? { seasonLabel: ctx.seasonLabel } : {}),

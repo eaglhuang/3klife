@@ -208,6 +208,9 @@ export interface MindLine {
 export interface MindGeneralView {
     id: string;
     name?: string;
+    /** 性別（'男'／'女'）與年齡：台詞第一人稱用 */
+    gender?: string;
+    age?: number;
     personality?: { type?: 'Loyal' | 'Brave' | 'Wise' | 'Playful' };
     str?: number; int?: number; lea?: number; pol?: number; cha?: number; luk?: number;
     stats?: Partial<Record<'str' | 'int' | 'lea' | 'pol' | 'cha' | 'luk', number>>;
