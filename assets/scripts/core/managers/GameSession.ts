@@ -161,7 +161,7 @@ import { applyGraspChoice, comingOfAgeCrossings, enqueueLineageMilestones, grasp
 import { EMPTY_SEASON_PERSONALITY_STATE, normalizeSeasonPersonalityState, rollSeasonPersonalityEvents, seasonEventDef, seasonEventFarmMultiplier, seasonEventShortfall, strAfterExp, SEASON_PERSONALITY_TUNING, type SeasonEventInstance, type SeasonPersonalityState } from '../systems/SeasonPersonalityEvents';
 import { governanceEventLine, governanceOutputMultiplier, governanceReportLine, normalizeGovernanceEvent, rollGovernanceEvent, type ActiveGovernanceEvent } from '../systems/GovernanceEvents';
 import { EMPTY_DOMESTIC_LOG, normalizeDomesticLog, runDomesticTask, type DomesticSeasonLog, type DomesticStats, type DomesticTaskResult } from '../systems/DomesticTasks';
-import type { HallCandidate } from '../systems/HallCharacterRoll';
+import { canWalkHall, type HallCandidate } from '../systems/HallCharacterRoll';
 import { buildHallSpotRows, EMPTY_HALL_SPOT_STATE, HallSpotRow, HallSpotState, refreshHallCharacterSpots } from '../systems/HallCharacterPresenter';
 import { buildHallStageFeed, type HallStageFeed, type HallStageProfile } from '../systems/HallStageFeed';
 import type { HallVolunteerTask } from '../systems/HallVolunteer';
@@ -5741,7 +5741,7 @@ export class GameSession implements AcademyRecordPort {
     public hallCandidates(): HallCandidate[] {
         const favorites = new Set(this._favoriteGeneralIds);
         const assigned = new Set(Object.values(this._hallAssignments));
-        return this._roster.getAll().map((g) => ({
+        return this._roster.getAll().filter((g) => canWalkHall(g.age)).map((g) => ({
             id: g.id,
             favorite: favorites.has(g.id),
             assigned: assigned.has(g.id),
