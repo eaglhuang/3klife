@@ -6,6 +6,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { assert, TestSuite } from './TestRunner';
 import crowdConfig from '../assets/resources/data/master/ceremony-crowd-lines.json';
+import { selfOf } from '../assets/scripts/core/mind/SpeakerVoice';
 import {
     crowdTurn,
     normalizeCrowdGender,
@@ -22,7 +23,7 @@ const readJson = <T = any>(rel: string): T => JSON.parse(fs.readFileSync(path.jo
 const LOCALES = ['zh-TW', 'zh-CN', 'en', 'ja'];
 const config = crowdConfig as CeremonyCrowdConfig;
 /** 男性專用自稱：通用台詞不得出現（女武將也會說） */
-const MALE_ONLY = ['俺', '老子', '本座', '在下', '咱家', '朕', '孤', '吾', 'I, a man'];
+const MALE_ONLY = ['俺', '老子', '本座', '在下', '咱家', '朕', '孤', '吾', '某'];
 
 export function createYearEndCeremonyCrowdSuite(): TestSuite {
     const suite = new TestSuite('YearEndCeremonyCrowd');
@@ -35,7 +36,7 @@ export function createYearEndCeremonyCrowdSuite(): TestSuite {
         const ids = new Set(base.map((g) => g.id));
         for (const g of config.crowdGenerals) {
             ok(ids.has(g.generalId), `名冊找不到 ${g.generalId}`);
-            ok(normalizeCrowdGender(g.gender) !== 'u', `${g.generalId} 缺性別`);
+            ok(g.gender === '男' || g.gender === '女', `${g.generalId} 缺性別`);
         }
     });
 
@@ -50,7 +51,7 @@ export function createYearEndCeremonyCrowdSuite(): TestSuite {
         const crowd = pickCeremonyCrowd(roster, (id) => affinity[id] ?? 0, config);
         equal(crowd.length, config.maxCrowd);
         deepEqual(crowd.slice(0, 3).map((m) => m.generalId), ['da-qiao', 'guan-yu', 'x-3']);
-        equal(crowd[0].gender, 'f');
+        equal(crowd[0].gender, 'F');
         ok(!crowd.some((m) => m.generalId.startsWith('child_')));
         equal(new Set(crowd.map((m) => m.generalId)).size, crowd.length);
     });
@@ -62,13 +63,11 @@ export function createYearEndCeremonyCrowdSuite(): TestSuite {
         equal(safe[0].generalId, 'a');
     });
 
-    suite.test('台詞性別：女武將優先 .f 變體，沒有變體或男性用通用版', () => {
-        const table: Record<string, string> = { k: '通用', 'k.f': '女版' };
-        const t = (key: string): string => table[key] ?? key;
-        equal(resolveCrowdLine(t, 'k', 'f'), '女版');
-        equal(resolveCrowdLine(t, 'k', 'm'), '通用');
-        equal(resolveCrowdLine(t, 'k', 'u'), '通用');
-        equal(resolveCrowdLine((key) => (key === 'k' ? '通用' : key), 'k', 'f'), '通用');
+    suite.test('台詞自稱走共用聲線：男「某」、女「妾身」，與 SpeakerVoice 一致', () => {
+        const t = (key: string, ...args: string[]): string => `${key}|${args[0]}`;
+        equal(resolveCrowdLine(t, 'k', 'M'), `k|${selfOf({ gender: '男' })}`);
+        equal(resolveCrowdLine(t, 'k', 'F'), `k|${selfOf({ gender: '女' })}`);
+        ok(selfOf({ gender: '男' }) !== selfOf({ gender: '女' }));
     });
 
     suite.test('四語系：台詞鍵齊全、無殘留佔位、通用版無男性專用自稱、說話格式有兩個佔位', () => {
@@ -77,7 +76,7 @@ export function createYearEndCeremonyCrowdSuite(): TestSuite {
             for (const key of config.cheerKeys) {
                 const text = table[key];
                 ok(typeof text === 'string' && text.length > 0, `${locale} 缺 ${key}`);
-                ok(!/\{\d\}/.test(text), `${locale} ${key} 殘留佔位`);
+                ok(!/\{[1-9]\}/.test(text), `${locale} ${key} 多餘佔位`);
                 for (const word of MALE_ONLY) ok(!text.includes(word), `${locale} ${key} 含男性專用自稱 ${word}`);
             }
             const say = table['ui.ceremony.crowd.say'];

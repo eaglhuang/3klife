@@ -41,6 +41,7 @@
 | `doc_task_3144` | docs/agent-briefs/tasks/PROG/PROG-2-10091.md | [PROG-2-10091] 索引健檢：虎符族文件補列與 keep.summary 更新 |
 | `doc_task_3150` | docs/agent-briefs/tasks/PROG/PROG-2-10101.md | [PROG-2-10101] 獲得面板規格（RewardPresenter：任何人物／物品獲得的統一出口） |
 | `doc_task_3151` | docs/agent-briefs/tasks/PROG/PROG-2-10102.md | [PROG-2-10102] 實作：獲得面板 RewardPresenter＋AcquirePanelController 並改接任務回報／季報／轉蛋收尾 |
+| `doc_task_3155` | docs/agent-briefs/tasks/PROG/PROG-2-10106.md | [PROG-2-10106] 年末典禮觀禮武將大頭像與熱鬧台詞掛載（資料驅動、性別參數） |
 | `doc_task_3157` | docs/agent-briefs/tasks/PROG/PROG-2-10083.md | [PROG-2-10083] 大廳小人台詞依武將性別換自稱（女將不再說某） |
 | `doc_task_3161` | docs/agent-briefs/tasks/PROG/PROG-2-10090.md | [PROG-2-10090] 大廳小人待出場疊在畫面邊緣點不到 |
 | `doc_task_3164` | docs/agent-briefs/tasks/PROG/PROG-2-10098.md | [PROG-2-10098] 姻緣單一流程規格：相親 → 提親 → 成婚 → 結緣（11/26 修訂） |

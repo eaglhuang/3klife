@@ -1554,10 +1554,8 @@
   "ui.ceremony.act3.grandSlam": "新手满贯！首年目标几乎一网打尽，这开局连老江湖都想拜师！",
   "ui.ceremony.crowd.cheer.1": "这榜单比我家年终奖还刺激，先鼓掌再说！",
   "ui.ceremony.crowd.cheer.2": "各位名门手别停，掌声不收费，今天免费领到饱！",
-  "ui.ceremony.crowd.cheer.2.f": "各位名门手别停，掌声不收费，姐妹们一起拍到手红！",
   "ui.ceremony.crowd.cheer.3": "第一名先别太得意，明年有人要来抢位置啦。",
-  "ui.ceremony.crowd.cheer.4": "我赌一包瓜子，今年的黑马就在现场！",
-  "ui.ceremony.crowd.cheer.4.f": "本姑娘赌一包瓜子，今年的黑马就在现场！",
+  "ui.ceremony.crowd.cheer.4": "{0}赌一包瓜子，今年的黑马就在现场！",
   "ui.ceremony.crowd.cheer.5": "没上榜也别气馁，今天主要是来蹭热闹的。",
   "ui.ceremony.crowd.cheer.6": "领奖的记得笑一个，这张要放进家族相册！",
   "ui.ceremony.crowd.say": "{0}：{1}"

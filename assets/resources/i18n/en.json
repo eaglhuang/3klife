@@ -1554,10 +1554,8 @@
   "ui.ceremony.act3.grandSlam": "Rookie Grand Slam! Nearly every Year 1 goal cleared, even veterans want to take notes!",
   "ui.ceremony.crowd.cheer.1": "This ranking is more thrilling than my year-end bonus. Clap first, ask later!",
   "ui.ceremony.crowd.cheer.2": "Keep clapping, noble houses. Applause is free and today it is all-you-can-clap!",
-  "ui.ceremony.crowd.cheer.2.f": "Keep clapping, noble houses. Applause is free, ladies, clap until your palms glow!",
   "ui.ceremony.crowd.cheer.3": "Number one, do not gloat yet. Someone is coming for your seat next year.",
-  "ui.ceremony.crowd.cheer.4": "I bet a bag of sunflower seeds the dark horse is in this very room!",
-  "ui.ceremony.crowd.cheer.4.f": "This lady bets a bag of sunflower seeds the dark horse is in this very room!",
+  "ui.ceremony.crowd.cheer.4": "Bet you a bag of sunflower seeds the dark horse is in this very room!",
   "ui.ceremony.crowd.cheer.5": "Missed the list? Chin up, you are mostly here for the party anyway.",
   "ui.ceremony.crowd.cheer.6": "Winners, smile! This one is going straight into the family album.",
   "ui.ceremony.crowd.say": "{0}: {1}"

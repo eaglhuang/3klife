@@ -744,7 +744,14 @@ async function main() {
         if (!(await active())) return null;
         const t0 = Date.now();
         let claimed = false;
+        // 觀禮武將（PROG-2-10106）：典禮前幾秒各留一張圖，驗大頭像列與台詞輪播（不影響流程）
+        const crowdShots = [[1500, 'ceremony-crowd-1-avatars'], [4500, 'ceremony-crowd-2-line-rotate'], [7600, 'ceremony-crowd-3-line-rotate']];
+        let crowdShotIndex = 0;
         while (Date.now() - t0 < maxMs) {
+            if (crowdShotIndex < crowdShots.length && Date.now() - t0 >= crowdShots[crowdShotIndex][0]) {
+                await page.screenshot({ path: path.join(outDir, `${crowdShots[crowdShotIndex][1]}.png`) }).catch(() => undefined);
+                crowdShotIndex++;
+            }
             if (!(await active())) return { claimed, waitedMs: Date.now() - t0 };
             if (await clickButton('^BtnYcClose$')) claimed = true;
             await delay(700);

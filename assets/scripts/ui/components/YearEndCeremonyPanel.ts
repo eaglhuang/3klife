@@ -401,7 +401,7 @@ export class YearEndCeremonyPanel extends Component {
         const label = this.crowdLineLabel;
         if (!label) return;
         label.horizontalAlign = HorizontalTextAlignment.LEFT;
-        const line = resolveCrowdLine((key) => this._t(key), this._crowdCheerKeys[lineIndex], speaker.gender);
+        const line = resolveCrowdLine((key, ...args) => this._t(key, ...args), this._crowdCheerKeys[lineIndex], speaker.gender);
         label.string = this._t('ui.ceremony.crowd.say', speaker.name, line);
         if (this._nameTagStyle) applyGeneralNameTag(label.node, speaker.generalId, speaker.name, this._nameTagStyle);
     }

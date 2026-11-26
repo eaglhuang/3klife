@@ -1486,10 +1486,8 @@
   "ui.ceremony.act3.grandSlam": "新人グランドスラム！初年目標をほぼ制覇、古参も弟子入りしたがる滑り出しです！",
   "ui.ceremony.crowd.cheer.1": "この番付、年末ボーナスより心臓に悪い。まず拍手だ！",
   "ui.ceremony.crowd.cheer.2": "名門の皆さん手を止めずに！拍手は無料、今日は拍手し放題！",
-  "ui.ceremony.crowd.cheer.2.f": "名門の皆さん手を止めずに！拍手は無料、みんなで手が赤くなるまで叩こう！",
   "ui.ceremony.crowd.cheer.3": "一位の人、まだ浮かれないで。来年は席を奪いに来る人がいるよ。",
-  "ui.ceremony.crowd.cheer.4": "ひまわりの種一袋賭けるよ、今年のダークホースはこの会場にいる！",
-  "ui.ceremony.crowd.cheer.4.f": "私はひまわりの種一袋賭けるわ、今年のダークホースはこの会場にいる！",
+  "ui.ceremony.crowd.cheer.4": "{0}はひまわりの種一袋賭ける、今年のダークホースはこの会場にいる！",
   "ui.ceremony.crowd.cheer.5": "圏外でも落ち込まないで。今日は主に賑やかしに来ただけだし。",
   "ui.ceremony.crowd.cheer.6": "受賞者は笑顔で！この一枚は家族アルバム行きだから！",
   "ui.ceremony.crowd.say": "{0}：{1}"

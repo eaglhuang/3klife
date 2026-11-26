@@ -4,8 +4,10 @@
  *
  * 名單：優先取玩家名冊裡的武將（好感高者優先），不足再依資料檔補名將；
  * 台詞：與說話人無關的通用熱鬧句，說話人的名字由畫面的名字標籤顯示；
- *       台詞鍵可帶性別變體（key.f＝女武將版），沒有變體就用通用版，通用版不得用男性專用自稱。
+ *       自稱槽位 {0} 由 SpeakerVoice 依性別代入，自稱一律用 {0} 槽位。
  */
+import { selfOf, voiceGenderOf, type VoiceGender } from '../mind/SpeakerVoice';
+
 export interface CeremonyCrowdGeneral {
     readonly generalId: string;
     readonly name: string;
@@ -26,7 +28,7 @@ export interface CrowdRosterEntry {
     readonly gender?: string;
 }
 
-export type CrowdGender = 'm' | 'f' | 'u';
+export type CrowdGender = VoiceGender;
 
 export interface CrowdMember {
     readonly generalId: string;
@@ -34,11 +36,8 @@ export interface CrowdMember {
     readonly gender: CrowdGender;
 }
 
-export function normalizeCrowdGender(raw: string | null | undefined): CrowdGender {
-    if (raw === '女' || raw === 'f' || raw === 'female') return 'f';
-    if (raw === '男' || raw === 'm' || raw === 'male') return 'm';
-    return 'u';
-}
+/** 性別一律走全遊戲共用的 SpeakerVoice（PROG-2-10083），不另寫一套 */
+export const normalizeCrowdGender = (raw: string | null | undefined): CrowdGender => voiceGenderOf(raw ?? undefined);
 
 /** 動態子嗣（child_*）沒有正式頭像，不當觀禮武將 */
 function isCrowdEligible(id: string): boolean {
@@ -86,13 +85,8 @@ export function crowdTurn(turn: number, memberCount: number, lineCount: number):
 }
 
 /**
- * 依說話人性別取台詞：女武將優先用 key.f 變體；翻譯函式查不到時會回傳 key 本身，視為沒有變體。
+ * 台詞文字：台詞裡的 {0} 由共用聲線代入第一人稱（男「某」、女「妾身」…），台詞本身不寫死自稱。
  */
-export function resolveCrowdLine(t: (key: string) => string, key: string, gender: CrowdGender): string {
-    if (gender === 'f') {
-        const variantKey = `${key}.f`;
-        const variant = t(variantKey);
-        if (variant && variant !== variantKey) return variant;
-    }
-    return t(key);
+export function resolveCrowdLine(t: (key: string, ...args: string[]) => string, key: string, gender: CrowdGender): string {
+    return t(key, selfOf({ gender: gender === 'F' ? '女' : '男' }));
 }
