@@ -290,6 +290,9 @@ import { BondingJealousyRuntime, pairSynergyK, seedOfText } from '../../core/sys
 import { YearEndCeremonyPanel } from '../components/YearEndCeremonyPanel';
 import { buildYearEndCeremonyResult } from '../../core/systems/YearEndCeremonyRuntime';
 import { claimYearEndRewards } from '../../core/systems/YearEndCeremonyReward';
+import { Year1GoalsPanel } from '../components/Year1GoalsPanel';
+import { Year1GoalsController, type Year1GoalsSessionPort } from '../core/Year1GoalsController';
+import { claimYear1GoalReward } from '../../core/systems/Year1GoalsReward';
 import type { YearEndRankingResult } from '../../core/systems/YearEndRankingService';
 import ceremonyRankingConfig from '../../../resources/data/master/year-end-ranking-config.json';
 import { BloodlineEpithetService } from '../../core/systems/BloodlineEpithetService';
@@ -530,6 +533,11 @@ export class LobbyScene extends Component {
     private _pendingCeremonyYear = 0;
     private _ceremonyResult: YearEndRankingResult | null = null;
     private _ceremonyClaiming = false;
+    /** 首年目標進度條與領獎結算（PROG-2-10062）；Toast 排隊逐則播，避免一次完成多項互相蓋掉 */
+    private _year1Goals: Year1GoalsController | null = null;
+    private _year1Panel: Year1GoalsPanel | null = null;
+    private _year1ToastQueue: string[] = [];
+    private _year1ToastDraining = false;
     private _extremeTaskMessage = '';
     private _listPanel: GeneralListComposite | null = null;
     private _detailPanel: GeneralDetailComposite | null = null;
@@ -921,6 +929,7 @@ export class LobbyScene extends Component {
             // 任務牆與詳情窗跟著大廳一起掛（PROG-2-9130）：資料是小 json，不必排在 40 多個背景介面之後，
             // 否則玩家進大廳時牆上沒有真任務、點了也開不出詳情
             () => this._mountHallBoard(),
+            () => this._mountYear1Goals(),
             async () => { await this._mountLobbyMissionDetailDialogPanel(); services().ui.register(UIID.LobbyMissionDetailDialog, this._createLobbyMissionDetailDialogController()); },
             () => this._mountRedFaceShowcase(),
             ...(openingFirst ? [] : [() => this._mountOpeningPanels()]),
@@ -3554,6 +3563,88 @@ export class LobbyScene extends Component {
         host.node.active = false;
     }
 
+    /** 首年目標（PROG-2-10062）：進度條掛在大廳上方中央；完成就領獎、跳 Toast，進度條隨事件刷新 */
+    private async _mountYear1Goals(): Promise<void> {
+        const host = await this._mountPreviewScreenHost('Year1GoalsHost', 'year1-goals-screen', [
+            { buttonId: 'btnY1Next', handler: () => { this._runYear1GoalsNext(); } },
+        ]);
+        const nodeOf = (id: string): Node | null => host.binder.getNode(id) ?? null;
+        const panel = host.node.getComponent(Year1GoalsPanel) ?? host.node.addComponent(Year1GoalsPanel);
+        panel.progressLabel = nodeOf('y1Progress')?.getComponent(Label) ?? null;
+        panel.hintLabel = nodeOf('y1Hint')?.getComponent(Label) ?? null;
+        panel.barTrack = nodeOf('y1BarTrack');
+        panel.barFill = nodeOf('y1BarFill');
+        panel.nextButton = nodeOf('btnY1Next');
+        const theme = await services().specLoader.getThemeService().catch(() => null);
+        panel.setServices(this._panelT, theme);
+        host.binder.setTexts({ btnY1NextLabel: this._panelT('year1.panel.go') });
+        const sessionPort: Year1GoalsSessionPort = {
+            get year1Goals() { return services().session.year1Goals; },
+            get currentYear() { return services().session.gameTime.currentYear; },
+            markYear1GoalClaimed: (goalId) => services().session.markYear1GoalClaimed(goalId),
+            excludeFromYearSilverIncome: (amount) => services().session.excludeFromYearSilverIncome(amount),
+        };
+        this._year1Goals = new Year1GoalsController({
+            session: sessionPort,
+            claim: (goal, kind) => claimYear1GoalReward(services().api, goal, kind),
+            t: this._panelT,
+            toast: (message) => this._queueYear1Toast(message),
+        });
+        this._year1Panel = panel;
+        const refresh = (): void => { void this._settleYear1Goals(); };
+        this._sessionEventUnsubscribers.push(
+            services().event.on(GAME_SESSION_EVENTS.Year1GoalsChanged, refresh),
+            services().event.on(GAME_SESSION_EVENTS.Loaded, refresh),
+            services().event.on(GAME_SESSION_EVENTS.SeasonAdvanced, refresh),
+            services().event.on(GAME_SESSION_EVENTS.BattleSettled, refresh),
+            services().event.on(GAME_SESSION_EVENTS.RosterChanged, refresh),
+        );
+        host.node.active = true;
+        refresh();
+    }
+
+    /** 對帳（補判已打贏、已有配偶）→ 刷新進度條 → 領獎；領獎完成再刷一次 */
+    private async _settleYear1Goals(): Promise<void> {
+        const goals = this._year1Goals;
+        const panel = this._year1Panel;
+        if (!goals || !panel) return;
+        services().session.syncYear1Goals();
+        panel.refresh(goals.getView());
+        await goals.settle();
+        if (this.node?.isValid) panel.refresh(goals.getView());
+    }
+
+    /** 「下一步」按鈕：未解鎖只給提示，已解鎖就開對應功能 */
+    private _runYear1GoalsNext(): void {
+        const action = this._year1Goals?.getView().nextAction as LobbyActionId | null | undefined;
+        if (!action) return;
+        const session = services().session;
+        const lock = lobbyActionLock(action, session.officerState.currentTier);
+        if (lock.locked) {
+            this._showToast(lockedActionToast(lobbyActionName(action), lock, session.officerState.officerExp));
+            return;
+        }
+        this._runCityHubAction(action);
+    }
+
+    /** Toast 排隊：一次完成多項時逐則播，每則 2.4 秒 */
+    private _queueYear1Toast(message: string): void {
+        this._year1ToastQueue.push(message);
+        if (this._year1ToastDraining) return;
+        this._year1ToastDraining = true;
+        const next = (): void => {
+            const text = this._year1ToastQueue.shift();
+            if (text === undefined || !this.node?.isValid) {
+                this._year1ToastDraining = false;
+                this._year1ToastQueue.length = 0;
+                return;
+            }
+            services().event.emit('SHOW_TOAST', { message: text, duration: 2.2 });
+            this.scheduleOnce(next, 2.4);
+        };
+        next();
+    }
+
     /** 典禮要的單一音效：大廳平常沒載入 audio bundle，只取這一個 clip（不整包載入，省手機記憶體）；失敗就靜音 */
     private _ensureCeremonyClip(name: string): void {
         const audio = services().audio;
@@ -3576,6 +3667,9 @@ export class LobbyScene extends Component {
         const session = services().session;
         const { scoreInput, context } = session.yearEndScoreInputs();
         const result = buildYearEndCeremonyResult(year, scoreInput, this._panelT('ui.ceremony.house'), context);
+        // 首年目標（PROG-2-10062）：先用本年名次結算「金榜題名」，再判新手滿貫；只多一行賀詞，不動榜單分數與名次
+        session.recordYear1Sprint(year, result.playerRank);
+        if (this._year1Goals?.isGrandSlam(year)) result.newbieGrandSlam = true;
         this._ceremonyResult = result;
         const playerScore = result.standings.find((entry) => entry.isPlayer)?.score ?? 0;
         void session.recordYearEndCeremonyScore(year, playerScore).catch(() => undefined);
@@ -7131,7 +7225,7 @@ ${spent}`,
         this._ensureWidget(hostNode);
         // 彈窗／全螢幕 host 必須吃掉點擊，避免點空白或按鈕邊緣穿透到底層大廳與武將
         // 選主將／選卡組是大廳底層的小卡，不是彈窗：整頁透明 host 若吃點擊，會蓋住左上主將頭像等底下可點的東西（頭像點擊說話 PROG-2-9885）
-        const nonBlockingHosts = new Set(['LobbyHallHost', 'LobbyMainHost', 'SeasonHudHost', 'LeadSelectHost', 'DeckSelectHost']);
+        const nonBlockingHosts = new Set(['LobbyHallHost', 'LobbyMainHost', 'SeasonHudHost', 'Year1GoalsHost', 'LeadSelectHost', 'DeckSelectHost']);
         if (BlockInputEvents && !nonBlockingHosts.has(hostName) && !hostNode.getComponent(BlockInputEvents)) {
             hostNode.addComponent(BlockInputEvents);
         }

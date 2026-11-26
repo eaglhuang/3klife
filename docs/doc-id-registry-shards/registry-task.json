@@ -17290,5 +17290,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10057.md",
     "title": "[PROG-2-10057] 血統第 3~5 年成長小事件：資料載入器、schema 驗證與觸發／一次性邏輯（核心基礎調查）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3125",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10062.md",
+    "title": "[PROG-2-10062] 首年目標清單：資料、追蹤、一次性領獎與大廳進度條",
+    "category": "task"
   }
 ]

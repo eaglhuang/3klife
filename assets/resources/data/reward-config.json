@@ -190,6 +190,55 @@
       "effects": [{ "kind": "currency", "id": "silver", "amount": 500 }],
       "sources": ["yearEnd"],
       "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_Y1_GOAL_FIRST_BATTLE",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "silver", "amount": 150 }],
+      "sources": ["year1Goal"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_Y1_GOAL_FIRST_RECRUIT",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "silver", "amount": 100 }],
+      "sources": ["year1Goal"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_Y1_GOAL_FIRST_AFFAIRS",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "silver", "amount": 100 }],
+      "sources": ["year1Goal"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_Y1_GOAL_FIRST_TALK",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "silver", "amount": 50 }],
+      "sources": ["year1Goal"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_Y1_GOAL_FIRST_SPOUSE",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "silver", "amount": 150 }],
+      "sources": ["year1Goal"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_Y1_GOAL_TOP3_SPRINT",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "silver", "amount": 100 }],
+      "sources": ["year1Goal"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_Y1_GOAL_SPRINT_CONSOLATION",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "silver", "amount": 20 }],
+      "sources": ["year1Goal"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
     }
   ],
   "insight": {

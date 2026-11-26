@@ -37,6 +37,7 @@ import { normalizeClanTradition, type ClanTradition } from '../systems/ClanTradi
 import { normalizeClanHall } from '../systems/ClanHall';
 import type { FactorDefinition } from '../systems/FactorInheritance';
 import { normalizeOnboardingState, OnboardingState } from '../systems/OnboardingTutorial';
+import { normalizeYear1GoalsState, type Year1GoalsState } from '../systems/Year1Goals';
 import { normalizeOpeningLetterState, OpeningLetterState } from '../systems/OpeningLetter';
 import { normalizeMilitaryReserve, MilitaryReserve } from '../systems/MilitaryReserve';
 import { normalizePrisonState, type PrisonState } from '../systems/PrisonerOfWar';
@@ -353,6 +354,8 @@ export interface PlayerSaveSnapshot {
     femaleSystem?: FemaleSystemState;
     /** 新手 3 段式引導進度；後加的選填欄位，舊檔讀回視為從頭開始（PROG-2-0229） */
     onboarding?: OnboardingState;
+    /** 首年目標清單進度（已完成、已領獎、稱號、計數）；後加的選填欄位，舊檔讀回視為全空（PROG-2-10062） */
+    year1Goals?: Year1GoalsState;
     /** 開場信件已讀狀態；後加的選填欄位，舊檔讀回視為未讀（PROG-2-1304） */
     openingLetter?: OpeningLetterState;
     /** 結義點數餘額；後加的選填欄位，舊檔讀回為 0（GCH-06） */
@@ -704,6 +707,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         ...(snapshot.rivals !== undefined ? { rivals: normalizeRivalWorld(snapshot.rivals) } : {}),
         ...(snapshot.mercenaries !== undefined ? { mercenaries: normalizeMercenaryBundle(snapshot.mercenaries) } : {}),
         ...(snapshot.onboarding !== undefined ? { onboarding: normalizeOnboardingState(snapshot.onboarding) } : {}),
+        ...(snapshot.year1Goals !== undefined ? { year1Goals: normalizeYear1GoalsState(snapshot.year1Goals) } : {}),
         ...(snapshot.openingLetter !== undefined ? { openingLetter: normalizeOpeningLetterState(snapshot.openingLetter) } : {}),
         ...(snapshot.bondPoints !== undefined ? { bondPoints: normalizeBondPoints(snapshot.bondPoints) } : {}),
         ...(snapshot.friendBorrowLedger !== undefined ? { friendBorrowLedger: normalizeBorrowLedger(snapshot.friendBorrowLedger) } : {}),
