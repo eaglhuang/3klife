@@ -19156,12 +19156,61 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_3123",
+      "id": "PROG-2-10059",
+      "title": "年底結算接成長事件：待處理事件佇列存檔、resolveBloodlineEvent 結算",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-26T16:59:17+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "年底結算呼叫 dueBloodlineEvent 產生待處理事件佇列並存檔（本卡不做彈窗）；提供 resolveBloodlineEvent(childId,eventId,choice) 發放獎勵，每名孩子每年最多一件，承 PROG-2-10057、PROG-2-10058。",
+      "related": [
+        "PROG-2-10057",
+        "PROG-2-10058"
+      ],
+      "depends": [
+        "PROG-2-10058"
+      ],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-26 | 狀態: done | 驗證: run-cli 全過（9770）、tsc 0 錯、compute-gate standard | 變更: 歲末結算排出血統成長事件待決佇列並存檔 bloodlineGrowthEvents（舊檔相容）、resolveBloodlineEvent 入帳、family.growthEvents／resolveGrowthEvent 與 E370／E371、單元測試 | 阻塞: 無（彈窗畫面不在本卡）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
-    "done": 357,
+    "done": 358,
     "in_progress": 4,
     "open": 88,
-    "total": 449
+    "total": 450
   }
 }

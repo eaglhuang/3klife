@@ -17296,5 +17296,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10058.md",
     "title": "[PROG-2-10058] 幼苗與親子資料基礎：開局送 7 歲幼苗、親子好感、小名碎片帳本、同窗好友旗標",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3123",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10059.md",
+    "title": "[PROG-2-10059] 年底結算接成長事件：待處理事件佇列存檔、resolveBloodlineEvent 結算（屬性／好感／銀兩／聲望／小名碎片／同窗好友）",
+    "category": "task"
   }
 ]
