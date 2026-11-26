@@ -19028,7 +19028,7 @@
         "PR diff 僅限 artwork/general-art-library/** 與 catalog.json 與本卡片檔"
       ],
       "deliverables": [
-        "artwork/general-art-library/**（每位武將靜態立繪、戰鬥立繪、avatars、small_avatars 四件組）",
+        "artwork/general-art-library/**",
         "artwork/general-art-library/catalog.json"
       ],
       "notes": "2026-11-26 | 狀態: open | 驗證: pending | 變更: ClaudeCode_claude-opus-5-5 開傘卡，owner 指派 codex-gpt-6.2-sol，未上鎖 | 阻塞: 無",
