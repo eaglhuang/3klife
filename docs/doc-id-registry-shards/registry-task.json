@@ -17524,5 +17524,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10115.md",
     "title": "[PROG-2-10115] 名冊出現「敵軍」陣營武將",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3186",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10116.md",
+    "title": "[PROG-2-10116] 詳情表頭 enemy 標在野",
+    "category": "task"
   }
 ]
