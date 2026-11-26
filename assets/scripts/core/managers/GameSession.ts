@@ -2817,6 +2817,8 @@ export class GameSession implements AcademyRecordPort {
         next = recordChildTalk(next, childId, year);
         this._childLedger = next;
         const favor = childFavorOf(next, childId);
+        // 首年目標清單：真正的親子談話一次（y1_first_talk）
+        this.recordChildInteraction();
         if (this._autoSave && this._save) void this.save();
         return { ok: true, result: { childId, topicId: topic.id, lineKey: topic.lineKey, favorDelta: favor - before, favor, interactionCountThisYear: childInteractionCountOf(next, year) } };
     }
