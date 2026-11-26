@@ -19938,12 +19938,65 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_3180",
+      "id": "PROG-2-10113",
+      "title": "Antigravity 試玩三 bug：學府佔位符、結緣橫幅擋按鈕、幼兒進大廳與成年台詞",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-27",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-27T02:00:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "學府佔位符回歸測試、結緣橫幅不擋按鈕、未滿5歲不進大廳與孩童台詞",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [
+        "assets/scripts/core/systems/ToastMotion.ts",
+        "assets/scripts/core/systems/HallCharacterRoll.ts",
+        "assets/scripts/core/systems/HallChildLines.ts",
+        "assets/scripts/core/managers/GameSession.ts",
+        "assets/scripts/ui/scenes/LobbyScene.ts",
+        "tests/I18nPlaceholderFill.test.ts",
+        "tests/HallChildLines.test.ts",
+        "tests/ToastMotion.test.ts"
+      ],
+      "notes": "2026-11-26 | 狀態: done | 驗證: run-cli 全過（9806）、tsc 0 錯、compute-gate quick 通過 | 變更: 信箱標題與入口文字改走 i18n 四語系（季報信箱） | 阻塞: none",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
-    "done": 369,
+    "done": 370,
     "in_progress": 4,
     "open": 91,
-    "total": 464
+    "total": 465
   }
 }

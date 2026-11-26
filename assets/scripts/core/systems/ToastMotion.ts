@@ -20,8 +20,12 @@ export function toastHoldSec(duration?: number): number {
     return Math.max(TOAST_MIN_HOLD_SEC, duration);
 }
 
-/** 彈窗開著時，提示條貼著畫面底緣放，距底緣的留白（像素） */
-export const TOAST_MODAL_BOTTOM_MARGIN_PX = 48;
+/**
+ * 彈窗開著時，提示條貼著畫面底緣放，距底緣的留白（像素）。
+ * 結緣卡（1200×880 置中於 1080 高）下緣只剩 100px 空地，提示條 112px 高，留白必須為 0，
+ * 才不會蓋住卡片底部的「譜牒密考」等按鈕列。
+ */
+export const TOAST_MODAL_BOTTOM_MARGIN_PX = 0;
 
 /**
  * 提示條中心的 y（相對全螢幕容器中心，向上為正）。
