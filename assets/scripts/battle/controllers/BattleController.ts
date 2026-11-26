@@ -647,13 +647,14 @@ export class BattleController {
     if (general.canUseSkill()) {
       const ultimate = buildUltimateSkills(general)[0];
       // 委任代打同敵方：SP 滿還要過奧義判斷（IQ 比例門檻＋家族審批），不符合就留著 SP 不放（PROG-2-9723）
-      const shouldCast = !!ultimate && !!this.delegateQuality && this.shouldFactionCastUltimate(
+      // 教學戰旁路（PROG-2-10074）：首戰 SP 滿就放，不過 IQ／敵方隊數判斷，讓新手首戰一定看到放招
+      const shouldCast = !!ultimate && (this._tutorialBattle || (!!this.delegateQuality && this.shouldFactionCastUltimate(
         Faction.Player,
         general,
         this.delegateUltimateIq(this.delegateQuality),
         this.state.aiUltimateRules,
         ultimate?.ultimateId ?? '',
-      );
+      )));
       if (ultimate && shouldCast) {
         done.ultimate = this.triggerPlayerBattleSkill(ultimate.skillId, SkillSourceType.Ultimate, {
           targetMode: resolveBattleSkillTargetMode(ultimate.skillId, BattleSkillTargetMode.EnemyAll),
@@ -666,7 +667,33 @@ export class BattleController {
     if (tactic && this.getPlayerTacticPointState().enabled) {
       done.tactic = this.triggerPlayerSeedTactic({ targetMode: tactic.targetMode, targetUnitUid });
     }
+    // 條件不符自動換招（PROG-2-10074 方案 D）：主戰法放不出（例如火計要起風）就改放戰法槽內本局放得出的其他招
+    if (!done.tactic) done.tactic = this.tryDelegateFallbackTactic(tactic?.tacticId ?? null, targetUnitUid);
     return done;
+  }
+
+  /**
+   * 委任換招（PROG-2-10074）：依戰法槽順序找第一個「戰法庫有定義、施放條件達成、點數付得起」且實際施放成功的戰法。
+   * 主戰法本身（primaryTacticId）已試過，略過。放不出去（沒有目標等）不扣點，換下一招。
+   */
+  private tryDelegateFallbackTactic(primaryTacticId: string | null, targetUnitUid: string): boolean {
+    const general = this.state.playerGeneral;
+    if (!general) return false;
+    for (const slot of general.tacticSlots ?? []) {
+      const tacticId = slot.tacticId;
+      if (!tacticId || tacticId === primaryTacticId) continue;
+      const def = this.tacticDefinitionMap.get(tacticId);
+      if (!def?.battleSkillId) continue;
+      if (this.skillDispatcher.findUnmetGeneralTacticCondition(Faction.Player, tacticId)) continue;
+      if (!this.canAffordTactic(tacticId)) continue;
+      const cast = this.triggerPlayerBattleSkill(def.battleSkillId, SkillSourceType.SeedTactic, {
+        targetMode: def.targetMode as BattleSkillTargetMode,
+        tacticId,
+        targetUnitUid,
+      });
+      if (cast) return true;
+    }
+    return false;
   }
 
   /** 委任帶主將出陣（PROG-2-9712）：出兵口有空、主將血量過門檻就上場（出陣＝全軍攻擊加倍，既有規則） */
