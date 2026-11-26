@@ -19210,12 +19210,67 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "",
+      "id": "PROG-2-10064",
+      "title": "新手開場點擊精簡：介紹合併自動長卷、六名將一頁亮相、SSR 揭曉加點擊提示",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-26T18:20:58+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "稽核 B1/B2：開場約 16 次點擊、45~50 秒。介紹 4 頁合併成一頁自動長卷（右下略過）；六名將亮相改一頁橫排；SSR 揭曉加點擊繼續提示並縮短空窗。目標新帳號開場到大廳 8 次點擊內、30 秒內。只動開場段（信→介紹→亮相→宿命轉蛋）。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [
+        "assets/scripts/ui/core/OpeningIntroController.ts",
+        "assets/scripts/ui/core/InitialShowcaseController.ts",
+        "assets/scripts/ui/core/GachaFlowCoordinator.ts",
+        "assets/scripts/ui/scenes/LobbyScene.ts",
+        "assets/resources/ui-spec/layouts/opening-intro-main.json",
+        "assets/resources/ui-spec/layouts/initial-showcase-main.json",
+        "assets/resources/i18n/*.json",
+        "tools_node/playtest-online.js",
+        "tests/OpeningIntroVortex.test.ts",
+        "tests/InitialShowcaseController.test.ts"
+      ],
+      "notes": "2026-11-26 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
     "done": 358,
-    "in_progress": 4,
+    "in_progress": 5,
     "open": 88,
-    "total": 450
+    "total": 451
   }
 }
