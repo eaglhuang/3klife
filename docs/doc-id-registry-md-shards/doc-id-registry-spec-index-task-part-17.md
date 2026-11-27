@@ -102,3 +102,4 @@
 | `doc_task_3260` | docs/agent-briefs/tasks/PROG/PROG-2-10191.md | [PROG-2-10191] 使用者裁決寫入規格（純文件） |
 | `doc_task_3261` | docs/agent-briefs/tasks/PROG/PROG-2-10192.md | [PROG-2-10192] 回寫使用者 11/28 裁決 |
 | `doc_task_3263` | docs/agent-briefs/tasks/PROG/PROG-2-10190.md | [PROG-2-10190] 戰法分組音效 |
+| `doc_task_3264` | docs/agent-briefs/tasks/PROG/PROG-2-10197.md | [PROG-2-10197] 市井大街改照 v2 密集版（規格第 9、10 章） |
