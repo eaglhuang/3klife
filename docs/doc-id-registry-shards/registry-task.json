@@ -17722,5 +17722,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10179.md",
     "title": "[PROG-2-10179] 武將說溜嘴破綻語與言論圖鑑系統規格書",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3246",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10185.md",
+    "title": "[PROG-2-10185] FUN-02／03／04 實作",
+    "category": "task"
   }
 ]
