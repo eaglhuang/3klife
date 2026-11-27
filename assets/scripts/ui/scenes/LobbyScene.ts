@@ -298,6 +298,7 @@ import { BondingJealousyRuntime, pairSynergyK, seedOfText } from '../../core/sys
 import { YearEndCeremonyPanel } from '../components/YearEndCeremonyPanel';
 import { buildYearEndCeremonyResult } from '../../core/systems/YearEndCeremonyRuntime';
 import { pickCeremonyCrowd } from '../../core/systems/YearEndCeremonyCrowd';
+import { buildFameBoard, type CeremonyBoard } from '../../core/systems/YearEndCeremonyPodium';
 import { claimYearEndRewards } from '../../core/systems/YearEndCeremonyReward';
 import { Year1GoalsPanel } from '../components/Year1GoalsPanel';
 import { Year1GoalsController, type Year1GoalsSessionPort } from '../core/Year1GoalsController';
@@ -3694,8 +3695,8 @@ export class LobbyScene extends Component {
         const nodeOf = (id: string): Node | null => host.binder.getNode(id) ?? null;
         const labelOf = (id: string): Label | null => nodeOf(id)?.getComponent(Label) ?? null;
         const panel = host.node.addComponent(YearEndCeremonyPanel);
-        panel.titleLabel = labelOf('ycTitle');
-        panel.standingsLabel = labelOf('ycStandings');
+        panel.stageNode = nodeOf('ycStage');
+        panel.hintLabel = labelOf('ycHint');
         panel.dialogueLabel = labelOf('ycDialogue');
         panel.rewardLabel = labelOf('ycReward');
         panel.crowdContainer = nodeOf('ycCrowd');
@@ -3864,13 +3865,48 @@ export class LobbyScene extends Component {
             { win: ceremonyCrowdConfig.winRelayKeys, lose: ceremonyCrowdConfig.loseRelayKeys },
         );
         panel.setOnFinished(() => { void session.markYearEndCeremonySeen().catch(() => undefined); });
+        panel.setPortraits({
+            npc: Object.fromEntries(ceremonyRankingConfig.npcFillPool.map((npc) => [npc.id, npc.portraitId])),
+            player: session.resolveLeadGeneralId(session.roster[0]?.id ?? ''),
+        });
+        panel.setFameBoards(this._buildCeremonyFameBoards());
         panel.bindRankingResult(result, session.yearEndCeremonySeen);
+        // 典禮期間把提示（例如 SR 升星）先收著，典禮收掉後再播，免得蓋住頒獎畫面
+        services().event.emit('TOAST_SUPPRESS', { on: true });
         host.node.active = true;
         this._bringNodeToFront(host.node);
         return true;
     }
 
+    /**
+     * 風雲榜（第 2 幕的第 2、3 榜）：取各榜大廳預覽（前三名＋本府最佳名次）；
+     * 帳本沒資料、榜未啟用或任何錯誤都回空陣列，典禮退化成只有名門榜。
+     */
+    private _buildCeremonyFameBoards(): CeremonyBoard[] {
+        try {
+            const manager = AnnualRankingManager.getInstance();
+            const roster = services().session.roster;
+            const generals: Record<string, { generalId: string; name: string; isPlayerFaction: boolean }> = {};
+            for (const g of roster) generals[g.id] = { generalId: g.id, name: g.name, isPlayerFaction: true };
+            for (const g of this._generals) if (!generals[g.id]) generals[g.id] = { generalId: g.id, name: g.name, isPlayerFaction: false };
+            const year = this._pendingCeremonyYear > 0 ? this._pendingCeremonyYear : 1;
+            const previews = manager.getLobbyPreviews(Object.keys(generals), roster.map((g) => g.id), { year, quarter: 4, generals });
+            const boards: CeremonyBoard[] = [];
+            for (const preview of previews) {
+                const board = buildFameBoard(preview, (id) => {
+                    const g = this._generals.find((x) => x.id === id) ?? roster.find((x) => x.id === id);
+                    return { name: g?.name ?? id, gender: g?.gender === '女' ? 'F' : 'M' };
+                });
+                if (board) boards.push(board);
+            }
+            return boards;
+        } catch {
+            return [];
+        }
+    }
+
     private _closeYearEndCeremony(): void {
+        services().event.emit('TOAST_SUPPRESS', { on: false });
         if (this._ceremonyHost) this._ceremonyHost.node.active = false;
         void this._childGrowthPopup?.refreshAvailability();
     }

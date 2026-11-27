@@ -14,19 +14,10 @@
       "color": "primary",
       "alpha": 160
     },
-    "yc.label.title": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 34,
-      "lineHeight": 44,
-      "color": "secondaryLight",
-      "overflow": "CLAMP",
-      "isBold": true
-    },
     "yc.label.body": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 24,
+      "fontSize": 22,
       "lineHeight": 30,
       "color": "secondaryLight",
       "overflow": "SHRINK"
@@ -39,14 +30,6 @@
       "color": "secondaryLight",
       "overflow": "SHRINK"
     },
-    "yc.label.standing": {
-      "kind": "label-style",
-      "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 26,
-      "lineHeight": 34,
-      "color": "secondaryLight",
-      "overflow": "SHRINK"
-    },
     "yc.label.reward": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
@@ -55,6 +38,14 @@
       "color": "secondaryLight",
       "overflow": "CLAMP",
       "isBold": true
+    },
+    "yc.label.hint": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 20,
+      "lineHeight": 26,
+      "color": "secondaryLight",
+      "overflow": "SHRINK"
     }
   }
 }
