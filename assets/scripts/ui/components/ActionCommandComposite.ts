@@ -58,13 +58,13 @@ export class ActionCommandComposite extends CompositePanel {
     private _spRingSprite: Sprite | null = null;
     private _ultLabel:     Label  | null = null;
     private _spPctLabel:   Label  | null = null;
-    private _tacticsButtonCaption = '計謀';
+    private _tacticsButtonCaption = '';
     private _tacticsLabel: Label  | null = null;
     private _ultimateBtnNode: Node | null = null;
     private _ultimateSkills: UltimateSkillItem[] = [];
     /** 本場玩家已施放的奧義 skillId（PROG-2-1512） */
     private readonly _usedUltimateSkillIds = new Set<string>();
-    private _tacticsSummaryLabel = '計謀';
+    private _tacticsSummaryLabel = '';
 
     // ── 目前 SP 狀態 ──────────────────────────────────────────
     private _tacticEnabled = true;
@@ -75,7 +75,7 @@ export class ActionCommandComposite extends CompositePanel {
     private _duelButtonNode: Node | null = null;
     private _duelLocked = false;
     /** 鎖定時按鈕第二行的字：一般是「鎖定」，主將已在棋盤上是「已出陣」 */
-    private _duelLockedText = '鎖定';
+    private _duelLockedText = '';
     /** 單挑鈕原始文字（不含 🔒），第一次套鎖時記下 */
     private _duelLabelText: string | null = null;
     private _tacticsEnabledColor: Color | null = null;
@@ -87,6 +87,10 @@ export class ActionCommandComposite extends CompositePanel {
 
     private readonly _readyWaiters: Array<(ready: boolean) => void> = [];
     private readonly _unsubs: (() => void)[] = [];
+    /** 語系切換／語系字串晚到時重繪動態字的取消訂閱函數（PROG-2-10124） */
+    private _unsubLocaleRefresh: (() => void) | null = null;
+    /** 最近一次 setTacticSummary 的輸入；語系切換時用它重組字串 */
+    private _lastTacticSummary: { label: string; points?: { current?: number; max?: number; enabled: boolean }; reason?: string | null; shortReason?: string } | null = null;
 
     // ── 生命週期 ─────────────────────────────────────────────
 
@@ -100,6 +104,8 @@ export class ActionCommandComposite extends CompositePanel {
         this.unmount();
         this._unsubs.forEach(fn => fn());
         this._unsubs.length = 0;
+        this._unsubLocaleRefresh?.();
+        this._unsubLocaleRefresh = null;
         this._isMounted = false;
     }
 
@@ -138,15 +144,18 @@ export class ActionCommandComposite extends CompositePanel {
 
     public setTacticSummary(label: string, points?: { current?: number; max?: number; enabled: boolean }, reason?: string | null, shortReason?: string): void {
         // 不能施放時顯示原因（PROG-2-0408），否則顯示計點
-        this._tacticsSummaryLabel = (label.trim() || '計謀') +
-            (reason ? `\n${reason}` : points?.current !== undefined ? `\n點 ${points.current}/${points.max}` : '');
+        this._lastTacticSummary = { label, points, reason, shortReason };
+        const i18n = services().i18n;
+        const tacticsName = i18n.t('battle.tactics');
+        this._tacticsSummaryLabel = (label.trim() || tacticsName) +
+            (reason ? `\n${reason}` : points?.current !== undefined ? `\n${i18n.t('battle.tactics.points_full', String(points.current), String(points.max))}` : '');
         // 有兩個字的原因就直接寫在按鈕上（例如「待風」），沒有才寫「受限」（PROG-2-9333）
         // 點數不夠時照樣寫目前點數（灰字），玩家才看得到還差多少，不會只看到「受限」
         const pointText = points?.current !== undefined
-            ? (points.current > 99 ? '99+' : `${Math.max(0, Math.floor(points.current))}點`) : null;
-        this._tacticsButtonCaption = reason === tacticReasonText(TACTIC_REASON_NO_POINTS) && pointText ? `計謀\n${pointText}`
-            : reason ? `計謀\n${shortReason || '受限'}`
-            : pointText ? `計謀\n${pointText}` : '計謀';
+            ? (points.current > 99 ? '99+' : i18n.t('battle.tactics.points', String(Math.max(0, Math.floor(points.current))))) : null;
+        this._tacticsButtonCaption = reason === tacticReasonText(TACTIC_REASON_NO_POINTS) && pointText ? `${tacticsName}\n${pointText}`
+            : reason ? `${tacticsName}\n${shortReason || i18n.t('battle.tactics.limited')}`
+            : pointText ? `${tacticsName}\n${pointText}` : tacticsName;
         this._tacticEnabled = points?.enabled ?? true;
         // 天氣禁用：變灰但保留點擊，讓點擊後的天氣 Toast 出得來（PROG-2-0597）
         this._tacticClickable = this._tacticEnabled || reason === tacticReasonText(TACTIC_REASON_WEATHER);
@@ -163,9 +172,9 @@ export class ActionCommandComposite extends CompositePanel {
      * 單挑鈕條件不足時灰度 + 🔒（主戰場UI規格補充_v3 小按鈕 3，PROG-2-1873）。
      * 保留點擊，讓按下後的原因 Toast（前排有小兵、已上場…）照常出現。
      */
-    public setDuelLocked(locked: boolean, lockedText = '鎖定'): void {
+    public setDuelLocked(locked: boolean, lockedText?: string): void {
         this._duelLocked = locked;
-        this._duelLockedText = lockedText;
+        this._duelLockedText = lockedText ?? '';
         this._applyDuelLock();
     }
 
@@ -176,7 +185,7 @@ export class ActionCommandComposite extends CompositePanel {
         const label = btn.getChildByName('DuelLabel')?.getComponent(Label) ?? null;
         if (!label) return;
         if (this._duelLabelText === null) this._duelLabelText = label.string.replace(/^🔒\s*/, '');
-        label.string = this._duelLocked ? `${this._duelLabelText}\n${this._duelLockedText}` : this._duelLabelText;
+        label.string = this._duelLocked ? `${this._duelLabelText}\n${this._duelLockedText || services().i18n.t('battle.hud.locked')}` : this._duelLabelText;
     }
 
     public waitUntilReady(timeoutMs = 5000): Promise<boolean> {
@@ -213,13 +222,17 @@ export class ActionCommandComposite extends CompositePanel {
             this._tacticsLabel.fontSize = 24;
             this._tacticsLabel.lineHeight = 28;
             this._tacticsLabel.overflow = Label.Overflow.CLAMP;
-            this._tacticsLabel.string = this._tacticsButtonCaption;
+            this._tacticsLabel.string = this._tacticsButtonCaption || services().i18n.t('battle.tactics');
             if (!this._tacticEnabled) this._tacticsLabel.color = new Color(130, 130, 130, 255);
         }
         
         // 奧義大圓點擊
         this._ultimateBtnNode = binder.getNode('UltimateBtn');
         this._ultimateBtnNode?.on(Button.EventType.CLICK, this._onUltimateClick, this);
+
+        // 語系字串晚到或切換語系時，動態字（奧義、計謀）要跟著重繪；onDestroy 取消（PROG-2-10124）
+        this._unsubLocaleRefresh?.();
+        this._unsubLocaleRefresh = services().i18n.onLocaleChanged(() => this._refreshLocaleTexts());
 
         // 結束回合、計謀、單挑
         binder.getNode('EndTurnBtn')?.on(Button.EventType.CLICK, this._onEndTurnClick, this);
@@ -291,6 +304,15 @@ export class ActionCommandComposite extends CompositePanel {
             this._spPctLabel.node.active = !isReady;
             if (!isReady) this._spPctLabel.string = `SP ${pct}%`;
         }
+    }
+
+    /** 語系切換後重繪動態字：奧義標籤、計謀鈕、單挑鎖定字 */
+    private _refreshLocaleTexts(): void {
+        this._onSpChanged({ faction: Faction.Player, sp: this._currentSp, maxSp: this._maxSp });
+        const last = this._lastTacticSummary;
+        if (last) this.setTacticSummary(last.label, last.points, last.reason, last.shortReason);
+        else if (this._tacticsLabel) this._tacticsLabel.string = services().i18n.t('battle.tactics');
+        this._applyDuelLock();
     }
 
     private _setReadyPulse(on: boolean): void {
@@ -377,7 +399,8 @@ export class ActionCommandComposite extends CompositePanel {
     }
 
     private _toastTacticsBlocked(): void {
-        const text = this._tacticReason ? `計謀暫不可用：${this._tacticReason}` : '計謀點不足或本回合已用過';
+        const i18n = services().i18n;
+        const text = this._tacticReason ? i18n.t('battle.tactics.blocked', this._tacticReason) : i18n.t('battle.tactics.blocked_generic');
         services().event.emit(EVENT_NAMES.ShowToast, { text });
     }
 

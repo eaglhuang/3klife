@@ -172,6 +172,7 @@
             "width": 66,
             "height": 56,
             "text": "計謀",
+            "textKey": "battle.tactics",
             "styleSlot": "action.util.label"
           }
         ]

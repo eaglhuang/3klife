@@ -394,7 +394,7 @@ export class BattleHUDComposite extends CompositePanel {
             await this._settings.show();
             bringNodeToFront(node);
         } catch {
-            services().event.emit(EVENT_NAMES.ShowToast, { text: '設定載入失敗，請再試一次' });
+            services().event.emit(EVENT_NAMES.ShowToast, { text: services().i18n.t('battle.hud.settings_load_failed') });
         }
     }
 
@@ -403,16 +403,17 @@ export class BattleHUDComposite extends CompositePanel {
     private _renderSp(sp: number, maxSp: number): void {
         this._spState = { sp, maxSp };
         // 真實主將尚未就緒時不假造上限，也不曝光無意義的 0/0。
+        const i18n = services().i18n;
         if (maxSp <= 0) {
-            if (this._spLabel) this._spLabel.string = 'SP 準備中';
-            if (this._chargeLabel) this._chargeLabel.string = '奧義數值準備中';
-            if (this._spReadyLabel) this._spReadyLabel.string = '奧義準備中';
+            if (this._spLabel) this._spLabel.string = i18n.t('battle.hud.sp_preparing');
+            if (this._chargeLabel) this._chargeLabel.string = i18n.t('battle.hud.ult_value_preparing');
+            if (this._spReadyLabel) this._spReadyLabel.string = i18n.t('battle.hud.ult_preparing');
             this._spFill?.setScale(0, 1, 1);
             return;
         }
         if (this._spLabel) this._spLabel.string = `SP ${sp}/${maxSp}`;
-        if (this._chargeLabel) this._chargeLabel.string = `奧義消耗 SP ${maxSp}；目前 ${sp}/${maxSp}`;
-        if (this._spReadyLabel) this._spReadyLabel.string = maxSp > 0 && sp >= maxSp ? '奧義可施放' : '奧義蓄力中';
+        if (this._chargeLabel) this._chargeLabel.string = i18n.t('battle.hud.ult_cost', String(maxSp), String(sp), String(maxSp));
+        if (this._spReadyLabel) this._spReadyLabel.string = i18n.t(maxSp > 0 && sp >= maxSp ? 'battle.hud.ult_castable' : 'battle.hud.ult_charging');
         this._spFill?.setScale(maxSp > 0 ? Math.min(1, sp / maxSp) : 0, 1, 1);
     }
 
@@ -502,6 +503,8 @@ export class BattleHUDComposite extends CompositePanel {
             ev.on(EVENT_NAMES.GeneralSkillUsed,  (d) => this._onGeneralSkillUsed(d as { faction: Faction; skillId?: string; skillName?: string; sourceType?: any })),
             ev.on(EVENT_NAMES.GeneralSkillEffect,(d) => this._onSkillEffect(d as { faction: Faction; skillId: string })),
             ev.on(EVENT_NAMES.FortressDamaged,   (d) => this._onFortressDamaged(d as { faction: Faction; hp: number })),
+            // 語系字串晚到或切換語系時重繪 SP 文字；隨 _unsubs 在 onDestroy 取消（PROG-2-10124）
+            services().i18n.onLocaleChanged(() => this._renderSp(this._spState.sp, this._spState.maxSp)),
         );
     }
 

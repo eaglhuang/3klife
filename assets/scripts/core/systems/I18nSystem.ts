@@ -87,6 +87,18 @@ export class I18nSystem {
         this.changeHandlers.forEach(h => h(locale));
     }
 
+    /** 目前語系的字串是否已載入（未載入時 t(key) 只會回傳 key） */
+    get isLoaded(): boolean { return this.cache.has(this._locale); }
+
+    /**
+     * 確保目前語系字串已載入；已載入就直接返回，否則載入並通知 onLocaleChanged 訂閱者重繪。
+     * 給不經大廳直接進入的場景（戰場）使用，免得所有 t(key) 都回傳鍵名（PROG-2-10124）。
+     */
+    async ensureLoaded(): Promise<void> {
+        if (this.isLoaded) return;
+        await this.setLocale(this._locale);
+    }
+
     /**
      * 翻譯字串，支援 {0}{1} 佔位符。
      * 若 key 不存在，回傳 key 本身（便於除錯，不會白畫面）。
