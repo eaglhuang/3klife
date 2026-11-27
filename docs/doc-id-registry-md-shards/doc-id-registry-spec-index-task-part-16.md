@@ -90,4 +90,5 @@
 | `doc_task_3239` | docs/agent-briefs/tasks/PROG/PROG-2-10170.md | [PROG-2-10170] 任務詳情情報區長文字自動加高，en／ja 不再壓到風險／提示列 |
 | `doc_task_3240` | docs/agent-briefs/tasks/PROG/PROG-2-10172.md | [PROG-2-10172] 新手第一年樂趣四功能規格書 |
 | `doc_task_3241` | docs/agent-briefs/tasks/PROG/PROG-2-10174.md | [PROG-2-10174] 任務系統 en／ja／zh-CN 譯文校稿 |
+| `doc_task_3242` | docs/agent-briefs/tasks/PROG/PROG-2-10177.md | [PROG-2-10177] 新手第一年樂趣四功能實作 |
 | `doc_task_3243` | docs/agent-briefs/tasks/PROG/PROG-2-10179.md | [PROG-2-10179] 武將說溜嘴破綻語與言論圖鑑系統規格書 |

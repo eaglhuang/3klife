@@ -1,0 +1,172 @@
+{
+  "schema": "fun-toddler-bark.v1",
+  "id": "FUN01_POOL",
+  "ageBands": {
+    "baby": [
+      0,
+      1
+    ],
+    "toddler": [
+      2,
+      3
+    ],
+    "kid": [
+      4,
+      4
+    ]
+  },
+  "templates": [
+    {
+      "id": "t_baby_reach",
+      "ageBand": "baby",
+      "genders": [
+        "any"
+      ],
+      "textKey": "fun.toddler.t_baby_reach",
+      "action": "wave",
+      "sfx": "sfx_baby_giggle",
+      "weight": 1
+    },
+    {
+      "id": "t_baby_bubble",
+      "ageBand": "baby",
+      "genders": [
+        "any"
+      ],
+      "textKey": "fun.toddler.t_baby_bubble",
+      "action": "bubble",
+      "sfx": "sfx_baby_giggle",
+      "weight": 1
+    },
+    {
+      "id": "t_baby_coo",
+      "ageBand": "baby",
+      "genders": [
+        "any"
+      ],
+      "textKey": "fun.toddler.t_baby_coo",
+      "action": "bounce",
+      "sfx": "sfx_baby_giggle",
+      "weight": 1
+    },
+    {
+      "id": "t_hug",
+      "ageBand": "toddler",
+      "genders": [
+        "any"
+      ],
+      "textKey": "fun.toddler.t_hug",
+      "action": "bounce",
+      "sfx": "sfx_baby_giggle",
+      "weight": 1
+    },
+    {
+      "id": "t_horse",
+      "ageBand": "toddler",
+      "genders": [
+        "any"
+      ],
+      "textKey": "fun.toddler.t_horse",
+      "action": "spin",
+      "sfx": "sfx_baby_giggle",
+      "weight": 1
+    },
+    {
+      "id": "t_hand",
+      "ageBand": "toddler",
+      "genders": [
+        "any"
+      ],
+      "textKey": "fun.toddler.t_hand",
+      "action": "bounce",
+      "sfx": "sfx_baby_giggle",
+      "weight": 1
+    },
+    {
+      "id": "t_fight",
+      "ageBand": "toddler",
+      "genders": [
+        "any"
+      ],
+      "textKey": "fun.toddler.t_fight",
+      "action": "fist",
+      "sfx": "sfx_baby_giggle",
+      "weight": 1
+    },
+    {
+      "id": "t_snack",
+      "ageBand": "toddler",
+      "genders": [
+        "any"
+      ],
+      "textKey": "fun.toddler.t_snack",
+      "action": "bounce",
+      "sfx": "sfx_baby_giggle",
+      "weight": 1
+    },
+    {
+      "id": "t_general",
+      "ageBand": "kid",
+      "genders": [
+        "any"
+      ],
+      "textKey": "fun.toddler.t_general",
+      "action": "none",
+      "sfx": "sfx_baby_giggle",
+      "weight": 1
+    },
+    {
+      "id": "t_shout",
+      "ageBand": "kid",
+      "genders": [
+        "any"
+      ],
+      "textKey": "fun.toddler.t_shout",
+      "action": "none",
+      "sfx": "sfx_baby_giggle",
+      "weight": 1
+    },
+    {
+      "id": "t_speed",
+      "ageBand": "kid",
+      "genders": [
+        "any"
+      ],
+      "textKey": "fun.toddler.t_speed",
+      "action": "spin",
+      "sfx": "sfx_baby_giggle",
+      "weight": 1
+    },
+    {
+      "id": "t_shoulder",
+      "ageBand": "kid",
+      "genders": [
+        "any"
+      ],
+      "textKey": "fun.toddler.t_shoulder",
+      "action": "bounce",
+      "sfx": "sfx_baby_giggle",
+      "weight": 1
+    },
+    {
+      "id": "t_secret",
+      "ageBand": "kid",
+      "genders": [
+        "any"
+      ],
+      "textKey": "fun.toddler.t_secret",
+      "action": "none",
+      "sfx": "sfx_baby_giggle",
+      "weight": 1
+    }
+  ],
+  "rules": {
+    "perSeasonFixed": true,
+    "noRepeatLastSeason": true,
+    "bubbleSeconds": 3.5
+  },
+  "reward": {
+    "bundleId": "BUNDLE_TODDLER_BOND",
+    "grantKeyFmt": "fun01.{childId}.{seasonNo}"
+  }
+}

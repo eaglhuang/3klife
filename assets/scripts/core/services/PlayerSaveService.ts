@@ -13,6 +13,7 @@ import type { BreedingBirthRecord } from '../systems/BreedingBirthRecord';
 import type { AnnualRankingSaveData } from '../systems/annual_ranking/AnnualRankingManager';
 import { normalizeBreedingBirthRecords } from '../systems/BreedingBirthRecordSave';
 import { isEmptyChildLedger, normalizeChildLedger, type BloodlineChildLedgerState } from '../systems/BloodlineChildLedger';
+import { isEmptyFunState, normalizeFunState, type FunState } from '../fun/FunState';
 import { isEmptyBloodlineGrowth, normalizeBloodlineGrowthSave, type BloodlineGrowthSave } from '../systems/BloodlineGrowthSettlement';
 import { normalizeTravelCountdown, type TravelCountdown } from '../systems/TravelCountdown';
 import { readCardStarState } from '../systems/TigerTallyStar';
@@ -401,6 +402,8 @@ export interface PlayerSaveSnapshot {
     breedingBirthRecords?: BreedingBirthRecord[];
     /** 親子好感、天賦小名碎片、同窗好友旗標（PROG-2-10058）；空帳本不寫，舊檔缺值讀回為空帳本，版號不升（自帶 v） */
     bloodlineChildLedger?: BloodlineChildLedgerState;
+    /** 新手樂趣四功能（FUN-01～04，PROG-2-10177）去重與輪替狀態；空狀態不寫，舊檔缺值讀回為空 */
+    funState?: FunState;
     /** 血統成長事件（PROG-2-10059）：已觸發紀錄與待決佇列；舊存檔缺欄位視為空 */
     bloodlineGrowthEvents?: BloodlineGrowthSave;
     /** 史境天下風雲榜年度指標與歷年排名（PROG-2-9601 PR2） */
@@ -688,6 +691,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         gameTime: GameClock.normalize(snapshot.gameTime as GameTimeState),
         roster: snapshot.roster,
         ...(snapshot.breedingBirthRecords !== undefined ? { breedingBirthRecords: normalizeBreedingBirthRecords(snapshot.breedingBirthRecords) } : {}),
+        ...(snapshot.funState !== undefined && !isEmptyFunState(normalizeFunState(snapshot.funState)) ? { funState: normalizeFunState(snapshot.funState) } : {}),
         ...(isEmptyChildLedger(normalizeChildLedger(snapshot.bloodlineChildLedger)) ? {} : { bloodlineChildLedger: normalizeChildLedger(snapshot.bloodlineChildLedger) }),
         ...(isEmptyBloodlineGrowth(normalizeBloodlineGrowthSave(snapshot.bloodlineGrowthEvents).state, normalizeBloodlineGrowthSave(snapshot.bloodlineGrowthEvents).pending) ? {} : { bloodlineGrowthEvents: { records: normalizeBloodlineGrowthSave(snapshot.bloodlineGrowthEvents).state.records, pending: normalizeBloodlineGrowthSave(snapshot.bloodlineGrowthEvents).pending } }),
         ...(snapshot.nurture ? { nurture: snapshot.nurture } : {}),
