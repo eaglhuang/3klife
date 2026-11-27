@@ -1481,7 +1481,7 @@
       "uid": "huang-yue-ying",
       "name": "黃月英",
       "standing": {
-        "activeVersion": "0008",
+        "activeVersion": "0009",
         "status": "review-pending",
         "history": [
           {
@@ -1530,12 +1530,20 @@
             "sha256": "C2F9CC970AFCEC3963A71A1E6B05422799C4BA3425BDB7D94A0240AEFF18765E",
             "canvas": "1024x1536 RGBA",
             "note": "Full-body 3/4 portrait with compact low braid, functional forearm tool pouch, shoulder satchel, waist-held brass caliper, crown-mounted oil lamp and single-eye loupe; transparent canvas with safe margins; pending PM review."
+          },
+          {
+            "version": "0009",
+            "file": "standing/huang_yue_ying__黃月英__standing_0009.png",
+            "status": "review-pending",
+            "sha256": "22A26AA57C7AB017B1DB6F531DCD24FBBFEE0C4AA1102E2B971438526B85F447",
+            "canvas": "1024x1536 RGBA",
+            "note": "Full-body 3/4 inventor design with a visible forearm tool sleeve, shoulder satchel, hand-held brass caliper, one crown-side oil lantern and single-eye loupe; transparent RGBA with safe margins; pending PM review."
           }
         ]
       },
       "battle": {
         "status": "review-pending",
-        "activeVersion": "0008",
+        "activeVersion": "0009",
         "history": [
           {
             "version": "0003",
@@ -1596,11 +1604,23 @@
             "gaze": "task-focused 3/4 angle",
             "sourceStandingFile": "standing/huang_yue_ying__黃月英__standing_0008.png",
             "note": "Full-body action pose in the standing costume, with visible forearm tool slots, shoulder satchel, hand-operated mechanism and crown lamp; pending PM review."
+          },
+          {
+            "version": "0009",
+            "file": "battle/huang_yue_ying__黃月英__battle_0009.png",
+            "status": "review-pending",
+            "sha256": "3280ACE7F624740EEDCE121FD543AE652532151425595D2CC67B8924950A1876",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "compact mechanical device and brass measuring tool",
+            "poseLabel": "mechanical deployment",
+            "gaze": "task-focused 3/4 angle",
+            "sourceStandingFile": "standing/huang_yue_ying__黃月英__standing_0009.png",
+            "note": "Dynamic full-body mechanical deployment with matching forearm tool loops, shoulder satchel, hand-held caliper, one crown-side oil lantern and single-eye loupe; transparent RGBA with safe margins; pending PM review."
           }
         ]
       },
       "avatar": {
-        "activeVersion": "0006",
+        "activeVersion": "0007",
         "status": "review-pending",
         "history": [
           {
@@ -1674,11 +1694,22 @@
               "height": 590
             },
             "qc": "125px/250px review: complete 3/4 head, both shoulder lines and full chest visible to chest base; waist excluded; head silhouette centered; pending PM review."
+          },
+          {
+            "version": "0007",
+            "file": "avatars/huang_yue_ying__黃月英__avatar_0007.png",
+            "status": "review-pending",
+            "sha256": "1EBCD7CCEE178B0627DADAB8667CC3B48D6C9E186078A6AF0967E9639984B518",
+            "canvas": "256x256 RGBA",
+            "sourceStandingFile": "standing/huang_yue_ying__黃月英__standing_0009.png",
+            "method": "image-generated bust consistent with updated standing design; transparent RGBA normalized to 256x256; pending PM review",
+            "qc": "125px/250px review: complete 3/4 head, both shoulder lines and full chest visible to chest base; waist excluded; head silhouette centered; pending PM review.",
+            "note": "3/4 bust to full chest-base line with both shoulders, held brass caliper, forearm tool sleeve and satchel strap; one crown-side lantern and single-eye loupe; pending PM review."
           }
         ]
       },
       "smallAvatar": {
-        "activeVersion": "0005",
+        "activeVersion": "0006",
         "status": "review-pending",
         "history": [
           {
@@ -1732,6 +1763,17 @@
               "height": 320
             },
             "qc": "125px/250px review: compact hairstyle and crown lamp complete; head silhouette centered with natural 3/4 face; neck and shoulder top visible; pending PM review."
+          },
+          {
+            "version": "0006",
+            "file": "small_avatars/huang_yue_ying__黃月英__small_avatar_0006.png",
+            "status": "review-pending",
+            "sha256": "DF5D2C69E1A657AC58D37CC026C157ADB3638C15DC6803CEB80E381948099061",
+            "canvas": "256x256 RGBA",
+            "sourceStandingFile": "standing/huang_yue_ying__黃月英__standing_0009.png",
+            "method": "image-generated close portrait consistent with updated standing design; transparent RGBA normalized to 256x256; pending PM review",
+            "qc": "125px/250px review: compact hairstyle and crown lamp complete; head silhouette centered with natural 3/4 face; neck and shoulder top visible; pending PM review.",
+            "note": "Centered human head outline in natural 3/4 view; complete lamp and single-eye loupe, neck and shoulder line only; pending PM review."
           }
         ]
       },
@@ -13821,4 +13863,3 @@
     }
   ]
 }
-
