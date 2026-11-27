@@ -1,0 +1,416 @@
+{
+  "schema": "life-area-maps.v1",
+  "note": "7 區與場景索引（QSOC-01 第 4 章）。hasArt=false 的場景顯示通用佔位底圖＋施工中；Codex 美術到位後改 true。lighting 由 WP5 life-lighting.json 負責，不放這裡。",
+  "defaultSceneId": "mkt_street",
+  "areas": [
+    {
+      "id": "gov",
+      "nameKey": "life.scene.area.gov",
+      "order": 0,
+      "scenes": [
+        {
+          "id": "gov_hall",
+          "nameKey": "life.scene.gov_hall",
+          "hasArt": false
+        },
+        {
+          "id": "gov_office",
+          "nameKey": "life.scene.gov_office",
+          "hasArt": false
+        },
+        {
+          "id": "gov_strategy",
+          "nameKey": "life.scene.gov_strategy",
+          "hasArt": false
+        },
+        {
+          "id": "gov_library",
+          "nameKey": "life.scene.gov_library",
+          "hasArt": false
+        },
+        {
+          "id": "gov_vault",
+          "nameKey": "life.scene.gov_vault",
+          "hasArt": false
+        },
+        {
+          "id": "gov_dais",
+          "nameKey": "life.scene.gov_dais",
+          "hasArt": false
+        },
+        {
+          "id": "gov_stable",
+          "nameKey": "life.scene.gov_stable",
+          "hasArt": false
+        },
+        {
+          "id": "gov_prison",
+          "nameKey": "life.scene.gov_prison",
+          "hasArt": false
+        }
+      ]
+    },
+    {
+      "id": "mil",
+      "nameKey": "life.scene.area.mil",
+      "order": 1,
+      "scenes": [
+        {
+          "id": "mil_barracks",
+          "nameKey": "life.scene.mil_barracks",
+          "hasArt": false
+        },
+        {
+          "id": "mil_range",
+          "nameKey": "life.scene.mil_range",
+          "hasArt": false
+        },
+        {
+          "id": "mil_arena",
+          "nameKey": "life.scene.mil_arena",
+          "hasArt": false
+        },
+        {
+          "id": "mil_armory",
+          "nameKey": "life.scene.mil_armory",
+          "hasArt": false
+        },
+        {
+          "id": "mil_city",
+          "nameKey": "life.scene.mil_city",
+          "hasArt": false
+        },
+        {
+          "id": "mil_beacon",
+          "nameKey": "life.scene.mil_beacon",
+          "hasArt": false
+        },
+        {
+          "id": "mil_granary",
+          "nameKey": "life.scene.mil_granary",
+          "hasArt": false
+        }
+      ]
+    },
+    {
+      "id": "mkt",
+      "nameKey": "life.scene.area.mkt",
+      "order": 2,
+      "scenes": [
+        {
+          "id": "mkt_street",
+          "nameKey": "life.scene.mkt_street",
+          "hasArt": false
+        },
+        {
+          "id": "mkt_inn",
+          "nameKey": "life.scene.mkt_inn",
+          "hasArt": false
+        },
+        {
+          "id": "mkt_tavern",
+          "nameKey": "life.scene.mkt_tavern",
+          "hasArt": false
+        },
+        {
+          "id": "mkt_theater",
+          "nameKey": "life.scene.mkt_theater",
+          "hasArt": false
+        },
+        {
+          "id": "mkt_teahouse",
+          "nameKey": "life.scene.mkt_teahouse",
+          "hasArt": false
+        },
+        {
+          "id": "mkt_tailor",
+          "nameKey": "life.scene.mkt_tailor",
+          "hasArt": false
+        },
+        {
+          "id": "mkt_smithy",
+          "nameKey": "life.scene.mkt_smithy",
+          "hasArt": false
+        },
+        {
+          "id": "mkt_carpenter",
+          "nameKey": "life.scene.mkt_carpenter",
+          "hasArt": false
+        },
+        {
+          "id": "mkt_grocery",
+          "nameKey": "life.scene.mkt_grocery",
+          "hasArt": false
+        },
+        {
+          "id": "mkt_pharmacy",
+          "nameKey": "life.scene.mkt_pharmacy",
+          "hasArt": false
+        },
+        {
+          "id": "mkt_clinic",
+          "nameKey": "life.scene.mkt_clinic",
+          "hasArt": false
+        },
+        {
+          "id": "mkt_pawn",
+          "nameKey": "life.scene.mkt_pawn",
+          "hasArt": false
+        },
+        {
+          "id": "mkt_bank",
+          "nameKey": "life.scene.mkt_bank",
+          "hasArt": false
+        },
+        {
+          "id": "mkt_rouge",
+          "nameKey": "life.scene.mkt_rouge",
+          "hasArt": false
+        },
+        {
+          "id": "mkt_bookshop",
+          "nameKey": "life.scene.mkt_bookshop",
+          "hasArt": false
+        },
+        {
+          "id": "mkt_story",
+          "nameKey": "life.scene.mkt_story",
+          "hasArt": false
+        },
+        {
+          "id": "mkt_gamble",
+          "nameKey": "life.scene.mkt_gamble",
+          "hasArt": false
+        },
+        {
+          "id": "mkt_bath",
+          "nameKey": "life.scene.mkt_bath",
+          "hasArt": false
+        },
+        {
+          "id": "mkt_guild",
+          "nameKey": "life.scene.mkt_guild",
+          "hasArt": false
+        },
+        {
+          "id": "mkt_escort",
+          "nameKey": "life.scene.mkt_escort",
+          "hasArt": false
+        },
+        {
+          "id": "mkt_post",
+          "nameKey": "life.scene.mkt_post",
+          "hasArt": false
+        },
+        {
+          "id": "mkt_horse",
+          "nameKey": "life.scene.mkt_horse",
+          "hasArt": false
+        },
+        {
+          "id": "mkt_match",
+          "nameKey": "life.scene.mkt_match",
+          "hasArt": false
+        }
+      ]
+    },
+    {
+      "id": "edu",
+      "nameKey": "life.scene.area.edu",
+      "order": 3,
+      "scenes": [
+        {
+          "id": "edu_academy",
+          "nameKey": "life.scene.edu_academy",
+          "hasArt": false
+        },
+        {
+          "id": "edu_tutor",
+          "nameKey": "life.scene.edu_tutor",
+          "hasArt": false
+        },
+        {
+          "id": "edu_club",
+          "nameKey": "life.scene.edu_club",
+          "hasArt": false
+        },
+        {
+          "id": "edu_music",
+          "nameKey": "life.scene.edu_music",
+          "hasArt": false
+        },
+        {
+          "id": "edu_chess",
+          "nameKey": "life.scene.edu_chess",
+          "hasArt": false
+        },
+        {
+          "id": "edu_paint",
+          "nameKey": "life.scene.edu_paint",
+          "hasArt": false
+        },
+        {
+          "id": "edu_hermit",
+          "nameKey": "life.scene.edu_hermit",
+          "hasArt": false
+        },
+        {
+          "id": "edu_temple",
+          "nameKey": "life.scene.edu_temple",
+          "hasArt": false
+        },
+        {
+          "id": "edu_daoist",
+          "nameKey": "life.scene.edu_daoist",
+          "hasArt": false
+        },
+        {
+          "id": "edu_clan",
+          "nameKey": "life.scene.edu_clan",
+          "hasArt": false
+        },
+        {
+          "id": "edu_yuelao",
+          "nameKey": "life.scene.edu_yuelao",
+          "hasArt": false
+        },
+        {
+          "id": "edu_land",
+          "nameKey": "life.scene.edu_land",
+          "hasArt": false
+        }
+      ]
+    },
+    {
+      "id": "home",
+      "nameKey": "life.scene.area.home",
+      "order": 4,
+      "scenes": [
+        {
+          "id": "home_general",
+          "nameKey": "life.scene.home_general",
+          "hasArt": false
+        },
+        {
+          "id": "home_lord",
+          "nameKey": "life.scene.home_lord",
+          "hasArt": false
+        },
+        {
+          "id": "home_garden",
+          "nameKey": "life.scene.home_garden",
+          "hasArt": false
+        },
+        {
+          "id": "home_nursery",
+          "nameKey": "life.scene.home_nursery",
+          "hasArt": false
+        }
+      ]
+    },
+    {
+      "id": "out",
+      "nameKey": "life.scene.area.out",
+      "order": 5,
+      "scenes": [
+        {
+          "id": "out_river",
+          "nameKey": "life.scene.out_river",
+          "hasArt": false
+        },
+        {
+          "id": "out_forest",
+          "nameKey": "life.scene.out_forest",
+          "hasArt": false
+        },
+        {
+          "id": "out_farm",
+          "nameKey": "life.scene.out_farm",
+          "hasArt": false
+        },
+        {
+          "id": "out_bamboo",
+          "nameKey": "life.scene.out_bamboo",
+          "hasArt": false
+        },
+        {
+          "id": "out_peach",
+          "nameKey": "life.scene.out_peach",
+          "hasArt": false
+        },
+        {
+          "id": "out_spring",
+          "nameKey": "life.scene.out_spring",
+          "hasArt": false
+        },
+        {
+          "id": "out_ranch",
+          "nameKey": "life.scene.out_ranch",
+          "hasArt": false
+        },
+        {
+          "id": "out_tea",
+          "nameKey": "life.scene.out_tea",
+          "hasArt": false
+        },
+        {
+          "id": "out_orchard",
+          "nameKey": "life.scene.out_orchard",
+          "hasArt": false
+        },
+        {
+          "id": "out_ferry",
+          "nameKey": "life.scene.out_ferry",
+          "hasArt": false
+        },
+        {
+          "id": "out_steppe",
+          "nameKey": "life.scene.out_steppe",
+          "hasArt": false
+        },
+        {
+          "id": "out_ruins",
+          "nameKey": "life.scene.out_ruins",
+          "hasArt": false
+        }
+      ]
+    },
+    {
+      "id": "mtn",
+      "nameKey": "life.scene.area.mtn",
+      "order": 6,
+      "scenes": [
+        {
+          "id": "mtn_deep",
+          "nameKey": "life.scene.mtn_deep",
+          "hasArt": false
+        },
+        {
+          "id": "mtn_cave",
+          "nameKey": "life.scene.mtn_cave",
+          "hasArt": false
+        },
+        {
+          "id": "mtn_falls",
+          "nameKey": "life.scene.mtn_falls",
+          "hasArt": false
+        },
+        {
+          "id": "mtn_fort",
+          "nameKey": "life.scene.mtn_fort",
+          "hasArt": false
+        },
+        {
+          "id": "mtn_cliff",
+          "nameKey": "life.scene.mtn_cliff",
+          "hasArt": false
+        },
+        {
+          "id": "mtn_relic",
+          "nameKey": "life.scene.mtn_relic",
+          "hasArt": false
+        }
+      ]
+    }
+  ]
+}
