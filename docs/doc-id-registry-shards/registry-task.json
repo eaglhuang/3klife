@@ -17766,6 +17766,12 @@
     "category": "task"
   },
   {
+    "id": "doc_task_3260",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10191.md",
+    "title": "[PROG-2-10191] 使用者裁決寫入規格（純文件）",
+    "category": "task"
+  },
+  {
     "id": "doc_task_3261",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10192.md",
     "title": "[PROG-2-10192] 回寫使用者 11/28 裁決",
