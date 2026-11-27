@@ -17818,5 +17818,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10203.md",
     "title": "[PROG-2-10203] 武將生活系統四份規格審查",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3278",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10210.md",
+    "title": "[PROG-2-10210] WP2 頭上生活符號系統",
+    "category": "task"
   }
 ]
