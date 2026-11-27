@@ -17818,5 +17818,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10203.md",
     "title": "[PROG-2-10203] 武將生活系統四份規格審查",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3273",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10213.md",
+    "title": "[PROG-2-10213] WP3 武將作息與喜好引擎",
+    "category": "task"
   }
 ]

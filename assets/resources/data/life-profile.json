@@ -1,0 +1,348 @@
+{
+  "schema": "life-profile.v1",
+  "generals": {
+    "zhang_fei": {
+      "homeScene": "home_general",
+      "affinityTag": {
+        "martial": 80,
+        "scholar": 10,
+        "drink": 90,
+        "family": 40,
+        "nature": 30,
+        "faith": 10,
+        "trade": 35,
+        "official": 15,
+        "play": 45,
+        "medical": 10,
+        "adventure": 40
+      },
+      "affinityScene": {
+        "mil_barracks": 95,
+        "mkt_tavern": 100,
+        "mil_arena": 70,
+        "home_nursery": 55
+      },
+      "chronotype": "night",
+      "sociability": 85,
+      "stubbornness": 30,
+      "likes": [
+        "tag_wine",
+        "tag_weapon",
+        "tag_meat"
+      ],
+      "dislikes": [
+        "tag_document",
+        "tag_tea"
+      ],
+      "props": {
+        "mkt_tavern": "item_wine_jar",
+        "mil_barracks": "item_spear"
+      }
+    },
+    "zhuge_liang": {
+      "homeScene": "home_general",
+      "affinityTag": {
+        "martial": 15,
+        "scholar": 95,
+        "drink": 30,
+        "family": 35,
+        "nature": 60,
+        "faith": 30,
+        "trade": 25,
+        "official": 85,
+        "play": 20,
+        "medical": 40,
+        "adventure": 30
+      },
+      "affinityScene": {
+        "gov_library": 100,
+        "out_bamboo": 90,
+        "mkt_teahouse": 70,
+        "gov_office": 75
+      },
+      "chronotype": "day",
+      "sociability": 40,
+      "stubbornness": 55,
+      "likes": [
+        "tag_book",
+        "tag_tea",
+        "tag_feather_fan"
+      ],
+      "dislikes": [
+        "tag_meat"
+      ],
+      "props": {
+        "gov_library": "item_book",
+        "mkt_teahouse": "item_tea"
+      }
+    },
+    "lu_bu": {
+      "homeScene": "home_general",
+      "affinityTag": {
+        "martial": 95,
+        "scholar": 10,
+        "drink": 50,
+        "family": 20,
+        "nature": 25,
+        "faith": 10,
+        "trade": 40,
+        "official": 30,
+        "play": 55,
+        "medical": 10,
+        "adventure": 60
+      },
+      "affinityScene": {
+        "mil_arena": 100,
+        "mil_range": 90,
+        "mkt_tavern": 70
+      },
+      "chronotype": "night",
+      "sociability": 45,
+      "stubbornness": 70,
+      "likes": [
+        "tag_weapon",
+        "tag_horse"
+      ],
+      "dislikes": [
+        "tag_document"
+      ],
+      "props": {
+        "mil_arena": "item_halberd"
+      }
+    },
+    "guan_yu": {
+      "homeScene": "home_general",
+      "affinityTag": {
+        "martial": 90,
+        "scholar": 60,
+        "drink": 40,
+        "family": 40,
+        "nature": 40,
+        "faith": 30,
+        "trade": 15,
+        "official": 40,
+        "play": 25,
+        "medical": 15,
+        "adventure": 35
+      },
+      "affinityScene": {
+        "mil_arena": 80,
+        "out_river": 60,
+        "edu_temple": 55
+      },
+      "chronotype": "day",
+      "sociability": 40,
+      "stubbornness": 80,
+      "likes": [
+        "tag_book",
+        "tag_weapon"
+      ],
+      "dislikes": [
+        "tag_gambling"
+      ],
+      "props": {
+        "gov_library": "item_book"
+      }
+    },
+    "liu_bei": {
+      "homeScene": "home_general",
+      "affinityTag": {
+        "martial": 30,
+        "scholar": 50,
+        "drink": 40,
+        "family": 60,
+        "nature": 50,
+        "faith": 45,
+        "trade": 45,
+        "official": 70,
+        "play": 30,
+        "medical": 30,
+        "adventure": 30
+      },
+      "affinityScene": {
+        "out_peach": 85,
+        "gov_hall": 70
+      },
+      "chronotype": "day",
+      "sociability": 80,
+      "stubbornness": 40,
+      "likes": [
+        "tag_tea",
+        "tag_cloth"
+      ],
+      "dislikes": [],
+      "props": {
+        "mkt_teahouse": "item_tea"
+      }
+    },
+    "cao_cao": {
+      "homeScene": "home_general",
+      "affinityTag": {
+        "martial": 60,
+        "scholar": 70,
+        "drink": 60,
+        "family": 35,
+        "nature": 30,
+        "faith": 10,
+        "trade": 40,
+        "official": 90,
+        "play": 40,
+        "medical": 15,
+        "adventure": 50
+      },
+      "affinityScene": {
+        "gov_strategy": 80,
+        "gov_office": 90,
+        "mkt_tavern": 70
+      },
+      "chronotype": "night",
+      "sociability": 60,
+      "stubbornness": 50,
+      "likes": [
+        "tag_wine",
+        "tag_poetry"
+      ],
+      "dislikes": [],
+      "props": {
+        "mkt_tavern": "item_wine_jar"
+      }
+    },
+    "zhao_yun": {
+      "homeScene": "home_general",
+      "affinityTag": {
+        "martial": 85,
+        "scholar": 30,
+        "drink": 30,
+        "family": 45,
+        "nature": 50,
+        "faith": 25,
+        "trade": 25,
+        "official": 50,
+        "play": 25,
+        "medical": 25,
+        "adventure": 55
+      },
+      "affinityScene": {
+        "mil_range": 85,
+        "mil_barracks": 80
+      },
+      "chronotype": "day",
+      "sociability": 55,
+      "stubbornness": 40,
+      "likes": [
+        "tag_weapon",
+        "tag_horse"
+      ],
+      "dislikes": [],
+      "props": {
+        "mil_barracks": "item_spear"
+      }
+    },
+    "zhou_yu": {
+      "homeScene": "home_general",
+      "affinityTag": {
+        "martial": 50,
+        "scholar": 80,
+        "drink": 35,
+        "family": 40,
+        "nature": 45,
+        "faith": 10,
+        "trade": 20,
+        "official": 65,
+        "play": 75,
+        "medical": 15,
+        "adventure": 35
+      },
+      "affinityScene": {
+        "mkt_theater": 95,
+        "edu_academy": 60
+      },
+      "chronotype": "night",
+      "sociability": 55,
+      "stubbornness": 35,
+      "likes": [
+        "tag_music",
+        "tag_wine"
+      ],
+      "dislikes": [],
+      "props": {
+        "mkt_theater": "item_lute"
+      }
+    },
+    "diao_chan": {
+      "homeScene": "home_general",
+      "affinityTag": {
+        "martial": 10,
+        "scholar": 40,
+        "drink": 25,
+        "family": 45,
+        "nature": 60,
+        "faith": 35,
+        "trade": 60,
+        "official": 25,
+        "play": 85,
+        "medical": 20,
+        "adventure": 20
+      },
+      "affinityScene": {
+        "mkt_theater": 100,
+        "home_garden": 80,
+        "mkt_tailor": 70
+      },
+      "chronotype": "day",
+      "sociability": 75,
+      "stubbornness": 30,
+      "likes": [
+        "tag_cloth",
+        "tag_music"
+      ],
+      "dislikes": [
+        "tag_weapon"
+      ],
+      "props": {
+        "mkt_theater": "item_lute"
+      }
+    },
+    "sun_shangxiang": {
+      "homeScene": "home_general",
+      "affinityTag": {
+        "martial": 70,
+        "scholar": 20,
+        "drink": 40,
+        "family": 35,
+        "nature": 60,
+        "faith": 10,
+        "trade": 45,
+        "official": 10,
+        "play": 70,
+        "medical": 10,
+        "adventure": 70
+      },
+      "affinityScene": {
+        "out_forest": 90,
+        "mil_range": 75,
+        "mkt_street": 65
+      },
+      "chronotype": "day",
+      "sociability": 70,
+      "stubbornness": 40,
+      "likes": [
+        "tag_weapon",
+        "tag_horse"
+      ],
+      "dislikes": [
+        "tag_document"
+      ],
+      "props": {
+        "out_forest": "item_bow"
+      }
+    }
+  },
+  "defaults": {
+    "chronotype": "day",
+    "sociability": 50,
+    "stubbornness": 40,
+    "affinityBase": 30,
+    "homeScene": "home_general"
+  }
+}
