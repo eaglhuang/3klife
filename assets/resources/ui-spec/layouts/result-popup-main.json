@@ -39,7 +39,7 @@
         "name": "Card",
         "id": "card",
         "width": 1120,
-        "height": 880,
+        "height": 944,
         "skinSlot": "popup.card.bg",
         "layout": {
           "type": "vertical",
@@ -149,6 +149,17 @@
               "thumbSkinSlot": "popup.scrollbar.thumb",
               "autoHide": false
             }
+          },
+          {
+            "type": "button",
+            "name": "BtnToggleDetail",
+            "id": "btnToggleDetail",
+            "width": "100%",
+            "height": 52,
+            "skinSlot": "common.button.secondary",
+            "textKey": "ui.result.hl.expand",
+            "_comment": "戰報重點整理（PROG-2-10137）：預設只顯示三項重點，點此展開／收合詳細戰報；沒有重點資料時隱藏",
+            "onClick": "onClickToggleDetail"
           },
           {
             "type": "container",

@@ -17604,7 +17604,19 @@
     "category": "task"
   },
   {
-    "id": "doc_task_3211",
+    "id": "doc_task_3213",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10136.md",
+    "title": "[PROG-2-10136] 首場戰鬥新手提示",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3214",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10137.md",
+    "title": "[PROG-2-10137] 戰後重點整理三條",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3215",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10160.md",
     "title": "[PROG-2-10160] 武將白話吐槽補 en／ja 語系與王異性別修正",
     "category": "task"
