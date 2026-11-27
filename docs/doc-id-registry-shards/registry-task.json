@@ -17854,5 +17854,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10212.md",
     "title": "[PROG-2-10212] WP4 場景註冊表＋任意場景切換 UI",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3286",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10214.md",
+    "title": "[PROG-2-10214] 生活層第一個看得到的原型",
+    "category": "task"
   }
 ]

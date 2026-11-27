@@ -3241,5 +3241,9 @@
   "life.panel.slotBadge": "{0}・{1}",
   "life.panel.companions": "同行者",
   "life.scene.underConstruction": "施工中",
-  "life.scene.placeholderHint": "这里还在盖，先随便逛逛"
+  "life.scene.placeholderHint": "这里还在盖，先随便逛逛",
+  "life.proto.enter": "生活层（开发）",
+  "life.proto.btn.slot": "时段：{0} ▶",
+  "life.proto.btn.season": "季节：{0} ▶",
+  "life.proto.stats": "Q头 {0}　符号 {1}　符号元件 {2}"
 }

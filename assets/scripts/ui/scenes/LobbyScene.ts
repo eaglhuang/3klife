@@ -55,6 +55,7 @@ import { UIID, LayerType } from '../../core/config/UIConfig';
 import type { GeneralConfig, GeneralDetailDefaultTab } from '../../core/models/GeneralUnit';
 import type { GameTimeState } from '../../core/systems/GameClock';
 import { services } from '../../core/managers/ServiceLoader';
+import { LifeProtoEntry } from '../life/cocos/LifeProtoEntry';
 import { FriendshipService } from '../../core/services/FriendshipService';
 import type { IUIManagedController } from '../../shared/interfaces/IUIInterfaces';
 import { SceneName } from '../../core/config/Constants';
@@ -1139,6 +1140,8 @@ export class LobbyScene extends Component {
         ensureGlobalDevOverlay(this._localGachaService, undefined, () => { PlayerRosterService.clear(); }, () => {
             this._refreshWalletPreviewState();
         });
+        // 生活層原型的開發入口（PROG-2-10214）：只有網址帶 ?lifeProto 時才放按鈕
+        try { LifeProtoEntry.install(this.node); } catch (error) { UCUFLogger.warn(LogCategory.LIFECYCLE, '[LobbyScene] 生活層入口安裝失敗', error); }
 
         // 核心架構合一：幕府政廳即為主大廳，登入後直接坐鎮大堂；新玩家開場走完才開（PROG-2-2222）
         if (!this._isOpeningInProgress()) this._openLobbyHall();
