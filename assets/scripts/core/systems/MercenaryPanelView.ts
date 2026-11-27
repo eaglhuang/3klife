@@ -11,6 +11,8 @@
 import { BOND_POINT_COST, BondRarity } from './MercenaryBondPermanent';
 import { canBondMercenary, MercenaryState, TRIAL_DAYS } from './MercenaryBond';
 import { ILLUSTRATION_STAGE_MAX, ILLUSTRATION_STAGE_MIN } from './MercenaryIllustration';
+import { AFFECTION_CAP } from './MercenaryAffection';
+import { evaluateOath, oathConditionLines, oathText, SWORN_MORALE_BONUS, type OathTextLookup } from './MercenaryOath';
 
 export interface MercenaryPanelInput {
     /** 原主名字（名牌用） */
@@ -21,6 +23,10 @@ export interface MercenaryPanelInput {
     bondPoints: number;
     /** 這位傭兵的稀有度，決定結義點數成本 */
     rarity: BondRarity;
+    /** 文案查詢（i18n）；沒給就用 zh-TW 預設 */
+    lookup?: OathTextLookup;
+    /** 已結義後的義兄弟名字；尚未結義或沒有時為 null（PROG-2-10201） */
+    swornPartnerName?: string | null;
 }
 
 export interface MercenaryPanelView {
@@ -29,6 +35,14 @@ export interface MercenaryPanelView {
     /** 插畫階段文字，例如「插畫 3/5」 */
     illustrationText: string;
     nametagText: string;
+    /** 好感 x/60 */
+    affectionText: string;
+    /** 持有／需要結義點數 */
+    pointsText: string;
+    /** 結義條件清單（多行，✓／○）；已離隊時為空字串 */
+    conditionsText: string;
+    /** 義兄弟與同陣士氣說明；試用中提示結義後的效果，已離隊為 null */
+    swornText: string | null;
     /** 可結義時才有確認文字 */
     confirmText: string | null;
     /** 已離隊時才有告別文字 */
@@ -40,15 +54,28 @@ export interface MercenaryPanelView {
 
 export function buildMercenaryPanelView(state: Readonly<MercenaryState>, input: Readonly<MercenaryPanelInput>): MercenaryPanelView {
     const cost = BOND_POINT_COST[input.rarity];
-    const bondable = canBondMercenary(state);
+    // 與 GameSession 結義判定一致：倒數歸零且好感滿門檻才可結義（點數另算）
+    const bondable = canBondMercenary(state) && (state.affection ?? 0) >= AFFECTION_CAP;
     const insufficient = bondable && input.bondPoints < cost;
+    const lookup = input.lookup;
+    const evaluation = evaluateOath(state, { cost, bondPoints: input.bondPoints, lookup });
+    let swornText: string | null = null;
+    if (state.status === 'Bonded' && input.swornPartnerName) {
+        swornText = oathText(lookup, 'swornPartner', input.swornPartnerName, SWORN_MORALE_BONUS);
+    } else if (state.status === 'Trial') {
+        swornText = oathText(lookup, 'swornPending', SWORN_MORALE_BONUS);
+    }
     return {
-        countdownText: `結義倒數：${state.daysLeft} 日`,
-        bondText: `結義進度：${state.bond}/${TRIAL_DAYS}`,
-        illustrationText: `插畫 ${state.illustrationStage ?? ILLUSTRATION_STAGE_MIN}/${ILLUSTRATION_STAGE_MAX}`,
-        nametagText: `原主：${input.originalOwnerName}`,
-        confirmText: bondable ? `消耗 ${cost} 結義點數，將 ${input.generalName} 納為永久武將？` : null,
-        farewellText: state.status === 'Expired' ? `${input.generalName} 已離隊。六日情緣，且作追憶。` : null,
+        countdownText: oathText(lookup, 'countdown', state.daysLeft),
+        bondText: oathText(lookup, 'progress', state.bond, TRIAL_DAYS),
+        illustrationText: oathText(lookup, 'illustration', state.illustrationStage ?? ILLUSTRATION_STAGE_MIN, ILLUSTRATION_STAGE_MAX),
+        nametagText: oathText(lookup, 'nametag', input.originalOwnerName),
+        affectionText: oathText(lookup, 'affection', state.affection ?? 0, AFFECTION_CAP),
+        pointsText: oathText(lookup, 'points', input.bondPoints, cost),
+        conditionsText: oathConditionLines(evaluation),
+        swornText,
+        confirmText: bondable ? oathText(lookup, 'confirm', cost, input.generalName) : null,
+        farewellText: state.status === 'Expired' ? oathText(lookup, 'farewell', input.generalName) : null,
         bondEnabled: bondable && !insufficient,
         bondPointCost: cost,
         insufficientPoints: insufficient,

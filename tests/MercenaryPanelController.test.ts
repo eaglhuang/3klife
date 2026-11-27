@@ -13,7 +13,7 @@ function readJson(relative: string): any {
     return JSON.parse(readFileSync(join(__dirname, '..', relative), 'utf8'));
 }
 
-const TRIAL: MercenaryState = { uid: 'm1', daysLeft: 0, bond: 6, status: 'Trial', generalId: 'zhang-fei' };
+const TRIAL: MercenaryState = { uid: 'm1', daysLeft: 0, bond: 6, affection: 60, status: 'Trial', generalId: 'zhang-fei' };
 const EXPIRED: MercenaryState = { uid: 'm2', daysLeft: 0, bond: 3, status: 'Expired', generalId: 'guan-yu' };
 
 function makeDeps(overrides: Partial<MercenaryPanelDeps> = {}): MercenaryPanelDeps {
@@ -70,7 +70,7 @@ export function createMercenaryPanelControllerSuite(): TestSuite {
             mercenaries: () => [{ ...TRIAL, daysLeft: 2, bond: 4 }],
         }));
         assert.isFalse(await controller.bondSelected());
-        assert.equals('尚未完成六日試用，無法結義', controller.getFlowView().texts.mercNotice);
+        assert.equals('尚未滿足結義條件，請看條件清單', controller.getFlowView().texts.mercNotice);
     });
 
     suite.test('點數足夠時結義選中的傭兵，成功後提示清除', async () => {

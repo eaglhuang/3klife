@@ -14,6 +14,7 @@ import type { BondRarity } from '../../core/systems/MercenaryBondPermanent';
 import { MercenaryState } from '../../core/systems/MercenaryBond';
 import { buildMercenaryPanelView, MercenaryPanelView } from '../../core/systems/MercenaryPanelView';
 import { femalePoolHireLabel } from '../../core/systems/FemalePoolRefresh';
+import { oathText, type OathTextLookup } from '../../core/systems/MercenaryOath';
 import { buildMercenaryNameplateRows, MERC_PANEL_MAX_ROWS } from './MercenaryNameplateRows';
 
 export { MERC_PANEL_MAX_ROWS };
@@ -50,6 +51,10 @@ export interface MercenaryPanelDeps {
     femalePool?: () => { count: number; remainingMs: number };
     /** 用 1 張試用券從女將池招募：成功回傳武將名，失敗回傳 null */
     hireFemale?: () => Promise<string | null>;
+    /** 文案查詢（i18n）；沒給用 zh-TW 預設（PROG-2-10201） */
+    lookup?: OathTextLookup;
+    /** 已結義傭兵的義兄弟名字；沒有回傳 null */
+    swornPartnerName?: (state: Readonly<MercenaryState>) => string | null;
 }
 
 export class MercenaryPanelController {
@@ -57,6 +62,10 @@ export class MercenaryPanelController {
     private _notice: string | null = null;
 
     constructor(private readonly _deps: MercenaryPanelDeps) {}
+
+    private _t(key: Parameters<typeof oathText>[1], ...args: Array<string | number>): string {
+        return oathText(this._deps.lookup, key, ...args);
+    }
 
     /** 傭兵列（最多 6 格）。 */
     public rows(): MercenaryState[] {
@@ -103,22 +112,24 @@ export class MercenaryPanelController {
             generalName: info.generalName,
             bondPoints: this._deps.bondPoints(),
             rarity: info.rarity,
+            lookup: this._deps.lookup,
+            swornPartnerName: this._deps.swornPartnerName?.(state) ?? null,
         });
     }
 
     /** 試用招募：成功後選中新傭兵並提示；無券或無可招武將時只設提示 */
     public hireTrial(): Promise<boolean> {
-        return this._hireWith(this._deps.hire, '目前沒有可試用的武將');
+        return this._hireWith(this._deps.hire, this._t('noteNoCandidate'));
     }
 
     /** 從女將池招募；規則與試用招募相同 */
     public hireFemale(): Promise<boolean> {
-        return this._hireWith(this._deps.hireFemale, '本批女將已招完');
+        return this._hireWith(this._deps.hireFemale, this._t('noteFemaleEmpty'));
     }
 
     private async _hireWith(hire: (() => Promise<string | null>) | undefined, emptyNotice: string): Promise<boolean> {
         if (!hire || (this._deps.trialTickets?.() ?? 0) <= 0) {
-            this._notice = '試用券不足';
+            this._notice = this._t('noteNoTicket');
             return false;
         }
         const name = await hire();
@@ -128,7 +139,7 @@ export class MercenaryPanelController {
         }
         const rows = this.rows();
         this._selectedUid = rows[rows.length - 1]?.uid ?? this._selectedUid;
-        this._notice = `${name} 願為主公效力六日`;
+        this._notice = this._t('noteHired', name);
         return true;
     }
 
@@ -138,15 +149,15 @@ export class MercenaryPanelController {
         const view = this.view();
         if (!state || !view) return false;
         if (view.insufficientPoints) {
-            this._notice = '結義點數不足';
+            this._notice = this._t('noteNoPoints');
             return false;
         }
         if (!view.bondEnabled) {
-            this._notice = '尚未完成六日試用，無法結義';
+            this._notice = this._t('noteNotReady');
             return false;
         }
         const ok = await this._deps.bond(state.uid);
-        this._notice = ok ? null : '結義失敗，請稍後再試';
+        this._notice = ok ? null : this._t('noteBondFailed');
         return ok;
     }
 
@@ -157,17 +168,21 @@ export class MercenaryPanelController {
         const view = this.view();
         const femalePool = this._deps.femalePool?.();
         const texts: Record<string, string> = {
-            mercPanelTitle: '傭兵・結義',
-            mercEmptyLabel: rows.length === 0 ? '目前沒有傭兵' : '',
+            mercPanelTitle: this._t('panelTitle'),
+            mercEmptyLabel: rows.length === 0 ? this._t('empty') : '',
             mercCountdown: view?.countdownText ?? '',
             mercBond: view ? `${view.bondText}　${view.illustrationText}` : '',
+            mercAffection: view?.affectionText ?? '',
+            mercPoints: view?.pointsText ?? '',
             mercNametag: view?.nametagText ?? '',
+            mercConditions: view?.conditionsText ?? '',
+            mercSworn: view?.swornText ?? '',
             mercConfirm: view?.confirmText ?? '',
             mercFarewell: view?.farewellText ?? '',
-            mercNotice: this._notice ?? (view?.insufficientPoints ? '結義點數不足' : ''),
-            btnMercBondLabel: view ? `結義（${view.bondPointCost} 點）` : '結義',
-            btnCloseLabel: '關閉',
-            btnMercHireLabel: `試用招募（試用券 ${this._deps.trialTickets?.() ?? 0}）`,
+            mercNotice: this._notice ?? (view?.insufficientPoints ? this._t('noteNoPoints') : ''),
+            btnMercBondLabel: view ? this._t('bondButton', view.bondPointCost) : this._t('bondButtonIdle'),
+            btnCloseLabel: this._t('close'),
+            btnMercHireLabel: this._t('hireButton', this._deps.trialTickets?.() ?? 0),
             btnMercHireFemaleLabel: femalePool ? femalePoolHireLabel(femalePool.count, femalePool.remainingMs) : '',
         };
         const actives: Record<string, boolean> = {
@@ -175,6 +190,8 @@ export class MercenaryPanelController {
             mercDetail: selected !== null,
             mercConfirm: view?.confirmText != null,
             mercFarewell: view?.farewellText != null,
+            mercConditions: (view?.conditionsText ?? '') !== '',
+            mercSworn: (view?.swornText ?? '') !== '',
             mercNotice: texts.mercNotice !== '',
             btnMercHire: this._deps.hire !== undefined,
             btnMercHireFemale: femalePool !== undefined,
@@ -191,7 +208,7 @@ export class MercenaryPanelController {
             actives[`mercRow${i}`] = plate !== undefined;
             texts[`mercRow${i}Name`] = plate?.nameText ?? '';
             texts[`mercRow${i}Meta`] = plate?.metaText ?? '';
-            texts[`btnMercRow${i}Label`] = plate && plate.uid === selected?.uid ? '檢視中' : '選取';
+            texts[`btnMercRow${i}Label`] = plate && plate.uid === selected?.uid ? this._t('selecting') : this._t('select');
             enabled[`btnMercRow${i}`] = plate !== undefined;
         }
         return { texts, actives, enabled };
