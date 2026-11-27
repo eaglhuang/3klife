@@ -141,13 +141,13 @@
       "type": "string",
       "required": true,
       "description": "基礎獎勵內容。",
-      "bindPath": "DialogCard/Body/ColLeft/RewardPanel/BaseRewardCard/RewardBaseLabel"
+      "bindPath": "DialogCard/Body/ColRight/RewardPanel/BaseRewardCard/RewardBaseLabel"
     },
     "rewardPerfectLabel": {
       "type": "string",
       "required": true,
       "description": "完美達成加成內容。",
-      "bindPath": "DialogCard/Body/ColLeft/RewardPanel/PerfectRewardCard/RewardPerfectLabel"
+      "bindPath": "DialogCard/Body/ColRight/RewardPanel/PerfectRewardCard/RewardPerfectLabel"
     },
     "aiDelegateChecked": {
       "type": "boolean",

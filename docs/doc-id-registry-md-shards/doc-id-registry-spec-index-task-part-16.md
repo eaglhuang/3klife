@@ -87,3 +87,4 @@
 | `doc_task_3235` | docs/agent-briefs/tasks/PROG/PROG-2-10161.md | [PROG-2-10161] 修正：任務詳情畫面寫死中文標籤改走 i18n 四語 |
 | `doc_task_3237` | docs/agent-briefs/tasks/PROG/PROG-2-10168.md | [PROG-2-10168] 修正：結緣面板喜訊結果文字與左下譜牒密考按鈕重疊 |
 | `doc_task_3238` | docs/agent-briefs/tasks/PROG/PROG-2-10166.md | [PROG-2-10166] 任務詳情服務層投影文字走 i18n 四語 |
+| `doc_task_3239` | docs/agent-briefs/tasks/PROG/PROG-2-10170.md | [PROG-2-10170] 任務詳情情報區長文字自動加高，en／ja 不再壓到風險／提示列 |
