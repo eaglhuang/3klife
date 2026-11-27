@@ -17650,5 +17650,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10157.md",
     "title": "[PROG-2-10157] 戰場：騎兵 Spine 圖集重打包",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3228",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10163.md",
+    "title": "[PROG-2-10163] 守城回大廳自動接典禮",
+    "category": "task"
   }
 ]
