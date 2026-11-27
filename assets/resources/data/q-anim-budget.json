@@ -1,0 +1,15 @@
+{
+  "schema": "q-anim-budget.v1",
+  "_comment": "Q 動畫預算與降級門檻（QACT-01 第 7 章，PM 暫定值）。生活系統共用；maxActors＝同畫面 Q 頭上限，物件池上限＝maxActors＋poolSpare。",
+  "defaultTier": "mid",
+  "lodRecomputeSec": 0.25,
+  "maxDtSec": 0.1,
+  "defaultFadeSec": 0.12,
+  "poolSpare": 4,
+  "lod1": { "everyNFrames": 2, "channels": ["y", "scale"] },
+  "tiers": {
+    "low": { "maxActors": 12, "lod0Actors": 6, "maxDuels": 1, "frameBudgetMs": 1.0, "targetFps": 30 },
+    "mid": { "maxActors": 16, "lod0Actors": 10, "maxDuels": 1, "frameBudgetMs": 1.5, "targetFps": 30 },
+    "high": { "maxActors": 24, "lod0Actors": 16, "maxDuels": 2, "frameBudgetMs": 2.0, "targetFps": 60 }
+  }
+}

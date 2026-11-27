@@ -17820,7 +17820,25 @@
     "category": "task"
   },
   {
-    "id": "doc_task_3271",
+    "id": "doc_task_3273",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10213.md",
+    "title": "[PROG-2-10213] WP3 武將作息與喜好引擎",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3275",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10211.md",
+    "title": "[PROG-2-10211] WP5 日夜四季調色與疊層程式框架",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3280",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10209.md",
+    "title": "[PROG-2-10209] Q 動畫管理器核心＋基本動作片段",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3282",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10204.md",
     "title": "[PROG-2-10204] 戰場結義效果：義兄弟同陣士氣＋生死相隨援護＋動態義兄弟合攻",
     "category": "task"
