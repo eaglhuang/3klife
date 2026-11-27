@@ -3852,6 +3852,7 @@ export class LobbyScene extends Component {
             pickCeremonyCrowd(session.roster, (id) => session.bondAffinityOf(id), ceremonyCrowdConfig),
             ceremonyCrowdConfig.cheerKeys,
             ceremonyCrowdConfig.lineIntervalSeconds,
+            { win: ceremonyCrowdConfig.winRelayKeys, lose: ceremonyCrowdConfig.loseRelayKeys },
         );
         panel.setOnFinished(() => { void session.markYearEndCeremonySeen().catch(() => undefined); });
         panel.bindRankingResult(result, session.yearEndCeremonySeen);

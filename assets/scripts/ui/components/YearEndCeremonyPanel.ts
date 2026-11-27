@@ -11,7 +11,9 @@ import {
     ceremonyStandingsText,
     type CeremonyAct,
 } from '../../core/systems/YearEndCeremonyRuntime';
-import { crowdTurn, resolveCrowdLine, type CrowdMember } from '../../core/systems/YearEndCeremonyCrowd';
+import { crowdTurn, resolveCrowdVoiceLine, type CrowdMember } from '../../core/systems/YearEndCeremonyCrowd';
+import { CEREMONY_RIBBON_COUNT, planRelay, planRibbons, relayTriggerRank, type RelayKind, type RelayStep } from '../../core/systems/CeremonyHype';
+import { CeremonyRibbonPool } from './CeremonyRibbonPool';
 import type { ThemeService } from '../core/ThemeService';
 import { loadGeneralAvatar } from '../core/GeneralAvatarLoader';
 import type { NameTagStyle } from '../core/GeneralNameTagModel';
@@ -21,7 +23,10 @@ import type { PanelTranslate } from './BondingAndEpithetPanel';
 const { ccclass, property } = _decorator;
 
 /** 觀禮大頭像邊長（設計像素）；每位用既有 avatars 貼圖，不新增圖集 */
-const CROWD_AVATAR_SIZE = 76;
+const CROWD_AVATAR_SIZE = 96;
+/** 發言者跳起的高度（設計像素）與拍肩的左右擺幅 */
+const CROWD_HOP_PX = 18;
+const CROWD_PAT_PX = 10;
 
 export type { CeremonyAct };
 
@@ -75,7 +80,7 @@ export class YearEndCeremonyPanel extends Component {
     /** 第 1～3 名的金／銀／銅框（Graphics 程序繪製，不新增美術）；第一次用到才建 */
     private _rankFrames: Array<{ node: Node; opacity: UIOpacity }> = [];
     /** 觀禮大頭像槽：節點與 Sprite 只建一次，之後只換圖與位置（手機記憶體：不新增圖集、不重建節點） */
-    private _crowdSlots: Array<{ node: Node; opacity: UIOpacity }> = [];
+    private _crowdSlots: Array<{ node: Node; opacity: UIOpacity; baseX: number }> = [];
     private _crowd: readonly CrowdMember[] = [];
     private _crowdCheerKeys: readonly string[] = [];
     private _crowdIntervalSeconds = 2.6;
@@ -84,6 +89,14 @@ export class YearEndCeremonyPanel extends Component {
     private _nameTagStyle: NameTagStyle | null = null;
     /** 載圖序號：重開典禮時，舊的非同步載入結果丟棄 */
     private _crowdLoadSeq = 0;
+    /** 得獎起鬨／落榜拍肩的台詞鍵（PROG-2-10127）與接力進度 */
+    private _winRelayKeys: readonly string[] = [];
+    private _loseRelayKeys: readonly string[] = [];
+    private _relayQueue: RelayStep[] = [];
+    private _relayClock = 0;
+    private _relayKind: RelayKind = 'win';
+    /** 彩帶物件池：最多 CEREMONY_RIBBON_COUNT 個節點，落完回收重用 */
+    private readonly _ribbons = new CeremonyRibbonPool();
 
     /** 注入翻譯與主題服務；主題為 null 時用墊底色 */
     public setServices(t: PanelTranslate, theme: ThemeService | null): void {
@@ -111,9 +124,16 @@ export class YearEndCeremonyPanel extends Component {
      * 帶入觀禮名單與台詞鍵（由宿主用 pickCeremonyCrowd 組好）；下一次 bindRankingResult 開播時生效。
      * 輪播只在典禮播放中推進，播完／跳過就停，不延長典禮。
      */
-    public setCrowd(members: readonly CrowdMember[], cheerKeys: readonly string[], intervalSeconds: number): void {
+    public setCrowd(
+        members: readonly CrowdMember[],
+        cheerKeys: readonly string[],
+        intervalSeconds: number,
+        relayKeys?: { readonly win: readonly string[]; readonly lose: readonly string[] },
+    ): void {
         this._crowd = members;
         this._crowdCheerKeys = cheerKeys;
+        this._winRelayKeys = relayKeys?.win ?? [];
+        this._loseRelayKeys = relayKeys?.lose ?? [];
         this._crowdIntervalSeconds = intervalSeconds > 0 ? intervalSeconds : 2.6;
     }
 
@@ -158,6 +178,7 @@ export class YearEndCeremonyPanel extends Component {
         if (this.skipButton) this.skipButton.active = this._canSkip;
         if (this.closeButton) this.closeButton.active = false;
         this.hideRankFrames();
+        this._ribbons.recycleAll();
         this.refreshDisplay();
         this.startCrowd();
         this.fireEvents(ceremonyEventsBetween(1, -1, 0));
@@ -215,6 +236,7 @@ export class YearEndCeremonyPanel extends Component {
 
     private _finish(): void {
         this._playing = false;
+        this._relayQueue = [];
         this._currentAct = 3;
         this.showRankFramesFinal();
         this.refreshDisplay();
@@ -249,8 +271,13 @@ export class YearEndCeremonyPanel extends Component {
     /** 時間軸事件：音效交給宿主、名次框做彈跳閃光 */
     private fireEvents(events: readonly CeremonyEvent[]): void {
         for (const event of events) {
-            if (event.type === 'cue') this._onCue?.(event.cue);
-            else this.revealRankFrame(event.rank);
+            if (event.type === 'cue') {
+                this._onCue?.(event.cue);
+                continue;
+            }
+            this.revealRankFrame(event.rank);
+            if (event.rank === 1) this.dropRibbons();
+            if (this._result && event.rank === relayTriggerRank(this._result.playerRank)) this.startRelay();
         }
     }
 
@@ -327,6 +354,7 @@ export class YearEndCeremonyPanel extends Component {
         const members = this._crowd;
         this._crowdTurn = 0;
         this._crowdTimer = 0;
+        this._relayQueue = [];
         this._crowdLoadSeq += 1;
         if (!container || members.length === 0 || this._crowdCheerKeys.length === 0) {
             if (container) container.active = false;
@@ -343,7 +371,8 @@ export class YearEndCeremonyPanel extends Component {
         for (let i = 0; i < members.length; i++) {
             const slot = this.ensureCrowdSlot(i);
             slot.node.active = true;
-            slot.node.setPosition((i - (members.length - 1) / 2) * step, 0, 0);
+            slot.baseX = (i - (members.length - 1) / 2) * step;
+            slot.node.setPosition(slot.baseX, 0, 0);
             const sprite = slot.node.getComponent(Sprite);
             if (sprite) sprite.spriteFrame = null;
             void loadGeneralAvatar(members[i].generalId, true).then((frame) => {
@@ -358,7 +387,7 @@ export class YearEndCeremonyPanel extends Component {
         this.sayCrowdLine();
     }
 
-    private ensureCrowdSlot(index: number): { node: Node; opacity: UIOpacity } {
+    private ensureCrowdSlot(index: number): { node: Node; opacity: UIOpacity; baseX: number } {
         const existing = this._crowdSlots[index];
         if (existing) return existing;
         const container = this.crowdContainer!;
@@ -368,13 +397,19 @@ export class YearEndCeremonyPanel extends Component {
         node.addComponent(Sprite);
         const opacity = node.addComponent(UIOpacity);
         container.addChild(node);
-        const slot = { node, opacity };
+        const slot = { node, opacity, baseX: 0 };
         this._crowdSlots[index] = slot;
         return slot;
     }
 
     private tickCrowd(dt: number): void {
         if (this._crowd.length === 0 || !this.crowdContainer?.active) return;
+        if (this._relayQueue.length > 0) {
+            // 接力進行中：暫停一般輪播，免得被插話
+            this._crowdTimer = 0;
+            this.advanceRelay(dt);
+            return;
+        }
         this._crowdTimer += dt;
         if (this._crowdTimer < this._crowdIntervalSeconds) return;
         this._crowdTimer -= this._crowdIntervalSeconds;
@@ -382,28 +417,76 @@ export class YearEndCeremonyPanel extends Component {
         this.sayCrowdLine();
     }
 
-    /** 輪到誰就誰放大亮起、其餘縮小變淡，台詞行換成「名字標籤＋這句台詞」 */
+    /** 一般輪播：輪到誰就誰跳起放大、其餘縮小變淡，台詞行換成「名字標籤＋這句台詞」 */
     private sayCrowdLine(): void {
-        const members = this._crowd;
-        const { memberIndex, lineIndex } = crowdTurn(this._crowdTurn, members.length, this._crowdCheerKeys.length);
+        const { memberIndex, lineIndex } = crowdTurn(this._crowdTurn, this._crowd.length, this._crowdCheerKeys.length);
         if (memberIndex < 0) return;
+        this.speak(memberIndex, this._crowdCheerKeys[lineIndex], 'hop');
+    }
+
+    /** 得獎起鬨／落榜拍肩：開一段 2～3 人的接力，第一句立刻說 */
+    private startRelay(): void {
+        if (!this.crowdContainer?.active) return;
+        const kind: RelayKind = this._result && this._result.playerRank <= 3 ? 'win' : 'lose';
+        const keys = kind === 'win' ? this._winRelayKeys : this._loseRelayKeys;
+        const steps = planRelay(this._crowdTurn, this._crowd.length, keys);
+        if (steps.length === 0) return;
+        this._crowdTurn += 1;
+        this._relayKind = kind;
+        this._relayQueue = steps;
+        this._relayClock = 0;
+        this.advanceRelay(0);
+    }
+
+    private advanceRelay(dt: number): void {
+        this._relayClock += dt;
+        while (this._relayQueue.length > 0 && this._relayQueue[0].atSeconds <= this._relayClock) {
+            const step = this._relayQueue.shift()!;
+            this.speak(step.memberIndex, step.lineKey, this._relayKind === 'win' ? 'hop' : 'pat');
+        }
+    }
+
+    /**
+     * 讓第 memberIndex 位觀眾說話：hop＝跳起歡呼（上下彈跳＋放大），pat＝拍肩偷笑（左右輕晃）；其餘人縮小變淡。
+     * 台詞自稱走 SpeakerVoice（性別、性格、年齡）。
+     */
+    private speak(memberIndex: number, lineKey: string, motion: 'hop' | 'pat'): void {
+        const members = this._crowd;
         const speaker = members[memberIndex];
+        if (!speaker) return;
         for (let i = 0; i < members.length; i++) {
             const slot = this._crowdSlots[i];
             if (!slot) continue;
             const on = i === memberIndex;
             tween(slot.node).stop();
-            tween(slot.node)
-                .to(0.18, { scale: on ? new Vec3(1.25, 1.25, 1) : new Vec3(0.9, 0.9, 1) })
-                .start();
+            slot.node.setPosition(slot.baseX, 0, 0);
+            const t = tween(slot.node);
+            if (!on) {
+                t.to(0.18, { scale: new Vec3(0.9, 0.9, 1) });
+            } else if (motion === 'hop') {
+                t.to(0.12, { position: new Vec3(slot.baseX, CROWD_HOP_PX, 0), scale: new Vec3(1.3, 1.3, 1) }, { easing: 'sineOut' })
+                    .to(0.16, { position: new Vec3(slot.baseX, 0, 0), scale: new Vec3(1.25, 1.25, 1) }, { easing: 'sineIn' });
+            } else {
+                t.to(0.08, { position: new Vec3(slot.baseX + CROWD_PAT_PX, 0, 0), scale: new Vec3(1.2, 1.2, 1) })
+                    .to(0.1, { position: new Vec3(slot.baseX - CROWD_PAT_PX, 0, 0) })
+                    .to(0.1, { position: new Vec3(slot.baseX + CROWD_PAT_PX / 2, 0, 0) })
+                    .to(0.08, { position: new Vec3(slot.baseX, 0, 0) });
+            }
+            t.start();
             slot.opacity.opacity = on ? 255 : 150;
         }
         const label = this.crowdLineLabel;
         if (!label) return;
         label.horizontalAlign = HorizontalTextAlignment.LEFT;
-        const line = resolveCrowdLine((key, ...args) => this._t(key, ...args), this._crowdCheerKeys[lineIndex], speaker.gender);
+        const line = resolveCrowdVoiceLine((key, ...args) => this._t(key, ...args), lineKey, speaker);
         label.string = this._t('ui.ceremony.crowd.say', speaker.name, line);
         if (this._nameTagStyle) applyGeneralNameTag(label.node, speaker.generalId, speaker.name, this._nameTagStyle);
+    }
+
+    /** 前三名揭曉：從面板上緣飄落 CEREMONY_RIBBON_COUNT 枚彩帶（物件池重用） */
+    private dropRibbons(): void {
+        const size = this.node.getComponent(UITransform);
+        this._ribbons.spawn(this.node, planRibbons(CEREMONY_RIBBON_COUNT), size?.width ?? 860, size?.height ?? 420);
     }
 
     /** 收下賞賜後把入帳結果寫在賞賜行（不重複領的情況由宿主傳訊息文字） */

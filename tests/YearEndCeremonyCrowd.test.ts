@@ -12,8 +12,18 @@ import {
     normalizeCrowdGender,
     pickCeremonyCrowd,
     resolveCrowdLine,
+    resolveCrowdVoiceLine,
     type CeremonyCrowdConfig,
 } from '../assets/scripts/core/systems/YearEndCeremonyCrowd';
+import {
+    CEREMONY_RIBBON_COLORS,
+    CEREMONY_RIBBON_COUNT,
+    RELAY_STEP_SECONDS,
+    isPlayerWinner,
+    planRelay,
+    planRibbons,
+    relayTriggerRank,
+} from '../assets/scripts/core/systems/CeremonyHype';
 
 const ok = (value: boolean, msg?: string): void => assert.isTrue(value, msg);
 const equal = <T>(actual: T, expected: T): void => assert.equals(expected, actual);
@@ -73,7 +83,7 @@ export function createYearEndCeremonyCrowdSuite(): TestSuite {
     suite.test('四語系：台詞鍵齊全、無殘留佔位、通用版無男性專用自稱、說話格式有兩個佔位', () => {
         for (const locale of LOCALES) {
             const table = readJson<Record<string, string>>(`assets/resources/i18n/${locale}.json`);
-            for (const key of config.cheerKeys) {
+            for (const key of [...config.cheerKeys, ...config.winRelayKeys, ...config.loseRelayKeys]) {
                 const text = table[key];
                 ok(typeof text === 'string' && text.length > 0, `${locale} 缺 ${key}`);
                 ok(!/\{[1-9]\}/.test(text), `${locale} ${key} 多餘佔位`);
@@ -99,6 +109,62 @@ export function createYearEndCeremonyCrowdSuite(): TestSuite {
         const walk = (n: any): void => { if (n?.id) ids.add(n.id); (n?.children ?? []).forEach(walk); };
         walk(layout.root);
         ok(ids.has('ycCrowd') && ids.has('ycCrowdLine'));
+    });
+
+    suite.test('熱鬧感：得獎接力 2～3 人換人換句、間隔固定；落榜用拍肩偷笑台詞；人數不足不接力', () => {
+        const keys = config.winRelayKeys;
+        ok(keys.length >= 3 && config.loseRelayKeys.length >= 3);
+        const even = planRelay(0, 6, keys);
+        const odd = planRelay(1, 6, keys);
+        equal(even.length, 2);
+        equal(odd.length, 3);
+        deepEqual(odd.map((s) => s.memberIndex), [1, 2, 3]);
+        deepEqual(odd.map((s) => s.atSeconds), [0, RELAY_STEP_SECONDS, RELAY_STEP_SECONDS * 2]);
+        ok(new Set(odd.map((s) => s.memberIndex)).size === odd.length, '同一輪不重複同一人');
+        deepEqual(planRelay(1, 2, keys).map((s) => s.memberIndex), [1, 0]);
+        deepEqual(planRelay(0, 1, keys), []);
+        deepEqual(planRelay(0, 6, []), []);
+        ok(odd[odd.length - 1].atSeconds < 3, '接力在 3 秒內收完，不拖長典禮');
+    });
+
+    suite.test('熱鬧感：前三名得獎在自己名次亮框時起鬨，落榜等第 3 名亮框後才拍肩', () => {
+        ok(isPlayerWinner(1) && isPlayerWinner(3) && !isPlayerWinner(4) && !isPlayerWinner(0));
+        equal(relayTriggerRank(1), 1);
+        equal(relayTriggerRank(2), 2);
+        equal(relayTriggerRank(3), 3);
+        equal(relayTriggerRank(4), 3);
+        equal(relayTriggerRank(6), 3);
+    });
+
+    suite.test('熱鬧感：彩帶固定 20 枚、橫向散佈在 0～1、五色輪流、延遲與落下秒數有界、同輸入同輸出', () => {
+        const specs = planRibbons();
+        equal(specs.length, CEREMONY_RIBBON_COUNT);
+        equal(CEREMONY_RIBBON_COUNT, 20);
+        ok(specs.every((r) => r.x >= 0 && r.x < 1 && r.fall >= 2 && r.fall <= 3.2 && r.delay >= 0 && r.delay < 0.6));
+        equal(new Set(specs.map((r) => r.colorIndex)).size, CEREMONY_RIBBON_COLORS.length);
+        ok(specs.some((r) => r.sway > 0) && specs.some((r) => r.sway < 0));
+        deepEqual(planRibbons(), specs);
+    });
+
+    suite.test('台詞聲線：同一句依性別、性格、年齡代入不同自稱（走 SpeakerVoice）', () => {
+        const t = (key: string, ...args: string[]): string => `${key}|${args[0]}`;
+        const say = (m: { gender: 'M' | 'F'; type?: 'Brave' | 'Wise' | 'Loyal' | 'Playful'; age?: number }): string =>
+            resolveCrowdVoiceLine(t, 'k', { generalId: 'x', name: 'X', ...m });
+        equal(say({ gender: 'F', type: 'Brave' }), `k|${selfOf({ gender: '女', type: 'Brave' })}`);
+        equal(say({ gender: 'F', type: 'Playful' }), 'k|人家');
+        equal(say({ gender: 'M', type: 'Playful' }), 'k|咱');
+        equal(say({ gender: 'M', age: 12 }), 'k|我');
+        equal(say({ gender: 'M', age: 70 }), 'k|老夫');
+        equal(say({ gender: 'F', age: 70 }), 'k|老身');
+        equal(say({ gender: 'M' }), `k|${selfOf({ gender: '男' })}`);
+    });
+
+    suite.test('名冊的性格與年齡會帶進觀眾，資料檔名將沒有就缺省', () => {
+        const crowd = pickCeremonyCrowd([{ id: 'a', name: 'A', gender: '女', personality: { type: 'Brave' }, age: 22 }], () => 0, config);
+        equal(crowd[0].type, 'Brave');
+        equal(crowd[0].age, 22);
+        equal(crowd[1].type, undefined);
+        equal(crowd[1].age, undefined);
     });
 
     return suite;
