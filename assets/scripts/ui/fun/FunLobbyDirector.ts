@@ -8,7 +8,7 @@
  *
  * 世界觀：武將一律古代口吻；白話吐槽是主角內心 OS，在舞台上顯示成「（心想）」淡色小字。
  */
-import { Node } from 'cc';
+import { BlockInputEvents, Node } from 'cc';
 import { services } from '../../core/managers/ServiceLoader';
 import { GAME_SESSION_EVENTS } from '../../core/managers/GameSession';
 import { FriendshipService } from '../../core/services/FriendshipService';
@@ -24,6 +24,7 @@ import { loadGeneralAvatar } from '../core/GeneralAvatarLoader';
 import { countFunStageShown, playFunStage, stopFunStage, type FunStageBeat, type FunStagePlan } from './FunStageView';
 
 /** 還沒播的新招募武將（記憶體；大廳沒開時先排著，回大廳補播） */
+let _deferred = false;
 const _recruitQueue: StageGeneral[] = [];
 let _busy = false;
 let _timer: ReturnType<typeof setTimeout> | null = null;
@@ -175,6 +176,13 @@ async function runVictoryChat(lines: FunStageLines): Promise<boolean> {
 
 // ── 排程 ────────────────────────────────────────────────────────────────
 
+/** 有別的彈窗（獲得武將面板、轉蛋結果、學府等）蓋在畫面上時不插播：等它關掉再演，避免自我介紹被面板蓋住或疊在面板前 */
+function otherModalOpen(): boolean {
+    if (services().ui.hasBackdropShown()) return true;
+    const stage = _canvasHost?.getChildByName('FunStage');
+    return (_canvasHost?.children ?? []).some((c) => c !== stage && c.activeInHierarchy && !!c.getComponent(BlockInputEvents));
+}
+
 /** 依優先序播一輪：滿月酒 → 自我介紹 → 勝仗搭話；單一飛行，不並行 */
 export async function runFunLobbyTick(): Promise<void> {
     if (_busy || !_canvasHost?.isValid) return;
@@ -182,6 +190,7 @@ export async function runFunLobbyTick(): Promise<void> {
     try {
         const lines = await ensureLines();
         if (!lines) return;
+        if (otherModalOpen()) { _deferred = true; return; }
         if (await runMoonParty(lines)) return;
         if (await runRecruitIntros(lines)) return;
         await runVictoryChat(lines);
@@ -199,7 +208,7 @@ export function scheduleFunTick(delayMs = 800): void {
         _timer = null;
         void runFunLobbyTick().then(() => {
             // 一輪只播一種；還有排隊的就接著播
-            if (_recruitQueue.length > 0 || services().session.funState().victoryChat.pending) scheduleFunTick(600);
+            if (_deferred) { _deferred = false; scheduleFunTick(1500); } else if (_recruitQueue.length > 0 || services().session.funState().victoryChat.pending) scheduleFunTick(600);
         });
     }, delayMs);
 }
