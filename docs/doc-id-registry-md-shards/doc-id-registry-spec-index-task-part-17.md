@@ -95,4 +95,7 @@
 | `doc_task_3244` | docs/agent-briefs/tasks/PROG/PROG-2-10119.md | [PROG-2-10119] 批次補舊 PROG 卡 frontmatter task_id（讓 ATM importer 可匯入） |
 | `doc_task_3247` | docs/agent-briefs/tasks/PROG/PROG-2-10184.md | [PROG-2-10184] 新世界觀改寫（純規格） |
 | `doc_task_3250` | docs/agent-briefs/tasks/PROG/PROG-2-10186.md | [PROG-2-10186] MYS-01 UI 碎片延伸四項 |
+| `doc_task_3253` | docs/agent-briefs/tasks/PROG/PROG-2-10189.md | [PROG-2-10189] 三題裁決寫入規格 |
+| `doc_task_3255` | docs/agent-briefs/tasks/PROG/PROG-2-10140.md | [PROG-2-10140] 趙雲奧義 roar 延後至衝擊點＋洪流水花改藍白 |
+| `doc_task_3257` | docs/agent-briefs/tasks/PROG/PROG-2-10134.md | [PROG-2-10134] 戰場音訊：小兵攻擊／受擊分兵種音效、戰場 BGM 三段、音效池與預載 |
 | `doc_task_3258` | docs/agent-briefs/tasks/PROG/PROG-2-10188.md | [PROG-2-10188] 武將生活化「Q 版社會」規格（純規格） |

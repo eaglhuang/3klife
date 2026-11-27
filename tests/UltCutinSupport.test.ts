@@ -143,6 +143,18 @@ export function createUltCutinSupportSuite(): TestSuite {
         }
     });
 
+    suite.test('趙雲奧義 roar 延後到衝擊點 0.25 秒，晚於蓄力 whoosh（不再與 whoosh 重疊）', () => {
+        const config = readJson<CutinConfig>('zhao_yun.json');
+        const sfx = config.panels.flatMap((p) => p.sfx ?? []);
+        const roar = sfx.find((s) => s.key === 'roar');
+        const whoosh = sfx.find((s) => s.key === 'whoosh');
+        if (!roar || !whoosh) throw new Error('缺 roar 或 whoosh 音效設定');
+        const roarAt = roar.offset ?? -1;
+        const whooshAt = whoosh.offset ?? -1;
+        assert.isTrue(Math.abs(roarAt - 0.25) < 1e-9, `roar offset ${roarAt}`);
+        assert.isTrue(roarAt > whooshAt, 'roar 應晚於 whoosh');
+    });
+
     suite.test('缺圖流程：圖都沒匯入時不可播、不丟例外，而且不會要求暫停戰場', () => {
         const config = readJson<CutinConfig>('zhao_yun.json');
         const events: string[] = [];

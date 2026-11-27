@@ -16,6 +16,8 @@ import {
     moveFootstepFor,
     rollDustParticle,
     stepBobOffset,
+    SPLASH_COLOR_FOAM,
+    SPLASH_COLOR_MUD,
     tryAcquireMoveSfx,
 } from '../assets/scripts/battle/shared/MoveFeedback';
 import { TestSuite, assert } from './TestRunner';
@@ -173,6 +175,12 @@ export function createMoveFeedbackSuite(): TestSuite {
 
     suite.test('步態倍率上限 2.2（總PM 定案，不到 2.5）', () => {
         assert.isTrue(MOVE_GAIT_TUNING.maxAnimationSpeed === 2.2);
+    });
+
+    suite.test('洪流水花偏藍白：泡沫端約 (200,225,255)，泥漿端藍度高於綠度', () => {
+        assert.isTrue(SPLASH_COLOR_FOAM.r === 200 && SPLASH_COLOR_FOAM.g === 225 && SPLASH_COLOR_FOAM.b === 255, '泡沫色');
+        assert.isTrue(SPLASH_COLOR_FOAM.b >= SPLASH_COLOR_FOAM.g && SPLASH_COLOR_FOAM.g >= SPLASH_COLOR_FOAM.r, '泡沫色應由紅到藍遞增');
+        assert.isTrue(SPLASH_COLOR_MUD.b > SPLASH_COLOR_MUD.g, '泥漿端應偏藍而非偏綠');
     });
 
     return suite;
