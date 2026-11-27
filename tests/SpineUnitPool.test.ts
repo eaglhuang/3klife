@@ -11,6 +11,7 @@ type Any = any;
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const cc: Any = require('cc');
 
+let siblingCalls = 0; // PROG-2-10155：計算兄弟索引重排次數
 class FakeNode {
   public isValid = true; public active = true; public layer = 0; public parent: FakeNode | null = null;
   public children: FakeNode[] = []; public index = 0; public scale = { x: 1, y: 1 }; public position = { x: 0, y: 0 };
@@ -24,6 +25,7 @@ class FakeNode {
   setScale(x: number, y: number): void { this.scale = { x, y }; }
   /** 與 Cocos 相同：在父節點 children 內真的移動位置 */
   setSiblingIndex(i: number): void {
+    siblingCalls += 1;
     this.index = i;
     const list = this.parent?.children; if (!list) return;
     list.splice(list.indexOf(this), 1); list.splice(Math.max(0, Math.min(i, list.length)), 0, this);
@@ -238,6 +240,47 @@ export function createSpineUnitPoolSuite(): TestSuite {
     assert.isTrue(idx('TileBuffMarker') < idx('SpineUnit_far') && idx('TileBuffMarker') < idx('SpineUnit_near'), '標記要在小兵底下，實際順序 ' + root.children.map(n => n.name).join(','));
     assert.isTrue(idx('DeployDust') < idx('SpineUnit_far'), '揚塵要在小兵底下');
     assert.isTrue(idx('SpineUnit_far') < idx('SpineUnit_near'), '畫面下方（靠近鏡頭）的小兵蓋在上面');
+    overlay.clear();
+  }));
+
+  suite.test('兄弟索引：順序沒變就不碰 setSiblingIndex；順序變了才重排且結果依落腳 y 由大到小', () => withStub(() => {
+    const root = new FakeNode('root');
+    const overlay = new SpineUnitOverlay(() => root as Any, () => 1);
+    const ys: Record<string, number> = { a: 300, b: 200, c: 100, d: 150 };
+    const sync = (): void => { for (const id of Object.keys(ys)) overlay.sync(id, cfg, 0, ys[id], 1, false, 0, true, 1); };
+    sync(); overlay.update(0);
+    const order = (): string => root.children.map(n => n.name.replace('SpineUnit_', '')).join('');
+    const expected = (): string => Object.keys(ys).sort((p, q) => ys[q] - ys[p]).join('');
+    assert.equals(expected(), order());
+    siblingCalls = 0;
+    for (let i = 0; i < 30; i++) { sync(); overlay.update(1 / 60); }
+    assert.equals(0, siblingCalls, '順序沒變時 30 幀都不該呼叫 setSiblingIndex');
+    assert.equals(expected(), order());
+    // 兩個單位對調高度：必須重排
+    ys.c = 260; ys.d = 20;
+    sync(); overlay.update(1 / 60);
+    assert.isTrue(siblingCalls > 0, '順序變了要重排');
+    assert.equals(expected(), order());
+    siblingCalls = 0;
+    for (let i = 0; i < 10; i++) { sync(); overlay.update(1 / 60); }
+    assert.equals(0, siblingCalls, '重排後再次穩定又不碰');
+    // 移除單位：集合改變也要正確
+    overlay.remove('a');
+    overlay.update(1 / 60);
+    assert.isTrue(!root.children.some(n => n.name === 'SpineUnit_a' && n.isValid && n.active), '移除的單位不在場上');
+    overlay.clear();
+  }));
+
+  suite.test('兄弟索引：外部動過順序時，定期對齊（SORT_RESYNC_FRAMES）會拉回正確順序', () => withStub(() => {
+    const root = new FakeNode('root');
+    const overlay = new SpineUnitOverlay(() => root as Any, () => 1);
+    overlay.sync('a', cfg, 0, 300, 1, false, 0, true, 1);
+    overlay.sync('b', cfg, 0, 100, 1, false, 0, true, 1);
+    overlay.update(0);
+    const first = root.children[0];
+    first.setSiblingIndex(1); // 外部把順序弄反
+    for (let i = 0; i < 130; i++) overlay.update(1 / 60);
+    assert.equals('SpineUnit_a', root.children[0].name, '定期對齊後恢復 y 由大到小');
     overlay.clear();
   }));
 

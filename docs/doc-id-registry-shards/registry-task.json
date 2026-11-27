@@ -17632,5 +17632,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10135.md",
     "title": "[PROG-2-10135] 偵察面板戰法一鍵自動配置",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3218",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10155.md",
+    "title": "[PROG-2-10155] 戰場：每幀重排與徽章避讓改成有變動才算",
+    "category": "task"
   }
 ]
