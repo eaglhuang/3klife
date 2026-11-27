@@ -1481,7 +1481,7 @@
       "uid": "huang-yue-ying",
       "name": "黃月英",
       "standing": {
-        "activeVersion": "0007",
+        "activeVersion": "0008",
         "status": "review-pending",
         "history": [
           {
@@ -1522,12 +1522,20 @@
             "sha256": "4E0E9170020CCF3255B178BFE4E729336B4A60061195E7F48F114695EDF76742",
             "canvas": "1024x1536 RGBA",
             "note": "Full-body 3/4 standing portrait; modest high-neck teal and ivory inventor outfit with mechanical embroidery; head-outline center approximately 49.8% of canvas width; pending PM review."
+          },
+          {
+            "version": "0008",
+            "file": "standing/huang_yue_ying__黃月英__standing_0008.png",
+            "status": "review-pending",
+            "sha256": "C2F9CC970AFCEC3963A71A1E6B05422799C4BA3425BDB7D94A0240AEFF18765E",
+            "canvas": "1024x1536 RGBA",
+            "note": "Full-body 3/4 portrait with compact low braid, functional forearm tool pouch, shoulder satchel, waist-held brass caliper, crown-mounted oil lamp and single-eye loupe; transparent canvas with safe margins; pending PM review."
           }
         ]
       },
       "battle": {
         "status": "review-pending",
-        "activeVersion": "0006",
+        "activeVersion": "0008",
         "history": [
           {
             "version": "0003",
@@ -1576,11 +1584,23 @@
             "gaze": "direct-to-camera",
             "sourceStandingFile": "standing/huang_yue_ying__黃月英__standing_0007.png",
             "note": "Full-body action pose matched to standing colors and outfit; transparent canvas; pending PM review."
+          },
+          {
+            "version": "0008",
+            "file": "battle/huang_yue_ying__黃月英__battle_0008.png",
+            "status": "review-pending",
+            "sha256": "729D030DA76CD7FA4F8B79497EC7B24B45A31139BAFD82014AD25A8C67ADBCA0",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "compact mechanical device and brass measuring tool",
+            "poseLabel": "mechanical deployment",
+            "gaze": "task-focused 3/4 angle",
+            "sourceStandingFile": "standing/huang_yue_ying__黃月英__standing_0008.png",
+            "note": "Full-body action pose in the standing costume, with visible forearm tool slots, shoulder satchel, hand-operated mechanism and crown lamp; pending PM review."
           }
         ]
       },
       "avatar": {
-        "activeVersion": "0005",
+        "activeVersion": "0006",
         "status": "review-pending",
         "history": [
           {
@@ -1638,11 +1658,27 @@
               "height": 479
             },
             "qc": "125px/250px review: full chest seam visible with waist belt excluded; shoulder surfaces visible; head-outline center approximately 50.5% of canvas width."
+          },
+          {
+            "version": "0006",
+            "file": "avatars/huang_yue_ying__黃月英__avatar_0006.png",
+            "status": "review-pending",
+            "sha256": "D288C52D792644A0F02417B2668AE982DDFE212325EAC1B9C18743ED5A0644E6",
+            "canvas": "256x256 RGBA",
+            "sourceStandingFile": "standing/huang_yue_ying__黃月英__standing_0008.png",
+            "method": "crop-only; uniform resize with alpha premultiplication; no redraw, rotation or retouch",
+            "cropBox": {
+              "x": 202,
+              "y": 0,
+              "width": 590,
+              "height": 590
+            },
+            "qc": "125px/250px review: complete 3/4 head, both shoulder lines and full chest visible to chest base; waist excluded; head silhouette centered; pending PM review."
           }
         ]
       },
       "smallAvatar": {
-        "activeVersion": "0003",
+        "activeVersion": "0005",
         "status": "review-pending",
         "history": [
           {
@@ -1680,6 +1716,22 @@
               "height": 319.15
             },
             "qc": "125px review: complete low-profile hairstyle and face, neck and both shoulders visible; head-outline center approximately 50.9%; cranial head height 75.2%."
+          },
+          {
+            "version": "0005",
+            "file": "small_avatars/huang_yue_ying__黃月英__small_avatar_0005.png",
+            "status": "review-pending",
+            "sha256": "82EC699893BC768AAAD0AD32620F98383B7B8634F3F3BBB9F9FD8E3EB1544270",
+            "canvas": "256x256 RGBA",
+            "sourceStandingFile": "standing/huang_yue_ying__黃月英__standing_0008.png",
+            "method": "crop-only; uniform resize with alpha premultiplication; no redraw, rotation or retouch",
+            "cropBox": {
+              "x": 338,
+              "y": 36,
+              "width": 320,
+              "height": 320
+            },
+            "qc": "125px/250px review: compact hairstyle and crown lamp complete; head silhouette centered with natural 3/4 face; neck and shoulder top visible; pending PM review."
           }
         ]
       },
