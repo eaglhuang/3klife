@@ -17572,5 +17572,17 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10124.md",
     "title": "[PROG-2-10124] 戰場右側 UI B0 缺陷：ui.ultimate.label 顯示原始 key、委任鈕字被截、寫死中文改 i18n",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3208",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10136.md",
+    "title": "[PROG-2-10136] 首場戰鬥新手提示",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3209",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10137.md",
+    "title": "[PROG-2-10137] 戰後重點整理三條",
+    "category": "task"
   }
 ]

@@ -67,3 +67,5 @@
 | `doc_task_3192` | docs/agent-briefs/tasks/PROG/PROG-2-10129.md | [PROG-2-10129] 三彈窗掛武將頭像與台詞 |
 | `doc_task_3194` | docs/agent-briefs/tasks/PROG/PROG-2-10131.md | [PROG-2-10131] 虎符卡乙版精簡與四階品階框（暗銅/銀/金/赤金） |
 | `doc_task_3195` | docs/agent-briefs/tasks/PROG/PROG-2-10124.md | [PROG-2-10124] 戰場右側 UI B0 缺陷：ui.ultimate.label 顯示原始 key、委任鈕字被截、寫死中文改 i18n |
+| `doc_task_3208` | docs/agent-briefs/tasks/PROG/PROG-2-10136.md | [PROG-2-10136] 首場戰鬥新手提示 |
+| `doc_task_3209` | docs/agent-briefs/tasks/PROG/PROG-2-10137.md | [PROG-2-10137] 戰後重點整理三條 |

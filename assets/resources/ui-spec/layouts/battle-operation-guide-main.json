@@ -45,10 +45,10 @@
             "type": "button",
             "name": "guidePrevious",
             "id": "guidePrevious",
-            "width": 104,
+            "width": 76,
             "height": 72,
             "widget": {
-              "left": 16,
+              "left": 12,
               "bottom": 8
             },
             "skinSlot": "tutorial.button.confirm.bg",
@@ -72,10 +72,10 @@
             "type": "button",
             "name": "guideNext",
             "id": "guideNext",
-            "width": 104,
+            "width": 76,
             "height": 72,
             "widget": {
-              "left": 128,
+              "left": 94,
               "bottom": 8
             },
             "skinSlot": "tutorial.button.confirm.bg",
@@ -99,10 +99,10 @@
             "type": "button",
             "name": "guideMinimize",
             "id": "guideMinimize",
-            "width": 104,
+            "width": 76,
             "height": 72,
             "widget": {
-              "left": 240,
+              "left": 176,
               "bottom": 8
             },
             "skinSlot": "tutorial.button.confirm.bg",
@@ -112,6 +112,33 @@
                 "name": "guideMinimizeText",
                 "textKey": "battle.guide.minimize",
                 "text": "收起",
+                "widget": {
+                  "top": 0,
+                  "bottom": 0,
+                  "left": 0,
+                  "right": 0
+                },
+                "styleSlot": "tutorial.label.body"
+              }
+            ]
+          },
+          {
+            "type": "button",
+            "name": "guideSkip",
+            "id": "guideSkip",
+            "width": 76,
+            "height": 72,
+            "widget": {
+              "left": 258,
+              "bottom": 8
+            },
+            "skinSlot": "tutorial.button.confirm.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "guideSkipText",
+                "textKey": "battle.guide.skip",
+                "text": "跳過",
                 "widget": {
                   "top": 0,
                   "bottom": 0,
