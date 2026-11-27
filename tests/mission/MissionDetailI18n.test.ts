@@ -147,9 +147,9 @@ export function createMissionDetailI18nSuite(): TestSuite {
         assert.isTrue(low.intelHintLabel.startsWith('Intel 35%'), low.intelHintLabel);
         assert.isTrue(low.costFoodValueLabel.includes('Short, have 10'), low.costFoodValueLabel);
         assert.equals('Gold／Silver', low.costFundNameLabel);
-        assert.isTrue((low.actionBlockedText.execute ?? '').startsWith('Insufficient Grain'));
+        assert.isTrue((low.actionBlockedText.execute ?? '').startsWith('Grain short'));
         assert.isTrue(states[1]!.aiDelegateHintLabel.startsWith('No officer'));
-        assert.isTrue((states[2]!.actionBlockedText['re-scout'] ?? '').includes('capped'));
+        assert.isTrue((states[2]!.actionBlockedText['re-scout'] ?? '').includes('maxes'));
         assert.isTrue(states[3]!.intelHintLabel.startsWith('Locked'), states[3]!.intelHintLabel);
         assert.isTrue(states[3]!.envScoutWeatherLine.includes('Year 2, Season 2'), states[3]!.envScoutWeatherLine);
     });
