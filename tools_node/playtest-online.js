@@ -2013,6 +2013,13 @@ async function main() {
                 rec.detail.diag = await page.evaluate(() => { const walk = (n) => { for (const c of n.components) if (c && typeof c._askScoutBeforeSortie === 'function') return c; for (const ch of n.children) { const r = walk(ch); if (r) return r; } return null; }; const l = walk(window.cc.director.getScene()); return { result: window.__scoutResult, host: !!(l && l._scoutPanelHost), active: !!(l && l._scoutPanelHost && l._scoutPanelHost.node.active), encounter: l && l._currentEncounter ? (l._currentEncounter() || {}).id : null }; });
                 await shot(rec, 'scout-panel');
                 rec.detail.panelTexts = (await rm.allTexts()).filter((t) => /偵查|建議|加強|風險|怎麼換|出征/.test(t)).slice(0, 20);
+                // 幫我換上（PROG-2-10135）：按一下換上並截圖、再按一下復原並截圖；按鈕只在偵查面板有缺口提示時出現
+                if (await clickButton('^BtnScoutAutofill$')) {
+                    await delay(800);
+                    rec.detail.autofillTexts = (await rm.allTexts()).filter((t) => /已換上|復原|尚未持有|戰法槽/.test(t)).slice(0, 10);
+                    await shot(rec, 'scout-autofill');
+                    if (await clickButton('^BtnScoutAutofill$')) { await delay(800); await shot(rec, 'scout-autofill-undo'); }
+                } else rec.detail.autofillTexts = ['no-button'];
                 if (!(await clickButton('^BtnScoutSortie$'))) throw new Error('點不到 BtnScoutSortie');
                 await delay(1000);
                 await shot(rec, 'scout-confirm');

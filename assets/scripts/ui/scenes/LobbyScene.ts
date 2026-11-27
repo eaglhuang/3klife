@@ -266,8 +266,11 @@ import { ITEM_SHOP_OFFERS, JOB_CHANGE_ORDER_OFFER } from '../../core/systems/Ite
 import { ShopMainController } from '../core/ShopMainController';
 import { PrisonerPopupController } from '../core/PrisonerPopupController';
 import { DuplicatePullPopupController, DUPLICATE_INFUSION_VALUE, infusionTargetsOf, rebirthTargetsOf, splitOwnedDuplicates, starUpTargetsOf, type DuplicatePullChoice, type DuplicatePullEntry, type DuplicatePullQuips, type DuplicatePullRoute } from '../core/DuplicatePullPopupController';
-import { buildLobbyScout, ScoutPanelController } from '../core/ScoutPanelController';
+import { buildLobbyScout, ScoutPanelController, type LobbyScout } from '../core/ScoutPanelController';
 import type { TacticCounterTagTable } from '../../core/systems/LoadoutCheck';
+import { COMMON_TACTIC_ID } from '../../core/systems/BattleRoster';
+import { DEFAULT_AUTOFILL_RULES, parseAutofillRules, type TacticAutofillRules } from '../../core/systems/TacticAutofill';
+import { buildScoutAutofillHooks, effectiveTacticSlots } from '../core/ScoutAutofillBinding';
 import { spiritSlotViewOf } from '../../core/systems/SpiritSlotState';
 import { DestinyShopController } from '../core/DestinyShopController';
 import { LEAD_BUSY_NOTICE_KEY, SortieSetupController, type SortieDeckCardInfo, type SortieRole } from '../core/SortieSetupController';
@@ -718,6 +721,7 @@ export class LobbyScene extends Component {
     private _scoutPanelHost: UIScreenPreviewHost | null = null;
     private readonly _scoutPanel = new ScoutPanelController((key, ...args) => services().i18n.t(key, ...args));
     private _tacticCounterTags: TacticCounterTagTable | null = null;
+    private _tacticAutofillRules: TacticAutofillRules | null = null;
     /** 季節天氣機率表（PROG-2-9735，data/battle-weather-season）；載入前或載入失敗時抽天氣一律退回晴天 */
     private _weatherSeasonTable: BattleWeatherSeasonTable | null = null;
     private _destinyShopHost: UIScreenPreviewHost | null = null;
@@ -6364,6 +6368,7 @@ ${spent}`,
         const refresh = (): void => { const binder = this._scoutPanelHost?.binder; if (binder) applyFlowView(binder, this._scoutPanel.getView()); };
         this._scoutPanelHost = await this._mountPreviewScreenHost('ScoutPanelHost', 'scout-panel-screen', [
             { buttonId: 'btnScoutSortie', handler: () => { if (this._scoutPanel.sortie()) close(); else refresh(); } },
+            { buttonId: 'btnScoutAutofill', handler: () => { this._scoutPanel.autofill(); refresh(); } },
             { buttonId: 'btnScoutCancel', handler: () => { this._scoutPanel.cancel(); close(); } },
             { buttonId: 'btnScoutConfirmYes', handler: () => { this._scoutPanel.confirm(); close(); } },
             { buttonId: 'btnScoutConfirmNo', handler: () => { this._scoutPanel.back(); refresh(); } },
@@ -6379,14 +6384,30 @@ ${spent}`,
         const enemy = this._generals.find((g) => g.id === encounter.enemyGeneralId);
         const leadId = services().session.resolveLeadGeneralId(encounter.playerGeneralId);
         const lead = services().session.roster.find((g) => g.id === leadId) ?? this._generals.find((g) => g.id === leadId);
-        const scout = buildLobbyScout(
+        const tagTable = await this._loadTacticCounterTags();
+        const rules = await this._loadTacticAutofillRules();
+        const tacticNames = await this._ensureTacticNames();
+        const weatherLine = weatherPreBattleLine(this._resolveEncounterWeather(encounter));
+        const enemyLeader = enemy ? { name: enemy.name, ...(enemy.title ? { title: enemy.title } : {}) } : null;
+        const currentLead = (): GeneralConfig | null => services().session.roster.find((g) => g.id === leadId) ?? lead ?? null;
+        // 戰法槽沿用戰場組隊規則（tacticSlots 或已習得戰法），再加上不佔槽的通用計謀，與戰場端的推薦檢核一致
+        const rebuild = (): LobbyScout => buildLobbyScout(
             encounter,
-            enemy ? { name: enemy.name, ...(enemy.title ? { title: enemy.title } : {}) } : null,
-            (lead?.tacticSlots ?? []).map((slot) => slot.tacticId),
-            await this._loadTacticCounterTags(),
-            weatherPreBattleLine(this._resolveEncounterWeather(encounter)),
+            enemyLeader,
+            [...effectiveTacticSlots(currentLead()).map((slot) => slot.tacticId), COMMON_TACTIC_ID],
+            tagTable,
+            weatherLine,
         );
-        const result = this._scoutPanel.ask(scout);
+        const hooks = buildScoutAutofillHooks({
+            encounter,
+            currentLead,
+            tagTable,
+            rules,
+            nameOf: (id) => tacticNames.get(id) ?? inspiredTacticName(id) ?? id,
+            writeSlots: (generalId, slots) => services().session.setGeneralTacticSlots(generalId, slots),
+            rebuild,
+        });
+        const result = this._scoutPanel.ask(rebuild(), hooks);
         host.node.active = true;
         this._bringNodeToFront(host.node);
         if (host.binder) applyFlowView(host.binder, this._scoutPanel.getView());
@@ -6427,6 +6448,32 @@ ${spent}`,
             table: this._weatherSeasonTable,
             rng: createSeededRng(seasonWeatherSeed(time.currentYear, time.currentSeason, encounter.id)),
         }).weather;
+    }
+
+    /** 「幫我換上」的挑選規則（data/tactic-autofill-rules）；載入失敗用預設排序、不看兵種加權 */
+    private async _loadTacticAutofillRules(): Promise<TacticAutofillRules> {
+        if (this._tacticAutofillRules) return this._tacticAutofillRules;
+        try {
+            this._tacticAutofillRules = parseAutofillRules(await services().resource.loadJson<unknown>('data/tactic-autofill-rules', { tags: ['LobbyScene'] }));
+        } catch {
+            return DEFAULT_AUTOFILL_RULES;
+        }
+        return this._tacticAutofillRules;
+    }
+
+    /** 戰法庫 id → 顯示名（與學府結業共用同一份快取） */
+    private async _ensureTacticNames(): Promise<ReadonlyMap<string, string>> {
+        if (!this._academyTacticNames) {
+            const names = new Map<string, string>();
+            try {
+                const library = await services().resource.loadJson<{ data?: { id: string; displayName?: string }[] }>('data/master/tactic-library', { tags: ['LobbyScene'] });
+                for (const t of library?.data ?? []) if (t.displayName) names.set(t.id, t.displayName);
+            } catch (error) {
+                UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 戰法庫載入失敗，換上預覽改顯示戰法 id', error);
+            }
+            this._academyTacticNames = names;
+        }
+        return this._academyTacticNames;
     }
 
     private async _loadTacticCounterTags(): Promise<TacticCounterTagTable> {

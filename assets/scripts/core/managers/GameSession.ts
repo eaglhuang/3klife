@@ -56,7 +56,7 @@ import { inspiredTacticIds, type NurtureAction, type NurtureRoundLog } from '../
 import { applyCareerMarkTpDiscountToCost } from '../systems/nurture/AcademyInheritAndMarks';
 import { computeDiscountedTpCost, tacticTagsOf } from '../systems/WhiteFactorTraits';
 import { applyPassiveSave, totalTacticTpDiscount } from '../systems/MentorPassiveSavings';
-import type { GeneralConfig } from '../models/GeneralUnit';
+import type { GeneralConfig, GeneralTacticSlotConfig } from '../models/GeneralUnit';
 import { advanceDaughtersOneYear, assignDaughterRoute, daughtersAwaitingRoute, type AssignDaughterResult, type DaughterRecord, type DaughterRoute } from '../systems/DaughterComingOfAge';
 import { isAcademyRecordActive, normalizeAcademyRecord, type AcademyRecordPort, type PersistedAcademyRecord } from '../services/GameAcademySaveStore';
 import { formatSeasonLabel, GameClock, GameTimeState, SeasonAdvanceResult, SEASONS_PER_YEAR } from '../systems/GameClock';
@@ -3591,6 +3591,15 @@ export class GameSession implements AcademyRecordPort {
                 : { ...g, tacticExp: { ...(g.tacticExp ?? {}), [gain.tacticId]: gain.expAfter } };
         }));
         return result;
+    }
+
+    /** 偵察面板「幫我換上」／復原（PROG-2-10135）：整組覆寫武將的戰法槽，其餘欄位不動；找不到武將回傳 false */
+    public setGeneralTacticSlots(generalId: string, slots: readonly GeneralTacticSlotConfig[]): boolean {
+        const all = this._roster.getAll();
+        if (!all.some((g) => g.id === generalId)) return false;
+        this._roster.replaceAll(all.map((g) => (g.id === generalId ? { ...g, tacticSlots: slots.map((slot) => ({ ...slot })) } : g)));
+        this._emit(GAME_SESSION_EVENTS.RosterChanged, this.roster);
+        return true;
     }
 
     /** 注入武將配置（generals.json），供俘虜來投時依 uid 重建武將 */
