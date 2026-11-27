@@ -20098,12 +20098,68 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_3190",
+      "id": "PROG-2-10127",
+      "title": "年末典禮熱鬧感加強",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P2",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-27",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-27T08:27:06+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "觀眾大頭像放大 96px 輪流跳起歡呼；得獎 2～3 位觀眾接力起鬨、落榜拍肩偷笑；前三名揭曉飄 20 枚彩帶；Toast 括號詞不被斷行拆開。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "觀眾大頭像 96px 且輪流跳起",
+        "得獎 2～3 位觀眾接力起鬨，落榜拍肩偷笑，台詞走 SpeakerVoice",
+        "前三名揭曉飄落 20 枚彩帶並由物件池回收",
+        "Toast 括號詞不被斷行拆開",
+        "compute-gate quick、test tsc 0 錯、run-cli 全過"
+      ],
+      "deliverables": [
+        "assets/scripts/core/systems/CeremonyHype.ts",
+        "assets/scripts/ui/components/CeremonyRibbonPool.ts",
+        "assets/scripts/ui/components/YearEndCeremonyPanel.ts",
+        "assets/scripts/core/systems/ToastMotion.ts",
+        "tests/YearEndCeremonyCrowd.test.ts"
+      ],
+      "notes": "2026-11-27 | 狀態: in-progress | 驗證: pending | 變更: 總PM 指派年末典禮熱鬧感加強 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
-    "done": 371,
-    "in_progress": 4,
+    "done": 372,
+    "in_progress": 5,
     "open": 91,
-    "total": 466
+    "total": 468
   }
 }

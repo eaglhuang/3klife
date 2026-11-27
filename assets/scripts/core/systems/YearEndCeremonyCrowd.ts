@@ -7,6 +7,7 @@
  *       自稱槽位 {0} 由 SpeakerVoice 依性別代入，自稱一律用 {0} 槽位。
  */
 import { selfOf, voiceGenderOf, type VoiceGender } from '../mind/SpeakerVoice';
+import type { GeneralPersonalityType } from '../models/GeneralUnit';
 
 export interface CeremonyCrowdGeneral {
     readonly generalId: string;
@@ -20,12 +21,19 @@ export interface CeremonyCrowdConfig {
     readonly lineIntervalSeconds: number;
     readonly crowdGenerals: readonly CeremonyCrowdGeneral[];
     readonly cheerKeys: readonly string[];
+    /** 玩家得獎時 2～3 位觀眾接力起鬨的台詞鍵（PROG-2-10127） */
+    readonly winRelayKeys: readonly string[];
+    /** 玩家落榜時拍肩、偷笑的台詞鍵 */
+    readonly loseRelayKeys: readonly string[];
 }
 
 export interface CrowdRosterEntry {
     readonly id: string;
     readonly name: string;
     readonly gender?: string;
+    /** 性格與年齡：台詞自稱走 SpeakerVoice（勇「本姑娘」、玩「人家」、少年「我」…）；缺值照成年處理 */
+    readonly personality?: { readonly type: GeneralPersonalityType };
+    readonly age?: number;
 }
 
 export type CrowdGender = VoiceGender;
@@ -34,6 +42,8 @@ export interface CrowdMember {
     readonly generalId: string;
     readonly name: string;
     readonly gender: CrowdGender;
+    readonly type?: GeneralPersonalityType;
+    readonly age?: number;
 }
 
 /** 性別一律走全遊戲共用的 SpeakerVoice（PROG-2-10083），不另寫一套 */
@@ -55,15 +65,21 @@ export function pickCeremonyCrowd(
     const limit = Math.max(0, Math.floor(config.maxCrowd));
     const seen = new Set<string>();
     const out: CrowdMember[] = [];
-    const push = (id: string, name: string, gender: string | undefined): void => {
+    const push = (id: string, name: string, gender: string | undefined, entry?: CrowdRosterEntry): void => {
         if (out.length >= limit || seen.has(id) || !isCrowdEligible(id)) return;
         seen.add(id);
-        out.push({ generalId: id, name, gender: normalizeCrowdGender(gender) });
+        out.push({
+            generalId: id,
+            name,
+            gender: normalizeCrowdGender(gender),
+            ...(entry?.personality ? { type: entry.personality.type } : {}),
+            ...(entry?.age !== undefined ? { age: entry.age } : {}),
+        });
     };
     const ranked = roster
         .map((entry, index) => ({ entry, index, affinity: safeAffinity(affinityOf, entry.id) }))
         .sort((a, b) => b.affinity - a.affinity || a.index - b.index);
-    for (const { entry } of ranked) push(entry.id, entry.name, entry.gender);
+    for (const { entry } of ranked) push(entry.id, entry.name, entry.gender, entry);
     for (const general of config.crowdGenerals) push(general.generalId, general.name, general.gender);
     return out;
 }
@@ -89,4 +105,12 @@ export function crowdTurn(turn: number, memberCount: number, lineCount: number):
  */
 export function resolveCrowdLine(t: (key: string, ...args: string[]) => string, key: string, gender: CrowdGender): string {
     return t(key, selfOf({ gender: gender === 'F' ? '女' : '男' }));
+}
+
+/**
+ * 台詞文字（完整聲線版）：性別、性格、年齡都走 SpeakerVoice.selfOf，
+ * 同一句台詞由勇猛女將說是「本姑娘」、少年說是「我」、老將說是「老夫」。
+ */
+export function resolveCrowdVoiceLine(t: (key: string, ...args: string[]) => string, key: string, member: CrowdMember): string {
+    return t(key, selfOf({ gender: member.gender === 'F' ? '女' : '男', type: member.type, age: member.age }));
 }

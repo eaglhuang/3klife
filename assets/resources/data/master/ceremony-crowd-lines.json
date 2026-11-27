@@ -16,5 +16,15 @@
     "ui.ceremony.crowd.cheer.4",
     "ui.ceremony.crowd.cheer.5",
     "ui.ceremony.crowd.cheer.6"
+  ],
+  "winRelayKeys": [
+    "ui.ceremony.crowd.win.1",
+    "ui.ceremony.crowd.win.2",
+    "ui.ceremony.crowd.win.3"
+  ],
+  "loseRelayKeys": [
+    "ui.ceremony.crowd.lose.1",
+    "ui.ceremony.crowd.lose.2",
+    "ui.ceremony.crowd.lose.3"
   ]
 }
