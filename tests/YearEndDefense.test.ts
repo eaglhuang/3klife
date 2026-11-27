@@ -11,6 +11,7 @@ import {
     DEFAULT_YEAR_END_DEFENSE,
     isYearEndDefenseDue,
     isYearEndRolloverPending,
+    YEAR_END_RESUME_MOUNT_IDS,
     parseYearEndDefenseConfig,
     strongestInvader,
     yearEndDefenseTierFor,
@@ -140,6 +141,16 @@ export function createYearEndDefenseSuite(): TestSuite {
         assert.isTrue(lobby.includes('() => this._isYearEndDefenseDue());'));
         const bridge = readFileSync(join(__dirname, '..', 'assets/scripts/battle/views/BattleUIBridge.ts'), 'utf8');
         assert.isTrue(bridge.includes('setReplayAllowed?.(this.ctx.ctrl?.state.siegeDefender !== Faction.Player)'));
+    });
+
+    suite.test('守城回大廳換年不等全部背景面板：換年用面板 id 都在掛載清單、且先補建再換年（PROG-2-10163）', () => {
+        const lobby = readFileSync(join(__dirname, '..', 'assets/scripts/ui/scenes/LobbyScene.ts'), 'utf8');
+        for (const id of YEAR_END_RESUME_MOUNT_IDS) {
+            assert.isTrue(lobby.includes(`{ id: '${id}'`), `背景掛載清單缺 ${id}`);
+        }
+        assert.isTrue(lobby.includes('void this._resumeYearEndRolloverEarly(scheduler);'));
+        const early = lobby.indexOf('void this._resumeYearEndRolloverEarly(scheduler);');
+        assert.isTrue(early > 0 && early < lobby.indexOf('await scheduler.runAll('), '提早換年必須在 runAll 之前啟動');
     });
 
     return suite;
