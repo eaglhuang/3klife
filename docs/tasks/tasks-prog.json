@@ -20047,12 +20047,63 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_3189",
+      "id": "PROG-2-10119",
+      "title": "批次補舊 PROG 卡 frontmatter task_id（讓 ATM importer 可匯入）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P2",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-26",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-27T06:49:13+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "ATM tasks import 只認 frontmatter 的 task_id；origin/master 有 2444 張舊 PROG 卡只有 id 沒有 task_id，無法被 ATM 匯入。以機械規則在 id 行之後插入同值 task_id（保留原引號與換行格式），跳過 status 為 in-progress 的卡以免與進行中工作衝突。不改其他欄位。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "非 in-progress 的 PROG 卡都具備與 id 同值的 task_id",
+        "除新增 task_id 一行外無其他差異（diff 只有新增行）",
+        "抽樣卡片 atm tasks import --dry-run 可辨識 task id",
+        "CI atm-governance 通過"
+      ],
+      "deliverables": [
+        "docs/agent-briefs/tasks/PROG/"
+      ],
+      "notes": "2026-11-27 | 狀態: in-progress | 驗證: pending | 變更: ATM專家開卡，使用者選定的批次補 task_id 工作 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
     "done": 371,
-    "in_progress": 4,
+    "in_progress": 5,
     "open": 91,
-    "total": 466
+    "total": 467
   }
 }

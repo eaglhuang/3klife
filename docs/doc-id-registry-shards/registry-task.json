@@ -17536,5 +17536,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10117.md",
     "title": "[PROG-2-10117] pre-commit 編碼檢查在缺 tools_node 的 worktree（mailbox 分支）改走內建檢查",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3189",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10119.md",
+    "title": "[PROG-2-10119] 批次補舊 PROG 卡 frontmatter task_id（讓 ATM importer 可匯入）",
+    "category": "task"
   }
 ]
