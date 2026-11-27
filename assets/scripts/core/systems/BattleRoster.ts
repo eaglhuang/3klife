@@ -205,15 +205,25 @@ function withCommonTactic(slots: GeneralTacticSlotConfig[]): GeneralTacticSlotCo
     return [...slots, { slotId: 'slot-common', tacticId: COMMON_TACTIC_ID, source: 'inborn', notes: '通用計謀' }];
 }
 
-function buildTacticSlots(general: BattleRosterGeneral): GeneralTacticSlotConfig[] {
+/**
+ * 主將實際帶上戰場的智力槽（不含通用計謀）——戰場組隊與偵察面板「幫我換上」預覽共用這一個算法。
+ * 通用計謀不佔智力槽，所以要先濾掉再依智力上限截槽；否則存檔把它排在前面時會吃掉一格，預覽與戰場就對不上。
+ */
+export function battleIntelligenceSlotsOf(general: BattleRosterGeneral): GeneralTacticSlotConfig[] {
     // 槽位上限依戰場智力（規格 §F-7），並不超過全域上限
     const capacity = Math.min(tacticLoadoutCapacity(battleIntelligenceOf(general)), BATTLE_TACTIC_SLOT_LIMIT);
-    if (general.tacticSlots && general.tacticSlots.length > 0) {
-        return general.tacticSlots.slice(0, capacity).map((slot) => ({ ...slot }));
+    const explicit = (general.tacticSlots ?? []).filter((slot) => slot.tacticId !== COMMON_TACTIC_ID);
+    if (explicit.length > 0) {
+        return explicit.slice(0, capacity).map((slot) => ({ ...slot }));
     }
     // 靈感戰法（規格 TAC_* id）轉成戰法庫 id 才查得到戰場技能；多招對到同一招只佔一槽（PROG-2-1135）
     const learned = Array.from(new Set((general.learnedTactics ?? []).map(toLibraryTacticId))).slice(0, capacity);
     return learned.map((tacticId, index) => ({ slotId: `slot-${index + 1}`, tacticId, source: 'learned' as GeneralTacticSlotConfig['source'] }));
+}
+
+function buildTacticSlots(general: BattleRosterGeneral): GeneralTacticSlotConfig[] {
+    const common = (general.tacticSlots ?? []).filter((slot) => slot.tacticId === COMMON_TACTIC_ID).slice(0, 1).map((slot) => ({ ...slot }));
+    return [...battleIntelligenceSlotsOf(general), ...common];
 }
 
 function fatigueHpFactor(general: BattleRosterGeneral): number {

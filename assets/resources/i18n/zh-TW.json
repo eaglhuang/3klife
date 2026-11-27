@@ -1552,6 +1552,7 @@
   "scout.autofillFill": "【{0}】補空槽",
   "scout.autofillNone": "尚未持有可補缺口的戰法，先照常出征",
   "scout.autofillBlocked": "戰法槽都排著本關用得到的戰法，先照常出征",
+  "scout.autofillFailed": "換上失敗，戰法槽沒有變動，可再試一次或先照常出征",
   "scout.tag.siege": "攻城門用",
   "scout.tag.anti_stealth": "識破伏兵",
   "scout.tag.breakthrough": "衝破敵陣",

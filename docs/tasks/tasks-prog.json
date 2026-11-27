@@ -20458,7 +20458,7 @@
       }
     },
     {
-      "doc_id": "doc_task_3230",
+      "doc_id": "doc_task_3233",
       "id": "PROG-2-10161",
       "title": "修正：任務詳情畫面寫死中文標籤改走 i18n 四語",
       "owner": "ClaudeCode_claude-opus-5-5",
