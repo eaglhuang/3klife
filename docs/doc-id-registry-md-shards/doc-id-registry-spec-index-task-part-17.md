@@ -111,3 +111,4 @@
 | `doc_task_3273` | docs/agent-briefs/tasks/PROG/PROG-2-10213.md | [PROG-2-10213] WP3 武將作息與喜好引擎 |
 | `doc_task_3275` | docs/agent-briefs/tasks/PROG/PROG-2-10211.md | [PROG-2-10211] WP5 日夜四季調色與疊層程式框架 |
 | `doc_task_3280` | docs/agent-briefs/tasks/PROG/PROG-2-10209.md | [PROG-2-10209] Q 動畫管理器核心＋基本動作片段 |
+| `doc_task_3283` | docs/agent-briefs/tasks/PROG/PROG-2-10210.md | [PROG-2-10210] WP2 頭上生活符號系統 |
