@@ -26,7 +26,7 @@ export function createNewcomerHudLayoutSuite(): TestSuite {
             assert.isTrue(node(root, 'BattleHudScreen_div_1').active !== false);
         }
         const log = layout('battle-log-main.json').root;
-        assert.equals(16, log.widget.right); assert.equals(320, log.widget.top); assert.equals(72, log.width); // PROG-2-9377 改成右緣 72 寬直排，不再壓到敵將，上移到 320 讓底端不碰奧義蓄力面板；以下為舊註記： // PROG-2-2225 HUD 五視窗稽核後下移；PROG-2-9301 再下移；PROG-2-9328 實跑截圖敵將腳底約 y 350，再下移到 360
+        assert.equals(104, log.widget.right); assert.equals(8, log.widget.top); assert.equals(436, log.width); assert.equals(72, log.height); // PROG-2-10133（B1）：功能鈕改成頂欄右側橫排，位於退出鈕左側；舊註記：PROG-2-9377 改成右緣 72 寬直排，不再壓到敵將，上移到 320 讓底端不碰奧義蓄力面板；以下為舊註記： // PROG-2-2225 HUD 五視窗稽核後下移；PROG-2-9301 再下移；PROG-2-9328 實跑截圖敵將腳底約 y 350，再下移到 360
     });
     return suite;
 }

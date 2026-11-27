@@ -44,6 +44,11 @@ export function wisdomMeterText(meter: number): string {
     return `智謀 ${Math.floor(Math.max(0, Math.min(WISDOM_METER_MAX, meter)))}/${WISDOM_METER_MAX}`;
 }
 
+/** 膠囊條右側的數值文字，例如「45/100」（名稱「智謀」走 i18n，不含在這裡） */
+export function wisdomMeterValueText(meter: number): string {
+    return `${Math.floor(Math.max(0, Math.min(WISDOM_METER_MAX, meter)))}/${WISDOM_METER_MAX}`;
+}
+
 /** 垂直能量條的填充比例 0~1（PROG-2-1851） */
 export function wisdomFillRatio(meter: number): number {
     return Math.max(0, Math.min(WISDOM_METER_MAX, meter)) / WISDOM_METER_MAX;

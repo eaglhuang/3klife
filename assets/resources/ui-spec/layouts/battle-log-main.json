@@ -12,148 +12,100 @@
   "root": {
     "type": "container",
     "name": "SidePanelRoot",
-    "width": 72,
+    "width": 436,
     "widget": {
-      "right": 16,
-      "top": 320
+      "right": 104,
+      "top": 8
     },
     "children": [
       {
-        "type": "panel",
+        "type": "container",
         "name": "ControlBar",
-        "width": 72,
-        "height": 392,
-        "skinSlot": "log.header.bg",
-        "layout": {
-          "type": "vertical",
-          "spacing": 8
+        "width": 412,
+        "height": 72,
+        "widget": {
+          "left": 0,
+          "top": 0
         },
         "children": [
           {
             "type": "button",
             "name": "BtnAuto",
             "id": "btnAuto",
-            "width": 72,
+            "width": 76,
             "height": 72,
-            "skinSlot": "log.btn.auto",
-            "children": [
-              {
-                "type": "image",
-                "name": "AutoIcon",
-                "id": "autoIcon",
-                "widget": {
-                  "hCenter": true,
-                  "vCenter": true
-                },
-                "width": 32,
-                "height": 32,
-                "skinSlot": "log.icon.auto",
-                "_doc": "F8 tactical control overlay glyph"
-              }
-            ]
+            "skinSlot": "log.btn.hit",
+            "widget": {
+              "left": 0,
+              "top": 0
+            },
+            "_doc": "外觀（底板、線稿圖示、說明字 自動）由 BattleButtonStyle 繪製；此節點只負責 76×72 觸控範圍。"
           },
           {
             "type": "button",
             "name": "BtnDelegate",
             "id": "btnDelegate",
-            "width": 72,
+            "width": 76,
             "height": 72,
-            "skinSlot": "log.btn.auto",
-            "children": [
-              {
-                "type": "label",
-                "name": "DelegateText",
-                "id": "delegateText",
-                "width": 72,
-                "height": 72,
-                "text": "委任",
-                "styleSlot": "log.label.btn",
-                "widget": {
-                  "hCenter": true,
-                  "vCenter": true
-                },
-                "textKey": "battle.log.delegate"
-              }
-            ]
+            "skinSlot": "log.btn.hit",
+            "widget": {
+              "left": 84,
+              "top": 0
+            },
+            "_doc": "外觀（底板、線稿圖示、說明字 委任）由 BattleButtonStyle 繪製；此節點只負責 76×72 觸控範圍。"
           },
           {
             "type": "button",
             "name": "BtnSpeed",
             "id": "btnSpeed",
-            "width": 72,
+            "width": 76,
             "height": 72,
-            "skinSlot": "log.btn.speed",
-            "children": [
-              {
-                "type": "image",
-                "name": "SpeedIcon",
-                "id": "speedIcon",
-                "widget": {
-                  "hCenter": true,
-                  "vCenter": true
-                },
-                "width": 32,
-                "height": 32,
-                "skinSlot": "log.icon.speed",
-                "_doc": "F8 tactical control overlay glyph"
-              }
-            ]
-          },
-          {
-            "type": "button",
-            "name": "BtnSetting",
-            "id": "btnSetting",
-            "width": 72,
-            "height": 72,
-            "skinSlot": "log.btn.setting",
-            "children": [
-              {
-                "type": "image",
-                "name": "SettingIcon",
-                "id": "settingIcon",
-                "widget": {
-                  "hCenter": true,
-                  "vCenter": true
-                },
-                "width": 32,
-                "height": 32,
-                "skinSlot": "log.icon.setting",
-                "_doc": "F8 tactical control overlay glyph"
-              }
-            ]
+            "skinSlot": "log.btn.hit",
+            "widget": {
+              "left": 168,
+              "top": 0
+            },
+            "_doc": "外觀（底板、線稿圖示、說明字 加速）由 BattleButtonStyle 繪製；此節點只負責 76×72 觸控範圍。"
           },
           {
             "type": "button",
             "name": "BtnCollapse",
             "id": "btnCollapse",
-            "width": 72,
+            "width": 76,
             "height": 72,
-            "text": "戰報",
-            "skinSlot": "log.btn.collapse",
-            "styleSlot": "log.label.toggle",
-            "children": [
-              {
-                "type": "image",
-                "name": "CollapseIcon",
-                "id": "collapseIcon",
-                "widget": {
-                  "hCenter": true,
-                  "bottom": 6
-                },
-                "width": 12,
-                "height": 12,
-                "skinSlot": "log.icon.collapse",
-                "_doc": "F8 tactical control overlay glyph"
-              }
-            ],
-            "_comment": "Collapse only hides the log body; control touch targets remain full size.",
-            "textKey": "battle.log.toggle"
+            "skinSlot": "log.btn.hit",
+            "widget": {
+              "left": 252,
+              "top": 0
+            },
+            "_doc": "外觀（底板、線稿圖示、說明字 戰報）由 BattleButtonStyle 繪製；此節點只負責 76×72 觸控範圍。"
+          },
+          {
+            "type": "button",
+            "name": "BtnSetting",
+            "id": "btnSetting",
+            "width": 76,
+            "height": 72,
+            "skinSlot": "log.btn.hit",
+            "widget": {
+              "left": 336,
+              "top": 0
+            },
+            "_doc": "外觀（底板、線稿圖示、說明字 設定）由 BattleButtonStyle 繪製；此節點只負責 76×72 觸控範圍。"
           }
-        ],
+        ]
+      },
+      {
+        "type": "panel",
+        "name": "Divider",
+        "width": 2,
+        "height": 44,
         "widget": {
-          "right": 0,
-          "top": 0
-        }
+          "right": 11,
+          "top": 14
+        },
+        "skinSlot": "log.divider",
+        "_doc": "功能群與退出鈕的分隔線"
       },
       {
         "type": "panel",
@@ -221,12 +173,12 @@
           }
         ],
         "widget": {
-          "right": 352,
-          "top": 534
+          "right": 288,
+          "top": 836
         }
       }
     ],
-    "height": 392,
-    "_comment": "PROG-2-9377: 5 buttons stacked on the right edge; the log body opens to the left of the column so the two right-most board columns stay visible while collapsed. PROG-2-9389: the log body now opens below the board (bottom-right gap, left of the SP panel) so it never covers the enemy general or the two right-most board columns."
+    "height": 72,
+    "_comment": "PROG-2-10133 (B1): 5 個功能鈕搬到頂欄右側橫排（圖示＋2 字說明，外觀由 BattleButtonStyle 統一繪製）；退出鈕在 HUD 頂欄最右（72 寬），與功能群隔 24px。戰報本體展開時開在右下指令座左側。SidePanelRoot 右緣 = 頂欄 padding 32 + 退出 72；觸控範圍 76×72，1280×720 等效 51×48。"
   }
 }

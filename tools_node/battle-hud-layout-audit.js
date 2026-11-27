@@ -29,6 +29,8 @@ function auditBattleHud(options={}) {
   // 戰報面板改成右緣直排後根節點自帶高度、不再靠直向排版加總（PROG-2-9377）
   logRect.height=docs[3].root.layout?.type==='vertical'?(docs[3].root.children||[]).filter(n=>n.active!==false).reduce((s,n)=>s+len(n.height,h),0):len(docs[3].root.height,h);
   const groups={top:rect(top,w,h),cards:cardRect,log:logRect,commands:rect(docs[1].root,w,h)};
+  // B1（PROG-2-10133）：功能鈕列放在頂欄右側；頂欄的內容區止於功能鈕列左緣，之後的重疊才算違規
+  if(logRect.y>=groups.top.y-.1&&logRect.y+logRect.height<=groups.top.y+groups.top.height+.1&&logRect.x>groups.top.x)groups.top.width=Math.min(groups.top.width,logRect.x-groups.top.x);
   if(sp)groups.sp=rect(sp,w,h);
   for(const n of docs[4].root.children) if(n.active!==false) groups[n.name]=rect(n,w,h);
   for(const [name,r]of Object.entries(groups)){
