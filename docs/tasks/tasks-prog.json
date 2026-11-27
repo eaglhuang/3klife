@@ -20557,12 +20557,56 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_3244",
+      "id": "PROG-2-10119",
+      "title": "批次補舊 PROG 卡 frontmatter task_id（讓 ATM importer 可匯入）",
+      "owner": "ClaudeCode_claude-sonnet-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-27",
+      "created_by_agent": "ClaudeCode_claude-sonnet-5-5",
+      "started_at": "",
+      "started_by_agent": "",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "在舊卡 id 下一行補同值 task_id，僅新增行；跳過 in-progress 與 24h 內改動卡。",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [],
+      "notes": "2026-11-27 | 狀態: done | 驗證: 6 個 PR（#2756-#2761）CI 全 SUCCESS、diff 僅新增行 | 變更: PROG 2378 張＋其他系列 360 張補 task_id | 阻塞: 無；28 張無 frontmatter、約 70 張 in-progress/近期卡與 19 張引號格式卡的匯入器相容性未處理",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
-    "done": 379,
-    "in_progress": 6,
+    "done": 381,
+    "in_progress": 5,
     "open": 91,
-    "total": 476
+    "total": 477
   }
 }

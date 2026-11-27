@@ -17722,5 +17722,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10179.md",
     "title": "[PROG-2-10179] 武將說溜嘴破綻語與言論圖鑑系統規格書",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3244",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10119.md",
+    "title": "[PROG-2-10119] 批次補舊 PROG 卡 frontmatter task_id（讓 ATM importer 可匯入）",
+    "category": "task"
   }
 ]
