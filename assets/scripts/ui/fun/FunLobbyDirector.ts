@@ -20,8 +20,9 @@ import {
     type FunStageLines, type MoonChildInput, type MoonGuestCandidate, type StageGeneral, type StageRenderEnv,
 } from '../../core/fun/FunStageLines';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
+import { tryToddlerBarkTap } from './FunToddlerBarkView';
 import { loadGeneralAvatar } from '../core/GeneralAvatarLoader';
-import { countFunStageShown, playFunStage, stopFunStage, type FunStageBeat, type FunStagePlan } from './FunStageView';
+import { countFunStageShown, funStageShownCount, playFunStage, stopFunStage, type FunStageBeat, type FunStagePlan } from './FunStageView';
 
 /** 還沒播的新招募武將（記憶體；大廳沒開時先排著，回大廳補播） */
 let _deferred = false;
@@ -232,6 +233,8 @@ export function startFunLobbyDirector(host: Node): () => void {
         stopFunStage();
         _canvasHost = null;
     };
+    // QA 探針（實跑驗收讀取，不影響遊戲）：globalThis.__FUN_QA__
+    (globalThis as unknown as Record<string, unknown>).__FUN_QA__ = { services, funStageShownCount, runFunLobbyTick, scheduleFunTick, tryToddlerBarkTap };
     scheduleFunTick(1500);
     return _disposeEvents;
 }
