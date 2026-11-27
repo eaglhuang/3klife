@@ -24,7 +24,7 @@
 | `dispatch` | 派遣 | `DispatchJobs` | 唯讀轉接器，第二版遷入 |
 | `mercenary` | 傭兵出戰、義勇營 | 傭兵系統 | 唯讀轉接器，第二版遷入 |
 | `expedition` | 10 歲歷練 | 歷練存檔 | 唯讀轉接器，第二版遷入 |
-| `medical` | 待產（2 季）與哺乳、輕重傷 | 人物旗標 | 唯讀轉接器，第二版遷入；子狀態 `sub` 區分 |
+| `medical` | 待產（2 季）與哺乳、輕重傷 | 人物旗標 | 唯讀轉接器，第二版遷入；子狀態 `sub` 區分；**`injured` 另有伺服器 API 寫入口，見下方「`medical:injured` 寫入口」**（已與戰場專家對齊（11/28 審查））|
 | `campaign` | 出征（含守城防衛 `sub=defense`） | 戰場陣容 | **新增**，第二版接戰場陣容篩選 |
 | `estate`（預留） | 家業職缺 | 無（家業 E0 才有） | 預留，由家業 E0 接入（doc_spec_1181） |
 
@@ -86,7 +86,7 @@
 | `mentorAssign` ＋ `governance` | 無 | 老將退居幕後當教官，可兼太守 |
 | `mentorAssign` ＋ `estate` | 榮養位 | 家業規格 10.3 |
 
-其餘全部互斥，包含：`mentorAssign` 與 `campaign`（被指派的教官不能出征，使用者 11/21 裁決 #4）、`medical(pregnant／nursing)` 與 `campaign(sortie)`、`mercenary`、`dispatch`、`expedition`；`medical(injured)` 與一切（重傷不可派）；`academy` 與一切（入學即自動卸任其他職務）。
+其餘全部互斥，包含：`mentorAssign` 與 `campaign`（被指派的教官不能出征，使用者 11/21 裁決 #4）、`medical(pregnant／nursing)` 與 `campaign(sortie)`、`mercenary`、`dispatch`、`expedition`；`medical(injured)`（輕傷、重傷皆同）**不再與出征、守城互斥**（使用者 11/28 裁決：傷者可出戰，只扣屬性，已與戰場專家對齊（11/28 審查）），但仍與 `mercenary`、`dispatch`、`expedition`、`academy` 互斥（暫定，沿用原規則）；`academy` 與一切（入學即自動卸任其他職務）。
 
 ```json
 { "schema": "occupancy-matrix.v1", "default": "exclusive",
@@ -96,8 +96,21 @@
     { "a": "medical:pregnant", "b": "hallMission", "when": { "category": "domestic" } },
     { "a": "medical:nursing",  "b": "hallMission", "when": { "category": "domestic" } },
     { "a": "medical:nursing",  "b": "campaign:defense" },
+    { "a": "medical:injured",  "b": "campaign:sortie" },
+    { "a": "medical:injured",  "b": "campaign:defense" },
     { "a": "mentorAssign",     "b": "governance" }
   ] }
 ```
 
 矩陣只存資料；`OccupancyCompatibility` 函式（現況全互斥的預設函式）改讀此表，呼叫端不動。
+
+### `medical:injured` 寫入口（使用者 11/28 裁決；已與戰場專家對齊（11/28 審查））
+
+`medical` 種類整體仍是唯讀轉接器（`writable:false`，owner＝family），**但 `sub=injured` 開一個可寫入口，一律走伺服器 API，客戶端不直接寫**：
+
+- 寫入：`occupancy.acquire(kind=medical, sub=injured, level=light|severe, until=+1 季｜+2 季, refId=duel:<seed>:<季>)`；冪等，同一鍵重送不重複寫。呼叫端是生活單挑（QLIFE-01 第 6.4.1 節）與戰場名將重傷（`doc_spec_0720`）。
+- **同一人只有一筆 `injured`**：再次受傷時不疊加，`level` 取較重者、`until` 取較晚者；戰場 WOUNDED 與生活單挑輕傷是同一個狀態。
+- 屬性扣減：輕傷 −10%、重傷 −20%（暫定），走戰場既有 buff 乘算管線，取較重者，不疊加。
+- **互斥表**：`injured` 與 `campaign(sortie／defense)` 可並存（見上方 allow 表），傷者可出征、可守城，只扣屬性。
+- 釋放：休養期滿由季結算釋放，或醫館看診（輕傷痊癒、重傷降輕傷）。
+- 主角不受傷：對主角本人（及主角代理頭）的 `acquire(injured)` 一律拒絕。
