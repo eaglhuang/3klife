@@ -21,4 +21,4 @@
 | 13 | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-13.md | 298 |
 | 14 | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-14.md | 298 |
 | 15 | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-15.md | 298 |
-| 16 | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-16.md | 82 |
+| 16 | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-16.md | 83 |
