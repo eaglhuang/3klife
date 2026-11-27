@@ -20105,7 +20105,7 @@
       "title": "戰場右側 UI B0 缺陷：ui.ultimate.label 顯示原始 key、委任鈕字被截、寫死中文改 i18n",
       "owner": "ClaudeCode_claude-opus-5-5",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-27",
@@ -20136,7 +20136,7 @@
         "assets/resources/ui-spec/layouts/action-command-main.json",
         "tests/BattleI18nB0.test.ts"
       ],
-      "notes": "2026-11-27 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "notes": "2026-11-27 | 狀態: done | 驗證: tests/run-cli.ts 9936 全過（新增 tests/BattleI18nB0.test.ts）；tsc -p tsconfig.test.json 0 錯；compute-gate standard 13/14（1 警告為既有 ui→battle import）；web-desktop 實機建置（debug=false，exit 36）直進戰場修前 UltLabel=ui.ultimate.label、修後=奧義，委→委任 | 變更: 根因＝不經大廳進戰場時 I18nSystem 未載入語系且 ActionCommandComposite 未訂閱 onLocaleChanged；新增 I18nSystem.ensureLoaded 並在 BattleScene.start 呼叫；ActionCommandComposite／BattleHUDComposite 訂閱語系切換並於 onDestroy 取消；battle.log.delegate 改委任／委任／Auto／委任且版型改用置中字型 log.label.btn；計謀／點／受限／SP 準備中等寫死字改 battle.* 十四個新 key 四語系；切換背景鈕原已由 DEV 旗標擋掉，release 建置實測不存在 | 未做: 版面重排（B1 以後）、手機實機未驗、en 委任鈕詞用 Auto 與自動鈕字面易混請 PM 確認 | 阻塞: 無",
       "brief": {
         "style": "classic",
         "label": "",

@@ -1,5 +1,6 @@
 // @spec-source → Issue #2086；PROG-2-2234
 import { TestSuite, assert } from './TestRunner';
+import { withZhTwI18n } from './seedZhTwI18n';
 import { battleCoachPlacement, battleCoachIsObstacle, coachRectsOverlap } from '../assets/scripts/ui/core/BattleCoachPlacement';
 import { OPERATION_GUIDE } from '../assets/scripts/core/systems/FirstBattleOperationGuide';
 import { strategistHudLogLine } from '../assets/scripts/core/systems/StrategistHud';
@@ -22,7 +23,7 @@ export function createBattleHudIssue2086Suite(): TestSuite {
         // #2107-5：卡面常駐前綴
         assert.contains(src, "TALLY_STAT_PREFIX = { atk: '攻', hp: '命', cost: '糧' }"); assert.contains(src, '${TALLY_STAT_PREFIX.atk}${data.atk}'); assert.contains(src, '${TALLY_STAT_PREFIX.cost}${data.cost}');
     });
-    suite.test('SP 建構前到達的 80 上限保留，未取得上限不顯示 0/0', () => {
+    suite.test('SP 建構前到達的 80 上限保留，未取得上限不顯示 0/0', withZhTwI18n(() => {
         const hud: any = { _spLabel: null, _chargeLabel: null, _spReadyLabel: null, _spFill: null };
         const render = BattleHUDComposite.prototype['_renderSp']; render.call(hud, 0, 80);
         hud._spLabel = { string: '' }; hud._chargeLabel = { string: '' }; hud._spReadyLabel = { string: '' };
@@ -30,7 +31,7 @@ export function createBattleHudIssue2086Suite(): TestSuite {
         assert.equals('SP 0/80', hud._spLabel.string);
         render.call(hud, 0, 0); assert.equals('SP 準備中', hud._spLabel.string);
         assert.isFalse(hud._chargeLabel.string.includes('0/0'));
-    });
+    }));
     suite.test('兵種名留足字高並縮字；軍師欄位換行不留下孤立分隔符', () => {
         const layout = JSON.parse(fs.readFileSync(path.join(__dirname, '../assets/resources/ui-spec/layouts/tiger-tally-main.json'), 'utf8'));
         const skin = JSON.parse(fs.readFileSync(path.join(__dirname, '../assets/resources/ui-spec/skins/tiger-tally-default.json'), 'utf8'));

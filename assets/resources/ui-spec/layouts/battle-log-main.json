@@ -66,8 +66,8 @@
                 "id": "delegateText",
                 "width": 72,
                 "height": 72,
-                "text": "委",
-                "styleSlot": "log.label.title",
+                "text": "委任",
+                "styleSlot": "log.label.btn",
                 "widget": {
                   "hCenter": true,
                   "vCenter": true

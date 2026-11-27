@@ -1,5 +1,6 @@
 // @spec-source → Issue #2074；PROG-2-2215
 import { TestSuite, assert } from './TestRunner';
+import { withZhTwI18n } from './seedZhTwI18n';
 import { BattleController } from '../assets/scripts/battle/controllers/BattleController';
 import { GeneralUnit } from '../assets/scripts/core/models/GeneralUnit';
 import { EVENT_NAMES, Faction, GAME_CONFIG, TroopType } from '../assets/scripts/core/config/Constants';
@@ -124,7 +125,7 @@ export function createBattlePlaytest2Suite(): TestSuite {
         assert.isTrue(g.advance('ended'));
         assert.equals(null, g.hint);
     });
-    suite.test('HUD 的 SP 數值、填充與可用提示同源；不足訊息帶出當前值與需求', () => {
+    suite.test('HUD 的 SP 數值、填充與可用提示同源；不足訊息帶出當前值與需求', withZhTwI18n(() => {
         fresh();
         const label = { string: '' }, charge = { string: '' }, ready = { string: '' };
         let ratio = -1;
@@ -136,6 +137,6 @@ export function createBattlePlaytest2Suite(): TestSuite {
         const off = services().event.on(EVENT_NAMES.ShowToast, (d: { text: string }) => { text = d.text; });
         ActionCommandComposite.prototype['_onUltimateClick'].call({ _currentSp: 5, _maxSp: 100 } as any);
         assert.contains(text, '5/100'); assert.contains(text, '需要 100'); off();
-    });
+    }));
     return suite;
 }

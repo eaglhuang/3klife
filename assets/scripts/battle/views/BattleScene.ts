@@ -175,6 +175,8 @@ export class BattleScene extends Component {
       // 1. 初始化服務容器（必須在所有 services() 呼叫之前）
       // 傳入 this.node 作為 hostNode，讓 AudioSystem 得以掛載 AudioSource
       services().initialize(this.node);
+      // 不經大廳直接進戰場（登入直進、試玩、直接載場景）時語系字串還沒載入，t(key) 會回傳鍵名（PROG-2-10124）；失敗只警告，與大廳一致
+      await services().i18n.ensureLoaded().catch((e) => UCUFLogger.warn(LogCategory.BATTLE, "[BattleScene] 語系字串載入失敗", e));
       installBattleSfxGate(); // PROG-2-9481：所有音效走同一個節流閘門
       // ensureGlobalDevOverlay(); // 解耦移除
       UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] ServiceLoader 初始化完成");
