@@ -1,0 +1,703 @@
+{
+  "schema": "life-scenes.v1",
+  "scenes": [
+    {
+      "id": "gov_hall",
+      "area": "gov",
+      "nameKey": "life.scene.gov_hall",
+      "tag": [
+        "official"
+      ],
+      "openSlots": [
+        2,
+        4
+      ],
+      "capacity": 12
+    },
+    {
+      "id": "gov_office",
+      "area": "gov",
+      "nameKey": "life.scene.gov_office",
+      "tag": [
+        "official"
+      ],
+      "openSlots": [
+        2,
+        4
+      ],
+      "capacity": 10,
+      "slotBias": {
+        "2": 1.3,
+        "4": 1.2
+      }
+    },
+    {
+      "id": "gov_library",
+      "area": "gov",
+      "nameKey": "life.scene.gov_library",
+      "tag": [
+        "scholar"
+      ],
+      "openSlots": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "capacity": 10,
+      "slotBias": {
+        "2": 1.3,
+        "4": 1.3
+      }
+    },
+    {
+      "id": "gov_dais",
+      "area": "gov",
+      "nameKey": "life.scene.gov_dais",
+      "tag": [
+        "official",
+        "martial"
+      ],
+      "openSlots": [
+        1,
+        2,
+        4
+      ],
+      "capacity": 14
+    },
+    {
+      "id": "mil_barracks",
+      "area": "mil",
+      "nameKey": "life.scene.mil_barracks",
+      "tag": [
+        "martial"
+      ],
+      "openSlots": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "capacity": 20,
+      "slotBias": {
+        "1": 1.5
+      }
+    },
+    {
+      "id": "mil_range",
+      "area": "mil",
+      "nameKey": "life.scene.mil_range",
+      "tag": [
+        "martial"
+      ],
+      "openSlots": [
+        1,
+        2,
+        4
+      ],
+      "capacity": 12
+    },
+    {
+      "id": "mil_arena",
+      "area": "mil",
+      "nameKey": "life.scene.mil_arena",
+      "tag": [
+        "martial"
+      ],
+      "openSlots": [
+        1,
+        2,
+        4,
+        5
+      ],
+      "capacity": 10
+    },
+    {
+      "id": "mil_armory",
+      "area": "mil",
+      "nameKey": "life.scene.mil_armory",
+      "tag": [
+        "martial"
+      ],
+      "openSlots": [
+        2,
+        4
+      ],
+      "capacity": 6
+    },
+    {
+      "id": "mil_city",
+      "area": "mil",
+      "nameKey": "life.scene.mil_city",
+      "tag": [
+        "martial",
+        "official"
+      ],
+      "openSlots": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "capacity": 16,
+      "slotBias": {
+        "7": 0.6
+      },
+      "lateNightKind": "watch"
+    },
+    {
+      "id": "mil_beacon",
+      "area": "mil",
+      "nameKey": "life.scene.mil_beacon",
+      "tag": [
+        "martial",
+        "official"
+      ],
+      "openSlots": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "capacity": 4,
+      "slotBias": {
+        "7": 0.6
+      },
+      "lateNightKind": "watch"
+    },
+    {
+      "id": "mil_granary",
+      "area": "mil",
+      "nameKey": "life.scene.mil_granary",
+      "tag": [
+        "official"
+      ],
+      "openSlots": [
+        2,
+        4
+      ],
+      "capacity": 6
+    },
+    {
+      "id": "mkt_street",
+      "area": "mkt",
+      "nameKey": "life.scene.mkt_street",
+      "tag": [
+        "trade",
+        "play"
+      ],
+      "openSlots": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "capacity": 30,
+      "slotBias": {
+        "6": 1.3,
+        "7": 0.7
+      },
+      "lateNightKind": "nightMarket"
+    },
+    {
+      "id": "mkt_inn",
+      "area": "mkt",
+      "nameKey": "life.scene.mkt_inn",
+      "tag": [
+        "family",
+        "trade"
+      ],
+      "openSlots": [
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "capacity": 16,
+      "slotBias": {
+        "7": 1.5
+      },
+      "lateNightKind": "sleep"
+    },
+    {
+      "id": "mkt_tavern",
+      "area": "mkt",
+      "nameKey": "life.scene.mkt_tavern",
+      "tag": [
+        "drink"
+      ],
+      "openSlots": [
+        3,
+        4,
+        5,
+        6
+      ],
+      "capacity": 12,
+      "slotBias": {
+        "5": 1.3,
+        "6": 1.5,
+        "7": 1.2
+      },
+      "nightOwlSlots": [
+        7
+      ]
+    },
+    {
+      "id": "mkt_theater",
+      "area": "mkt",
+      "nameKey": "life.scene.mkt_theater",
+      "tag": [
+        "play"
+      ],
+      "openSlots": [
+        4,
+        5,
+        6
+      ],
+      "capacity": 14,
+      "slotBias": {
+        "6": 1.3
+      }
+    },
+    {
+      "id": "mkt_teahouse",
+      "area": "mkt",
+      "nameKey": "life.scene.mkt_teahouse",
+      "tag": [
+        "scholar",
+        "drink"
+      ],
+      "openSlots": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "capacity": 12,
+      "slotBias": {
+        "3": 1.3
+      }
+    },
+    {
+      "id": "mkt_tailor",
+      "area": "mkt",
+      "nameKey": "life.scene.mkt_tailor",
+      "tag": [
+        "trade"
+      ],
+      "openSlots": [
+        2,
+        3,
+        4
+      ],
+      "capacity": 6
+    },
+    {
+      "id": "mkt_smithy",
+      "area": "mkt",
+      "nameKey": "life.scene.mkt_smithy",
+      "tag": [
+        "trade",
+        "martial"
+      ],
+      "openSlots": [
+        2,
+        3,
+        4
+      ],
+      "capacity": 6
+    },
+    {
+      "id": "mkt_carpenter",
+      "area": "mkt",
+      "nameKey": "life.scene.mkt_carpenter",
+      "tag": [
+        "trade"
+      ],
+      "openSlots": [
+        2,
+        4
+      ],
+      "capacity": 6
+    },
+    {
+      "id": "mkt_grocery",
+      "area": "mkt",
+      "nameKey": "life.scene.mkt_grocery",
+      "tag": [
+        "trade"
+      ],
+      "openSlots": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "capacity": 8
+    },
+    {
+      "id": "mkt_clinic",
+      "area": "mkt",
+      "nameKey": "life.scene.mkt_clinic",
+      "tag": [
+        "medical"
+      ],
+      "openSlots": [
+        2,
+        3,
+        4,
+        5
+      ],
+      "capacity": 10
+    },
+    {
+      "id": "mkt_pawn",
+      "area": "mkt",
+      "nameKey": "life.scene.mkt_pawn",
+      "tag": [
+        "trade"
+      ],
+      "openSlots": [
+        3,
+        4,
+        5
+      ],
+      "capacity": 6
+    },
+    {
+      "id": "mkt_bookshop",
+      "area": "mkt",
+      "nameKey": "life.scene.mkt_bookshop",
+      "tag": [
+        "scholar",
+        "trade"
+      ],
+      "openSlots": [
+        2,
+        3,
+        4
+      ],
+      "capacity": 8,
+      "slotBias": {
+        "2": 1.3,
+        "4": 1.3
+      }
+    },
+    {
+      "id": "mkt_guild",
+      "area": "mkt",
+      "nameKey": "life.scene.mkt_guild",
+      "tag": [
+        "adventure"
+      ],
+      "openSlots": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "capacity": 12
+    },
+    {
+      "id": "mkt_match",
+      "area": "mkt",
+      "nameKey": "life.scene.mkt_match",
+      "tag": [
+        "family"
+      ],
+      "openSlots": [
+        2,
+        4
+      ],
+      "capacity": 6
+    },
+    {
+      "id": "mkt_gamble",
+      "area": "mkt",
+      "nameKey": "life.scene.mkt_gamble",
+      "tag": [
+        "play"
+      ],
+      "openSlots": [
+        4,
+        5,
+        6
+      ],
+      "capacity": 14,
+      "slotBias": {
+        "6": 1.4
+      }
+    },
+    {
+      "id": "mkt_bath",
+      "area": "mkt",
+      "nameKey": "life.scene.mkt_bath",
+      "tag": [
+        "play",
+        "medical"
+      ],
+      "openSlots": [
+        4,
+        5,
+        6
+      ],
+      "capacity": 12,
+      "slotBias": {
+        "5": 1.4
+      }
+    },
+    {
+      "id": "edu_academy",
+      "area": "edu",
+      "nameKey": "life.scene.edu_academy",
+      "tag": [
+        "scholar"
+      ],
+      "openSlots": [
+        2,
+        4
+      ],
+      "capacity": 20
+    },
+    {
+      "id": "edu_temple",
+      "area": "edu",
+      "nameKey": "life.scene.edu_temple",
+      "tag": [
+        "faith"
+      ],
+      "openSlots": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "capacity": 12,
+      "slotBias": {
+        "1": 1.3
+      }
+    },
+    {
+      "id": "edu_clan",
+      "area": "edu",
+      "nameKey": "life.scene.edu_clan",
+      "tag": [
+        "faith",
+        "family"
+      ],
+      "openSlots": [
+        2,
+        4
+      ],
+      "capacity": 8
+    },
+    {
+      "id": "home_general",
+      "area": "home",
+      "nameKey": "life.scene.home_general",
+      "tag": [
+        "family"
+      ],
+      "openSlots": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "capacity": 99,
+      "slotBias": {
+        "5": 1.2,
+        "7": 2
+      },
+      "lateNightKind": "sleep"
+    },
+    {
+      "id": "home_lord",
+      "area": "home",
+      "nameKey": "life.scene.home_lord",
+      "tag": [
+        "family"
+      ],
+      "openSlots": [
+        3,
+        4,
+        5,
+        6
+      ],
+      "capacity": 12
+    },
+    {
+      "id": "home_garden",
+      "area": "home",
+      "nameKey": "life.scene.home_garden",
+      "tag": [
+        "nature",
+        "family"
+      ],
+      "openSlots": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "capacity": 10
+    },
+    {
+      "id": "home_nursery",
+      "area": "home",
+      "nameKey": "life.scene.home_nursery",
+      "tag": [
+        "family"
+      ],
+      "openSlots": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "capacity": 6
+    },
+    {
+      "id": "out_river",
+      "area": "out",
+      "nameKey": "life.scene.out_river",
+      "tag": [
+        "nature"
+      ],
+      "openSlots": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "capacity": 10
+    },
+    {
+      "id": "out_forest",
+      "area": "out",
+      "nameKey": "life.scene.out_forest",
+      "tag": [
+        "nature",
+        "adventure"
+      ],
+      "openSlots": [
+        1,
+        2,
+        4
+      ],
+      "capacity": 10
+    },
+    {
+      "id": "out_farm",
+      "area": "out",
+      "nameKey": "life.scene.out_farm",
+      "tag": [
+        "nature"
+      ],
+      "openSlots": [
+        1,
+        2,
+        4
+      ],
+      "capacity": 12
+    },
+    {
+      "id": "out_bamboo",
+      "area": "out",
+      "nameKey": "life.scene.out_bamboo",
+      "tag": [
+        "nature"
+      ],
+      "openSlots": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "capacity": 6
+    },
+    {
+      "id": "out_peach",
+      "area": "out",
+      "nameKey": "life.scene.out_peach",
+      "tag": [
+        "nature",
+        "family"
+      ],
+      "openSlots": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "capacity": 10
+    },
+    {
+      "id": "out_spring",
+      "area": "out",
+      "nameKey": "life.scene.out_spring",
+      "tag": [
+        "medical",
+        "nature"
+      ],
+      "openSlots": [
+        3,
+        4,
+        5,
+        6
+      ],
+      "capacity": 10
+    },
+    {
+      "id": "out_orchard",
+      "area": "out",
+      "nameKey": "life.scene.out_orchard",
+      "tag": [
+        "nature"
+      ],
+      "openSlots": [
+        1,
+        2,
+        4
+      ],
+      "capacity": 10
+    },
+    {
+      "id": "mtn_deep",
+      "area": "mtn",
+      "nameKey": "life.scene.mtn_deep",
+      "tag": [
+        "adventure"
+      ],
+      "openSlots": [
+        1,
+        2,
+        4
+      ],
+      "capacity": 8
+    }
+  ]
+}
