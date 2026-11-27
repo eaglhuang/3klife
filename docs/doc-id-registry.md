@@ -17,14 +17,14 @@
 | 畫面UI類 | `doc_ui` | 54 |
 | 美術非UI類 | `doc_art` | 3 |
 | 數值類 | `doc_data` | 2 |
-| 遊戲規格類 | `doc_spec` | 1314 |
+| 遊戲規格類 | `doc_spec` | 1318 |
 | 索引類 | `doc_index` | 115 |
-| 任務卡類 | `doc_task` | 2957 |
+| 任務卡類 | `doc_task` | 2958 |
 | AI Agent 專用 | `doc_ai` | 43 |
 | Agent Skill 專用 | `doc_agentskill` | 106 |
 | Server 文件類 | `doc_server_<subtype>` | 3 |
 | 其它類 | `doc_other` | 1984 |
-| **合計** | — | **6604** |
+| **合計** | — | **6609** |
 
 ## Markdown 分片
 
@@ -32,7 +32,7 @@
 |------|------|-----:|------|
 | 分類統計 | docs/doc-id-registry-md-shards/doc-id-registry-stats.md | 23 | 單一分片 |
 | Tech / UI / Art / Data | docs/doc-id-registry-md-shards/doc-id-registry-tech-ui-art.md | 108 | 單一分片 |
-| Spec / Index / Task | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md | 25 | 16 個 parts |
+| Spec / Index / Task | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md | 26 | 17 個 parts |
 | AI / AgentSkill / Server | docs/doc-id-registry-md-shards/doc-id-registry-agent-server.md | 173 | 單一分片 |
 | 其它類 | docs/doc-id-registry-md-shards/doc-id-registry-other.md | 16 | 7 個 parts |
 
