@@ -17548,5 +17548,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10118.md",
     "title": "[PROG-2-10118] 戰場部隊徽章避讓武將本體",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3191",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10124.md",
+    "title": "[PROG-2-10124] 戰場右側 UI B0 缺陷：ui.ultimate.label 顯示原始 key、委任鈕字被截、寫死中文改 i18n",
+    "category": "task"
   }
 ]
