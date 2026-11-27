@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "doc": "QLIFE-01 第 3.5 節 日夜四季乘色表（PM 暫定、可調）。改此檔即生效，不改程式。",
+  "seasons": ["spring", "summer", "autumn", "winter"],
+  "seasonClock": {
+    "spring": { "nightStart": 20, "dawnStart": 5 },
+    "summer": { "nightStart": 21, "dawnStart": 5 },
+    "autumn": { "nightStart": 20, "dawnStart": 6 },
+    "winter": { "nightStart": 19, "dawnStart": 7 }
+  },
+  "dawnDurationHours": 1.5,
+  "duskLeadHours": 2,
+  "slots": [
+    { "id": 1, "key": "dawn", "startHour": 5, "endHour": 8 },
+    { "id": 2, "key": "morning", "startHour": 8, "endHour": 11 },
+    { "id": 3, "key": "noon", "startHour": 11, "endHour": 14 },
+    { "id": 4, "key": "afternoon", "startHour": 14, "endHour": 17 },
+    { "id": 5, "key": "evening", "startHour": 17, "endHour": 20 },
+    { "id": 6, "key": "night", "startHour": 20, "endHour": 24 },
+    { "id": 7, "key": "lateNight", "startHour": 0, "endHour": 5 }
+  ],
+  "phaseTint": {
+    "dawn": { "spring": "FFE6D2", "summer": "FFEBCF", "autumn": "FFDCC0", "winter": "E8E6F2" },
+    "day": { "spring": "FFFFFF", "summer": "FFF6DC", "autumn": "FFE6BE", "winter": "E8F0FF" },
+    "dusk": { "spring": "FFC89A", "summer": "FFC48C", "autumn": "FFB27C", "winter": "F0B8A8" },
+    "night": { "spring": "5A6BA0", "summer": "6272A8", "autumn": "55609A", "winter": "46558C" }
+  },
+  "lightIntensity": { "dawn": 0.3, "day": 0, "dusk": 0.7, "night": 1.0 },
+  "deepNightMultiplier": 0.85,
+  "deepNightLightTags": ["inn", "tavern", "theater", "gambling", "watch", "street_lamp"],
+  "transition": { "autoSeconds": 15, "manualSeconds": 0.6, "seasonSeconds": 0.6 },
+  "overlays": {
+    "seasonal": {
+      "spring": ["front_tree_spring", "particles_spring"],
+      "summer": ["front_tree_summer", "patch_summer_awning", "particles_summer"],
+      "autumn": ["overlay_autumn_leaves", "front_tree_autumn", "particles_autumn"],
+      "winter": ["overlay_winter_snow", "patch_winter_roof", "front_tree_winter", "particles_winter"]
+    },
+    "atmosphere": ["lights_atlas", "stars"]
+  }
+}
