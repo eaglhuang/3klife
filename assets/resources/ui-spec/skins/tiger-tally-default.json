@@ -174,28 +174,30 @@
     "tally.label.rarity": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
-      "fontSize": 24,
-      "lineHeight": 28,
+      "fontSize": 21,
+      "lineHeight": 24,
       "color": "#FFE28A",
-      "horizontalAlign": "CENTER",
+      "horizontalAlign": "RIGHT",
       "verticalAlign": "CENTER",
       "isBold": true,
-      "_doc": "稀有度標籤，顯示於左上角六角形牌匾（SSR/SR/R/N）。TS 在 _populateCards 中將 rarity enum 映射為顯示文字。",
+      "overflow": "SHRINK",
       "outlineColor": "#1E1208",
-      "outlineWidth": 3
+      "outlineWidth": 3,
+      "_doc": "乙版：品階字（R/SR/SSR/UR）貼右上，顏色由主題資料決定。"
     },
     "tally.label.stars": {
       "kind": "label-style",
       "font": "fonts/manrope/manrope",
-      "fontSize": 24,
-      "lineHeight": 28,
-      "color": "#FFD65A",
-      "horizontalAlign": "CENTER",
+      "fontSize": 21,
+      "lineHeight": 24,
+      "color": "#F1C453",
+      "horizontalAlign": "LEFT",
       "verticalAlign": "CENTER",
       "isBold": false,
-      "_doc": "星數顯示，放在底部 band 中心（★★★）。bind tally[i].stars，TS 需填入對應 rarity 的星字串。",
+      "overflow": "SHRINK",
       "outlineColor": "#1E1208",
-      "outlineWidth": 3
+      "outlineWidth": 2,
+      "_doc": "乙版：星級，空星顯示品質封頂（R3／SR4／SSR5／UR5）。"
     },
     "widget.resource.icon": {
       "kind": "label-style",
@@ -237,15 +239,16 @@
     "tally.label.name": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
-      "fontSize": 24,
-      "lineHeight": 28,
-      "color": "#FFFFFF",
-      "horizontalAlign": "CENTER",
+      "fontSize": 21,
+      "lineHeight": 24,
+      "color": "#FFF1D8",
+      "horizontalAlign": "LEFT",
+      "verticalAlign": "CENTER",
       "isBold": true,
       "overflow": "SHRINK",
-      "_doc": "名稱退成頂部輔助資訊，讓頭像與底部數值成為第一視線。",
       "outlineColor": "#1E1208",
-      "outlineWidth": 3
+      "outlineWidth": 3,
+      "_doc": "乙版：名稱靠左，右側讓給品階字；超長縮字。"
     },
     "tally.label.sub": {
       "kind": "label-style",
@@ -271,16 +274,17 @@
     },
     "tally.label.cost": {
       "kind": "label-style",
-      "font": "fonts/manrope/manrope",
-      "fontSize": 24,
-      "lineHeight": 28,
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 21,
+      "lineHeight": 24,
       "color": "#FFEC96",
-      "horizontalAlign": "CENTER",
+      "horizontalAlign": "LEFT",
       "verticalAlign": "CENTER",
       "isBold": true,
-      "_doc": "糧草費用縮小成右上角標，避免跟卡片主體搶權重。",
+      "overflow": "SHRINK",
       "outlineColor": "#1E1208",
-      "outlineWidth": 3
+      "outlineWidth": 3,
+      "_doc": "乙版：糧耗；數字前綴走 i18n（ui.tally.card.grain）。"
     },
     "tally.label.badge": {
       "kind": "label-style",
@@ -294,6 +298,82 @@
       "_doc": "兵種徽章縮寫文字（CV/IN/AR/SH...），白色置中，由 Layout JSON 定義，TigerTallyPanel 只負責填入文字。lineHeight 必須 >= fontSize 避免 Cocos 裁切。",
       "outlineColor": "#1E1208",
       "outlineWidth": 3
+    },
+    "tally.card.frame.v2": {
+      "kind": "sprite-frame",
+      "path": "ui/tiger-tally/theme/tally_frame_placeholder/spriteFrame",
+      "spriteType": "sliced",
+      "border": [
+        40,
+        40,
+        40,
+        56
+      ],
+      "allowAutoAtlas": true,
+      "_doc": "虎符卡乙版框圖佔位（287x142 白底，執行期乘品階色）；實際路徑與色板由 ui-spec/tiger-tally-card-theme.json 決定，交件正式框圖後只改那份資料。"
+    },
+    "tally.card.brushed": {
+      "kind": "sprite-frame",
+      "path": "ui/tiger-tally/theme/brushed-128/spriteFrame",
+      "spriteType": "tiled",
+      "allowAutoAtlas": false,
+      "_doc": "共用 128x128 灰階可平鋪拉絲圖，四階卡共用同一張貼圖，只調不透明度。"
+    },
+    "tally.label.owner": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 21,
+      "lineHeight": 24,
+      "color": "#C9B88F",
+      "horizontalAlign": "LEFT",
+      "verticalAlign": "CENTER",
+      "isBold": false,
+      "overflow": "SHRINK",
+      "outlineColor": "#1E1208",
+      "outlineWidth": 2,
+      "_doc": "乙版：持有武將行（未獲得時顯示「未獲得」）。"
+    },
+    "tally.label.resonance": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 21,
+      "lineHeight": 24,
+      "color": "#FFFFFF",
+      "horizontalAlign": "RIGHT",
+      "verticalAlign": "CENTER",
+      "isBold": true,
+      "overflow": "SHRINK",
+      "outlineColor": "#1E1208",
+      "outlineWidth": 3,
+      "_doc": "乙版：星級共鳴倍率（ui.tally.card.resonance）。"
+    },
+    "tally.label.flag": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 21,
+      "lineHeight": 24,
+      "color": "#7CFF9B",
+      "horizontalAlign": "RIGHT",
+      "verticalAlign": "CENTER",
+      "isBold": true,
+      "overflow": "SHRINK",
+      "outlineColor": "#1E1208",
+      "outlineWidth": 3,
+      "_doc": "乙版：出戰中標籤（取代冷卻遮罩，Q61 不設冷卻）。"
+    },
+    "tally.label.infuse": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 21,
+      "lineHeight": 24,
+      "color": "#DFE5EC",
+      "horizontalAlign": "CENTER",
+      "verticalAlign": "CENTER",
+      "isBold": true,
+      "overflow": "SHRINK",
+      "outlineColor": "#1E1208",
+      "outlineWidth": 3,
+      "_doc": "乙版：灌注小章（Lv5 銀、Lv8 金），顏色由主題資料決定。"
     }
   }
 }

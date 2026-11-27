@@ -68,6 +68,18 @@ export interface TallyCardData {
     isDisabled?: boolean;
     /** 守城保底券可用於這張卡（卡面顯示「保」小標；PROG-2-10041） */
     guardTicket?: boolean;
+    /** 持有卡品質 R／SR／SSR／UR（綁到持有實例時填；卡面品階優先採用，沒有就看 rarity；PROG-2-10131） */
+    qualityTier?: string;
+    /** 持有卡實際星級 1~5（卡面星數與共鳴倍率依此；沒有就數 stars 字串的 ★） */
+    starLevel?: number;
+    /** 持有武將名（卡面「持有 ○○」；沒有就不顯示該行） */
+    ownerName?: string;
+    /** 灌注等級（Lv5 銀章、Lv8 金章） */
+    infuseLevel?: number;
+    /** 圖鑑狀態 LOCKED／DISCOVERED／ACQUIRED／STAR_ENHANCED；戰場出戰卡沒填，依星級推導 */
+    collectionState?: 'LOCKED' | 'DISCOVERED' | 'ACQUIRED' | 'STAR_ENHANCED';
+    /** 已出戰（卡面顯示「出戰中」標籤，不做冷卻） */
+    deployed?: boolean;
     rarityLabel?: string;
     stars?: string;
     artResource?: string;

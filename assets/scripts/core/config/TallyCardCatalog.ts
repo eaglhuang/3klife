@@ -477,13 +477,14 @@ export function tallyDeployRefOf(card: Pick<TallyCardData, 'tacticId' | 'instanc
  */
 export function bindHeldTallyInstances(
     cards: readonly TallyCardData[],
-    held: Readonly<Record<string, Pick<TigerTallyCard, 'uid' | 'troopType'>>>,
+    held: Readonly<Record<string, Pick<TigerTallyCard, 'uid' | 'troopType'> & Partial<Pick<TigerTallyCard, 'stars' | 'quality'>>>>,
 ): TallyCardData[] {
     const free = Object.keys(held).sort().map((key) => held[key]);
     return cards.map((card) => {
         const index = free.findIndex((instance) => instance.troopType === card.unitType);
         if (index < 0) return { ...card };
         const [instance] = free.splice(index, 1);
-        return { ...card, instanceUid: instance.uid };
+        // 卡面乙版（PROG-2-10131）：品階與星級以持有卡為準
+        return { ...card, instanceUid: instance.uid, qualityTier: instance.quality, starLevel: instance.stars };
     });
 }

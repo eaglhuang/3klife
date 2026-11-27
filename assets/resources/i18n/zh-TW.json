@@ -1559,5 +1559,13 @@
   "ui.ceremony.crowd.cheer.4": "{0}賭一包瓜子，今年的黑馬就在現場！",
   "ui.ceremony.crowd.cheer.5": "沒上榜也別氣餒，今天主要是來蹭熱鬧的。",
   "ui.ceremony.crowd.cheer.6": "領獎的記得笑一個，這張要放進家族相簿！",
-  "ui.ceremony.crowd.say": "{0}：{1}"
+  "ui.ceremony.crowd.say": "{0}：{1}",
+  "ui.tally.card.grain": "糧 {0}",
+  "ui.tally.card.resonance": "共鳴 +{0}%",
+  "ui.tally.card.owner": "持有 {0}",
+  "ui.tally.card.unowned": "未獲得",
+  "ui.tally.card.unknown_name": "？？？",
+  "ui.tally.card.deployed": "出戰中",
+  "ui.tally.card.infuse_lv5": "灌5",
+  "ui.tally.card.infuse_lv8": "灌8"
 }

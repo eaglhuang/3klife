@@ -1490,5 +1490,13 @@
   "ui.ceremony.crowd.cheer.4": "{0}はひまわりの種一袋賭ける、今年のダークホースはこの会場にいる！",
   "ui.ceremony.crowd.cheer.5": "圏外でも落ち込まないで。今日は主に賑やかしに来ただけだし。",
   "ui.ceremony.crowd.cheer.6": "受賞者は笑顔で！この一枚は家族アルバム行きだから！",
-  "ui.ceremony.crowd.say": "{0}：{1}"
+  "ui.ceremony.crowd.say": "{0}：{1}",
+  "ui.tally.card.grain": "糧 {0}",
+  "ui.tally.card.resonance": "共鳴 +{0}%",
+  "ui.tally.card.owner": "所持 {0}",
+  "ui.tally.card.unowned": "未入手",
+  "ui.tally.card.unknown_name": "？？？",
+  "ui.tally.card.deployed": "出陣中",
+  "ui.tally.card.infuse_lv5": "注5",
+  "ui.tally.card.infuse_lv8": "注8"
 }

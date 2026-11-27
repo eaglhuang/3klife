@@ -1558,5 +1558,13 @@
   "ui.ceremony.crowd.cheer.4": "Bet you a bag of sunflower seeds the dark horse is in this very room!",
   "ui.ceremony.crowd.cheer.5": "Missed the list? Chin up, you are mostly here for the party anyway.",
   "ui.ceremony.crowd.cheer.6": "Winners, smile! This one is going straight into the family album.",
-  "ui.ceremony.crowd.say": "{0}: {1}"
+  "ui.ceremony.crowd.say": "{0}: {1}",
+  "ui.tally.card.grain": "Food {0}",
+  "ui.tally.card.resonance": "Bond +{0}%",
+  "ui.tally.card.owner": "Held by {0}",
+  "ui.tally.card.unowned": "Not owned",
+  "ui.tally.card.unknown_name": "???",
+  "ui.tally.card.deployed": "In battle",
+  "ui.tally.card.infuse_lv5": "Inf5",
+  "ui.tally.card.infuse_lv8": "Inf8"
 }
