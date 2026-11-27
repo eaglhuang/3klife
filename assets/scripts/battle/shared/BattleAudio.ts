@@ -6,7 +6,7 @@ import { attackSfxFor } from './AttackSfxMapping';
 import { SfxThrottle, parseSfxThrottleConfig } from './SfxThrottle';
 import {
   BattleAudioLayersConfig, DEFAULT_BATTLE_AUDIO_LAYERS, DieBoomStagger, FootstepCapState, HitSfxState,
-  createFootstepCapState, createHitSfxState, footstepClipFor, footstepDelayMs, jitterFootstepVolume, parseBattleAudioLayersConfig, pickUnitAttackSfx, tryAcquireFootstep,
+  createFootstepCapState, createHitSfxState, footstepClipFor, footstepDelayMs, jitterFootstepVolume, parseBattleAudioLayersConfig, pickTacticSfx, pickUnitAttackSfx, tryAcquireFootstep,
 } from './BattleAudioLayers';
 import { SfxVoicePool, SFX_CATEGORIES, type SfxCategory } from './SfxVoicePool';
 import { BattleBgmController, type BgmPort, type BgmTimerPort } from './BattleBgm';
@@ -217,6 +217,19 @@ export function playBattleAudio(cue: BattleAudioCue, volume = 1.0): void {
     if (wait > 0) { setTimeout(() => playBattleClip(clipName, volume, category), wait); return; }
   }
   playBattleClip(clipName, volume, category);
+}
+
+/**
+ * 戰法分組音效（PROG-2-10190）：戰法特效命中那一刻播一聲（一次施放一聲，不是每格一聲）。
+ * 依特效分組（fire／water／wind／heal／haste／morale／stun）從 battle-audio-layers.json 的 tactic 區塊挑 clip，
+ * 走發聲池 'tactic' 類別（占槽、每秒上限、人多降音量）。回傳實際送去發聲池的 clip 名；沒設定回 null。
+ */
+export function playTacticSfx(group: string, volume = 1.0): string | null {
+  ensureAudioLayersConfig();
+  const picked = pickTacticSfx(group, battleAudioLayers, Math.random, sfxPickState);
+  if (!picked) return null;
+  playBattleClip(picked.clip, picked.volume * volume, 'tactic');
+  return picked.clip;
 }
 
 /** 直接用 clip 名稱播（受擊分層、腳步變調版本用）；閘門與靜音規則同 playBattleAudio。 */

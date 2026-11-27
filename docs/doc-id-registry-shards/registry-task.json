@@ -17770,5 +17770,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10191.md",
     "title": "[PROG-2-10191] 使用者裁決寫入規格（純文件）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3262",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10190.md",
+    "title": "[PROG-2-10190] 戰法分組音效",
+    "category": "task"
   }
 ]

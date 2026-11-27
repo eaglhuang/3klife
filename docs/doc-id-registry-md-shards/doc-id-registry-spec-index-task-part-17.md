@@ -100,3 +100,4 @@
 | `doc_task_3257` | docs/agent-briefs/tasks/PROG/PROG-2-10134.md | [PROG-2-10134] 戰場音訊：小兵攻擊／受擊分兵種音效、戰場 BGM 三段、音效池與預載 |
 | `doc_task_3258` | docs/agent-briefs/tasks/PROG/PROG-2-10188.md | [PROG-2-10188] 武將生活化「Q 版社會」規格（純規格） |
 | `doc_task_3260` | docs/agent-briefs/tasks/PROG/PROG-2-10191.md | [PROG-2-10191] 使用者裁決寫入規格（純文件） |
+| `doc_task_3262` | docs/agent-briefs/tasks/PROG/PROG-2-10190.md | [PROG-2-10190] 戰法分組音效 |

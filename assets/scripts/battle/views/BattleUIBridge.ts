@@ -99,6 +99,7 @@ import {
 import {
   BATTLE_AUDIO_CUE,
   playBattleAudio,
+  playTacticSfx,
   setBattleBgmResult,
   playBattleClip,
   battleAudioLayers,
@@ -1167,6 +1168,8 @@ export class BattleUIBridge {
     const fxGroup = data.sourceType === SkillSourceType.Ultimate ? null : tacticVfxGroupOf(skillId);
     const pending = fxGroup ? takePendingTacticHit(skillId) : null;
     const grouped = fxGroup ? (this.ctx.unitRenderer?.playTacticHit(fxGroup, data.faction, pending?.cells ?? []) ?? 0) > 0 : false;
+    // PROG-2-10190：分組特效播出就配一聲對應音效（一次施放一聲）
+    if (grouped && fxGroup) playTacticSfx(fxGroup);
     if (!grouped) {
       playBattleGeneralSkillEffect(services().effect, this.ctx.boardRenderer,
         this.ctx.unitRenderer?.getGeneralSidelineWorldPosition(data.faction) ?? null, effectKey, 1.35);

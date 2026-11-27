@@ -13,11 +13,11 @@
  * 時間由呼叫端傳入（毫秒）。
  */
 
-export type SfxCategory = 'hit-heavy' | 'hit' | 'cast' | 'attack' | 'footstep' | 'other';
+export type SfxCategory = 'hit-heavy' | 'hit' | 'cast' | 'attack' | 'footstep' | 'other' | 'tactic';
 
-export const SFX_CATEGORIES: readonly SfxCategory[] = ['hit-heavy', 'hit', 'cast', 'attack', 'footstep', 'other'];
+export const SFX_CATEGORIES: readonly SfxCategory[] = ['hit-heavy', 'hit', 'cast', 'attack', 'footstep', 'other', 'tactic'];
 
-const PRIORITY: Record<SfxCategory, number> = { 'hit-heavy': 3, hit: 2, cast: 2, attack: 1, footstep: 0, other: 2 };
+const PRIORITY: Record<SfxCategory, number> = { 'hit-heavy': 3, hit: 2, cast: 2, attack: 1, footstep: 0, other: 2, tactic: 2 };
 
 export interface SfxVoicePoolConfig {
   /** 同時發聲上限（受池管理的類別合計） */
@@ -40,11 +40,13 @@ export const DEFAULT_SFX_VOICE_POOL: SfxVoicePoolConfig = {
   maxVoices: 8,
   attackReserve: 3,
   voiceExempt: ['footstep', 'other'],
-  perSecond: { attack: 5, hit: 7 },
+  perSecond: { attack: 5, hit: 7, tactic: 3 },
   defaultDurationMs: 450,
   clipDurationMs: {
     sfx_atk_blade: 420, sfx_atk_thrust: 400, sfx_atk_bow: 480, sfx_atk_arrow_whoosh: 500, sfx_atk_shield: 400, sfx_atk_charge: 550,
     sfx_hit_blade: 400, sfx_hit_pierce: 350, sfx_hit_arrow: 300, sfx_hit_clash: 450, sfx_hit_wood: 400, sfx_hit_body_a: 450, sfx_hit_body_b: 450,
+    // 戰法分組音效（PROG-2-10190）：占槽時間取實際長度的一部分，長音（水／風）不長期霸佔槽
+    tactic_fire: 1200, tactic_water: 1400, tactic_wind: 1300, tactic_heal: 1000, tactic_haste: 600, tactic_morale: 1300, tactic_stun: 1000,
   },
   duck: { perVoice: 0.06, minScale: 0.6 },
 };
