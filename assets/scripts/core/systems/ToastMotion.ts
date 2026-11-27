@@ -77,3 +77,13 @@ export function keepBracketsTogether(text: string, unitsPerLine: number): string
     }
     return out;
 }
+
+/**
+ * 一行保守可放幾個全形字：Label 寬度 ÷（字級＋字距）再少算 1 格。
+ * Label 實際換行比理論值早（字距、標點、粗體），剛好塞滿的括號詞會被拆開（PROG-2-10141）；
+ * 少算只會讓括號詞提早換行，不會被拆。
+ */
+export function toastUnitsPerLine(width: number, fontSize: number, spacingX: number): number {
+    if (!Number.isFinite(width) || width <= 0) return 0;
+    return Math.max(1, Math.floor(width / Math.max(1, fontSize + spacingX)) - 1);
+}

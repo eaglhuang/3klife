@@ -1,6 +1,6 @@
 {
   "id": "battle-log-default",
-  "version": 2,
+  "version": 3,
   "bundle": "battle_ui",
   "atlasPolicy": "battle_ui",
   "slots": {
@@ -20,54 +20,6 @@
       "alpha": 200,
       "spriteType": "sliced",
       "border": [4, 4, 4, 4]
-    },
-    "log.btn.auto": {
-      "kind": "color",
-      "color": "surfaceGreenDeep",
-      "alpha": 180,
-      "_doc": "Auto 自動戰鬥按鈕，32×32"
-    },
-    "log.btn.speed": {
-      "kind": "color",
-      "color": "surfaceBlueDeep",
-      "alpha": 180,
-      "_doc": "x2 加速按鈕，32×32"
-    },
-    "log.btn.setting": {
-      "kind": "color",
-      "color": "surfaceMidGray",
-      "alpha": 180,
-      "_doc": "⚙ 設定按鈕，32×32"
-    },
-    "log.btn.collapse": {
-      "kind": "color",
-      "color": "surfaceSepiaDeep",
-      "alpha": 170,
-      "_doc": "📋 收合/展開日誌按鈕，全寬 28px"
-    },
-    "log.icon.auto": {
-      "kind": "sprite-frame",
-      "path": "sprites/battle/log_icon_auto/spriteFrame",
-      "spriteType": "simple",
-      "allowAutoAtlas": true
-    },
-    "log.icon.speed": {
-      "kind": "sprite-frame",
-      "path": "sprites/battle/log_icon_speed/spriteFrame",
-      "spriteType": "simple",
-      "allowAutoAtlas": true
-    },
-    "log.icon.setting": {
-      "kind": "sprite-frame",
-      "path": "sprites/battle/log_icon_setting/spriteFrame",
-      "spriteType": "simple",
-      "allowAutoAtlas": true
-    },
-    "log.icon.collapse": {
-      "kind": "sprite-frame",
-      "path": "sprites/battle/log_icon_collapse/spriteFrame",
-      "spriteType": "simple",
-      "allowAutoAtlas": true
     },
     "log.label.title": {
       "kind": "label-style",
@@ -102,6 +54,18 @@
       "lineHeight": 32,
       "color": "rarityWhite",
       "horizontalAlign": "CENTER"
+    },
+    "log.btn.hit": {
+      "kind": "color",
+      "color": "backgroundNavyAlt",
+      "alpha": 0,
+      "_doc": "全透明觸控範圍；外觀由 BattleButtonStyle 繪製（PROG-2-10133）"
+    },
+    "log.divider": {
+      "kind": "color",
+      "color": "secondary",
+      "alpha": 170,
+      "_doc": "頂欄功能群與退出鈕之間的分隔線（銅色）"
     }
   }
 }
