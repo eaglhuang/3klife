@@ -17572,5 +17572,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10124.md",
     "title": "[PROG-2-10124] 戰場右側 UI B0 缺陷：ui.ultimate.label 顯示原始 key、委任鈕字被截、寫死中文改 i18n",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3201",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10141.md",
+    "title": "[PROG-2-10141] Toast 括號詞斷行修正（每行字數保守估算）",
+    "category": "task"
   }
 ]
