@@ -1551,6 +1551,7 @@
   "scout.autofillFill": "[{0}] into an empty slot",
   "scout.autofillNone": "You do not own a tactic that covers the gaps yet; sortie as usual",
   "scout.autofillBlocked": "Every slot holds a tactic this stage needs; sortie as usual",
+  "scout.autofillFailed": "Swap failed; your tactic slots are unchanged. Try again or sortie as usual",
   "scout.tag.siege": "for breaking gates",
   "scout.tag.anti_stealth": "spots ambushes",
   "scout.tag.breakthrough": "breaks enemy lines",

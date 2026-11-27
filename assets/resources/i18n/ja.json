@@ -1483,6 +1483,7 @@
   "scout.autofillFill": "【{0}】を空き枠へ",
   "scout.autofillNone": "不足を補える戦法をまだ持っていません。そのまま出陣できます",
   "scout.autofillBlocked": "枠はすべて本ステージで使う戦法で埋まっています。そのまま出陣できます",
+  "scout.autofillFailed": "装備の変更に失敗しました。戦法枠は変わっていません。再試行するか、そのまま出陣できます",
   "scout.tag.siege": "城門攻め用",
   "scout.tag.anti_stealth": "伏兵を見破る",
   "scout.tag.breakthrough": "敵陣突破",
