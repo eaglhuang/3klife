@@ -1,0 +1,35 @@
+{
+  "id": "life-scene-panel",
+  "version": 1,
+  "canvas": {
+    "fitWidth": true,
+    "fitHeight": true,
+    "safeArea": true,
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "dataSource": "assets/resources/data/life-ui-layout.json",
+  "root": {
+    "type": "container",
+    "name": "LifeScenePanelRoot",
+    "widget": { "top": 0, "left": 0, "right": 0, "bottom": 0 },
+    "children": [
+      { "type": "panel", "name": "MapFab", "widget": { "left": 58, "bottom": 43 }, "width": 81, "height": 81, "skinSlot": "life.mapFab" },
+      { "type": "panel", "name": "SlotBadge", "widget": { "top": 32, "right": 38 }, "width": 307, "height": 65, "skinSlot": "life.slotBadge" },
+      { "type": "container", "name": "CompanionRow", "widget": { "top": 130, "left": 38 }, "width": 120, "height": 54 },
+      {
+        "type": "panel",
+        "name": "ScenePanel",
+        "widget": { "left": 0, "right": 0, "bottom": 0 },
+        "height": 648,
+        "skinSlot": "life.scenePanel.bg",
+        "children": [
+          { "type": "container", "name": "TabBar", "widget": { "left": 0, "right": 0, "bottom": 0 }, "height": 108 },
+          { "type": "container", "name": "SearchBox", "widget": { "left": 38, "right": 38, "top": 20 }, "height": 97 },
+          { "type": "container", "name": "ListArea", "widget": { "left": 38, "right": 38, "top": 130, "bottom": 120 } },
+          { "type": "container", "name": "BackToLobby", "widget": { "right": 38, "top": 20 }, "width": 330, "height": 97 }
+        ]
+      }
+    ]
+  }
+}
