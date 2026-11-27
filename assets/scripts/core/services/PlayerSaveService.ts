@@ -1,3 +1,4 @@
+import { isEmptySwornState, normalizeSwornState, type SwornState } from '../systems/SwornPact';
 import { normalizeMissionSave } from '../mission/MissionSave';
 import type { MissionSaveV2 } from '../mission/MissionTypes';
 import { normalizeGovernanceBoosts, type ActiveGovernanceBoost } from '../systems/GovernanceEfficiencyItem';
@@ -404,6 +405,8 @@ export interface PlayerSaveSnapshot {
     bloodlineChildLedger?: BloodlineChildLedgerState;
     /** 新手樂趣四功能（FUN-01～04，PROG-2-10177）去重與輪替狀態；空狀態不寫，舊檔缺值讀回為空 */
     funState?: FunState;
+    /** 桃園結義盟約與割袍斷義（PROG-2-10207）；空狀態不寫，舊檔缺值讀回為空 */
+    swornPacts?: SwornState;
     /** 血統成長事件（PROG-2-10059）：已觸發紀錄與待決佇列；舊存檔缺欄位視為空 */
     bloodlineGrowthEvents?: BloodlineGrowthSave;
     /** 史境天下風雲榜年度指標與歷年排名（PROG-2-9601 PR2） */
@@ -691,6 +694,7 @@ export function validatePlayerSaveSnapshot(raw: unknown): PlayerSaveSnapshot {
         gameTime: GameClock.normalize(snapshot.gameTime as GameTimeState),
         roster: snapshot.roster,
         ...(snapshot.breedingBirthRecords !== undefined ? { breedingBirthRecords: normalizeBreedingBirthRecords(snapshot.breedingBirthRecords) } : {}),
+        ...(snapshot.swornPacts !== undefined && !isEmptySwornState(normalizeSwornState(snapshot.swornPacts)) ? { swornPacts: normalizeSwornState(snapshot.swornPacts) } : {}),
         ...(snapshot.funState !== undefined && !isEmptyFunState(normalizeFunState(snapshot.funState)) ? { funState: normalizeFunState(snapshot.funState) } : {}),
         ...(isEmptyChildLedger(normalizeChildLedger(snapshot.bloodlineChildLedger)) ? {} : { bloodlineChildLedger: normalizeChildLedger(snapshot.bloodlineChildLedger) }),
         ...(isEmptyBloodlineGrowth(normalizeBloodlineGrowthSave(snapshot.bloodlineGrowthEvents).state, normalizeBloodlineGrowthSave(snapshot.bloodlineGrowthEvents).pending) ? {} : { bloodlineGrowthEvents: { records: normalizeBloodlineGrowthSave(snapshot.bloodlineGrowthEvents).state.records, pending: normalizeBloodlineGrowthSave(snapshot.bloodlineGrowthEvents).pending } }),
