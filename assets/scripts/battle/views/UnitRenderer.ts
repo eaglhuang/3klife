@@ -60,6 +60,8 @@ import { FLOOD_SPLASH_INTERVAL_SEC, FLOOD_SPLASH_SPEC, createMoveSfxThrottleStat
 import { DEPLOY_LANDING_PUFFS, RiderDeployDrop, deployLandingDust, deployLandingThud, riderDeployRingPuffs } from "../shared/DeployLanding";
 import { playBattleAudio, playBattleFootstep } from "../shared/BattleAudio";
 import { MoveDustEmitter } from "./MoveDustEmitter";
+import { TacticVfxPlayer } from "./TacticVfxPlayer";
+import type { TacticVfxGroup } from "../shared/TacticVfxGroups";
 import { SpineUnitOverlay } from "./SpineGeneralOverlay";
 import { GeneralPortraitStandee, STANDEE_HEIGHT_PX, needsStandeeFallback } from "./GeneralPortraitStandee";
 import { generalSpineConfig, resolveRidingTier, setMountedList, squadMemberCount, troopSpineConfig, troopSpineConfigWithFallback } from '../shared/UnitPresentationConfig';
@@ -311,6 +313,8 @@ export class UnitRenderer extends Component {
   private readonly slashShots = new SlashShotView(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   /** 攻擊特效試作（零貼圖單一 Graphics，JSON 驅動；?atkVfx=old 可退回舊特效） */
   private readonly attackVfx = new AttackVfxPlayer(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
+  /** 戰法分組特效（PROG-2-10138）：火／水／風／回復／加速／鼓舞／控制，單一加色 Graphics、預算見 TacticVfxGroups */
+  private readonly tacticVfx = new TacticVfxPlayer(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   /** PROG-2-9407：落腳揚塵粒子，畫在 2D 疊層、單位後面（粒子池有上限，見 MoveDustEmitter） */
   private readonly moveSfxThrottle = createMoveSfxThrottleState();
   private readonly moveDust = new MoveDustEmitter(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
@@ -1304,6 +1308,7 @@ export class UnitRenderer extends Component {
     this.arrowShots.update(dt);
     this.slashShots.update(dt);
     this.attackVfx.update(dt);
+    this.tacticVfx.update(dt);
     perfEnd('fxShots', t); t = perfBegin();
 
     this.tileBuffMarkers.update(dt);
@@ -1574,6 +1579,41 @@ export class UnitRenderer extends Component {
     return this.spineUnits.charge(this.generalSpineId(faction), durationSec);
   }
 
+  /** 世界點投影到疊層，並回傳「一格寬約幾個 64px」當特效縮放（取不到投影回 null） */
+  private tacticFxPoint(world: Vec3): { x: number; y: number; scale: number } | null {
+    const a = this.overlayPoint(world);
+    if (!a) return null;
+    const ax = a.x, ay = a.y;
+    const cell = this.boardRenderer?.cellSize ?? 1;
+    const b = this.overlayPoint(new Vec3(world.x + cell, world.y, world.z));
+    const scale = b ? Math.abs(b.x - ax) / 64 : 1;
+    return { x: ax, y: ay, scale: scale > 0.2 ? scale : 1 };
+  }
+
+  /** 戰法前搖（PROG-2-10138）：施放方主將身上匯聚，時間與蓄力同長。沒歸類或取不到位置回 false。 */
+  public playTacticWindup(group: TacticVfxGroup, faction: Faction, durSec: number): boolean {
+    const world = this.getGeneralSidelineWorldPosition(faction);
+    const p = world ? this.tacticFxPoint(world) : null;
+    return !!p && this.tacticVfx.playWindup(group, p.x, p.y, faction === Faction.Player ? 1 : -1, p.scale, durSec);
+  }
+
+  /** 戰法命中＋餘韻（PROG-2-10138）：在受影響單位所在格播；cells 為空時改在施放者身上播。回傳實際播出的格數。 */
+  public playTacticHit(group: TacticVfxGroup, faction: Faction, cells: ReadonlyArray<{ lane: number; depth: number }>): number {
+    const facing = faction === Faction.Player ? 1 : -1;
+    let played = 0;
+    if (cells.length === 0) {
+      const world = this.getGeneralSidelineWorldPosition(faction);
+      const p = world ? this.tacticFxPoint(world) : null;
+      return p && this.tacticVfx.playHit(group, p.x, p.y, facing, p.scale) ? 1 : 0;
+    }
+    for (const cell of cells) {
+      const world = this.getUnitWorldPosition(cell.lane, cell.depth);
+      const p = world ? this.tacticFxPoint(world) : null;
+      if (p && this.tacticVfx.playHit(group, p.x, p.y, facing, p.scale)) played++;
+    }
+    return played;
+  }
+
   public playGeneralAttackPose(faction: Faction): void {
     this.spineUnits.playCast(this.generalSpineId(faction));
     // PROG-2-9353：沒有目標位置，朝對方武將方向在自身前方播刀光；任何一方不在場就略過
@@ -1692,7 +1732,7 @@ export class UnitRenderer extends Component {
     this.spineUnits.abortDuel();
   }
 
-  onDestroy(): void { this.unsubVitality?.(); this.unsubVitality = null; this.spineUnits.clear(); this.generalStandees.clear(); this.moveDust.destroy(); this.attackVfx.destroy(); services().floatText?.setAvoidProvider(null); }
+  onDestroy(): void { this.unsubVitality?.(); this.unsubVitality = null; this.spineUnits.clear(); this.generalStandees.clear(); this.moveDust.destroy(); this.attackVfx.destroy(); this.tacticVfx.destroy(); services().floatText?.setAvoidProvider(null); }
 
   private createGeneralView(faction: Faction): GeneralView {
     this.ensureRoots();
