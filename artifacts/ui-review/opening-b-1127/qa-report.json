@@ -1,0 +1,32 @@
+[
+  {
+    "k": "start",
+    "v": "mouse",
+    "errs": 0
+  },
+  {
+    "k": "screen",
+    "v": "BtnIntroNext",
+    "errs": 0
+  },
+  {
+    "k": "screen",
+    "v": "BtnCloseOpeningLetter",
+    "errs": 0
+  },
+  {
+    "k": "screen",
+    "v": "BtnShowcaseNext",
+    "errs": 0
+  },
+  {
+    "k": "totalClicksAfterTitle",
+    "v": 3,
+    "errs": 0
+  },
+  {
+    "k": "errors",
+    "v": [],
+    "errs": 0
+  }
+]
