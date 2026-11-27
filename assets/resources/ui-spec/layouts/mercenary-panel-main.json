@@ -504,7 +504,7 @@
                 "name": "MercCountdown",
                 "id": "mercCountdown",
                 "widget": {
-                  "top": 24,
+                  "top": 20,
                   "left": 32
                 },
                 "height": 40,
@@ -517,7 +517,7 @@
                 "name": "MercBond",
                 "id": "mercBond",
                 "widget": {
-                  "top": 74,
+                  "top": 62,
                   "left": 32
                 },
                 "height": 40,
@@ -527,10 +527,10 @@
               },
               {
                 "type": "label",
-                "name": "MercNametag",
-                "id": "mercNametag",
+                "name": "MercAffection",
+                "id": "mercAffection",
                 "widget": {
-                  "top": 124,
+                  "top": 104,
                   "left": 32
                 },
                 "height": 32,
@@ -540,10 +540,49 @@
               },
               {
                 "type": "label",
+                "name": "MercPoints",
+                "id": "mercPoints",
+                "widget": {
+                  "top": 146,
+                  "left": 32
+                },
+                "height": 32,
+                "text": "",
+                "styleSlot": "mp.label.meta",
+                "width": 660
+              },
+              {
+                "type": "label",
+                "name": "MercNametag",
+                "id": "mercNametag",
+                "widget": {
+                  "top": 188,
+                  "left": 32
+                },
+                "height": 32,
+                "text": "",
+                "styleSlot": "mp.label.meta",
+                "width": 660
+              },
+              {
+                "type": "label",
+                "name": "MercConditions",
+                "id": "mercConditions",
+                "widget": {
+                  "top": 230,
+                  "left": 32
+                },
+                "height": 110,
+                "text": "",
+                "styleSlot": "mp.label.meta",
+                "width": 660
+              },
+              {
+                "type": "label",
                 "name": "MercConfirm",
                 "id": "mercConfirm",
                 "widget": {
-                  "top": 180,
+                  "top": 352,
                   "left": 32
                 },
                 "height": 80,
@@ -556,12 +595,25 @@
                 "name": "MercFarewell",
                 "id": "mercFarewell",
                 "widget": {
-                  "top": 280,
+                  "top": 448,
                   "left": 32
                 },
-                "height": 80,
+                "height": 64,
                 "text": "",
                 "styleSlot": "mp.label.body",
+                "width": 660
+              },
+              {
+                "type": "label",
+                "name": "MercSworn",
+                "id": "mercSworn",
+                "widget": {
+                  "top": 448,
+                  "left": 32
+                },
+                "height": 64,
+                "text": "",
+                "styleSlot": "mp.label.meta",
                 "width": 660
               },
               {
@@ -569,7 +621,7 @@
                 "name": "MercNotice",
                 "id": "mercNotice",
                 "widget": {
-                  "top": 380,
+                  "top": 520,
                   "left": 32
                 },
                 "height": 32,
@@ -582,7 +634,7 @@
                 "name": "BtnMercBond",
                 "id": "btnMercBond",
                 "widget": {
-                  "top": 470,
+                  "top": 566,
                   "left": 32
                 },
                 "width": 400,

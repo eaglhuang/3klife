@@ -87,6 +87,7 @@ import { calculatePrestigeGain, clanPrestigeTierOf } from '../systems/Generation
 import { clanPrestigeBenefitOf } from '../systems/MvpLoopController';
 import { ITEM_VITALITY_PILL } from '../systems/ItemDef';
 import { createEmptyMercenaryBundle, normalizeMercenaryBundle, serializeMercenaryBundle, type MercenarySaveBundle } from '../systems/MercenarySaveModel';
+import { clampBondPoints } from '../systems/MercenaryOath';
 import { bondMercenaryToRoster, rarityOfTemplate, statsOfTemplate, type RosterBondResult } from '../systems/MercenaryRoster';
 import { useTrialTicket, type TrialTicketRejectReason, type TrialTicketResult } from '../systems/MercenaryTrialTicket';
 import { createUpkeepState } from '../systems/MercenaryUpkeep';
@@ -6282,7 +6283,7 @@ export class GameSession implements AcademyRecordPort {
         const outcome = createBorrow(this._borrowLedger, borrowRequest);
         if (!outcome) throw new Error('canBorrow 通過後 createBorrow 不應回傳 null');
         this._borrowLedger = outcome.ledger;
-        this._bondPoints += outcome.ownerBondReward;
+        this._bondPoints = clampBondPoints(this._bondPoints + outcome.ownerBondReward);
         if (this._autoSave && this._save) {
             await this.save();
         }
@@ -7283,7 +7284,7 @@ export class GameSession implements AcademyRecordPort {
                 this._roster.replaceAll(roster.map((general) => byId.get(general.id) ?? general));
                 for (let i = 0; i < added.length; i++) added[i] = byId.get(added[i].id) ?? added[i];
             }
-            this._bondPoints += bondPointsGained;
+            this._bondPoints = clampBondPoints(this._bondPoints + bondPointsGained);
         }
 
         if (options.fromGacha) {

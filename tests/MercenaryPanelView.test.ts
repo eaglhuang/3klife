@@ -20,7 +20,7 @@ export function createMercenaryPanelViewSuite(): TestSuite {
     });
 
     suite.test('倒數歸零且點數足夠：可結義，確認文字顯示點數成本', () => {
-        const ready = { ...createTrialMercenary('m1'), daysLeft: 0, bond: 6 };
+        const ready = { ...createTrialMercenary('m1'), daysLeft: 0, bond: 6, affection: 60 };
         const view = buildMercenaryPanelView(ready, { ...INPUT, bondPoints: 300 });
         assert.isTrue(view.bondEnabled);
         assert.isFalse(view.insufficientPoints);
@@ -28,7 +28,7 @@ export function createMercenaryPanelViewSuite(): TestSuite {
     });
 
     suite.test('倒數歸零但點數不足：結義按鈕不可按，並回報點數不足（不扣點）', () => {
-        const ready = { ...createTrialMercenary('m1'), daysLeft: 0, bond: 6 };
+        const ready = { ...createTrialMercenary('m1'), daysLeft: 0, bond: 6, affection: 60 };
         const view = buildMercenaryPanelView(ready, { ...INPUT, bondPoints: 299 });
         assert.isFalse(view.bondEnabled);
         assert.isTrue(view.insufficientPoints);

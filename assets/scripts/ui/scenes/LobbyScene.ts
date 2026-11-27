@@ -227,7 +227,7 @@ import { GovernorHallController, GovernorTerritoryInfo } from '../core/GovernorH
 import { BAG_CATEGORY_TABS, BAG_ROW_SLOTS, ItemBagController, type ItemBagGeneralTarget } from '../core/ItemBagController';
 import { planTerritoryUpgrade } from '../../core/systems/TerritoryUpgrade';
 import { rarityOfTemplate } from '../../core/systems/MercenaryRoster';
-import { mercBondedLine, mercDayThreeLine, mercFarewellLine, mercTrustLine } from '../../core/systems/MercenaryScripts';
+import { buildOathRitual, oathText, swornPartnerOf, type OathRitualStep } from '../../core/systems/MercenaryOath';
 import { RED_FACE_SHOW_MAX_ROWS, RedFaceGalleryController, RedFaceShowcaseController, RedFaceShowcaseDeps, toRedFaceTabFlowView } from '../core/RedFaceShowcaseController';
 import { GACHA_NODES, GACHA_POOL_INDEX, GACHA_POOLS, GachaPoolDef, RED_FACE_SECTION_ROW_BUTTON } from '../core/GachaScreenNodes';
 import { LocalGachaApi } from '../../core/gacha/LocalGachaApi';
@@ -3497,6 +3497,8 @@ export class LobbyScene extends Component {
                 return { count: ids.length, remainingMs };
             },
             hireFemale: () => this._hireMercenaryFrom(services().session.femalePoolStatus(this._generals, Date.now()).ids),
+            lookup: (key, ...args) => services().i18n.t(key, ...args),
+            swornPartnerName: (state) => this._swornPartnerNameOf(state.generalId),
         });
         const rowBindings = Array.from({ length: MERC_PANEL_MAX_ROWS }, (_, i) => ({
             buttonId: `btnMercRow${i}`,
@@ -4289,16 +4291,121 @@ export class LobbyScene extends Component {
         }
         try {
             const name = this._mercPanel.selectedGeneralName();
+            const generalId = this._mercPanel.selected()?.generalId;
             const ok = await this._mercPanel.bondSelected();
             if (!ok) {
-                services().event.emit('SHOW_TOAST', { message: '無法結義此傭兵', duration: 2.5 });
+                services().event.emit('SHOW_TOAST', { message: this._oathText('bondFailedToast'), duration: 2.5 });
             } else if (name) {
-                services().event.emit('SHOW_TOAST', { message: mercBondedLine(name), duration: 3 });
+                // 結果已寫入名冊與存檔；儀式只是演出，可點擊略過（PROG-2-10201）
+                this._refreshMercenaryPanel();
+                await this._playOathRitual(name, this._swornPartnerNameOf(generalId));
+                services().event.emit('SHOW_TOAST', { message: this._oathText('bondedLine', name), duration: 3 });
             }
         } catch (error) {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 傭兵結義失敗', error);
         } finally {
             this._refreshMercenaryPanel();
+        }
+    }
+
+    private _oathText(key: Parameters<typeof oathText>[1], ...args: Array<string | number>): string {
+        return oathText((k, ...a) => services().i18n.t(k, ...a), key, ...args);
+    }
+
+    /** 武將的義兄弟名字（DYNAMIC_SWORN／SWORN）；沒有義兄弟回傳 null。 */
+    private _swornPartnerNameOf(generalId: string | undefined): string | null {
+        if (!generalId) return null;
+        const partnerId = swornPartnerOf(generalId, services().session.dynamicRelations.listFor(generalId));
+        if (!partnerId) return null;
+        return this._generals.find((g) => g.id === partnerId)?.name
+            ?? services().session.roster.find((g) => g.id === partnerId)?.name
+            ?? partnerId;
+    }
+
+    /** 結義儀式（只建一個節點重複使用）：焚香、對飲、立誓、完成，逐句淡入淡出，點擊任意處略過。 */
+    private _oathRitualUi: { node: Node; title: Label; line: Label; hint: Label; opacity: UIOpacity } | null = null;
+    private _oathWake: (() => void) | null = null;
+    private _oathSkipped = false;
+    /** QA 探針：最近一次儀式播放的句子（PROG-2-10201 驗收用） */
+    public readonly oathRitualTrace: string[] = [];
+
+    private _ensureOathRitualUi(): { node: Node; title: Label; line: Label; hint: Label; opacity: UIOpacity } {
+        if (this._oathRitualUi) return this._oathRitualUi;
+        const node = new Node('OathRitual');
+        node.layer = this.node.layer;
+        node.parent = this.node;
+        node.addComponent(UITransform);
+        const widget = node.addComponent(Widget);
+        widget.isAlignLeft = widget.isAlignRight = widget.isAlignTop = widget.isAlignBottom = true;
+        widget.left = widget.right = widget.top = widget.bottom = 0;
+        node.addComponent(BlockInputEvents);
+        // 全螢幕暗幕（SolidBackground，同 UIManager 遮罩做法）
+        const veil = new Node('Veil');
+        veil.layer = node.layer;
+        veil.parent = node;
+        veil.addComponent(UITransform);
+        const veilWidget = veil.addComponent(Widget);
+        veilWidget.isAlignLeft = veilWidget.isAlignRight = veilWidget.isAlignTop = veilWidget.isAlignBottom = true;
+        veilWidget.left = veilWidget.right = veilWidget.top = veilWidget.bottom = 0;
+        const fill = veil.addComponent('SolidBackground') as unknown as { color: Color } | null;
+        if (fill) fill.color = new Color(14, 8, 6, 235);
+        const makeLabel = (name: string, size: number, y: number, color: Color): Label => {
+            const child = new Node(name);
+            child.layer = node.layer;
+            child.parent = node;
+            child.setPosition(0, y, 0);
+            child.addComponent(UITransform).setContentSize(1500, size * 2 + 24);
+            const label = child.addComponent(Label);
+            label.fontSize = size;
+            label.lineHeight = size + 14;
+            label.color = color;
+            label.overflow = Label.Overflow.SHRINK;
+            return label;
+        };
+        const title = makeLabel('Title', 96, 150, new Color(245, 210, 122, 255));
+        const line = makeLabel('Line', 44, -30, new Color(240, 232, 214, 255));
+        const hint = makeLabel('Hint', 28, -330, new Color(190, 176, 150, 255));
+        const opacity = line.node.addComponent(UIOpacity);
+        node.on(Node.EventType.TOUCH_END, () => { this._oathSkipped = true; this._oathWake?.(); }, this);
+        node.active = false;
+        this._oathRitualUi = { node, title, line, hint, opacity };
+        return this._oathRitualUi;
+    }
+
+    private _oathWait(seconds: number): Promise<void> {
+        return new Promise<void>((resolve) => {
+            const done = (): void => { this._oathWake = null; this.unschedule(done); resolve(); };
+            this._oathWake = done;
+            this.scheduleOnce(done, seconds);
+        });
+    }
+
+    private async _playOathRitual(generalName: string, partnerName: string | null): Promise<void> {
+        const ui = this._ensureOathRitualUi();
+        const steps: OathRitualStep[] = buildOathRitual(generalName, partnerName, (k, ...a) => services().i18n.t(k, ...a));
+        this._oathSkipped = false;
+        this.oathRitualTrace.length = 0;
+        ui.title.string = this._oathText('ritualTitle');
+        ui.hint.string = this._oathText('ritualSkip');
+        ui.node.active = true;
+        this._bringNodeToFront(ui.node);
+        const fade = 0.35;
+        try {
+            for (const step of steps) {
+                if (this._oathSkipped) break;
+                ui.line.string = step.text;
+                this.oathRitualTrace.push(step.text);
+                ui.opacity.opacity = 0;
+                Tween.stopAllByTarget(ui.opacity);
+                tween(ui.opacity).to(fade, { opacity: 255 }).start();
+                await this._oathWait(Math.max(0.2, step.ms / 1000 - fade));
+                if (this._oathSkipped) break;
+                tween(ui.opacity).to(fade, { opacity: 0 }).start();
+                await this._oathWait(fade);
+            }
+        } finally {
+            Tween.stopAllByTarget(ui.opacity);
+            ui.node.active = false;
         }
     }
 
@@ -5943,15 +6050,15 @@ export class LobbyScene extends Component {
                 };
                 // 試用第 3 日對話（傭兵 §G 日常互動，PROG-2-1771）
                 for (const uid of payload?.mercenaryDayThree ?? []) {
-                    services().event.emit('SHOW_TOAST', { message: mercDayThreeLine(mercName(uid)), duration: 3 });
+                    services().event.emit('SHOW_TOAST', { message: this._oathText('dayThreeLine', mercName(uid)), duration: 3 });
                 }
                 // 插畫第 4 階段「信任」（留存 §G，PROG-2-1777）
                 for (const uid of payload?.mercenaryTrust ?? []) {
-                    services().event.emit('SHOW_TOAST', { message: mercTrustLine(mercName(uid)), duration: 3 });
+                    services().event.emit('SHOW_TOAST', { message: this._oathText('trustLine', mercName(uid)), duration: 3 });
                 }
                 // 傭兵試用期滿離隊告別（傭兵 §G 退場告別，PROG-2-1154、PROG-2-1771）
                 for (const uid of payload?.mercenaryDepartures ?? []) {
-                    services().event.emit('SHOW_TOAST', { message: mercFarewellLine(mercName(uid)), duration: 3 });
+                    services().event.emit('SHOW_TOAST', { message: this._oathText('farewellLine', mercName(uid)), duration: 3 });
                 }
                 if (payload?.matchmakerOfferNotice) {
                     this._enqueueMatchmakerGuide(payload.matchmakerOfferNotice);
