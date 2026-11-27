@@ -5,9 +5,11 @@ import { services } from '../../core/managers/ServiceLoader';
 import { attackSfxFor } from './AttackSfxMapping';
 import { SfxThrottle, parseSfxThrottleConfig } from './SfxThrottle';
 import {
-  BattleAudioLayersConfig, DEFAULT_BATTLE_AUDIO_LAYERS, DieBoomStagger, FootstepCapState,
-  createFootstepCapState, footstepClipFor, footstepDelayMs, jitterFootstepVolume, parseBattleAudioLayersConfig, tryAcquireFootstep,
+  BattleAudioLayersConfig, DEFAULT_BATTLE_AUDIO_LAYERS, DieBoomStagger, FootstepCapState, HitSfxState,
+  createFootstepCapState, createHitSfxState, footstepClipFor, footstepDelayMs, jitterFootstepVolume, parseBattleAudioLayersConfig, pickUnitAttackSfx, tryAcquireFootstep,
 } from './BattleAudioLayers';
+import { SfxVoicePool, SFX_CATEGORIES, type SfxCategory } from './SfxVoicePool';
+import { BattleBgmController, type BgmPort, type BgmTimerPort } from './BattleBgm';
 
 
 /**
@@ -178,31 +180,73 @@ export function resolveBattleGeneralHitSfxKey(): BattleAudioCue {
   return BATTLE_AUDIO_CUE.generalHitCommon;
 }
 
+/**
+ * 音效 cue → 發聲池類別（PROG-2-10134）。沒列的 cue 走 'other'（不受發聲槽限制，只計數）。
+ * 受擊／擋下／暴擊／倒地優先級最高，其次一般受擊與放招，再來小兵與主將出手，腳步最低。
+ */
+export const BATTLE_AUDIO_CUE_CATEGORY: Partial<Record<BattleAudioCue, SfxCategory>> = {
+  [BATTLE_AUDIO_CUE.unitHitPrimary]: 'hit', [BATTLE_AUDIO_CUE.unitHitSecondary]: 'hit', [BATTLE_AUDIO_CUE.unitHitCommon]: 'hit', [BATTLE_AUDIO_CUE.generalHitCommon]: 'hit',
+  [BATTLE_AUDIO_CUE.critHit]: 'hit-heavy', [BATTLE_AUDIO_CUE.shieldBlock]: 'hit-heavy', [BATTLE_AUDIO_CUE.unitDie]: 'hit-heavy', [BATTLE_AUDIO_CUE.fortressDamaged]: 'hit-heavy',
+  [BATTLE_AUDIO_CUE.unitAttackPrimary]: 'attack', [BATTLE_AUDIO_CUE.unitAttackSecondary]: 'attack', [BATTLE_AUDIO_CUE.unitAttackCommon]: 'attack',
+  [BATTLE_AUDIO_CUE.unitAttackBow]: 'attack', [BATTLE_AUDIO_CUE.unitAttackThrust]: 'attack', [BATTLE_AUDIO_CUE.unitAttackShield]: 'attack',
+  [BATTLE_AUDIO_CUE.generalAttackCommon]: 'cast', [BATTLE_AUDIO_CUE.generalAttackBlade]: 'cast', [BATTLE_AUDIO_CUE.generalAttackSpear]: 'cast',
+  [BATTLE_AUDIO_CUE.generalAttackSword]: 'cast', [BATTLE_AUDIO_CUE.generalAttackBow]: 'cast', [BATTLE_AUDIO_CUE.generalAttackCast]: 'cast',
+  [BATTLE_AUDIO_CUE.skillCharge]: 'cast', [BATTLE_AUDIO_CUE.skillRelease]: 'cast',
+  [BATTLE_AUDIO_CUE.unitMove]: 'footstep',
+};
+
 export function playBattleAudio(cue: BattleAudioCue, volume = 1.0): void {
   const clipName = BATTLE_AUDIO_CLIP_MAP[cue];
   if (!clipName) {
     UCUFLogger.warn(LogCategory.LIFECYCLE, `[BattleAudio] 音效 cue 缺少 clip 對應 cue=${cue}`);
     return;
   }
+  const category = BATTLE_AUDIO_CUE_CATEGORY[cue] ?? 'other';
+
+  // PROG-2-10134：小兵出手音依兵種分檔（劈砍／槍刺／箭／盾擊／騎兵衝鋒），音量比受擊小；設定沒列才退回 clip 對照表
+  if (category === 'attack') {
+    ensureAudioLayersConfig();
+    const picked = pickUnitAttackSfx(cue, battleAudioLayers, Math.random, sfxPickState);
+    if (picked) { playBattleClip(picked.clip, picked.volume * volume, 'attack'); return; }
+  }
 
   // PROG-2-9729：倒地聲與暴擊聲不同幀疊播，後到的延後 staggerMs
   if (cue === BATTLE_AUDIO_CUE.unitDie || cue === BATTLE_AUDIO_CUE.critHit) {
     ensureAudioLayersConfig();
     const wait = dieBoomStagger.delayFor(cue === BATTLE_AUDIO_CUE.unitDie ? 'die' : 'boom', nowMs());
-    if (wait > 0) { setTimeout(() => playBattleClip(clipName, volume), wait); return; }
+    if (wait > 0) { setTimeout(() => playBattleClip(clipName, volume, category), wait); return; }
   }
-  playBattleClip(clipName, volume);
+  playBattleClip(clipName, volume, category);
 }
 
 /** 直接用 clip 名稱播（受擊分層、腳步變調版本用）；閘門與靜音規則同 playBattleAudio。 */
-export function playBattleClip(clipName: string, volume = 1.0): void {
+export function playBattleClip(clipName: string, volume = 1.0, category: SfxCategory = 'other'): void {
+  // PROG-2-10134：先過發聲池（同時發聲上限、優先級、類別每秒上限、人多降音量），過了才交給統一閘門
+  const t = nowMs();
+  const slot = sfxPool.acquire(category, clipName, t);
+  if (!slot.ok) return;
   // PROG-2-9439／9481：節流改在 AudioSystem 的統一閘門做，這裡只確保閘門已裝上，不再自己判斷（避免算兩次）
   // 音效系統未就緒或缺檔都靜音略過，不可丟例外（PROG-2-9357）
   try {
     installBattleSfxGate();
-    services().audio.playSfx(clipName, volume);
+    services().audio.playSfx(clipName, volume * slot.volumeScale);
+    recordPlayCost(clipName, nowMs() - t);
   } catch { /* 靜音 */ }
 }
+
+/** 發聲池與出手音輪播狀態（PROG-2-10134）：預先配置一次，戰場內重用，不每次新建 */
+export const sfxPool = new SfxVoicePool();
+const sfxPickState: HitSfxState = createHitSfxState();
+
+/** 首次播放與之後播放的同步呼叫耗時（毫秒），量測預載效果（PROG-2-10134） */
+const playCost = { first: {} as Record<string, number>, laterSumMs: 0, laterCount: 0, laterMaxMs: 0 };
+function recordPlayCost(clip: string, ms: number): void {
+  if (playCost.first[clip] === undefined) { playCost.first[clip] = ms; return; }
+  playCost.laterSumMs += ms; playCost.laterCount++; if (ms > playCost.laterMaxMs) playCost.laterMaxMs = ms;
+}
+
+/** 統一閘門的放行／擋下次數（PROG-2-10134），與發聲池計數合併成證據 */
+const gateCount = { allowed: 0, denied: 0 };
 
 /** 戰鬥音效分層設定（PROG-2-9729）；data/battle-audio-layers.json，讀到之前用預設。 */
 export let battleAudioLayers: BattleAudioLayersConfig = DEFAULT_BATTLE_AUDIO_LAYERS;
@@ -210,14 +254,22 @@ const dieBoomStagger = new DieBoomStagger();
 const footstepCap: FootstepCapState = createFootstepCapState();
 let layersConfigRequested = false;
 
-export function ensureAudioLayersConfig(): void {
-  if (layersConfigRequested) return;
+let layersConfigPromise: Promise<void> = Promise.resolve();
+
+/** 讀 data/battle-audio-layers.json（只讀一次）；回傳的 Promise 在設定套用後完成，失敗也 resolve（用預設）。 */
+export function ensureAudioLayersConfig(): Promise<void> {
+  if (layersConfigRequested) return layersConfigPromise;
   layersConfigRequested = true;
   try {
-    services().resource.loadJson<unknown>('data/battle-audio-layers', { tags: ['battle'] })
-      .then(raw => { battleAudioLayers = parseBattleAudioLayersConfig(raw); dieBoomStagger.setStaggerMs(battleAudioLayers.dieBoom.staggerMs); })
+    layersConfigPromise = services().resource.loadJson<unknown>('data/battle-audio-layers', { tags: ['battle'] })
+      .then(raw => {
+        battleAudioLayers = parseBattleAudioLayersConfig(raw);
+        dieBoomStagger.setStaggerMs(battleAudioLayers.dieBoom.staggerMs);
+        sfxPool.setConfig(battleAudioLayers.pool);
+      })
       .catch(() => { /* 讀不到用預設 */ });
   } catch { /* 資源系統未就緒：用預設 */ }
+  return layersConfigPromise;
 }
 
 /**
@@ -230,7 +282,7 @@ export function playBattleFootstep(troopType: string, fallbackCue: BattleAudioCu
   const clip = footstepClipFor(troopType, battleAudioLayers);
   const volume = jitterFootstepVolume(baseVolume, battleAudioLayers);
   const delay = footstepDelayMs(battleAudioLayers);
-  const play = (): void => { if (clip) playBattleClip(clip, volume); else playBattleAudio(fallbackCue, volume); };
+  const play = (): void => { if (clip) playBattleClip(clip, volume, 'footstep'); else playBattleAudio(fallbackCue, volume); };
   if (delay <= 1) play(); else setTimeout(play, delay);
   return true;
 }
@@ -241,7 +293,9 @@ export function playBattleFootstep(troopType: string, fallbackCue: BattleAudioCu
  */
 export function battleSfxGate(clip: string): boolean {
   ensureSfxThrottleConfig();
-  return battleSfxThrottle.allow(clip, nowMs());
+  const ok = battleSfxThrottle.allow(clip, nowMs());
+  if (ok) gateCount.allowed++; else gateCount.denied++;
+  return ok;
 }
 
 /** 戰場開始時裝上閘門；重複呼叫不會重裝。音效系統未就緒就略過。 */
@@ -261,6 +315,8 @@ export function uninstallBattleSfxGate(): void {
   } catch { /* 音效系統未就緒 */ }
   battleSfxThrottle.reset();
   dieBoomStagger.reset();
+  sfxPool.clear();
+  stopBattleBgm(true);
 }
 
 /** 戰鬥音效節流（PROG-2-9439）；數值在 data/battle-audio.json，讀到之前用預設值。 */
@@ -280,3 +336,86 @@ function ensureSfxThrottleConfig(): void {
       .catch(() => { /* 讀不到用預設 */ });
   } catch { /* 資源系統未就緒：用預設 */ }
 }
+
+// ─────────────────────────────────────────────────────────────
+//  PROG-2-10134：戰場 BGM、音效預載、debug 計數
+// ─────────────────────────────────────────────────────────────
+
+const bgmPort: BgmPort = {
+  hasClip: (name) => { try { return services().audio.hasClip(name); } catch { return false; } },
+  crossfadeTo: (clip, o) => { try { services().audio.crossfadeTo(clip, o.fadeSec, { volume: o.volume, loop: o.loop }); } catch { /* 靜音 */ } },
+  fadeOut: (sec) => { try { services().audio.fadeOutBgm(sec); } catch { /* 靜音 */ } },
+  stop: () => { try { services().audio.fadeOutBgm(0); } catch { /* 靜音 */ } },
+};
+const bgmTimers: BgmTimerPort = {
+  set: (fn, ms) => setTimeout(fn, ms),
+  clear: (h) => clearTimeout(h as ReturnType<typeof setTimeout>),
+};
+export const battleBgm = new BattleBgmController(bgmPort, bgmTimers, () => battleAudioLayers.bgm);
+
+/** 戰場開始：播開戰段 BGM（淡入），之後自動交叉淡入緊張段。設定載入完成後才開始。 */
+export function startBattleBgm(): void {
+  void ensureAudioLayersConfig().then(() => battleBgm.startBattle());
+}
+
+/** 戰場分出勝負：勝利／敗北換結果曲，平手淡出。 */
+export function setBattleBgmResult(result: string): void {
+  battleBgm.setResult(result);
+}
+
+/** 離開戰場：停止 BGM（immediate 立刻停；預設淡出）。 */
+export function stopBattleBgm(immediate = false): void {
+  battleBgm.stop(immediate);
+}
+
+export interface BattleAudioWarmReport { enabled: boolean; warmed: number; missing: string[]; ms: number }
+export let lastWarmReport: BattleAudioWarmReport | null = null;
+
+/** URL 帶 sfxWarm=0 可關閉暖機（量測預載前後延遲用） */
+function warmDisabled(): boolean {
+  try { return new URLSearchParams((globalThis as any)?.window?.location?.search ?? '').get('sfxWarm') === '0'; } catch { return false; }
+}
+
+/**
+ * 戰前預載（PROG-2-10134）：clip 已由 BattleSceneLoader 載入 AudioSystem 快取；這裡再依設定的 preload 清單
+ * （馬蹄、放招、攻擊、受擊）各以音量 0 播一次暖機，讓引擎先建好解碼／播放資源，戰鬥中第一次播放不再延遲。
+ */
+export async function warmBattleAudio(): Promise<BattleAudioWarmReport> {
+  await ensureAudioLayersConfig();
+  const t0 = nowMs();
+  if (warmDisabled()) return (lastWarmReport = { enabled: false, warmed: 0, missing: [], ms: 0 });
+  try {
+    const r = services().audio.warmClips(battleAudioLayers.preload);
+    return (lastWarmReport = { enabled: true, warmed: r.warmed.length, missing: r.missing, ms: nowMs() - t0 });
+  } catch {
+    return (lastWarmReport = { enabled: true, warmed: 0, missing: [...battleAudioLayers.preload], ms: nowMs() - t0 });
+  }
+}
+
+/** 戰場音訊計數快照（debug／驗證用）：各類別 requested／played／dropped／stolen、各 clip 播放次數、閘門、BGM、暖機、首播耗時。 */
+export function getBattleAudioStats(): Record<string, unknown> {
+  const categories: Record<string, unknown> = {};
+  for (const c of SFX_CATEGORIES) categories[c] = { ...sfxPool.stats[c] };
+  const first = playCost.first;
+  return {
+    categories,
+    clipPlayed: { ...sfxPool.clipPlayed },
+    peakVoices: sfxPool.peakVoices,
+    maxVoices: sfxPool.getConfig().maxVoices,
+    perSecondCaps: { ...sfxPool.getConfig().perSecond },
+    gate: { ...gateCount },
+    bgm: { phase: battleBgm.phase, transitions: battleBgm.transitions.map(t => ({ ...t })) },
+    warm: lastWarmReport,
+    playCost: { firstCallMs: first, laterAvgMs: playCost.laterCount > 0 ? playCost.laterSumMs / playCost.laterCount : 0, laterMaxMs: playCost.laterMaxMs, laterCount: playCost.laterCount },
+  };
+}
+
+/** 清零計數（驗證腳本在量測區間開頭呼叫）。 */
+export function resetBattleAudioStats(): void {
+  sfxPool.resetStats();
+  gateCount.allowed = 0; gateCount.denied = 0;
+  playCost.first = {}; playCost.laterSumMs = 0; playCost.laterCount = 0; playCost.laterMaxMs = 0;
+}
+
+// 掛在 globalThis 給無頭瀏覽器驗證讀取（只讀；沒有副作用）
+try { (globalThis as any).__battleAudio = { stats: getBattleAudioStats, reset: resetBattleAudioStats }; } catch { /* 無 globalThis */ }

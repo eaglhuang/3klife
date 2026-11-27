@@ -4,6 +4,7 @@
 // 本模組所有函數均無 BattleScene 實例依賴（不使用 this）。
 // Unity 對照：BattleDataLoader + BattleHandBuilder 靜態工具類別
 
+import { warmBattleAudio } from '../shared/BattleAudio';
 import { ancestorSignatureSkillOf } from '../shared/AncestralSpirit';
 import { assetManager, AudioClip } from "cc";
 import { services } from "../../core/managers/ServiceLoader";
@@ -259,6 +260,9 @@ export async function prewarmBattleAudioClips(): Promise<void> {
     }
 
     services().audio.registerClips(clips);
+    // PROG-2-10134：馬蹄、放招、攻擊、受擊音效戰前暖機，戰鬥中第一次播放不再臨時初始化
+    const warm = await warmBattleAudio();
+    UCUFLogger.info(LogCategory.LIFECYCLE, `[BattleSceneLoader] 戰場音效暖機 enabled=${warm.enabled} warmed=${warm.warmed} missing=${warm.missing.length} ms=${warm.ms.toFixed(1)}`);
   } catch (error) {
     UCUFLogger.warn(LogCategory.LIFECYCLE, '[BattleSceneLoader] battle audio clips 預熱失敗', error);
   }

@@ -1,6 +1,6 @@
 import { UCUFLogger, LogCategory } from '../utils/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
-import { AudioClip, AudioSource, Node, director, tween } from "cc";
+import { AudioClip, AudioSource, Node, Tween, director, tween } from "cc";
 import { AUDIO_PREFS_KEY, parseAudioPrefs, type AudioPrefs } from "./BattleSettingsView";
 
 /**
@@ -211,7 +211,7 @@ export class AudioSystem {
      * @param clipOrName  目標 AudioClip 或已注冊的名稱
      * @param duration    漸變時長（秒，預設 1.5）
      */
-    public crossfadeTo(clipOrName: AudioClip | string, duration: number = 1.5): void {
+    public crossfadeTo(clipOrName: AudioClip | string, duration: number = 1.5, options?: { volume?: number; loop?: boolean }): void {
         if (!this.bgmSource || !this.bgmSourceB) return;
 
         const clip = typeof clipOrName === 'string'
@@ -224,9 +224,14 @@ export class AudioSystem {
 
         const from = this.activeBgm === 'A' ? this.bgmSource : this.bgmSourceB;
         const to   = this.activeBgm === 'A' ? this.bgmSourceB : this.bgmSource;
+        // PROG-2-10134：戰場 BGM 各段音量與是否循環不同；連續切曲時先停掉兩軌上還在跑的漸變，避免舊漸變把新曲音量拉回 0
+        Tween.stopAllByTarget(from);
+        Tween.stopAllByTarget(to);
+        if (options?.volume !== undefined) this.bgmVolume = options.volume;
+        to.loop = options?.loop ?? true;
 
         // 開始漸變：to 軌從靖音漸入新曲目
-to.clip = clip;
+        to.clip = clip;
         to.volume = 0;
         to.play();
 
@@ -234,6 +239,37 @@ to.clip = clip;
         tween(to).to(duration, { volume: this._bgmTargetVolume() }).start();
 
         this.activeBgm = this.activeBgm === 'A' ? 'B' : 'A';
+    }
+
+    /** 淡出並停止所有 BGM 軌（PROG-2-10134：戰場結束、離開戰場）。 */
+    public fadeOutBgm(duration: number = 1.0): void {
+        for (const src of [this.bgmSource, this.bgmSourceB]) {
+            if (!src) continue;
+            Tween.stopAllByTarget(src);
+            if (duration <= 0 || !src.playing) { src.stop(); continue; }
+            tween(src).to(duration, { volume: 0 }).call(() => src.stop()).start();
+        }
+    }
+
+    /**
+     * 預載暖機（PROG-2-10134）：把指定 clip 各以音量 0 播一次，讓引擎在戰前就建立解碼／播放資源，
+     * 戰鬥中第一次真正播放不再臨時初始化。直接走 sfxSource，不經節流閘門、不計入戰場計數。
+     * 回傳暖機成功與缺檔的 clip 名稱。
+     */
+    public warmClips(names: readonly string[]): { warmed: string[]; missing: string[] } {
+        const warmed: string[] = [];
+        const missing: string[] = [];
+        for (const name of names) {
+            const clip = this.clipCache.get(name);
+            if (!clip || !this.sfxSource) { missing.push(name); continue; }
+            try { this.sfxSource.playOneShot(clip, 0); warmed.push(name); } catch { missing.push(name); }
+        }
+        return { warmed, missing };
+    }
+
+    /** BGM 目前是否在播（debug／驗證用）。 */
+    public isBgmPlaying(): boolean {
+        return !!(this.bgmSource?.playing || this.bgmSourceB?.playing);
     }
 
     // ─────────────────────────────────────────
