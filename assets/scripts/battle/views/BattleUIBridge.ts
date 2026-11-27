@@ -26,7 +26,7 @@ import { StatusCueThrottle, statusFloatTypeOf, statusMakesTargetFlinch, statusPo
 import { salvageSummaryLines } from '../../core/systems/StageSalvageSettlement';
 import { isDefenseDeployBlocked, withDefenseGuideFallback } from '../../core/systems/DefenseGuide';
 import { AUTO_PLAY_OFF_LINE, AUTO_PLAY_ON_LINE, AUTO_PLAY_SKIP_LINE, AutoPlayState, delegateToggleStopsAutoPlay } from '../../core/systems/AutoPlay';
-import { DELEGATE_OFF_LINE, delegateOnLine, FOOD_EMPTY_LINE } from '../../core/systems/SortieDeployScripts';
+import { DELEGATE_OFF_LINE, delegateOnLine, describeDeployShortfall, FOOD_EMPTY_LINE, type DeployShortfall } from '../../core/systems/SortieDeployScripts';
 import { wisdomMeterText, WISDOM_SURGE_LOG } from '../shared/WisdomMeter';
 import { strategistHudInputOf } from '../shared/StrategistHudSource';
 import { selfBurstNoticeText, type SelfBurstChangedEvent } from '../shared/SelfBurstWindow';
@@ -52,7 +52,7 @@ import { BattlePerformanceTracker, EMPTY_PERFORMANCE, formatPerformance, type Ba
 import { BattleHighlightTracker, buildBattleHighlights } from '../../core/systems/BattleHighlights';
 import type { DuelOutcomeRecord } from '../../core/systems/DuelAftermath';
 import { milestoneAnnouncementLines } from '../../core/systems/BattleMilestoneScripts';
-import { formatSortieSummary, isSortiePoolExhausted, SORTIE_POOL_EXHAUSTED_LINE } from '../../core/systems/SortieDeploy';
+import { DEPLOY_SUGGESTION_CANDIDATES, formatSortieSummary, isSortiePoolExhausted, SORTIE_POOL_EXHAUSTED_LINE } from '../../core/systems/SortieDeploy';
 import { powOptionLabels } from '../../core/systems/PrisonerOfWar';
 import { cellarProtectionText } from '../../ui/core/DailySubsidyNotice';
 import { generalNameMapOf, relationEventLogLine } from '../../ui/core/RelationEventLogText';
@@ -523,6 +523,21 @@ export class BattleUIBridge {
     if (pg && c.deployRuntime) {
       c.deployRuntime.updateSkillStatus(pg.canUseSkill() && c.ctrl.canUsePlayerSkills());
     }
+    this.refreshResourceViews();
+  }
+
+  /**
+   * 軍勢／糧草常駐資源列與卡面費用章、缺額帶（doc_spec_1341）。
+   * 每次兵力或糧草可能變動（部署、回合更新、部隊陣亡）後呼叫；沒有出征帳本時卡面章全收起。
+   */
+  public refreshResourceViews(): void {
+    const c = this.ctx;
+    c.deployRuntime?.refreshResources?.();
+    if (!c.battleScenePanel?.setDeployStatus) return;
+    const sortie = c.ctrl?.getSortieState();
+    const status: Record<string, DeployShortfall> = {};
+    if (sortie) for (const type of DEPLOY_SUGGESTION_CANDIDATES) status[type] = describeDeployShortfall(sortie, { troopType: type });
+    c.battleScenePanel.setDeployStatus(status);
   }
 
   public playTurnBanner(faction: Faction): void {

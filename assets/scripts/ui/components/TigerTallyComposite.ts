@@ -11,11 +11,12 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
  *   3. 品階 4 級 R／SR／SSR／UR 與四種收集狀態的色板、素材路徑全讀 ui-spec/tiger-tally-card-theme.json
  *   4. 點擊卡片 → emit CardSelected 事件；派不出去的卡（軍勢、糧草、條件不足）灰態，點擊仍可查看資訊
  */
-import { _decorator, Button, Color, EventTouch, Label, Node, Sprite, SpriteFrame, UITransform, Widget } from 'cc';
+import { _decorator, Button, Color, EventTouch, Graphics, Label, Node, Sprite, SpriteFrame, UITransform, Widget } from 'cc';
 import { services } from '../../core/managers/ServiceLoader';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { UI_EVENTS } from '../core/UIEvents';
+import { deployShortBand, type DeployShortfall } from '../../core/systems/SortieDeployScripts';
 import { emitDeployDragDebug, isCardTap } from './DeployDragDebug';
 import { logBattleUIPosition } from './BattleUIDiag';
 import { TroopTypeBadge } from '../shared/TroopTypeBadge';
@@ -58,6 +59,9 @@ function useBitmapCacheForCardLabels(cardNode: Node): void {
     }
 }
 const TALLY_THEME_PATH = 'ui-spec/tiger-tally-card-theme';
+/** 費用章：夠付綠、缺紅（doc_spec_1341 §4） */
+const DEPLOY_OK_COLOR = new Color(120, 224, 130, 255);
+const DEPLOY_SHORT_COLOR = new Color(255, 104, 90, 255);
 /** 卡圖當背景層的基礎暗化（乘色），讓前景文字讀得清楚 */
 const ART_BASE_SHADE = 150;
 /** 星階共鳴卡的描邊色（淺金） */
@@ -100,6 +104,8 @@ export class TigerTallyComposite extends CompositePanel {
     private _templateBinder: UITemplateBinder | null = null;
     private _cards: TallyCardData[] = [];
     private _guardTicketType: string | null = null;
+    /** 各兵種目前派不派得出去與缺口（doc_spec_1341）；沒有出征帳本時為空 */
+    private _deployStatus: Readonly<Record<string, DeployShortfall>> = {};
     private _cardNodes: Node[] = [];
     private _isMounted = false;
     private readonly _cardLoadSeq = [0, 0, 0, 0];
@@ -176,6 +182,143 @@ export class TigerTallyComposite extends CompositePanel {
         badge.active = show;
     }
 
+    /**
+     * 各兵種的出牌狀態（doc_spec_1341 §4）：兵／糧費用章夠付綠、缺紅；缺資源的卡灰化並蓋紅色缺額帶。
+     * 戰場橋接層每次兵力、糧草變動後呼叫；傳空物件代表沒有出征帳本，費用章與缺額帶全部收起。
+     */
+    public setDeployStatus(status: Readonly<Record<string, DeployShortfall>>): void {
+        this._deployStatus = status;
+        for (let i = 0; i < this._cardNodes.length; i++) {
+            const data = this._cards[i];
+            if (data && this._cardNodes[i].active) this._applyDeployStatus(this._cardNodes[i], i + 1, data);
+        }
+    }
+
+    /** 實跑檢查用：某張卡目前的費用章與缺額帶文字 */
+    public readDeployChips(slot: number): { troops: string; food: string; band: string[]; grayed: boolean } | null {
+        const card = this._cardNodes[slot - 1];
+        const troops = card?.getChildByName(`TroopCost${slot}`);
+        if (!troops?.active) return null;
+        const band = card.getChildByName(`ShortBand${slot}`);
+        return {
+            troops: troops.getComponent(Label)?.string ?? '',
+            food: this._templateBinder?.getNode(`CostBadge${slot}`)?.getComponent(Label)?.string ?? '',
+            band: band?.active ? band.getComponentsInChildren(Label).filter((l) => l.node.active).map((l) => l.string) : [],
+            grayed: !!this._templateBinder?.getNode(`DisabledMask${slot}`)?.active,
+        };
+    }
+
+    private _applyDeployStatus(cardNode: Node, slot: number, data: TallyCardData): void {
+        const status = this._deployStatus[data.unitType];
+        const t = (k: string, ...a: string[]): string => services().i18n.t(k, ...a);
+        const foodLabel = this._templateBinder?.getNode(`CostBadge${slot}`)?.getComponent(Label) ?? null;
+        const troopName = `TroopCost${slot}`;
+        const bandName = `ShortBand${slot}`;
+        let troopNode = cardNode.getChildByName(troopName);
+        let band = cardNode.getChildByName(bandName);
+        // 底列留給兵／糧兩枚費用章；共鳴字樣讓到上一列（右側原本是空的），兩邊才不會疊在一起
+        const resonanceWidget = this._templateBinder?.getNode(`ResonanceLabel${slot}`)?.getComponent(Widget) ?? null;
+        if (resonanceWidget) {
+            resonanceWidget.bottom = status ? 8 + 26 : 8;
+            resonanceWidget.updateAlignment();
+        }
+        if (!status) {
+            if (troopNode) troopNode.active = false;
+            if (band) band.active = false;
+            return;
+        }
+        const tone = (gap: number): Color => (gap > 0 ? DEPLOY_SHORT_COLOR : DEPLOY_OK_COLOR);
+        if (!troopNode) {
+            troopNode = new Node(troopName);
+            troopNode.layer = cardNode.layer;
+            troopNode.addComponent(UITransform).setAnchorPoint(0, 0.5);
+            const label = troopNode.addComponent(Label);
+            label.fontSize = 18;
+            label.lineHeight = 22;
+            label.isBold = true;
+            label.overflow = Label.Overflow.NONE;
+            label.horizontalAlign = Label.HorizontalAlign.LEFT;
+            label.enableOutline = true;
+            label.outlineColor = new Color(0, 0, 0, 220);
+            label.outlineWidth = 2;
+            cardNode.addChild(troopNode);
+        }
+        const troopsLabel = troopNode.getComponent(Label)!;
+        troopsLabel.string = t('battle.deploy.cost.troops', String(status.troops.need));
+        troopsLabel.color = tone(status.troops.gap);
+        troopNode.active = true;
+        const cardUi = cardNode.getComponent(UITransform);
+        const cw = cardUi?.width ?? 224;
+        const ch = cardUi?.height ?? 111;
+        troopNode.setPosition(-cw / 2 + 14, -ch / 2 + 20, 0);
+        troopNode.setSiblingIndex(cardNode.children.length - 1);
+        if (foodLabel) {
+            foodLabel.string = t('battle.deploy.cost.food', String(status.food.need));
+            foodLabel.color = tone(status.food.gap);
+            foodLabel.fontSize = 18;
+            foodLabel.overflow = Label.Overflow.NONE;
+            // 費用章並排：糧章貼在兵章右邊（兵章寬度依字數而變）
+            troopsLabel.updateRenderData(true);
+            const widget = foodLabel.node.getComponent(Widget);
+            if (widget) {
+                widget.left = 14 + troopNode.getComponent(UITransform)!.width + 8;
+                widget.updateAlignment();
+            }
+        }
+        const mask = this._templateBinder?.getNode(`DisabledMask${slot}`);
+        const short = status.kind !== 'ok';
+        if (mask && short) mask.active = true;
+        else if (mask && !data.isDisabled) mask.active = false;
+
+        // 缺額帶：卡面中央的紅色橫帶；兩者皆缺分兩行
+        if (!short) {
+            if (band) band.active = false;
+            return;
+        }
+        const lines = deployShortBand(status).map((c) => t(c.key, ...c.args));
+        if (!band) {
+            band = new Node(bandName);
+            band.layer = cardNode.layer;
+            band.addComponent(UITransform);
+            band.addComponent(Graphics);
+            cardNode.addChild(band);
+            for (let i = 0; i < 2; i++) {
+                const n = new Node(`Line${i}`);
+                n.layer = cardNode.layer;
+                n.addComponent(UITransform).setContentSize(cw - 16, 26);
+                const label = n.addComponent(Label);
+                label.fontSize = 20;
+                label.lineHeight = 24;
+                label.isBold = true;
+                label.color = new Color(255, 236, 224, 255);
+                label.overflow = Label.Overflow.SHRINK;
+                label.horizontalAlign = Label.HorizontalAlign.CENTER;
+                label.verticalAlign = Label.VerticalAlign.CENTER;
+                band.addChild(n);
+            }
+        }
+        const h = 12 + lines.length * 24;
+        band.getComponent(UITransform)!.setContentSize(cw - 12, h);
+        const g = band.getComponent(Graphics)!;
+        g.clear();
+        g.fillColor = new Color(132, 32, 28, 235);
+        g.strokeColor = new Color(238, 120, 104, 255);
+        g.lineWidth = 2;
+        g.roundRect(-(cw - 12) / 2, -h / 2, cw - 12, h, 6);
+        g.fill();
+        g.stroke();
+        band.setPosition(0, 4, 0);
+        band.children.forEach((n, i) => {
+            n.active = i < lines.length;
+            if (i < lines.length) {
+                n.getComponent(Label)!.string = lines[i];
+                n.setPosition(0, (lines.length - 1) * 12 - i * 24, 0);
+            }
+        });
+        band.setSiblingIndex(cardNode.children.length - 1);
+        band.active = true;
+    }
+
     public getCards(): TallyCardData[] {
         return [...this._cards];
     }
@@ -229,6 +372,7 @@ export class TigerTallyComposite extends CompositePanel {
             // 派不出去（軍勢、糧草、條件不足）的灰態：遮罩蓋全卡，框圖與卡圖另外染暗（見 _applyTheme）
             const disabledMask = this._templateBinder.getNode(`DisabledMask${slot}`);
             if (disabledMask) { disabledMask.active = face.grayed; }
+            this._applyDeployStatus(cardNode, slot, data);
 
             // 短按（按下到放開幾乎沒移動）→ 開兵種資訊面板。
             // 不能靠按鈕的點擊事件：下面為了重綁拖曳會把這張卡的按下監聽整批拔掉，按鈕就收不到點擊了（PROG-2-9390）。
@@ -243,6 +387,12 @@ export class TigerTallyComposite extends CompositePanel {
                     index: i,
                     unitType: data.unitType,
                 });
+                // 派不出去的卡：點了先看「缺多少、怎麼補」說明面板；面板上另有「兵種資訊」鈕可回到原本的資訊面板
+                const status = this._deployStatus[data.unitType];
+                if (status && status.kind !== 'ok') {
+                    services().event.emit(UI_EVENTS.CardShortTapped, { index: i, data });
+                    return;
+                }
                 services().event.emit(UI_EVENTS.CardSelected, { index: i, data });
             };
             this._cardTapHandlers[i] = onTapEnd;

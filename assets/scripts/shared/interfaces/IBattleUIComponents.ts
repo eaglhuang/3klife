@@ -93,6 +93,10 @@ export interface IDeployController {
     /** 委任開關（PROG-2-0913）：開啟後玩家部署階段由委任 AI 自動部署 */
     setDelegateEnabled(on: boolean): void;
     isDelegateEnabled(): boolean;
+    /** 目前出征帳本（已同步場上）；沒有出征帳本時 null。常駐資源列與不足說明面板讀它（doc_spec_1341，可選，測試替身可不實作） */
+    getSortieState?(): import('../../core/systems/SortieDeploy').SortieState | null;
+    /** 說明面板「怎麼補」需要的當下條件（可選） */
+    getDeployHelpContext?(): { canRetreat: boolean; canPromote: boolean };
 }
 
 /**
@@ -116,6 +120,8 @@ export interface IDeployRuntimeLike {
     /** 拖曳中回報手指螢幕座標；結束拖曳時回報 null（PROG-2-1880） */
     registerDragHoverCallback?(callback: (point: { x: number; y: number } | null) => void): void;
     updateSkillStatus(available: boolean): void;
+    /** 軍勢／糧草有變動時重畫常駐資源列（doc_spec_1341）；舊版部署面板沒有 */
+    refreshResources?(): void;
 }
 
 export interface IBattleScenePanelLike {
@@ -124,6 +130,8 @@ export interface IBattleScenePanelLike {
     setCards(cards: any[]): void;
     /** 守城保底券持券兵種；null 清除（PROG-2-10041） */
     setGuardTicket?(unitType: string | null): void;
+    /** 各兵種出牌狀態：兵／糧費用章、缺額帶、灰化（doc_spec_1341）；空物件代表沒有出征帳本 */
+    setDeployStatus?(status: Readonly<Record<string, import('../../core/systems/SortieDeployScripts').DeployShortfall>>): void;
     setUltimateSkills(skills: any[]): void;
     /** reason：戰法不能施放時的短原因（PROG-2-0408），有值時取代計點行 */
     setTacticSummary(summary: string, points?: { current?: number; max?: number; enabled: boolean }, reason?: string | null, shortReason?: string): void;

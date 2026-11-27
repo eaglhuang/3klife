@@ -377,6 +377,8 @@ export class BattleScene extends Component {
       this.sceneContext.skillTargetingFlow = this.skillTargetingFlow;
       this.battleUIBridge = new BattleUIBridge(this.sceneContext, this);
       this.battleUIBridge.syncStrategistHud();
+      // 開場就顯示軍勢／糧草資源列與卡面費用章（doc_spec_1341）
+      this.battleUIBridge.refreshResourceViews();
       this.turnFlowManager = new TurnFlowManager(this.sceneContext, this, this.battleUIBridge);
       this.sceneFlow = new BattleSceneFlow({
         getCtrl: () => this.ctrl,
