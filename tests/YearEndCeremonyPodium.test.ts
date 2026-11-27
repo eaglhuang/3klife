@@ -5,6 +5,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { assert, TestSuite } from './TestRunner';
+import { CharmRankingProvider } from '../assets/scripts/core/systems/annual_ranking/providers/CharmRankingProvider';
 import {
     CEREMONY_AUDIENCE_COUNTS,
     CEREMONY_SPEECH_COUNT,
@@ -133,6 +134,25 @@ export function createYearEndCeremonyPodiumSuite(): TestSuite {
         walk(JSON.parse(fs.readFileSync(path.join(ROOT, 'assets/resources/ui-spec/layouts/year-end-ceremony-main.json'), 'utf8')).root);
         for (const id of ['ycStage', 'ycHint', 'ycDialogue', 'ycCrowd', 'ycCrowdLine', 'ycReward', 'btnYcSkip', 'btnYcClose']) assert.isTrue(ids.has(id), `缺 ${id}`);
         assert.isTrue(!ids.has('ycTitle') && !ids.has('ycStandings'));
+    });
+
+    suite.test('紅顏榜只排女將（沒帶性別的舊流程不限）；風雲榜評審旁白每榜有入榜／沒入榜兩句且四語系都有值', () => {
+        const provider = new CharmRankingProvider();
+        const ctx = { year: 1, quarter: 4, generals: { m: { generalId: 'm', gender: 'M' }, f: { generalId: 'f', gender: 'F' }, u: { generalId: 'u' } } } as never;
+        assert.equals(false, provider.isEligible('m', ctx, {} as never));
+        assert.equals(true, provider.isEligible('f', ctx, {} as never));
+        assert.equals(true, provider.isEligible('u', ctx, {} as never));
+        const ids = ['kills', 'governance', 'charm', 'rookie', 'mentor'];
+        const lines = new Set<string>();
+        for (const locale of LOCALES) {
+            const tb = table(locale);
+            for (const id of ids) for (const k of ['in', 'out']) {
+                const v = tb[`ui.ceremony.podium.judge.${id}.${k}`];
+                assert.isTrue(typeof v === 'string' && v.length > 0, `${locale} 缺評審旁白 ${id}.${k}`);
+                if (locale === 'zh-TW') lines.add(v);
+            }
+        }
+        assert.equals(10, lines.size);
     });
 
     return suite;
