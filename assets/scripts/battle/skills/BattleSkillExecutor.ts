@@ -1,11 +1,12 @@
 // @spec-source → 戰法系統.md (doc_spec_0038)；PROG-2-1429 依建檔紀錄補標出處
-import type { BattleSkillRequest, SkillExecutionResult } from '../../shared/SkillRuntimeContract';
+import { SkillSourceType, type BattleSkillRequest, type SkillExecutionResult } from '../../shared/SkillRuntimeContract';
 import type { BattleSkillExecutionContext, BattleSkillResolver } from './BattleSkillResolver';
 import { moduleTagsOfSkill } from './BattleSkillModuleTags';
 import { resolveBattleSkillProfile } from './BattleSkillProfiles';
 import { BURN_CONFIG } from '../shared/BurnStatus';
 import { FIRE_HAZARD_DAMAGE_PER_TURN } from './SkillEffectFormulas';
 import { gridHookKindOfElement, tacticElementOfSkill } from '../shared/TacticVfxHooks';
+import { capHitCells, tacticVfxGroupOf } from '../shared/TacticVfxGroups';
 
 export class BattleSkillExecutor {
   constructor(private readonly resolvers: BattleSkillResolver[]) {}
@@ -30,6 +31,7 @@ export class BattleSkillExecutor {
     // 只有套用成功才回報代號；被阻擋或未套用的施放回空清單（PROG-2-0772）
     if (result.applied) this.applyFireAttackAftermath(request.battleSkillId, result, context);
     if (result.applied) this.emitGridVfx(request.battleSkillId, result, context);
+    if (result.applied && request.sourceType !== SkillSourceType.Ultimate) this.emitTacticHit(request.battleSkillId, result, context);
     const moduleTags = result.applied ? moduleTagsOfSkill(resolveBattleSkillProfile(request.battleSkillId)) : [];
     return { ...result, moduleTags };
   }
@@ -49,6 +51,23 @@ export class BattleSkillExecutor {
       seen.add(key);
       context.emitGridVfx(kind, { lane: unit.lane, depth: unit.depth });
     }
+  }
+
+  /**
+   * 戰法分組特效的命中格（PROG-2-10138）：只算非奧義的戰法；受影響單位所在格去重、截到上限後送給 View，
+   * 蓄力結束時才在這些格播命中特效。沒歸類的戰法或沒有受影響單位不送（View 退回只在施放者身上播）。
+   */
+  private emitTacticHit(skillId: string, result: SkillExecutionResult, context: BattleSkillExecutionContext): void {
+    if (!context.emitTacticHit) return;
+    const group = tacticVfxGroupOf(skillId);
+    if (!group) return;
+    const cells: { lane: number; depth: number }[] = [];
+    for (const delta of result.deltas) {
+      if (!delta.unitUid) continue;
+      const unit = context.getUnit(delta.unitUid);
+      if (unit) cells.push({ lane: unit.lane, depth: unit.depth });
+    }
+    context.emitTacticHit(skillId, group, capHitCells(cells));
   }
 
   /**
