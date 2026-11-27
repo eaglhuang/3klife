@@ -20511,12 +20511,58 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_3237",
+      "id": "PROG-2-10168",
+      "title": "修正：結緣面板喜訊結果文字與左下譜牒密考按鈕重疊",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-27",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-27T17:36:46+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "BondNotice 左界與 BtnProbePedigree 重疊；改錨點左界到按鈕右側",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [
+        "assets/resources/ui-spec/layouts/bonding-setup-main.json"
+      ],
+      "notes": "2026-11-27 | 狀態: done | 驗證: compute-gate quick 全過、tests/run-cli 10070 通過、無頭實跑結緣前後截圖 | 變更: bonding-setup-main.json BondNotice 左界 32→252、高 46→50 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
-    "done": 378,
-    "in_progress": 5,
-    "open": 92,
-    "total": 475
+    "done": 379,
+    "in_progress": 6,
+    "open": 91,
+    "total": 476
   }
 }

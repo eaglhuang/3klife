@@ -2424,10 +2424,10 @@
             "id": "bondNotice",
             "widget": {
               "bottom": 12,
-              "left": 32,
+              "left": 252,
               "right": 420
             },
-            "height": 46,
+            "height": 50,
             "text": "",
             "styleSlot": "bonding.label.log"
           },

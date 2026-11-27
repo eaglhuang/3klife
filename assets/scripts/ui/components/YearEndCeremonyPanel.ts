@@ -337,6 +337,12 @@ export class YearEndCeremonyPanel extends Component {
         if (!board || !result || !this._view) return;
         this._boardIndex = index;
         this._view.setBoard(board, result.year, index, this._boards.length, ceremonyActHeadline(this._currentAct, this._t));
+        // 風雲榜的評審團旁白依榜別、本府有沒有人上台換句（名門榜維持原本第 2 幕台詞）
+        if (this._currentAct === 2 && this.dialogueLabel) {
+            this.dialogueLabel.string = board.id === 'house'
+                ? this.getActDialogueText()
+                : this._t(`ui.ceremony.podium.judge.${board.id}.${board.playerInTop3 ? 'in' : 'out'}`);
+        }
     }
 
     /** 第 3 幕／跳過：回名門榜（已在名門榜就保留現況）、全部亮出，前三名各留一句感言 */

@@ -3910,9 +3910,9 @@ export class LobbyScene extends Component {
         try {
             const manager = AnnualRankingManager.getInstance();
             const roster = services().session.roster;
-            const generals: Record<string, { generalId: string; name: string; isPlayerFaction: boolean }> = {};
-            for (const g of roster) generals[g.id] = { generalId: g.id, name: g.name, isPlayerFaction: true };
-            for (const g of this._generals) if (!generals[g.id]) generals[g.id] = { generalId: g.id, name: g.name, isPlayerFaction: false };
+            const generals: Record<string, { generalId: string; name: string; isPlayerFaction: boolean; gender: 'M' | 'F' }> = {};
+            for (const g of roster) generals[g.id] = { generalId: g.id, name: g.name, isPlayerFaction: true, gender: g.gender === '女' ? 'F' : 'M' };
+            for (const g of this._generals) if (!generals[g.id]) generals[g.id] = { generalId: g.id, name: g.name, isPlayerFaction: false, gender: g.gender === '女' ? 'F' : 'M' };
             const year = this._pendingCeremonyYear > 0 ? this._pendingCeremonyYear : 1;
             const previews = manager.getLobbyPreviews(Object.keys(generals), roster.map((g) => g.id), { year, quarter: 4, generals });
             const boards: CeremonyBoard[] = [];
