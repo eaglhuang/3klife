@@ -13,7 +13,8 @@ import { missionText, type DetailActionKey, type MissionTr } from '../core/HallD
 import { SEASONS_PER_YEAR, formatSeasonLabel } from '../../core/systems/GameClock';
 import type { MissionDetailView } from '../../core/mission/MissionTypes';
 import type { CandidateView, IMissionService, MissionCardView } from '../../core/mission/service/IMissionService';
-import { findCard, type WallOfTheme } from './MissionBoardPresenter';
+import { resolveOne, revealableText, resolveRefs } from './MissionProjectionText';
+import { findCard,type WallOfTheme } from './MissionBoardPresenter';
 import { HALL_FUND_NAME } from '../../core/systems/HallMissionActions';
 import type { MissionBlock } from '../../core/mission/MissionTypes';
 
@@ -154,8 +155,8 @@ export interface MissionDialogState {
 }
 
 /** 完美獎勵：揭曉前永遠是 ???＋說明；揭曉後列出內容（沒有則寫無） */
-export function perfectRewardLabel(d: Pick<MissionDetailView, 'intel' | 'hiddenRewards'>, hiddenRevealIntel = 100, tr?: MissionTr): string {
-    if (d.intel >= hiddenRevealIntel) return d.hiddenRewards.length > 0 ? d.hiddenRewards.join('、') : missionText(tr, 'mission.detail.perfect_none', '無額外完美獎勵');
+export function perfectRewardLabel(d: Pick<MissionDetailView, 'intel' | 'hiddenRewards'> & { hiddenRewardRefs?: MissionDetailView['hiddenRewardRefs'] }, hiddenRevealIntel = 100, tr?: MissionTr): string {
+    if (d.intel >= hiddenRevealIntel) return d.hiddenRewards.length > 0 ? resolveRefs(d.hiddenRewardRefs, tr, d.hiddenRewards.join('、')) : missionText(tr, 'mission.detail.perfect_none', '無額外完美獎勵');
     return `${MISSION_MASK_TEXT}\n${missionText(tr, 'mission.detail.perfect_note', MISSION_PERFECT_REVEAL_NOTE)}`;
 }
 
@@ -229,11 +230,11 @@ export function buildMissionDialogState(service: IMissionService, missionId: str
     }
 
     const rateLine = active
-        ? T('mission.detail.rate_fixed', '{0}（派出時定下）', labeled(labelRate, d.rate.text, ' ', '成功率'))
-        : picked ? `${labeled(labelRate, picked.rate.text, ' ', '成功率')}（${picked.name}）`
-            : free.length > 0 ? labeled(labelRate, d.rate.text, ' ', '成功率') : noCandidateText;
-    // 事實一條一行（長事實由視窗換行，不縮成小字）
-    const factsLine = d.facts.filter((f) => f.state !== 'hidden').map((f) => `${f.label}${colon}${f.text}`).join('\n');
+        ? T('mission.detail.rate_fixed', '{0}（派出時定下）', labeled(labelRate, revealableText(d.rate, tr), ' ', '成功率'))
+        : picked ? `${labeled(labelRate, revealableText(picked.rate, tr), ' ', '成功率')}（${picked.name}）`
+            : free.length > 0 ? labeled(labelRate, revealableText(d.rate, tr), ' ', '成功率') : noCandidateText;
+    // 事實一條一行（長事實由視窗換行，不縮成小字）；標籤與內容走內容資料語系鍵（PROG-2-10166）
+    const factsLine = d.facts.filter((f) => f.state !== 'hidden').map((f) => `${resolveOne(f.labelRef, tr, f.label)}${colon}${resolveOne(f.textRef, tr, f.text)}`).join('\n');
     const periodText = active
         ? (returnSeasonText(card, ctx.season, tr) || T('mission.detail.period_active', '進行中'))
         : T('mission.detail.period_left', '剩餘期限 {0} 季', left);
@@ -247,15 +248,15 @@ ${ctx.jargonGuide}` : intelHint;
     return {
         // 連鎖任務多帶一個「連續任務 2/3」標記（PROG-2-9966）
         missionTypeLabel: `${T(`mission.detail.wall.${wallOfTheme(d.theme)}`, MISSION_WALL_NAME[wallOfTheme(d.theme)] ?? '')}・${T(`mission.detail.difficulty.${d.difficulty}`, MISSION_DIFFICULTY_NAME[d.difficulty] ?? d.difficulty)}${card?.chain ? `・${chainTagText(card.chain.depth, card.chain.total, tr)}` : ''}`,
-        missionTitle: d.title,
-        missionBrief: d.brief,
+        missionTitle: resolveOne(d.titleRef, tr, d.title),
+        missionBrief: resolveOne(d.briefRef, tr, d.brief),
         intelRevealPercent: d.intel,
-        intelBody: [d.objective.text, ...d.hints].filter((s) => s.length > 0).join('\n'),
+        intelBody: [revealableText(d.objective, tr), ...d.hints.map((h, i) => resolveOne(d.hintRefs?.[i], tr, h))].filter((s) => s.length > 0).join('\n'),
         // 鎖定中也要顯示提示列（鎖定文字放在這裡），所以不因情報高而隱藏
         intelFogVisible: !fullBand || active,
         intelHintLabel: intelHintWithGuide,
         envScoutTerrainLine: factsLine || T('mission.detail.no_intel', '尚未探得敵情'),
-        envScoutWeatherLine: ctx.weatherLine ?? `${labeled(labelRisk, d.risk.text, colon, '風險')}・${periodText}`,
+        envScoutWeatherLine: ctx.weatherLine ?? `${labeled(labelRisk, revealableText(d.risk, tr), colon, '風險')}・${periodText}`,
         generalSelectHintLabel: active && card?.executorName ? T('mission.detail.rate_executor', '{0}・{1}出任務中', rateLine, card.executorName) : rateLine,
         volunteerBadgeVisible: !active && picked?.volunteer === true,
         volunteerBadgeLabel: !active && picked?.volunteer === true ? T('mission.detail.volunteer_badge', '{0} 毛遂自薦', picked.name) : '',
@@ -270,7 +271,7 @@ ${ctx.jargonGuide}` : intelHint;
         costFundRatio: ratio(Math.max(d.cost.gold, d.cost.silver), 300),
         costTimeValueLabel: T('mission.detail.seasons', '{0} 季', d.durationSeasons),
         costTimeRatio: ratio(d.durationSeasons, 3),
-        rewardBaseLabel: d.reward.text,
+        rewardBaseLabel: revealableText(d.reward, tr),
         rewardPerfectLabel: perfectRewardLabel(d, revealIntel, tr),
         aiDelegateHintLabel: active ? T('mission.detail.ai_active', '已派出，不能更換武將') : free.length > 0 ? T('mission.detail.ai_hint', '委任：系統依武將記憶與適性選人') : noCandidateText,
         availableActions: offered,

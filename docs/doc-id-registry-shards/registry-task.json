@@ -17686,5 +17686,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10168.md",
     "title": "[PROG-2-10168] 修正：結緣面板喜訊結果文字與左下譜牒密考按鈕重疊",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3238",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10166.md",
+    "title": "[PROG-2-10166] 任務詳情服務層投影文字走 i18n 四語",
+    "category": "task"
   }
 ]
