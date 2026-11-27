@@ -17824,5 +17824,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10213.md",
     "title": "[PROG-2-10213] WP3 武將作息與喜好引擎",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3276",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10209.md",
+    "title": "[PROG-2-10209] Q 動畫管理器核心＋基本動作片段",
+    "category": "task"
   }
 ]
