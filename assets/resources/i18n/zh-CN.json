@@ -3074,5 +3074,7 @@
   "fun.victory.win_wise.text": "兵贵神速，此战既已告捷，{honor}可准备犒赏三军了。",
   "fun.victory.win_wise.os": "提醒犒赏的时机真准，我的荷包默默缩了一下。",
   "fun.victory.win_playful.text": "战事已毕，{self}肚中空空，不知府上可有酒肉？",
-  "fun.victory.win_playful.os": "打完仗第一件事是找吃的，这点我完全可以理解。"
+  "fun.victory.win_playful.os": "打完仗第一件事是找吃的，这点我完全可以理解。",
+  "ui.battle.kin_rescue.float": "生死相随！",
+  "ui.battle.kin_rescue.log": "{0}与{1}生死相随，替其分摊 {2} 点伤害"
 }

@@ -72,3 +72,12 @@ export function advanceMoraleOf(units: Iterable<MoraleCarrier>, faction: Faction
     }
   }
 }
+
+/**
+ * 士氣保底（義兄弟同陣，動態關係規格 §3.1）：士氣至少為 floor 並重新計時；
+ * 已經比 floor 高就不降、不疊加（PROG-2-10204）。
+ */
+export function applyMoraleFloor(unit: MoraleCarrier, floor: number): void {
+  unit.morale = Math.max(unit.morale, floor);
+  unit.moraleTurns = MORALE_DURATION_TURNS;
+}

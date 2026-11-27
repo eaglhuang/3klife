@@ -3006,5 +3006,7 @@
   "fun.victory.win_wise.text": "兵は神速を貴ぶ。勝利した今、{honor}は三軍への褒賞を用意されるがよい。",
   "fun.victory.win_wise.os": "褒賞を促す時機が絶妙だ。財布が静かに縮んだ。",
   "fun.victory.win_playful.text": "戦は終わった。腹が空いたが、屋敷に酒と肉はあるだろうか？",
-  "fun.victory.win_playful.os": "戦の後にまず食べ物を探す気持ち、よくわかる。"
+  "fun.victory.win_playful.os": "戦の後にまず食べ物を探す気持ち、よくわかる。",
+  "ui.battle.kin_rescue.float": "生死を共に！",
+  "ui.battle.kin_rescue.log": "{0}が{1}をかばい、{2}ダメージを肩代わりした"
 }

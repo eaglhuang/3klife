@@ -3074,5 +3074,7 @@
   "fun.victory.win_wise.text": "Speed is vital in war. The battle is won, so {honor} may prepare rewards for the army.",
   "fun.victory.win_wise.os": "Reminded me about rewards at the perfect moment. My purse quietly shrank.",
   "fun.victory.win_playful.text": "The battle is over and my belly is empty. Is there any wine and meat at the residence?",
-  "fun.victory.win_playful.os": "The first thing after battle is looking for food. I totally understand."
+  "fun.victory.win_playful.os": "The first thing after battle is looking for food. I totally understand.",
+  "ui.battle.kin_rescue.float": "Bound in life and death!",
+  "ui.battle.kin_rescue.log": "{0} stepped in for {1}, taking {2} damage"
 }
