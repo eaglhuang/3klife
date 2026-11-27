@@ -1894,5 +1894,9 @@
   "ui.general.quip.cai-shi": "I pushed Liu Cong to take the throne and wrote to Cao Cao to take over Jingzhou. No soldier moved, but the ownership changed hands. Even the mergers envy this efficiency!",
   "ui.general.quip.cao-hua": "I entered the palace with my two older sisters. I'm not one to show off, and in the big storm of Han and Wei swapping shifts, I'm the steady one who protects everyday life.",
   "ui.general.quip.cao-xian": "I'm good at settling sisters' little fights with one sentence. The role of a palace relations mediator sounds like it was made just for me!",
-  "ui.general.quip.xu-shi": "I pretended to obey while secretly contacting Bian Hong, and at the banquet I defended my husband's honor. This move of retreating to advance made even Sun Quan send a gift!"
+  "ui.general.quip.xu-shi": "I pretended to obey while secretly contacting Bian Hong, and at the banquet I defended my husband's honor. This move of retreating to advance made even Sun Quan send a gift!",
+  "mission.detail.btn.scout.sub": "Food −{0}",
+  "mission.detail.btn.wait.sub": "+1 season",
+  "mission.detail.btn.execute.sub": "Pick who goes",
+  "mission.detail.btn.assign.sub": "Auto-pick"
 }

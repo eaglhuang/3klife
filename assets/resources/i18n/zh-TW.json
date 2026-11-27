@@ -1895,5 +1895,9 @@
   "ui.general.quip.cai-shi": "妾身力推劉琮繼位又寫信請曹操接手荊州，一兵不動就換主人，這效率連併購案都自嘆不如呢。",
   "ui.general.quip.cao-hua": "人家和兩位姐姐同進宮，不愛出風頭，在漢魏換班的大風暴裡就是默默守住日常的穩重派呢。",
   "ui.general.quip.cao-xian": "人家擅長一句話化解姐妹小摩擦，宮廷人際調解員這職位簡直是為我量身打造呢。",
-  "ui.general.quip.xu-shi": "妾身假裝順從暗中聯絡邊鴻，在宴席上替夫君討回公道，這招以退為進連孫權都送來大禮呢！"
+  "ui.general.quip.xu-shi": "妾身假裝順從暗中聯絡邊鴻，在宴席上替夫君討回公道，這招以退為進連孫權都送來大禮呢！",
+  "mission.detail.btn.scout.sub": "糧草 −{0}",
+  "mission.detail.btn.wait.sub": "期限 +1 季",
+  "mission.detail.btn.execute.sub": "自己選人派出",
+  "mission.detail.btn.assign.sub": "系統代選"
 }
