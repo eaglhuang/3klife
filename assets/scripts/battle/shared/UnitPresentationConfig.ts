@@ -274,6 +274,36 @@ export function troopSpineConfigWithFallback(troop: string, isEnemy: boolean, ta
     troopSpineConfig(troop === 'archer' ? 'archer' : 'pikeman', isEnemy)];
   return candidates.find(config => !hasFailed(config.path)) ?? candidates[candidates.length - 1];
 }
+
+interface TroopSpineCacheSlot { isEnemy: boolean; template: string | null; failedVersion: number; config: UnitSpineConfig }
+
+/**
+ * troopSpineConfigWithFallback 的結果快取（PROG-2-10155）：lateUpdate 每幀每單位都要查，原本每次建 4～6 份設定物件。
+ * 兵種／陣營／模板相同且「載不起來的素材數」沒變，後備選擇就不會變，直接回上次的設定物件。
+ */
+export class TroopSpineConfigCache {
+  private readonly byTroop = new Map<string, TroopSpineCacheSlot[]>();
+
+  public get(troop: string, isEnemy: boolean, tallyTemplateId: string | null | undefined, failedVersion: number,
+    hasFailed: (path: string) => boolean): UnitSpineConfig {
+    const template = tallyTemplateId ?? null;
+    let slots = this.byTroop.get(troop);
+    if (!slots) { slots = []; this.byTroop.set(troop, slots); }
+    for (const slot of slots) {
+      if (slot.isEnemy === isEnemy && slot.template === template) {
+        if (slot.failedVersion !== failedVersion) {
+          slot.config = troopSpineConfigWithFallback(troop, isEnemy, template, hasFailed);
+          slot.failedVersion = failedVersion;
+        }
+        return slot.config;
+      }
+    }
+    const config = troopSpineConfigWithFallback(troop, isEnemy, template, hasFailed);
+    slots.push({ isEnemy, template, failedVersion, config });
+    return config;
+  }
+}
+
 /**
  * 小兵依兵種（弓／其餘）與陣營選素材：我方藍、敵方紅，戰場上一眼分得出敵我。
  * 紅色版由藍色圖集換色產生（見 tools_node/battle-chibi/），骨架與動作和藍色版共用。

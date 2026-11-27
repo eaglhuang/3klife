@@ -90,6 +90,8 @@ export class UnitPresentationCore {
   private currentClip(): ActionClip {
     return this.clipOverride?.action === this.action ? this.clipOverride.clip : this.config.clips[this.action];
   }
+  /** 腳底 y（不配置物件；每幀排序用，省掉 snapshot() 複製腳底點，PROG-2-10155） */
+  public footY(): number { return this.foot.y; }
   public snapshot(): UnitPresentationState {
     return { foot: { ...this.foot }, facing: this.facing, action: this.action, clip: this.currentClip(), animationSpeed: this.animationSpeed, revision: this.revision };
   }

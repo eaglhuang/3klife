@@ -77,4 +77,4 @@
 | `doc_task_3215` | docs/agent-briefs/tasks/PROG/PROG-2-10160.md | [PROG-2-10160] 武將白話吐槽補 en／ja 語系與王異性別修正 |
 | `doc_task_3216` | docs/agent-briefs/tasks/PROG/PROG-2-10154.md | [PROG-2-10154] 戰場：有 Spine／立繪時不載隱藏的 3D 主將模型 |
 | `doc_task_3217` | docs/agent-briefs/tasks/PROG/PROG-2-10135.md | [PROG-2-10135] 偵察面板戰法一鍵自動配置 |
-| `doc_task_3219` | docs/agent-briefs/tasks/PROG/PROG-2-10153.md | [PROG-2-10153] 年末頒獎典禮 A 版領獎台實作 |
+| `doc_task_3218` | docs/agent-briefs/tasks/PROG/PROG-2-10155.md | [PROG-2-10155] 戰場：每幀重排與徽章避讓改成有變動才算 |
