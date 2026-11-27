@@ -122,6 +122,7 @@ export class BattleScenePanel extends Component {
             this._guideControlsBound = true;
             const binder = this._guideHost.binder;
             binder?.getNode('guidePrevious')?.on(Button.EventType.CLICK, () => services().event.emit('first-battle-guide-previous', undefined), this);
+            binder?.getNode('guideSkip')?.on(Button.EventType.CLICK, () => services().event.emit('first-battle-guide-skip', undefined), this);
             binder?.getNode('guideNext')?.on(Button.EventType.CLICK, () => services().event.emit('first-battle-guide-next', undefined), this);
             binder?.getNode('guideMinimize')?.on(Button.EventType.CLICK, () => { this._guideMinimized = true; this._layoutOperationGuide(); }, this);
             binder?.getNode('guideResume')?.on(Button.EventType.CLICK, () => { this._guideMinimized = false; this._guideTabOverrideKey = this._guideHint?.key ?? null; this._layoutOperationGuide(); }, this);

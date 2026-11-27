@@ -4,7 +4,7 @@
  * Unity 對照：像測 DOTween 序列的參數表，不需要場景。
  */
 import { assert, TestSuite } from './TestRunner';
-import { TOAST_DEFAULT_HOLD_SEC, TOAST_MODAL_BOTTOM_MARGIN_PX, TOAST_RISE_PX, keepBracketsTogether, toastCenterY, toastHoldSec } from '../assets/scripts/core/systems/ToastMotion';
+import { TOAST_DEFAULT_HOLD_SEC, TOAST_MODAL_BOTTOM_MARGIN_PX, TOAST_RISE_PX, keepBracketsTogether, toastCenterY, toastUnitsPerLine, toastHoldSec } from '../assets/scripts/core/systems/ToastMotion';
 
 export function createToastMotionSuite(): TestSuite {
     const suite = new TestSuite('ToastMotion (Toast 上浮消失 doc_ui_0001 §4.1)');
@@ -67,6 +67,14 @@ export function createToastMotionSuite(): TestSuite {
                 assert.equals(open, close, `每行括號成對（${perLine}）：${row}`);
             }
         }
+    });
+
+    suite.test('每行字數保守少算一格：744 寬、24 字級 → 30，實句括號詞不拆', () => {
+        assert.equals(30, toastUnitsPerLine(744, 24, 0));
+        assert.equals(0, toastUnitsPerLine(0, 24, 0));
+        const line = '滾滾長江東逝水，且看今歲【月旦評】天下俊彥榜！關羽【才思出眾】、張飛【武勇過人】，皆一時之選也！';
+        const rows = keepBracketsTogether(line, toastUnitsPerLine(744, 24, 0)).split('\n');
+        assert.equals(true, rows.some((r) => r.startsWith('【才思出眾】')), '才思出眾整詞落在行首');
     });
 
     return suite;

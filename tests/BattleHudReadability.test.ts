@@ -17,7 +17,9 @@ export function createBattleHudReadabilitySuite(): TestSuite {
  });
  suite.test('結束回合有清楚文字、大點擊區，與下方指令群不重疊', () => {
    const e=nodes.EndTurnBtn, r=rect(e), u=rect(nodes.UltimateBtn);
-   assert.isTrue(e.width>=200 && e.height>=56); assert.isTrue(r.bottom+8<=u.y);
+   assert.isTrue(e.width>=200 && e.height>=56);
+   // B1（PROG-2-10133）：指令座 360×156，結束回合在右下、奧義在左下（含 10px 充能環），左右並排不相交
+   assert.isTrue(r.x>=u.right+10+8);
    assert.equals('結束回合',e.children.find((n:any)=>n.name==='EndTurnLabel').text);
    const skin=JSON.parse(read('assets/resources/ui-spec/skins/action-command-default.json'));
    assert.isTrue(skin.slots['action.util.endturn.label'].fontSize>=22);

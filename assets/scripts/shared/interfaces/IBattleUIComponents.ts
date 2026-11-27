@@ -68,6 +68,8 @@ export interface IResultPopupLike {
     setReplayAllowed?(allowed: boolean): void;
     /** 下一次結算窗的「下一步建議」按鈕文字；null＝不顯示（戰敗敗因診斷，PROG-2-9712） */
     setDefeatAdvice?(label: string | null): void;
+    /** 下一次結算窗的戰報重點三列（首功、最強技能、勝敗原因）；空陣列＝直接顯示完整明細（PROG-2-10137） */
+    setHighlights?(rows: readonly { key: string; value: string }[] | null): void;
     /** 勝敗停頓期間先載主將頭像，結算窗開出來不先閃剪影（PROG-2-9427） */
     preloadAvatar?(generalId?: string): void;
     /** 戰場覺醒定格演出（PROG-2-1702） */

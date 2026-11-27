@@ -920,9 +920,17 @@
                   "type": "label",
                   "name": "OverviewBio",
                   "width": 478,
-                  "height": 128,
+                  "height": 84,
                   "text": "張飛，字翼德，幽州涿郡人。少年以屠豬賣酒為業，後於桃園與劉備、關羽義結金蘭，誓同生死。性烈如火，勇猛無雙——長坂橋前單槍匹馬，一聲怒吼令曹軍百萬退散；義釋嚴顏一事，足見其粗中有細，智勇兼備。然酒後失德，醉鞭督卒，終命喪部將之手，令千古扼腕。其一生豪烈，血脈中燕地武人的剛猛之氣，至今仍在後裔身上延燃。",
                   "styleSlot": "auto.character-ds3-tab-overview.overviewbio"
+                },
+                {
+                  "type": "label",
+                  "name": "OverviewBioQuip",
+                  "width": 478,
+                  "height": 36,
+                  "text": "",
+                  "styleSlot": "auto.character-ds3-tab-overview.overviewbioquip"
                 }
               ]
             },
