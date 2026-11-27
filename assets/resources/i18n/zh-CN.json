@@ -1570,5 +1570,19 @@
   "ui.ceremony.crowd.cheer.4": "{0}赌一包瓜子，今年的黑马就在现场！",
   "ui.ceremony.crowd.cheer.5": "没上榜也别气馁，今天主要是来蹭热闹的。",
   "ui.ceremony.crowd.cheer.6": "领奖的记得笑一个，这张要放进家族相册！",
-  "ui.ceremony.crowd.say": "{0}：{1}"
+  "ui.ceremony.crowd.win.1": "哇！上榜了上榜了，{0}的瓜子都吓掉了！",
+  "ui.ceremony.crowd.win.2": "大家一起喊，让全场都听见——恭喜恭喜！",
+  "ui.ceremony.crowd.win.3": "{0}先预约明年的庆功宴，酒钱谁请客？",
+  "ui.ceremony.crowd.lose.1": "（拍拍肩）没事没事，{0}年年来看榜，习惯就好。",
+  "ui.ceremony.crowd.lose.2": "（偷笑）嘘，别笑太大声，明年的榜首说不定就是你。",
+  "ui.ceremony.crowd.lose.3": "（递上瓜子）来，吃点东西压压惊，{0}请客。",
+  "ui.ceremony.crowd.say": "{0}：{1}",
+  "ui.tally.card.grain": "粮 {0}",
+  "ui.tally.card.resonance": "共鸣 +{0}%",
+  "ui.tally.card.owner": "持有 {0}",
+  "ui.tally.card.unowned": "未获得",
+  "ui.tally.card.unknown_name": "？？？",
+  "ui.tally.card.deployed": "出战中",
+  "ui.tally.card.infuse_lv5": "灌5",
+  "ui.tally.card.infuse_lv8": "灌8"
 }

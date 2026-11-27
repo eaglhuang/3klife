@@ -1,6 +1,6 @@
 // @spec-source → 見 docs/cross-reference-index.md
 import { _decorator, BlockInputEvents, Color, Label, Node, Tween, tween, UITransform, UIOpacity, Vec3, Widget } from "cc";
-import { TOAST_FADE_SEC, TOAST_RISE_PX, toastCenterY, toastHoldSec } from '../../core/systems/ToastMotion';
+import { TOAST_FADE_SEC, TOAST_RISE_PX, keepBracketsTogether, toastCenterY, toastHoldSec } from '../../core/systems/ToastMotion';
 import { services } from "../../core/managers/ServiceLoader";
 import { UIPreviewBuilder } from "../core/UIPreviewBuilder";
 import { SolidBackground } from './SolidBackground';
@@ -137,7 +137,7 @@ export class ToastMessage extends UIPreviewBuilder {
     if (lblNode) {
         const lbl = lblNode.getComponent(Label);
         if (lbl) {
-            lbl.string = message;
+            lbl.string = keepBracketsTogether(message, this._unitsPerLine(lblNode, lbl));
             if (options?.color) lbl.color = options.color;
         }
     }
@@ -208,6 +208,12 @@ export class ToastMessage extends UIPreviewBuilder {
     if (services().ui.hasBackdropShown()) return true;
     const siblings = this.node.parent?.children ?? [];
     return siblings.some((child) => child !== this.node && child.activeInHierarchy && !!child.getComponent(BlockInputEvents));
+  }
+
+  /** 一行大約放得下幾個全形字：Label 寬度 ÷（字級＋字距） */
+  private _unitsPerLine(node: Node, lbl: Label): number {
+    const width = node.getComponent(UITransform)?.width ?? 0;
+    return Math.floor(width / Math.max(1, lbl.fontSize + lbl.spacingX));
   }
 
   private _stopRise(): void {
