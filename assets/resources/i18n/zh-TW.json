@@ -2085,5 +2085,15 @@
   "mission.detail.unspecified_general": "未指定武將",
   "mission.detail.dropdown.available": "可派武將（{0}）",
   "mission.detail.dropdown.selectable": "可選武將",
-  "mission.detail.dropdown.unavailable": "不可派武將（{0}，附原因）"
+  "mission.detail.dropdown.unavailable": "不可派武將（{0}，附原因）",
+  "mission.detail.toast.busy": "任務資料整理中，請稍後再試",
+  "mission.detail.toast.not_found": "此任務已不存在",
+  "mission.detail.toast.failed": "任務行動失敗，請稍後再試",
+  "mission.detail.toast.recon_done": "再探完成，情報 +{0}，目前 {1}%",
+  "mission.detail.toast.wait_done": "等待一季：期限延長，情報 +{0}，目前 {1}%",
+  "mission.detail.toast.cost.grain": "糧草 -{0}",
+  "mission.detail.toast.cost.troops": "兵源 -{0}",
+  "mission.detail.sep": "、",
+  "mission.detail.toast.dispatched": "已派出{0}執行「{1}」，{2} 季後回報\n{3}",
+  "mission.detail.toast.dispatched_delegate": "已派出（委任）{0}執行「{1}」，{2} 季後回報\n{3}"
 }

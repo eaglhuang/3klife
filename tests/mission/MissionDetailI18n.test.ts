@@ -38,6 +38,7 @@ function usedKeys(): string[] {
         'assets/scripts/ui/mission/MissionDetailPresenter.ts',
         'assets/scripts/ui/core/HallDetailActionStates.ts',
         'assets/scripts/ui/components/LobbyMissionDetailDialogComposite.ts',
+        'assets/scripts/ui/scenes/LobbyScene.ts',
     ];
     for (const f of files) {
         const src: string = fs.readFileSync(path.join(ROOT, f), 'utf8');
@@ -47,7 +48,7 @@ function usedKeys(): string[] {
     for (const m of layout.matchAll(/"textKey": "(mission\.detail\.[A-Za-z_.]+)"/g)) keys.add(m[1]);
     for (const w of ['Military', 'Domestic', 'Expedition']) keys.add(`mission.detail.wall.${w}`);
     for (const d of ['EASY', 'NORMAL', 'ELITE', 'ADVANCED', 'HELL']) keys.add(`mission.detail.difficulty.${d}`);
-    for (const k of ['ui.mission.shortage.gold', 'ui.mission.shortage.silver', 'ui.hallMission.chain.tag']) keys.add(k);
+    for (const k of ['ui.mission.cost.gold', 'ui.mission.cost.silver', 'ui.mission.shortage.gold', 'ui.mission.shortage.silver', 'ui.hallMission.chain.tag']) keys.add(k);
     // 動態鍵前綴（'mission.detail.wall.' 之類）不是完整鍵，濾掉
     return [...keys].filter((k) => !k.endsWith('.'));
 }
@@ -108,7 +109,7 @@ export function createMissionDetailI18nSuite(): TestSuite {
 
     suite.test('四語系鍵齊全、非空、佔位符與繁中一致', () => {
         const keys = usedKeys();
-        assert.isTrue(keys.length >= 70, `鍵數量異常：${keys.length}`);
+        assert.isTrue(keys.length >= 80, `鍵數量異常：${keys.length}`);
         const base = readLocale('zh-TW');
         for (const lang of LANGS) {
             const dict = readLocale(lang);

@@ -2016,5 +2016,15 @@
   "mission.detail.unspecified_general": "武将未指定",
   "mission.detail.dropdown.available": "派遣可能な武将（{0}）",
   "mission.detail.dropdown.selectable": "選べる武将",
-  "mission.detail.dropdown.unavailable": "派遣不可の武将（{0}、理由つき）"
+  "mission.detail.dropdown.unavailable": "派遣不可の武将（{0}、理由つき）",
+  "mission.detail.toast.busy": "ミッションデータを整理中です。しばらくしてからお試しください",
+  "mission.detail.toast.not_found": "このミッションはもう存在しません",
+  "mission.detail.toast.failed": "ミッション行動に失敗しました。しばらくしてからお試しください",
+  "mission.detail.toast.recon_done": "再偵察完了：情報 +{0}、現在 {1}%",
+  "mission.detail.toast.wait_done": "1 季待機：期限が延び、情報 +{0}、現在 {1}%",
+  "mission.detail.toast.cost.grain": "兵糧 -{0}",
+  "mission.detail.toast.cost.troops": "兵員 -{0}",
+  "mission.detail.sep": "、",
+  "mission.detail.toast.dispatched": "{0} を「{1}」に派遣しました。{2} 季後に報告\n{3}",
+  "mission.detail.toast.dispatched_delegate": "{0} を「{1}」に派遣しました（委任）。{2} 季後に報告\n{3}"
 }

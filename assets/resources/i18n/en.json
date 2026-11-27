@@ -2084,5 +2084,15 @@
   "mission.detail.unspecified_general": "No officer picked",
   "mission.detail.dropdown.available": "Available officers ({0})",
   "mission.detail.dropdown.selectable": "Choose an officer",
-  "mission.detail.dropdown.unavailable": "Unavailable officers ({0}, with reasons)"
+  "mission.detail.dropdown.unavailable": "Unavailable officers ({0}, with reasons)",
+  "mission.detail.toast.busy": "Mission data is being prepared. Please try again shortly.",
+  "mission.detail.toast.not_found": "This mission no longer exists",
+  "mission.detail.toast.failed": "Mission action failed. Please try again later.",
+  "mission.detail.toast.recon_done": "Re-scout done: Intel +{0}, now {1}%",
+  "mission.detail.toast.wait_done": "Waited a season: deadline extended, Intel +{0}, now {1}%",
+  "mission.detail.toast.cost.grain": "Grain -{0}",
+  "mission.detail.toast.cost.troops": "Troops -{0}",
+  "mission.detail.sep": ", ",
+  "mission.detail.toast.dispatched": "{0} dispatched on \"{1}\", reporting back in {2} season(s)\n{3}",
+  "mission.detail.toast.dispatched_delegate": "{0} dispatched on \"{1}\" (delegated), reporting back in {2} season(s)\n{3}"
 }
