@@ -20260,6 +20260,111 @@
       }
     },
     {
+      "doc_id": "doc_task_3198",
+      "id": "PROG-2-10138",
+      "title": "戰場七種戰法專屬特效（火水風回復加速鼓舞控制）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P2",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-27",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-27T09:54:26+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "戰場戰法施放原本全共用 battle_skill_seed 一種光效。依效果分火、水、風、回復、加速、鼓舞、控制七組，各做前搖→命中→餘韻的程式繪製（Graphics）特效，粒子池有上限、同屏有上限。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "七組戰法各有可辨識的前搖、命中、餘韻特效",
+        "同屏特效數與粒子數有上限且不每幀配置",
+        "單元測試鎖定分組對應與上限",
+        "七種特效實機命中瞬間截圖"
+      ],
+      "deliverables": [
+        "assets/scripts/battle/shared/TacticVfxGroups.ts",
+        "assets/scripts/battle/views/TacticVfxPlayer.ts",
+        "tests/TacticVfxGroups.test.ts"
+      ],
+      "notes": "2026-11-27 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
+      "doc_id": "doc_task_3203",
+      "id": "PROG-2-10141",
+      "title": "Toast 括號詞斷行修正（每行字數保守估算）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P2",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-27",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-27T10:30:00+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "Toast 括號詞被換行拆開（每行字數估算剛好塞滿），改保守少算 1 格。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "每行字數少算 1 格，括號詞整個落在行首",
+        "tests/ToastMotion.test.ts 全過",
+        "compute-gate quick"
+      ],
+      "deliverables": [
+        "assets/scripts/core/systems/ToastMotion.ts",
+        "assets/scripts/ui/components/ToastMessage.ts",
+        "tests/ToastMotion.test.ts"
+      ],
+      "notes": "已修；單元測試 9 過、compute-gate quick 過；截圖 artifacts/ui-review/ceremony-hype-1127/real-toast-bracket-fixed.png",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
+    },
+    {
       "doc_id": "doc_task_3199",
       "id": "PROG-2-10146",
       "title": "武將介紹古文後接白話吐槽",
