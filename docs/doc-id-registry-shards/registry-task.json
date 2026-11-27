@@ -17580,6 +17580,12 @@
     "category": "task"
   },
   {
+    "id": "doc_task_3199",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10146.md",
+    "title": "[PROG-2-10146] 武將介紹古文後接白話吐槽",
+    "category": "task"
+  },
+  {
     "id": "doc_task_3203",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10141.md",
     "title": "[PROG-2-10141] Toast 括號詞斷行修正（每行字數保守估算）",

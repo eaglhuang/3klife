@@ -136,6 +136,16 @@
       "description": "人物傳記區塊內文。",
       "bindPath": "InfoContent/BiographyPanel/BiographyBody"
     },
+    "biographyQuip": {
+      "type": "string",
+      "required": false,
+      "description": "古文後的白話吐槽（PROG-2-10146），人物介紹頁古文下方小字異色顯示。"
+    },
+    "biographyQuipKey": {
+      "type": "string",
+      "required": false,
+      "description": "吐槽 i18n 鍵 ui.general.quip.<id>。"
+    },
     "footerTitle": {
       "type": "string",
       "required": true,
