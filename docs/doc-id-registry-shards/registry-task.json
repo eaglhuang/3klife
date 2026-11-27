@@ -17724,7 +17724,19 @@
     "category": "task"
   },
   {
-    "id": "doc_task_3245",
+    "id": "doc_task_3244",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10119.md",
+    "title": "[PROG-2-10119] 批次補舊 PROG 卡 frontmatter task_id（讓 ATM importer 可匯入）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3247",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10184.md",
+    "title": "[PROG-2-10184] 新世界觀改寫（純規格）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3251",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10134.md",
     "title": "[PROG-2-10134] 戰場音訊：小兵攻擊／受擊分兵種音效、戰場 BGM 三段、音效池與預載",
     "category": "task"
