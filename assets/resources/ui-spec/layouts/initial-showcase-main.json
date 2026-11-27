@@ -608,6 +608,182 @@
             ]
           }
         ]
+      },
+      {
+        "type": "container",
+        "name": "DanmakuLayer",
+        "id": "danmakuLayer",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "_doc": "PROG-2-10149 方案 B 彈幕層：固定 6 個槽位節點整個開場重用（物件池），位置全用錨點，避開中央卡片",
+        "children": [
+          {
+            "type": "panel",
+            "name": "DanmakuSlot0",
+            "id": "danmakuSlot0",
+            "widget": {
+              "top": 24,
+              "left": 60
+            },
+            "width": 860,
+            "height": 56,
+            "skinSlot": "oi.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "DanmakuText0",
+                "id": "danmakuText0",
+                "widget": {
+                  "vCenter": true,
+                  "left": 16,
+                  "right": 16
+                },
+                "height": 44,
+                "text": "",
+                "styleSlot": "oi.label.body"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "DanmakuSlot1",
+            "id": "danmakuSlot1",
+            "widget": {
+              "top": 24,
+              "right": 60
+            },
+            "width": 860,
+            "height": 56,
+            "skinSlot": "oi.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "DanmakuText1",
+                "id": "danmakuText1",
+                "widget": {
+                  "vCenter": true,
+                  "left": 16,
+                  "right": 16
+                },
+                "height": 44,
+                "text": "",
+                "styleSlot": "oi.label.body"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "DanmakuSlot2",
+            "id": "danmakuSlot2",
+            "widget": {
+              "bottom": 78,
+              "left": 60
+            },
+            "width": 860,
+            "height": 56,
+            "skinSlot": "oi.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "DanmakuText2",
+                "id": "danmakuText2",
+                "widget": {
+                  "vCenter": true,
+                  "left": 16,
+                  "right": 16
+                },
+                "height": 44,
+                "text": "",
+                "styleSlot": "oi.label.body"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "DanmakuSlot3",
+            "id": "danmakuSlot3",
+            "widget": {
+              "bottom": 78,
+              "right": 60
+            },
+            "width": 860,
+            "height": 56,
+            "skinSlot": "oi.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "DanmakuText3",
+                "id": "danmakuText3",
+                "widget": {
+                  "vCenter": true,
+                  "left": 16,
+                  "right": 16
+                },
+                "height": 44,
+                "text": "",
+                "styleSlot": "oi.label.body"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "DanmakuSlot4",
+            "id": "danmakuSlot4",
+            "widget": {
+              "bottom": 14,
+              "left": 60
+            },
+            "width": 860,
+            "height": 56,
+            "skinSlot": "oi.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "DanmakuText4",
+                "id": "danmakuText4",
+                "widget": {
+                  "vCenter": true,
+                  "left": 16,
+                  "right": 16
+                },
+                "height": 44,
+                "text": "",
+                "styleSlot": "oi.label.body"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "DanmakuSlot5",
+            "id": "danmakuSlot5",
+            "widget": {
+              "bottom": 14,
+              "right": 60
+            },
+            "width": 860,
+            "height": 56,
+            "skinSlot": "oi.row.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "DanmakuText5",
+                "id": "danmakuText5",
+                "widget": {
+                  "vCenter": true,
+                  "left": 16,
+                  "right": 16
+                },
+                "height": 44,
+                "text": "",
+                "styleSlot": "oi.label.body"
+              }
+            ]
+          }
+        ]
       }
     ]
   }

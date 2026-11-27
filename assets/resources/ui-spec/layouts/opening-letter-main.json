@@ -58,14 +58,28 @@
           },
           {
             "type": "label",
+            "name": "LetterSender",
+            "id": "openingLetterSender",
+            "widget": {
+              "top": 70,
+              "left": 48,
+              "right": 48
+            },
+            "height": 30,
+            "text": "",
+            "styleSlot": "letter.label.meta",
+            "_doc": "PROG-2-10149 方案 B：信封寄件人欄（劉備、張飛、關羽）"
+          },
+          {
+            "type": "label",
             "name": "LetterBody",
             "id": "openingLetterBody",
             "widget": {
-              "top": 96,
+              "top": 108,
               "left": 56,
               "right": 56
             },
-            "height": 440,
+            "height": 428,
             "text": "",
             "styleSlot": "letter.label.body"
           },
@@ -93,6 +107,182 @@
                 "height": 56,
                 "text": "關閉",
                 "styleSlot": "letter.label.button"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "container",
+        "name": "DanmakuLayer",
+        "id": "danmakuLayer",
+        "widget": {
+          "top": 0,
+          "bottom": 0,
+          "left": 0,
+          "right": 0
+        },
+        "_doc": "PROG-2-10149 方案 B 彈幕層：固定 6 個槽位節點整個開場重用（物件池），位置全用錨點，避開中央卡片",
+        "children": [
+          {
+            "type": "panel",
+            "name": "DanmakuSlot0",
+            "id": "danmakuSlot0",
+            "widget": {
+              "top": 180,
+              "left": 30
+            },
+            "width": 420,
+            "height": 56,
+            "skinSlot": "letter.slot.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "DanmakuText0",
+                "id": "danmakuText0",
+                "widget": {
+                  "vCenter": true,
+                  "left": 16,
+                  "right": 16
+                },
+                "height": 44,
+                "text": "",
+                "styleSlot": "letter.label.body"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "DanmakuSlot1",
+            "id": "danmakuSlot1",
+            "widget": {
+              "top": 260,
+              "right": 30
+            },
+            "width": 420,
+            "height": 56,
+            "skinSlot": "letter.slot.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "DanmakuText1",
+                "id": "danmakuText1",
+                "widget": {
+                  "vCenter": true,
+                  "left": 16,
+                  "right": 16
+                },
+                "height": 44,
+                "text": "",
+                "styleSlot": "letter.label.body"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "DanmakuSlot2",
+            "id": "danmakuSlot2",
+            "widget": {
+              "top": 340,
+              "left": 30
+            },
+            "width": 420,
+            "height": 56,
+            "skinSlot": "letter.slot.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "DanmakuText2",
+                "id": "danmakuText2",
+                "widget": {
+                  "vCenter": true,
+                  "left": 16,
+                  "right": 16
+                },
+                "height": 44,
+                "text": "",
+                "styleSlot": "letter.label.body"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "DanmakuSlot3",
+            "id": "danmakuSlot3",
+            "widget": {
+              "top": 420,
+              "right": 30
+            },
+            "width": 420,
+            "height": 56,
+            "skinSlot": "letter.slot.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "DanmakuText3",
+                "id": "danmakuText3",
+                "widget": {
+                  "vCenter": true,
+                  "left": 16,
+                  "right": 16
+                },
+                "height": 44,
+                "text": "",
+                "styleSlot": "letter.label.body"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "DanmakuSlot4",
+            "id": "danmakuSlot4",
+            "widget": {
+              "top": 500,
+              "left": 30
+            },
+            "width": 420,
+            "height": 56,
+            "skinSlot": "letter.slot.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "DanmakuText4",
+                "id": "danmakuText4",
+                "widget": {
+                  "vCenter": true,
+                  "left": 16,
+                  "right": 16
+                },
+                "height": 44,
+                "text": "",
+                "styleSlot": "letter.label.body"
+              }
+            ]
+          },
+          {
+            "type": "panel",
+            "name": "DanmakuSlot5",
+            "id": "danmakuSlot5",
+            "widget": {
+              "top": 580,
+              "right": 30
+            },
+            "width": 420,
+            "height": 56,
+            "skinSlot": "letter.slot.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "DanmakuText5",
+                "id": "danmakuText5",
+                "widget": {
+                  "vCenter": true,
+                  "left": 16,
+                  "right": 16
+                },
+                "height": 44,
+                "text": "",
+                "styleSlot": "letter.label.body"
               }
             ]
           }

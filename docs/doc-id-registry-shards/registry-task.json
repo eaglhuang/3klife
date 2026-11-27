@@ -17586,6 +17586,12 @@
     "category": "task"
   },
   {
+    "id": "doc_task_3202",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10149.md",
+    "title": "[PROG-2-10149] 開場重新包裝方案 B：AI 武將搶先連線",
+    "category": "task"
+  },
+  {
     "id": "doc_task_3203",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10141.md",
     "title": "[PROG-2-10141] Toast 括號詞斷行修正（每行字數保守估算）",

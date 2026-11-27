@@ -69,4 +69,5 @@
 | `doc_task_3195` | docs/agent-briefs/tasks/PROG/PROG-2-10124.md | [PROG-2-10124] 戰場右側 UI B0 缺陷：ui.ultimate.label 顯示原始 key、委任鈕字被截、寫死中文改 i18n |
 | `doc_task_3198` | docs/agent-briefs/tasks/PROG/PROG-2-10138.md | [PROG-2-10138] 戰場七種戰法專屬特效（火水風回復加速鼓舞控制） |
 | `doc_task_3199` | docs/agent-briefs/tasks/PROG/PROG-2-10146.md | [PROG-2-10146] 武將介紹古文後接白話吐槽 |
+| `doc_task_3202` | docs/agent-briefs/tasks/PROG/PROG-2-10149.md | [PROG-2-10149] 開場重新包裝方案 B：AI 武將搶先連線 |
 | `doc_task_3203` | docs/agent-briefs/tasks/PROG/PROG-2-10141.md | [PROG-2-10141] Toast 括號詞斷行修正（每行字數保守估算） |

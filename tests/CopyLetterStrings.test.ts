@@ -31,10 +31,10 @@ export function createCopyLetterStringsSuite(): TestSuite {
         }
     });
 
-    suite.test('繁中開場信件為規格 §2.1 推薦版，五段', () => {
+    suite.test('繁中開場信件為方案 B（武將搶先連線，PROG-2-10149）新文，五段', () => {
         const paragraphs = loadLocale('zh-TW')[LETTER_KEY].split('\n\n');
         assert.equals(5, paragraphs.length);
-        assert.equals('朋友，剛才看到你又在玩《三國志2》……還是劉備？', paragraphs[0]);
+        assert.equals('朋友，我們剛才看到你又在玩《三國志2》……還是劉備？', paragraphs[0]);
         assert.equals('準備好了，就按下：啟動宿命轉蛋。', paragraphs[4]);
     });
 
