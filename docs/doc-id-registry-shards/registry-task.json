@@ -17830,5 +17830,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10211.md",
     "title": "[PROG-2-10211] WP5 日夜四季調色與疊層程式框架",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3280",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10209.md",
+    "title": "[PROG-2-10209] Q 動畫管理器核心＋基本動作片段",
+    "category": "task"
   }
 ]
