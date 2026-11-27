@@ -86,7 +86,7 @@ import { buildSandtableStatusLabel } from '../../core/systems/SandtableStatus';
 import type { YearReport } from '../../core/systems/YearReport';
 import { YearReportController } from '../core/YearReportController';
 import { isStageUnlocked } from '../../core/systems/StageChainProgress';
-import { DEFAULT_YEAR_END_DEFENSE, isYearEndDefenseDue, isYearEndRolloverPending, parseYearEndDefenseConfig, strongestInvader, yearEndDefenseTierFor, type YearEndDefenseConfig } from '../../core/systems/YearEndDefense';
+import { DEFAULT_YEAR_END_DEFENSE, isYearEndDefenseDue, isYearEndRolloverPending, parseYearEndDefenseConfig, YEAR_END_RESUME_MOUNT_IDS, strongestInvader, yearEndDefenseTierFor, type YearEndDefenseConfig } from '../../core/systems/YearEndDefense';
 import { isStageSeasonOpen, parseStageSeasonSchedule, seasonLockedHint, stageOpenSeason, type StageSeasonSchedule } from '../../core/systems/StageSeasonSchedule';
 import { buildBattlefieldReconForEncounter } from '../../core/systems/BattlefieldRecon';
 import { buildEnvScoutLines } from '../core/EnvScoutPresenter';
@@ -1162,6 +1162,10 @@ export class LobbyScene extends Component {
         });
         this._mountScheduler = scheduler;
         this._installMountDemandHooks(scheduler);
+        // 守城打完回大廳還停在第 4 季：不等其餘面板，先補建換年會用到的面板就自動換年（PROG-2-10163）
+        if (isYearEndRolloverPending(services().session.gameTime, services().session.yearEndDefenseYear)) {
+            void this._resumeYearEndRolloverEarly(scheduler);
+        }
         await scheduler.runAll((id, error) => {
             // 玩家在背景掛載途中離開大廳（例如直接出征）時節點已銷毀、欄位讀到 null，屬正常中止不算錯誤（PROG-2-9108）
             if (!this.node?.isValid) return;
@@ -7285,6 +7289,16 @@ export class LobbyScene extends Component {
             tutorial: false,
             teachingSpirit: null,
         });
+    }
+
+    /** 先補建換年用面板再換年；其餘背景面板照排程繼續掛（PROG-2-10163） */
+    private async _resumeYearEndRolloverEarly(scheduler: LobbyMountScheduler): Promise<void> {
+        try {
+            for (const id of YEAR_END_RESUME_MOUNT_IDS) await scheduler.demand(id);
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.UI, '[LobbyScene] 換年用面板補建失敗，仍嘗試自動換年', error);
+        }
+        await this._resumeYearEndRollover();
     }
 
     /** 年終守城打完回到大廳時還停在第 4 季：自動換到下一年（勝敗都換，PROG-2-9426） */
