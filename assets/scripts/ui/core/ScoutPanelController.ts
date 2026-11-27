@@ -62,6 +62,7 @@ export const SCOUT_PANEL_TEXTS = {
     autofillFill: '【{0}】補空槽',
     autofillNone: '尚未持有可補缺口的戰法，先照常出征',
     autofillBlocked: '戰法槽都排著本關用得到的戰法，先照常出征',
+    autofillFailed: '換上失敗，戰法槽沒有變動，可再試一次或先照常出征',
 } as const;
 
 /** 對策標籤的白話說明（新手看不懂「破城」「反隱」）；鍵＝i18n scout.tag.<code>，值＝zh-TW 預設 */
@@ -96,11 +97,17 @@ export interface AutofillPreview {
     slotsBlocked: boolean;
 }
 
-/** 「幫我換上」的三個動作（PROG-2-10135）：預覽不動資料；apply 寫入並回傳重算後的情資；undo 還原並回傳情資 */
+/** apply／undo 的結果：scout 一律是從最新資料重算的情資；ok 只在寫入成功且重讀驗證通過時為 true（PROG-2-10164） */
+export interface AutofillOutcome {
+    scout: LobbyScout;
+    ok: boolean;
+}
+
+/** 「幫我換上」的三個動作（PROG-2-10135）：預覽不動資料；apply 寫入並回報是否成功；undo 還原並回報是否成功 */
 export interface ScoutAutofillHooks {
     preview(): AutofillPreview;
-    apply(): LobbyScout;
-    undo(): LobbyScout;
+    apply(): AutofillOutcome;
+    undo(): AutofillOutcome;
 }
 
 /** 大廳出征前的四區塊情資；主將戰法槽轉對策標籤後比對關卡的必備與高建議（與戰場端 loadLoadoutCheck 同一套規則） */
@@ -135,6 +142,8 @@ export class ScoutPanelController {
     private _hooks: ScoutAutofillHooks | null = null;
     /** 已按過「幫我換上」：保存當時列出的換上清單，按鈕改成「復原」 */
     private _applied: AutofillPreview | null = null;
+    /** 最近一次換上／復原沒寫成功：提示列改顯示失敗訊息，直到下次操作 */
+    private _autofillFailed = false;
 
     constructor(private readonly _lookup?: ScoutTextLookup) {}
 
@@ -162,6 +171,7 @@ export class ScoutPanelController {
         this._scout = scout;
         this._hooks = hooks ?? null;
         this._applied = null;
+        this._autofillFailed = false;
         this._confirming = false;
         return new Promise((resolve) => { this._resolve = resolve; });
     }
@@ -199,14 +209,19 @@ export class ScoutPanelController {
     autofill(): void {
         if (!this.isOpen() || this._confirming || !this._hooks) return;
         if (this._applied) {
-            this._scout = this._hooks.undo();
-            this._applied = null;
+            const undone = this._hooks.undo();
+            this._scout = undone.scout;
+            this._autofillFailed = !undone.ok;
+            if (undone.ok) this._applied = null;
             return;
         }
         const preview = this._hooks.preview();
         if (preview.changes.length === 0) return;
-        this._scout = this._hooks.apply();
-        this._applied = preview;
+        // 必須寫入成功且重讀驗證通過才進「已換上」；失敗不改狀態，只提示
+        const applied = this._hooks.apply();
+        this._scout = applied.scout;
+        this._autofillFailed = !applied.ok;
+        if (applied.ok) this._applied = preview;
     }
 
     isAutofillApplied(): boolean {
@@ -224,11 +239,13 @@ export class ScoutPanelController {
         const hidden = { note: '', btn: '', show: false };
         if (!this._hooks || !this._scout) return hidden;
         if (this._applied) {
+            if (this._autofillFailed) return { note: this._text('autofillFailed'), btn: this._text('autofillUndo'), show: true };
             return { note: this._text('autofillDone', this._autofillLines(this._applied)), btn: this._text('autofillUndo'), show: true };
         }
         if (this._scout.intel.loadoutGaps.length === 0) return hidden;
         const preview = this._hooks.preview();
         if (preview.changes.length > 0) {
+            if (this._autofillFailed) return { note: this._text('autofillFailed'), btn: this._text('autofillBtn'), show: true };
             return { note: this._text('autofillPreview', this._autofillLines(preview)), btn: this._text('autofillBtn'), show: true };
         }
         if (preview.slotsBlocked) return { note: this._text('autofillBlocked'), btn: '', show: false };
@@ -292,6 +309,7 @@ export class ScoutPanelController {
         this._resolve = null;
         this._hooks = null;
         this._applied = null;
+        this._autofillFailed = false;
         this._confirming = false;
         resolve?.(sortie);
     }

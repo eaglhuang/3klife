@@ -9,21 +9,15 @@
 import type { EncounterConfig } from '../../shared/BattleEntryParams';
 import type { GeneralConfig, GeneralTacticSlotConfig } from '../../core/models/GeneralUnit';
 import type { TacticCounterTagTable } from '../../core/systems/LoadoutCheck';
-import { BATTLE_TACTIC_SLOT_LIMIT, COMMON_TACTIC_ID, battleIntelligenceOf } from '../../core/systems/BattleRoster';
-import { toLibraryTacticId } from '../../core/systems/InspiredTacticMap';
+import { BATTLE_TACTIC_SLOT_LIMIT, COMMON_TACTIC_ID, battleIntelligenceOf, battleIntelligenceSlotsOf } from '../../core/systems/BattleRoster';
 import { planTacticAutofill, type TacticAutofillPlan, type TacticAutofillRules } from '../../core/systems/TacticAutofill';
 import { tacticLevelOf } from '../../core/systems/TacticRandomization';
 import { tacticLoadoutCapacity } from '../../core/systems/TacticLoadout';
-import type { AutofillPreview, LobbyScout, ScoutAutofillHooks } from './ScoutPanelController';
+import type { AutofillOutcome, AutofillPreview, LobbyScout, ScoutAutofillHooks } from './ScoutPanelController';
 
-/** 主將目前實際會帶上戰場的智力槽（不含通用計謀） */
+/** 主將目前實際會帶上戰場的智力槽（不含通用計謀）；與戰場組隊共用 BattleRoster.battleIntelligenceSlotsOf，預覽才不會和實際出戰分歧 */
 export function effectiveTacticSlots(general: GeneralConfig | null | undefined): GeneralTacticSlotConfig[] {
-    if (!general) return [];
-    const capacity = Math.min(tacticLoadoutCapacity(battleIntelligenceOf(general)), BATTLE_TACTIC_SLOT_LIMIT);
-    const explicit = (general.tacticSlots ?? []).filter((slot) => slot.tacticId !== COMMON_TACTIC_ID);
-    if (explicit.length > 0) return explicit.slice(0, capacity).map((slot) => ({ ...slot }));
-    const learned = Array.from(new Set((general.learnedTactics ?? []).map(toLibraryTacticId))).slice(0, capacity);
-    return learned.map((tacticId, index) => ({ slotId: `slot-${index + 1}`, tacticId, source: 'learned' as GeneralTacticSlotConfig['source'] }));
+    return general ? battleIntelligenceSlotsOf(general) : [];
 }
 
 export interface ScoutAutofillDeps {
@@ -58,6 +52,8 @@ export function planFor(deps: ScoutAutofillDeps, lead: GeneralConfig): TacticAut
     });
 }
 
+const idsOf = (slots: readonly { tacticId: string }[]): string => slots.map((slot) => slot.tacticId).join(',');
+
 export function buildScoutAutofillHooks(deps: ScoutAutofillDeps): ScoutAutofillHooks | undefined {
     if (!deps.currentLead()) return undefined;
     /** 按下「幫我換上」前的戰法槽（原樣保存，含沒有 tacticSlots 的舊資料） */
@@ -73,28 +69,32 @@ export function buildScoutAutofillHooks(deps: ScoutAutofillDeps): ScoutAutofillH
                 slotsBlocked: plan.slotsBlocked,
             };
         },
-        apply(): LobbyScout {
+        /** 寫入後從最新資料重讀驗證：寫入回報成功、且重讀的智力槽確實等於方案，才算 ok（面板才可顯示「已換上」） */
+        apply(): AutofillOutcome {
             const lead = deps.currentLead();
-            if (lead) {
-                const plan = planFor(deps, lead);
-                if (plan.changes.length > 0) {
-                    snapshot = (lead.tacticSlots ?? []).map((slot) => ({ ...slot }));
-                    const old = new Map(effectiveTacticSlots(lead).map((slot) => [slot.slotId, slot]));
-                    const common = (lead.tacticSlots ?? []).filter((slot) => slot.tacticId === COMMON_TACTIC_ID);
-                    const next = plan.nextSlots.map((slot) => {
-                        const before = old.get(slot.slotId);
-                        return before && before.tacticId === slot.tacticId ? before : { slotId: slot.slotId, tacticId: slot.tacticId, source: 'learned' as GeneralTacticSlotConfig['source'] };
-                    });
-                    deps.writeSlots(lead.id, [...next, ...common]);
-                }
-            }
-            return deps.rebuild();
+            if (!lead) return { scout: deps.rebuild(), ok: false };
+            const plan = planFor(deps, lead);
+            if (plan.changes.length === 0) return { scout: deps.rebuild(), ok: false };
+            const before = (lead.tacticSlots ?? []).map((slot) => ({ ...slot }));
+            const old = new Map(effectiveTacticSlots(lead).map((slot) => [slot.slotId, slot]));
+            const common = (lead.tacticSlots ?? []).filter((slot) => slot.tacticId === COMMON_TACTIC_ID);
+            const next = plan.nextSlots.map((slot) => {
+                const prev = old.get(slot.slotId);
+                return prev && prev.tacticId === slot.tacticId ? prev : { slotId: slot.slotId, tacticId: slot.tacticId, source: 'learned' as GeneralTacticSlotConfig['source'] };
+            });
+            const written = deps.writeSlots(lead.id, [...next, ...common]);
+            const ok = written && idsOf(effectiveTacticSlots(deps.currentLead())) === idsOf(plan.nextSlots);
+            if (ok) snapshot = before;
+            else if (written) deps.writeSlots(lead.id, before); // 寫入回報成功但重讀對不上：盡力還原，避免留下半套
+            return { scout: deps.rebuild(), ok };
         },
-        undo(): LobbyScout {
+        undo(): AutofillOutcome {
             const lead = deps.currentLead();
-            if (lead && snapshot) deps.writeSlots(lead.id, snapshot);
-            snapshot = null;
-            return deps.rebuild();
+            if (!lead || !snapshot) return { scout: deps.rebuild(), ok: false };
+            const written = deps.writeSlots(lead.id, snapshot);
+            const ok = written && idsOf(deps.currentLead()?.tacticSlots ?? []) === idsOf(snapshot);
+            if (ok) snapshot = null;
+            return { scout: deps.rebuild(), ok };
         },
     };
 }
