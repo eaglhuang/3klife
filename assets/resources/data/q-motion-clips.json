@@ -1,0 +1,98 @@
+{
+  "schema": "q-motion-clips.v1",
+  "_comment": "Q 動作片段庫（QACT-01 第 3、5 章）。長度單位＝頭高 H，角度＝度，時間＝秒。新增動作只改這個檔；曲線種類見 curves.ts。",
+  "clips": {
+    "walk": {
+      "loop": true,
+      "period": 0.36,
+      "fadeInSec": 0.12,
+      "channels": {
+        "y": { "type": "bounce", "amp": 0.10 },
+        "rot": { "type": "sineAlt", "amp": 6 },
+        "scale": { "type": "squashStretch", "land": [1.12, 0.88], "apex": [0.94, 1.08], "landSec": 0.06, "reboundSec": 0.08 },
+        "shadow": { "type": "followY", "scaleMin": 0.78, "alphaMin": 0.55 }
+      },
+      "events": [{ "t": 0.0, "name": "land" }]
+    },
+    "run": {
+      "loop": true,
+      "period": 0.24,
+      "fadeInSec": 0.10,
+      "channels": {
+        "y": { "type": "bounce", "amp": 0.13 },
+        "rot": { "type": "sineAlt", "amp": 8 },
+        "scale": { "type": "squashStretch", "land": [1.14, 0.86], "apex": [0.92, 1.10], "landSec": 0.04, "reboundSec": 0.054 },
+        "shadow": { "type": "followY", "scaleMin": 0.72, "alphaMin": 0.5 }
+      },
+      "events": [{ "t": 0.0, "name": "land" }]
+    },
+    "jump": {
+      "loop": false,
+      "duration": 0.5,
+      "fadeInSec": 0.05,
+      "channels": {
+        "y": { "type": "arc", "amp": 0.6, "preSec": 0.08, "landSec": 0.08 },
+        "scale": { "type": "anticipate", "pre": [1.15, 0.85], "land": [1.18, 0.82], "stretch": [0.94, 1.08], "preSec": 0.08, "landSec": 0.08 },
+        "shadow": { "type": "followY", "scaleMin": 0.6, "alphaMin": 0.4 },
+        "flipX": { "type": "spin", "enable": false, "deg": 360, "preSec": 0.08, "landSec": 0.08 }
+      },
+      "events": [{ "t": 0.42, "name": "land" }]
+    },
+    "jumpSpin": {
+      "loop": false,
+      "duration": 0.5,
+      "fadeInSec": 0.05,
+      "channels": {
+        "y": { "type": "arc", "amp": 0.6, "preSec": 0.08, "landSec": 0.08 },
+        "scale": { "type": "anticipate", "pre": [1.15, 0.85], "land": [1.18, 0.82], "stretch": [0.94, 1.08], "preSec": 0.08, "landSec": 0.08 },
+        "shadow": { "type": "followY", "scaleMin": 0.6, "alphaMin": 0.4 },
+        "flipX": { "type": "spin", "enable": true, "deg": 360, "preSec": 0.08, "landSec": 0.08 }
+      },
+      "events": [{ "t": 0.42, "name": "land" }]
+    },
+    "idle": {
+      "loop": true,
+      "period": 2.4,
+      "fadeInSec": 0.2,
+      "channels": {
+        "scale": { "type": "breath", "min": 1.0, "max": 1.03 },
+        "rot": { "type": "sine", "amp": 1.5, "period": 4 },
+        "flipX": { "type": "lookAround", "minSec": 4, "maxSec": 9, "turnSec": 0.12 }
+      }
+    },
+    "sit": {
+      "loop": true,
+      "period": 3.6,
+      "fadeInSec": 0.2,
+      "channels": {
+        "y": { "type": "hold", "value": -0.12 },
+        "scale": { "type": "breath", "min": 1.0, "max": 1.02 }
+      }
+    },
+    "bow": {
+      "loop": false,
+      "duration": 1.2,
+      "fadeInSec": 0.1,
+      "channels": {
+        "rot": { "type": "bell", "amp": 20 }
+      },
+      "events": [{ "t": 0.6, "name": "bowLow" }]
+    },
+    "nod": {
+      "loop": false,
+      "duration": 0.5,
+      "fadeInSec": 0.05,
+      "channels": {
+        "y": { "type": "sineBurst", "amp": 0.05, "cycles": 2 }
+      }
+    },
+    "shake": {
+      "loop": false,
+      "duration": 0.5,
+      "fadeInSec": 0.05,
+      "channels": {
+        "rot": { "type": "sineBurst", "amp": 12, "cycles": 3 }
+      }
+    }
+  }
+}
