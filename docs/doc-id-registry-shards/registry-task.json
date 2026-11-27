@@ -17818,5 +17818,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10203.md",
     "title": "[PROG-2-10203] 武將生活系統四份規格審查",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3274",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10211.md",
+    "title": "[PROG-2-10211] WP5 日夜四季調色與疊層程式框架",
+    "category": "task"
   }
 ]
