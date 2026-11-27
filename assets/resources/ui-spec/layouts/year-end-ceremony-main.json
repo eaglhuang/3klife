@@ -37,6 +37,7 @@
             "type": "container",
             "name": "YcStage",
             "id": "ycStage",
+            "lazySlot": true,
             "width": 1460,
             "height": 640
           },

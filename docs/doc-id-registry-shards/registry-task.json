@@ -17632,5 +17632,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10135.md",
     "title": "[PROG-2-10135] 偵察面板戰法一鍵自動配置",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3219",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10153.md",
+    "title": "[PROG-2-10153] 年末頒獎典禮 A 版領獎台實作",
+    "category": "task"
   }
 ]
