@@ -101,3 +101,4 @@
 | `doc_task_3258` | docs/agent-briefs/tasks/PROG/PROG-2-10188.md | [PROG-2-10188] 武將生活化「Q 版社會」規格（純規格） |
 | `doc_task_3260` | docs/agent-briefs/tasks/PROG/PROG-2-10191.md | [PROG-2-10191] 使用者裁決寫入規格（純文件） |
 | `doc_task_3261` | docs/agent-briefs/tasks/PROG/PROG-2-10192.md | [PROG-2-10192] 回寫使用者 11/28 裁決 |
+| `doc_task_3263` | docs/agent-briefs/tasks/PROG/PROG-2-10190.md | [PROG-2-10190] 戰法分組音效 |

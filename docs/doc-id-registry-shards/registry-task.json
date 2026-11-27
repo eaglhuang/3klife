@@ -17776,5 +17776,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10192.md",
     "title": "[PROG-2-10192] 回寫使用者 11/28 裁決",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3263",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10190.md",
+    "title": "[PROG-2-10190] 戰法分組音效",
+    "category": "task"
   }
 ]

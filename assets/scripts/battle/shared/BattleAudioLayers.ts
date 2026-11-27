@@ -53,6 +53,8 @@ export interface BattleAudioLayersConfig {
   attackSfx: { maxGapToImpactSec: number; immediateStyles: string[] };
   /** 小兵出手音（PROG-2-10134）：以攻擊音效鍵（unit-attack-*）為 key，每鍵多個 clip 輪播、各自音量範圍 */
   attack: { clips: Record<string, string[]>; volume: Record<string, Range> };
+  /** 戰法分組音效（PROG-2-10190）：以特效分組（fire／water／wind／heal／haste／morale／stun）為 key，每組多個 clip 輪播、各自音量範圍 */
+  tactic: { clips: Record<string, string[]>; volume: Record<string, Range> };
   /** 發聲池（PROG-2-10134）：同時發聲上限、優先級、類別每秒上限、人多降音量 */
   pool: SfxVoicePoolConfig;
   /** 戰前預載清單（PROG-2-10134）：這些 clip 在載入戰場時先解碼／暖機，避免第一次播放延遲 */
@@ -111,12 +113,24 @@ export const DEFAULT_BATTLE_AUDIO_LAYERS: BattleAudioLayersConfig = {
       'unit-attack-bow': [0.45, 0.6], 'unit-attack-primary': [0.5, 0.65],
     },
   },
+  // 戰法分組音效（PROG-2-10190）：與 TacticVfxGroups 的 7 組一一對應；音量比受擊略小，不蓋過命中聲
+  tactic: {
+    clips: {
+      fire: ['tactic_fire'], water: ['tactic_water'], wind: ['tactic_wind'], heal: ['tactic_heal'],
+      haste: ['tactic_haste'], morale: ['tactic_morale'], stun: ['tactic_stun'],
+    },
+    volume: {
+      fire: [0.7, 0.85], water: [0.7, 0.85], wind: [0.65, 0.8], heal: [0.7, 0.85],
+      haste: [0.65, 0.8], morale: [0.7, 0.85], stun: [0.7, 0.85],
+    },
+  },
   pool: DEFAULT_SFX_VOICE_POOL,
   preload: [
     'cc0_hoof_single', 'hoof_gallop', 'footstep_hoof', 'skill1', 'skill7',
     'sfx_atk_blade', 'sfx_atk_thrust', 'sfx_atk_bow', 'sfx_atk_arrow_whoosh', 'sfx_atk_shield', 'sfx_atk_charge',
     'sfx_hit_blade', 'sfx_hit_pierce', 'sfx_hit_arrow', 'sfx_hit_clash', 'sfx_hit_wood', 'sfx_hit_body_a', 'sfx_hit_body_b',
     'hit_light', 'hit_heavy', 'hit_lethal', 'cc0_block_metal_bright', 'cc0_hit_flesh', 'die', 'boom',
+    'tactic_fire', 'tactic_water', 'tactic_wind', 'tactic_heal', 'tactic_haste', 'tactic_morale', 'tactic_stun',
   ],
   bgm: DEFAULT_BATTLE_BGM,
 };
@@ -203,6 +217,7 @@ export function parseBattleAudioLayersConfig(raw: unknown): BattleAudioLayersCon
       immediateStyles: strList(as.immediateStyles, d.attackSfx.immediateStyles),
     },
     attack: parseAttack(root.attack, d.attack),
+    tactic: parseTactic(root.tactic, d.tactic),
     pool: parseSfxVoicePoolConfig(root.pool),
     preload: strList(root.preload, d.preload),
     bgm: parseBattleBgmConfig(root.bgm),
@@ -218,6 +233,16 @@ function parseByStyle(v: unknown, fallback: Record<string, HitTierSpec>): Record
     out[style] = { clips, volume: range(spec?.volume, [0.65, 0.85]), clipVolumeScale: scaleMap(spec?.clipVolumeScale) };
   }
   return Object.keys(out).length > 0 ? out : fallback;
+}
+
+function parseTactic(v: unknown, fallback: BattleAudioLayersConfig['tactic']): BattleAudioLayersConfig['tactic'] {
+  if (!v || typeof v !== 'object') return fallback;
+  const src = v as Record<string, any>;
+  const clips: Record<string, string[]> = { ...fallback.clips };
+  const volume: Record<string, Range> = { ...fallback.volume };
+  if (src.clips && typeof src.clips === 'object') for (const [k, list] of Object.entries(src.clips as Record<string, unknown>)) { const l = strList(list, []); if (l.length) clips[k] = l; }
+  if (src.volume && typeof src.volume === 'object') for (const [k, r] of Object.entries(src.volume as Record<string, unknown>)) volume[k] = range(r, volume[k] ?? [0.7, 0.85]);
+  return { clips, volume };
 }
 
 function parseAttack(v: unknown, fallback: BattleAudioLayersConfig['attack']): BattleAudioLayersConfig['attack'] {
@@ -303,6 +328,19 @@ export function pickUnitAttackSfx(cueKey: string, cfg: BattleAudioLayersConfig =
   const raw = list[Math.min(list.length - 1, Math.floor(rand() * list.length))];
   if (state) state.lastClip[stateKey] = raw;
   return { clip: resolveClipName(raw, cfg), volume: pickInRange(cfg.attack.volume[cueKey] ?? [0.5, 0.65], rand) };
+}
+
+/** 戰法分組音效選檔（PROG-2-10190）：依特效分組挑 clip（多檔輪播、不連續重複）與音量；該組沒設定回 null（不播）。 */
+export function pickTacticSfx(group: string, cfg: BattleAudioLayersConfig = DEFAULT_BATTLE_AUDIO_LAYERS, rand: () => number = Math.random, state?: HitSfxState): PickedSfx | null {
+  const pool = cfg.tactic.clips[group];
+  if (!pool || pool.length === 0) return null;
+  const stateKey = 'tactic:' + group;
+  const last = state?.lastClip[stateKey];
+  const filtered = pool.length > 1 && last !== undefined ? pool.filter(c => c !== last) : pool;
+  const list = filtered.length > 0 ? filtered : pool;
+  const raw = list[Math.min(list.length - 1, Math.floor(rand() * list.length))];
+  if (state) state.lastClip[stateKey] = raw;
+  return { clip: resolveClipName(raw, cfg), volume: pickInRange(cfg.tactic.volume[group] ?? [0.7, 0.85], rand) };
 }
 
 /** 輕擊音這一刻能不能播（windowMs 內最多 maxPerWindow 聲）；能播就登記。非輕擊層不節流，永遠 true。 */
