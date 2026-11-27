@@ -17724,15 +17724,15 @@
     "category": "task"
   },
   {
-    "id": "doc_task_3246",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10185.md",
-    "title": "[PROG-2-10185] FUN-02／03／04 實作",
-    "category": "task"
-  },
-  {
     "id": "doc_task_3244",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10119.md",
     "title": "[PROG-2-10119] 批次補舊 PROG 卡 frontmatter task_id（讓 ATM importer 可匯入）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3246",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10185.md",
+    "title": "[PROG-2-10185] FUN-02／03／04 實作",
     "category": "task"
   },
   {
@@ -17805,6 +17805,12 @@
     "id": "doc_task_3269",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10200.md",
     "title": "[PROG-2-10200] 日夜四季全域規則＋市井大街熱區裁定回寫",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3270",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10203.md",
+    "title": "[PROG-2-10203] 武將生活系統四份規格審查",
     "category": "task"
   }
 ]

@@ -41,7 +41,7 @@
 ├───────────────────┴─────────────────────┴────────────────┤
 │  共用底層：動畫管理器（AnimMgr）、確定性亂數、時鐘、物件池   │
 ├──────────────────────────────────────────────────────────┤
-│  共用框架：商店、庫存、任務、獎勵、技能、劇情、占用、友誼    │
+│  共用框架：商店、庫存、任務、獎勵、技能、劇情、占用、友誼、收藏│
 └──────────────────────────────────────────────────────────┘
 ```
 
@@ -60,7 +60,7 @@
 |---|---|
 | 一顆 Q 頭 | 動作（身體）＋表情（臉）＋符號（頭上）＋影子，共用一個物件池與一個動畫管理器 |
 | 一個舞台 | 一張大圖＋可走路徑層＋可點區域層＋Q 頭群＋符號層 |
-| 進舞台 | 場景切換 UI → 載入大圖（最多快取 2 張）→ 生活層用當下時段與季節生成快照 → 依情報等級決定看得到誰、看得到什麼 |
+| 進舞台 | 場景切換 UI → 載入大圖（最多快取 2 張；低階機 1 張＋預載 1，見第 11 章）→ 生活層用當下時段與季節生成快照 → 依情報等級決定看得到誰、看得到什麼 |
 | 離開舞台 | Q 頭、符號、跳字、血條全部歸池；大圖視記憶體預算釋放 |
 | 時鐘 | 生活時鐘 7 時段，每時段 90 秒；季度由大廳推進（QLIFE-01 第 3.2 節）|
 | 單挑 | 生活層呼叫動作系統單挑模組；友誼走友誼框架，**傷勢經伺服器 API 寫入人員占用**（呈現在客戶端、傷勢結果由伺服器權威；已與戰場專家對齊（11/28 審查））|
@@ -132,6 +132,7 @@
     "mapFab":    { "anchor": "bottomLeft",  "offset": [0.03, 0.04], "sizeRel": 0.075, "minPx": 56, "mirrorable": true },
     "scenePanel":{ "anchor": "bottom",      "heightRel": 0.60, "radius": 16, "tabs": ["map", "recent", "favorites", "find"] },
     "slotBadge": { "anchor": "topRight",    "offset": [0.02, 0.03], "sizeRel": 0.06 },
+    "interactMenu": { "anchor": "actor",    "radiusH": 0.9, "minPx": 44, "note": "點 Q 頭彈出的圓形互動選單（QLIFE-01 第 6 章），跟著頭走、相對頭高 H，不寫死像素" },
     "companions":{ "anchor": "topLeft",     "offset": [0.02, 0.12], "sizeRel": 0.05, "max": 2 }
   },
   "portraitOverride": { "scenePanel": { "heightRel": 0.70 } }
@@ -162,13 +163,15 @@
 | Lv2 | ≥ 25 | 知道在哪個**場景**；人影帶輪廓，不知道是誰 |
 | Lv3 | ≥ 45 | 看到**是誰**（頭像＋名字）|
 | Lv4 | ≥ 65 | 看到**在做什麼**（動態符號）；可偷聽想法 |
-| Lv5 | ≥ 85 | 看到**下一時段預測**去哪；偷聽說溜嘴機率 +50% |
+| Lv5 | ≥ 85 | 看到**下一時段預測**去哪；偷聽說溜嘴機率 +50%（與 `doc_spec_1348「說溜嘴要稀有」` 的原則是否牴觸，待使用者確認，見審查待問清單 Q3）|
 
+> 待確認：生活層看得到的武將以「我方家臣＋本城訪客」為主（QLIFE-01 2.4），自家家臣在 Lv0～2 也畫成剪影不太合理，是否改成「家臣身分永遠可見，位置與活動才受情報限制」，見審查待問清單 Q7。
+>
 > 場景內的 Q 頭顯示：Lv0～2 的武將畫成「剪影＋?」，仍會走動（維持社會熱鬧感），但**不暴露身分與活動**；Lv3 顯示臉與名；Lv4 才顯示頭上符號。
 
 ### 5.3 怎麼升
 
-保留既有來源（監獄審訊每季產出等，數值不動）。生活層**新增**的來源也入同一個 `intel`，走獎勵框架 `reward.grant`（貨幣 `intel`），每項有每季上限防刷（PM 暫定，單位為 `intel` 點，可小數，累計後取整）：
+保留既有來源（監獄審訊每季產出等，數值不動）。生活層**新增**的來源也入同一個 `intel`，走獎勵框架 `reward.grant`（貨幣 `intel`；11/28 審查：該貨幣種類要在 `doc_spec_1247` 補登記為情報值資源，累計的小數寫在 `hallPlayerOf` 的 `rawIntel`，取整規則沿用 `doc_spec_0460`），每項有每季上限防刷（PM 暫定，單位為 `intel` 點，可小數，累計後取整）：
 
 | 新增來源 | 每次 | 每季上限 |
 |---|---|---|
@@ -204,7 +207,7 @@
 
 | 項目 | 規則 |
 |---|---|
-| 位置 | `assets/scripts/shared/`（與共通底層工具層同一層，不依賴任何框架）|
+| 位置 | `assets/scripts/shared/presentation/`（呈現底層 PRS，與共通底層工具層並列，不依賴任何框架；11/28 審查：與第 12 章、QACT-01 統一路徑）|
 | 使用者 | 動作系統、表情系統、符號系統（生活層）、戰場（可選）、小遊戲 |
 | 責任 | 統一排程、物件池、LOD 降級、暫停、事件 |
 | 預算 | 見 QACT-01 第 7 章與 QLIFE-01 第 5.9 節，社會層只決定「本機等級」並下發 |
@@ -215,14 +218,14 @@
 
 | 層 | 檔案 |
 |---|---|
-| 動作 | `q-motion-clips.json`、`q-anim-budget.json` |
+| 動作 | `q-motion-clips.json`、`q-anim-budget.json`、`q-actor-sockets.json` |
 | 表情 | `q-face-anchors.json`、`q-face-parts.atlas`、`q-expression-presets.json` |
-| 生活 | `life-profile.json`、`life-factors.json`、`life-scenes.json`、`life-roster.json`、`q-symbol-groups.json`、`q-rare-gestures.json`、`life-gift-events.json`、`life-friendship-actions.json` |
+| 生活 | `life-profile.json`、`life-factors.json`、`life-scenes.json`、`life-roster.json`、`q-symbol-groups.json`、`q-rare-gestures.json`、`life-gift-events.json`、`life-friendship-actions.json`、`life-injury.json` |
 | 社會 | `life-intel-levels.json`、`life-intel-sources.json`、`life-interaction-quota.json`、`life-ui-layout.json`、`life-area-maps.json`（大圖路徑、導航圖、熱區色碼、光照乘色 `lighting`、季節補丁座標，第 10 章與 QLIFE-01 第 3.5 節）|
 
 ### 7.2 需要走共用 API 的重要數值（共用框架總綱第 5 章硬規則）
 
-單機也走本機 adapter：友誼、心情、羈絆點數、玩家情報值 `intel`（既有）、每日互動次數與付費、物品轉移（送禮、搶物品、歸還）、圖鑑收錄（舉止簿）、收藏場景、最近去過（可選存本機）、說溜嘴收錄。**純視覺的位置、動畫、符號不上 API**，由客戶端依 `seed` 重現。
+單機也走本機 adapter：友誼、心情、羈絆點數、玩家情報值 `intel`（既有）、每日互動次數與付費、物品轉移（送禮、搶物品、歸還）、傷勢（單挑經 `occupancy.acquire(kind=medical, sub=injured)` 寫入，11/28 審查補列）、圖鑑收錄（舉止簿）、收藏場景、最近去過（可選存本機）、說溜嘴收錄。**純視覺的位置、動畫、符號不上 API**，由客戶端依 `seed` 重現。
 
 ## 8. 實作順序建議（開卡由總 PM）
 
@@ -254,7 +257,7 @@ v2 圖上可辨認的店面（照 v2 的密度與招牌）：客棧、酒館、�
 | 項目 | 低階 | 中階 | 高階 |
 |---|---|---|---|
 | 街上同時看得到的 Q 頭（白天） | 12 | 16 | 24 |
-| 夜晚（燈籠、戲館、酒館）| 12 | 18 | 24 |
+| 夜晚（燈籠、戲館、酒館）| 12 | 16 | 24 |
 | 模擬中的武將總數（含在店內看不到的）| 24 | 32 | 40 |
 | 同時動態符號 | 8 | 14 | 22 |
 | 同時單挑 | 1 | 1 | 2 |
@@ -266,7 +269,7 @@ v2 圖上可辨認的店面（照 v2 的密度與招牌）：客棧、酒館、�
 1. 大圖（日／夜＋四季變體）、可點店家熱區、可走路徑。
 2. 7 時段輪替，武將依喜好挑去處，在店門進出。
 3. 走路動作、待機、跳、眨眼、說話、紅暈。
-4. 50 種符號中，一版至少實作 S01、S04、S05、S09、S10、S14、S16、S17、S18、S19、S21、S23、S27、S29、S42 等 15 種＋兩人互動符號（聊天、吵架、曖昧）＋心情變色。
+4. 50 種符號中，一版至少實作 S01、S04、S05、S09、S10、S14、S16、S17、S18、S19、S21、S23、S27、S29、S42 等 15 種，再加一版場景必需的 S08（傭兵公會）、S15（布莊）、S37（木材工具所）、S40（媒婆館）、S50（發呆待機，預設）共 20 種＋兩人互動符號（聊天、吵架、曖昧）＋心情變色。
 5. 互動：搭話、送禮、邀約同行、切磋單挑（在街坊空地）。搶物品、偷聽想法可二版，但資料與介面先留（`feature flag`）。
 6. 場景切換 UI 全部元件。
 7. 情報 Lv0～Lv5 的顯示切換。
@@ -415,6 +418,8 @@ v2 圖上可辨認的店面（照 v2 的密度與招牌）：客棧、酒館、�
 | stall_left | 攤販市集（左組）| 255,128,255 |
 | stall_right | 攤販市集（右組）| 128,255,255 |
 
+**熱區 id 對生活場景 id（`life-area-maps.json` 的 `hotspotToScene`，11/28 審查補）**：多數是去掉 `mkt_` 前綴（`inn`→`mkt_inn`、`tavern`→`mkt_tavern`、`clinic`→`mkt_clinic`、`pharmacy`→`mkt_pharmacy`、`rouge`→`mkt_rouge`、`bank`→`mkt_bank`、`smithy`→`mkt_smithy`、`escort`→`mkt_escort`、`teahouse`→`mkt_teahouse`）；名稱不同者：`opera`→`mkt_theater`、`matchmaker`→`mkt_match`、`pawnshop`→`mkt_pawn`、`mercenary`→`mkt_guild`、`cloth`→`mkt_tailor`、`carpentry`→`mkt_carpenter`、`general_store`→`mkt_grocery`、`bookstore`→`mkt_bookshop`、`storyteller`→`mkt_story`、`gambling`→`mkt_gamble`、`bathhouse`→`mkt_bath`、`plaza`／`stall_left`／`stall_right`→`mkt_street`；**暫定**：`horse_market_a`→`mkt_horse`（驛站 `mkt_post` 併為同棟的子活動，不另開熱區）、`horse_market_b`→`mkt_horse`（兩個門口同一個場景），待使用者確認見審查待問清單 Q4。
+
 店家 id 對照第 10.2 節（#1～#22 依序為 inn、tavern、opera、teahouse、matchmaker、pawnshop、bank、mercenary、cloth、smithy、carpentry、general_store、pharmacy、clinic、rouge、bookstore、storyteller、gambling、bathhouse、escort、horse_market_a、horse_market_b）。
 
 ### 10.6 Q 頭可走路徑層
@@ -458,6 +463,7 @@ v2 圖上可辨認的店面（照 v2 的密度與招牌）：客棧、酒館、�
 | 其他單張大圖紋理總量（含日夜四季圖層，QLIFE-01 第 3.5.7 節）| ≤ 12 MB | ≤ 16 MB | ≤ 24 MB |
 | 動畫管理器每幀 | ≤ 1.0 ms | ≤ 1.5 ms | ≤ 2.0 ms |
 | 目標幀率 | 30 | 30 | 60 |
+| 季節粒子同時上限（花瓣、落葉、雪；11/28 審查補，PM 暫定）| 30 | 60 | 120 |
 
 ## 12. 共用框架評估（使用者 11/28 裁決已定）
 
@@ -478,7 +484,7 @@ v2 圖上可辨認的店面（照 v2 的密度與招牌）：客棧、酒館、�
 
 ## 13. 待使用者裁決
 
-**目前沒有待裁決題目。** 原六題已全部由使用者本人定案（2026-11-28），裁決結果與落點：
+**原六題已全部裁決。** 11/28 PM 審查（PROG-2-10203）另列 7 題新待問（切磋預設模式、每日定義、Lv5 說溜嘴、馬市驛站對應、不對稱頭翻轉、前期街上人數、家臣情報可見），待使用者回覆，清單在 `artifacts/life-sim-review-1128/questions.md`（不入庫）。原六題已全部由使用者本人定案（2026-11-28），裁決結果與落點：
 
 | # | 原題 | 裁決 | 寫在哪裡 |
 |---|---|---|---|
