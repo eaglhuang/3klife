@@ -17,6 +17,34 @@
       "presentation": { "type": "instant", "args": {}, "skippable": true }
     },
     {
+      "id": "BUNDLE_MERC_PARTING_1",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "gold", "amount": 300 }],
+      "sources": ["mercenary"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_MERC_PARTING_2",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "gold", "amount": 800 }, { "kind": "item", "itemId": "ITEM_BATTLE_NOTE", "qty": 1, "itemSource": "EVENT" }],
+      "sources": ["mercenary"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_MERC_PARTING_3",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "gold", "amount": 1500 }, { "kind": "item", "itemId": "ITEM_WINE_GREEN_PLUM", "qty": 1, "itemSource": "EVENT" }],
+      "sources": ["mercenary"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_MERC_PARTING_4",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "gold", "amount": 3000 }, { "kind": "item", "itemId": "ITEM_WINE_DUKANG", "qty": 1, "itemSource": "EVENT" }, { "kind": "item", "itemId": "ITEM_BATTLE_NOTE", "qty": 2, "itemSource": "EVENT" }],
+      "sources": ["mercenary"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
       "id": "BUNDLE_ACADEMY_GRAD_S",
       "kind": "reward",
       "effects": [{ "kind": "currency", "id": "gold", "amount": 20000 }],

@@ -1,0 +1,28 @@
+{
+  "schema": "oath-config.v1",
+  "affinityThreshold": 60,
+  "pact": { "minMembers": 2, "maxMembers": 3 },
+  "severance": { "lockedAffinity": -100 },
+  "wine": {
+    "mode": "dual",
+    "highRarities": ["SSR", "UR"],
+    "wines": {
+      "DUKANG_WINE": { "itemId": "ITEM_WINE_DUKANG", "affinityGain": 35 },
+      "GREEN_PLUM": { "itemId": "ITEM_WINE_GREEN_PLUM", "affinityGain": 25 },
+      "TUSU_WINE": { "itemId": "ITEM_WINE_TUSU", "affinityGain": 15 },
+      "JIUYUN_WINE": { "itemId": "ITEM_WINE_JIUYUN", "affinityGain": 30 }
+    },
+    "bondWine": {
+      "SSR": { "wineId": "DUKANG_WINE", "qty": 2 },
+      "UR": { "wineId": "JIUYUN_WINE", "qty": 3 }
+    }
+  },
+  "parting": {
+    "tiers": [
+      { "minAffection": 0, "bundleId": "BUNDLE_MERC_PARTING_1" },
+      { "minAffection": 20, "bundleId": "BUNDLE_MERC_PARTING_2" },
+      { "minAffection": 40, "bundleId": "BUNDLE_MERC_PARTING_3" },
+      { "minAffection": 60, "bundleId": "BUNDLE_MERC_PARTING_4" }
+    ]
+  }
+}

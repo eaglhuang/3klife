@@ -13,6 +13,7 @@ import { AFFECTION_CAP } from './MercenaryAffection';
 import { bondMercenary, MercenaryRejectReason, MercenaryState } from './MercenaryBond';
 import { BondRarity, BondRejectReason, BondStats, bondToPermanent } from './MercenaryBondPermanent';
 import { PoolCooldown, startCooldownAfterBond } from './MercenaryDeparture';
+import { applyGrowthSnapshot, freezeGrowthSnapshot } from './MercenaryGrowthSnapshot';
 
 export type RosterBondRejectReason = 'not-found' | 'general-mismatch' | 'affection-not-full' | MercenaryRejectReason | BondRejectReason;
 
@@ -71,6 +72,8 @@ export function bondMercenaryToRoster(
     bondPoints: number,
     cooldowns: readonly PoolCooldown[],
     today: number,
+    payment?: { path: 'points' } | { path: 'wine'; available: boolean },
+    season = 0,
 ): RosterBondResult {
     const reject = (reason: RosterBondRejectReason): RosterBondResult => ({ ok: false, reason, pointsSpent: 0 });
     if (mercenary.generalId !== template.id) return reject('general-mismatch');
@@ -83,13 +86,14 @@ export function bondMercenaryToRoster(
     const rarity = rarityOfTemplate(template);
     if (!rarity) return reject('unknown-rarity');
 
-    const points = bondToPermanent({ bondPoints }, rarity, 'points', statsOfTemplate(template));
+    const points = bondToPermanent({ bondPoints }, rarity, payment?.path === 'wine' ? 'wine' : 'points', statsOfTemplate(template), payment?.path === 'wine' ? payment.available : undefined);
     if (!points.ok) return reject(points.reason!);
 
     return {
         ok: true,
         pointsSpent: points.pointsSpent,
-        general: { ...template },
+        // 試用期成長（等級／經驗／戰法）凍結後繼承（MERC-12，PROG-2-10207）；沒有成長資料就原樣複製模板
+        general: applyGrowthSnapshot({ ...template }, freezeGrowthSnapshot(mercenary.growth, template.id, season)),
         mercenary: { ...bonded.state },
         cooldowns: startCooldownAfterBond(mercenary.uid, today, cooldowns, template.id),
     };

@@ -3,7 +3,8 @@
  * MercenaryBondPermanent — 傭兵結義後轉為永久武將的點數扣除與數值快照，純邏輯，不依賴 cc。
  *
  * - 點數路徑：依稀有度扣結義點數，點數不足則拒絕，且不扣任何點數。
- * - 美酒路徑（SSR/UR）：依 Q42 裁決，目前未定，回傳 'wine-path-undecided'，不做扣除。
+ * - 美酒路徑（SSR/UR）：Q42 路線未裁決，路線規則放 oath-config.json（WineBanquet.planBondPayment）；這裡只依呼叫端傳入的 wineAvailable 判定，
+ *   不傳（undefined）維持舊行為回傳 'wine-path-undecided'。名酒的實際扣除由 GameSession 依付款方案處理，這裡不碰庫存。
  * - 快照：結義成功時保留當下的 Stats 作為永久武將初始值（MERC-12）。
  *
  * 規格沒有寫結義點數的來源，這裡只負責扣除；點數來源由後續工單接線。
@@ -26,7 +27,7 @@ export interface BondPointsWallet {
     bondPoints: number;
 }
 
-export type BondRejectReason = 'insufficient-points' | 'wine-path-undecided' | 'unknown-rarity';
+export type BondRejectReason = 'insufficient-points' | 'insufficient-wine' | 'wine-path-undecided' | 'unknown-rarity';
 
 export interface BondPermanentResult {
     ok: boolean;
@@ -55,6 +56,7 @@ export function bondToPermanent(
     rarity: string,
     path: BondPath,
     stats: Readonly<BondStats>,
+    wineAvailable?: boolean,
 ): BondPermanentResult {
     const reject = (reason: BondRejectReason): BondPermanentResult => ({
         ok: false,
@@ -63,7 +65,11 @@ export function bondToPermanent(
         pointsSpent: 0,
     });
     if (!isBondRarity(rarity)) return reject('unknown-rarity');
-    if (path === 'wine') return reject('wine-path-undecided');
+    if (path === 'wine') {
+        if (wineAvailable === undefined) return reject('wine-path-undecided');
+        if (!wineAvailable) return reject('insufficient-wine');
+        return { ok: true, wallet: { ...wallet }, snapshot: snapshotBondStats(stats), pointsSpent: 0 };
+    }
     const cost = BOND_POINT_COST[rarity];
     if (wallet.bondPoints < cost) return reject('insufficient-points');
     return {

@@ -89,6 +89,14 @@ import { ITEM_VITALITY_PILL } from '../systems/ItemDef';
 import { createEmptyMercenaryBundle, normalizeMercenaryBundle, serializeMercenaryBundle, type MercenarySaveBundle } from '../systems/MercenarySaveModel';
 import { clampBondPoints } from '../systems/MercenaryOath';
 import { bondMercenaryToRoster, rarityOfTemplate, statsOfTemplate, type RosterBondResult } from '../systems/MercenaryRoster';
+import { BOND_POINT_COST } from '../systems/MercenaryBondPermanent';
+import { DEFAULT_OATH_CONFIG, normalizeOathConfig, type OathConfig } from '../systems/OathConfig';
+import { holdBanquet, planBondPayment, type BanquetResult } from '../systems/WineBanquet';
+import {
+    cloneSwornState, emptySwornState, formPact, isEmptySwornState, normalizeSwornState, severTies,
+    type FormPactResult, type SeverResult, type SwornState,
+} from '../systems/SwornPact';
+import { partingGiftClaim, type PartingGiftClaim } from '../systems/MercenaryParting';
 import { useTrialTicket, type TrialTicketRejectReason, type TrialTicketResult } from '../systems/MercenaryTrialTicket';
 import { createUpkeepState } from '../systems/MercenaryUpkeep';
 import { advanceTrialDay } from '../systems/MercenaryTrialDay';
@@ -1045,6 +1053,12 @@ export class GameSession implements AcademyRecordPort {
     private _childLedger: BloodlineChildLedgerState = emptyChildLedger();
     /** 新手樂趣四功能（FUN-01～04，PROG-2-10177）去重與輪替狀態；空狀態不寫，舊存檔缺欄位視為空 */
     private _funState: FunState = emptyFunState();
+    /** 結義系統參數（oath-config.json，PROG-2-10207）：好感門檻、名酒路線（Q42 可調）、離隊留念分級；未載入用預設 */
+    private _oathConfig: OathConfig = DEFAULT_OATH_CONFIG;
+    /** 桃園結義盟約與割袍斷義狀態（PROG-2-10207）；空狀態不寫存檔 */
+    private _swornState: SwornState = emptySwornState();
+    /** 離隊留念禮物：換日結算時排入，隨後以 reward.claim 入帳（失敗只記警告） */
+    private _pendingPartingClaims: PartingGiftClaim[] = [];
     /** 親子談話話題表（PROG-2-10070，延後載入） */
     private _childTalkCfg: ChildTalkConfig | null = null;
     /** 血統成長事件（PROG-2-10059）：已觸發紀錄與歲末排出的待決佇列，隨存檔 bloodlineGrowthEvents 保存；事件表首次用到才載入 */
@@ -1354,10 +1368,100 @@ export class GameSession implements AcademyRecordPort {
      */
     public async advanceMercenaryDay(): Promise<MercenaryDayReport> {
         const report = this._tickMercenaryDay();
+        await this._flushPartingGifts();
         if (this._autoSave && this._save) {
             await this.save();
         }
         return report;
+    }
+
+    /** 把排隊中的離隊留念禮物經 reward.claim 入帳；grantKey 冪等，沒綁 API 就保留到下次，失敗只記警告 */
+    private async _flushPartingGifts(): Promise<void> {
+        if (!this._rewardApi || this._pendingPartingClaims.length === 0) return;
+        const claims = this._pendingPartingClaims;
+        this._pendingPartingClaims = [];
+        for (const claim of claims) {
+            try {
+                const res = await this._rewardApi.cmd('reward.claim', { bundleId: claim.bundleId, grantKey: claim.grantKey, source: claim.source });
+                if (isApiFail(res)) console.warn('[GameSession] 離隊留念領取失敗 ' + claim.grantKey + ' ' + res.errorCode + ' ' + res.message);
+            } catch (error) {
+                console.warn('[GameSession] 離隊留念領取例外', error);
+            }
+        }
+    }
+
+    /** 經共通物品 API 扣道具；沒綁 API 或庫存不足回 false。扣除後同步發庫存變更事件。 */
+    private async _consumeViaItemApi(itemId: string, qty: number, sink: string): Promise<boolean> {
+        if (!this._itemApi) return false;
+        try {
+            const res = await this._itemApi.cmd('item.consume', { itemId, qty, sink });
+            if (isApiFail(res)) return false;
+            this._emit(GAME_SESSION_EVENTS.InventoryChanged, this.inventory);
+            return true;
+        } catch (error) {
+            console.warn('[GameSession] 道具扣除例外', error);
+            return false;
+        }
+    }
+
+    /** 載入結義參數（oath-config.json 原始內容）；壞資料退回預設 */
+    public setOathConfig(raw: unknown): void {
+        this._oathConfig = normalizeOathConfig(raw);
+    }
+
+    public get oathConfig(): OathConfig {
+        return this._oathConfig;
+    }
+
+    /** 盟約與割袍斷義狀態（唯讀複本） */
+    public swornState(): SwornState {
+        return cloneSwornState(this._swornState);
+    }
+
+    /** 兩位武將目前的好感（配對友誼，-100～100） */
+    public pairAffinity(a: string, b: string): number {
+        return FriendshipService.getInstance().getPair(a, b);
+    }
+
+    /**
+     * 桃園結義（doc_spec_0743 §3）：2~3 位武將兩兩好感達門檻才成立；成立後兩兩記為義兄弟（動態關係）並存檔。
+     * 失敗不改任何狀態。戰場光環與千里奔援屬戰場規則，不在這裡接線。
+     */
+    public async formSwornPact(memberIds: readonly string[]): Promise<FormPactResult> {
+        const season = this._clock.state.totalSeasonsElapsed;
+        const result = formPact(this._swornState, memberIds, season, (a, b) => this.pairAffinity(a, b), this._oathConfig);
+        if (!result.ok) return result;
+        this._swornState = result.state;
+        const ids = result.pact.swornBrotherIds;
+        for (let i = 0; i < ids.length; i += 1) {
+            for (let j = i + 1; j < ids.length; j += 1) this.dynamicRelations.record('sworn-pact', ids[i], ids[j], season);
+        }
+        if (this._autoSave && this._save) await this.save();
+        return result;
+    }
+
+    /** 割袍斷義（doc_spec_0743 §4）：同盟約兩人，好感鎖死 -100、互為宿敵、盟約瓦解並存檔；失敗不改狀態。 */
+    public async severSwornTies(offenderId: string, victimId: string): Promise<SeverResult> {
+        const result = severTies(this._swornState, offenderId, victimId, this._clock.state.totalSeasonsElapsed, this._oathConfig);
+        if (!result.ok) return result;
+        this._swornState = result.state;
+        const service = FriendshipService.getInstance();
+        service.setLockedPairs(result.state.severedPairs);
+        service.lockPair(offenderId, victimId, result.lockedAffinity);
+        if (this._autoSave && this._save) await this.save();
+        return result;
+    }
+
+    /** 名酒宴飲（doc_spec_0743 §2）：消耗 1 瓶名酒，兩位武將好感上升；割袍斷義的配對不能宴飲。 */
+    public async holdWineBanquet(wineId: string, hostId: string, guestId: string): Promise<BanquetResult> {
+        const service = FriendshipService.getInstance();
+        const severed = this._swornState.severedPairs.includes(hostId < guestId ? hostId + '|' + guestId : guestId + '|' + hostId);
+        const result = holdBanquet(this._inventory, wineId, hostId, guestId, service.getPair(hostId, guestId), severed, this._oathConfig);
+        if (!result.ok) return result;
+        if (!await this._consumeViaItemApi(result.itemId, 1, 'OATH_BANQUET')) return { ok: false, reason: 'no-wine' };
+        service.addPair(hostId, guestId, result.affinityGain, 'wine-banquet');
+        if (this._autoSave && this._save) await this.save();
+        return result;
     }
 
     /** 傭兵日推進的狀態變更（不存檔）；advanceMercenaryDay 與季度推進共用 */
@@ -1377,6 +1481,11 @@ export class GameSession implements AcademyRecordPort {
                 events.push(...settled.events);
                 const letter = createFarewellLetter({ uid: merc.uid, generalName: this.generalNameOf(merc.generalId, merc.uid), affection: merc.affection ?? 0, day: today });
                 if (letter) letters.push(letter);
+                // 離隊留念禮物（doc_spec_0583 §5.1）：只有試用到期離隊才有，好感越高越豐厚
+                if (settled.events.some((e) => e.type === 'departed' && e.reason === 'trial-expired')) {
+                    const gift = partingGiftClaim(merc.uid, merc.affection ?? 0, today, this._oathConfig);
+                    if (gift) this._pendingPartingClaims.push(gift);
+                }
                 return { ...merc, status: settled.record.status };
             }
             const next = advanceTrialDay(merc).state;
@@ -1456,9 +1565,19 @@ export class GameSession implements AcademyRecordPort {
         if (!mercenary) {
             return { ok: false, reason: 'not-found', pointsSpent: 0 };
         }
-        const result = bondMercenaryToRoster(mercenary, template, this._bondPoints, this._mercenaries.cooldowns, this.mercenaryDay);
+        // 付款方案（點數或名酒，Q42 路線由 oath-config.json 決定）；稀有度不明時交給名冊計算回報 unknown-rarity
+        const rarity = rarityOfTemplate(template);
+        const plan = rarity ? planBondPayment(rarity, BOND_POINT_COST[rarity], this._bondPoints, this._inventory, this._oathConfig) : null;
+        const payment = plan && plan.ok && plan.path === 'wine' ? { path: 'wine' as const, available: true }
+            : plan && !plan.ok && plan.reason === 'insufficient-wine' ? { path: 'wine' as const, available: false }
+                : undefined;
+        const result = bondMercenaryToRoster(mercenary, template, this._bondPoints, this._mercenaries.cooldowns, this.mercenaryDay, payment, this._clock.state.totalSeasonsElapsed);
         if (!result.ok || !result.mercenary || !result.general || !result.cooldowns) {
             return result;
+        }
+        if (plan && plan.ok && plan.path === 'wine') {
+            // 名酒走共通物品 API 扣除（防繞過棘輪）；結義已成立，扣除失敗只記警告
+            if (!await this._consumeViaItemApi(plan.itemId, plan.qty, 'OATH_BOND')) console.warn('[GameSession] 結義名酒扣除失敗 ' + plan.itemId);
         }
         this._mercenaries = {
             mercenaries: this._mercenaries.mercenaries.map((m) => (m.uid === uid ? result.mercenary! : m)),
@@ -3305,6 +3424,8 @@ export class GameSession implements AcademyRecordPort {
         this._breedingBirthRecords = [];
         this._childLedger = emptyChildLedger();
         this._funState = emptyFunState();
+        this._swornState = emptySwornState();
+        FriendshipService.getInstance().setLockedPairs([]);
         this._bloodlineEventState = emptyBloodlineEventState();
         this._bloodlinePending = [];
         this._familySystemUnlockedFlag = false;
@@ -6754,6 +6875,7 @@ export class GameSession implements AcademyRecordPort {
         const rivalBattles = this._tickRivals();
         // MVP 定案：一季＝傭兵一日（PROG-2-1154，使用者裁定）
         const mercenaryDay = this._tickMercenaryDay();
+        void this._flushPartingGifts();
         const departedUids = mercenaryDay.events.filter((e) => e.type === 'departed').map((e) => e.uid);
         // 用另一條由季數與目前亂數狀態導出的序列，不消耗主亂數，既有結算的結果不變
         const governanceSeason = advance.current.totalSeasonsElapsed;
@@ -8047,6 +8169,7 @@ export class GameSession implements AcademyRecordPort {
             ...(this._breedingBirthRecords.length > 0 ? { breedingBirthRecords: this.breedingBirthRecords() } : {}),
             ...(isEmptyChildLedger(this._childLedger) ? {} : { bloodlineChildLedger: cloneChildLedger(this._childLedger) }),
             ...(isEmptyFunState(this._funState) ? {} : { funState: cloneFunState(this._funState) }),
+            ...(isEmptySwornState(this._swornState) ? {} : { swornPacts: cloneSwornState(this._swornState) }),
             ...(isEmptyBloodlineGrowth(this._bloodlineEventState, this._bloodlinePending) ? {} : { bloodlineGrowthEvents: { records: this._bloodlineEventState.records.map((r) => ({ ...r })), pending: this._bloodlinePending.map((p) => ({ ...p })) } }),
         };
     }
@@ -8330,6 +8453,8 @@ export class GameSession implements AcademyRecordPort {
         this._breedingBirthRecords = normalizeBreedingBirthRecords(snapshot.breedingBirthRecords);
         this._childLedger = normalizeChildLedger(snapshot.bloodlineChildLedger);
         this._funState = normalizeFunState(snapshot.funState);
+        this._swornState = normalizeSwornState(snapshot.swornPacts);
+        FriendshipService.getInstance().setLockedPairs(this._swornState.severedPairs);
         const growth = normalizeBloodlineGrowthSave(snapshot.bloodlineGrowthEvents);
         this._bloodlineEventState = growth.state;
         this._bloodlinePending = growth.pending;
