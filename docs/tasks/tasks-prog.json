@@ -20659,7 +20659,7 @@
       "title": "戰場結義效果：義兄弟同陣士氣＋生死相隨援護＋動態義兄弟合攻",
       "owner": "ClaudeCode_claude-opus-5-5",
       "priority": "P1",
-      "status": "in-progress",
+      "status": "done",
       "type": "implementation",
       "phase": "M0",
       "created": "2026-11-27",
@@ -20679,7 +20679,7 @@
         "assets/scripts/core/systems/HistoricalPairs.ts",
         "tests/KinBattleEffects.test.ts"
       ],
-      "notes": "2026-11-27 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "notes": "2026-11-28 | 狀態: done | 驗證: 新單測 15 項全過、run-cli 10160 全過、tsc 0 錯、compute-gate quick 4/4、web-desktop 建置實跑（士氣 +20 圖示出現、生死相隨飄字出現 1 次、傷害 37/88 分攤）截圖在共用筆記夾 kin-sworn-1128 | 變更: KinBattleEffects.ts 新增、BattleController 注入 dynamicRelations/sortieLineupIds 與部署士氣、BattleCombatResolver 生死相隨、combatRelationsBetween 認動態義兄弟、KinRescue 事件＋飄字＋戰報、i18n 四語 | 阻塞: 無（歧義清單見 PR）",
       "brief": {
         "style": "classic",
         "label": "",
@@ -20704,8 +20704,8 @@
     }
   ],
   "summary": {
-    "done": 382,
-    "in_progress": 6,
+    "done": 383,
+    "in_progress": 5,
     "open": 91,
     "total": 479
   }
