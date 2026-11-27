@@ -1,6 +1,7 @@
 ---
 doc_id: doc_task_0019
 id: HARN-HDO-0002
+task_id: HARN-HDO-0002
 priority: P0
 phase: Phase1
 created: 2026-05-04

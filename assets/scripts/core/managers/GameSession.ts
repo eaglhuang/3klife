@@ -56,7 +56,7 @@ import { inspiredTacticIds, type NurtureAction, type NurtureRoundLog } from '../
 import { applyCareerMarkTpDiscountToCost } from '../systems/nurture/AcademyInheritAndMarks';
 import { computeDiscountedTpCost, tacticTagsOf } from '../systems/WhiteFactorTraits';
 import { applyPassiveSave, totalTacticTpDiscount } from '../systems/MentorPassiveSavings';
-import type { GeneralConfig } from '../models/GeneralUnit';
+import type { GeneralConfig, GeneralTacticSlotConfig } from '../models/GeneralUnit';
 import { advanceDaughtersOneYear, assignDaughterRoute, daughtersAwaitingRoute, type AssignDaughterResult, type DaughterRecord, type DaughterRoute } from '../systems/DaughterComingOfAge';
 import { isAcademyRecordActive, normalizeAcademyRecord, type AcademyRecordPort, type PersistedAcademyRecord } from '../services/GameAcademySaveStore';
 import { formatSeasonLabel, GameClock, GameTimeState, SeasonAdvanceResult, SEASONS_PER_YEAR } from '../systems/GameClock';
@@ -262,6 +262,7 @@ import type { ChildGrowthHost, ChildTalkOutcome, GrowthEventResolveOutcome } fro
 import { childTalkTopicFor, loadChildTalkConfig, type ChildTalkConfig } from '../systems/ChildTalk';
 import { bloodlineSilverCost, emptyBloodlineEventState, loadBloodlineY3Y5Events, type BloodlineEventState, type BloodlineEventTable } from '../systems/BloodlineY3Y5Events';
 import { applyBloodlineEffectsToLedger, applyBloodlineStatDeltas, isEmptyBloodlineGrowth, normalizeBloodlineGrowthSave, queueBloodlineGrowthEvents, resolvePendingBloodlineEvent, type PendingBloodlineEvent } from '../systems/BloodlineGrowthSettlement';
+import { cloneFunState, emptyFunState, isEmptyFunState, normalizeFunState, type FunState } from '../fun/FunState';
 import { CHILD_FAVOR_DEFAULT, addChildFavor, addChildInteraction, childInteractionCountOf, childTalkCountOf, childTalkedThisYear, cloneChildLedger, childFavorOf, recordChildTalk, emptyChildLedger, isEmptyChildLedger, normalizeChildLedger, seedChildFavor, type BloodlineChildLedgerState } from '../systems/BloodlineChildLedger';
 import { resolveFactorColor } from '../systems/FactorInheritance';
 import { insertSpiritCard, replaceSpiritCard, setPrimarySpiritCard, unequipSpiritCard, type SpiritSlotFlowResult } from '../systems/SpiritSlotFlow';
@@ -1038,6 +1039,8 @@ export class GameSession implements AcademyRecordPort {
     private _breedingBirthRecords: BreedingBirthRecord[] = [];
     /** 親子好感、天賦小名碎片、同窗好友旗標（PROG-2-10058）；存於 bloodlineChildLedger，舊存檔缺欄位視為空帳本 */
     private _childLedger: BloodlineChildLedgerState = emptyChildLedger();
+    /** 新手樂趣四功能（FUN-01～04，PROG-2-10177）去重與輪替狀態；空狀態不寫，舊存檔缺欄位視為空 */
+    private _funState: FunState = emptyFunState();
     /** 親子談話話題表（PROG-2-10070，延後載入） */
     private _childTalkCfg: ChildTalkConfig | null = null;
     /** 血統成長事件（PROG-2-10059）：已觸發紀錄與歲末排出的待決佇列，隨存檔 bloodlineGrowthEvents 保存；事件表首次用到才載入 */
@@ -2898,6 +2901,23 @@ export class GameSession implements AcademyRecordPort {
         this._roster.replaceAll(roster.map((g) => (g.id === childId ? { ...g, ...next, stats: { ...(g.stats ?? {}), ...next } } : g)));
     }
 
+    /** 新手樂趣四功能狀態（唯讀複本；寫入走 setFunState） */
+    public funState(): FunState {
+        return cloneFunState(this._funState);
+    }
+
+    public setFunState(next: FunState): void {
+        this._funState = normalizeFunState(next);
+        if (this._autoSave && this._save) void this.save();
+    }
+
+    /** 獎勵框架 childBond 效果入帳：親子好感加減（夾在 0～100），回傳實際增量（已到上限為 0） */
+    public grantChildFavor(childId: string, delta: number): number {
+        const before = childFavorOf(this._childLedger, childId);
+        this._childLedger = addChildFavor(this._childLedger, childId, delta);
+        return childFavorOf(this._childLedger, childId) - before;
+    }
+
     /** 單一子嗣的親子好感（沒紀錄回預設值） */
     public childFavor(childId: string): number {
         return childFavorOf(this._childLedger, childId);
@@ -3280,6 +3300,7 @@ export class GameSession implements AcademyRecordPort {
         this._storyMeta = emptyStoryMeta();
         this._breedingBirthRecords = [];
         this._childLedger = emptyChildLedger();
+        this._funState = emptyFunState();
         this._bloodlineEventState = emptyBloodlineEventState();
         this._bloodlinePending = [];
         this._familySystemUnlockedFlag = false;
@@ -3591,6 +3612,15 @@ export class GameSession implements AcademyRecordPort {
                 : { ...g, tacticExp: { ...(g.tacticExp ?? {}), [gain.tacticId]: gain.expAfter } };
         }));
         return result;
+    }
+
+    /** 偵察面板「幫我換上」／復原（PROG-2-10135）：整組覆寫武將的戰法槽，其餘欄位不動；找不到武將回傳 false */
+    public setGeneralTacticSlots(generalId: string, slots: readonly GeneralTacticSlotConfig[]): boolean {
+        const all = this._roster.getAll();
+        if (!all.some((g) => g.id === generalId)) return false;
+        this._roster.replaceAll(all.map((g) => (g.id === generalId ? { ...g, tacticSlots: slots.map((slot) => ({ ...slot })) } : g)));
+        this._emit(GAME_SESSION_EVENTS.RosterChanged, this.roster);
+        return true;
     }
 
     /** 注入武將配置（generals.json），供俘虜來投時依 uid 重建武將 */
@@ -7986,6 +8016,7 @@ export class GameSession implements AcademyRecordPort {
             sortiePresets: { ...this._sortiePresets },
             ...(this._breedingBirthRecords.length > 0 ? { breedingBirthRecords: this.breedingBirthRecords() } : {}),
             ...(isEmptyChildLedger(this._childLedger) ? {} : { bloodlineChildLedger: cloneChildLedger(this._childLedger) }),
+            ...(isEmptyFunState(this._funState) ? {} : { funState: cloneFunState(this._funState) }),
             ...(isEmptyBloodlineGrowth(this._bloodlineEventState, this._bloodlinePending) ? {} : { bloodlineGrowthEvents: { records: this._bloodlineEventState.records.map((r) => ({ ...r })), pending: this._bloodlinePending.map((p) => ({ ...p })) } }),
         };
     }
@@ -8268,6 +8299,7 @@ export class GameSession implements AcademyRecordPort {
         this._sortiePresets = normalizeSortiePresets(snapshot.sortiePresets);
         this._breedingBirthRecords = normalizeBreedingBirthRecords(snapshot.breedingBirthRecords);
         this._childLedger = normalizeChildLedger(snapshot.bloodlineChildLedger);
+        this._funState = normalizeFunState(snapshot.funState);
         const growth = normalizeBloodlineGrowthSave(snapshot.bloodlineGrowthEvents);
         this._bloodlineEventState = growth.state;
         this._bloodlinePending = growth.pending;

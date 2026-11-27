@@ -17574,7 +17574,157 @@
     "category": "task"
   },
   {
-    "id": "doc_task_3197",
+    "id": "doc_task_3198",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10138.md",
+    "title": "[PROG-2-10138] 戰場七種戰法專屬特效（火水風回復加速鼓舞控制）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3199",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10146.md",
+    "title": "[PROG-2-10146] 武將介紹古文後接白話吐槽",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3200",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10150.md",
+    "title": "[PROG-2-10150] 每季小報：季末彈《本季大事記》搞笑小報（3 行大事＋武將吐槽，只用既有數據）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3203",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10141.md",
+    "title": "[PROG-2-10141] Toast 括號詞斷行修正（每行字數保守估算）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3210",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10133.md",
+    "title": "[PROG-2-10133] 戰場右側 UI B1 版面搬遷＋B2 統一按鈕元件＋B4 驗收",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3213",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10136.md",
+    "title": "[PROG-2-10136] 首場戰鬥新手提示",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3214",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10137.md",
+    "title": "[PROG-2-10137] 戰後重點整理三條",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3215",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10160.md",
+    "title": "[PROG-2-10160] 武將白話吐槽補 en／ja 語系與王異性別修正",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3216",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10154.md",
+    "title": "[PROG-2-10154] 戰場：有 Spine／立繪時不載隱藏的 3D 主將模型",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3217",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10135.md",
+    "title": "[PROG-2-10135] 偵察面板戰法一鍵自動配置",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3218",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10155.md",
+    "title": "[PROG-2-10155] 戰場：每幀重排與徽章避讓改成有變動才算",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3221",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10156.md",
+    "title": "[PROG-2-10156] 戰場：VFX 表／池預熱／Spine 預載並行載入",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3224",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10157.md",
+    "title": "[PROG-2-10157] 戰場：騎兵 Spine 圖集重打包",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3227",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10153.md",
+    "title": "[PROG-2-10153] 年末頒獎典禮 A 版領獎台實作",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3229",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10164.md",
+    "title": "[PROG-2-10164] 修正偵察面板幫我換上兩個重現錯誤",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3232",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10165.md",
+    "title": "[PROG-2-10165] 修復 PROG-2-9307 結算窗暗幕測試：測試替身缺 getComponentInChildren（run-cli 既有失敗）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3234",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10163.md",
+    "title": "[PROG-2-10163] 守城回大廳自動接典禮",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3235",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10161.md",
+    "title": "[PROG-2-10161] 修正：任務詳情畫面寫死中文標籤改走 i18n 四語",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3237",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10168.md",
+    "title": "[PROG-2-10168] 修正：結緣面板喜訊結果文字與左下譜牒密考按鈕重疊",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3238",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10166.md",
+    "title": "[PROG-2-10166] 任務詳情服務層投影文字走 i18n 四語",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3239",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10170.md",
+    "title": "[PROG-2-10170] 任務詳情情報區長文字自動加高，en／ja 不再壓到風險／提示列",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3240",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10172.md",
+    "title": "[PROG-2-10172] 新手第一年樂趣四功能規格書",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3241",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10174.md",
+    "title": "[PROG-2-10174] 任務系統 en／ja／zh-CN 譯文校稿",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3242",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10177.md",
+    "title": "[PROG-2-10177] 新手第一年樂趣四功能實作",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3243",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10179.md",
+    "title": "[PROG-2-10179] 武將說溜嘴破綻語與言論圖鑑系統規格書",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3245",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10134.md",
     "title": "[PROG-2-10134] 戰場音訊：小兵攻擊／受擊分兵種音效、戰場 BGM 三段、音效池與預載",
     "category": "task"

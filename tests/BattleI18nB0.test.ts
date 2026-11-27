@@ -138,13 +138,9 @@ export function createBattleI18nB0Suite(): TestSuite {
             assert.equals(expected[lang], v, lang);
             assert.isFalse(v.startsWith('['), `${lang} 不得帶占位前綴`);
         }
-        const layout = JSON.parse(fs.readFileSync(path.join(ROOT, 'assets/resources/ui-spec/layouts/battle-log-main.json'), 'utf8'));
-        const find = (n: any): any => (n.name === 'DelegateText' ? n : (n.children ?? []).map(find).find(Boolean));
-        assert.equals('委任', find(layout.root).text);
-        // 版型原用左對齊的 log.label.title，字貼左緣像被截；改用置中的 log.label.btn
-        assert.equals('log.label.btn', find(layout.root).styleSlot);
+        // B1（PROG-2-10133）：功能鈕列改為圖示＋說明字，說明字由 battle.hud.fn.* 提供（BattleRightUiB1 測試涵蓋），舊 DelegateText 節點已移除
         const skin = JSON.parse(fs.readFileSync(path.join(ROOT, 'assets/resources/ui-spec/skins/battle-log-default.json'), 'utf8'));
-        assert.equals('CENTER', skin.slots['log.label.btn'].horizontalAlign);
+        assert.isTrue(!!skin.slots['log.btn.hit'], '功能鈕觸控區 slot');
     });
 
     suite.test('新增戰場 HUD key：四語系齊全、無占位前綴、佔位符與 zh-TW 一致', () => {

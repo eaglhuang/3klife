@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "headlineCount": 3,
+  "maxNames": 3,
+  "fillerCount": 3,
+  "kinds": {
+    "marriage":     { "priority": 90, "tone": "good" },
+    "birth":        { "priority": 85, "tone": "good" },
+    "promotion":    { "priority": 80, "tone": "good" },
+    "battle_win":   { "priority": 70, "tone": "good" },
+    "recruit":      { "priority": 65, "tone": "good" },
+    "battle_lose":  { "priority": 60, "tone": "bad" },
+    "retire":       { "priority": 55, "tone": "bad" },
+    "dispatch_win": { "priority": 40, "tone": "good" },
+    "dispatch_fail": { "priority": 35, "tone": "bad" }
+  },
+  "sources": {
+    "journal": {
+      "BATTLE_WIN": "battle_win",
+      "BATTLE_LOSE": "battle_lose",
+      "GENERAL_BORN": "birth",
+      "GENERAL_RETIRE": "retire",
+      "DISPATCH_SUCCESS": "dispatch_win",
+      "DISPATCH_FAIL": "dispatch_fail"
+    },
+    "mind": {
+      "BOND_FORMED": "marriage"
+    }
+  }
+}

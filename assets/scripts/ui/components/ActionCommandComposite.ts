@@ -21,6 +21,7 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
  * Unity 對照：UltimateButtonController + ActionBtnGroup，但透過 CompositePanel 統一管理
  */
 import { _decorator, Button, Canvas, Color, Label, Node, Sprite, Tween, tween, UITransform, Vec3, Widget } from 'cc';
+import { BattleButtonStyle } from './BattleButtonStyle';
 import { ULTIMATE_READY_PULSE, ultimateRingState } from '../../core/systems/UltimateRingView';
 import { EVENT_NAMES, Faction } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
@@ -38,9 +39,10 @@ const { ccclass, property } = _decorator;
  * 計謀鈕灰階顯示。不使用 interactable=false：Button 不可互動時收不到 CLICK，
  * 就無法跳出不可用原因的 Toast，因此按鈕保持可點，由 _onTacticsClick 擋下。
  */
-function applyTacticsDim(button: Button | null, enabled: boolean): void {
+function applyTacticsDim(button: Button | null, enabled: boolean, style?: BattleButtonStyle | null): void {
     if (!button) return;
     button.interactable = true;
+    if (style) { style.setDisabled(!enabled); return; }
     for (const sprite of button.node.getComponentsInChildren(Sprite)) sprite.grayscale = !enabled;
 }
 
@@ -60,6 +62,10 @@ export class ActionCommandComposite extends CompositePanel {
     private _spPctLabel:   Label  | null = null;
     private _tacticsButtonCaption = '';
     private _tacticsLabel: Label  | null = null;
+    /** 三個操作鈕的統一外觀（PROG-2-10133 B2） */
+    private _endTurnStyle: BattleButtonStyle | null = null;
+    private _tacticsStyle: BattleButtonStyle | null = null;
+    private _duelStyle: BattleButtonStyle | null = null;
     private _ultimateBtnNode: Node | null = null;
     private _ultimateSkills: UltimateSkillItem[] = [];
     /** 本場玩家已施放的奧義 skillId（PROG-2-1512） */
@@ -78,7 +84,6 @@ export class ActionCommandComposite extends CompositePanel {
     private _duelLockedText = '';
     /** 單挑鈕原始文字（不含 🔒），第一次套鎖時記下 */
     private _duelLabelText: string | null = null;
-    private _tacticsEnabledColor: Color | null = null;
     private _maxSp = 100;
     private _currentSp = 0;
     /** SP 滿時奧義大圓的呼吸脈衝（doc_ui_0001 §2.4，PROG-2-1892） */
@@ -160,12 +165,8 @@ export class ActionCommandComposite extends CompositePanel {
         // 天氣禁用：變灰但保留點擊，讓點擊後的天氣 Toast 出得來（PROG-2-0597）
         this._tacticClickable = this._tacticEnabled || reason === tacticReasonText(TACTIC_REASON_WEATHER);
         this._tacticReason = reason ?? null;
-        applyTacticsDim(this._tacticsButton, this._tacticEnabled);
-        if (this._tacticsLabel) {
-            this._tacticsLabel.string = this._tacticsButtonCaption;
-            if (this._tacticsEnabledColor) this._tacticsLabel.color = this._tacticEnabled
-                ? this._tacticsEnabledColor : new Color(130, 130, 130, 255);
-        }
+        applyTacticsDim(this._tacticsButton, this._tacticEnabled, this._tacticsStyle);
+        if (this._tacticsLabel) this._tacticsLabel.string = this._tacticsButtonCaption;
     }
 
     /**
@@ -181,11 +182,13 @@ export class ActionCommandComposite extends CompositePanel {
     private _applyDuelLock(): void {
         const btn = this._duelButtonNode;
         if (!btn) return;
-        for (const sprite of btn.getComponentsInChildren(Sprite)) sprite.grayscale = this._duelLocked;
-        const label = btn.getChildByName('DuelLabel')?.getComponent(Label) ?? null;
+        if (this._duelStyle) this._duelStyle.setDisabled(this._duelLocked);
+        else for (const sprite of btn.getComponentsInChildren(Sprite)) sprite.grayscale = this._duelLocked;
+        const label = this._duelStyle?.getLabel() ?? btn.getChildByName('DuelLabel')?.getComponent(Label) ?? null;
         if (!label) return;
-        if (this._duelLabelText === null) this._duelLabelText = label.string.replace(/^🔒\s*/, '');
-        label.string = this._duelLocked ? `${this._duelLabelText}\n${this._duelLockedText || services().i18n.t('battle.hud.locked')}` : this._duelLabelText;
+        const i18n = services().i18n;
+        const name = i18n.t('battle.sortie');
+        label.string = this._duelLocked ? `${name}\n${this._duelLockedText || i18n.t('battle.hud.locked')}` : name;
     }
 
     public waitUntilReady(timeoutMs = 5000): Promise<boolean> {
@@ -206,6 +209,32 @@ export class ActionCommandComposite extends CompositePanel {
         });
     }
 
+    /**
+     * 結束回合（朱漆）、出陣（金漆）、計謀（次要）掛上統一外觀。
+     * 計謀與出陣的字由本元件動態組字（點數／原因／鎖定），不給 captionKey；結束回合是固定字，由樣式元件跟語系重寫。
+     */
+    private _attachOperationButtons(binder: UITemplateBinder): void {
+        const endNode = binder.getNode('EndTurnBtn');
+        if (endNode) {
+            this._endTurnStyle = BattleButtonStyle.attach(endNode, {
+                variant: 'crimson', icon: 'endturn', iconLayout: 'left', label: binder.getLabel('EndTurnLabel'),
+                captionKey: 'battle.end_turn', fontSize: 30, bold: true,
+            });
+        }
+        const tacticsNode = binder.getNode('TacticsBtn');
+        if (tacticsNode) {
+            this._tacticsStyle = BattleButtonStyle.attach(tacticsNode, {
+                variant: 'secondary', icon: 'tactics', iconLayout: 'corner', iconSize: 12, label: this._tacticsLabel, fontSize: 19, bold: true,
+            });
+        }
+        const duelNode = binder.getNode('DuelBtn');
+        if (duelNode) {
+            this._duelStyle = BattleButtonStyle.attach(duelNode, {
+                variant: 'gold', icon: 'sortie', iconLayout: 'corner', iconSize: 16, label: binder.getLabel('DuelLabel'), fontSize: 26, bold: true,
+            });
+        }
+    }
+
     // ── CompositePanel 鉤子 ───────────────────────────────────
 
     protected override _onAfterBuildReady(binder: UITemplateBinder): void {
@@ -216,16 +245,9 @@ export class ActionCommandComposite extends CompositePanel {
         this._ultLabel      = binder.getLabel('UltLabel');
         this._spPctLabel    = binder.getLabel('SpPctLabel');
         this._tacticsLabel  = binder.getLabel('TacticsLabel');
-        if (this._tacticsLabel) {
-            this._tacticsEnabledColor = this._tacticsLabel.color.clone();
-            this._tacticsLabel.node.getComponent(UITransform)?.setContentSize(66, 56);
-            this._tacticsLabel.fontSize = 24;
-            this._tacticsLabel.lineHeight = 28;
-            this._tacticsLabel.overflow = Label.Overflow.CLAMP;
-            this._tacticsLabel.string = this._tacticsButtonCaption || services().i18n.t('battle.tactics');
-            if (!this._tacticEnabled) this._tacticsLabel.color = new Color(130, 130, 130, 255);
-        }
-        
+        this._attachOperationButtons(binder);
+        if (this._tacticsLabel) this._tacticsLabel.string = this._tacticsButtonCaption || services().i18n.t('battle.tactics');
+
         // 奧義大圓點擊
         this._ultimateBtnNode = binder.getNode('UltimateBtn');
         this._ultimateBtnNode?.on(Button.EventType.CLICK, this._onUltimateClick, this);
@@ -237,7 +259,7 @@ export class ActionCommandComposite extends CompositePanel {
         // 結束回合、計謀、單挑
         binder.getNode('EndTurnBtn')?.on(Button.EventType.CLICK, this._onEndTurnClick, this);
         this._tacticsButton = binder.getNode('TacticsBtn')?.getComponent(Button) ?? null;
-        applyTacticsDim(this._tacticsButton, this._tacticEnabled);
+        applyTacticsDim(this._tacticsButton, this._tacticEnabled, this._tacticsStyle);
         binder.getNode('TacticsBtn')?.on(Button.EventType.CLICK, this._onTacticsClick, this);
         binder.getNode('DuelBtn')?.on(Button.EventType.CLICK, this._onDuelClick, this);
         this._duelButtonNode = binder.getNode('DuelBtn');

@@ -1303,14 +1303,14 @@ export class LoadingScene extends Component {
 
             try {
                 this._requireMissionDetailNonEmptyLabel(root, 'DialogCard/HeaderBar/DialogTitleLabel');
-                this._requireMissionDetailNonEmptyLabel(root, 'DialogCard/ScrollView/ScrollContent/OverviewPanel/MissionTitleLabel');
-                this._requireMissionDetailNonEmptyLabel(root, 'DialogCard/ScrollView/ScrollContent/IntelPanel/IntelBodyLabel');
-                this._requireMissionDetailNonEmptyLabel(root, 'DialogCard/ScrollView/ScrollContent/RewardPanel/RewardBaseLabel');
-                this._requireMissionDetailNonEmptyLabel(root, 'DialogCard/ScrollView/ScrollContent/RewardPanel/RewardPerfectLabel');
+                this._requireMissionDetailNonEmptyLabel(root, 'DialogCard/Body/ColLeft/OverviewPanel/MissionTitleLabel');
+                this._requireMissionDetailNonEmptyLabel(root, 'DialogCard/Body/ColLeft/IntelPanel/IntelBodyLabel');
+                this._requireMissionDetailNonEmptyLabel(root, 'DialogCard/Body/ColRight/RewardPanel/RewardBaseLabel');
+                this._requireMissionDetailNonEmptyLabel(root, 'DialogCard/Body/ColRight/RewardPanel/RewardPerfectLabel');
                 this._requireMissionDetailNode(root, 'DialogCard/FooterBar/AiDelegateRow/AiDelegateToggle');
-                this._requireMissionDetailNode(root, 'DialogCard/ScrollView/ScrollContent/AssignmentPanel/GeneralSelectButton');
+                this._requireMissionDetailNode(root, 'DialogCard/Body/ColMid/AssignmentPanel/GeneralSelectButton');
 
-                const fogMask = root.getChildByPath('DialogCard/ScrollView/ScrollContent/IntelPanel/IntelFogMask');
+                const fogMask = root.getChildByPath('DialogCard/Body/ColLeft/IntelPanel/IntelFogMask');
                 if (!fogMask) {
                     throw new Error('[LoadingScene] LobbyMissionDetailDialog preview missing IntelFogMask');
                 }

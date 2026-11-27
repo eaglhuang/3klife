@@ -1,0 +1,47 @@
+{
+  "radius": 12,
+  "borderWidth": 2,
+  "thickness": 3,
+  "highlight": "#F6DE9A",
+  "pressedOffset": 3,
+  "pressedBrightness": 0.85,
+  "disabledOpacity": 0.42,
+  "disabledDesaturate": 1,
+  "pressTweenSec": 0.06,
+  "activeBorder": "#FFE088",
+  "activeIcon": "#FFE088",
+  "activeGlow": "#FFD36A",
+  "glowSpread": 12,
+  "activeWarmMix": 0.22,
+  "minFontRatio": 0.7,
+  "variants": {
+    "secondary": {
+      "top": "#241C16",
+      "bottom": "#0D0A08",
+      "border": "#8A6A2F",
+      "text": "#F2E6C8",
+      "icon": "#F2E6C8"
+    },
+    "crimson": {
+      "top": "#D03A30",
+      "bottom": "#6A1313",
+      "border": "#D4AF37",
+      "text": "#FFF2D6",
+      "icon": "#FFF2D6"
+    },
+    "gold": {
+      "top": "#F0D27A",
+      "bottom": "#8F6A1C",
+      "border": "#FFF0B0",
+      "text": "#3A2208",
+      "icon": "#3A2208"
+    },
+    "danger": {
+      "top": "#2A1814",
+      "bottom": "#0D0A08",
+      "border": "#B03A2E",
+      "text": "#F2E6C8",
+      "icon": "#F2B8AE"
+    }
+  }
+}

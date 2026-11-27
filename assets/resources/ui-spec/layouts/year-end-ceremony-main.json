@@ -20,43 +20,33 @@
         "type": "panel",
         "name": "YearEndCeremonyCard",
         "id": "yearEndCeremonyCard",
-        "width": 920,
-        "height": 760,
+        "width": 1500,
+        "height": 1000,
         "skinSlot": "yc.card.bg",
         "layout": {
           "type": "vertical",
           "justifyContent": "start",
-          "spacingY": 14,
-          "paddingTop": 28,
-          "paddingRight": 30,
-          "paddingBottom": 28,
-          "paddingLeft": 30
+          "spacingY": 6,
+          "paddingTop": 12,
+          "paddingRight": 20,
+          "paddingBottom": 12,
+          "paddingLeft": 20
         },
         "children": [
           {
-            "type": "label",
-            "name": "YcTitle",
-            "id": "ycTitle",
-            "width": 860,
-            "height": 52,
-            "text": "歲末頒獎典禮",
-            "styleSlot": "yc.label.title"
-          },
-          {
-            "type": "label",
-            "name": "YcStandings",
-            "id": "ycStandings",
-            "width": 860,
-            "height": 150,
-            "text": "",
-            "styleSlot": "yc.label.standing"
+            "type": "container",
+            "name": "YcStage",
+            "id": "ycStage",
+            "lazySlot": true,
+            "width": 1460,
+            "height": 640
           },
           {
             "type": "label",
             "name": "YcDialogue",
             "id": "ycDialogue",
-            "width": 860,
-            "height": 120,
+            "width": 1460,
+            "height": 56,
             "text": "",
             "styleSlot": "yc.label.body"
           },
@@ -65,14 +55,14 @@
             "name": "YcCrowd",
             "id": "ycCrowd",
             "lazySlot": true,
-            "width": 860,
-            "height": 96
+            "width": 1420,
+            "height": 110
           },
           {
             "type": "label",
             "name": "YcCrowdLine",
             "id": "ycCrowdLine",
-            "width": 860,
+            "width": 1460,
             "height": 40,
             "text": "",
             "styleSlot": "yc.label.body"
@@ -81,8 +71,8 @@
             "type": "label",
             "name": "YcReward",
             "id": "ycReward",
-            "width": 860,
-            "height": 48,
+            "width": 1460,
+            "height": 36,
             "text": "",
             "styleSlot": "yc.label.reward"
           },
@@ -90,15 +80,28 @@
             "type": "container",
             "name": "YcButtonRow",
             "id": "ycButtonRow",
-            "width": 860,
-            "height": 64,
+            "width": 1460,
+            "height": 56,
             "children": [
+              {
+                "type": "label",
+                "name": "YcHint",
+                "id": "ycHint",
+                "width": 700,
+                "height": 36,
+                "text": "",
+                "styleSlot": "yc.label.hint",
+                "widget": {
+                  "hCenter": true,
+                  "vCenter": true
+                }
+              },
               {
                 "type": "button",
                 "name": "BtnYcSkip",
                 "id": "btnYcSkip",
-                "width": 200,
-                "height": 64,
+                "width": 220,
+                "height": 52,
                 "skinSlot": "yc.button.bg",
                 "children": [
                   {
@@ -120,8 +123,8 @@
                 "type": "button",
                 "name": "BtnYcClose",
                 "id": "btnYcClose",
-                "width": 200,
-                "height": 64,
+                "width": 220,
+                "height": 52,
                 "skinSlot": "yc.button.bg",
                 "children": [
                   {

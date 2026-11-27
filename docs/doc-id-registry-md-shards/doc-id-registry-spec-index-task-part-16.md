@@ -67,3 +67,29 @@
 | `doc_task_3192` | docs/agent-briefs/tasks/PROG/PROG-2-10129.md | [PROG-2-10129] 三彈窗掛武將頭像與台詞 |
 | `doc_task_3194` | docs/agent-briefs/tasks/PROG/PROG-2-10131.md | [PROG-2-10131] 虎符卡乙版精簡與四階品階框（暗銅/銀/金/赤金） |
 | `doc_task_3195` | docs/agent-briefs/tasks/PROG/PROG-2-10124.md | [PROG-2-10124] 戰場右側 UI B0 缺陷：ui.ultimate.label 顯示原始 key、委任鈕字被截、寫死中文改 i18n |
+| `doc_task_3198` | docs/agent-briefs/tasks/PROG/PROG-2-10138.md | [PROG-2-10138] 戰場七種戰法專屬特效（火水風回復加速鼓舞控制） |
+| `doc_task_3199` | docs/agent-briefs/tasks/PROG/PROG-2-10146.md | [PROG-2-10146] 武將介紹古文後接白話吐槽 |
+| `doc_task_3200` | docs/agent-briefs/tasks/PROG/PROG-2-10150.md | [PROG-2-10150] 每季小報：季末彈《本季大事記》搞笑小報（3 行大事＋武將吐槽，只用既有數據） |
+| `doc_task_3203` | docs/agent-briefs/tasks/PROG/PROG-2-10141.md | [PROG-2-10141] Toast 括號詞斷行修正（每行字數保守估算） |
+| `doc_task_3210` | docs/agent-briefs/tasks/PROG/PROG-2-10133.md | [PROG-2-10133] 戰場右側 UI B1 版面搬遷＋B2 統一按鈕元件＋B4 驗收 |
+| `doc_task_3213` | docs/agent-briefs/tasks/PROG/PROG-2-10136.md | [PROG-2-10136] 首場戰鬥新手提示 |
+| `doc_task_3214` | docs/agent-briefs/tasks/PROG/PROG-2-10137.md | [PROG-2-10137] 戰後重點整理三條 |
+| `doc_task_3215` | docs/agent-briefs/tasks/PROG/PROG-2-10160.md | [PROG-2-10160] 武將白話吐槽補 en／ja 語系與王異性別修正 |
+| `doc_task_3216` | docs/agent-briefs/tasks/PROG/PROG-2-10154.md | [PROG-2-10154] 戰場：有 Spine／立繪時不載隱藏的 3D 主將模型 |
+| `doc_task_3217` | docs/agent-briefs/tasks/PROG/PROG-2-10135.md | [PROG-2-10135] 偵察面板戰法一鍵自動配置 |
+| `doc_task_3218` | docs/agent-briefs/tasks/PROG/PROG-2-10155.md | [PROG-2-10155] 戰場：每幀重排與徽章避讓改成有變動才算 |
+| `doc_task_3221` | docs/agent-briefs/tasks/PROG/PROG-2-10156.md | [PROG-2-10156] 戰場：VFX 表／池預熱／Spine 預載並行載入 |
+| `doc_task_3224` | docs/agent-briefs/tasks/PROG/PROG-2-10157.md | [PROG-2-10157] 戰場：騎兵 Spine 圖集重打包 |
+| `doc_task_3227` | docs/agent-briefs/tasks/PROG/PROG-2-10153.md | [PROG-2-10153] 年末頒獎典禮 A 版領獎台實作 |
+| `doc_task_3229` | docs/agent-briefs/tasks/PROG/PROG-2-10164.md | [PROG-2-10164] 修正偵察面板幫我換上兩個重現錯誤 |
+| `doc_task_3232` | docs/agent-briefs/tasks/PROG/PROG-2-10165.md | [PROG-2-10165] 修復 PROG-2-9307 結算窗暗幕測試：測試替身缺 getComponentInChildren（run-cli 既有失敗） |
+| `doc_task_3234` | docs/agent-briefs/tasks/PROG/PROG-2-10163.md | [PROG-2-10163] 守城回大廳自動接典禮 |
+| `doc_task_3235` | docs/agent-briefs/tasks/PROG/PROG-2-10161.md | [PROG-2-10161] 修正：任務詳情畫面寫死中文標籤改走 i18n 四語 |
+| `doc_task_3237` | docs/agent-briefs/tasks/PROG/PROG-2-10168.md | [PROG-2-10168] 修正：結緣面板喜訊結果文字與左下譜牒密考按鈕重疊 |
+| `doc_task_3238` | docs/agent-briefs/tasks/PROG/PROG-2-10166.md | [PROG-2-10166] 任務詳情服務層投影文字走 i18n 四語 |
+| `doc_task_3239` | docs/agent-briefs/tasks/PROG/PROG-2-10170.md | [PROG-2-10170] 任務詳情情報區長文字自動加高，en／ja 不再壓到風險／提示列 |
+| `doc_task_3240` | docs/agent-briefs/tasks/PROG/PROG-2-10172.md | [PROG-2-10172] 新手第一年樂趣四功能規格書 |
+| `doc_task_3241` | docs/agent-briefs/tasks/PROG/PROG-2-10174.md | [PROG-2-10174] 任務系統 en／ja／zh-CN 譯文校稿 |
+| `doc_task_3242` | docs/agent-briefs/tasks/PROG/PROG-2-10177.md | [PROG-2-10177] 新手第一年樂趣四功能實作 |
+| `doc_task_3243` | docs/agent-briefs/tasks/PROG/PROG-2-10179.md | [PROG-2-10179] 武將說溜嘴破綻語與言論圖鑑系統規格書 |
+| `doc_task_3245` | docs/agent-briefs/tasks/PROG/PROG-2-10134.md | [PROG-2-10134] 戰場音訊：小兵攻擊／受擊分兵種音效、戰場 BGM 三段、音效池與預載 |

@@ -143,6 +143,8 @@ export interface RankingGeneralInfo {
   isGraduateThisYear?: boolean;
   isProdigy?: boolean;
   persona?: string;
+  /** 性別（紅顏榜只排女將；未提供視為不限） */
+  gender?: 'M' | 'F';
 }
 
 export interface RankingContext {

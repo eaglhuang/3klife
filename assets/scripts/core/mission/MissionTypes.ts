@@ -324,22 +324,44 @@ export interface MissionRecord {
 
 // ───────────────────────── 玩家視圖（已投影） ─────────────────────────
 
-/** 可揭露量：UI 只照 text 顯示 */
+/**
+ * 語系參照（PROG-2-10166）：投影層只送「鍵＋參數」，由 UI 依語系組字；text 仍是繁中原文，
+ * 當作沒有翻譯函式、查不到鍵時的保底（API 回傳結構只增不減，舊用戶端照 text 顯示不受影響）。
+ * 參數可以是數字、字串，或巢狀參照（陣列＝多段，以語系的 mission.proj.sep 串接）。
+ */
+export interface MissionI18nRef {
+    key: string;
+    args?: ReadonlyArray<string | number | MissionI18nRef | readonly MissionI18nRef[]>;
+    /** 查不到鍵時的繁中原文（巢狀參照用；最外層用所屬欄位的 text） */
+    fb?: string;
+}
+
+/** 可揭露量：UI 只照 text 顯示（有 i18n 且有翻譯函式時改走語系鍵） */
 export interface Revealable {
     state: 'hidden' | 'hint' | 'range' | 'exact';
     text: string;
     value?: number;
     lo?: number;
     hi?: number;
+    /** 語系參照；多段以語系分隔符串接。沒有表示文字與語系無關（例如純百分比） */
+    i18n?: MissionI18nRef[];
 }
 
-export interface MissionFactView { key: string; label: string; text: string; state: 'hidden' | 'hint' | 'exact' }
+export interface MissionFactView {
+    key: string; label: string; text: string; state: 'hidden' | 'hint' | 'exact';
+    /** 事實標籤／內容的語系參照（內容資料鍵，見 MissionTextKeys） */
+    labelRef?: MissionI18nRef;
+    textRef?: MissionI18nRef;
+}
 
 export interface MissionDetailView {
     id: string;
     defId: string;
     title: string;
     brief: string;
+    /** 標題／簡介的語系參照（任務定義內容資料鍵；舊檔遷移任務沒有） */
+    titleRef?: MissionI18nRef;
+    briefRef?: MissionI18nRef;
     theme: string;
     difficulty: MissionDifficulty;
     intel: number;
@@ -347,6 +369,8 @@ export interface MissionDetailView {
     facts: MissionFactView[];
     objective: Revealable;
     hints: string[];
+    /** 與 hints 同序的語系參照 */
+    hintRefs?: MissionI18nRef[];
     rate: Revealable;
     risk: Revealable;
     /** 風險標籤（情報夠高才有內容） */
@@ -354,6 +378,8 @@ export interface MissionDetailView {
     reward: Revealable;
     /** 隱藏獎勵／額外分支：只在最高情報度顯示 */
     hiddenRewards: string[];
+    /** 與 hiddenRewards 同序的語系參照 */
+    hiddenRewardRefs?: MissionI18nRef[];
     /** 耗費、精力、時限一律明牌 */
     cost: { grain: number; troops: number; gold: number; silver: number; energy: number };
     durationSeasons: number;

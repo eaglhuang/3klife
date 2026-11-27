@@ -1,6 +1,6 @@
 {
   "id": "strategist-hud-main",
-  "version": 1,
+  "version": 2,
   "canvas": {
     "fitWidth": true,
     "fitHeight": true,
@@ -59,35 +59,35 @@
         "type": "container",
         "name": "WisdomColumn",
         "widget": {
-          "top": 112,
-          "right": 18
+          "top": 96,
+          "right": 12
         },
-        "width": 344,
-        "height": 48,
+        "width": 360,
+        "height": 36,
         "children": [
           {
             "type": "panel",
             "name": "WisdomTrack",
             "id": "wisdomTrack",
             "widget": {
-              "bottom": 0,
-              "hCenter": true
+              "left": 0,
+              "top": 0
             },
-            "width": 320,
-            "height": 8,
-            "skinSlot": "strategist.wisdom.track",
+            "width": 360,
+            "height": 36,
+            "skinSlot": "strategist.wisdom.hit",
             "children": [
               {
                 "type": "panel",
                 "name": "WisdomFill",
                 "id": "wisdomFill",
                 "widget": {
-                  "left": 0,
-                  "top": 0,
-                  "bottom": 0
+                  "left": 3,
+                  "top": 3,
+                  "bottom": 3
                 },
-                "height": 8,
-                "skinSlot": "strategist.wisdom.fill",
+                "height": 30,
+                "skinSlot": "strategist.wisdom.hit",
                 "width": 0
               }
             ]
@@ -97,15 +97,30 @@
             "name": "WisdomText",
             "id": "wisdomText",
             "widget": {
-              "top": 0,
-              "hCenter": true
+              "left": 16,
+              "top": 0
             },
-            "width": 344,
-            "height": 32,
+            "width": 150,
+            "height": 36,
             "text": "",
-            "styleSlot": "strategist.label.wisdom"
+            "styleSlot": "strategist.label.wisdom.name",
+            "textKey": "battle.hud.wisdom"
+          },
+          {
+            "type": "label",
+            "name": "WisdomValue",
+            "id": "wisdomValue",
+            "widget": {
+              "right": 16,
+              "top": 0
+            },
+            "width": 150,
+            "height": 36,
+            "text": "",
+            "styleSlot": "strategist.label.wisdom.value"
           }
-        ]
+        ],
+        "_doc": "B1 (PROG-2-10133)：智謀條改 360×36 膠囊，字壓在條內（左名稱右數值）。膠囊外框與填充由 StrategistHudComposite 以 Graphics 繪製；WisdomTrack/WisdomFill 保留為全透明定位節點。"
       }
     ]
   }

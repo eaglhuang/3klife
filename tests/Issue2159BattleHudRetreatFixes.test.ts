@@ -467,7 +467,11 @@ export function createIssue2159BattleHudRetreatFixesSuite(): TestSuite {
         const added: unknown[] = [];
         overlay.getComponent = () => null;
         overlay.addComponent = (ctor: unknown) => { added.push(ctor); return {}; };
-        const button = (): any => ({ node: { on: () => undefined } });
+        // 假按鈕節點要涵蓋 ResultPopupComposite 實際會碰的成員（active、getComponentInChildren、getComponent）：
+        // PROG-2-10136 加了「展開詳細戰報」鈕後 _applyDetailToggle 會呼叫 getComponentInChildren，舊替身缺它而整案丟 TypeError（PROG-2-10165）
+        const button = (): any => ({
+            node: { active: true, on: () => undefined, getComponentInChildren: () => null, getComponent: () => null },
+        });
         popup._onAfterBuildReady({
             getButton: () => button(),
             getNode: (name: string) => (name === 'Overlay' ? overlay : null),

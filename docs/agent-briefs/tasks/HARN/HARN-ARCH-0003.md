@@ -1,6 +1,7 @@
 ---
 doc_id: doc_task_0005
 id: HARN-ARCH-0003
+task_id: HARN-ARCH-0003
 priority: P1
 phase: G
 created: 2026-05-04

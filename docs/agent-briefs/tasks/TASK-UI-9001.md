@@ -34,6 +34,7 @@ validators:
   - "node tools_node/check-general-detail-lobby-flow-smoke.js"
   - "git diff --check"
 id: TASK-UI-9001
+task_id: TASK-UI-9001
 title: "人物頁 chrome 與擷取診斷拆分"
 priority: P1
 phase: M6

@@ -1,6 +1,7 @@
 ---
 doc_id: doc_task_0304
 id: ATM-2.5-0002
+task_id: ATM-2.5-0002
 priority: P0
 phase: ATM-2.5
 created: 2026-05-05

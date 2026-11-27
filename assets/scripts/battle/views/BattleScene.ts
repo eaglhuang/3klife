@@ -181,6 +181,16 @@ export class BattleScene extends Component {
       // ensureGlobalDevOverlay(); // 解耦移除
       UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] ServiceLoader 初始化完成");
 
+      // PROG-2-10156：VFX 池預熱只讀靜態登錄表、不依賴戰場資料，先送出與後面的資料載入並行；結果在開戰前（initBattle 之前）才等。
+      // capture mode 只做靜態 UI / HUD 驗證，不需要把整批可選特效池都預熱進來，
+      // 否則不存在的可選 prefab 會把 UI residual 報表洗成假噪音。
+      const vfxWarm: Promise<void> = isBattleCaptureMode
+        ? Promise.resolve()
+        : prewarmVfxPools().then(
+            () => UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] VFX 池預熱完成"),
+            (e) => UCUFLogger.warn(LogCategory.BATTLE, "[BattleScene] VFX 池預熱失敗，特效改為首次使用時載入", e),
+          );
+
       // 2. 建立控制器，載入兵種表
       this.ctrl = new BattleController();
       // 虎符星級與模板 id 從玩家卡組的卡片實例讀取（PROG-2-0573、PROG-2-0574）；查不到卡時 1★、無模板
@@ -207,15 +217,8 @@ export class BattleScene extends Component {
       UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] ActionSystem + VFX 效果表載入完成");
       SceneLoadProgress.step();
 
-      // 2.6 預熱 VFX 池（依據 VFX_BLOCK_REGISTRY 中定義的 prefabPath）
-      // capture mode 只做靜態 UI / HUD 驗證，不需要把整批可選特效池都預熱進來，
-      // 否則不存在的可選 prefab 會把 UI residual 報表洗成假噪音。
-      if (!isBattleCaptureMode) {
-        await prewarmVfxPools();
-        UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] VFX 池預熱完成");
-      } else {
-        UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] capture mode 略過 VFX 池預熱");
-      }
+      // 2.6 VFX 池預熱已在上方並行送出（PROG-2-10156）
+      if (isBattleCaptureMode) UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] capture mode 略過 VFX 池預熱");
 
       // 2.7 解析戰場入口參數（統一 Lobby / Preview / Replay 路徑）
       const battleParams = this._resolveBattleParams();
@@ -255,6 +258,7 @@ export class BattleScene extends Component {
       await services().material.warmupCritical(this.node);
       SceneLoadProgress.step();
 
+      await vfxWarm; // 開戰前 VFX 池要好（上面與資料載入並行；失敗已在 vfxWarm 內警告，不會丟出）
       // 5. 開始第一場戰鬥（含地形、天氣、戰法）
       // 戰場關係事件帳本（PROG-2-1415）：同一關只觸發一次，已播紀錄隨存檔保存
       this.ctrl.bindRelationEvents(`battle:${this.currentEncounterId}`, services().session.relationEvents);
@@ -377,6 +381,8 @@ export class BattleScene extends Component {
       this.sceneContext.skillTargetingFlow = this.skillTargetingFlow;
       this.battleUIBridge = new BattleUIBridge(this.sceneContext, this);
       this.battleUIBridge.syncStrategistHud();
+      // 開場就顯示軍勢／糧草資源列與卡面費用章（doc_spec_1341）
+      this.battleUIBridge.refreshResourceViews();
       this.turnFlowManager = new TurnFlowManager(this.sceneContext, this, this.battleUIBridge);
       this.sceneFlow = new BattleSceneFlow({
         getCtrl: () => this.ctrl,
@@ -420,10 +426,12 @@ export class BattleScene extends Component {
       this.sceneContext.boardCamera = this.getMainCamera();
       UCUFLogger.info(LogCategory.BATTLE, `[BattleScene] unitRenderer 已連結: ${!!this.unitRenderer}`);
       // 戰前預載雙方兵種 Spine 與節點池（PROG-2-10078）：騎兵馬身骨架第一次載入要 2 秒多，不預載就會在戰場上出現得太晚
-      if (!isBattleCaptureMode) {
-        await this.unitRenderer?.prewarmTroopSpines(battleTroopPreloadList(AI_USABLE_TYPES, initialCards));
-        UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] 兵種 Spine 預載完成");
-      }
+      // PROG-2-10156：預載先送出不等，與下面 HUD／虎符卡／背景建置並行；單位出現前（訂閱事件、refreshBattleViews 之前）才等。失敗只警告，單位上場時照舊現載。
+      const spineWarm: Promise<void> = isBattleCaptureMode ? Promise.resolve()
+        : (this.unitRenderer?.prewarmTroopSpines(battleTroopPreloadList(AI_USABLE_TYPES, initialCards)) ?? Promise.resolve()).then(
+            () => UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] 兵種 Spine 預載完成"),
+            (e) => UCUFLogger.warn(LogCategory.BATTLE, "[BattleScene] 兵種 Spine 預載失敗，單位上場時現載", e),
+          );
 
       this._deployPanelRuntime?.setController(this.ctrl);
       this._deployPanelRuntime?.registerDragDropCallback((screenX, screenY) => this.turnFlowManager?.doDeployRaycast(screenX, screenY));
@@ -503,6 +511,8 @@ export class BattleScene extends Component {
       if (!isBattleCaptureMode && DEV) {
         addBackgroundSwitchUI(canvas, this.sceneBackground, this._deployPanelRuntime);
       }
+
+      await spineWarm; // 單位出現前 Spine 要好（PROG-2-10078 的預載行為不變，只是不再擋住中間的 HUD 建置）
 
       // 7. 訂閱事件，驅動 UI 更新
       this.battleUIBridge?.subscribeEvents({

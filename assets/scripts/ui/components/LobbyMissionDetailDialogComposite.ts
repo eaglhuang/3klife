@@ -29,7 +29,8 @@ const { ccclass } = _decorator;
 
 const SCREEN_ID = 'lobby-mission-detail-dialog-screen';
 const CONTENT_PATH = 'ui-spec/content/lobby-mission-detail-dialog-states-v1';
-import { DETAIL_ACTION_BLOCKED_TEXT, resolveDetailActionStates } from '../core/HallDetailActionStates';
+import { detailActionBlockedText, missionText, resolveDetailActionStates, type MissionTr } from '../core/HallDetailActionStates';
+import { MISSION_COST_SHORT_MARKER } from '../mission/MissionDetailPresenter';
 import { applyIntelConfirmChoice, IntelConfirmChoice, resolveExecutePress } from '../core/HallExecuteConfirm';
 
 const CONTENT_TAG = 'LobbyMissionDetailDialog';
@@ -43,6 +44,15 @@ const DROPDOWN_TITLE_GAP = 10;
 
 export type LobbyMissionActionKey = 're-scout' | 'execute' | 'wait' | 'assign';
 
+/** 按鈕副標節點 id（單屏版面，doc_spec_1342 §4） */
+const ACTION_SUBTITLE_IDS: Record<LobbyMissionActionKey, string> = {
+    're-scout': 'btnScoutSub',
+    execute: 'btnExecuteSub',
+    wait: 'btnWaitSub',
+    assign: 'btnAssignSub',
+};
+/** 再探耗糧（doc_spec_1178 §6）；只用於副標顯示，實際扣款仍由任務流程決定 */
+const SCOUT_FOOD_COST = 50;
 const ACTION_BUTTON_IDS: Record<LobbyMissionActionKey, string> = {
     're-scout': 'btnScout',
     execute: 'btnExecute',
@@ -222,10 +232,10 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         this._templateBinder = binder;
         this._dialogCard = binder.getNode('DialogCard');
         this._dialogCardOpacity = this._dialogCard?.getComponent(UIOpacity) ?? this._dialogCard?.addComponent(UIOpacity) ?? null;
-        this._scrollContent = binder.getNode('scrollContent');
-        this._scrollContentTransform = this._scrollContent?.getComponent(UITransform) ?? null;
-        this._scrollContentLayout = this._scrollContent?.getComponent(Layout) ?? null;
-        this._scrollContentBaseHeight = this._scrollContentTransform?.height ?? this._scrollContentBaseHeight;
+        // 單屏版面（doc_spec_1342）沒有捲動區；下拉選單改浮在對話框上，不再撐高內容
+        this._scrollContent = this._dialogCard;
+        this._scrollContentTransform = null;
+        this._scrollContentLayout = null;
         this._aiDelegateToggle = binder.getNode('aiDelegateToggle')?.getComponent(Toggle) ?? null;
         this._actionButtons['re-scout'] = binder.getButton('btnScout');
         this._actionButtons.execute = binder.getButton('btnExecute');
@@ -493,11 +503,11 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
 
         // 名冊沒有任何武將時不沿用設計稿預設的武將名，顯示空狀態文字
         if (options.length === 0) {
-            return { id: 'fallback-empty', label: '目前沒有可選武將', volunteer: false };
+            return { id: 'fallback-empty', label: this._mt('mission.detail.no_general', '目前沒有可選武將'), volunteer: false };
         }
         return {
             id: selected?.id ?? payloadId ?? payloadLabel ?? 'general-unknown',
-            label: payloadLabel || selected?.label || stateLabel || '未指定武將',
+            label: payloadLabel || selected?.label || stateLabel || this._mt('mission.detail.unspecified_general', '未指定武將'),
             volunteer: payload?.selectedGeneralVolunteer ?? selected?.volunteer ?? stateVolunteerVisible,
         };
     }
@@ -535,11 +545,11 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         this._setScrollContentBaseHeight();
     }
 
-    /** 耗費不足的那一行用紅字（doc_spec_1178 §5）：文字含「不足，現有」就染紅，之後補足了再還原 */
+    /** 耗費不足的那一行用紅字（doc_spec_1178 §5）：文字含不足標記（各語系 mission.detail.cost_short_marker）就染紅，之後補足了再還原 */
     private _shortageOrigColors = new WeakMap<Label, Color>();
     private _tintShortageLabels(): void {
         for (const label of this.node.getComponentsInChildren(Label)) {
-            const short = label.string.includes('不足，現有');
+            const short = label.string.includes(this._mt('mission.detail.cost_short_marker', MISSION_COST_SHORT_MARKER));
             const orig = this._shortageOrigColors.get(label);
             if (short) {
                 if (!orig) this._shortageOrigColors.set(label, label.color.clone());
@@ -554,7 +564,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
     /** 鎖定中的情報提示列用金色，一眼看出這張任務已派出、內容不會再變（PROG-2-9152） */
     private _lockedHintOrigColor: Color | null = null;
     private _tintLockedHint(locked: boolean): void {
-        const label = this._templateBinder?.getLabelByPath('DialogCard/ScrollView/ScrollContent/IntelPanel/IntelFogMask/IntelFogLabel');
+        const label = this._templateBinder?.getLabelByPath('DialogCard/Body/ColLeft/IntelPanel/IntelFogMask/IntelFogLabel');
         if (!label) return;
         if (!this._lockedHintOrigColor) this._lockedHintOrigColor = label.color.clone();
         label.color = locked ? this._tok('settle.text.accent', new Color(154, 91, 16, 255)) : this._lockedHintOrigColor;
@@ -687,7 +697,33 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
             button.interactable = true;
             const opacity = button.node.getComponent(UIOpacity) ?? button.node.addComponent(UIOpacity);
             opacity.opacity = enabled ? 255 : 120;
+            this._setActionSubtitle(action, states[action].enabled ? snapshot.actionBlockedText?.[action] : snapshot.actionBlockedText?.[action] ?? detailActionBlockedText(states[action].reason ?? 'not-offered', this._tr), enabled);
         }
+    }
+
+    /** 翻譯函式：走 services().i18n；查不到鍵時由 missionText 退回繁中原文 */
+    private readonly _tr: MissionTr = (key, ...args) => services().i18n.t(key, ...args.map(String));
+    private _mt(key: string, fallback: string, ...args: Array<string | number>): string {
+        return missionText(this._tr, key, fallback, ...args);
+    }
+
+    /** 按鈕副標：可用時顯示耗費或效果，停用時直接寫原因，玩家不必點進去才知道（doc_spec_1342 §4） */
+    private _setActionSubtitle(action: LobbyMissionActionKey, blockedText: string | undefined, enabled: boolean): void {
+        const label = this._templateBinder?.getLabel(ACTION_SUBTITLE_IDS[action]);
+        if (!label) return;
+        const t = (key: string, ...args: string[]): string => services().i18n.t(key, ...args);
+        label.string = enabled
+            ? (action === 're-scout' ? t('mission.detail.btn.scout.sub', String(SCOUT_FOOD_COST))
+                : action === 'wait' ? t('mission.detail.btn.wait.sub')
+                    : action === 'execute' ? t('mission.detail.btn.execute.sub')
+                        : t('mission.detail.btn.assign.sub'))
+            : (blockedText ?? '');
+        label.overflow = Label.Overflow.SHRINK;
+        // 副標跟主標同色、字小一點；不用 muted 色，不然金色主按鈕上看不清
+        const main = label.node.parent?.children[0]?.getComponent(Label);
+        label.fontSize = 14;
+        label.lineHeight = 18;
+        if (main) label.color = new Color(main.color.r, main.color.g, main.color.b, enabled ? 220 : 255);
     }
 
     private _onGeneralSelectButtonClick(): void {
@@ -717,7 +753,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
 
         const scrollContent = this._scrollContent;
         if (!scrollContent) {
-            throw new Error('[LobbyMissionDetailDialogComposite] missing scroll content');
+            throw new Error('[LobbyMissionDetailDialogComposite] missing dialog card');
         }
 
         const panel = new Node('GeneralSelectDropdownPanel');
@@ -725,7 +761,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         panel.parent = scrollContent;
 
         const transform = panel.addComponent(UITransform);
-        transform.setContentSize(this._scrollContentTransform?.width ?? 760, 120);
+        transform.setContentSize(this._dropdownWidth(), 120);
 
         const background = panel.addComponent(SolidBackground);
         background.color = this._tok('settle.dropdown.bg', new Color(43, 39, 36, 240));
@@ -746,17 +782,29 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
     }
 
     private _setDropdownSiblingIndex(): void {
-        if (!this._dropdownPanel || !this._scrollContent) {
-            return;
-        }
+        // 浮層：蓋在所有區塊與底部按鈕之上
+        this._dropdownPanel?.setSiblingIndex(this._scrollContent?.children.length ?? 0);
+    }
 
-        const assignmentPanel = this._templateBinder?.getNode('AssignmentPanel');
-        if (!assignmentPanel) {
-            this._dropdownPanel.setSiblingIndex(this._scrollContent.children.length - 1);
-            return;
-        }
+    /** 下拉選單寬度＝「更換武將」按鈕寬度（中欄寬），單屏版面下跟著欄寬走 */
+    private _dropdownWidth(): number {
+        const w = this._templateBinder?.getNode('generalSelectButton')?.getComponent(UITransform)?.width ?? 0;
+        return w > 0 ? w : 520;
+    }
 
-        this._dropdownPanel.setSiblingIndex(assignmentPanel.getSiblingIndex() + 1);
+    /** 把浮層貼在「更換武將」按鈕正下方（以對話框座標） */
+    private _placeDropdown(panelHeight: number): void {
+        const card = this._dialogCard;
+        const btn = this._templateBinder?.getNode('generalSelectButton');
+        const cardUi = card?.getComponent(UITransform);
+        const btnUi = btn?.getComponent(UITransform);
+        if (!card || !btn || !cardUi || !btnUi || !this._dropdownPanel) return;
+        const local = cardUi.convertToNodeSpaceAR(btn.worldPosition);
+        const x = local.x;
+        let y = local.y - btnUi.height / 2 - 6 - panelHeight / 2;
+        // 太長就上推，但不蓋到底部行動列（104px＋留邊）
+        y = Math.max(y, -cardUi.height / 2 + 112 + panelHeight / 2);
+        this._dropdownPanel.setPosition(x, y, 0);
     }
 
     private _populateDropdownPanel(): void {
@@ -764,22 +812,21 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         dropdown.removeAllChildren();
 
         const panelTransform = dropdown.getComponent(UITransform);
-        const scrollWidth = this._scrollContentTransform?.width ?? 760;
-        const panelWidth = Math.max(520, Math.floor(scrollWidth - ROW_PADDING * 2));
-        const rowWidth = Math.max(360, panelWidth - ROW_PADDING * 2);
+        const panelWidth = this._dropdownWidth();
+        const rowWidth = Math.max(300, panelWidth - ROW_PADDING * 2);
         const rows: MissionGeneralOption[] = this._availableGenerals.length > 0
             ? [...this._availableGenerals]
-            : [{ id: 'fallback-empty', label: '目前沒有可選武將', volunteer: false }];
+            : [{ id: 'fallback-empty', label: this._mt('mission.detail.no_general', '目前沒有可選武將'), volunteer: false }];
 
         // 有分組資訊時分「可派／不可派（附原因）」兩組，各加組標題（PROG-2-9152）；否則沿用單一標題
         const grouped = rows.some((r) => r.group !== undefined);
         const availableRows = rows.filter((r) => r.group === 'available');
         const unavailableRows = rows.filter((r) => r.group === 'unavailable');
         const sections: { title: string; items: MissionGeneralOption[] }[] = grouped
-            ? [{ title: `可派武將（${availableRows.length}）`, items: availableRows }]
-            : [{ title: '可選武將', items: rows }];
+            ? [{ title: this._mt('mission.detail.dropdown.available', '可派武將（{0}）', availableRows.length), items: availableRows }]
+            : [{ title: this._mt('mission.detail.dropdown.selectable', '可選武將'), items: rows }];
         if (grouped && unavailableRows.length > 0) {
-            sections.push({ title: `不可派武將（${unavailableRows.length}，附原因）`, items: unavailableRows });
+            sections.push({ title: this._mt('mission.detail.dropdown.unavailable', '不可派武將（{0}，附原因）', unavailableRows.length), items: unavailableRows });
         }
 
         let nodeCount = 0;
@@ -802,19 +849,11 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         dropdown.getComponent(Layout)?.updateLayout(true);
         dropdown.getComponent(Layout)?.updateLayout();
 
-        if (this._scrollContentTransform) {
-            this._scrollContentTransform.setContentSize(
-                this._scrollContentTransform.width,
-                this._scrollContentBaseHeight + panelHeight,
-            );
-        }
-
         this._setDropdownSiblingIndex();
-        this._scrollContentLayout?.updateLayout(true);
-        this._scrollContentLayout?.updateLayout();
+        this._placeDropdown(panelHeight);
     }
 
-    private _createDropdownHeader(parent: Node, panelWidth: number, title = '可選武將'): Node {
+    private _createDropdownHeader(parent: Node, panelWidth: number, title = this._mt('mission.detail.dropdown.selectable', '可選武將')): Node {
         const titleNode = new Node('DropdownTitle');
         titleNode.layer = parent.layer;
         titleNode.parent = parent;
@@ -891,7 +930,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
             rowNode,
             `GeneralOptionBadge_${this._sanitizeNodeName(option.id)}`,
             option.blockedText ? 150 : 110,
-            option.blockedText ?? '毛遂自薦',
+            option.blockedText ?? this._mt('mission.detail.volunteer', '毛遂自薦'),
             14,
             option.blockedText ? this._tok('settle.dropdown.blocked', new Color(255, 138, 122, 255)) : this._tok('settle.dropdown.badge', new Color(255, 210, 122, 255)),
             Label.HorizontalAlign.RIGHT,
@@ -975,7 +1014,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         this._selectedGeneralVolunteer = option.volunteer === true;
 
         const badgeVisible = option.volunteer === true;
-        const badgeLabel = badgeVisible ? `${option.label} 毛遂自薦` : '';
+        const badgeLabel = badgeVisible ? this._mt('mission.detail.volunteer_badge', '{0} 毛遂自薦', option.label) : '';
 
         this._templateBinder?.setTexts({
             selectedGeneralLabel: option.label,
@@ -1007,7 +1046,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         }).states[action];
         const customBlock = snapshot.actionBlockedText?.[action];
         if (!blocked.enabled || customBlock) {
-            services().event.emit('SHOW_TOAST', { message: customBlock ?? DETAIL_ACTION_BLOCKED_TEXT[blocked.reason ?? 'not-offered'], duration: 2 });
+            services().event.emit('SHOW_TOAST', { message: customBlock ?? detailActionBlockedText(blocked.reason ?? 'not-offered', this._tr), duration: 2 });
             return false;
         }
 
