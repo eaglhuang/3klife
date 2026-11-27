@@ -2423,7 +2423,7 @@
             "name": "BondNotice",
             "id": "bondNotice",
             "widget": {
-              "bottom": 12,
+              "bottom": 68,
               "left": 252,
               "right": 420
             },
