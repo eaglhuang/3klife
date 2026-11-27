@@ -111,6 +111,6 @@ export function resolveCrowdLine(t: (key: string, ...args: string[]) => string, 
  * 台詞文字（完整聲線版）：性別、性格、年齡都走 SpeakerVoice.selfOf，
  * 同一句台詞由勇猛女將說是「本姑娘」、少年說是「我」、老將說是「老夫」。
  */
-export function resolveCrowdVoiceLine(t: (key: string, ...args: string[]) => string, key: string, member: CrowdMember): string {
-    return t(key, selfOf({ gender: member.gender === 'F' ? '女' : '男', type: member.type, age: member.age }));
+export function resolveCrowdVoiceLine(t: (key: string, ...args: string[]) => string, key: string, member: CrowdMember, ...extra: string[]): string {
+    return t(key, selfOf({ gender: member.gender === 'F' ? '女' : '男', type: member.type, age: member.age }), ...extra);
 }

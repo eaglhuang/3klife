@@ -129,7 +129,7 @@ export function createYearEndCeremonyMountSuite(): TestSuite {
     suite.test('畫面規格：LobbyScene 綁的節點 id 存在、皮膚登記 settle 家族、顏色只用存在的 token', () => {
         const ids = new Set<string>();
         collectIds(readJson('assets/resources/ui-spec/layouts/year-end-ceremony-main.json').root, ids);
-        for (const id of ['ycTitle', 'ycStandings', 'ycDialogue', 'ycReward', 'btnYcSkip', 'btnYcClose', 'btnYcSkipLabel', 'btnYcCloseLabel']) {
+        for (const id of ['ycStage', 'ycDialogue', 'ycReward', 'btnYcSkip', 'btnYcClose', 'btnYcSkipLabel', 'btnYcCloseLabel']) {
             assert.isTrue(ids.has(id), `缺節點 ${id}`);
         }
         const registry = readJson('assets/resources/ui-spec/themes/theme-registry.json');
@@ -140,7 +140,7 @@ export function createYearEndCeremonyMountSuite(): TestSuite {
         }
         const panelSrc = fs.readFileSync(path.join(ROOT, 'assets/scripts/ui/components/YearEndCeremonyPanel.ts'), 'utf8');
         const tokens = [...panelSrc.matchAll(/token\('(settle\.[a-z.]+)'/g)].map((m) => m[1]);
-        assert.isTrue(tokens.length >= 3);
+        assert.isTrue(tokens.length >= 2);
         const themeText = fs.readFileSync(path.join(ROOT, 'assets/resources/ui-spec/themes/theme-registry.json'), 'utf8');
         for (const token of tokens) {
             assert.isTrue(themeText.includes(`"${token}"`), `主題沒有 token ${token}`);
