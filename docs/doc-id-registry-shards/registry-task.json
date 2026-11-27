@@ -17656,5 +17656,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10153.md",
     "title": "[PROG-2-10153] 年末頒獎典禮 A 版領獎台實作",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3231",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10165.md",
+    "title": "[PROG-2-10165] 修復 PROG-2-9307 結算窗暗幕測試：測試替身缺 getComponentInChildren（run-cli 既有失敗）",
+    "category": "task"
   }
 ]
