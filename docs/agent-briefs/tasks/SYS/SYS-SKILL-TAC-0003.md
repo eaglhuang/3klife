@@ -1,6 +1,7 @@
 ---
 doc_id: doc_task_0159
 id: SYS-SKILL-TAC-0003
+task_id: SYS-SKILL-TAC-0003
 priority: P1
 phase: M1-E
 created: 2026-04-15

@@ -1,6 +1,7 @@
 ---
 doc_id: doc_task_0220
 id: HARN-PERF-0001
+task_id: HARN-PERF-0001
 priority: P2
 phase: M0
 created: 2026-05-04

@@ -5,12 +5,6 @@
   "atlasPolicy": "action_command",
   "_doc": "Zone 7: 奧義大圓 + 3個技能小圓皮膚。深色底板，金色奧義環，SP填充藍環。",
   "slots": {
-    "action.dock.bg": {
-      "kind": "color",
-      "color": "backgroundNavyAlt",
-      "alpha": 176,
-      "_doc": "右下指令底座；先用深色半透明板建立群組感。"
-    },
     "action.ultimate.bg": {
       "kind": "sprite-frame",
       "path": "sprites/battle/action_ult_bg/spriteFrame",
@@ -81,48 +75,6 @@
       "_fallback": "#141820",
       "_doc": "技能鎖定時（SP不足）-暗色"
     },
-    "action.util.endturn": {
-      "kind": "sprite-frame",
-      "path": "sprites/battle/action_util_endturn/spriteFrame",
-      "spriteType": "sliced",
-      "border": [6, 6, 6, 6],
-      "allowAutoAtlas": true,
-      "_fallback": "#1a6a2a"
-    },
-    "action.icon.endturn": {
-      "kind": "sprite-frame",
-      "path": "sprites/battle/action_icon_endturn/spriteFrame",
-      "spriteType": "simple",
-      "allowAutoAtlas": true
-    },
-    "action.util.tactics": {
-      "kind": "sprite-frame",
-      "path": "sprites/battle/action_util_tactics/spriteFrame",
-      "spriteType": "sliced",
-      "border": [6, 6, 6, 6],
-      "allowAutoAtlas": true,
-      "_fallback": "#1E3A4A"
-    },
-    "action.icon.tactics": {
-      "kind": "sprite-frame",
-      "path": "sprites/battle/action_icon_tactics/spriteFrame",
-      "spriteType": "simple",
-      "allowAutoAtlas": true
-    },
-    "action.util.duel": {
-      "kind": "sprite-frame",
-      "path": "sprites/battle/action_util_duel/spriteFrame",
-      "spriteType": "sliced",
-      "border": [6, 6, 6, 6],
-      "allowAutoAtlas": true,
-      "_fallback": "#4A3A1E"
-    },
-    "action.icon.duel": {
-      "kind": "sprite-frame",
-      "path": "sprites/battle/action_icon_duel/spriteFrame",
-      "spriteType": "simple",
-      "allowAutoAtlas": true
-    },
     "action.ultimate.label": {
       "kind": "label-style",
       "font": "fonts/notosans_tc/notosans_tc",
@@ -186,6 +138,12 @@
       "lineHeight": 18,
       "color": "textOffWhite",
       "horizontalAlign": "LEFT"
+    },
+    "action.btn.hit": {
+      "kind": "color",
+      "color": "backgroundNavyAlt",
+      "alpha": 0,
+      "_doc": "全透明觸控範圍；外觀由 BattleButtonStyle 繪製（PROG-2-10133）"
     }
   }
 }

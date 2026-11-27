@@ -166,3 +166,71 @@ export function bodyAvoidOffsetY(badge: LabelRect, bodies: readonly LabelRect[],
     }
     return { dy: 0, faded: true };
 }
+
+/** BadgeAvoidSolver 的輸出（唯讀；有快取時多幀回傳同一份物件，呼叫端不可改動） */
+export interface BadgeAvoidResult {
+    /** 讓開武將本體的 Y 位移（未列出代表 0） */
+    bodyDy: ReadonlyMap<string, number>;
+    /** 讓不開本體、要半透明的部隊框 id */
+    bodyFaded: ReadonlySet<string>;
+    /** 部隊框彼此與名牌錯開的 Y 位移（未列出代表 0） */
+    targets: ReadonlyMap<string, number>;
+}
+
+/**
+ * 部隊框避讓求解器（PROG-2-10155）：把「先讓武將本體（10118）→ 再彼此／名牌錯開（9440）」包成一次呼叫，
+ * 輸入（名牌、本體、各框外框與優先序）與上一幀完全相同就直接沿用上一幀結果，不重算、不配置。
+ * 部隊站著不動時每幀輸入相同，所以平常幾乎不跑演算法；有任何數值改變就整個重算，結果與舊流程逐位相同。
+ * 注意：未命中快取時會照舊把「讓開本體後」的位移寫回 entries[i].rect.y（與舊行為一致）。
+ */
+export class BadgeAvoidSolver {
+    private prev: number[] = [];
+    private cur: number[] = [];
+    private prevIds: string[] = [];
+    private valid = false;
+    private readonly bodyDy = new Map<string, number>();
+    private readonly bodyFaded = new Set<string>();
+    private readonly result: { bodyDy: ReadonlyMap<string, number>; bodyFaded: ReadonlySet<string>; targets: ReadonlyMap<string, number> } = {
+        bodyDy: this.bodyDy, bodyFaded: this.bodyFaded, targets: new Map<string, number>(),
+    };
+    /** 累計命中／未命中次數（量測與測試用） */
+    public hits = 0;
+    public misses = 0;
+
+    /** 讓下一次 solve 一定重算（例如外部狀態改了但不在輸入裡） */
+    public invalidate(): void { this.valid = false; }
+
+    public solve(entries: StackBadgeEntry[], plates: readonly LabelRect[], bodies: readonly LabelRect[], maxShift: number): BadgeAvoidResult {
+        const cur = this.cur;
+        let n = 0;
+        cur[n++] = maxShift;
+        cur[n++] = plates.length;
+        for (const r of plates) { cur[n++] = r.x; cur[n++] = r.y; cur[n++] = r.halfW; cur[n++] = r.halfH; }
+        cur[n++] = bodies.length;
+        for (const r of bodies) { cur[n++] = r.x; cur[n++] = r.y; cur[n++] = r.halfW; cur[n++] = r.halfH; }
+        cur[n++] = entries.length;
+        for (const e of entries) { cur[n++] = e.rect.x; cur[n++] = e.rect.y; cur[n++] = e.rect.halfW; cur[n++] = e.rect.halfH; cur[n++] = e.priority; }
+        cur.length = n;
+        let same = this.valid && this.prev.length === n && this.prevIds.length === entries.length;
+        for (let i = 0; same && i < n; i += 1) if (cur[i] !== this.prev[i]) same = false;
+        for (let i = 0; same && i < entries.length; i += 1) if (entries[i].id !== this.prevIds[i]) same = false;
+        if (same) { this.hits += 1; return this.result; }
+        this.misses += 1;
+        // 交換緩衝：本幀簽章變成「上一幀」，舊陣列留給下一幀寫
+        this.cur = this.prev; this.prev = cur;
+        this.prevIds.length = entries.length;
+        for (let i = 0; i < entries.length; i += 1) this.prevIds[i] = entries[i].id;
+        this.valid = true;
+        this.bodyDy.clear();
+        this.bodyFaded.clear();
+        if (bodies.length > 0) {
+            for (const e of entries) {
+                const r = bodyAvoidOffsetY(e.rect, bodies, maxShift);
+                if (r.dy !== 0) { this.bodyDy.set(e.id, r.dy); e.rect.y += r.dy; }
+                if (r.faded) this.bodyFaded.add(e.id);
+            }
+        }
+        this.result.targets = stackBadgeOffsets(entries, plates);
+        return this.result;
+    }
+}

@@ -15,6 +15,9 @@
 /** 虎符卡片被點擊時發送，payload: { index: number; data: TallyCardData } */
 export const UI_EVENT_CARD_SELECTED   = 'ui:card-selected';
 
+/** 點了「派不出去」的虎符卡（軍勢或糧草不足），請求開說明面板，payload: { index: number; data: TallyCardData } */
+export const UI_EVENT_CARD_SHORT_TAPPED = 'ui:card-short-tapped';
+
 /** 拖拽放開，請求部署兵種，payload: { troopType: TroopType; worldPos: Vec3 } */
 export const UI_EVENT_DEPLOY_REQUEST  = 'ui:deploy-request';
 
@@ -43,6 +46,7 @@ export const UI_EVENT_CARD_DRAG_START = 'ui:card-drag-start';
 export const UI_EVENTS = {
   CardSelected:   UI_EVENT_CARD_SELECTED,
   CardDragStart:  UI_EVENT_CARD_DRAG_START,
+  CardShortTapped: UI_EVENT_CARD_SHORT_TAPPED,
   DeployRequest:  UI_EVENT_DEPLOY_REQUEST,
   EndTurn:        UI_EVENT_END_TURN,
   Tactics:        UI_EVENT_TACTICS,

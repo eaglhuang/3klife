@@ -47,6 +47,38 @@
       "verticalAlign": "CENTER",
       "outlineColor": "#1E1208",
       "outlineWidth": 3
+    },
+    "strategist.wisdom.hit": {
+      "kind": "color",
+      "color": "backgroundNavyAlt",
+      "alpha": 0,
+      "_doc": "全透明；膠囊外觀由 StrategistHudComposite 繪製（PROG-2-10133）"
+    },
+    "strategist.label.wisdom.name": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 22,
+      "lineHeight": 30,
+      "color": "textAccent",
+      "isBold": true,
+      "overflow": "SHRINK",
+      "horizontalAlign": "LEFT",
+      "verticalAlign": "CENTER",
+      "outlineColor": "#1E1208",
+      "outlineWidth": 3
+    },
+    "strategist.label.wisdom.value": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 22,
+      "lineHeight": 30,
+      "color": "textAccent",
+      "isBold": true,
+      "overflow": "SHRINK",
+      "horizontalAlign": "RIGHT",
+      "verticalAlign": "CENTER",
+      "outlineColor": "#1E1208",
+      "outlineWidth": 3
     }
   }
 }

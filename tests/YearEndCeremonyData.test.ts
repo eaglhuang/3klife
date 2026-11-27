@@ -247,19 +247,17 @@ export function createYearEndCeremonyDataSuite(): TestSuite {
         assert.equals(88, normalizeLastCeremonyScore({ year: 2, score: 88.4 })?.score);
     });
 
-    suite.test('演出時間軸：金、銀、銅依序亮框，事件都在該幕停留秒數內；敲鑼對齊第 1、2 幕，掌聲隨金框', () => {
+    suite.test('演出時間軸：敲鑼對齊第 1、2 幕；名次揭曉改由各榜時間軸排（季軍→亞軍→冠軍），事件都在停留秒數內', () => {
         for (const act of [1, 2, 3] as CeremonyAct[]) {
             for (const item of CEREMONY_TIMELINE[act]) {
                 assert.isTrue(item.at < CEREMONY_ACT_SECONDS[act - 1], `第 ${act} 幕事件 ${item.at} 秒超出停留時間`);
             }
         }
-        const reveals = ceremonyEventsBetween(2, -1, 100).filter((e) => e.type === 'reveal');
-        assert.equals('1,2,3', reveals.map((e) => (e as { rank: number }).rank).join(','));
+        assert.equals(0, ceremonyEventsBetween(2, -1, 100).filter((e) => e.type === 'reveal').length);
         assert.isTrue(ceremonyEventsBetween(1, -1, 0).some((e) => e.type === 'cue' && e.cue === 'gong'));
         assert.isTrue(ceremonyEventsBetween(2, -1, 0).some((e) => e.type === 'cue' && e.cue === 'gong'));
-        assert.isTrue(ceremonyEventsBetween(2, 0.5, 1).some((e) => e.type === 'cue' && e.cue === 'applause'));
         // 區間左開右閉：同一時刻不會重複觸發
-        assert.equals(0, ceremonyEventsBetween(2, 0.8, 0.8).length);
+        assert.equals(0, ceremonyEventsBetween(2, 0, 0).length);
         assert.equals(0, ceremonyEventsBetween(3, -1, 100).length);
     });
 

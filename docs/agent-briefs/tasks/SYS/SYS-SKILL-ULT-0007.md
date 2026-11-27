@@ -1,6 +1,7 @@
 ---
 doc_id: doc_task_0168
 id: SYS-SKILL-ULT-0007
+task_id: SYS-SKILL-ULT-0007
 priority: P1
 phase: M1-E
 created: 2026-04-15

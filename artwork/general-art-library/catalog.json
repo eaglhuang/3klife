@@ -925,7 +925,7 @@
       "uid": "lu-ling-qi",
       "name": "呂玲綺",
       "standing": {
-        "activeVersion": "0003",
+        "activeVersion": "0004",
         "status": "review-pending",
         "history": [
           {
@@ -941,16 +941,24 @@
           {
             "version": "0003",
             "file": "standing/lu_ling_qi__呂玲綺__standing_0003.png",
-            "status": "review-pending",
+            "status": "superseded",
             "sha256": "7f6d75ee193bd3772783f7ea75379367713d52c41a8381355ce48d88f6e74314",
             "canvas": "1024x1536 RGBA",
             "note": "v5品質線重建候選：銀白分層輕甲、深梅紫內層與玫瑰金結構飾件；待審。"
+          },
+          {
+            "version": "0004",
+            "file": "standing/lu_ling_qi__呂玲綺__standing_0004.png",
+            "status": "review-pending",
+            "sha256": "762628445e5f8a2bb633af59f6c8ae48ddf7510b233e0203c3dbc7bba03df9bb",
+            "canvas": "1024x1536 RGBA",
+            "note": "半寫實成熟女性立繪；豐滿胸線與收腰S曲線、上臂前臂自然飽滿；大腿小腿修長收細而不纖弱；頸部修長略露，頭部約30度三分之四側轉；銀紫輕甲與白皙膚色；武器和人物四周保留透明安全距離。"
           }
         ]
       },
       "battle": {
         "status": "review-pending",
-        "activeVersion": "0003",
+        "activeVersion": "0004",
         "history": [
           {
             "version": "0001",
@@ -974,7 +982,7 @@
           {
             "version": "0003",
             "file": "battle/lu_ling_qi__呂玲綺__battle_0003.png",
-            "status": "review-pending",
+            "status": "superseded",
             "sha256": "99b6bf8a398d8ed3726b71823fba97a93307f71766fe3c0258db3074744bd283",
             "canvas": "1024x1536 RGBA",
             "weaponClass": "crescent halberd",
@@ -982,11 +990,23 @@
             "gaze": "forward-three-quarter",
             "sourceStanding": "standing/lu_ling_qi__呂玲綺__standing_0003.png",
             "note": "沿用靜態造型，向上挑架後跨步反擊；全身與戟保持完整，待審。"
+          },
+          {
+            "version": "0004",
+            "file": "battle/lu_ling_qi__呂玲綺__battle_0004.png",
+            "status": "review-pending",
+            "sha256": "ba2d0f14c487614f2d343533c14e20cf59fd11c45a2d9f9a496923dedcc37b8b",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "crescent halberd",
+            "poseLabel": "前跨旋身斜刺",
+            "gaze": "forward-three-quarter",
+            "sourceStanding": "standing/lu_ling_qi__呂玲綺__standing_0004.png",
+            "note": "沿用靜態立繪的銀紫造型、豐滿胸線、收腰曲線與自然飽滿上臂前臂；大腿小腿修長收細而不纖弱；頭部約30度三分之四側轉，頸部修長略露；方天戟長約身高1.2倍，桿身由頭至尾筆直連續並經細軸線檢查；整張等比縮小置中，保留透明安全距離。"
           }
         ]
       },
       "avatar": {
-        "activeVersion": "0003",
+        "activeVersion": "0004",
         "status": "review-pending",
         "history": [
           {
@@ -1002,7 +1022,7 @@
           {
             "version": "0003",
             "file": "avatars/lu_ling_qi__呂玲綺__avatar_0003.png",
-            "status": "review-pending",
+            "status": "superseded",
             "sha256": "38d9c943ee50e509cf9634586e22763d07098fed61644fcd56ffbf7fe01ef987",
             "canvas": "256x256 RGBA",
             "sourceBust": "busts/lu_ling_qi__呂玲綺__bust_0001.png",
@@ -1013,11 +1033,21 @@
               700
             ],
             "resampling": "Lanczos proportional resize to 256x256"
+          },
+          {
+            "version": "0004",
+            "file": "avatars/lu_ling_qi__呂玲綺__avatar_0004.png",
+            "status": "review-pending",
+            "sha256": "0ec36fbabe907b156ed3050e48b8078d20720dfef821e425e9bc70ee337e8f2d",
+            "canvas": "256x256 RGBA",
+            "sourceStanding": "standing/lu_ling_qi__呂玲綺__standing_0004.png",
+            "note": "依新站姿重繪的半身像；銀紫頭冠、長髮、白皙膚色；完整胸線入鏡，腰腹與腰帶未入鏡；頭部水平置中。",
+            "method": "identity-locked portrait repaint from standing_0004"
           }
         ]
       },
       "smallAvatar": {
-        "activeVersion": "0003",
+        "activeVersion": "0004",
         "status": "review-pending",
         "history": [
           {
@@ -1030,12 +1060,24 @@
           {
             "version": "0003",
             "file": "small_avatars/lu_ling_qi__呂玲綺__small_avatar_0003.png",
-            "status": "review-pending",
+            "status": "superseded",
             "sha256": "77fab86b7e52c3c5642474125791670958797f918ba46dcbef5a513ac322d7aa",
             "canvas": "256x256 RGBA",
             "method": "uniform resize with alpha premultiplication; no crop or redraw",
             "qc": "保留原核准來源的完整構圖與透明邊界，只作等比例縮放至256x256；未裁切、旋轉或重畫。",
             "createdAt": "2026-11-21"
+          },
+          {
+            "version": "0004",
+            "file": "small_avatars/lu_ling_qi__呂玲綺__small_avatar_0004.png",
+            "status": "review-pending",
+            "sha256": "12bf2ce0bda2ea3a4a0b4c52f105c13f0bf21f77c33c6a3501636839181e27de",
+            "canvas": "256x256 RGBA",
+            "sourceStanding": "standing/lu_ling_qi__呂玲綺__standing_0004.png",
+            "method": "identity-locked portrait repaint derived from standing_0004",
+            "headHeightRatioEstimate": 0.73,
+            "headCenterOffsetPct": 0.02,
+            "note": "銀紫頭冠與長髮完整；顱部至下巴頭高約73%；頭部輪廓與臉中線置中，肩線保留；依站姿身份重繪並整理透明留白。"
           }
         ]
       },
@@ -1439,7 +1481,7 @@
       "uid": "huang-yue-ying",
       "name": "黃月英",
       "standing": {
-        "activeVersion": "0007",
+        "activeVersion": "0009",
         "status": "review-pending",
         "history": [
           {
@@ -1480,12 +1522,28 @@
             "sha256": "4E0E9170020CCF3255B178BFE4E729336B4A60061195E7F48F114695EDF76742",
             "canvas": "1024x1536 RGBA",
             "note": "Full-body 3/4 standing portrait; modest high-neck teal and ivory inventor outfit with mechanical embroidery; head-outline center approximately 49.8% of canvas width; pending PM review."
+          },
+          {
+            "version": "0008",
+            "file": "standing/huang_yue_ying__黃月英__standing_0008.png",
+            "status": "review-pending",
+            "sha256": "C2F9CC970AFCEC3963A71A1E6B05422799C4BA3425BDB7D94A0240AEFF18765E",
+            "canvas": "1024x1536 RGBA",
+            "note": "Full-body 3/4 portrait with compact low braid, functional forearm tool pouch, shoulder satchel, waist-held brass caliper, crown-mounted oil lamp and single-eye loupe; transparent canvas with safe margins; pending PM review."
+          },
+          {
+            "version": "0009",
+            "file": "standing/huang_yue_ying__黃月英__standing_0009.png",
+            "status": "review-pending",
+            "sha256": "22A26AA57C7AB017B1DB6F531DCD24FBBFEE0C4AA1102E2B971438526B85F447",
+            "canvas": "1024x1536 RGBA",
+            "note": "Full-body 3/4 inventor design with a visible forearm tool sleeve, shoulder satchel, hand-held brass caliper, one crown-side oil lantern and single-eye loupe; transparent RGBA with safe margins; pending PM review."
           }
         ]
       },
       "battle": {
         "status": "review-pending",
-        "activeVersion": "0006",
+        "activeVersion": "0009",
         "history": [
           {
             "version": "0003",
@@ -1534,11 +1592,35 @@
             "gaze": "direct-to-camera",
             "sourceStandingFile": "standing/huang_yue_ying__黃月英__standing_0007.png",
             "note": "Full-body action pose matched to standing colors and outfit; transparent canvas; pending PM review."
+          },
+          {
+            "version": "0008",
+            "file": "battle/huang_yue_ying__黃月英__battle_0008.png",
+            "status": "review-pending",
+            "sha256": "729D030DA76CD7FA4F8B79497EC7B24B45A31139BAFD82014AD25A8C67ADBCA0",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "compact mechanical device and brass measuring tool",
+            "poseLabel": "mechanical deployment",
+            "gaze": "task-focused 3/4 angle",
+            "sourceStandingFile": "standing/huang_yue_ying__黃月英__standing_0008.png",
+            "note": "Full-body action pose in the standing costume, with visible forearm tool slots, shoulder satchel, hand-operated mechanism and crown lamp; pending PM review."
+          },
+          {
+            "version": "0009",
+            "file": "battle/huang_yue_ying__黃月英__battle_0009.png",
+            "status": "review-pending",
+            "sha256": "3280ACE7F624740EEDCE121FD543AE652532151425595D2CC67B8924950A1876",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "compact mechanical device and brass measuring tool",
+            "poseLabel": "mechanical deployment",
+            "gaze": "task-focused 3/4 angle",
+            "sourceStandingFile": "standing/huang_yue_ying__黃月英__standing_0009.png",
+            "note": "Dynamic full-body mechanical deployment with matching forearm tool loops, shoulder satchel, hand-held caliper, one crown-side oil lantern and single-eye loupe; transparent RGBA with safe margins; pending PM review."
           }
         ]
       },
       "avatar": {
-        "activeVersion": "0005",
+        "activeVersion": "0007",
         "status": "review-pending",
         "history": [
           {
@@ -1596,11 +1678,38 @@
               "height": 479
             },
             "qc": "125px/250px review: full chest seam visible with waist belt excluded; shoulder surfaces visible; head-outline center approximately 50.5% of canvas width."
+          },
+          {
+            "version": "0006",
+            "file": "avatars/huang_yue_ying__黃月英__avatar_0006.png",
+            "status": "review-pending",
+            "sha256": "D288C52D792644A0F02417B2668AE982DDFE212325EAC1B9C18743ED5A0644E6",
+            "canvas": "256x256 RGBA",
+            "sourceStandingFile": "standing/huang_yue_ying__黃月英__standing_0008.png",
+            "method": "crop-only; uniform resize with alpha premultiplication; no redraw, rotation or retouch",
+            "cropBox": {
+              "x": 202,
+              "y": 0,
+              "width": 590,
+              "height": 590
+            },
+            "qc": "125px/250px review: complete 3/4 head, both shoulder lines and full chest visible to chest base; waist excluded; head silhouette centered; pending PM review."
+          },
+          {
+            "version": "0007",
+            "file": "avatars/huang_yue_ying__黃月英__avatar_0007.png",
+            "status": "review-pending",
+            "sha256": "1EBCD7CCEE178B0627DADAB8667CC3B48D6C9E186078A6AF0967E9639984B518",
+            "canvas": "256x256 RGBA",
+            "sourceStandingFile": "standing/huang_yue_ying__黃月英__standing_0009.png",
+            "method": "image-generated bust consistent with updated standing design; transparent RGBA normalized to 256x256; pending PM review",
+            "qc": "125px/250px review: complete 3/4 head, both shoulder lines and full chest visible to chest base; waist excluded; head silhouette centered; pending PM review.",
+            "note": "3/4 bust to full chest-base line with both shoulders, held brass caliper, forearm tool sleeve and satchel strap; one crown-side lantern and single-eye loupe; pending PM review."
           }
         ]
       },
       "smallAvatar": {
-        "activeVersion": "0003",
+        "activeVersion": "0006",
         "status": "review-pending",
         "history": [
           {
@@ -1638,6 +1747,33 @@
               "height": 319.15
             },
             "qc": "125px review: complete low-profile hairstyle and face, neck and both shoulders visible; head-outline center approximately 50.9%; cranial head height 75.2%."
+          },
+          {
+            "version": "0005",
+            "file": "small_avatars/huang_yue_ying__黃月英__small_avatar_0005.png",
+            "status": "review-pending",
+            "sha256": "82EC699893BC768AAAD0AD32620F98383B7B8634F3F3BBB9F9FD8E3EB1544270",
+            "canvas": "256x256 RGBA",
+            "sourceStandingFile": "standing/huang_yue_ying__黃月英__standing_0008.png",
+            "method": "crop-only; uniform resize with alpha premultiplication; no redraw, rotation or retouch",
+            "cropBox": {
+              "x": 338,
+              "y": 36,
+              "width": 320,
+              "height": 320
+            },
+            "qc": "125px/250px review: compact hairstyle and crown lamp complete; head silhouette centered with natural 3/4 face; neck and shoulder top visible; pending PM review."
+          },
+          {
+            "version": "0006",
+            "file": "small_avatars/huang_yue_ying__黃月英__small_avatar_0006.png",
+            "status": "review-pending",
+            "sha256": "DF5D2C69E1A657AC58D37CC026C157ADB3638C15DC6803CEB80E381948099061",
+            "canvas": "256x256 RGBA",
+            "sourceStandingFile": "standing/huang_yue_ying__黃月英__standing_0009.png",
+            "method": "image-generated close portrait consistent with updated standing design; transparent RGBA normalized to 256x256; pending PM review",
+            "qc": "125px/250px review: compact hairstyle and crown lamp complete; head silhouette centered with natural 3/4 face; neck and shoulder top visible; pending PM review.",
+            "note": "Centered human head outline in natural 3/4 view; complete lamp and single-eye loupe, neck and shoulder line only; pending PM review."
           }
         ]
       },
@@ -1682,7 +1818,7 @@
       "uid": "guan-yin-ping",
       "name": "關銀屏",
       "standing": {
-        "activeVersion": "0003",
+        "activeVersion": "0004",
         "status": "review-pending",
         "history": [
           {
@@ -1711,11 +1847,28 @@
             "qc": "125/250px progressive preview checked: full figure, natural hands, complete crescent polearm and boots; alpha>16 bbox x=146–824,y=94–1443; head center 50.8%, within ±3%.",
             "createdAt": "2026-11-27",
             "note": "關銀屏四件組，等待 PM 審核。"
+          },
+          {
+            "version": "0004",
+            "file": "standing/guan_yin_ping__關銀屏__standing_0004.png",
+            "status": "review-pending",
+            "sha256": "4d5074a1bceb0a73dea85e6c7b765ba47718789f6b63846fe1cbcc826031ac0e",
+            "canvas": "1024x1536 RGBA",
+            "method": "Image_gen retouch from the existing Guan Yinping identity; uniform framing with transparent safety margin; no background.",
+            "headOutlineBoundsPx": [
+              490,
+              534
+            ],
+            "headOutlineCenterXPercent": 50,
+            "headAngleDegreesApprox": 32,
+            "qc": "125/250px progressive review: head outline centered; two skin openings, long legs, flat boots and complete crescent polearm visible; alpha>=8 bbox x=147..866,y=93..1454; margins exceed 2%.",
+            "createdAt": "2026-11-27",
+            "note": "Adult 3/4 full-body design with pale skin, a defined waist, long slender legs, two visible skin openings, exposed neck, and flat boots; transparent RGBA with >2% alpha safety margins; pending PM review."
           }
         ]
       },
       "battle": {
-        "activeVersion": "0005",
+        "activeVersion": "0006",
         "status": "review-pending",
         "displayStatus": "not-yet-verified",
         "weaponClass": "long-polearm",
@@ -1776,11 +1929,33 @@
             "qc": "125/250px progressive preview checked: separated natural grip points, full crescent blade and polearm butt, both boots, compact silhouette; alpha>16 bbox x=142–855,y=98–1364; head center 49.6%, within ±3%.",
             "createdAt": "2026-11-27",
             "note": "關銀屏四件組，等待 PM 審核。"
+          },
+          {
+            "version": "0006",
+            "file": "battle/guan_yin_ping__關銀屏__battle_0006.png",
+            "status": "review-pending",
+            "sha256": "0ab9d9a02f5806925bf4d9e4abe009bb64b5924385026b836d74ac9f6092aa82",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "long-polearm",
+            "poseCode": "LH-036",
+            "poseLabel": "斜步半轉，長戟斜線橫掃",
+            "gaze": "toward camera",
+            "sourceStanding": "standing/guan_yin_ping__關銀屏__standing_0004.png",
+            "method": "Image_gen battle pose based on the updated standing design; uniform scale and transparent framing; no background.",
+            "headOutlineBoundsPx": [
+              486,
+              536
+            ],
+            "headOutlineCenterXPercent": 50,
+            "headAngleDegreesApprox": 32,
+            "qc": "125/250px progressive review: head outline centered; shaft verified by a thin axis line from blade socket to butt; full blade, butt and boots visible; alpha>=8 bbox x=21..910,y=175..1403; margins exceed 2%.",
+            "createdAt": "2026-11-27",
+            "note": "Dynamic polearm battle pose with slimmer thighs than Huang Yueying, pale skin, two openings, exposed neck and flat boots; weapon shaft passed the thin-line straightness check; transparent RGBA with >2% safety margins; pending PM review."
           }
         ]
       },
       "avatar": {
-        "activeVersion": "0003",
+        "activeVersion": "0004",
         "status": "review-pending",
         "history": [
           {
@@ -1811,11 +1986,30 @@
             "qc": "125/250px preview checked: three-quarter face, centered head, complete chest armor to lower edge; no waist or belt included.",
             "createdAt": "2026-11-27",
             "note": "關銀屏四件組，等待 PM 審核。"
+          },
+          {
+            "version": "0004",
+            "file": "avatars/guan_yin_ping__關銀屏__avatar_0004.png",
+            "status": "review-pending",
+            "sha256": "b626620091471781c0fab7eebd707a9a1de455b51aa372854212b7764238049d",
+            "canvas": "256x256 RGBA",
+            "source": "standing/guan_yin_ping__關銀屏__standing_0004.png",
+            "method": "Image_gen bust consistent with the updated standing design; proportional translation and resize only; no angle change.",
+            "crop": "complete-chest; bottom at chest-base seam, above waist belt",
+            "headOutlineBoundsPx": [
+              98,
+              158
+            ],
+            "headOutlineCenterXPercent": 50,
+            "headAngleDegreesApprox": 32,
+            "qc": "125/250px review: head outline centered within 3%; natural 3/4 angle, long neck, both shoulder lines and full chest base visible; no waist or belt.",
+            "createdAt": "2026-11-27",
+            "note": "Mature 3/4 bust with exposed neck and shoulders, two skin openings, and complete chest-base line; no waist or belt; head centered; pending PM review."
           }
         ]
       },
       "smallAvatar": {
-        "activeVersion": "0003",
+        "activeVersion": "0004",
         "status": "review-pending",
         "history": [
           {
@@ -1849,6 +2043,26 @@
             "qc": "125px progressive preview and crop geometry checked: head height 71.7%, face centered, both shoulder surfaces retained; centered head outline within ±3%.",
             "createdAt": "2026-11-27",
             "note": "關銀屏四件組，等待 PM 審核。"
+          },
+          {
+            "version": "0004",
+            "file": "small_avatars/guan_yin_ping__關銀屏__small_avatar_0004.png",
+            "status": "review-pending",
+            "sha256": "29e95cc9f0eb50d142783d844dd0de3c547e430fca0c537f991379ed12c73be2",
+            "canvas": "256x256 RGBA",
+            "source": "standing/guan_yin_ping__關銀屏__standing_0004.png",
+            "method": "Image_gen small portrait; crop-only shoulder-line reframe and proportional resize; no rotation or retouch.",
+            "crop": "shoulder-line; cropBox x=442,y=110,size=1097; no chest front",
+            "headOutlineBoundsPx": [
+              48,
+              208
+            ],
+            "headOutlineCenterXPercent": 50,
+            "headHeightPercent": 71,
+            "headAngleDegreesApprox": 32,
+            "qc": "125/250px review: head outline centered within 3%, head height approximately 71%; both shoulder surfaces visible; no chest-front framing.",
+            "createdAt": "2026-11-27",
+            "note": "Centered human head silhouette at approximately 71% height; complete ornament, neck and shoulder line; no chest-front framing; pending PM review."
           }
         ]
       }

@@ -1,6 +1,7 @@
 ---
 doc_id: doc_task_0014
 id: HARN-FIX-0001
+task_id: HARN-FIX-0001
 priority: P3
 phase: G
 created: 2026-05-04

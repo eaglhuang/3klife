@@ -60,9 +60,11 @@ import { FLOOD_SPLASH_INTERVAL_SEC, FLOOD_SPLASH_SPEC, createMoveSfxThrottleStat
 import { DEPLOY_LANDING_PUFFS, RiderDeployDrop, deployLandingDust, deployLandingThud, riderDeployRingPuffs } from "../shared/DeployLanding";
 import { playBattleAudio, playBattleFootstep } from "../shared/BattleAudio";
 import { MoveDustEmitter } from "./MoveDustEmitter";
+import { TacticVfxPlayer } from "./TacticVfxPlayer";
+import type { TacticVfxGroup } from "../shared/TacticVfxGroups";
 import { SpineUnitOverlay } from "./SpineGeneralOverlay";
-import { GeneralPortraitStandee, STANDEE_HEIGHT_PX, needsStandeeFallback } from "./GeneralPortraitStandee";
-import { generalSpineConfig, resolveRidingTier, setMountedList, squadMemberCount, troopSpineConfig, troopSpineConfigWithFallback } from '../shared/UnitPresentationConfig';
+import { GeneralPortraitStandee, STANDEE_HEIGHT_PX, needsStandeeFallback, shouldLoadHeroModel } from "./GeneralPortraitStandee";
+import { generalSpineConfig, resolveRidingTier, setMountedList, squadMemberCount, TroopSpineConfigCache, troopSpineConfig } from '../shared/UnitPresentationConfig';
 import { DuelExchange } from '../shared/DuelPresentationCore';
 import { BATTLE_VISUAL_TIMING, buildHitShakeSteps, hitScaleNeighborDepth, planHitFeedback, planMoveSegment } from "./BattlePresentationTiming";
 import { BuffGainEffectPool } from "./effects/BuffGainEffectPool";
@@ -84,7 +86,7 @@ import { NameplateCombatFade, getBattleUiFeedback } from "../shared/BattleUiFeed
 import { TileBuffMarkers } from "./TileBuffMarkers";
 import { UnitBuffPickupVfx } from "./UnitBuffPickupVfx";
 import type { TileBuffBadge } from "../shared/TileBuffBadge";
-import { BADGE_HIT_PRIORITY_SEC, BODY_AVOID_MAX_SHIFT_RATIO, BODY_FADE_ALPHA, badgeRectFromExtent, bodyAvoidOffsetY, easePlateOffset, generalBodyRect, stackBadgeOffsets, unionExtent, type LabelRect, type LocalExtent, type StackBadgeEntry } from "../shared/GeneralPlateAvoidance";
+import { BADGE_HIT_PRIORITY_SEC, BODY_AVOID_MAX_SHIFT_RATIO, BODY_FADE_ALPHA, BadgeAvoidSolver, badgeRectFromExtent, easePlateOffset, generalBodyRect, unionExtent, type LabelRect, type LocalExtent, type StackBadgeEntry } from "../shared/GeneralPlateAvoidance";
 import { buildUnitStatusContext, computeUnitStatusIcons, gainedTones, newlyGainedKinds, type StatusIconKind } from "../shared/UnitStatusIcons";
 import { services } from "../../core/managers/ServiceLoader";
 import { FLOAT_MISS_TEXT, FLOAT_TEXT_STYLES, FloatTextType, cellFloatAnchor } from "../../core/systems/FloatTextStyle";
@@ -113,6 +115,8 @@ interface UnitView {
   accentNode: Node;
   formationRoot: Node;
   labelNode: Node;
+  /** 名牌的 UITransform（快取，避免每幀 getComponent；PROG-2-10155） */
+  labelTransform?: UITransform | null;
   attackLabel: Label;
   typeLabel: Label;
   hpLabel: Label;
@@ -285,13 +289,18 @@ export class UnitRenderer extends Component {
   /** 部隊資訊框避開武將名牌的目前 Y 位移（PROG-2-9434），每幀平滑逼近目標 */
   private readonly plateAvoidOffsets = new Map<string, number>();
   private readonly plateRectsBuf: LabelRect[] = [];
+  /** PROG-2-10155：後備設定快取、避讓求解器（輸入沒變沿用上一幀）、部隊框外框物件池 */
+  private readonly troopConfigCache = new TroopSpineConfigCache();
+  private readonly badgeSolver = new BadgeAvoidSolver();
+  /** 部隊框節點集合（弱參照），供 topUnitLabelIndex 由尾端找最上層部隊框 */
+  private readonly unitLabelNodes = new WeakSet<Node>();
+  private readonly badgeEntryPool: StackBadgeEntry[] = [];
+  private readonly hasSpineFailed = (path: string): boolean => this.spineUnits.hasFailed(path);
   /** 部隊框避讓武將本體（PROG-2-10118）：本體矩形暫存、各框目前的透明度比例（1 = 不透明，不在表內） */
   private readonly bodyRectsBuf: LabelRect[] = [];
   private readonly bodyFadeAlpha = new Map<string, number>();
   /** 部隊框錯開（PROG-2-9440）：每幀重用的輸入陣列、各單位最後受擊時間（戰場時鐘） */
   private readonly badgeEntriesBuf: StackBadgeEntry[] = [];
-  private readonly bodyDyBuf = new Map<string, number>();
-  private readonly bodyFadedBuf = new Set<string>();
   private readonly lastHitAt = new Map<string, number>();
   private badgeClock = 0;
   private unsubVitality: (() => void) | null = null;
@@ -311,6 +320,8 @@ export class UnitRenderer extends Component {
   private readonly slashShots = new SlashShotView(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   /** 攻擊特效試作（零貼圖單一 Graphics，JSON 驅動；?atkVfx=old 可退回舊特效） */
   private readonly attackVfx = new AttackVfxPlayer(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
+  /** 戰法分組特效（PROG-2-10138）：火／水／風／回復／加速／鼓舞／控制，單一加色 Graphics、預算見 TacticVfxGroups */
+  private readonly tacticVfx = new TacticVfxPlayer(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   /** PROG-2-9407：落腳揚塵粒子，畫在 2D 疊層、單位後面（粒子池有上限，見 MoveDustEmitter） */
   private readonly moveSfxThrottle = createMoveSfxThrottleState();
   private readonly moveDust = new MoveDustEmitter(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
@@ -1248,7 +1259,7 @@ export class UnitRenderer extends Component {
         const isGeneral = this.isGeneralAvatarUnit(unit);
         const general = isGeneral ? this.latestState?.getGeneral(unit.faction) : null;
         const config = isGeneral ? (general ? this.generalSpine(general, unit.faction) : null)
-          : troopSpineConfigWithFallback(unit.type, unit.faction === Faction.Enemy, unit.tallyTemplateId, path => this.spineUnits.hasFailed(path));
+          : this.troopConfigCache.get(unit.type, unit.faction === Faction.Enemy, unit.tallyTemplateId, this.spineUnits.failedCount(), this.hasSpineFailed);
         // 主將沒有 Spine（或素材載不起來）：改畫立繪站牌，站位與 Spine 主將相同；站牌也載不到才留 3D 棋子（issue #2238）
         if (isGeneral && general && needsStandeeFallback(config?.path, path => this.spineUnits.hasFailed(path))) {
           this.spineUnits.remove(unitId);
@@ -1304,6 +1315,7 @@ export class UnitRenderer extends Component {
     this.arrowShots.update(dt);
     this.slashShots.update(dt);
     this.attackVfx.update(dt);
+    this.tacticVfx.update(dt);
     perfEnd('fxShots', t); t = perfBegin();
 
     this.tileBuffMarkers.update(dt);
@@ -1545,7 +1557,8 @@ export class UnitRenderer extends Component {
       view.worldNode.setScale(Vec3.ONE);
       view.bodyNode.active = false;
       view.modelRoot.active = false;
-      if (!view.heroLoading) {
+      // PROG-2-10154：有可用 Spine 時不載 3D 主將（貼圖約 190MB 卻被 Spine 蓋掉）；Spine 沒有或載不起來才載後備
+      if (!view.heroLoading && shouldLoadHeroModel(this.generalSpine(general, faction)?.path, path => this.spineUnits.hasFailed(path))) {
         void this.ensureGeneralHeroModel(view, faction);
       }
     }
@@ -1572,6 +1585,41 @@ export class UnitRenderer extends Component {
   /** PROG-2-9410：武將放招前蓄力（Spine 主將聚氣膨脹＋顫動）；沒有 Spine 主將時回 false，不影響流程。 */
   public playGeneralCharge(faction: Faction, durationSec: number): boolean {
     return this.spineUnits.charge(this.generalSpineId(faction), durationSec);
+  }
+
+  /** 世界點投影到疊層，並回傳「一格寬約幾個 64px」當特效縮放（取不到投影回 null） */
+  private tacticFxPoint(world: Vec3): { x: number; y: number; scale: number } | null {
+    const a = this.overlayPoint(world);
+    if (!a) return null;
+    const ax = a.x, ay = a.y;
+    const cell = this.boardRenderer?.cellSize ?? 1;
+    const b = this.overlayPoint(new Vec3(world.x + cell, world.y, world.z));
+    const scale = b ? Math.abs(b.x - ax) / 64 : 1;
+    return { x: ax, y: ay, scale: scale > 0.2 ? scale : 1 };
+  }
+
+  /** 戰法前搖（PROG-2-10138）：施放方主將身上匯聚，時間與蓄力同長。沒歸類或取不到位置回 false。 */
+  public playTacticWindup(group: TacticVfxGroup, faction: Faction, durSec: number): boolean {
+    const world = this.getGeneralSidelineWorldPosition(faction);
+    const p = world ? this.tacticFxPoint(world) : null;
+    return !!p && this.tacticVfx.playWindup(group, p.x, p.y, faction === Faction.Player ? 1 : -1, p.scale, durSec);
+  }
+
+  /** 戰法命中＋餘韻（PROG-2-10138）：在受影響單位所在格播；cells 為空時改在施放者身上播。回傳實際播出的格數。 */
+  public playTacticHit(group: TacticVfxGroup, faction: Faction, cells: ReadonlyArray<{ lane: number; depth: number }>): number {
+    const facing = faction === Faction.Player ? 1 : -1;
+    let played = 0;
+    if (cells.length === 0) {
+      const world = this.getGeneralSidelineWorldPosition(faction);
+      const p = world ? this.tacticFxPoint(world) : null;
+      return p && this.tacticVfx.playHit(group, p.x, p.y, facing, p.scale) ? 1 : 0;
+    }
+    for (const cell of cells) {
+      const world = this.getUnitWorldPosition(cell.lane, cell.depth);
+      const p = world ? this.tacticFxPoint(world) : null;
+      if (p && this.tacticVfx.playHit(group, p.x, p.y, facing, p.scale)) played++;
+    }
+    return played;
   }
 
   public playGeneralAttackPose(faction: Faction): void {
@@ -1692,7 +1740,7 @@ export class UnitRenderer extends Component {
     this.spineUnits.abortDuel();
   }
 
-  onDestroy(): void { this.unsubVitality?.(); this.unsubVitality = null; this.spineUnits.clear(); this.generalStandees.clear(); this.moveDust.destroy(); this.attackVfx.destroy(); services().floatText?.setAvoidProvider(null); }
+  onDestroy(): void { this.unsubVitality?.(); this.unsubVitality = null; this.spineUnits.clear(); this.generalStandees.clear(); this.moveDust.destroy(); this.attackVfx.destroy(); this.tacticVfx.destroy(); services().floatText?.setAvoidProvider(null); }
 
   private createGeneralView(faction: Faction): GeneralView {
     this.ensureRoots();
@@ -1760,8 +1808,7 @@ export class UnitRenderer extends Component {
 
     bodyNode.active = false;
 
-    void this.ensureGeneralHeroModel(view, faction);
-
+    // 3D 主將改由 updateSingleGeneralView 判斷 Spine 後再載（PROG-2-10154），建立時不無條件載入
     return view;
   }
 
@@ -1775,6 +1822,14 @@ export class UnitRenderer extends Component {
     this.generalViews.delete(faction);
   }
 
+  /** uiRoot 底下最上層的部隊框兄弟索引；沒有回 -1（PROG-2-10155：由尾端往前找，不再逐框 getSiblingIndex）。 */
+  private topUnitLabelIndex(): number {
+    const children = this.uiRoot?.children;
+    if (!children) return -1;
+    for (let i = children.length - 1; i >= 0; i -= 1) if (this.unitLabelNodes.has(children[i])) return i;
+    return -1;
+  }
+
   /**
    * 名牌優先（PROG-2-9434）：部隊集中在武將附近時，部隊頭頂資訊框會壓到武將名牌（能量環、將血量、精力條）。
    * 名牌排到最上層；與名牌重疊的部隊框往上或往下推開（取較短方向），位移平滑逼近，避免部隊走動時跳動。
@@ -1784,13 +1839,12 @@ export class UnitRenderer extends Component {
     const plates = this.plateRectsBuf;
     plates.length = 0;
     // 名牌只排到最上層部隊框之上；之後加進來的傷害跳字等特效仍在名牌之上
-    let topUnitIndex = -1;
-    this.unitViews.forEach((view) => {
-      if (view.labelNode.parent === this.uiRoot) topUnitIndex = Math.max(topUnitIndex, view.labelNode.getSiblingIndex());
-    });
+    // PROG-2-10155：getSiblingIndex 是線性搜尋，原本每個部隊框每幀各搜一次；改由 uiRoot 子節點尾端往前找第一個部隊框
+    let topUnitIndex = -2; // -2＝還沒找；只有名牌存在時才找
     this.generalViews.forEach((view) => {
       const label = view.labelNode;
       if (!label.active) return;
+      if (topUnitIndex === -2) topUnitIndex = this.topUnitLabelIndex();
       if (label.getSiblingIndex() < topUnitIndex) label.setSiblingIndex(topUnitIndex);
       const s = label.scale.x;
       // 名牌本體寬 186＋底板 10；左側另有能量環（見 buildVitalityRing 的位置）
@@ -1803,22 +1857,29 @@ export class UnitRenderer extends Component {
     // PROG-2-9440：部隊框彼此也錯開；剛受擊的框先擺（留原位），其他框讓開
     this.badgeClock += dt > 0 ? dt : 0;
     const entries = this.badgeEntriesBuf;
-    entries.length = 0;
+    let entryCount = 0;
     this.unitViews.forEach((view, unitId) => {
       const label = view.labelNode;
       if (!label.active) return;
-      const tf = label.getComponent(UITransform);
+      const tf = view.labelTransform ?? (view.labelTransform = label.getComponent(UITransform));
       const s = label.scale.x;
       const p = label.position;
       const hitAt = this.lastHitAt.get(unitId);
-      entries.push({
-        id: unitId,
-        rect: tf ? badgeRectFromExtent(p.x, p.y, s, this.badgeLocalExtent(view, tf)) : { x: p.x, y: p.y, halfW: 63, halfH: 31 },
-        priority: hitAt !== undefined && this.badgeClock - hitAt < BADGE_HIT_PRIORITY_SEC ? 1 : 0,
-      });
+      // 物件池：不每幀 new 項目與矩形（PROG-2-10155）
+      const entry = this.badgeEntryPool[entryCount] ?? (this.badgeEntryPool[entryCount] = { id: unitId, rect: { x: 0, y: 0, halfW: 0, halfH: 0 }, priority: 0 });
+      entry.id = unitId;
+      entry.priority = hitAt !== undefined && this.badgeClock - hitAt < BADGE_HIT_PRIORITY_SEC ? 1 : 0;
+      if (tf) {
+        const r = badgeRectFromExtent(p.x, p.y, s, this.badgeLocalExtent(view, tf));
+        entry.rect.x = r.x; entry.rect.y = r.y; entry.rect.halfW = r.halfW; entry.rect.halfH = r.halfH;
+      } else { entry.rect.x = p.x; entry.rect.y = p.y; entry.rect.halfW = 63; entry.rect.halfH = 31; }
+      entries[entryCount] = entry;
+      entryCount += 1;
     });
+    entries.length = entryCount;
     // PROG-2-10118：武將本體優先看得清楚。部隊框先往本體腳下讓開，讓不開才降半透明；
     // 讓開後的位置再交給部隊框彼此錯開。目標值每幀重算，實際位移／透明度用平滑逼近，避免閃爍。
+    // PROG-2-10155：輸入（名牌、本體、各框外框與優先序）與上一幀相同就沿用上一幀結果（BadgeAvoidSolver）。
     const bodies = this.bodyRectsBuf;
     bodies.length = 0;
     let maxShift = 0;
@@ -1828,18 +1889,10 @@ export class UnitRenderer extends Component {
       bodies.push(generalBodyRect(foot.x, foot.y, foot.labelToFoot));
       maxShift = Math.max(maxShift, foot.labelToFoot * BODY_AVOID_MAX_SHIFT_RATIO);
     });
-    const bodyDy = this.bodyDyBuf;
-    bodyDy.clear();
-    const bodyFaded = this.bodyFadedBuf;
-    bodyFaded.clear();
-    if (bodies.length > 0) {
-      for (const e of entries) {
-        const r = bodyAvoidOffsetY(e.rect, bodies, maxShift);
-        if (r.dy !== 0) { bodyDy.set(e.id, r.dy); e.rect.y += r.dy; }
-        if (r.faded) bodyFaded.add(e.id);
-      }
-    }
-    const targets = stackBadgeOffsets(entries, plates);
+    const solved = this.badgeSolver.solve(entries, plates, bodies, maxShift);
+    const bodyDy = solved.bodyDy;
+    const bodyFaded = solved.bodyFaded;
+    const targets = solved.targets;
     const baseOpacity = Math.round(Math.min(1, Math.max(0, this.plateFade.alpha)) * 255);
     this.unitViews.forEach((view, unitId) => {
       const label = view.labelNode;
@@ -2040,6 +2093,7 @@ export class UnitRenderer extends Component {
     const labelNode = new Node(`UnitLabel_${unit.id}`);
     labelNode.layer = this.canvasNode?.layer ?? Layers.Enum.UI_2D;
     this.uiRoot?.addChild(labelNode);
+    this.unitLabelNodes.add(labelNode);
     const badge = this.buildBadge(labelNode, 170, 34, unit.type, badgeLayers);
     const hpBar = this.buildHpBar(labelNode, 34 + 5);
 

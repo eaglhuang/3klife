@@ -1,10 +1,10 @@
 // @spec-source → 見 docs/cross-reference-index.md
 import { _decorator, BlockInputEvents, Color, Label, Node, Tween, tween, UITransform, UIOpacity, Vec3, Widget } from "cc";
-import { TOAST_FADE_SEC, TOAST_RISE_PX, keepBracketsTogether, toastCenterY, toastHoldSec } from '../../core/systems/ToastMotion';
+import { TOAST_FADE_SEC, TOAST_RISE_PX, keepBracketsTogether, toastCenterY, toastHoldSec, toastUnitsPerLine } from '../../core/systems/ToastMotion';
 import { services } from "../../core/managers/ServiceLoader";
 import { UIPreviewBuilder } from "../core/UIPreviewBuilder";
 import { SolidBackground } from './SolidBackground';
-import { ToastQueue } from '../core/ToastQueue';
+import { mergeHeldToasts, ToastQueue } from '../core/ToastQueue';
 
 const { ccclass } = _decorator;
 
@@ -38,6 +38,25 @@ export class ToastMessage extends UIPreviewBuilder {
   private _blockingOverlay: Node | null = null;
   private _activeToastKey: string | null = null;
   private _queue = new ToastQueue<QueuedToast>();
+  /** 全螢幕典禮（年末頒獎）期間暫停顯示：提示先存著，典禮收掉後依序播，免得蓋住典禮（PROG-2-10153） */
+  private _suppressed = false;
+  private _suppressedHeld: QueuedToast[] = [];
+
+  /** 開始／結束暫停；開始時正在顯示的與排隊的先收起並存下，結束時依序補播 */
+  public setSuppressed(on: boolean): void {
+    if (on === this._suppressed) return;
+    this._suppressed = on;
+    if (on) {
+      this._suppressedHeld = mergeHeldToasts(this._queue.drain(), this._suppressedHeld);
+      if (this.hideTween) { this.hideTween.stop(); this.hideTween = null; }
+      this._stopRise();
+      this.node.active = false;
+      return;
+    }
+    const held = this._suppressedHeld;
+    this._suppressedHeld = [];
+    for (const toast of held) void this.show(toast.message, toast.duration, toast.options);
+  }
 
   /** 建立（或複用）全螢幕排序擋板 */
   private _ensureBlockingOverlay(): Node {
@@ -93,6 +112,7 @@ export class ToastMessage extends UIPreviewBuilder {
     services().event.onBind('SHOW_TOAST', (payload: { message: string, duration?: number, blocking?: boolean, key?: string }) => {
       void this.show(payload.message, payload.duration, { blocking: payload.blocking, key: payload.key });
     }, this);
+    services().event.onBind('TOAST_SUPPRESS', (payload: { on: boolean }) => this.setSuppressed(!!payload?.on), this);
     services().event.onBind('HIDE_TOAST', (payload?: { key?: string }) => this.hide(payload?.key), this);
   }
 
@@ -107,6 +127,10 @@ export class ToastMessage extends UIPreviewBuilder {
 
     // 連發時排隊，避免後一句蓋掉玩家還沒讀的前一句
     const toast: QueuedToast = { message, duration, options };
+    if (this._suppressed) {
+      this._suppressedHeld = mergeHeldToasts(this._suppressedHeld, [toast]);
+      return;
+    }
     if (this._queue.offer(toast, Date.now() / 1000)) await this._present(toast);
   }
 
@@ -213,7 +237,7 @@ export class ToastMessage extends UIPreviewBuilder {
   /** 一行大約放得下幾個全形字：Label 寬度 ÷（字級＋字距） */
   private _unitsPerLine(node: Node, lbl: Label): number {
     const width = node.getComponent(UITransform)?.width ?? 0;
-    return Math.floor(width / Math.max(1, lbl.fontSize + lbl.spacingX));
+    return toastUnitsPerLine(width, lbl.fontSize, lbl.spacingX);
   }
 
   private _stopRise(): void {

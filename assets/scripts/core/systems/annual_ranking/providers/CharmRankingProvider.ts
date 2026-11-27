@@ -12,7 +12,9 @@ export class CharmRankingProvider implements IRankingBoardProvider {
   public readonly evaluatorKey: string = 'charm';
 
   public isEligible(generalId: string, context: RankingContext, config: BoardConfig): boolean {
-    return true;
+    // 紅顏榜只排女將；沒帶性別資料的呼叫端（舊流程）維持不限
+    const info = context.generals instanceof Map ? context.generals.get(generalId) : context.generals?.[generalId];
+    return !info?.gender || info.gender === 'F';
   }
 
   public evaluate(

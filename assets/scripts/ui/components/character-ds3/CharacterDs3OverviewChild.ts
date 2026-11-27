@@ -42,7 +42,7 @@ const V3_COMMAND_LABELS: Partial<Record<GeneralDetailOverviewContentState['comma
 const COMMAND_VALUE_NODE_PREFIX = 'CharacterDs3TabOverview_cmd_value_';
 
 /** 人物小傳顯示高度；PROG-2-1858 加虎符戰記次卡後由 164 縮為 128，整欄才不超出畫面 */
-const OVERVIEW_BIO_HEIGHT = 128;
+const OVERVIEW_BIO_HEIGHT = 84;
 
 export class CharacterDs3OverviewChild extends ChildPanelBase {
     override dataSource = 'overview';
@@ -73,6 +73,7 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
         this._setRarityPillText(state.rarityLabel);
         this._setLabelText('OverviewBio', state.biographyBody);
         this._clampBio();
+        this._applyBioQuip(state);
         // 逸事故事條由立繪下方的頁籤展開，這一列在 v3 沒有功能，還會超出畫面
         ds3SetActive(this.binder, this.hostNode, 'OverviewStoryExpand', false);
         // 設計稿底部樣板列「TEMPLATE · ZF_01 · 燕人武聖」只藏父容器，保留字元以通過視覺就緒驗證
@@ -196,6 +197,15 @@ export class CharacterDs3OverviewChild extends ChildPanelBase {
         label.overflow = Label.Overflow.CLAMP;
         label.verticalAlign = Label.VerticalAlign.TOP;
         transform.setContentSize(transform.width, OVERVIEW_BIO_HEIGHT);
+    }
+
+    /** 古文下方的白話吐槽：i18n 鍵優先，查不到用資料欄位；都沒有就隱藏（PROG-2-10146） */
+    private _applyBioQuip(state: GeneralDetailOverviewContentState): void {
+        const translated = state.biographyQuipKey ? this.t(state.biographyQuipKey) : '';
+        const text = translated && translated !== state.biographyQuipKey ? translated : (state.biographyQuip ?? '');
+        ds3SetActive(this.binder, this.hostNode, 'OverviewBioQuip', text !== '');
+        const label = ds3Label(this.binder, this.hostNode, 'OverviewBioQuip');
+        if (label && text !== '') label.string = text;
     }
 
     /** 虎符戰記次卡（general-tally-summary，PROG-2-1858）；沒有摘要資料時整卡隱藏 */

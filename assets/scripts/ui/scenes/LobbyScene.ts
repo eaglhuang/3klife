@@ -53,6 +53,7 @@ import { displayTitleOf } from '../../core/systems/HallStageFeed';
 import type { HallStageCast } from '../../core/systems/HallStageDirector';
 import { UIID, LayerType } from '../../core/config/UIConfig';
 import type { GeneralConfig, GeneralDetailDefaultTab } from '../../core/models/GeneralUnit';
+import type { GameTimeState } from '../../core/systems/GameClock';
 import { services } from '../../core/managers/ServiceLoader';
 import { FriendshipService } from '../../core/services/FriendshipService';
 import type { IUIManagedController } from '../../shared/interfaces/IUIInterfaces';
@@ -67,6 +68,7 @@ import { GeneralDetailComposite } from '../components/GeneralDetailComposite';
 import { canOpenSoulInject, SOUL_INJECT_REASON_I18N_KEY, soulInjectCandidatesFor, type SoulInjectCandidate } from '../../core/systems/SoulInjectCandidates';
 import { EliteTroopCodexComposite, type EliteTroopCodexOpenPayload } from '../components/EliteTroopCodexComposite';
 import { LobbyMissionDetailDialogComposite, type LobbyMissionActionKey, type LobbyMissionDetailDialogOpenPayload, type MissionGeneralOption } from '../components/LobbyMissionDetailDialogComposite';
+import { missionText, type MissionTr } from '../core/HallDetailActionStates';
 import { LobbyLeaderboardComposite, type LobbyLeaderboardOpenPayload } from '../components/LobbyLeaderboardComposite';
 import { SeasonReportComposite, type SeasonReportOpenPayload } from '../components/SeasonReportComposite';
 import { SandtableTerritoryComposite, type SandtableTerritoryOpenPayload } from '../components/SandtableTerritoryComposite';
@@ -84,7 +86,7 @@ import { buildSandtableStatusLabel } from '../../core/systems/SandtableStatus';
 import type { YearReport } from '../../core/systems/YearReport';
 import { YearReportController } from '../core/YearReportController';
 import { isStageUnlocked } from '../../core/systems/StageChainProgress';
-import { DEFAULT_YEAR_END_DEFENSE, isYearEndDefenseDue, isYearEndRolloverPending, parseYearEndDefenseConfig, strongestInvader, yearEndDefenseTierFor, type YearEndDefenseConfig } from '../../core/systems/YearEndDefense';
+import { DEFAULT_YEAR_END_DEFENSE, isYearEndDefenseDue, isYearEndRolloverPending, parseYearEndDefenseConfig, YEAR_END_RESUME_MOUNT_IDS, strongestInvader, yearEndDefenseTierFor, type YearEndDefenseConfig } from '../../core/systems/YearEndDefense';
 import { isStageSeasonOpen, parseStageSeasonSchedule, seasonLockedHint, stageOpenSeason, type StageSeasonSchedule } from '../../core/systems/StageSeasonSchedule';
 import { buildBattlefieldReconForEncounter } from '../../core/systems/BattlefieldRecon';
 import { buildEnvScoutLines } from '../core/EnvScoutPresenter';
@@ -125,6 +127,12 @@ import { RECRUIT_ROWS_PER_PAGE, RecruitHallController } from '../core/RecruitHal
 import { loadGeneralAvatar, loadGeneralPortrait } from '../core/GeneralAvatarLoader';
 import { bindAvatarTalk, setAvatarTalkProvider, showAvatarBubbleText } from '../core/AvatarTalkBubble';
 import { HallMissionReportStack } from '../components/HallMissionReportStack';
+import { SeasonNewsPopup } from '../components/SeasonNewsPopup';
+import {
+    DEFAULT_SEASON_NEWS_RULES, buildSeasonNews, collectSeasonNewsFacts, parseSeasonNewsRules, seasonJournalStamp, seasonNewsRoastLine,
+    type SeasonNewsRules,
+} from '../../core/systems/SeasonNews';
+import { popupVoiceOf } from '../../core/systems/PopupSpeakerLine';
 import {
     buildPinnedMissions, fallbackLineKey, missionContextKey, resolveCardLines, MISSION_LINE_TIMEOUT_MS,
     type HallMissionReportCard, type HallMissionReportCardWithLine,
@@ -266,8 +274,11 @@ import { ITEM_SHOP_OFFERS, JOB_CHANGE_ORDER_OFFER } from '../../core/systems/Ite
 import { ShopMainController } from '../core/ShopMainController';
 import { PrisonerPopupController } from '../core/PrisonerPopupController';
 import { DuplicatePullPopupController, DUPLICATE_INFUSION_VALUE, infusionTargetsOf, rebirthTargetsOf, splitOwnedDuplicates, starUpTargetsOf, type DuplicatePullChoice, type DuplicatePullEntry, type DuplicatePullQuips, type DuplicatePullRoute } from '../core/DuplicatePullPopupController';
-import { buildLobbyScout, ScoutPanelController } from '../core/ScoutPanelController';
+import { buildLobbyScout, ScoutPanelController, type LobbyScout } from '../core/ScoutPanelController';
 import type { TacticCounterTagTable } from '../../core/systems/LoadoutCheck';
+import { COMMON_TACTIC_ID } from '../../core/systems/BattleRoster';
+import { DEFAULT_AUTOFILL_RULES, parseAutofillRules, type TacticAutofillRules } from '../../core/systems/TacticAutofill';
+import { buildScoutAutofillHooks, effectiveTacticSlots } from '../core/ScoutAutofillBinding';
 import { spiritSlotViewOf } from '../../core/systems/SpiritSlotState';
 import { DestinyShopController } from '../core/DestinyShopController';
 import { LEAD_BUSY_NOTICE_KEY, SortieSetupController, type SortieDeckCardInfo, type SortieRole } from '../core/SortieSetupController';
@@ -298,6 +309,7 @@ import { BondingJealousyRuntime, pairSynergyK, seedOfText } from '../../core/sys
 import { YearEndCeremonyPanel } from '../components/YearEndCeremonyPanel';
 import { buildYearEndCeremonyResult } from '../../core/systems/YearEndCeremonyRuntime';
 import { pickCeremonyCrowd } from '../../core/systems/YearEndCeremonyCrowd';
+import { buildFameBoard, type CeremonyBoard } from '../../core/systems/YearEndCeremonyPodium';
 import { claimYearEndRewards } from '../../core/systems/YearEndCeremonyReward';
 import { Year1GoalsPanel } from '../components/Year1GoalsPanel';
 import { Year1GoalsController, type Year1GoalsSessionPort } from '../core/Year1GoalsController';
@@ -346,7 +358,7 @@ import { characterJournalPeekText } from '../core/CharacterJournalPeek';
 import { SUITABILITY_BADGE_LABEL, suitabilityBadgeText } from '../../core/systems/HallSuitability';
 import { BLOODLINE_SPEAKER_PLACEMENT, BLOODLINE_SPEAKER_SLOT, DS3_BLOODLINE_TREE_NODE_NAME, ensureDs3BloodlineTree } from '../components/character-ds3/Ds3BloodlineTree';
 import { YOUTH_ROW_SPEAKER_PLACEMENT, YOUTH_ROW_SPEAKER_SLOT, SAGE_SPEAKER_PLACEMENT, SAGE_SPEAKER_SLOT, findPopupNode, showPopupSpeaker } from '../core/PopupGeneralSpeaker';
-import { SAGE_VOICE, popupSpeakerLine, popupVoiceOf } from '../../core/systems/PopupSpeakerLine';
+import { SAGE_VOICE, popupSpeakerLine } from '../../core/systems/PopupSpeakerLine';
 import { getStarterYouthConfig } from '../../core/services/StarterYouthService';
 import { BLOODLINE_TREE_OPEN_LINE } from '../../core/systems/BloodlineTreeSlots';
 import { delegateSchedule } from '../../core/systems/AutoNurture';
@@ -718,6 +730,7 @@ export class LobbyScene extends Component {
     private _scoutPanelHost: UIScreenPreviewHost | null = null;
     private readonly _scoutPanel = new ScoutPanelController((key, ...args) => services().i18n.t(key, ...args));
     private _tacticCounterTags: TacticCounterTagTable | null = null;
+    private _tacticAutofillRules: TacticAutofillRules | null = null;
     /** 季節天氣機率表（PROG-2-9735，data/battle-weather-season）；載入前或載入失敗時抽天氣一律退回晴天 */
     private _weatherSeasonTable: BattleWeatherSeasonTable | null = null;
     private _destinyShopHost: UIScreenPreviewHost | null = null;
@@ -1083,6 +1096,13 @@ export class LobbyScene extends Component {
                 this._yearEndDefense = DEFAULT_YEAR_END_DEFENSE;
                 UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 年終守城設定載入失敗，改用預設檔位', defenseError);
             }
+            // 季末小報規則（PROG-2-10150）：讀不到或壞掉用內建預設，不擋大廳
+            try {
+                this._seasonNewsRules = parseSeasonNewsRules(await services().resource.loadJson<unknown>('data/season-news-rules', { tags: ['LobbyScene'] }));
+            } catch (newsError) {
+                this._seasonNewsRules = DEFAULT_SEASON_NEWS_RULES;
+                UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 季末小報規則載入失敗，改用預設', newsError);
+            }
             // 季節關卡排程（PROG-2-9421）：讀不到就不設季節閘門，不擋大廳
             try {
                 this._stageSeasonSchedule = parseStageSeasonSchedule(await services().resource.loadJson<unknown>('data/stage-season-schedule', { tags: ['LobbyScene'] }));
@@ -1142,6 +1162,10 @@ export class LobbyScene extends Component {
         });
         this._mountScheduler = scheduler;
         this._installMountDemandHooks(scheduler);
+        // 守城打完回大廳還停在第 4 季：不等其餘面板，先補建換年會用到的面板就自動換年（PROG-2-10163）
+        if (isYearEndRolloverPending(services().session.gameTime, services().session.yearEndDefenseYear)) {
+            void this._resumeYearEndRolloverEarly(scheduler);
+        }
         await scheduler.runAll((id, error) => {
             // 玩家在背景掛載途中離開大廳（例如直接出征）時節點已銷毀、欄位讀到 null，屬正常中止不算錯誤（PROG-2-9108）
             if (!this.node?.isValid) return;
@@ -1241,6 +1265,7 @@ export class LobbyScene extends Component {
 
     protected onDestroy(): void {
         this._cancelMountScheduler();
+        this._seasonNewsPopup.dispose();
         // 離開大廳（例如進戰場）要停掉站位輪換計時器，否則回大廳時舊場景的計時器仍在跑，讀到已銷毀的欄位（PROG-2-9103）
         this._lobbyHall?.stopStageTicking();
         this._lobbyHall = null;
@@ -3694,8 +3719,8 @@ export class LobbyScene extends Component {
         const nodeOf = (id: string): Node | null => host.binder.getNode(id) ?? null;
         const labelOf = (id: string): Label | null => nodeOf(id)?.getComponent(Label) ?? null;
         const panel = host.node.addComponent(YearEndCeremonyPanel);
-        panel.titleLabel = labelOf('ycTitle');
-        panel.standingsLabel = labelOf('ycStandings');
+        panel.stageNode = nodeOf('ycStage');
+        panel.hintLabel = labelOf('ycHint');
         panel.dialogueLabel = labelOf('ycDialogue');
         panel.rewardLabel = labelOf('ycReward');
         panel.crowdContainer = nodeOf('ycCrowd');
@@ -3864,13 +3889,48 @@ export class LobbyScene extends Component {
             { win: ceremonyCrowdConfig.winRelayKeys, lose: ceremonyCrowdConfig.loseRelayKeys },
         );
         panel.setOnFinished(() => { void session.markYearEndCeremonySeen().catch(() => undefined); });
+        panel.setPortraits({
+            npc: Object.fromEntries(ceremonyRankingConfig.npcFillPool.map((npc) => [npc.id, npc.portraitId])),
+            player: session.resolveLeadGeneralId(session.roster[0]?.id ?? ''),
+        });
+        panel.setFameBoards(this._buildCeremonyFameBoards());
         panel.bindRankingResult(result, session.yearEndCeremonySeen);
+        // 典禮期間把提示（例如 SR 升星）先收著，典禮收掉後再播，免得蓋住頒獎畫面
+        services().event.emit('TOAST_SUPPRESS', { on: true });
         host.node.active = true;
         this._bringNodeToFront(host.node);
         return true;
     }
 
+    /**
+     * 風雲榜（第 2 幕的第 2、3 榜）：取各榜大廳預覽（前三名＋本府最佳名次）；
+     * 帳本沒資料、榜未啟用或任何錯誤都回空陣列，典禮退化成只有名門榜。
+     */
+    private _buildCeremonyFameBoards(): CeremonyBoard[] {
+        try {
+            const manager = AnnualRankingManager.getInstance();
+            const roster = services().session.roster;
+            const generals: Record<string, { generalId: string; name: string; isPlayerFaction: boolean; gender: 'M' | 'F' }> = {};
+            for (const g of roster) generals[g.id] = { generalId: g.id, name: g.name, isPlayerFaction: true, gender: g.gender === '女' ? 'F' : 'M' };
+            for (const g of this._generals) if (!generals[g.id]) generals[g.id] = { generalId: g.id, name: g.name, isPlayerFaction: false, gender: g.gender === '女' ? 'F' : 'M' };
+            const year = this._pendingCeremonyYear > 0 ? this._pendingCeremonyYear : 1;
+            const previews = manager.getLobbyPreviews(Object.keys(generals), roster.map((g) => g.id), { year, quarter: 4, generals });
+            const boards: CeremonyBoard[] = [];
+            for (const preview of previews) {
+                const board = buildFameBoard(preview, (id) => {
+                    const g = this._generals.find((x) => x.id === id) ?? roster.find((x) => x.id === id);
+                    return { name: g?.name ?? id, gender: g?.gender === '女' ? 'F' : 'M' };
+                });
+                if (board) boards.push(board);
+            }
+            return boards;
+        } catch {
+            return [];
+        }
+    }
+
     private _closeYearEndCeremony(): void {
+        services().event.emit('TOAST_SUPPRESS', { on: false });
         if (this._ceremonyHost) this._ceremonyHost.node.active = false;
         void this._childGrowthPopup?.refreshAvailability();
     }
@@ -4969,7 +5029,7 @@ export class LobbyScene extends Component {
     private async _dispatchHallMission(missionId: string, generalId: string | null): Promise<boolean> {
         const session = services().session;
         const service = session.missionService;
-        if (!service) { this._showToast('任務資料整理中，請稍後再試'); return false; }
+        if (!service) { this._showToast(this._missionText('mission.detail.toast.busy', '任務資料整理中，請稍後再試')); return false; }
         const result = await service.dispatch({
             requestId: session.nextMissionRequestId('dispatch'),
             missionId,
@@ -4983,16 +5043,18 @@ export class LobbyScene extends Component {
         const board = service.getBoard();
         const card = board.ok ? findCard(board.value, missionId) : undefined;
         const name = session.roster.find((g) => g.id === v.generalIds[0])?.name ?? v.generalIds[0];
+        const mt = (key: string, fallback: string, ...args: Array<string | number>): string => this._missionText(key, fallback, ...args);
         const spent = [
-            v.cost.grain > 0 ? `糧草 -${v.cost.grain}` : '',
-            v.cost.troops > 0 ? `兵源 -${v.cost.troops}` : '',
-            v.cost.gold > 0 ? `金 -${v.cost.gold}` : '',
-            v.cost.silver > 0 ? `銀兩 -${v.cost.silver}` : '',
-        ].filter((text) => text.length > 0).join('、');
+            v.cost.grain > 0 ? mt('mission.detail.toast.cost.grain', '糧草 -{0}', v.cost.grain) : '',
+            v.cost.troops > 0 ? mt('mission.detail.toast.cost.troops', '兵源 -{0}', v.cost.troops) : '',
+            v.cost.gold > 0 ? mt('ui.mission.cost.gold', '金 -{0}', v.cost.gold) : '',
+            v.cost.silver > 0 ? mt('ui.mission.cost.silver', '銀兩 -{0}', v.cost.silver) : '',
+        ].filter((text) => text.length > 0).join(mt('mission.detail.sep', '、'));
         const duration = Math.max(1, v.returnSeason - this._hallSeason());
         services().event.emit('SHOW_TOAST', {
-            message: `已派出${v.delegated ? '（委任）' : ''}${name}執行「${card?.title ?? missionId}」，${duration} 季後回報
-${spent}`,
+            message: mt(v.delegated ? 'mission.detail.toast.dispatched_delegate' : 'mission.detail.toast.dispatched',
+                v.delegated ? '已派出（委任）{0}執行「{1}」，{2} 季後回報\n{3}' : '已派出{0}執行「{1}」，{2} 季後回報\n{3}',
+                name, card?.title ?? missionId, duration, spent),
             duration: 3,
         });
         this._lobbyHall?.reactToDispatch((card?.difficulty ?? 'EASY') as Parameters<NonNullable<typeof this._lobbyHall>['reactToDispatch']>[0]);
@@ -5031,6 +5093,7 @@ ${spent}`,
             intelBands: data.balance.intelBands,
             selectedGeneralId,
             jargonGuide: this._missionJargonGuide(missionId),
+            tr: this._missionTr,
         });
     }
 
@@ -5068,12 +5131,12 @@ ${spent}`,
         const session = services().session;
         const service = session.missionService;
         if (!service) {
-            this._showToast('任務資料整理中，請稍後再試');
+            this._showToast(this._missionText('mission.detail.toast.busy', '任務資料整理中，請稍後再試'));
             return;
         }
         // 清單＝真實名冊全員：可派的在前；不可派者（出任務中、受傷、被囚、未畢業…）灰掉並附原因（PROG-2-9148）
         const cands = service.getCandidates(missionId);
-        if (!cands.ok) { this._showToast('此任務已不存在'); return; }
+        if (!cands.ok) { this._showToast(this._missionText('mission.detail.toast.not_found', '此任務已不存在')); return; }
         const candidates = cands.value;
         const eligible = candidates.filter((c) => c.block.length === 0);
         const lead = session.leadGeneralId;
@@ -5103,23 +5166,23 @@ ${spent}`,
         const service = session.missionService;
         const board = service?.getBoard();
         const card = board && board.ok ? findCard(board.value, missionId) : undefined;
-        if (!service || !card) { this._showToast('此任務已不存在'); return false; }
+        if (!service || !card) { this._showToast(this._missionText('mission.detail.toast.not_found', '此任務已不存在')); return false; }
         if (card.status === 'ACTIVE') { this._showToast(missionRowStatusText(card, this._hallSeason())); return false; }
         try {
             if (action === 're-scout') {
                 const result = await service.recon({ requestId: session.nextMissionRequestId('recon'), missionId });
                 if (result.ok === false) { this._showToast(result.text); return false; }
-                this._showToast(`再探完成，情報 +${result.value.gained}，目前 ${result.value.intel}%`);
+                this._showToast(this._missionText('mission.detail.toast.recon_done', '再探完成，情報 +{0}，目前 {1}%', result.value.gained, result.value.intel));
                 this._refreshHallDialog(missionId, snapshot.selectedGeneralId);
-                this._missionDetailDialogPanel?.showIntelGain(intelGainFloatText(result.value.gained, result.value.intel));
+                this._missionDetailDialogPanel?.showIntelGain(intelGainFloatText(result.value.gained, result.value.intel, this._missionTr));
                 return true;
             }
             if (action === 'wait') {
                 const result = await service.wait({ requestId: session.nextMissionRequestId('wait'), missionId });
                 if (result.ok === false) { this._showToast(result.text); return false; }
-                this._showToast(`等待一季：期限延長，情報 +${result.value.gained}，目前 ${result.value.intel}%`);
+                this._showToast(this._missionText('mission.detail.toast.wait_done', '等待一季：期限延長，情報 +{0}，目前 {1}%', result.value.gained, result.value.intel));
                 this._refreshHallDialog(missionId, snapshot.selectedGeneralId);
-                this._missionDetailDialogPanel?.showIntelGain(intelGainFloatText(result.value.gained, result.value.intel));
+                this._missionDetailDialogPanel?.showIntelGain(intelGainFloatText(result.value.gained, result.value.intel, this._missionTr));
                 return true;
             }
             const delegate = action === 'assign' || snapshot.aiDelegateChecked;
@@ -5129,7 +5192,7 @@ ${spent}`,
             return ok;
         } catch (error) {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 大廳任務行動失敗', error);
-            this._showToast('任務行動失敗，請稍後再試');
+            this._showToast(this._missionText('mission.detail.toast.failed', '任務行動失敗，請稍後再試'));
             return false;
         } finally {
             this._refreshHallBoard();
@@ -5582,6 +5645,9 @@ ${spent}`,
     }
 
     private readonly _hallReportStack = new HallMissionReportStack();
+    /** 季末小報（PROG-2-10150）：節點只建一次、之後重用；規則來自 data/season-news-rules */
+    private readonly _seasonNewsPopup = new SeasonNewsPopup();
+    private _seasonNewsRules: SeasonNewsRules = DEFAULT_SEASON_NEWS_RULES;
 
     /** 任務回報／派出台詞：先問台詞系統（本機快取或中台，限時），不通就用本機預設（i18n），玩家看不出差別 */
     private _missionLineText(kind: 'dispatch' | 'return', generalId: string, tier: HallMissionReportCard['tier'] | undefined, pick: number): Promise<string> {
@@ -6364,6 +6430,7 @@ ${spent}`,
         const refresh = (): void => { const binder = this._scoutPanelHost?.binder; if (binder) applyFlowView(binder, this._scoutPanel.getView()); };
         this._scoutPanelHost = await this._mountPreviewScreenHost('ScoutPanelHost', 'scout-panel-screen', [
             { buttonId: 'btnScoutSortie', handler: () => { if (this._scoutPanel.sortie()) close(); else refresh(); } },
+            { buttonId: 'btnScoutAutofill', handler: () => { this._scoutPanel.autofill(); refresh(); } },
             { buttonId: 'btnScoutCancel', handler: () => { this._scoutPanel.cancel(); close(); } },
             { buttonId: 'btnScoutConfirmYes', handler: () => { this._scoutPanel.confirm(); close(); } },
             { buttonId: 'btnScoutConfirmNo', handler: () => { this._scoutPanel.back(); refresh(); } },
@@ -6379,14 +6446,30 @@ ${spent}`,
         const enemy = this._generals.find((g) => g.id === encounter.enemyGeneralId);
         const leadId = services().session.resolveLeadGeneralId(encounter.playerGeneralId);
         const lead = services().session.roster.find((g) => g.id === leadId) ?? this._generals.find((g) => g.id === leadId);
-        const scout = buildLobbyScout(
+        const tagTable = await this._loadTacticCounterTags();
+        const rules = await this._loadTacticAutofillRules();
+        const tacticNames = await this._ensureTacticNames();
+        const weatherLine = weatherPreBattleLine(this._resolveEncounterWeather(encounter));
+        const enemyLeader = enemy ? { name: enemy.name, ...(enemy.title ? { title: enemy.title } : {}) } : null;
+        const currentLead = (): GeneralConfig | null => services().session.roster.find((g) => g.id === leadId) ?? lead ?? null;
+        // 戰法槽沿用戰場組隊規則（tacticSlots 或已習得戰法），再加上不佔槽的通用計謀，與戰場端的推薦檢核一致
+        const rebuild = (): LobbyScout => buildLobbyScout(
             encounter,
-            enemy ? { name: enemy.name, ...(enemy.title ? { title: enemy.title } : {}) } : null,
-            (lead?.tacticSlots ?? []).map((slot) => slot.tacticId),
-            await this._loadTacticCounterTags(),
-            weatherPreBattleLine(this._resolveEncounterWeather(encounter)),
+            enemyLeader,
+            [...effectiveTacticSlots(currentLead()).map((slot) => slot.tacticId), COMMON_TACTIC_ID],
+            tagTable,
+            weatherLine,
         );
-        const result = this._scoutPanel.ask(scout);
+        const hooks = buildScoutAutofillHooks({
+            encounter,
+            currentLead,
+            tagTable,
+            rules,
+            nameOf: (id) => tacticNames.get(id) ?? inspiredTacticName(id) ?? id,
+            writeSlots: (generalId, slots) => services().session.setGeneralTacticSlots(generalId, slots),
+            rebuild,
+        });
+        const result = this._scoutPanel.ask(rebuild(), hooks);
         host.node.active = true;
         this._bringNodeToFront(host.node);
         if (host.binder) applyFlowView(host.binder, this._scoutPanel.getView());
@@ -6427,6 +6510,32 @@ ${spent}`,
             table: this._weatherSeasonTable,
             rng: createSeededRng(seasonWeatherSeed(time.currentYear, time.currentSeason, encounter.id)),
         }).weather;
+    }
+
+    /** 「幫我換上」的挑選規則（data/tactic-autofill-rules）；載入失敗用預設排序、不看兵種加權 */
+    private async _loadTacticAutofillRules(): Promise<TacticAutofillRules> {
+        if (this._tacticAutofillRules) return this._tacticAutofillRules;
+        try {
+            this._tacticAutofillRules = parseAutofillRules(await services().resource.loadJson<unknown>('data/tactic-autofill-rules', { tags: ['LobbyScene'] }));
+        } catch {
+            return DEFAULT_AUTOFILL_RULES;
+        }
+        return this._tacticAutofillRules;
+    }
+
+    /** 戰法庫 id → 顯示名（與學府結業共用同一份快取） */
+    private async _ensureTacticNames(): Promise<ReadonlyMap<string, string>> {
+        if (!this._academyTacticNames) {
+            const names = new Map<string, string>();
+            try {
+                const library = await services().resource.loadJson<{ data?: { id: string; displayName?: string }[] }>('data/master/tactic-library', { tags: ['LobbyScene'] });
+                for (const t of library?.data ?? []) if (t.displayName) names.set(t.id, t.displayName);
+            } catch (error) {
+                UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 戰法庫載入失敗，換上預覽改顯示戰法 id', error);
+            }
+            this._academyTacticNames = names;
+        }
+        return this._academyTacticNames;
     }
 
     private async _loadTacticCounterTags(): Promise<TacticCounterTagTable> {
@@ -7072,6 +7181,59 @@ ${spent}`,
         }
     }
 
+    /**
+     * 季末小報（PROG-2-10150，doc_spec_1345）：把既有數據（日誌、心智事件、官階、名冊增減）整理成三行大事＋一句吐槽。
+     * 組稿失敗（資料異常等）一律略過不擋後續彈窗；Promise 在小報收起後完成。
+     */
+    private async _showSeasonNews(
+        advance: { previous: GameTimeState; current: GameTimeState },
+        before: { tier: number; roster: readonly GeneralConfig[] },
+    ): Promise<void> {
+        if (!this.node?.isValid) return;
+        try {
+            const session = services().session;
+            const after = session.roster;
+            const names = new Map<string, string>();
+            for (const g of [...before.roster, ...after]) names.set(g.id, g.name);
+            const beforeIds = new Set(before.roster.map((g) => g.id));
+            const isAdult = (g: GeneralConfig): boolean => (g.age ?? 0) >= 16 && g.status !== 'dead' && !(g as { isMentorCard?: boolean }).isMentorCard;
+            const mind = after.flatMap((g) => session.mind.recentMemories(g.id, 12).map((m) => ({
+                generalId: g.id, kind: m.kind, season: m.season,
+                // 結緣事件的 id 以 bond-marriage: 開頭（MindMarriage），當作「婚嫁」標記
+                tags: m.id.startsWith('bond-marriage:') ? ['marriage'] : [],
+            })));
+            const nowTier = session.officerState.currentTier;
+            const facts = collectSeasonNewsFacts({
+                journal: session.queryJournal(),
+                sinceTimestamp: seasonJournalStamp(advance.previous.currentYear, advance.previous.currentSeason),
+                mind,
+                mindSinceSeason: advance.previous.totalSeasonsElapsed,
+                promotion: nowTier > before.tier ? { rankName: officerDisplayOf(session.officerState).rankName || '', generalId: session.leadGeneralId ?? undefined } : null,
+                recruits: after.filter((g) => !beforeIds.has(g.id) && isAdult(g)).map((g) => ({ id: g.id, name: g.name })),
+                nameOf: (id) => names.get(id),
+            }, this._seasonNewsRules);
+            const rosterIds = new Set(after.map((g) => g.id));
+            const issue = buildSeasonNews(facts, this._seasonNewsRules, {
+                seasonIndex: advance.current.totalSeasonsElapsed,
+                // 主將優先，其次成年武將，最後連少年（開局只有幼苗）也行：小報一定有人吐槽
+                fallbackRoasterIds: [session.leadGeneralId ?? '', ...after.filter(isAdult).map((g) => g.id), ...after.filter((g) => g.status !== 'dead' && !(g as { isMentorCard?: boolean }).isMentorCard).map((g) => g.id)],
+                rosterIds,
+            });
+            const t = (key: string): string => services().i18n.t(key);
+            const roaster = after.find((g) => g.id === issue.roasterId);
+            const host = this.node.scene?.getComponentInChildren(Canvas)?.node ?? this.node;
+            await this._seasonNewsPopup.show(host, {
+                headlines: issue.headlines,
+                issueNo: advance.current.totalSeasonsElapsed,
+                seasonLabel: seasonText(advance.previous),
+                roasterId: roaster ? roaster.id : null,
+                roastLine: roaster ? seasonNewsRoastLine(issue.tone, popupVoiceOf(roaster), t) : '',
+            });
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 季末小報組稿失敗，略過', error);
+        }
+    }
+
     /** 推進一季並發武將薪資（RET-10）；有欠薪或下野時提示玩家 */
     private async _advanceSeasonWithSalaries() {
         const session = services().session;
@@ -7129,6 +7291,16 @@ ${spent}`,
         });
     }
 
+    /** 先補建換年用面板再換年；其餘背景面板照排程繼續掛（PROG-2-10163） */
+    private async _resumeYearEndRolloverEarly(scheduler: LobbyMountScheduler): Promise<void> {
+        try {
+            for (const id of YEAR_END_RESUME_MOUNT_IDS) await scheduler.demand(id);
+        } catch (error) {
+            UCUFLogger.warn(LogCategory.UI, '[LobbyScene] 換年用面板補建失敗，仍嘗試自動換年', error);
+        }
+        await this._resumeYearEndRollover();
+    }
+
     /** 年終守城打完回到大廳時還停在第 4 季：自動換到下一年（勝敗都換，PROG-2-9426） */
     private async _resumeYearEndRollover(): Promise<void> {
         const session = services().session;
@@ -7149,6 +7321,8 @@ ${spent}`,
         }
         this._advancingSeason = true;
         try {
+            // 小報要比對換季前後的官階與名冊（PROG-2-10150）
+            const newsBefore = { tier: services().session.officerState.currentTier, roster: [...services().session.roster] };
             const { advance, agingEvents, quarterlyReports, hallMissionReport, seasonReportSections } = await this._advanceSeasonWithSalaries();
             const died = agingEvents.filter((event) => event.type === 'died').length;
             const suffix = died > 0 ? `（${died} 位武將離世）` : '';
@@ -7165,7 +7339,9 @@ ${spent}`,
             if (flow.fileDigest) this._fileSeasonDigest(hallMissionReport);
             // 本季所有任務回報合成一疊卡片：逐張點或全部略過，看完才開季報（PROG-2-9966）
             if (flow.showMissionStack) await this._showMissionReportStack(hallMissionReport?.cards ?? []);
-            const followUps = (): void => {
+            // 換季彈窗佇列：任務回報卡 → 季報 → 季末小報 → 三國季報／事件／血統 → 年終典禮（規格 doc_spec_1345 §5）
+            const followUps = (): void => { void this._showSeasonNews(advance, newsBefore).finally(afterNews); };
+            const afterNews = (): void => {
                 this._openSeasonChronicle('season-advance');
                 this._syncSeasonEventPopup();
                 this._syncLineagePopup();
@@ -7958,6 +8134,12 @@ ${spent}`,
     /** 子選單項目的畫面還沒就緒時，至少讓玩家知道不是壞掉（PROG-2-9121） */
     private _showNotOpenYet(): void {
         this._showToast(LOBBY_ACTION_NOT_OPEN_TEXT);
+    }
+
+    /** 任務詳情流程用的翻譯函式與取字（查不到鍵退回繁中原文） */
+    private readonly _missionTr: MissionTr = (key, ...args) => services().i18n.t(key, ...args.map(String));
+    private _missionText(key: string, fallback: string, ...args: Array<string | number>): string {
+        return missionText(this._missionTr, key, fallback, ...args);
     }
 
     private _showToast(message: string): void {

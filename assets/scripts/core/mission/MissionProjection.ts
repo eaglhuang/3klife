@@ -13,9 +13,10 @@ import { computeCost, computeFitness } from './MissionFitness';
 import { intelBandOf } from './MissionIntel';
 import { deriveUnit } from './MissionRng';
 import { MissionFlags, pickSwitchCase, rollThresholds, SwitchEnv } from './MissionResolver';
+import { contentRef, missionTextKey } from './MissionTextKeys';
 import type {
     MissionBranch, MissionDefinition, MissionDetailView, MissionEffect, MissionFactView, MissionGeneralFacts,
-    MissionInstance, MissionIntelBand, MissionNode, MissionTier, Revealable,
+    MissionI18nRef, MissionInstance, MissionIntelBand, MissionNode, MissionTier, Revealable,
 } from './MissionTypes';
 
 export const RES_TEXT: Record<string, string> = {
@@ -140,7 +141,17 @@ export function analyzeBranch(branch: MissionBranch, def: MissionDefinition, var
 
 // ───────────────────────── 各項目投影 ─────────────────────────
 
-const floorStep = (v: number, s: number): number => Math.floor(v / s) * s;
+/** 高中低的語系參照（成功率、風險共用；鍵 mission.proj.level.*） */
+const LEVEL_KEY: Record<string, string> = { '高': 'high', '中': 'mid', '低': 'low' };
+const levelRef = (lv: string): MissionI18nRef => ({ key: `mission.proj.level.${LEVEL_KEY[lv] ?? lv}`, fb: lv });
+/** 資源名的語系參照（mission.proj.res.*）；沒有登記的資源沿用原字 */
+const resRef = (k: string): MissionI18nRef => ({ key: `mission.proj.res.${k}`, fb: RES_TEXT[k] ?? k });
+/** 隱藏獎勵文字 → 語系鍵尾（效果收集時寫死的三句） */
+export const HIDDEN_REWARD_KEY: Readonly<Record<string, string>> = Object.freeze({
+    '可能引出後續任務': 'spawn', '可能解鎖新機緣': 'unlock', '武將可能習得特質': 'trait',
+});
+
+const floorStep =(v: number, s: number): number => Math.floor(v / s) * s;
 const ceilStep = (v: number, s: number): number => Math.ceil(v / s) * s;
 
 /** 成功率：未知 → 高中低 → 區間（端點位移由雜湊決定，穩定不可刷） → 確切 */
@@ -148,16 +159,16 @@ export function projectRate(trueRate: number, intel: number, missionId: string, 
     const band = intelBandOf(intel, balance);
     const pct = Math.round(trueRate * 100);
     const pj = balance.projection;
-    if (band === 'blind') return { state: 'hidden', text: '未知' };
+    if (band === 'blind') return { state: 'hidden', text: '未知', i18n: [{ key: 'mission.proj.rate.unknown' }] };
     if (band === 'vague') {
         const lv = trueRate >= pj.rateHigh ? '高' : trueRate >= pj.rateMid ? '中' : '低';
-        return { state: 'hint', text: `成功率：${lv}` };
+        return { state: 'hint', text: `成功率：${lv}`, i18n: [{ key: 'mission.proj.rate.vague', args: [levelRef(lv)] }] };
     }
     if (band === 'clear') {
         const shift = (Math.floor(deriveUnit(saveSeed, missionId, `proj:rate:${band}`) * 3) - 1) * pj.rangeStep;
         const lo = clampNumber(floorStep(pct - pj.rangeHalfWidth + shift, pj.rangeStep), 0, 100);
         const hi = clampNumber(ceilStep(pct + pj.rangeHalfWidth + shift, pj.rangeStep), 0, 100);
-        return { state: 'range', text: `約 ${lo}～${hi}%`, lo, hi };
+        return { state: 'range', text: `約 ${lo}～${hi}%`, lo, hi, i18n: [{ key: 'mission.proj.rate.range', args: [lo, hi] }] };
     }
     return { state: 'exact', text: `${pct}%`, value: pct };
 }
@@ -170,12 +181,13 @@ function riskLevel(pDisaster: number, balance: MissionBalance): string {
 /** 風險：低情報一律悲觀「高？」，不給細節 */
 export function projectRisk(a: BranchAnalysis, intel: number, balance: MissionBalance = DEFAULT_MISSION_BALANCE): { risk: Revealable; tags: string[] } {
     const band = intelBandOf(intel, balance);
-    if (band === 'blind') return { risk: { state: 'hidden', text: '高？' }, tags: [] };
+    if (band === 'blind') return { risk: { state: 'hidden', text: '高？', i18n: [{ key: 'mission.proj.risk.unknown' }] }, tags: [] };
     const lv = riskLevel(a.probs.disaster, balance);
-    if (band === 'vague') return { risk: { state: 'hint', text: `風險：${lv}` }, tags: a.harmTags.slice(0, 1) };
-    if (band === 'clear') return { risk: { state: 'hint', text: `風險：${lv}` }, tags: a.harmTags };
+    const levelText: Revealable = { state: 'hint', text: `風險：${lv}`, i18n: [{ key: 'mission.proj.risk.level', args: [levelRef(lv)] }] };
+    if (band === 'vague') return { risk: levelText, tags: a.harmTags.slice(0, 1) };
+    if (band === 'clear') return { risk: levelText, tags: a.harmTags };
     const v = Math.round(a.probs.disaster * 100);
-    return { risk: { state: 'exact', text: `大失敗約 ${v}%`, value: v }, tags: a.harmTags };
+    return { risk: { state: 'exact', text: `大失敗約 ${v}%`, value: v, i18n: [{ key: 'mission.proj.risk.exact', args: [v] }] }, tags: a.harmTags };
 }
 
 function weightedScore(rewards: Record<string, number>, balance: MissionBalance): number {
@@ -191,32 +203,45 @@ export function projectReward(a: BranchAnalysis, intel: number, missionId: strin
     const kinds = Object.keys(a.successRewards);
     const hidden = intel >= balance.hiddenRevealIntel ? a.hiddenRewards : [];
     if (band === 'blind') {
-        return { reward: { state: 'hidden', text: `${kinds.map(k => RES_TEXT[k] ?? k).join('／') || '未知'}？` }, hidden };
+        const ref: MissionI18nRef = kinds.length > 0
+            ? { key: 'mission.proj.reward.blind', args: [kinds.map(resRef)] }
+            : { key: 'mission.proj.reward.blind_unknown' };
+        return { reward: { state: 'hidden', text: `${kinds.map(k => RES_TEXT[k] ?? k).join('、') || '未知'}？`, i18n: [ref] }, hidden };
     }
     if (band === 'vague') {
         const score = weightedScore(a.successRewards, balance);
         const stars = 1 + pj.rewardStarCuts.filter(c => score >= c).length;
-        return { reward: { state: 'hint', text: `量級：${'★'.repeat(stars)}`, value: stars }, hidden };
+        return { reward: { state: 'hint', text: `量級：${'★'.repeat(stars)}`, value: stars, i18n: [{ key: 'mission.proj.reward.tier', args: ['★'.repeat(stars)] }] }, hidden };
     }
     const parts: string[] = [];
+    const refs: MissionI18nRef[] = [];
     for (const k of kinds) {
         const v = Math.round(a.successRewards[k]);
-        if (band === 'full') { parts.push(`${RES_TEXT[k] ?? k} ${v}`); continue; }
+        if (band === 'full') { parts.push(`${RES_TEXT[k] ?? k} ${v}`); refs.push({ key: 'mission.proj.reward.full', args: [resRef(k), v] }); continue; }
         const shift = (deriveUnit(saveSeed, missionId, `proj:reward:${k}`) - 0.5) * pj.rewardRangePct;
         const lo = Math.max(0, floorStep(v * (1 - pj.rewardRangePct + shift), pj.rewardRangeStep));
         const hi = ceilStep(v * (1 + pj.rewardRangePct + shift), pj.rewardRangeStep);
         parts.push(`${RES_TEXT[k] ?? k} ${lo}～${hi}`);
+        refs.push({ key: 'mission.proj.reward.range', args: [resRef(k), lo, hi] });
     }
-    return { reward: { state: band === 'full' ? 'exact' : 'range', text: parts.join('、') || '無' }, hidden };
+    return { reward: { state: band === 'full' ? 'exact' : 'range', text: parts.join('、') || '無', i18n: refs.length > 0 ? refs : [{ key: 'mission.proj.reward.none' }] }, hidden };
 }
 
 /** 目標：低／中情報看「呈現版」（可與真相不同）；進入 clear 揭露分支目標；full 另附細節 */
-export function projectObjective(branch: MissionBranch, intel: number, balance: MissionBalance = DEFAULT_MISSION_BALANCE): Revealable {
+export function projectObjective(branch: MissionBranch, intel: number, balance: MissionBalance = DEFAULT_MISSION_BALANCE, defId?: string): Revealable {
     const band = intelBandOf(intel, balance);
     const shown = branch.presented.objectiveText ?? branch.objective.text;
-    if (band === 'blind' || band === 'vague') return { state: 'hint', text: shown };
-    if (band === 'clear') return { state: 'hint', text: branch.objective.text };
-    return { state: 'exact', text: branch.presented.objectiveText ?? branch.objective.text };
+    // 語系參照：呈現版與真實版各有一把鍵（沒給 defId 的舊呼叫不附參照）
+    const ref = (presented: boolean): MissionI18nRef[] | undefined => {
+        if (!defId) return undefined;
+        return presented && branch.presented.objectiveText !== undefined
+            ? [contentRef(missionTextKey.text(defId, branch.presented.objectiveText), branch.presented.objectiveText)]
+            : [contentRef(missionTextKey.text(defId, branch.objective.text), branch.objective.text)];
+    };
+    const make = (state: Revealable['state'], text: string, i18n: MissionI18nRef[] | undefined): Revealable => (i18n ? { state, text, i18n } : { state, text });
+    if (band === 'blind' || band === 'vague') return make('hint', shown, ref(true));
+    if (band === 'clear') return make('hint', branch.objective.text, ref(false));
+    return make('exact', shown, ref(true));
 }
 
 /** 事實：依情報逐層揭露；低於最低門檻顯示 ???；低情報時依 seed 可能改顯示誤導說法 */
@@ -225,13 +250,14 @@ export function projectFacts(def: MissionDefinition, instId: string, intel: numb
     const out: MissionFactView[] = [];
     for (const f of def.facts ?? []) {
         let text = '???';
-        for (const lv of f.levels) if (lv.minIntel <= intel) text = lv.text;
+        let textRef: MissionI18nRef | undefined;
+        for (const lv of f.levels) if (lv.minIntel <= intel) { text = lv.text; textRef = contentRef(missionTextKey.text(def.id, lv.text), lv.text); }
         let state: MissionFactView['state'] = text === '???' ? 'hidden' : 'hint';
         if (f.decoy && intel < balance.projection.decoyMaxIntel) {
             const chance = (1 - intel / 100) * balance.projection.decoyFactor;
-            if (deriveUnit(saveSeed, instId, `decoy:${f.key}:${band}`) < chance) { text = f.decoy; state = 'hint'; }
+            if (deriveUnit(saveSeed, instId, `decoy:${f.key}:${band}`) < chance) { text = f.decoy; state = 'hint'; textRef = contentRef(missionTextKey.text(def.id, f.decoy), f.decoy); }
         }
-        out.push({ key: f.key, label: f.label, text, state });
+        out.push({ key: f.key, label: f.label, text, state, labelRef: contentRef(missionTextKey.factLabel(def.id, f.key), f.label), ...(textRef ? { textRef } : {}) });
     }
     return out;
 }
@@ -267,12 +293,15 @@ export function projectMission(input: ProjectInput): MissionDetailView {
     const cost = computeCost(def, branch, balance);
     return {
         id: inst.id, defId: def.id, title: def.text.title, brief: def.text.brief, theme: def.theme, difficulty: def.difficulty,
+        titleRef: contentRef(missionTextKey.title(def.id), def.text.title), briefRef: contentRef(missionTextKey.brief(def.id), def.text.brief),
         intel, intelBand: intelBandOf(intel, balance),
         facts: projectFacts(def, inst.id, intel, input.saveSeed, balance),
-        objective: projectObjective(branch, intel, balance),
+        objective: projectObjective(branch, intel, balance, def.id),
         hints: (branch.presented.hints ?? []).slice(),
+        hintRefs: (branch.presented.hints ?? []).map((h) => contentRef(missionTextKey.text(def.id, h), h)),
         rate: projectRate(trueRate, intel, inst.id, input.saveSeed, balance),
         risk, riskTags: tags, reward, hiddenRewards: hidden,
+        hiddenRewardRefs: hidden.map(h => ({ key: `mission.proj.hidden.${HIDDEN_REWARD_KEY[h] ?? h}`, fb: h })),
         cost, durationSeasons: Math.max(1, def.timing.durationSeasons + (branch.modifiers.durationDelta ?? 0)),
         expireSeason: inst.expireSeason, status: inst.status,
         canRecon: inst.status === 'OPEN' && inst.intel < balance.recon.cap,

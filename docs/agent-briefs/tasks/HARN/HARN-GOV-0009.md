@@ -1,6 +1,7 @@
 ---
 doc_id: doc_task_0243
 id: HARN-GOV-0009
+task_id: HARN-GOV-0009
 priority: P1
 phase: M0
 created: 2026-05-05

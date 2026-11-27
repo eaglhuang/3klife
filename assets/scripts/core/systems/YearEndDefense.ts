@@ -72,6 +72,15 @@ export function isYearEndRolloverPending(time: { currentYear: number; currentSea
     return time.currentSeason === YEAR_END_DEFENSE_SEASON && foughtYear === time.currentYear;
 }
 
+/**
+ * 守城打完回大廳要自動換年時，必須先補建的背景面板（PROG-2-10163）：
+ * 換年會開季報、事件、血統、吃醋、孩子成長與年末典禮，這些沒掛好會被略過；其餘約 60 個面板不必等。
+ * id 對應 LobbyScene 背景掛載清單（_deferredMounts）。
+ */
+export const YEAR_END_RESUME_MOUNT_IDS: readonly string[] = Object.freeze([
+    'SeasonReport', 'SeasonEventPopup', 'LineagePopup', 'JealousyPopup', 'ChildGrowthPopup', 'YearEndCeremony', 'YearReport',
+]);
+
 export interface YearEndInvader {
     nationId: string;
     nationName: string;

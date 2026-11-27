@@ -113,12 +113,31 @@ function ensureHitFlashMaterial(onReady: () => void): void {
  */
 const SQUAD_ONE_SHOT_STAGGER_SEC = 0.12;
 
+/** 兄弟索引順序沒變時，每隔幾幀仍強制對齊一次（防外部改動順序；PROG-2-10155） */
+export const SORT_RESYNC_FRAMES = 120;
+
 /** 節點池每個骨架路徑最多保留幾個閒置節點（PROG-2-9706）；超過的直接銷毀，避免池無限長大吃記憶體。 */
 export const SPINE_UNIT_POOL_MAX_PER_PATH = 24;
+
+/** 節點 → 骨架元件快取（PROG-2-10155）：每幀每隊員不再 getComponent；節點銷毀後由 WeakMap 自動釋放。 */
+const skeletonCache = new WeakMap<Node, sp.Skeleton>();
+function skeletonOf(node: Node | null | undefined): sp.Skeleton | null {
+  if (!node) return null;
+  const cached = skeletonCache.get(node);
+  if (cached) return cached; // 骨架元件與節點同生共死；節點是否有效由呼叫端檢查
+  const skeleton = node.getComponent(sp.Skeleton);
+  if (skeleton) skeletonCache.set(node, skeleton);
+  return skeleton;
+}
 
 /** 武將與兵種共用的 Cocos/Spine 薄接層；素材路徑與動作皆由設定提供。 */
 export class SpineUnitOverlay {
   private readonly entries = new Map<string, Entry>();
+  /** 兄弟索引排序緩衝與上一幀順序（PROG-2-10155）：順序沒變就不重排，也不每幀配置新陣列／物件 */
+  private readonly sortPool: Array<{ node: Node; y: number }> = [];
+  private readonly sortItems: Array<{ node: Node; y: number }> = [];
+  private lastSortedNodes: Node[] = [];
+  private sortFrames = 0;
   private readonly failed = new Set<string>();
   private readonly pendingRemovals = new Set<string>();
   /** 已要求落地但疊層還沒建立的單位（playDeploy 可能早於第一次 sync） */
@@ -201,6 +220,9 @@ export class SpineUnitOverlay {
   /** 這份素材是否已確定載不起來（缺檔或缺共用動作）；呼叫端據此改用後備素材，不讓單位退回方塊。 */
   public hasFailed(path: string): boolean { return this.failed.has(path); }
 
+  /** 載不起來的素材數（只增不減）；呼叫端用它判斷後備設定快取是否過期（PROG-2-10155）。 */
+  public failedCount(): number { return this.failed.size; }
+
   /**
    * 部署落地演出（PROG-2-9409）：整隊從上方依序落下、落地壓扁回彈，每名士兵落地時通知 onLanding。
    * 疊層還沒建立就先記著，建立時再開始；素材還在載入時時鐘不走，載好才落，玩家才看得到。
@@ -265,19 +287,35 @@ export class SpineUnitOverlay {
       }
     }
     // 畫面越下方（y 越小）越靠近鏡頭，要蓋在上面；隊員各自依落腳點排序，才不會整隊被隔壁格蓋住
-    const sorted: Array<{ node: Node; y: number }> = [];
+    // PROG-2-10155：緩衝重用；排序結果與上一幀相同（節點與順序都沒變）就不碰兄弟索引，每 SORT_RESYNC_FRAMES 幀仍強制對齊一次，防外部動過順序
+    const items = this.sortItems;
+    let count = 0;
+    const put = (node: Node, y: number): void => {
+      const item = this.sortPool[count] ?? (this.sortPool[count] = { node, y });
+      item.node = node; item.y = y; items[count] = item; count += 1;
+    };
     for (const entry of this.entries.values()) {
       if (!entry.node?.isValid) continue;
-      const footY = entry.core.snapshot().foot.y;
-      sorted.push({ node: entry.node, y: footY });
-      entry.followers.forEach((node, i) => { if (node.isValid && node.active) sorted.push({ node, y: footY + (entry.config.squad?.[i]?.y ?? 0) }); });
+      const footY = entry.core.footY();
+      put(entry.node, footY);
+      entry.followers.forEach((node, i) => { if (node.isValid && node.active) put(node, footY + (entry.config.squad?.[i]?.y ?? 0)); });
     }
-    // 只在小兵原本占的區段內重排（從目前最低的兄弟索引起排），不搶到 index 0：
-    // 壓在最底層的格子 buff 標記、落地揚塵等地面節點要留在小兵底下（PROG-2-9708）
-    let base = Number.POSITIVE_INFINITY;
-    for (const item of sorted) base = Math.min(base, item.node.getSiblingIndex());
-    if (!Number.isFinite(base)) base = 0;
-    sorted.sort((a, b) => b.y - a.y).forEach((item, index) => item.node.setSiblingIndex(base + index));
+    items.length = count;
+    items.sort((a, b) => b.y - a.y); // 穩定排序：同高度維持先後，避免來回跳
+    this.sortFrames += 1;
+    const last = this.lastSortedNodes;
+    let same = last.length === count && this.sortFrames % SORT_RESYNC_FRAMES !== 0;
+    for (let i = 0; same && i < count; i += 1) if (last[i] !== items[i].node) same = false;
+    if (!same) {
+      // 只在小兵原本占的區段內重排（從目前最低的兄弟索引起排），不搶到 index 0：
+      // 壓在最底層的格子 buff 標記、落地揚塵等地面節點要留在小兵底下（PROG-2-9708）
+      let base = Number.POSITIVE_INFINITY;
+      for (let i = 0; i < count; i += 1) base = Math.min(base, items[i].node.getSiblingIndex());
+      if (!Number.isFinite(base)) base = 0;
+      for (let i = 0; i < count; i += 1) items[i].node.setSiblingIndex(base + i);
+      last.length = count;
+      for (let i = 0; i < count; i += 1) last[i] = items[i].node;
+    }
     // 新單位建立時會插到 index 0，把地面層擠上來；這裡送回最底（已在定位就不動，平常不產生重排）
     const parent = this.getParent();
     let slot = 0;
@@ -491,7 +529,7 @@ export class SpineUnitOverlay {
 
   private apply(entry: Entry, state: UnitPresentationState): void {
     const node = entry.node;
-    const skeleton = node?.getComponent(sp.Skeleton);
+    const skeleton = skeletonOf(node);
     if (!node?.isValid || !skeleton) return;
     node.active = entry.visible || !!this.duel?.ids.some(id => this.entries.get(id) === entry);
     const offset = entry.config.footOffset;
@@ -533,7 +571,7 @@ export class SpineUnitOverlay {
     // 隊員跟著帶頭者做同一個動作，只差站位與時間差，看起來才不像複製貼上
     entry.followers.forEach((follower, i) => {
       const slot = entry.config.squad?.[i];
-      const followerSkel = follower.getComponent(sp.Skeleton);
+      const followerSkel = skeletonOf(follower);
       if (!slot || !follower.isValid || !followerSkel) return;
       const memberLanding = this.landingSample(entry, i + 1);
       follower.active = node.active && i < entry.members - 1 && memberLanding.visible;

@@ -26,7 +26,7 @@ import { StatusCueThrottle, statusFloatTypeOf, statusMakesTargetFlinch, statusPo
 import { salvageSummaryLines } from '../../core/systems/StageSalvageSettlement';
 import { isDefenseDeployBlocked, withDefenseGuideFallback } from '../../core/systems/DefenseGuide';
 import { AUTO_PLAY_OFF_LINE, AUTO_PLAY_ON_LINE, AUTO_PLAY_SKIP_LINE, AutoPlayState, delegateToggleStopsAutoPlay } from '../../core/systems/AutoPlay';
-import { DELEGATE_OFF_LINE, delegateOnLine, FOOD_EMPTY_LINE } from '../../core/systems/SortieDeployScripts';
+import { DELEGATE_OFF_LINE, delegateOnLine, describeDeployShortfall, FOOD_EMPTY_LINE, type DeployShortfall } from '../../core/systems/SortieDeployScripts';
 import { wisdomMeterText, WISDOM_SURGE_LOG } from '../shared/WisdomMeter';
 import { strategistHudInputOf } from '../shared/StrategistHudSource';
 import { selfBurstNoticeText, type SelfBurstChangedEvent } from '../shared/SelfBurstWindow';
@@ -48,10 +48,11 @@ import { finalizeQuickResolve, quickResolveOutcome } from '../runtime/BattleAuto
 import { deployedTroopsOf, quickResolveConfig, resolveEnemyReserve, type QuickResolveStage } from '../../core/systems/QuickResolveGate';
 import { FIELD_AUTO_BATTLE_JOURNAL } from '../../core/systems/OfflineBattleSnapshot';
 import { services } from '../../core/managers/ServiceLoader';
-import { BattlePerformanceTracker, formatPerformance } from '../../core/systems/BattleRecordStats';
+import { BattlePerformanceTracker, EMPTY_PERFORMANCE, formatPerformance, type BattlePerformance } from '../../core/systems/BattleRecordStats';
+import { BattleHighlightTracker, buildBattleHighlights } from '../../core/systems/BattleHighlights';
 import type { DuelOutcomeRecord } from '../../core/systems/DuelAftermath';
 import { milestoneAnnouncementLines } from '../../core/systems/BattleMilestoneScripts';
-import { formatSortieSummary, isSortiePoolExhausted, SORTIE_POOL_EXHAUSTED_LINE } from '../../core/systems/SortieDeploy';
+import { DEPLOY_SUGGESTION_CANDIDATES, formatSortieSummary, isSortiePoolExhausted, SORTIE_POOL_EXHAUSTED_LINE } from '../../core/systems/SortieDeploy';
 import { powOptionLabels } from '../../core/systems/PrisonerOfWar';
 import { cellarProtectionText } from '../../ui/core/DailySubsidyNotice';
 import { generalNameMapOf, relationEventLogLine } from '../../ui/core/RelationEventLogText';
@@ -67,6 +68,7 @@ import { BATTLE_RESULT_BEAT, battleResultBannerOf, shouldHoldBeforeResult } from
 import type { BattleResult } from '../BattleTypes';
 import { BattleSpecialActionTracker, specialActionDisplayName, toUnitHitObservation, type UnitDamagedPayload } from '../../core/systems/BattleSpecialActions';
 import { strategistHudViewOf } from '../shared/StrategistHudView';
+import { setPendingTacticHit, takePendingTacticHit, tacticVfxGroupOf, type TacticVfxGroup } from '../shared/TacticVfxGroups';
 import { salvageLootTexts, tacticFlashOf, TACTIC_FLASH_TIMING, TACTIC_GRID_VFX_BLOCKS, tacticGridVfxStats, type TacticGridHookKind } from '../shared/TacticVfxHooks';
 import type { StageSalvageGainedEvent } from '../shared/StageSalvage';
 import { salvageGainItems } from '../../core/systems/StrategistHud';
@@ -207,6 +209,13 @@ export function duelHitGapSeconds(hitCount: number): number {
   return Math.max(DUEL_FALLBACK_MIN_GAP_SECONDS, Math.min(DUEL_FALLBACK_MAX_GAP_SECONDS, DUEL_FALLBACK_TOTAL_SECONDS / hitCount));
 }
 
+/** 戰報重點翻譯：走 i18n，缺鍵用預設中文；{0}{1}{2} 代入參數 */
+function hlTranslate(key: string, fallback: string, ...args: (string | number)[]): string {
+  let text = fallback;
+  try { const t = services().i18n?.t(key); if (t && t !== key) text = t; } catch { /* 用預設 */ }
+  return text.replace(/\{(\d+)\}/g, (_m, i) => String(args[Number(i)] ?? ''));
+}
+
 export class BattleUIBridge {
   private duelCapture: {
     hits: Array<{ faction: Faction; hp: number; damage?: number; attackerId?: string | null; isCrit?: boolean; wasDodged?: boolean }>;
@@ -235,6 +244,9 @@ export class BattleUIBridge {
   private readonly specialActions = new BattleSpecialActionTracker();
   /** 我方主將帶隊的單場表現（擊殺 / 傷害 / 承傷 / 治療），戰後寫進戰績（PROG-2-0072） */
   private readonly performance = new BattlePerformanceTracker(Faction.Player);
+  /** 戰報重點（PROG-2-10137）：首功單位與最強技能；結算時取走 */
+  private readonly highlights = new BattleHighlightTracker();
+  private _lastPerformance: BattlePerformance = { ...EMPTY_PERFORMANCE };
   /** 本場收到的單挑勝負事件，戰後交給 recordBattle 結算名聲與斬將傳承（PROG-2-9132） */
   private duelOutcomes: DuelOutcomeRecord[] = [];
   /** 本場主將被擒的紀錄，戰後交給 recordBattle 走君主處置（PROG-2-9393） */
@@ -352,6 +364,7 @@ export class BattleUIBridge {
     this._defenseGateOpen = false;
     this.specialActions.reset();
     this.performance.reset();
+    this.highlights.reset();
     this.duelOutcomes = [];
     this.generalCaptures = [];
     this.ultCutin.resetBattle();
@@ -398,6 +411,7 @@ export class BattleUIBridge {
       svc.event.on(EVENT_NAMES.GeneralSkillUsed,        this._onGeneralSkillUsed.bind(this)),
       svc.event.on(EVENT_NAMES.GeneralSkillUsed,        this._noteEnemySkillRevealed.bind(this)),
       svc.event.on(EVENT_NAMES.TacticGridVfx,           this._onTacticGridVfx.bind(this)),
+      svc.event.on(EVENT_NAMES.TacticHitVfx,            this._onTacticHitVfx.bind(this)),
       svc.event.on(EVENT_NAMES.SelfBurstChanged,        this._onSelfBurstChanged.bind(this)),
       svc.event.on(EVENT_NAMES.StageSalvageGained, this._onStageSalvageGained.bind(this)),
       svc.event.on(EVENT_NAMES.TeamAuraChanged,         this._onTeamAuraChanged.bind(this)),
@@ -509,6 +523,21 @@ export class BattleUIBridge {
     if (pg && c.deployRuntime) {
       c.deployRuntime.updateSkillStatus(pg.canUseSkill() && c.ctrl.canUsePlayerSkills());
     }
+    this.refreshResourceViews();
+  }
+
+  /**
+   * 軍勢／糧草常駐資源列與卡面費用章、缺額帶（doc_spec_1341）。
+   * 每次兵力或糧草可能變動（部署、回合更新、部隊陣亡）後呼叫；沒有出征帳本時卡面章全收起。
+   */
+  public refreshResourceViews(): void {
+    const c = this.ctx;
+    c.deployRuntime?.refreshResources?.();
+    if (!c.battleScenePanel?.setDeployStatus) return;
+    const sortie = c.ctrl?.getSortieState();
+    const status: Record<string, DeployShortfall> = {};
+    if (sortie) for (const type of DEPLOY_SUGGESTION_CANDIDATES) status[type] = describeDeployShortfall(sortie, { troopType: type });
+    c.battleScenePanel.setDeployStatus(status);
   }
 
   public playTurnBanner(faction: Faction): void {
@@ -703,6 +732,7 @@ export class BattleUIBridge {
       : undefined;
     const unit = c.ctrl?.state.units.get(data.unitId);
     this.performance.observeUnitDamaged(data.damage, data.attackerFaction, unit?.faction ?? null);
+    this._observeHighlightDamage(data, unit?.faction ?? null);
     if (unit) {
       const side = unit.faction === Faction.Player ? '我方' : '敵方';
       // 內部傷害來源代號換成中文說明，不認得的不顯示（PROG-2-9375）
@@ -1046,7 +1076,24 @@ export class BattleUIBridge {
     }
   }
 
+  /** 戰報重點：我方打出的傷害記給攻擊單位；技能傷害（無攻擊者）等技能事件再歸戶 */
+  private _observeHighlightDamage(data: { damage: number; attackerId: string | null; attackerFaction: Faction | null }, targetFaction: Faction | null): void {
+    if (data.attackerFaction !== Faction.Player || targetFaction === Faction.Player) return;
+    const attacker = data.attackerId ? this.ctx.ctrl?.state.units.get(data.attackerId) : undefined;
+    const name = attacker ? attacker.name : null;
+    this.highlights.observePlayerDamage(data.damage, attacker ? data.attackerId : null, name);
+  }
+
+  /** 戰法分組特效命中格（PROG-2-10138）：先記下，等蓄力結束的 _presentGeneralSkillUsed 取走才播（只留最新一筆） */
+  private _onTacticHitVfx(data: { skillId: string; group: TacticVfxGroup; cells: { lane: number; depth: number }[] }): void {
+    setPendingTacticHit({ skillId: data.skillId, group: data.group, cells: data.cells });
+  }
+
   private _onGeneralSkillUsed(data: { faction: Faction; skillId?: string; skillName?: string; sourceType?: SkillSourceType; generalName?: string }): void {
+    if (data.faction === Faction.Player) {
+      const skillId = data.skillId ?? data.skillName;
+      this.highlights.observePlayerSkill(skillId ? getBattleSkillPresentation(skillId).name : '');
+    }
     if (data.faction === Faction.Player && data.sourceType === SkillSourceType.Ultimate) this._defeatStats.ultimates += 1;
     // 奧義：先播武將的漫畫分鏡 cut-in（戰場暫停；沒有專屬分鏡圖的武將播「暫代圖 待替換」），播完（或玩家點擊跳過）才接奧義特效。
     // 走戰鬥動畫佇列並插隊到最前：回合推進會等佇列清空，敵方奧義也走同一條（PROG-2-9352）
@@ -1093,6 +1140,9 @@ export class BattleUIBridge {
         // PROG-2-9438：蓄力有聲（漸強），出手有重音；奧義走立繪分鏡另有音效，不經過這裡
         playBattleAudio(SKILL_CAST_SFX.charge.cue, SKILL_CAST_SFX.charge.volume);
         this.ctx.unitRenderer?.playGeneralCharge(data.faction, plan.chargeSec);
+        // PROG-2-10138：戰法依效果分組的前搖（施放者身上匯聚），時間與蓄力同長，不增加總時長
+        const fxGroup = data.sourceType === SkillSourceType.Ultimate ? null : tacticVfxGroupOf(skillId);
+        if (fxGroup) this.ctx.unitRenderer?.playTacticWindup(fxGroup, data.faction, plan.chargeSec);
         await new Promise<void>(resolve => this.scene.scheduleOnce(() => resolve(), plan.chargeSec));
         playBattleAudio(SKILL_CAST_SFX.release.cue, SKILL_CAST_SFX.release.volume);
       }
@@ -1110,8 +1160,14 @@ export class BattleUIBridge {
     const caster = data.faction === Faction.Player ? this.ctx.pg : this.ctx.eg;
     const effectKey = resolveBattleGeneralSkillEffectKey(data.sourceType, [caster?.templateId, caster?.id],
       key => !!services().effect.getEffectDef(key));
-    playBattleGeneralSkillEffect(services().effect, this.ctx.boardRenderer,
-      this.ctx.unitRenderer?.getGeneralSidelineWorldPosition(data.faction) ?? null, effectKey, 1.35);
+    // PROG-2-10138：非奧義戰法有歸類就播分組特效（命中格＋餘韻），不再疊通用光效；沒歸類或播不出來退回通用光效
+    const fxGroup = data.sourceType === SkillSourceType.Ultimate ? null : tacticVfxGroupOf(skillId);
+    const pending = fxGroup ? takePendingTacticHit(skillId) : null;
+    const grouped = fxGroup ? (this.ctx.unitRenderer?.playTacticHit(fxGroup, data.faction, pending?.cells ?? []) ?? 0) > 0 : false;
+    if (!grouped) {
+      playBattleGeneralSkillEffect(services().effect, this.ctx.boardRenderer,
+        this.ctx.unitRenderer?.getGeneralSidelineWorldPosition(data.faction) ?? null, effectKey, 1.35);
+    }
 
     // SSR／UR 戰法：施放方主將半身立繪閃現（戰法系統 §H-2，PROG-2-1861）
     const flash = tacticFlashOf(skillId, data.faction === Faction.Player ? 'player' : 'enemy');
@@ -1433,6 +1489,10 @@ export class BattleUIBridge {
     this._defeatStats = BattleUIBridge._emptyDefeatStats();
     // 年終守城不可重打（PROG-2-9426）：守方是玩家時藏起「再戰一次」
     c.resultPopup?.setReplayAllowed?.(this.ctx.ctrl?.state.siegeDefender !== Faction.Player);
+    // 戰報重點（PROG-2-10137）：首功、最強技能、勝敗原因三行；完整明細收進「展開」
+    const outcome = data.result === 'player-win' ? 'victory' : data.result === 'enemy-win' ? 'defeat' : 'stalemate';
+    c.resultPopup?.setHighlights?.(buildBattleHighlights(this.highlights, this._lastPerformance, outcome, data.retreated === true, hlTranslate));
+    this.highlights.reset();
     const popup = c.resultPopup;
     const generalId = c.pg?.id;
     const showPopup = () => {
@@ -1505,6 +1565,7 @@ export class BattleUIBridge {
     const actions = this.specialActions.finish(result);
     this.specialActions.reset();
     const performance = this.performance.snapshot();
+    this._lastPerformance = performance;
     this.performance.reset();
     const fieldSortie = this.ctx.ctrl?.finishSortie(services().session.military.cityTroops, services().session.military.recruitRegen) ?? null;
     // QA 預覽的模擬帳本（PROG-2-9711）只顯示戰況，不寫回存檔兵源糧草、不觸發擒將

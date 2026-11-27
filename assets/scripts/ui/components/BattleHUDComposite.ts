@@ -30,6 +30,7 @@ import { isVitalityBarGrayed, vitalityBarRatio } from '../../core/systems/Vitali
 import { DEFENSE_FORTRESS_WARN_RATIO, FORTRESS_MAX_HP, defenseFortressBarText, fortressBarRatio } from '../../core/systems/FortressBarView';
 import { foodLabelText } from '../../core/systems/FoodLabelText';
 import { turnLabelText } from '../../core/systems/TimeUpJudgement';
+import { BattleButtonStyle } from './BattleButtonStyle';
 const { ccclass } = _decorator;
 /** 精力條（FORM-11）在血條正下方的高度與間距 */
 const VITALITY_BAR_HEIGHT = 6;
@@ -54,7 +55,6 @@ export class BattleHUDComposite extends CompositePanel {
     // ── 私有狀態 ─────────────────────────────────────────────
     private _isMounted = false;
     private _settings: BattleSettingsComposite | null = null;
-    private _spLabel: Label | null = null;
     private _chargeLabel: Label | null = null;
     private _spFill: Node | null = null;
     private _spReadyLabel: Label | null = null;
@@ -166,14 +166,22 @@ export class BattleHUDComposite extends CompositePanel {
      */
     protected override _onAfterBuildReady(binder: UITemplateBinder): void {
         binder.getButton('btnHudUltimate')?.node.on(Button.EventType.CLICK, () => { services().event.emit('hud-ultimate-requested', undefined); }, this);
-        // HTML 匯入的齒輪／退原本只是裝飾，沒有任何 Button 或事件。
+        // HTML 匯入的「退」原本只是裝飾，沒有任何 Button 或事件；改掛統一按鈕外觀（danger＝次要鈕＋偏紅邊，與功能鈕分開）。
         for (const id of ['BattleHudScreen_div_12', 'BattleHudScreen_div_142']) {
             const node = binder.getNode(id);
             if (!node) continue;
             if (!node.getComponent(Button)) node.addComponent(Button);
             node.on(Button.EventType.CLICK, () => { void this._showSettings(); }, this);
         }
-        this._spLabel = binder.getLabel('BattleHudScreen_div_127');
+        this._spLabel = binder.getLabel('BattleHudScreen_div_127'); // 版型已隱藏（B1 刪除 SP 文字面板），仍維持同源數值
+        const exitNode = binder.getNode('BattleHudScreen_div_12');
+        if (exitNode) {
+            const own = exitNode.getComponent(Label);
+            if (own) own.string = '';
+            BattleButtonStyle.attach(exitNode, {
+                variant: 'danger', icon: 'exit', iconLayout: 'top', captionKey: 'battle.hud.fn.exit', fontSize: 22, bold: true, insetX: 4, insetY: 6,
+            });
+        }
         this._chargeLabel = binder.getLabel('BattleHudScreen_div_121');
         this._spReadyLabel = binder.getLabel('BattleHudScreen_div_129');
         this._spFill = binder.getNode('BattleHudScreen_div_126')?.getChildByName('skinLayer_BattleHudScreen_div_128_BattleHudScreen_i_9') ?? null;
@@ -399,6 +407,7 @@ export class BattleHUDComposite extends CompositePanel {
     }
 
     private _spState = { sp: 0, maxSp: 0 };
+    private _spLabel: Label | null = null;
 
     private _renderSp(sp: number, maxSp: number): void {
         this._spState = { sp, maxSp };

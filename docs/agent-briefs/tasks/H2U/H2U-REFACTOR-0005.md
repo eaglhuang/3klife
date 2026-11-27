@@ -1,6 +1,7 @@
 ---
 doc_id: doc_task_0228
 id: "H2U-REFACTOR-0005"
+task_id: H2U-REFACTOR-0005
 priority: "P2"
 owner: "vs-insiders-gpt-5.4-mini"
 status: "done"
