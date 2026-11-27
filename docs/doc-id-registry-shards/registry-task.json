@@ -17820,7 +17820,19 @@
     "category": "task"
   },
   {
-    "id": "doc_task_3278",
+    "id": "doc_task_3273",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10213.md",
+    "title": "[PROG-2-10213] WP3 武將作息與喜好引擎",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3275",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10211.md",
+    "title": "[PROG-2-10211] WP5 日夜四季調色與疊層程式框架",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3281",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10210.md",
     "title": "[PROG-2-10210] WP2 頭上生活符號系統",
     "category": "task"
