@@ -86,7 +86,7 @@ const COLUMN_GEOMETRY: Readonly<Record<1 | 2 | 3, { x: number; h: number; w: num
     2: { x: -490, h: 100, w: 420, avatar: 92 },
     3: { x: 490, h: 76, w: 420, avatar: 92 },
 };
-const PEDESTAL_BOTTOM = -166;
+const PEDESTAL_BOTTOM = -230;
 
 export class CeremonyPodiumView {
     private readonly _stage: Node;
@@ -160,7 +160,7 @@ export class CeremonyPodiumView {
         const column = this._columns[rank - 1];
         if (!column || column.shown) return;
         column.shown = true;
-        const base = column.root.position;
+        const base = column.root.position.clone();
         column.root.setPosition(base.x, base.y - 70, base.z);
         column.opacity.opacity = 0;
         column.root.setScale(0.9, 0.9, 1);
@@ -204,7 +204,7 @@ export class CeremonyPodiumView {
         if (!column) return;
         column.bubble.active = text.length > 0;
         column.bubbleLabel.string = text;
-        const base = column.avatarNode.position;
+        const base = column.avatarNode.position.clone();
         tween(column.avatarNode).stop();
         column.avatarNode.setPosition(base.x, COLUMN_AVATAR_Y(rank), base.z);
         tween(column.avatarNode)
