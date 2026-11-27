@@ -17644,5 +17644,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10156.md",
     "title": "[PROG-2-10156] 戰場：VFX 表／池預熱／Spine 預載並行載入",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3224",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10157.md",
+    "title": "[PROG-2-10157] 戰場：騎兵 Spine 圖集重打包",
+    "category": "task"
   }
 ]
