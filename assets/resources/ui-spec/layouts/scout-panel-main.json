@@ -39,7 +39,7 @@
           "vCenter": true
         },
         "width": 1100,
-        "height": 800,
+        "height": 880,
         "skinSlot": "scout.card.bg",
         "children": [
           {
@@ -320,6 +320,46 @@
             "height": 72,
             "text": "",
             "styleSlot": "scout.label.body"
+          },
+          {
+            "type": "label",
+            "name": "ScoutAutofillNote",
+            "id": "scoutAutofillNote",
+            "widget": {
+              "top": 696,
+              "left": 372,
+              "right": 48
+            },
+            "height": 56,
+            "text": "",
+            "styleSlot": "scout.label.body"
+          },
+          {
+            "type": "button",
+            "name": "BtnScoutAutofill",
+            "id": "btnScoutAutofill",
+            "widget": {
+              "top": 696,
+              "left": 48
+            },
+            "width": 300,
+            "height": 56,
+            "skinSlot": "scout.button.cancel.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnScoutAutofillLabel",
+                "id": "scoutAutofillLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "幫我換上",
+                "styleSlot": "scout.label.button"
+              }
+            ]
           },
           {
             "type": "container",
