@@ -17590,5 +17590,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10141.md",
     "title": "[PROG-2-10141] Toast 括號詞斷行修正（每行字數保守估算）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3210",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10133.md",
+    "title": "[PROG-2-10133] 戰場右側 UI B1 版面搬遷＋B2 統一按鈕元件＋B4 驗收",
+    "category": "task"
   }
 ]

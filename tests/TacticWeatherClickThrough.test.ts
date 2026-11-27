@@ -16,7 +16,9 @@ export function createTacticWeatherClickThroughSuite(): TestSuite {
 
     suite.test('天氣禁用時按鈕仍變灰（字色沿用 _tacticEnabled）', () => {
         const source = fs.readFileSync(path.join(__dirname, '..', 'assets/scripts/ui/components/ActionCommandComposite.ts'), 'utf8');
-        assert.isTrue(source.includes('this._tacticsLabel.color = this._tacticEnabled'), '字色沒有依 _tacticEnabled 變灰');
+        // B2（PROG-2-10133）：禁用外觀統一走 BattleButtonStyle.setDisabled（去飽和＋降透明度，含字色與圖示）
+        assert.isTrue(source.includes('applyTacticsDim(this._tacticsButton, this._tacticEnabled, this._tacticsStyle)'), '沒有依 _tacticEnabled 套禁用外觀');
+        assert.isTrue(source.includes('style.setDisabled(!enabled)'), '禁用外觀沒有走 setDisabled');
     });
 
     return suite;

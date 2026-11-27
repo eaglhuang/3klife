@@ -2305,7 +2305,8 @@
                   "bottom": 0
                 }
               }
-            ]
+            ],
+            "active": false
           },
           {
             "type": "button",

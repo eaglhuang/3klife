@@ -5,13 +5,15 @@
  * 摘要文字與戰場日誌同一份，面板只負責套上去。
  */
 import { strategistHudLogLine, type StrategistHudInput } from '../../core/systems/StrategistHud';
-import { wisdomFillRatio, wisdomMeterText } from './WisdomMeter';
+import { wisdomFillRatio, wisdomMeterText, wisdomMeterValueText } from './WisdomMeter';
 
 export interface StrategistHudView {
     /** 軍師摘要；四欄都空時為空字串，面板隱藏摘要條 */
     summaryText: string;
     /** 「智謀 45/100」 */
     wisdomText: string;
+    /** 「45/100」（膠囊條右側數值；左側名稱由 i18n 提供） */
+    wisdomValueText: string;
     /** 能量條填充比例 0~1 */
     wisdomRatio: number;
 }
@@ -20,6 +22,7 @@ export function strategistHudViewOf(input: StrategistHudInput, wisdomMeter: numb
     return {
         summaryText: strategistHudLogLine(input),
         wisdomText: wisdomMeterText(wisdomMeter),
+        wisdomValueText: wisdomMeterValueText(wisdomMeter),
         wisdomRatio: wisdomFillRatio(wisdomMeter),
     };
 }
