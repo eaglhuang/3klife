@@ -92,3 +92,5 @@
 | `doc_task_3241` | docs/agent-briefs/tasks/PROG/PROG-2-10174.md | [PROG-2-10174] 任務系統 en／ja／zh-CN 譯文校稿 |
 | `doc_task_3242` | docs/agent-briefs/tasks/PROG/PROG-2-10177.md | [PROG-2-10177] 新手第一年樂趣四功能實作 |
 | `doc_task_3243` | docs/agent-briefs/tasks/PROG/PROG-2-10179.md | [PROG-2-10179] 武將說溜嘴破綻語與言論圖鑑系統規格書 |
+| `doc_task_3244` | docs/agent-briefs/tasks/PROG/PROG-2-10119.md | [PROG-2-10119] 批次補舊 PROG 卡 frontmatter task_id（讓 ATM importer 可匯入） |
+| `doc_task_3247` | docs/agent-briefs/tasks/PROG/PROG-2-10184.md | [PROG-2-10184] 新世界觀改寫（純規格） |
