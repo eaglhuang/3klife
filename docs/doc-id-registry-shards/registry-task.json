@@ -17572,5 +17572,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10124.md",
     "title": "[PROG-2-10124] 戰場右側 UI B0 缺陷：ui.ultimate.label 顯示原始 key、委任鈕字被截、寫死中文改 i18n",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3199",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10146.md",
+    "title": "[PROG-2-10146] 武將介紹古文後接白話吐槽",
+    "category": "task"
   }
 ]
