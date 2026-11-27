@@ -14,6 +14,7 @@ import { type MilestoneStage } from '../../../core/systems/FamilyMilestone';
 import { bloodlineTreeRowVisible } from '../../../core/systems/BloodlineTreeViewMode';
 import { BloodlineTreePanel } from '../../panels/BloodlineTreePanel';
 import { DS3_DESIGN_HEIGHT, DS3_DESIGN_WIDTH, ds3BloodlineRegion, type Ds3BloodlineRegion } from './Ds3BloodlineTreeGeometry';
+import type { PopupSpeakerPlacement } from '../../core/PopupGeneralSpeaker';
 import { BLOODLINE_VIEW_TOGGLE_NODE, ensureBloodlineViewToggle, refreshBloodlineViewToggle } from '../BloodlineTreeViewToggle';
 
 export const DS3_BLOODLINE_TREE_NODE_NAME = 'Ds3BloodlineTree';
@@ -25,6 +26,13 @@ const CARDS_CENTER_X = 115;
 const TITLE = { text: '家族血統樹', y: 480, width: 920, height: 40, fontSize: 26, color: '#FFE088' };
 /** 簡化／專家切換鈕：標題列右端，曾祖父母列上方（血統理論 §E-6，PROG-2-1897；共用元件 PROG-2-1899） */
 const TOGGLE_POS = { x: 500, y: 480 };
+
+/** 本代武將的頭像與一句台詞：左區右下角，位置用左區尺寸的比例（避開本代卡與圖例） */
+export const BLOODLINE_SPEAKER_SLOT = 'subject';
+export const BLOODLINE_SPEAKER_PLACEMENT: PopupSpeakerPlacement = {
+    avatarX: 0.92, avatarY: 0.17, avatarSize: 0.13,
+    bubble: { x: 0.74, y: 0.17, width: 0.27, height: 0.1 },
+};
 
 const ROWS = [
     { row: 1, container: 'Gen1Container', count: 8, step: 115, y: 380, width: 108, height: 96, zh: '曾祖父母', weight: PEDIGREE_SEAT_WEIGHTS.greatGrandparent, color: '#8C8575' },

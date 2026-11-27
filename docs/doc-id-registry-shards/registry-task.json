@@ -17548,5 +17548,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10118.md",
     "title": "[PROG-2-10118] 戰場部隊徽章避讓武將本體",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3192",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10129.md",
+    "title": "[PROG-2-10129] 三彈窗掛武將頭像與台詞",
+    "category": "task"
   }
 ]

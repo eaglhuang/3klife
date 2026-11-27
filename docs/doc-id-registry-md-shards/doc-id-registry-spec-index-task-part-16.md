@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-11-26
+> 生成日期: 2026-11-27
 > 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 16/16 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -63,3 +63,4 @@
 | `doc_task_3186` | docs/agent-briefs/tasks/PROG/PROG-2-10116.md | [PROG-2-10116] 詳情表頭 enemy 標在野 |
 | `doc_task_3187` | docs/agent-briefs/tasks/PROG/PROG-2-10117.md | [PROG-2-10117] pre-commit 編碼檢查在缺 tools_node 的 worktree（mailbox 分支）改走內建檢查 |
 | `doc_task_3188` | docs/agent-briefs/tasks/PROG/PROG-2-10118.md | [PROG-2-10118] 戰場部隊徽章避讓武將本體 |
+| `doc_task_3192` | docs/agent-briefs/tasks/PROG/PROG-2-10129.md | [PROG-2-10129] 三彈窗掛武將頭像與台詞 |

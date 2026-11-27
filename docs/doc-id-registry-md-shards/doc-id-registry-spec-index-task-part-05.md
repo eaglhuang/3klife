@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-11-26
+> 生成日期: 2026-11-27
 > 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 5/16 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -165,6 +165,7 @@
 | `doc_spec_1338` | docs/遊戲規格文件/系統規格書/家族子嗣與血統總規格書-shards/shard-d.md | 家族子嗣與血統總規格書（分片索引） — 16 11/26 修訂：姻緣單一流程（相親 → 提親 → 成婚 → 結緣） |
 | `doc_spec_1341` | docs/遊戲規格文件/系統規格書/戰場軍勢糧草常駐顯示與出牌不足提示規格書.md | 戰場軍勢糧草常駐顯示與出牌不足提示規格書 |
 | `doc_spec_1342` | docs/遊戲規格文件/系統規格書/內政任務詳情單屏重排與固定底部行動列規格書.md | 內政任務詳情單屏重排與固定底部行動列規格書 |
+| `doc_spec_1343` | docs/遊戲規格文件/系統規格書/彈窗武將頭像與台詞規格書.md | 彈窗武將頭像與台詞規格書 |
 
 ## 索引類 (`doc_index`)
 

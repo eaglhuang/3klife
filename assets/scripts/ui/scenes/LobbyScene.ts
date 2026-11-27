@@ -344,7 +344,10 @@ import { ensureDs3SideAction, ensureDs3SideLabel, setDs3SideActionEnabled } from
 import { ensureDs3JournalPeek } from '../components/character-ds3/Ds3JournalPeek';
 import { characterJournalPeekText } from '../core/CharacterJournalPeek';
 import { SUITABILITY_BADGE_LABEL, suitabilityBadgeText } from '../../core/systems/HallSuitability';
-import { DS3_BLOODLINE_TREE_NODE_NAME, ensureDs3BloodlineTree } from '../components/character-ds3/Ds3BloodlineTree';
+import { BLOODLINE_SPEAKER_PLACEMENT, BLOODLINE_SPEAKER_SLOT, DS3_BLOODLINE_TREE_NODE_NAME, ensureDs3BloodlineTree } from '../components/character-ds3/Ds3BloodlineTree';
+import { YOUTH_ROW_SPEAKER_PLACEMENT, YOUTH_ROW_SPEAKER_SLOT, SAGE_SPEAKER_PLACEMENT, SAGE_SPEAKER_SLOT, findPopupNode, showPopupSpeaker } from '../core/PopupGeneralSpeaker';
+import { SAGE_VOICE, popupSpeakerLine, popupVoiceOf } from '../../core/systems/PopupSpeakerLine';
+import { getStarterYouthConfig } from '../../core/services/StarterYouthService';
 import { BLOODLINE_TREE_OPEN_LINE } from '../../core/systems/BloodlineTreeSlots';
 import { delegateSchedule } from '../../core/systems/AutoNurture';
 import { AnnualRankingManager } from '../../core/systems/annual_ranking/AnnualRankingManager';
@@ -3294,9 +3297,15 @@ export class LobbyScene extends Component {
             const blurbKey = option ? `ui.opening.youth_pick.card.${option.id}` : '';
             const blurb = option ? i18n.t(blurbKey) : '';
             const intro = option && blurb !== blurbKey ? blurb : option ? `${option.name} ${option.title}` : '';
-            texts[`youthPickLabel${i}`] = option ? `【${i18n.t(`ui.opening.youth_pick.career.${option.career}`)}】${intro}\n${i18n.t('ui.opening.youth_pick.btn')}` : '';
+            // 第二行改由少年自己說一句（自稱依性別、性格、14 歲代入），頭像掛在這一列左側（PROG-2-10129）
+            const line = option ? popupSpeakerLine('youth-pick', popupVoiceOf(this._generals.find(g => g.id === option.id), { age: getStarterYouthConfig().age }), key => i18n.t(key)) : '';
+            texts[`youthPickLabel${i}`] = option ? `【${i18n.t(`ui.opening.youth_pick.career.${option.career}`)}】${intro}${line ? `
+「${line}」` : ''}` : '';
             const button = host.binder?.getNode(`btnYouthPick${i}`);
-            if (button) button.active = !!option;
+            if (button) {
+                button.active = !!option;
+                if (option) showPopupSpeaker(button, `${YOUTH_ROW_SPEAKER_SLOT}${i}`, { generalId: option.id, line: '' }, YOUTH_ROW_SPEAKER_PLACEMENT);
+            }
         });
         host.binder?.setTexts(texts);
         host.node.active = true;
@@ -6752,7 +6761,16 @@ ${spent}`,
         if (!binder || !this._oracle) {
             return;
         }
-        applyFlowView(binder, this._oracle.getView());
+        const view = this._oracle.getView();
+        applyFlowView(binder, view);
+        // 目前這位名士的大頭像＋一句台詞（PROG-2-10129）
+        const column = findPopupNode(this._oracleHost!.node, 'SageColumn');
+        if (column) {
+            showPopupSpeaker(column, SAGE_SPEAKER_SLOT, {
+                generalId: view.sageId,
+                line: popupSpeakerLine('sage-oracle', SAGE_VOICE[view.sageId] ?? {}, key => services().i18n.t(key)),
+            }, SAGE_SPEAKER_PLACEMENT);
+        }
     }
 
     private async _onClickDivine(): Promise<void> {
@@ -7906,6 +7924,11 @@ ${spent}`,
         const panel = ensureDs3BloodlineTree(hostNode, general.name, clanTitleText(CLAN_TIER_NAMES[services().session.clanTier], services().session.clanTradition, services().session.clanHall, clanPerkVisible(stage)), stage);
         panel.onCardPeek = (view) => this._showToast(`${view.title}：${view.tendency}`);
         panel.node.active = true;
+        // 本代武將的大頭像＋一句台詞（PROG-2-10129）
+        showPopupSpeaker(panel.node, BLOODLINE_SPEAKER_SLOT, {
+            generalId: general.id,
+            line: popupSpeakerLine('bloodline-tree', popupVoiceOf(general), key => services().i18n.t(key)),
+        }, BLOODLINE_SPEAKER_PLACEMENT);
         this._refreshCharacterDs3ExpertView(hostNode);
         for (const name of [FACTOR_HEX_NODE_NAME, 'btnGeneralJournal', 'btnSoulInject', JOB_CHANGE_ENTRY_NODE_NAME, GALLERY_ENTRY_NODE_NAME, TOTAL_TP_NODE_NAME, EXPERT_VIEW_NODE_NAME]) {
             hostNode.getChildByName(name)?.setSiblingIndex(hostNode.children.length - 1);

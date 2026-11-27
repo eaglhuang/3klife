@@ -15,6 +15,7 @@
 | BuffSystem.ts | doc_spec_0010 | D: BuffEntry, StatusEffect; 概: 狀態效果管理 |
 | ActionSystem.ts | doc_spec_0038, doc_spec_0030 | D: SkillDef, ActionStep, ActionContext; 概: 技能時間軸演出 |
 | EventSystem.ts | doc_tech_0015 | 概: Pub/Sub 事件匯流排 |
+| PopupSpeakerLine.ts | doc_spec_1343 | 概: 三彈窗頭像旁台詞選句與名士聲線（純邏輯，不依賴 cc；PROG-2-10129）。 |
 | PoolSystem.ts | doc_tech_0015 | 概: 物件池回收管理 |
 | ResourceManager.ts | doc_tech_0013, doc_tech_0015, doc_art_0003 | 概: JSON/Prefab/SpriteFrame 載入與快取 |
 | EffectSystem.ts | doc_tech_0015 | 概: VFX 生命週期管理 |
