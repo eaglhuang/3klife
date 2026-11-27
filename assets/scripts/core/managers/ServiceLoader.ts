@@ -424,6 +424,29 @@ export class ServiceLoader {
                 undo: async () => { FriendshipService.getInstance().add(generalId, -amount, 'insight:undo'); },
             };
         });
+        // 新手樂趣 FUN-01／FUN-03（PROG-2-10177）：親子好感與武將友誼都走獎勵框架，對象由 source.ref 帶入；已到上限時 applied 為 0（仍播放、不浮字）
+        this.localApi.registerRewardEffect('childBond', (effect, env) => {
+            const childId = env.source?.ref ?? '';
+            const amount = typeof effect.amount === 'number' ? effect.amount : 0;
+            if (!childId || amount <= 0) throw new Error('childBond 效果缺少孩子 id 或好感量');
+            const applied = this.session.grantChildFavor(childId, amount);
+            return {
+                applied: { ...effect, amount: applied },
+                trace: [`CHILD_BOND+${applied}`],
+                undo: async () => { this.session.grantChildFavor(childId, -applied); },
+            };
+        });
+        this.localApi.registerRewardEffect('friendship', (effect, env) => {
+            const generalId = env.source?.ref ?? '';
+            const amount = typeof effect.amount === 'number' ? effect.amount : 0;
+            if (!generalId || amount <= 0) throw new Error('friendship 效果缺少武將 id 或友誼量');
+            FriendshipService.getInstance().add(generalId, amount, 'fun03');
+            return {
+                applied: effect,
+                trace: [`FRIENDSHIP+${amount}`],
+                undo: async () => { FriendshipService.getInstance().add(generalId, -amount, 'fun03:undo'); },
+            };
+        });
         if (this.generalGrantHost) this.localApi.registerRewardEffect('general', createGeneralGrantHandler(this.generalGrantHost));
         this.localApi.setRewardAuthority(this.session.rewardAuthority());
         this.session.setRewardApi(this.localApi.api);

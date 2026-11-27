@@ -17710,5 +17710,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10174.md",
     "title": "[PROG-2-10174] 任務系統 en／ja／zh-CN 譯文校稿",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3242",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10177.md",
+    "title": "[PROG-2-10177] 新手第一年樂趣四功能實作",
+    "category": "task"
   }
 ]

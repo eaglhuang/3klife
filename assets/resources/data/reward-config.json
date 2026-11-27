@@ -239,6 +239,20 @@
       "effects": [{ "kind": "currency", "id": "silver", "amount": 20 }],
       "sources": ["year1Goal"],
       "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_TODDLER_BOND",
+      "kind": "reward",
+      "effects": [{ "kind": "childBond", "amount": 1 }],
+      "sources": ["fun01"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_VICTORY_CHAT",
+      "kind": "reward",
+      "effects": [{ "kind": "friendship", "amount": 1 }],
+      "sources": ["fun03"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
     }
   ],
   "insight": {
