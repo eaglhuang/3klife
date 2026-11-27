@@ -1,0 +1,2687 @@
+OpenAI Codex v0.171.0
+--------
+workdir: /workspace/spine-trial-q4
+model: gpt-6.2-sol
+provider: openai
+approval: never
+sandbox: danger-full-access
+reasoning effort: none
+reasoning summaries: none
+session id: 01a21c01-7c98-7291-b233-dde4b9ff87bf
+--------
+user
+# 任務：替小豆查證兩件事（repo /workspace/spine-trial-q4）
+只做查證和測試：不改美術或動畫，不 push，不合併，不開 PR。不要停下來問問題。
+1. #18 / PR #23：
+   - 用 gh 看 PR #23，checkout 它的 head 到一個暫時的 git worktree（例如 /tmp/xd-pr23）。
+   - 用「開著沙箱」的 Chrome/Chromium 跑一次真實 Spine 預覽：
+     - 嚴禁使用 --no-sandbox 和 --enable-unsafe-swiftshader。
+     - 如果沙箱在這個環境起不來，就停下，記錄確切的錯誤，並寫出可用的環境（瀏覽器版本、GPU 和 headless 能力）。
+   - 跑成功的話，記錄：
+     - 測試的 commit
+     - 實際的 PNG 路徑（複製到 /workspace/codex_jobs/xd_preview.png）
+     - 測完後用 ss -ltnp 確認 8765 和 8895 沒有殘留程序
+   - 跑完移除暫時 worktree，不留任何背景程序。
+2. #15 / PR #24：在 repo（所有分支、docs、reports、export）裡找已核可的圖或資料，條件是有標出頭冠、馬身中軸、蹄底。
+   - 找到就列出檔案路徑和 commit。
+   - 找不到就寫「找不到」，不要猜座標。
+把結果用中文寫進 /workspace/codex_jobs/xd_verify_result.md，不超過 25 行。
+
+codex
+我會先檢查 repo 和兩個 PR，再用暫時 worktree 測試 PR #23，並查找 #15 指定的核可標記。這次只做查證和測試。
+exec
+/bin/bash -lc 'cat skills/spine-preview-render/SKILL.md && cat docs/MOUNT.md' in /workspace/spine-trial-q4
+ succeeded in 0ms:
+---
+name: spine-preview-render
+description: Use to look at the result - render single poses, debug overlays, bone dumps, the preview MP4 and the contact sheet with the real spine-ts 4.2 runtime (headless Chrome). Required after any rig, preset, skin or atlas change, before reporting.
+---
+# spine-preview-render
+
+## Setup (once per box)
+- `cd render && npm ci` (playwright-core + spine-webgl 4.2); Chrome at `/usr/bin/google-chrome`.
+- Serve the repo root (runs from the repo root, localhost only):
+  `nohup python3 -m http.server 8765 --bind 127.0.0.1 >/dev/null 2>&1 &`  — stop it when done: `pkill -f "http.server 8765"`.
+
+## Commands (from `render/`)
+| Need | Command |
+|---|---|
+| Still frames | `node render.mjs poses cam '{"x":180,"y":560,"zoom":1.3}' "spear_thrust\|0.56\|../frames/v2/a.png" ...` (`setup\|0\|f.png` = setup pose) |
+| Skin | insert `skin <name>` before `cam` |
+| Only some slots (integrity check) | insert `only pony,torso,skirt` before `cam` (other slots hidden, no ground); `cam '{"bg":[1,0,1]}'` = magenta bg |
+| Debug colours + bones | insert `tint '{"l_arm":[1,0.3,0.3]}'` before `cam` |
+| Bone world dump | `node render.mjs bones "spear_thrust\|0.30"` |
+| Per-frame sample (validator) | `node render.mjs sample spear_thrust 60 ../frames/validate/x.json` |
+| Sequence | `rm -rf ../frames/main; node render.mjs seq cam '{"x":260,"y":590,"zoom":1.95}' seq.json` |
+
+`zoom` = world units per screen pixel (bigger = smaller character).
+
+MP4 (repo root): `ffmpeg -y -framerate 30 -i frames/main/%05d.png -c:v libx264 -pix_fmt yuv420p -crf 18 out/preview/zhao_preview.mp4`
+(check the frame pattern printed by `seq`). Contact sheet: `venv/bin/python scripts/contact.py` (renders its own frames).
+
+## Hard rules / must-nots
+- Always render with the real runtime; never judge a pose from the JSON numbers alone.
+- Look at frames at the key times of each beat (presets list `beats:`), zoomed on the joints that were changed
+  (knee in the lunge, front arm in the charge, hands on the weapon).
+- The Read tool caches images by path: write each new look to a NEW filename.
+- `frames/` is git-ignored; only `out/preview/*` deliverables are committed.
+
+## Verification checklist
+- [ ] Status line printed `{"s":"ok"...}` listing the expected animations.
+- [ ] Viewed the frames (not only generated them) and noted any visual defect with its time.
+- [ ] MP4 plays at 30 fps, yuv420p; contact sheet includes the close-ups the change was about.
+- [ ] Mirrored generals rendered with `skin hand_mirror flip` (battle spec: `"skin": "hand_mirror", "mirror": true`);
+  battle sheets include a hands close-up row and a legs/knees close-up row (`render.mjs sample` also dumps IK mixes `k`).
+- [ ] http server stopped.
+# 通用四足坐騎（Generic quadruped mount）— 切圖工具 + 動畫產生器 + 騎乘契約
+
+目標：任何武將／小兵骨架（`characters/<id>`，已 build）都能騎在任何四足坐騎（不同馬型、尺寸，或虎、牛等）上，
+動作全部由共用產生器參數化生成，**不需要為每隻坐騎或每組「騎手 × 坐騎」重做或打補丁**。
+
+```
+mounts/<mount>/mount.json  ──cut──▶  mounts/<mount>/parts/*.png + rig.json        (tools/mount/cut.py)
+                           ──build─▶ mounts/<mount>/out/<name>.json + atlas + astc  (tools/mount/build.py, gait.py)
+characters/<rider> (built) + mount ──combine─▶ out/mount/<rider>__<mount>/out/…     (tools/mount/combine.py)
+                                   ──qa / preview──▶ runtime checks, mp4, out/mount/contact.jpg
+```
+
+一鍵：`venv/bin/python -m tools.mount all`（預設騎手 `soldier_cavalry_blue,zhao,soldier_spear_blue`，坐騎 `horse_sheet,horse_bay,horse_war`；
+`--riders a,b --mounts m,n --no-video`）。單步：`cut <mount> [--debug]`、`build <mount>`、`combine <rider> <mount>`、
+`qa <rider> <mount>`、`preview <rider> <mount>`、`rider <char>`（部件表 → 小兵騎手，見 §1c）。測試：`venv/bin/python -m unittest tests.test_mount`。
+
+第 9 輪原步戰骨架坐姿的騎乘預覽用 `venv/bin/python -m tools.mount.seat_anim`。先用 `combine` 建好騎手與坐騎組合。
+省略動作名稱時生成共用清單的 17 個動作；也可指定如 `idle walk charge`。每個動作輸出兩位騎手同畫面的 30 fps MP4、抽格圖和逐格 QA JSON。
+`--rig-only` 會輸出可供 Spine 4.2 使用的 JSON 和 atlas；以 `--work` 指定工作目錄，骨架位於 `<work>/<rider>/candidate/out`。
+騎手材質沿用步戰 atlas，盾、弓、箭、弦沿用通用道具頁。步態、坐騎與根骨曲線沿用既有共用動作。
+待機與衝鋒各使用已核可的持槍基準，肩肘腕與長槍的動作在原髖骨座標下生成，頭頸的相對變換沿用基準。
+
+## 1. 新坐騎要準備什麼（mount.json）
+
+一張**無騎手**的坐騎原圖（正面 3/4、朝 +x，四腳站直、彼此不重疊；RGBA 或淺色平底）＋一份小小的 landmark 設定。
+座標都是原圖像素（y 向下）。範例：`mounts/horse_bay/mount.json`。
+
+| 欄位 | 意義 |
+|---|---|
+| `source` | 原圖路徑。RGB 淺底會從邊界 flood-fill 去背；`background.tolerance`、`holes_min_area`（被包住的背景洞，例如韁繩和臉之間） |
+| `scale` | 原圖 px → 骨架單位（預設 1） |
+| `body.pivot` | 身體骨頭原點 |
+| `belly_line` | 折線：線以下、且靠近某條腿軸線（寬度內）的像素歸那條腿，其餘歸身體 |
+| `parts.<名>` | 從身體切出的多邊形部件（頭頸、尾巴…）：`polygon`、`cut`（切線兩端點）、`pivot`、`keep_band`（身體保留切線旁幾 px 當底，轉動時不破洞）、`layer` = `front`（畫在身體前）/`behind`、`root_fill`（根部補圓） |
+| `overlays.<名>` | 從某個部件再切出的覆蓋件（鬃毛）：`parent`、`polygon`、`pivot`；母件被挖掉的地方自動補色 |
+| `legs.<id>` | 每條腿：`end` front/hind、`side` near/far、`root`（肩/髖關節，藏在身體裡）、`knee`（腕/飛節）、`hoof_top`（蹄冠，可省略）、`sole`（著地點）、`width` |
+| `saddle.seat` | **騎乘掛點**（鞍座最低點＝騎手骨盆底）；`stirrup` 可選 |
+| （騎手比例） | 不在 mount.json 設定：騎手軀幹（hip→head 骨頭原點）＝ `contract.rider.torso_vs_mount_length` × 坐騎剪影長度（尾尖到鼻尖），依 `cavalry_ref.png` 校正一次，所有坐騎 × 騎手共用 |
+| `rider.straddle` | 跨坐：只剩 `far_offset`（遠側腳相對腳鐙的深度偏移，px）。腳的位置由 `saddle.stirrup` 決定（§4） |
+| `gaits.<gait>` | （可選）覆寫共用步態表的個別欄位，例如較重的坐騎 `period` 長一點 |
+| `derive` | 衍生坐騎：`{"from": base, "leg_scale": 1.5, "body_scale": [1.14, 1.0]}`——沿用 base 的部件，只改比例（範例 `mounts/horse_war`） |
+
+`cut --debug` 會輸出 `out/mount/debug/<mount>_cut.png`（各部件著色、腿軸、belly line、pivot），先看這張再 build。
+
+切圖規則（cut.py）：
+- 每條腿切成**一張直的、沿腿軸重新取樣的圖**（root→sole），上端被身體遮住的部分用第一列可見像素往上延伸補滿；
+  runtime 是 weighted mesh：根部以上權重給身體（腿頂永遠藏在裙甲下）、膝蓋平滑混合、蹄冠短混合（蹄是剛體）。
+- 去背後的邊緣像素改用最近實心像素的顏色（沒有白邊）。
+- 被切走的頭／尾在身體上保留 `keep_band` 當底；覆蓋件挖掉的洞用最近色補。
+
+### 1b. 部件表輸入（`"input": "sheet"`，範例 `mounts/horse_sheet/mount.json`）
+
+另一種輸入：一張**淺色底的部件表**（每個部件是一塊獨立的連通區域，例如 `src_assets/mount/cavalry_parts_sheet.png`），
+加一張**組裝參考圖**（`reference`，例如 `cavalry_ref.png` 左邊那隻）決定比例與位置。工具（`tools/mount/partsheet.py`）
+自動找連通區域、補內部小洞、去白邊；設定只負責「哪一塊是什麼、放在參考圖的哪裡」：
+
+| 欄位 | 意義 |
+|---|---|
+| `source` / `reference` / `reference_box` / `scale` | 部件表、參考圖、參考圖中坐騎的框（px）、參考圖 px → 骨架單位 |
+| `pieces.<名>.pick` | 部件表上落在該部件裡的一點（標籤）；`anchor`（部件表 px）放到參考圖的 `at`（px，或 `"<部件>.<點名>"`，例如 `body.neck`） |
+| `pieces.<名>.scale / rot / shade` | 縮放、旋轉（度）、明暗 |
+| `pieces.<名>.points` | 具名 landmark（部件表 px）：body 的 `seat`、`stirrup`、`neck`、`tail`；head 的 `nose / eye / ear / throat`（給武器避讓用） |
+| `pieces.<名>.cutouts` | 部件上的深色洞（例如脖子插座）以 pick 指定、補成透明 |
+| `pieces.<名>.split` | 從部件再切出子部件（例如身體上畫好的腳鐙：`polygon`、`pivot`、`layer`）；母件被挖的地方用最近色＋inpaint 補 |
+| `pieces.<名>.layer / parent / motion` | `front` / `behind`、父部件、次級動作類型（`neck`、`head`、`tail`、`mane`、`none`） |
+| `legs.<id>` | `pick.upper`（大腿塊）、`pick.lower`（小腿＋蹄塊）、`at`（髖在參考圖的位置）、`shade`；`leg_scale` 統一縮放 |
+
+腿是**兩塊剛體**（大腿＋小腿）組成的 2 骨腿：髖、膝、蹄底關節由部件形狀自動找（大腿：上段中線→底部中心；
+小腿：上端關節球中心→底部中心），膝蓋是真正的轉軸。蹄底著地用「搖擺蹄」：IK 目標上移到使蹄底最低角剛好碰地，
+所以小腿傾斜時蹄緣不會插進地面（QA 以角點計算）。`cut --debug` 輸出組裝圖與參考圖並排（`out/mount/debug/<mount>_cut.png`）。
+
+### 1c. 部件表 → 小兵騎手（`rider <char>`，範例 `characters/soldier_cavalry_blue/source/sheet_parts.json`）
+
+`tools/mount/rider.py` 把部件表上的人物部件轉成 soldier tier 部件（`parts/*.png` + `char.json`），再交給
+`tools/soldier_rig.py`（固定關節、肢長 ±10% 閘門照舊，不放寬）。操作：`pick`（連通區域）、`copy` + `flip` / `shade`
+（遠側手腳＝近側鏡像）、`rot90`、`scale`、`straighten`（坐姿腿伸直：大腿繞膝旋轉、長度最多 ±15% 調到標準膝比例）、
+`fill`（補肩膀插座等深色洞，限半徑）。`soldier_rig.arm_fit`：手臂部件若畫成彎的，附件旋轉讓拳頭落在固定拳關節
+（既有小兵 arm_fit = 0，輸出不變）。
+
+## 2. 骨架（build.py）
+
+`root > mount_body > mount_saddle`（**騎乘掛點**）、`mount_<part>`（head、tail）`> mount_<overlay>`（mane）、
+`mount_<leg>_upper > _lower > _hoof`。Slot 由後到前：遠側腿、`behind` 部件、近側腿、〔騎手遠側腿〕、身體、
+`front` 部件、覆蓋件、〔騎手〕。Atlas 512 頁、padding 2、pma false、ASTC 6×6（`spec/mount_contract.json atlas`）。
+
+## 3. 步態產生器（gait.py，**沒有任何物種常數**）
+
+共用步態表 `spec/mount_contract.json gaits`（walk / trot / gallop），每個步態只有：週期、duty（著地比例）、
+各腿著地相位（以 front/hind × near/far 指定）、stride／lift／bob／surge／crouch（以**腿長**為單位）、pitch、蹄的屈曲角。
+所有長度都從該坐騎的 landmark 算出，所以換一隻腿長、身長不同的坐騎，步幅、速度、身體下沉量、IK 都會自動跟著變。
+
+共用 `target_width_to_leg_length` 記錄核可參考成品的大腿、小腿、蹄與尾巴寬度相對腿長的比例；
+產生器量測每個坐騎的素材及腿長，計算對應倍率，不改關節長度與原本的落地基準。
+兩節腿的滾蹄求解與接地 QA 會依調整後的蹄寬計算最低點；合併小腿與蹄的圖層以網格分別調整寬度。
+
+- 著地期：蹄尖固定在該腿自己的地面線上（3/4 視角遠側腿地面較高），以 `v = stride·L/(duty·T)` 往後滑——
+  角色在遊戲裡以 `v` 前進時蹄在世界座標**完全不滑**。`v` 寫在 `<mount>.meta.json gaits.<g>.ground_speed`。
+  最後一段做 breakover（以蹄尖為軸，蹄跟抬起）。
+- 擺動期：三次 Hermite，起訖速度等於著地速度（不會跳），平方正弦抬高（離地及著地時垂直速度為零，前腳較早到頂），蹄往後屈曲、著地前伸直。
+- 身體：bob 與 pitch 的相位由著地型態自動推出（gallop：後腳承重時抬頭、前腳承重時低頭、騰空期最高）；
+  任何著地腿會超出 IK 長度的格子自動把身體壓低並平滑。
+- 解析式 2 骨 IK（前腳膝向前、後腳飛節向後）＋蹄剛體，**烘焙成 60 fps 關鍵格**（t_k = k·T/N，循環無縫），
+  runtime 不需要 IK，著地是精確的。
+- 共用三種落蹄順序：`walk` 為後近 → 前近 → 後遠 → 前遠，每拍相隔 1/4 週期；`trot` 為前近與後遠、
+  前遠與後近兩組對角蹄交替；`gallop` 為後近 → 後遠與前近同時 → 前遠 → 四蹄騰空。
+- `tools.mount.batch_preview` 以 30 fps 取樣 `t=i·T/N, 0≤i<N`，步態影片接續三個循環。額外渲染的週末端點只供比對，
+  QA 同時比較最後一格到第一格與循環內的影像變化，並記錄 runtime 蹄位、臀鞍間隙與槍臉遮罩。
+- 次級動作：脖子跟身體反向點頭、尾巴隨速度抬起擺動、鬃毛延遲跟隨——都由身體曲線推出。
+
+## 4. 騎乘契約（combine.py，**任何騎手骨架原封不動**）
+
+- 新骨頭 `rider_root`（`mount_saddle` 的子骨，等比縮放 s）取代騎手的 root；騎手原本所有 root 子骨
+  （hip、腳 IK target、武將的槍…）原樣掛上去。weighted mesh 的骨頭索引自動重排。
+- `s = torso_vs_mount_length × 坐騎長度 / 騎手軀幹長`；hip 放在鞍座正上方 `seat_depth × 大腿長`（骨盆底＝鞍座點）。
+- 腿：騎手的 2 骨腿 IK（hip 底下、target 是 root 子骨）target 移到跨坐點
+  `大腿起點 + 大腿長·dir(thigh_deg) + 小腿長·dir(shin_deg)`；遠側腿（draw order 較前的那條）畫在坐騎身體後面。
+- 動畫分層：`mount_idle/walk/trot/gallop/surge`（track 0）＋ `rider_idle/walk/trot/gallop/thrust`（track 1），
+  另外合併好的 `idle / walk / trot / gallop / thrust / gallop_thrust`。
+  - 騎手 idle / 攻擊用**騎手自己的**動畫（`contract.rider.anim` 依序找 `attack_spear`、`spear_thrust`…），
+    移除 root／腿／腳 target 軌道與 hip 位移（骨盆永遠不離鞍）；其他 root 子骨（武將的槍與握把 target）扣掉 hip 位移，
+    所以雙手跟站姿攻擊一樣握在槍上。
+  - 步態反應：前傾 `lean` ＋延遲 `lag` 的反向俯仰 `absorb × pitch`，頭部沿用軀幹轉動並稍微向下看；走、跑時骨盆底固定在鞍座。
+  - 攻擊時坐騎依騎手被移除的 hip 位移向前衝（`thrust_surge`，上限 0.12 腿長），四蹄踩地不動。
+- **跨坐（straddle，每個騎手、不論有沒有盾牌）**：近側腳踝 IK 目標＝坐騎 `saddle.stirrup` landmark（＋0.08 腿長），
+  遠側＝腳鐙＋`far_offset`；膝蓋向前彎（IK `bendPositive` 依騎手自己的腿長算），腿太短搆不到時腳鐙部件
+  （`mount_stirrup` 骨頭）**往上**移到腳（只升不降，記在 `meta.straddle.stirrup_shift`）。
+  Draw order：遠側腿 < 坐騎身體（含鞍）< 近側腿 / 騎手軀幹 < 腳鐙。所以近側腿貼在近側馬腹外、遠側腿被馬身遮住。
+- **武器避讓馬頭**（`tools/mount/clearance.py`，從坐騎 head/neck/mane 部件剪影推出，沒有任何每組補丁）：
+  thrust / gallop_thrust 每格取樣，槍的前半段若進入馬頭剪影＋`thrust_clearance × 腿長`，就把武器骨頭以握點往上轉
+  最小角度（≤60°，`thrust_clear_max_deg`），不夠再讓軀幹以 hip 後仰（≤20°，`thrust_clear_max_lean`）；兩段式（取樣 → 修正 → 存檔），平滑過渡；存檔後再取樣，仍不足 margin 的格子最多再補兩輪、每輪 ≤15°（`thrust_clear_residual_deg`）。
+  武器 slot 畫在騎手頭的正後方（`weapon_behind_head`），原地待機維持 `apply_rest` 的持槍角度。行進時三種步態共用一個世界角度，
+  槍桿繞原握點旋轉，在整個循環維持頭部淨空；這套持槍處理只用於 walk、trot、gallop。
+- runtime QA（`qa`，真的 spine-webgl 取樣 60 fps）：鞍上 hip 漂移、腳鐙漂移、蹄低於地面、雙手到握把距離；
+  **跨坐檢查**（`tools/mount/straddle_qa.py`，關掉部分 slot 重新 render 比對像素）：近側腿在坐騎上緣以下、卻不在坐騎剪影上的像素 ≤5%（伸出馬腹下、胸前或臀後；鞍上的大腿不算）、
+  在完整畫面中 ≥15% 可見（長袍、盾牌、手臂可以合理遮住其餘部分，順序另外檢查）、遠側腿可見 ≤5%、順序
+  遠側腿 < mount_body < 近側腿（門檻 `spec/mount_contract.json rider.straddle_qa`）；**槍與馬頭距離** ≥ margin（每格重新量）。
+
+## 5. 新增一種坐騎 / 騎手
+
+- 新坐騎（例如老虎、牛）：準備無騎手原圖 → 寫 `mounts/<id>/mount.json`（只填上表 landmark）→
+  `cut --debug` 看切圖 → `build` → `combine <任一騎手> <id>` → `qa` → `preview`。爪子／偶蹄沒有 `hoof_top` 也可以（兩節腿）。
+  步態不合物種時只在 mount.json `gaits` 覆寫數值（例如老虎 gallop 改 rotary 相位），**不要改程式**。
+- 新騎手：任何已 build 的 `characters/<id>`（soldier 或 general tier）直接 `combine`，不用任何設定。
+
+## 6. 已知限制
+
+- 腿的 landmark（膝、蹄冠）需要人工點；`cut --debug` 圖用來檢查。
+- 3/4 視角的遠側腿使用自己較高的地面線（深度），所以畫面上的灰色地面線只對齊前近側蹄。
+- 遠側腿和近側腿互相重疊時，cut 以「最靠近的腿軸」分配像素，原圖最好四腳分開。
+- 衍生坐騎（`derive`）是把部件拉長，腿拉太長（> 1.6×）材質會被拉伸。
+- 部件表的人物只有一隻腿與一隻可用的手：遠側手腳是近側鏡像加暗（部件表第二隻手比固定拳關節長 1.5 倍，過不了肢長閘門）。
+- 軀幹肩膀插座用 inpaint 補，近看略糊；`horse_bay` / `horse_war`（landmark 原圖）沒有腳鐙部件，腳只是放在腳鐙 landmark 上。
+- 小兵（Q 版大頭）thrust 避讓時軀幹會後仰到 20°，動作較誇張；有盾牌的小兵近側腿大多被盾牌遮住（順序仍正確）。
+- 騎手依坐騎長度正規化（`torso_vs_mount_length`）；如果遊戲要讓武將比小兵大，請在遊戲端整體縮放騎乘組合。
+
+## 7. V3 動作與預覽
+
+`mount_walk / rider_walk`、`mount_idle_tail / rider_idle_tail`、`mount_charge / rider_charge`、
+`mount_hit / rider_hit` 是獨立層；合併動畫分別是 `walk`、`idle_tail`、`charge`、`hit`。
+衝鋒步態使用腿長正規化的步幅、壓低與軀幹傾角；騎手的伏身、手臂朝向與握點由共用契約和騎手骨架計算。
+尾巴的權重網格與骨鏈從部件輪廓及樞紐推導，獨立骨節有相位延遲。站立與受擊均以相同足部 IK 解算。
+`venv/bin/python -m tools.mount v3` 重建指定的三組、做 runtime QA，產生四個動作的影片及 `out/mount/contact_v3.jpg`；
+`--no-video` 省略影片。槍尖避頭、跨坐及馬蹄仍由共用 QA 驗證。
+
+## 8. Optional charge-only torso region
+
+A mounted rider may provide `characters/<id>/ride_profile.json`. This is opt-in;
+without the file the existing combined rig is unchanged. The profile contains
+`art` (repository-relative RGBA image), `slot` (existing rider region slot,
+default `torso`), `art_anchors` and `bone_anchors`, each with `hip`, `neck`,
+`shoulder` 2D points. Art points are source-image pixels (origin top-left);
+bone points are the corresponding positions in the torso slot bone's local
+units (y up) at the target charge pose. Optional `hide_slots` names existing
+rider slots fully replaced by the charge artwork; they are restored in other
+rider/merged actions. Mount slots cannot be hidden. No rider-specific
+coordinates are embedded in the code.
+
+Optional `charge_offsets` adds a parent-local `translate: [x, y]` and/or
+`rotate: degrees` to selected rider bones in the fixed charge pose. Use it
+to line up the existing head and arms with the new art. The offset applies
+once in both rider-only and combined charge; hip, legs and mount bones
+are excluded. The existing weapon clearance pass runs after these offsets.
+The mount config may supply `charge_head_offset: [x, y]` in each head part's
+parent-local units to move its cut forward in the mounted charge pose.
+
+`neck_targets` maps the chest and chin anchors from
+`src_assets/mount/ride_neck/profile.json` into the torso bone's local space.
+The resulting neck draws underneath the collar and head. `leg_trims` supplies
+source canvases and normalized cut polygons for charge-only leg overlays.
+Seated travel uses a shallower cut of the near thigh. The original mesh
+weights, UVs and joint positions still apply. A profile can
+request `seat_over_leg` to draw the torso over the near thigh and
+`stirrup_offsets` to set the charge-only tread offset per mount. `charge_grip_ik`
+names the existing arm IK constraints that should reach the weapon in charge.
+A mount's `near_thigh_overlay` controls the start and end of its visible
+feather, leaving the opaque upper leg underneath the body plate.
+
+The shared head underlay overlaps the throat beneath an articulated head
+and neck. A single head-neck cut already has a continuous throat.
+`ride_torso_volume` sets seated chest/waist width across the hip-to-collar
+axis and the retained depth of the near thigh.
+
+## 騎兵移動批次
+
+`spec/mount_contract.json` 的 `mounted_action_set` 列出 17 個動作與這次
+交付的五個移動循環。先用 `tools.mount build` 和 `tools.mount combine`
+產生所選坐騎與騎手，再執行
+`venv/bin/python -m tools.mount.batch_preview --mount horse_sheet`。
+可傳入動作名稱依序輸出部分循環。工具以相同週期取樣兩位騎手，
+輸出一週的 10 格並排表與兩週的 30 fps 影片，逐一更新
+`cav_batch1_index.md`。循環起訖、槍與臉的像素交集和頭身遮罩距離
+記入每個動作的 JSON。預覽仍需人工驗收。
+
+撤退預覽跟隨根骨骼，地面刻線用來顯示向後移動。遊戲中循環倒步時，
+每輪須累加根位移，才能保持落地蹄穩定。突進預覽播放完整的一趟，
+包含終點格。
+
+Run `venv/bin/python -m tools.mount.charge_qa RIDER MOUNT -t .14 -o report.json`
+after combining. `qa_chest_px` and `qa_grips` identify the chest landmark and
+two grip bones used by the QA, alongside the existing hip anchor.
+
+The three anchor pairs are fit with a uniform-scale rotation and translation,
+without reflection or nonuniform stretching. A maximum per-anchor fit error
+of 8 bone units is enforced (a profile may specify a stricter
+`max_anchor_error`, never a larger one). A conflict with an existing slot
+attachment timeline fails rather than replacing that timeline. Packing creates
+a 512×512, padding-2, pma:false page and an ASTC 6×6 page. `charge` and
+`rider_charge` select the region; other rider and merged animations explicitly
+restore the setup attachment.
+
+The fit only checks registration; it does not establish clean neck/waist art,
+face or weapon clearance, arm reach, visible contour angle, or acceptance of
+new source artwork. Run the source/art gates, runtime QA and inspect actual
+charge/idle renders before treating a profile as valid. No profile is supplied
+for the unapproved mock9 candidates.
+
+Example schema (numbers are illustrative only and must be measured for the art
+and rider pose):
+
+```json
+{
+  "art": "src_assets/mount/example_ride_torso.png",
+  "slot": "torso",
+  "art_anchors": {"hip": [40, 360], "neck": [400, 90], "shoulder": [340, 130]},
+  "bone_anchors": {"hip": [0, 0], "neck": [100, 75], "shoulder": [80, 64]},
+  "hide_slots": []
+}
+```
+
+## 9. 騎兵第三批動作
+
+`spec/mount_contract.json` 的 `mounted_action_set.maneuvers` 提供 dash_in、retreat、duel_attack、thrust、gallop_thrust、charge。
+每個合成包都經過 `tools/mount/maneuvers.py`。`review_maneuvers.py` 的行進動作用第二批的
+`MountedRig` 胸甲網格及 `Polearm` 雙手可達區求解。原生手臂 IK 沿用本來的伸縮與彎曲設定。
+剛體手臂靠兩個肩點可達圓求轉角，槍桿縮放保持獨立。
+Dash 與 retreat 在進出步態時補做蹄底接地求解。Gallop thrust 與 charge 使用兩個 gallop 步態週期，
+charge 固定 mock12 在 0.14 秒的整組騎手與鞍座姿勢，再加上步態的位移、抬蹄和收腿。核可的靜態姿勢可用
+`tools.mount.charge_qa --animation charge_mock12` 驗證。
+
+`tools.mount.batch_preview` 可預覽上述六個動作。每部影片播放兩次，逐格 JSON 包含兩個握點對槍桿的距離、
+槍桿輪廓的斷段、與臉／下巴的遮罩交集、頭角與蹄位。修正的五個動作另量上身與腰部輪廓間隙、
+膝關節兩段長度及指定的臀鞍間隙。
+
+## 10. 騎兵單次動作
+
+`spec/mount_contract.json` 的 `mounted_one_shots` 共用六個動作。
+節拍欄依序為 30 fps 格號、騎手軀幹角度、手臂出力、馬身前移與下沉（腿長比例）、馬身角度。
+`tools/mount/one_shot.py` 在 60 fps 烘焙騎手與馬身兩層，合併輸出時保留骨盆鞍點與既有接縫素材。
+`fall` 在鞍上伏倒並恢復，第二批突刺使用 `idle_attack_spear` 接點，其他五個動作使用各自的 `idle_<action>` 接點。
+
+持槍的待機與突刺共用 `tools/mount/polearm.py`。槍維持同一根骨的剛體變換。
+`mounted_rear_grip` 與 `mounted_front_grip` 固定在槍骨上，雙臂的可達區決定這兩點的位置。
+小兵沿用原有剛體手臂，由圓交點解出轉角。武將沿用原有手臂 IK。
+盾與弓沿用現有部件表，依動作選用固定的 attachment 和 alpha。盾擊後手收槍，弓擊以同一支箭從後手搭弦後射出。
+`ride_profile.json` 可用 `mounted_bow` 覆寫預設弓，提供 repo 內的 `art` 路徑、像素座標 `pivot` 和兩個弓梢座標 `ends`。
+受擊、閃避與伏倒用後手持槍，槍尖向後下。五個動作的胸甲以腰、脊、胸三節權重彎曲，底緣維持與骨盆相接。
+
+```sh
+python -m tools.mount.batch_preview attack_spear attack_shield attack_bow hit dodge fall --work frames/cav_batch2
+```
+
+Spine runtime 在 30 fps 逐格擷取兩位騎手，每個動作發布 10 格分鏡與兩次連續播放。
+QA 記錄起迄待機接點、頭的世界俯仰、頭身和腰胸遮罩接觸、槍臉交集、腰胸關節角度、裝備狀態、鞍點與落蹄。
+`attack_spear` 另檢查兩個握點、槍影連通以及任兩格的轉角上限 8°。
+
+## 9. 隊伍色變體（紅騎兵，程式化調色）
+
+紅騎兵 profile 的 `palette` 以藍騎兵的核可包為來源。v3 的同一個 build 在該次暫存目錄
+執行 `blue_to_red`（OpenCV 色相 78–128、邊緣羽化、飽和度大於 45），記錄每頁的符合條件及變色像素數，
+檢查 alpha 與色帶外像素，並用遊戲 runtime 渲染成品。裝配資料與動畫沿用來源骨架。
+核可的紅藍底稿均保留在 `export/mount/`。新騎乘工作使用下方 v3 建置入口。
+
+## v3 切件交接
+
+```bash
+venv/bin/python -m tools.mount cut horse_bay --debug --output frames/mount-cut/horse_bay
+venv/bin/python -m tools.mount cut --parts frames/mount-cut/input.json --output frames/mount-cut/rider
+```
+
+馬匹模式讀取 `mounts/<id>/mount.json` 的地標圖或部件表，輸出 `parts/`、`rig.json` 與選用 overlay。指定新的輸出目錄可保留原始切件。衍生馬使用基礎馬的幾何。
+
+騎手候選模式讀取已通過來源核可的 RGBA 原圖或透明部件表，需在 manifest 註明 `source`（repo 相對路徑）、`source_sha256`、`units: "image_px_y_down"`、`parts`。可用 `required_parts` 宣告預期零件名單，若缺件會在輸出前列名並停止。每個部件填 `crop: [left, top, right, bottom]`（右下不含）、`pivot: [x, y]`（圖上絕對像素）、`role`，可加 `polygon` 和正值 `scale`。輸出具名 PNG、`parts.json` 與 ≤512×512 的 pivot 圖。輸出 pivot 是 crop-local、y 向下。裝配時才依 `scale` 換算至 Spine y 向上。新美術須先依 `pipeline.py accept-source` 核可。版本化 `ride_profile.json` 的 `cut_profile` 會在建置時輸出候選件，需另做配準及核可才可使用。
+
+## v3 建置與發佈
+
+### 美術規格與 runtime 骨架
+
+步戰 STANDARD v1.0 的武將使用 577×1250 `work.png` 與 `tools/auto_cut.py`。
+騎乘 v3 的 2048 畫布與 21-slot 固定骨架屬騎手素材交接規格。候選 RGBA 部件可用上節的
+具名裁切 manifest 檢查與預覽。現行 build 的正式騎手輸入是已建置的步戰包或鎖定的騎乘包。
+合併後的遊戲骨架另含馬體、腿、鞍、武器和 skin slots，依各自的包匯出；其 PNG 頁為 512×512。
+2048／21-slot 素材的自動配準與原生匯入仍待正式 slot／pivot 對照表。
+
+### 指令與設定
+
+```bash
+venv/bin/python -m tools.mount build --general zhao_v2 --horse horse_bay --publish --no-video
+venv/bin/python -m tools.mount build --soldier soldier_cavalry_red --horse horse_bay --publish --no-video
+venv/bin/python -m tools.mount qa --package export/game/spine/generals/zhao_mounted/zhao__mount_horse_bay.json
+```
+
+每組騎手與馬獨立執行。加 `--dry-run` 做唯讀預檢。每次依序重用核可底稿或合成、依 profile 調色、
+調整共用 gait、檢查與渲染，再以 `--publish` 發佈。來源的附件與實際 PNG 頁在合成前核對，
+新馬 rig 的分件檔也在使用前核對。正式發佈前會再列名檢查缺失的圖集區塊、PNG 或骨架引用。
+
+版本化設定在 `characters/<id>/ride_profile.json`，由 `spec/mounted_general.schema.json` 驗證。
+
+| 欄位 | 用途 |
+|---|---|
+| `horses` | 此角色允許的完整馬型 ID，如 `horse_bay`。 |
+| `palette` | `source_rider` 指向同馬型的核可底稿，`preset: "blue_to_red"`；同時設定 `texture_source: "mounted_variant"`。紅騎兵已有設定。 |
+| `pose.seat_depth` | 新合成的座深占大腿長度比例，範圍 0–1。 |
+| `weapon.grip_offset` | 新合成的 `[x, y]` 握點位移，以武器父骨座標、Spine y 向上為準。武器與其子骨握點一起移動。 |
+| `skins_by_tier` | 以 `bay`、`sheet`、`war` 選擇 runtime 初始 skin，預設 `default`。 |
+| `attacks` | `sword`、`dao`、`bow`、`ji` 對應各武器使用的 slot 清單。 |
+| `roles`、`cut_profile` | 步戰骨架角色語意與選用的候選裁切 manifest。 |
+
+已核可的騎乘包維持原姿態及握點。新組合遇到 carry FIX，依錯誤所報骨名、頭部 hitbox、動作幀與 px
+調整 `weapon.grip_offset`，再跑同一條指令。頭內握點仍是硬失敗。
+
+### QA 與鎖定條件
+
+- `frames/mount-v3/<stem>-<runid>/` 下有 `package/`、`provenance.json`、`qa/report.json` 和 `qa/index.json`。
+  `build` 和 `qa` 預設產生兩軸 ≤512 px 的 `qa/sheets/contact.png`，包含 walk、attack、hit、death，
+  並附各 clip 樣本。若歷史包缺少 walk，預覽以 gallop 或 trot 作為走位樣本。`--no-video` 只省略影片。
+- 發佈門檻含 `idle`、`gallop`（可用 `trot`）、`retreat`、`attack_spear`（可用 `thrust`）、`hit`、
+  `dodge`、`fall`、兩個 skins `default`／`hand_mirror`，及共用槍、盾、弓、箭、弦附件。
+- `cast` 為通用大招動作，在騎姿上加入短幅蓄勢與發力。缺少時可發佈，manifest 記錄 `clip: null`
+  和實際槍擊 fallback。現有 `attack_bow` 走共用搭弦與射箭模板。其餘 `attack_sword`、
+  `attack_dao`、`attack_ji` 已有設定與檢查入口，待確認正式武器分件、握點和動作。
+  已提供的零件須通過附件檢查。配置中只找到部分武器零件時會列出缺件。
+- 速度以 gallop 完整週期 ÷ charge 完整週期計算，目標 1.385 ±5%。保留 `77b126b` 共用步態、
+  `7c347f7`／`ee998db` 頭頸、`8bfff79` 槍式、趙雲後指待機槍與 `zhao_v2` 共用步戰貼圖。
+  見 [基準與速度定義](reports/mount-v3-baseline.md)。
+
+### 3klife 交接
+
+發佈在 `export/game/spine/generals/<id>_mounted/` 和 `export/game/spine/soldiers/<id>/`。
+遊戲包只含 Spine 4.2.40 JSON、atlas 與 PNG。趙雲各馬型都有 `zhao_v2__mount_horse_*` 主包與
+`zhao__mount_horse_*` alias。別名的 PNG 位元組相同，atlas 採別名頁檔名。
+`export/mount/` 的七份核可包維持 byte-identical。
+
+`export/game/manifest.json` v2 的 `packages` 以無副檔名的遊戲相對路徑為 key。每筆含 `files.skeleton`、
+`files.atlas`、`files.png_pages`、`skeleton_version`、以檔名索引的 `file_hashes`（SHA-256）與 `md5`，
+以及選用的 aliases、動作 fallback、skin、來源與速度資料。`spine_version` 記錄共同 runtime 版本。
+並行發佈透過工作樹內的 lock 序列化。更新已登錄遊戲檔須符合原 manifest 的 SHA-256。
+
+`export/game/mounted-list.json` v1 提供 `generals[game_id][riding_tier]`。每個葉節點的 `skeleton` 是
+相對於 `export/game/` 且含 `.json` 的路徑，`skin` 和 `mirror_skin` 為 Spine skin 名稱，`animations`
+將遊戲動作名映射到實際 Spine clip（已解析 fallback）。趙雲使用 game ID `zhao` 及同名 alias。
+此 checkout 未找到 `tools_node/sync-mount-spine.js`，匯入工具可從這個檔案產生 `MOUNTED_GENERALS`。
+
+```bash
+venv/bin/python tools/pipeline.py regress
+venv/bin/python -m tools.mount.validate export/mount/*/*
+```
+
+exec
+/bin/bash -lc 'ls -la && command -v gh; command -v ss; command -v chromium; command -v google-chrome; ls -ld /workspace/codex_jobs' in /workspace/spine-trial-q4
+ succeeded in 0ms:
+total 1100
+drwxr-xr-x  26 box box   4096 Nov 25 08:07 .
+drwxr-xr-x. 34 box box  12288 Nov 27 08:18 ..
+drwxr-xr-x   2 box box   4096 Nov 25 08:07 .agents
+drwxr-xr-x   2 box box   4096 Nov 25 08:07 .aws
+drwxr-xr-x   2 box box   4096 Nov 25 08:07 .codex
+-rw-r--r--   1 box box     61 Nov 24 23:08 .git
+drwxr-xr-x   3 box box   4096 Nov 24 23:08 .github
+-rw-r--r--   1 box box    316 Nov 24 23:08 .gitignore
+-rw-r--r--   1 box box   6509 Nov 26 15:35 AGENTS.md
+-rw-r--r--   1 box box   3398 Nov 25 06:53 README.md
+-rw-r--r--   1 box box   2898 Nov 25 01:04 RESULT_Q4.md
+drwxr-xr-x   4 box box   4096 Nov 27 03:54 actions
+drwxr-xr-x   3 box box   4096 Nov 25 07:37 bin
+drwxr-xr-x  23 box box   4096 Nov 25 06:53 characters
+drwxr-xr-x   2 box box   4096 Nov 24 23:08 debug
+drwxr-xr-x   4 box box   4096 Nov 24 23:08 demo
+drwxr-xr-x   7 box box   4096 Nov 27 15:50 docs
+drwxr-xr-x   4 box box   4096 Nov 25 06:53 export
+drwxr-xr-x  28 box box   4096 Nov 27 15:54 frames
+drwxr-xr-x   5 box box   4096 Nov 24 23:08 mounts
+-rw-r--r--   1 box box    169 Nov 24 23:08 night_director.md
+drwxr-xr-x   7 box box   4096 Nov 24 23:08 out
+drwxr-xr-x   3 box box   4096 Nov 24 23:08 parts
+drwxr-xr-x   4 box box   4096 Nov 27 07:04 render
+-rw-r--r--   1 box box     60 Nov 25 06:53 requirements.txt
+drwxr-xr-x   3 box box   4096 Nov 27 03:54 scripts
+drwxr-xr-x  10 box box   4096 Nov 24 23:08 skills
+drwxr-xr-x   2 box box   4096 Nov 24 23:08 skins
+-rw-r--r--   1 box box    112 Nov 24 23:08 spear_axis.json
+drwxr-xr-x   3 box box   4096 Nov 26 15:29 spec
+drwxr-xr-x   3 box box   4096 Nov 24 23:08 src_assets
+drwxr-xr-x   4 box box   4096 Nov 26 15:29 tests
+drwxr-xr-x   5 box box   4096 Nov 27 15:55 tools
+drwxr-xr-x   5 box box   4096 Nov 24 23:13 venv
+-rw-r--r--   1 box box 972792 Nov 24 23:08 work.png
+/usr/local/bin/gh
+/usr/bin/ss
+/usr/bin/google-chrome
+drwxr-xr-x 40 box box 20480 Nov 27 15:56 /workspace/codex_jobs
+
+exec
+/bin/bash -lc "rg --files -g AGENTS.md -g '*LESSONS*' -g '*ARCHITECTURE*' -g '*EXTENDING*'; ls -ld venv render/node_modules; git log -8 --oneline" in /workspace/spine-trial-q4
+exec
+/bin/bash -lc 'gh pr view 23 --json number,title,state,headRefName,headRefOid,baseRefName,body,files,url; gh pr view 24 --json number,title,state,headRefName,headRefOid,baseRefName,body,files,url' in /workspace/spine-trial-q4
+exec
+/bin/bash -lc 'git status --short --branch && git branch -a && git remote -v' in /workspace/spine-trial-q4
+ succeeded in 10ms:
+AGENTS.md
+docs/ARCHITECTURE.md
+docs/LESSONS.md
+docs/EXTENDING.md
+drwxr-xr-x 5 box box 4096 Nov 25 00:54 render/node_modules
+drwxr-xr-x 5 box box 4096 Nov 24 23:13 venv
+ee3bcc6 docs: plan 2D animation pipeline extensions
+a27d856 Restore full draw arm on the shared general bow rig
+c82adda Restore complete Q4 general textures at shared joints
+b5342da Add three registered dimensional head art candidates
+9fc9b6c Build and preview the shared general bow loadout
+a98755e Record approved Xiahou Yuan bow rules verbatim
+86e3f7f Diagnose Ma Chao and Ma Dai and register cut layer landmarks
+b3176d5 Address general art feedback and align rigid weapon textures
+
+ succeeded in 601ms:
+## feat/q4-generals...origin/feat/q4-generals
+?? tools/joint_align_check.py
+  feat/mount-24-actions
++ feat/mount-actions-v2
++ feat/mount-cav-batch2
+  feat/mount-generator-v3
++ feat/mount-generator-v3.1
++ feat/mount-qa
++ feat/mount-ride-neck
+* feat/q4-generals
++ feat/zhangfei-0004
+  fix/cav-blue-atlas
++ main
+  wip/q4-ratio-normalize-1126
+  work/q4-ratio-final
+  remotes/origin/HEAD -> origin/main
+  remotes/origin/battle-chibi-spec
+  remotes/origin/codex/issue-15-proportion-audit
+  remotes/origin/codex/issue-16-regression-tests
+  remotes/origin/codex/issue-17-spine-doc-index
+  remotes/origin/codex/issue-18-preview-server-lifecycle
+  remotes/origin/codex/issue-19-source-warn-report
+  remotes/origin/cursor/polearm-thrust-contract-a971
+  remotes/origin/feat/guan-yu-mount
+  remotes/origin/feat/lubu-mount
+  remotes/origin/feat/mount-24-actions
+  remotes/origin/feat/mount-actions-v2
+  remotes/origin/feat/mount-cav-batch2
+  remotes/origin/feat/mount-generator-v3
+  remotes/origin/feat/mount-generator-v3.1
+  remotes/origin/feat/mount-parts-sheet
+  remotes/origin/feat/mount-qa
+  remotes/origin/feat/mount-ride-neck
+  remotes/origin/feat/mount-v3-actions
+  remotes/origin/feat/mount-v3-fix1
+  remotes/origin/feat/prog-2-9345-sword-cast
+  remotes/origin/feat/prog-2-9348-dual-weapon
+  remotes/origin/feat/q4-generals
+  remotes/origin/feat/red-cavalry
+  remotes/origin/feat/shared-mount
+  remotes/origin/feat/zhangfei-0004
+  remotes/origin/fix/cav-blue-atlas
+  remotes/origin/guan-yu-v3
+  remotes/origin/lobby-wander-demo
+  remotes/origin/lobby-wander-gait-v2
+  remotes/origin/main
+  remotes/origin/ult-cutin-core
+  remotes/origin/walk-compare
+  remotes/origin/walk-gait-tune
+  remotes/origin/wip/q4-ratio-normalize-1126
+  remotes/origin/wip/xy-bow-1127
+origin	https://github.com/eaglhuang/spine-trial.git (fetch)
+origin	https://github.com/eaglhuang/spine-trial.git (push)
+
+ succeeded in 5623ms:
+{"baseRefName":"main","body":"Refs #18。草稿：程序生命週期已驗；尚未完成真 Spine 渲染驗收。只改預覽啟停、工具呼叫端、測試與說明，未改角色、美術、動畫資料／產物、匯出或 golden。\n\n- Python 和 Bash 入口共用管理器，使用與 Node 相同的 RENDER_PORT，預設 8765。工具只等待和回收自行啟動的 PID；既有或其他服務不會被終止。\n- 原 helper 呼叫丟失 handle 時，在隔離 PID/network 環境於 8765、8895 皆重現父程序退出後仍監聽；沒有證據能確定歷史 8895 的原啟動者。\n- `python -X utf8 -m unittest discover -s tests -p 'test_preview_server.py' -v` 7/7；分別設定 `RENDER_PORT=8765`／`8895` 同樣通過。涵蓋成功、例外、啟動逾時、SIGINT/SIGTERM、外部服務與退出碼。\n- Bash 實際入口搭配受控 renderer/encoder fixture，在兩埠驗證退出 0、7、143：自行啟動的 PID 已退出且埠可重綁；外部服務仍可 HTTP 回應。固定埠檢查可配合 `ss -ltnp '( sport = :8765 or sport = :8895 )'`。\n- 真 Spine 預覽仍待在有正常 Chromium 和 Playwright 的隔離環境驗證。這次沒有停用沙箱或新增不安全參數。static CI 以本 PR 的實際結果為準。","files":[{"path":"demo/battle/battle_wide_preview.md","additions":1,"deletions":1,"changeType":"MODIFIED"},{"path":"render/battle.mjs","additions":2,"deletions":1,"changeType":"MODIFIED"},{"path":"render/gait_compare_capture.mjs","additions":2,"deletions":1,"changeType":"MODIFIED"},{"path":"render/lobby_wander/README.md","additions":4,"deletions":5,"changeType":"MODIFIED"},{"path":"render/lobby_wander/wander.mjs","additions":2,"deletions":1,"changeType":"MODIFIED"},{"path":"render/preview-origin.mjs","additions":1,"deletions":0,"changeType":"ADDED"},{"path":"render/render.mjs","additions":2,"deletions":3,"changeType":"MODIFIED"},{"path":"render/slot_debug.mjs","additions":2,"deletions":1,"changeType":"MODIFIED"},{"path":"scripts/contact.py","additions":7,"deletions":5,"changeType":"MODIFIED"},{"path":"skills/spine-action-gen/SKILL.md","additions":1,"deletions":1,"changeType":"MODIFIED"},{"path":"skills/spine-preview-render/SKILL.md","additions":9,"deletions":3,"changeType":"MODIFIED"},{"path":"tests/test_preview_server.py","additions":163,"deletions":0,"changeType":"ADDED"},{"path":"tools/action_gen/validate.py","additions":4,"deletions":15,"changeType":"MODIFIED"},{"path":"tools/cavalry_rig.py","additions":4,"deletions":5,"changeType":"MODIFIED"},{"path":"tools/hand_mirror.py","additions":3,"deletions":5,"changeType":"MODIFIED"},{"path":"tools/leg_check.py","additions":5,"deletions":6,"changeType":"MODIFIED"},{"path":"tools/mount/batch_preview.py","additions":6,"deletions":11,"changeType":"MODIFIED"},{"path":"tools/mount/charge_gallop_fix.py","additions":11,"deletions":17,"changeType":"MODIFIED"},{"path":"tools/mount/charge_horse_fix.py","additions":11,"deletions":17,"changeType":"MODIFIED"},{"path":"tools/mount/preview.py","additions":0,"deletions":6,"changeType":"MODIFIED"},{"path":"tools/mount/seat_anim.py","additions":30,"deletions":36,"changeType":"MODIFIED"},{"path":"tools/pipeline.py","additions":5,"deletions":6,"changeType":"MODIFIED"},{"path":"tools/preview_server.py","additions":181,"deletions":0,"changeType":"ADDED"},{"path":"tools/render_preview.sh","additions":5,"deletions":5,"changeType":"MODIFIED"},{"path":"tools/skin_combo_check.py","additions":3,"deletions":5,"changeType":"MODIFIED"},{"path":"tools/soldier_rig.py","additions":28,"deletions":31,"changeType":"MODIFIED"},{"path":"tools/view_qa.py","additions":8,"deletions":2,"changeType":"MODIFIED"}],"headRefName":"codex/issue-18-preview-server-lifecycle","headRefOid":"07acfa54d5f3ecd31c1b3f05f565c9234426486e","number":23,"state":"OPEN","title":"fix: 回收預覽工具自行啟動的 HTTP 伺服器","url":"https://github.com/eaglhuang/spine-trial/pull/23"}
+{"baseRefName":"main","body":"Refs #15。草稿，不代表 40 項全數修正或驗收。\n\n- [40 項對照](docs/reports/issue-15-audit-progress.md)：原順序列 8 BUG／32 RISK、main 實況、cut-side／rig-side、測試與仍缺證據。\n- 01–08、10–13：維持固定畫布時的等比配準，來源與裁切地標、遮罩相交、低信心檢查或變形診斷。部分是需審核標註才會啟用的路徑，不假定既有資產已遷移。\n- 09、14、18–20：測試歷史路徑隔離、貼圖與網格單位、現行握點契約；這是現況證據，不宣稱替代演算法或渲染等效。\n- 15–17：新增獨立地標量測診斷。不改既有 WARN；驗證 #19 樣本的無地標讀數和退出碼維持。24：OpenCV 依既有要求使用 4 連通孔洞查核。\n- 25–29：重現裁切／骨長／座位／網格敏感性，仍待修。30：只校正喉部覆片的透明留白，核准張圖原裁框結果逐位元不變。\n\n隔離來源子集整合執行 `python -B -X utf8 -m unittest discover -s tests -p 'test_tools_audit*.py' -v`，45 項通過；[真實倉庫靜態 CI](https://github.com/eaglhuang/spine-trial/actions/runs/45924692078) 已通過。真實 Spine runtime、其他風險及剩餘 WARN 未驗收。未改素材、角色設定、動畫、export、golden 或既有門檻。","files":[{"path":"docs/reports/issue-15-audit-progress.md","additions":65,"deletions":0,"changeType":"ADDED"},{"path":"docs/reports/issue-15-rows-15-17-source-metrics.md","additions":13,"deletions":0,"changeType":"ADDED"},{"path":"tests/test_tools_audit_i15_auto_cut.py","additions":156,"deletions":0,"changeType":"ADDED"},{"path":"tests/test_tools_audit_i15_legacy_routes.py","additions":180,"deletions":0,"changeType":"ADDED"},{"path":"tests/test_tools_audit_i15_prep.py","additions":105,"deletions":0,"changeType":"ADDED"},{"path":"tests/test_tools_audit_i15_prep_components.py","additions":99,"deletions":0,"changeType":"ADDED"},{"path":"tests/test_tools_audit_i15_redraw.py","additions":121,"deletions":0,"changeType":"ADDED"},{"path":"tests/test_tools_audit_i15_rig_contract.py","additions":169,"deletions":0,"changeType":"ADDED"},{"path":"tests/test_tools_audit_i15_source_proxies.py","additions":94,"deletions":0,"changeType":"ADDED"},{"path":"tests/test_tools_audit_mount_r30.py","additions":54,"deletions":0,"changeType":"ADDED"},{"path":"tests/test_tools_audit_row24.py","additions":32,"deletions":0,"changeType":"ADDED"},{"path":"tests/test_tools_audit_rows03_05.py","additions":165,"deletions":0,"changeType":"ADDED"},{"path":"tests/test_tools_audit_rows10_12.py","additions":134,"deletions":0,"changeType":"ADDED"},{"path":"tools/auto_cut.py","additions":115,"deletions":17,"changeType":"MODIFIED"},{"path":"tools/back_fit.py","additions":27,"deletions":7,"changeType":"MODIFIED"},{"path":"tools/compose_source.py","additions":34,"deletions":7,"changeType":"MODIFIED"},{"path":"tools/fist_probe.py","additions":113,"deletions":25,"changeType":"MODIFIED"},{"path":"tools/measure_joints.py","additions":41,"deletions":20,"changeType":"MODIFIED"},{"path":"tools/mount/build.py","additions":6,"deletions":2,"changeType":"MODIFIED"},{"path":"tools/pose_warp.py","additions":77,"deletions":45,"changeType":"MODIFIED"},{"path":"tools/prep_source.py","additions":126,"deletions":16,"changeType":"MODIFIED"},{"path":"tools/redraw_part.py","additions":15,"deletions":7,"changeType":"MODIFIED"},{"path":"tools/register.py","additions":27,"deletions":6,"changeType":"MODIFIED"},{"path":"tools/registered_raster.py","additions":36,"deletions":0,"changeType":"ADDED"},{"path":"tools/source_art_check.py","additions":67,"deletions":5,"changeType":"MODIFIED"},{"path":"tools/view_check.py","additions":9,"deletions":3,"changeType":"MODIFIED"},{"path":"tools/view_qa.py","additions":1,"deletions":1,"changeType":"MODIFIED"},{"path":"tools/view_skin.py","additions":46,"deletions":9,"changeType":"MODIFIED"},{"path":"tools/work_coordinates.py","additions":18,"deletions":0,"changeType":"ADDED"}],"headRefName":"codex/issue-15-proportion-audit","headRefOid":"48cc1c867a8da67f7d5ebf9120e48f5b4c3d9d31","number":24,"state":"OPEN","title":"fix: 工具比例稽核，第一批修正與 40 項追蹤","url":"https://github.com/eaglhuang/spine-trial/pull/24"}
+
+exec
+/bin/bash -lc "google-chrome --version; id; uname -sr; ls -l /dev/dri; command -v lspci && lspci -nn | rg -i 'vga|display|3d'; sysctl kernel.unprivileged_userns_clone user.max_user_namespaces; ss -ltnp '( sport = :8765 or sport = :8895 )'; ls -l /workspace/codex_jobs/xd_*" in /workspace/spine-trial-q4
+ succeeded in 0ms:
+Google Chrome 156.0.8078.47 
+uid=1000(box) gid=1000(box) groups=1000(box)
+Linux 6.12.113+
+ls: cannot access '/dev/dri': No such file or directory
+/bin/bash: line 1: sysctl: command not found
+State  Recv-Q Send-Q Local Address:Port Peer Address:PortProcess                             
+LISTEN 0      5          127.0.0.2:8895      0.0.0.0:*    users:(("python3",pid=915386,fd=3))
+LISTEN 0      5          127.0.0.1:8765      0.0.0.0:*    users:(("python",pid=1401870,fd=3))
+LISTEN 0      5          127.0.0.1:8895      0.0.0.0:*    users:(("python",pid=750499,fd=3)) 
+-rw-r--r-- 1 box box 49003 Nov 27 15:56 /workspace/codex_jobs/xd_verify.log
+-rw-r--r-- 1 box box  1227 Nov 27 15:56 /workspace/codex_jobs/xd_verify.md
+-rw-r--r-- 1 box box     0 Nov 27 15:56 /workspace/codex_jobs/xd_verify_result.md
+
+exec
+/bin/bash -lc 'gh issue view 15 --json body,comments,title; gh pr view 24 --json comments,reviews,isDraft; gh issue view 18 --json title,body' in /workspace/spine-trial-q4
+exec
+/bin/bash -lc "cat README.md; rg -n '"'^#{1,4} '"' docs/LESSONS.md docs/ARCHITECTURE.md docs/EXTENDING.md; git ls-remote --heads origin" in /workspace/spine-trial-q4
+exec
+/bin/bash -lc 'git fetch origin refs/pull/23/head && git cat-file -e 07acfa54d5f3ecd31c1b3f05f565c9234426486e''^{commit} && git worktree add --detach /tmp/xd-pr23 07acfa54d5f3ecd31c1b3f05f565c9234426486e' in /workspace/spine-trial-q4
+ succeeded in 2386ms:
+# Spine 4.2 Q 版武將與小兵動畫
+
+從 2D 角色素材產生共用 Spine 骨架、圖集和動作，以 headless Chrome 的 spine-webgl runtime 驗證。
+
+## 先選流程
+
+| 流程 | 素材與權威規格 | 建置與產物 |
+|---|---|---|
+| 步戰 STANDARD v1.0 | 武將使用 577×1250 `work.png`、固定關節與 `auto_cut`。小兵使用 STANDARD 的 soldier 分件規格。 | `tools/pipeline.py build <id>` 產出步戰 Spine 4.2、512×512 PNG 及 ASTC 6×6。 |
+| 騎乘 v3 | 2048 畫布／21-slot 固定骨架屬騎手美術交接規格。現行 build 讀取已建好的步戰 JSON／atlas 與馬匹包，或讀核可的騎乘包。 | `tools.mount build` 合成馬與騎手，遊戲包使用 Spine 4.2.40、512×512 PNG、padding 2、`pma: false`。 |
+
+見 [步戰 STANDARD](spec/STANDARD.md)、[新增步戰角色](docs/EXTENDING.md) 和 [騎乘指南](docs/MOUNT.md#v3-建置與發佈)。
+
+## 安裝
+
+```bash
+python3 -m venv venv
+venv/bin/pip install -r requirements.txt
+npm ci --prefix render
+```
+
+準備 Node.js ≥20 和 Chrome 或 Chromium。可用 `CHROME=/path/to/chrome` 指定執行檔。產生 MP4 需要 ffmpeg。步戰建置另需 astcenc 5.x，可用 `ASTCENC=/path/to/astcenc-avx2` 指定執行檔。
+
+## 一鍵建置和發佈騎乘包
+
+```bash
+venv/bin/python -m tools.mount build --general zhao_v2 --horse horse_bay --publish --no-video
+venv/bin/python -m tools.mount build --soldier soldier_cavalry_red --horse horse_bay --publish --no-video
+```
+
+每組騎手與馬各執行一次。紅騎兵的 `characters/soldier_cavalry_red/ride_profile.json` 選用核可藍騎兵與 `blue_to_red`，同一次建置執行調色、QA 和發佈。加上 `--dry-run` 做唯讀預檢。省略 `--publish` 只暫存，省略 `--no-video` 另產生 MP4。
+
+- 遊戲包放在 `export/game/spine/generals/<id>_mounted/` 或 `export/game/spine/soldiers/<id>/`，附 `export/game/manifest.json` 與 `export/game/mounted-list.json`。
+- 檢視 `frames/mount-v3/<stem>-<runid>/qa/report.json`、`qa/index.json` 和 `qa/sheets/contact.png`。縮圖包含 walk、attack、hit、death，兩軸上限 512 px。
+- 用 `venv/bin/python -m tools.mount qa --package <directory-or-json>` 檢查既有套件。發佈須通過缺件、共用動作／skins、runtime 和速度閘門。
+- 新美術先跑 `venv/bin/python tools/pipeline.py accept-source <id>`。所有修正應回到輸入檔或共用工具。保留核可的 `export/mount/`、趙雲頭頸與後指待機槍、`zhao_v2` 貼圖、共用步態及槍式。
+
+## 步戰驗證與代理交接
+
+```bash
+venv/bin/python tools/pipeline.py build <id>
+venv/bin/python tools/pipeline.py check --char <id>
+venv/bin/python tools/pipeline.py regress
+```
+
+`spec_check` 的 `style.face`、眼睛／視線不可量測及光線／比例等啟發式 WARN 可在依樣式參考圖人工確認後接受。`source.margin` 可在確認觸邊處沒有裁掉需保留的像素後接受。`source.baseline`、`source.alpha`、`style.key_green`、接縫 `joints` WARN 需要查明並回報。所有 FAIL 都須處理，`spec_check --strict` 也會因 WARN 回傳非零。回歸的未建置角色標記為 SKIP。
+
+代理先讀 [AGENTS.md](AGENTS.md) 和對應的 `skills/*/SKILL.md`。方向、手性與逐格閘門見 [STANDARD](spec/STANDARD.md)，歷史問題與修法見 [LESSONS](docs/LESSONS.md)，模組與資料流見 [ARCHITECTURE](docs/ARCHITECTURE.md)。
+docs/LESSONS.md:1:# 經驗教訓(LESSONS)— 給接手的 AI / 工程師
+docs/LESSONS.md:12:## 1. 過去的錯誤與修正
+docs/LESSONS.md:37:## 2. 每個驗證器為什麼存在
+docs/LESSONS.md:50:## 3. Spine 4.2 JSON / draw order / skins / IK / 鏡像 的坑
+docs/LESSONS.md:62:## 4. Codex 重繪流程與有效的提示詞
+docs/LESSONS.md:87:## 5. 渲染管線小技巧
+docs/LESSONS.md:96:## 6. 已知限制 / Roadmap
+docs/LESSONS.md:107:## Two-hand spear solver for swings (slash)
+docs/LESSONS.md:112:## Making victory/block readable with the two-hand spear solver (2026-11)
+docs/LESSONS.md:119:## Bow soldier draw order (idle/walk bow in front, attack_bow hand on top, 2026-11)
+docs/LESSONS.md:129:## 9. AI 自我糾正門（pipeline check / accept-source）
+docs/LESSONS.md:133:### 怎麼用
+docs/LESSONS.md:142:### FIX 區塊長什麼樣
+docs/LESSONS.md:158:### 安全自動修正（允許）
+docs/LESSONS.md:163:### 禁止
+docs/LESSONS.md:166:## Guan Yu / Lu Bu side_ur Codex candidates (2026-11)
+docs/LESSONS.md:173:## Continuous playback / mid-animation regressions
+docs/EXTENDING.md:1:# 擴充指南(EXTENDING)
+docs/EXTENDING.md:6:## 新增武將(general)
+docs/EXTENDING.md:25:## 新增小兵(soldier)
+docs/EXTENDING.md:34:## 新增動作
+docs/EXTENDING.md:40:## 新增武器 / 換裝(skin)
+docs/EXTENDING.md:45:## 新增視角(view)
+docs/EXTENDING.md:55:## Adding a shared action (example: block/run/slash/victory, 2026-11)
+docs/EXTENDING.md:61:## 武將掛載
+docs/ARCHITECTURE.md:1:# 架構(ARCHITECTURE)
+docs/ARCHITECTURE.md:6:## 資料流
+docs/ARCHITECTURE.md:38:## 模組地圖
+docs/ARCHITECTURE.md:57:## 關鍵設計決策
+7b97ee69184ff77feb665d61bedc0e31a1f7cde5	refs/heads/battle-chibi-spec
+48cc1c867a8da67f7d5ebf9120e48f5b4c3d9d31	refs/heads/codex/issue-15-proportion-audit
+e952e1ab8d64e3c958a0e3ebe3d481706a8bde03	refs/heads/codex/issue-16-regression-tests
+465513d3d319a88bbc44b86d56b3bab47ae48eaf	refs/heads/codex/issue-17-spine-doc-index
+07acfa54d5f3ecd31c1b3f05f565c9234426486e	refs/heads/codex/issue-18-preview-server-lifecycle
+3629242e33ddbb533463ff3b19576cfe02554013	refs/heads/codex/issue-19-source-warn-report
+aff55fde1a019a99ffb68627bb10666c97930e74	refs/heads/cursor/polearm-thrust-contract-a971
+71bf8aa1c5e70695bb221aead5ee5043bb0866cb	refs/heads/feat/lubu-mount
+77b126b6a1e7edc9ecdfb01b766d8cae30691a13	refs/heads/feat/mount-24-actions
+58de063235c5749cb268844cd6911d3cd9c73538	refs/heads/feat/mount-actions-v2
+5ffb117d489e3ef2e6b442952089845c9677abf9	refs/heads/feat/mount-cav-batch2
+dc1b223a957612ac22ab30e9aa7c0b946b3d5aa9	refs/heads/feat/mount-generator-v3
+8fd300da8cb763929d5bebf76e058f0e0c0afa87	refs/heads/feat/mount-generator-v3.1
+95614b964aaf4d5fa5b85bc7de77d1b1551c4e27	refs/heads/feat/mount-parts-sheet
+241c6cf7143d9da6b08aebe85d8bd1652ee5da2a	refs/heads/feat/mount-qa
+f74a710f98c7f285257bd90b2a4d4bb7ce36a4e5	refs/heads/feat/mount-ride-neck
+ca0376246128467121580a36017b6573258bc866	refs/heads/feat/mount-v3-actions
+f620af2bc0ae439cf4adfee0854206c4a672386f	refs/heads/feat/mount-v3-fix1
+4e301f3c538bce9251d54a07b0997b607b4e9ed4	refs/heads/feat/prog-2-9345-sword-cast
+df932227d6b50041d417ed0eab5acbd279632934	refs/heads/feat/prog-2-9348-dual-weapon
+ee3bcc6bdcc56395cf3d39f35db280af9eee66be	refs/heads/feat/q4-generals
+1cb1ca5f669f9621a447a630677f0cfd0e44c17e	refs/heads/feat/red-cavalry
+93d055ec2f0b5a7adfca9a7c51073f41390d95af	refs/heads/feat/shared-mount
+d4f1bba65ed5109c2913842674a11ea6ec17477d	refs/heads/feat/zhangfei-0004
+f3d035d1c1a6ab8aaeac7f030c4293115b4f7b53	refs/heads/fix/cav-blue-atlas
+ba70d678e9a16a49d157bd683a58971ded08595f	refs/heads/guan-yu-v3
+e280a95f9666ce8d554a6fa484ed9c5f46aee291	refs/heads/lobby-wander-demo
+856b82bba5ba84b948ef99073c53c248bec9d709	refs/heads/lobby-wander-gait-v2
+0fc0bd4bf5aa59f67cb3b7255ef1c98e09ce108f	refs/heads/main
+6d2a209119412d1e90435a7530907b3a4147d199	refs/heads/ult-cutin-core
+bcbb542095995295287f399972231f76d9b32351	refs/heads/walk-compare
+2591fd977560514df2b641bfb93ea5e71dcce874	refs/heads/walk-gait-tune
+db343cbc4f9305cc416c47267f7eda63bee0dc30	refs/heads/wip/q4-ratio-normalize-1126
+d094dd9792635414416ba7650ace7b2da64a7033	refs/heads/wip/xy-bow-1127
+
+ succeeded in 9942ms:
+From https://github.com/eaglhuang/spine-trial
+ * branch            refs/pull/23/head -> FETCH_HEAD
+Preparing worktree (detached HEAD 07acfa5)
+Updating files:   9% (193/1996)Updating files:  10% (200/1996)Updating files:  11% (220/1996)Updating files:  12% (240/1996)Updating files:  13% (260/1996)Updating files:  14% (280/1996)Updating files:  15% (300/1996)Updating files:  16% (320/1996)Updating files:  17% (340/1996)Updating files:  18% (360/1996)Updating files:  19% (380/1996)Updating files:  20% (400/1996)Updating files:  21% (420/1996)Updating files:  22% (440/1996)Updating files:  23% (460/1996)Updating files:  24% (480/1996)Updating files:  25% (499/1996)Updating files:  26% (519/1996)Updating files:  27% (539/1996)Updating files:  28% (559/1996)Updating files:  29% (579/1996)Updating files:  30% (599/1996)Updating files:  31% (619/1996)Updating files:  32% (639/1996)Updating files:  33% (659/1996)Updating files:  33% (676/1996)Updating files:  34% (679/1996)Updating files:  35% (699/1996)Updating files:  36% (719/1996)Updating files:  37% (739/1996)Updating files:  38% (759/1996)Updating files:  39% (779/1996)Updating files:  40% (799/1996)Updating files:  41% (819/1996)Updating files:  42% (839/1996)Updating files:  43% (859/1996)Updating files:  44% (879/1996)Updating files:  45% (899/1996)Updating files:  46% (919/1996)Updating files:  47% (939/1996)Updating files:  48% (959/1996)Updating files:  49% (979/1996)Updating files:  49% (980/1996)Updating files:  50% (998/1996)Updating files:  51% (1018/1996)Updating files:  52% (1038/1996)Updating files:  53% (1058/1996)Updating files:  54% (1078/1996)Updating files:  55% (1098/1996)Updating files:  56% (1118/1996)Updating files:  57% (1138/1996)Updating files:  58% (1158/1996)Updating files:  59% (1178/1996)Updating files:  60% (1198/1996)Updating files:  61% (1218/1996)Updating files:  62% (1238/1996)Updating files:  63% (1258/1996)Updating files:  64% (1278/1996)Updating files:  65% (1298/1996)Updating files:  66% (1318/1996)Updating files:  67% (1338/1996)Updating files:  68% (1358/1996)Updating files:  68% (1369/1996)Updating files:  69% (1378/1996)Updating files:  70% (1398/1996)Updating files:  71% (1418/1996)Updating files:  72% (1438/1996)Updating files:  73% (1458/1996)Updating files:  74% (1478/1996)Updating files:  75% (1497/1996)Updating files:  76% (1517/1996)Updating files:  77% (1537/1996)Updating files:  78% (1557/1996)Updating files:  79% (1577/1996)Updating files:  80% (1597/1996)Updating files:  81% (1617/1996)Updating files:  82% (1637/1996)Updating files:  83% (1657/1996)Updating files:  84% (1677/1996)Updating files:  85% (1697/1996)Updating files:  85% (1711/1996)Updating files:  86% (1717/1996)Updating files:  87% (1737/1996)Updating files:  88% (1757/1996)Updating files:  89% (1777/1996)Updating files:  90% (1797/1996)Updating files:  91% (1817/1996)Updating files:  92% (1837/1996)Updating files:  93% (1857/1996)Updating files:  94% (1877/1996)Updating files:  95% (1897/1996)Updating files:  96% (1917/1996)Updating files:  97% (1937/1996)Updating files:  98% (1957/1996)Updating files:  99% (1977/1996)Updating files: 100% (1996/1996)Updating files: 100% (1996/1996), done.
+HEAD is now at 07acfa5 fix: own and reap the preview HTTP server (#18)
+
+ exited 1 in 12668ms:
+{"body":"## 背景\n\n比例稽核共 62 項，分為 22 OK、32 RISK、8 BUG，涵蓋來源註冊、裁切、步戰骨架與驗證、騎乘建置與驗證。報告列有當時的路徑、行號、量測假設與建議。 [比例稽核報告（0218c06）](https://github.com/eaglhuang/spine-trial/blob/0218c06e00ffde4f558223e20fa74acce1141942/docs/reports/tools-proportion-audit.md)\n\n## 要做的事\n\n- 以報告原表順序建立 40 項對照，逐項比對 `main` 的對應程式與實際行為。修正全部 8 個 BUG 與 32 個 RISK。已修正的項目附上現況證據並補測試。\n- 按各項現況選用穩定的解剖地標、骨鏈長度或正規化尺度。驗證不同寬度、裁框或解析度下的行為，並保留原有固定格式與驗收契約。\n- 每項補可獨立辨識的回歸案例，可用參數化測試。PR 列出每項的原報告位置、cut-side／rig-side 分類、修正位置、測試名稱及剩餘 WARN。\n\n## 驗收條件\n\n- [ ] 8 個 BUG、32 個 RISK 全部可由對照表查到修正或既有修正證據，以及對應的測試案例。22 個 OK 的契約維持有效。\n- [ ] PR 列出可直接執行的測試命令，例如 `venv/bin/python -X utf8 -m unittest discover -s tests -p 'test_tools_audit*.py' -v`。40 項案例全數通過，修正前可重現的項目有修正前後的對照。\n- [ ] `venv/bin/python tools/pipeline.py regress --static` 回報 `FAIL=0`。有涉及 runtime 的項目另附原門檻下的執行命令與結果。\n\n## 不可碰的範圍\n\n- 不得修改 `characters/` 的美術、分件、設定或輸出、任何動畫（含 `actions/`、動畫資料與產物），以及 `export/`。驗證可讀既有素材，測試輸出請放暫存目錄。\n- 從 `main` 開新分支，發 PR 回 `main`。可唯讀引用 `feat/q4-generals` 的歷史資料，禁止修改、推送或以該分支為 PR 目標。\n- 禁止放寬容差、跳過 gate、重寫 golden 來掩蓋輸出差異，或修改動畫資產。\n","comments":[],"title":"修正工具比例稽核的 8 個 BUG 與 32 個 RISK"}
+{"comments":[],"isDraft":true,"reviews":[]}
+Post "https://api.github.com/graphql": net/http: TLS handshake timeout
+
+codex
+PR #23 的 head 已放進暫時 worktree。我會依照 repo 的 `spine-preview-render` 技能檢查渲染入口，並用 `cloud-environment-runtime` 技能確認環境限制。測試前已發現 8765 和 8895 有既有監聽程序，會保留它們，避免影響其他工作。
+exec
+/bin/bash -lc "cat /home/box/.codex/plugins/cache/openai-curated-remote/cloud-environment/0.2.6/skills/runtime/SKILL.md; cat docs/ARCHITECTURE.md docs/EXTENDING.md; sed -n '1,106p;129,165p' docs/LESSONS.md" in /workspace/spine-trial-q4
+ succeeded in 0ms:
+---
+name: cloud-environment-runtime
+description: Use when a task needs guidance on denied GitHub pushes, workspace files, tools, setup, SSH, network access, or service previews on a managed Codex Cloud computer.
+---
+
+The selected Cloud environment is your computer for this task. Use its workspace, shell, installed applications, and configured connections to do the work and verify the result.
+
+When you start or resume work on the Cloud computer, call `cloud_environment.environment_status({})` if available. Check again after its configuration changes. Its `environment_id` identifies the machine it describes. Its `portals` are configured inbound connections to that machine, identified by protocol and port. A configured connection does not establish that a service is running. If status is unavailable or describes a different machine, continue with what you can verify on the selected computer. Discard earlier status when the machine changes or detaches.
+
+If a saved Cloud environment is reported missing, ask the user to check **Settings → Codex Cloud → Environments** in the same workspace. Report the cause if a tool confirms it. Otherwise, say it may be unpublished or deleted only if every page of `list_templates` loads and none contains its previously seen `template_id`.
+
+- **Work with files or code.** Each task has its own workspace. A Default environment can start without a repository. On resume, inspect the files already there and preserve existing edits. For repo work, use the matching checkout or connected provider. Read [Repositories](references/repositories.md) to verify a requested revision, find a missing checkout, or resolve a provider access issue.
+- **Start a server.** Avoid ports reserved for Cloud system services, even if nothing is listening yet; desktop and browser services can start on demand. These include `22` (SSH), `8000` (browser auth), `8001` (CUA MCP gateway), `8080` (browser config), `8081` (Neko), `8082` (Neko proxy), `8083` (reserved browser service port), `8085` (browser controller), `9222` (Chromium CDP), `31460` (browser extension server), and `50002` (Neko WebRTC TCP mux, when configured). Check for other listeners before choosing a port, and never stop a system service to free one. For a new HTTP preview, prefer `3000` when the selected machine lists it as HTTP in `environment_status.portals`, it’s free, and the app can use it. Otherwise prefer another suitable configured HTTP port. Honor the user’s port and reuse an existing listener for the intended app.
+- **Inspect the Cloud desktop.** The Cloud desktop is the remote computer's graphical interface, separate from the user's Codex desktop app, web, or mobile client. Use this plugin’s `cloud-desktop` skill to explore a running Cloud app, investigate a visual bug interactively, use an existing browser session or native window, or hand control to the user. Honor any browser, tab, device, or test mode the user names.
+- **Run a suite or repeat a check.** Use the project’s test command and its configured browser mode. For new scripted checks, prefer headless automation such as Playwright for repeatable assertions, viewport sweeps, and scripted captures. Use a visible browser when the check depends on a real display. If a scripted check fails, reproduce the failing step in the app when it would help explain the failure.
+- **Preview a service for the user.** The app runs on the Cloud computer. An authenticated HTTP preview works on desktop, web, and mobile. SSH forwarding opens it locally on the computer running the user's Codex desktop app. Read [Service previews](references/previews.md) before choosing a connection, opening a preview, or helping configure a missing port.
+- **Deliver a file.** Open or read back the result in its intended format and link its absolute path in the originating chat. On supported desktop clients, **Save as…** downloads a copy.
+- **Set up tools.** Read [Packages](references/packages.md) before installing dependencies or [Docker](references/docker.md) before building or running containers.
+- **Connect to a service.** Read [Networking](references/networking.md) to check current policy and credentials, then test the intended service with its actual client. For a configured VPN or a private connectivity problem, also read [VPN](references/vpn.md).
+- **Provide a terminal SSH command.** Use these steps when the user explicitly asks to connect to the Cloud environment from a terminal over SSH. For app previews, follow [Service previews](references/previews.md). Confirm the selected executor and its `environment_id`, and verify an SSH portal when status can report it. On that executor, run `id -un` for the SSH user and `ssh-keygen -lf /run/codex-ssh/host_key.pub -E sha256` for the trusted host fingerprint. If SSH is unavailable, say so instead of guessing connection details.
+
+  Give the user this command to run locally, replacing `USER` and `ENV_ID` with the verified values, and the SHA256 fingerprint to check before accepting the host key:
+
+  ```sh
+  ssh -o 'ProxyCommand=codex tcp-tunnel --environment-id %n' USER@ENV_ID
+  ```
+
+  Keep `%n`: OpenSSH lowercases `%h`, but environment IDs are case-sensitive. Mention CLI version or `codex login` only for setup or troubleshooting.
+- **Change or repair the environment.** Read [Environment changes](references/environment-changes.md) for onboarding, adding repositories to the configuration, or changing access. Read [Diagnostics](references/diagnostics.md) before inspecting setup logs.
+
+## Recover a denied GitHub push
+
+For a GitHub.com HTTPS push that returns 403 with `Permission to OWNER/REPO.git denied to LOGIN`, copy the repository and login from the error. Call `cloud_environment.environment_status` with `{"github_push":{"repository_full_name":"OWNER/REPO","denied_login":"LOGIN"}}` if supported. Only offer selection recovery when `github_push_access` contains `installation_url`. Otherwise explain the Git error using any verified permissions.
+
+When you have the installation URL, start your final reply with one short sentence reporting the failed push, branch, and HTTP status. In the Codex app, put the explanation and next steps in the expanded card below. Substitute the verified URL and names, and use the user's language. For an organization, mention that an organization owner can update the selection.
+
+```markdown
+<details open>
+<summary>Allow pushes to OWNER/REPO</summary>
+
+Anyone can clone this public repository. GitHub doesn’t list it among the repositories `LOGIN` can access through the ChatGPT Codex Connector.
+
+1. [Manage access on GitHub](INSTALLATION_URL).
+2. Under **Repository access → Only select repositories**, add **REPO** if it’s missing and save.
+3. Reply “:codex-followup[Retry push]{prompt="Check access for LOGIN and retry my original push to OWNER/REPO if GitHub confirms write permission."}”. I’ll check access before trying again.
+
+Already selected? Ask a repository admin to check your write access.
+
+</details>
+```
+
+For the Codex CLI and other text clients, use a bold heading followed by the same Markdown steps. Replace the follow-up directive with **Retry push**. Omit the HTML tags and the directive syntax.
+
+Let the user decide when to retry after selection recovery. Recheck `environment_status` before retrying, including for a dry run. Copy the original repository and login verbatim. With `has_push_permission: true`, retry the original command once to the same branch, preserving every option. Ask if the original push is ambiguous. Report Git’s result and stop. With `has_push_permission: false`, GitHub lists the repository for this account. Ask a repository admin to check LOGIN’s write access. With `installation_url`, the repository is still missing from the account’s list. If the check fails, report that access is unverified and offer to check again on request. Wait for GitHub to confirm push permission before this retry.
+# 架構(ARCHITECTURE)
+
+一句話:**一張(或幾張)2D 角色圖 → 切件 → 共用骨架 + 共用動作 → Spine 4.2 JSON + 512 圖集 + ASTC 6×6 → 真實 runtime 逐格驗證 → 預覽 / 戰鬥 demo**。
+所有角色共用同一套骨架與動作(依 tier:general / soldier),角色差異只寫在 `characters/<id>/char.json`。
+
+## 資料流
+
+```
+ Codex 重繪(skills/spine-source-art) ──► characters/<id>/work.png(577×1250,綠幕已 key)
+        │                                 + 乾淨底圖 / 武器圖 / 視角 pass(full + arm-free)
+        ▼
+ 切圖端  tools/prep_source.py → tools/register.py / compose_source.py / pose_warp.py
+        tools/auto_cut.py(依 char.json "cut")──► characters/<id>/parts/*.png + parts_v1.json
+        tools/back_fit.py --landmarks → tools/view_skin.py ──► parts/skins/view_back/*.png + skins/view_back.yaml
+        (零件切不完整時)Codex 單件重畫 → tools/redraw_part.py ──► parts/skins/view_back/redrawn/<slot>.png(view_skin 自動採用)
+        ▼
+ build   tools/build_all.sh(CHAR=<id>)
+        1 scripts/merge_limbs.py   兩骨肢體加權網格(關節重疊 ≥ 18 px)
+        2 scripts/atlas.py         512×512 頁、padding 2、pma false、bleed
+        3 bin/bin/astcenc-avx2     ASTC 6×6(參考檔)
+        4 scripts/skeleton.py      共用 rig(setup pose)──► out/rig/<id>_rig.json
+        5 tools/skin_add.py        skins/*.yaml(換裝 / 視角 skin)
+        6 python -m tools.action_gen all   actions/*.yaml → 動畫 + validate + leg_check
+          tools/hand_mirror.py     鏡像右手 skin
+          tools/view_qa.py         side_ur 視角 gate(含 limb_chain / cape / cape_edges / redrawn_part 逐格渲染)
+          tools/spec_check.py      STANDARD v1.0(tools/standard.py)
+        ▼
+ 輸出    characters/<id>/out/<id>.json、out/atlas/*.atlas + *.png、out/astc/*.astc
+        ▼
+ 預覽    render/render.mjs(headless Chrome + spine-webgl 4.2)、tools/render_preview.sh(MP4 + contact sheet)
+        render/battle.mjs + battle.html(多角色戰鬥)、tools/pipeline.py render-demo
+        ▼
+ 回歸    tools/pipeline.py regress(tests/golden/:hash + 逐格驗證 + pose sheet)
+```
+
+小兵(soldier tier):分件圖 → `tools/soldier_rig.py`(圖集 + 共用剛體骨架 + 內建 idle/walk/attack_*、hand_mirror、檢查、預覽)。
+
+## 模組地圖
+
+| 路徑 | 角色 |
+|---|---|
+| `spec/STANDARD.md`、`spec/standard.json` | **權威規格**(比例、關節、視角、draw order、近側規則、腳掌角度、skin 組合、小兵 tier) |
+| `spec/ART_SPEC.md`、`cut_spec.json`、`rig_spec.json`、`source_art_spec.json` | 美術規則與切件 / rig 數值(JSON 為準) |
+| `spec/style_ref/` | 風格與角度參考圖(side_ur mockup 等) |
+| `tools/charcfg.py` | 每角色路徑與設定(`CHAR` 環境變數 → `characters/<id>/char.json`) |
+| `scripts/` | 底層 build 步驟(merge_limbs、atlas、skeleton;`cut.py`/`spear.py` 為趙雲舊切圖,保留以維持位元組不變) |
+| `tools/action_gen/` | 動作產生器:`gen.py`(預設檔 → 時間軸、`extends` + `weapon.key_patch` 視角鍵修補、視角 draw order、腳掌角度)、`solvers.py`(two_hand_spear 等)、`rig.py`、`timeline.py`、`validate.py`(runtime 驗證) |
+| `actions/*.yaml` | 正面共用動作;`actions/directional/*.yaml` 視角 / 方向動作(back_idle、back_spear_thrust、back_hit、hit_recoil、spear_thrust_dr) |
+| `tools/leg_check.py`、`hand_mirror.py`、`view_qa.py`、`view_check.py`、`skin_combo_check.py`、`spec_check.py`、`standard.py` | 驗證器(見 `docs/LESSONS.md` §2) |
+| `tools/pipeline.py` | 統一 CLI:new-general / new-soldier / build / add-action / render-demo / regress |
+| `render/` | spine-webgl 4.2 headless 渲染(`render.mjs` 模式 poses / sample / samplemany / bones;`battle.mjs`) |
+| `demo/battle/` | 戰鬥 demo 的 spec、背景與輸出 MP4 |
+| `characters/<id>/` | 每個角色:char.json、work.png、parts/、skins/、codex_*/(提示詞與紀錄)、out/ |
+| `tests/golden/` | 回歸 golden |
+| `skills/*/SKILL.md` | 給 AI 代理的操作手冊(`AGENTS.md` 有索引) |
+
+## 關鍵設計決策
+
+- **一套骨架、一套動作**:動作以趙雲比例寫,其他角色用 `joints` + `motion_scale` 吸收差異;不分叉骨架或預設檔。
+- **動作是資料**:YAML 預設 → 產生器 → 以真實 runtime 取樣驗證;FAIL 指出最差時間點與規格條目。
+- **視角 = skin**:side_ur 是 `view_back` rig skin(同骨架同動畫,換圖 + skin-only 約束),draw order 由 spec 決定。
+- **鏡像 = runtime scaleX −1**,右手持武器由 `hand_mirror` skin 保證。
+- **所有 gate 讀 spec**:數值不寫死在程式;改規則 = 改 `standard.json` + 文件。
+# 擴充指南(EXTENDING)
+
+先讀 `AGENTS.md` → `spec/STANDARD.md` → `docs/LESSONS.md` §9。每完成一步就 build + 看渲染圖 + `pipeline.py check` / `regress`。
+未 build 角色在 `regress` 會 **SKIP**(不是 FAIL)。任何 FAIL 讀 FIX 區塊;`tools/ai_gate.py` 配方表。**禁止放寬容差。**
+
+## 新增武將(general)
+1. `venv/bin/python tools/pipeline.py new-general <id> --from char2` 建立 `characters/<id>/`(char.json 範本 + 下一步提示)。
+2. 依 `skills/spine-source-art/SKILL.md` 用 Codex 重繪:577×1250 work 姿勢(與趙雲同關節)、乾淨底圖、**該武將自己的武器**單獨一張。
+   `tools/prep_source.py` key 綠幕。
+3. **必過來源門:** `venv/bin/python tools/pipeline.py accept-source <id>`(= `spec_check --only source,style`)。
+   FAIL 會印 FIX 區塊——**禁止**放寬容差或繼續 cut。合成用 `pipeline.py compose <id>`(寫完立刻重跑門)。
+4. `tools/measure_joints.py` 量關節寫入 char.json `joints`;`tools/proportions.py` 建議 `motion_scale`。
+5. `CHAR=<id> venv/bin/python tools/auto_cut.py`(依 char.json `cut`)→ 看 `cut_check.png`。
+   輕微關節偏移可在切件後執行 `venv/bin/python -m tools.fit_parts --char <id> --preview characters/<id>/preview/fit.png`。
+   以剛體變換寫回分件與關節，從本角色的 `src_assets/base_clean_reg.png` 補接縫；長度超標仍由 STANDARD 回報。
+   需保留武器方向時加 `--keep-weapon-angle`。重測或重做 fitting 前先完整重跑 `auto_cut.py`，再跑 STANDARD。
+6. `venv/bin/python tools/pipeline.py build <id>`(= `CHAR=<id> bash tools/build_all.sh`),必須 `FAIL=0`。
+   未 build 過的武將會在 build 前再跑一次 source,style;FAIL 則拒絕進入。
+7. `venv/bin/python tools/pipeline.py check --char <id>` 取得完整 AI 門報告(validators + FIX)。
+8. side_ur 視角(可選):照 SKILL 1b 出 full + arm-free 兩張 → `tools/view_check.py` PASS → `tools/back_fit.py --landmarks`
+   → `tools/view_skin.py FIT --body BODY --pad head=..,skirt=60x0,torso=20x0`(遠側手 `l_arm` 自動保留預設美術)→ 再 build。
+9. `CHAR=<id> bash tools/render_preview.sh`;看 contact sheet 與攻擊幀(雙手都在槍桿上、腳尖朝右上)。
+10. `pipeline.py regress --update --chars <id>` 建 golden,再 `pipeline.py regress` 全綠後 commit + push。
+
+## 新增小兵(soldier)
+1. `venv/bin/python tools/pipeline.py new-soldier <id> --weapon spear|sword|bow [--shield]`。
+2. 依 `skills/spine-soldier-new/SKILL.md` 用 Codex 出 320×640 分件(頭盔正面 / helmet_back、軀幹、雙臂、雙腿、武器、盾)。
+3. `CHAR=<id> venv/bin/python tools/soldier_rig.py --preview`(或 `pipeline.py build <id> --preview`),FAIL=0。
+   不可為單一兵種改骨架、關節或預設動作;不可單獨縮放分件。
+4. 弓兵(`shield: weapon_bow`):弓掛在共享的 `shield` slot。`soldier_rig.py` 會在 idle/walk/attack_spear/attack_shield
+   自動加 `drawOrder` key 把弓畫在 `arm_n` 之上; `attack_bow` 不加(拉弦拳要蓋住弓)。不要改 STANDARD setup
+   `draw_order`、不要在 char.json 寫 `draw_order` override。詳見 `docs/LESSONS.md`「Bow soldier draw order」。
+
+## 新增動作
+1. 寫 `actions/<name>.yaml`(或 `actions/directional/`),可 `extends:` 既有預設;用 `pipeline.py add-action <name> --from <preset.yaml> [--chars a,b] --build`。
+2. 視角動作:`view: {skin: view_back, draw_order: standard}`,不可寫 drawOrder;腳掌角度由產生器自動加上。
+3. 武器攻擊:前手 `ik_l_arm` mix 1 的區間就是 `grip_hands_visible` 的檢查區間;兩手都必須可見。
+4. `venv/bin/python -m tools.action_gen all` + 看幀;詳見 `skills/spine-action-gen/SKILL.md`。
+
+## 新增武器 / 換裝(skin)
+1. 同畫布同尺寸 PNG 放 `characters/<id>/parts/skins/<skin>/<slot>.png`,寫 `characters/<id>/skins/<skin>.yaml`(`name`、`replace`)。
+2. skin 命名 `weapon_<name>` / `outfit_<name>`;build 會跑 `skin_add.py` 與 `skin_combo_check.py`。詳見 `skills/spine-skin-swap/SKILL.md`。
+   換武器時注意握點(`char.json weapon.grip / front_grip`)與 `standard.weapon.axis`。
+
+## 新增視角(view)
+1. 在 `spec/standard.json tiers.general.views` 加視角:`draw_order`、`near_side`(front / behind / grip_hand / grip_hands)、`feet`、`qa`,
+   並在 `spec/STANDARD.md` §2 寫人讀規則與參考圖(`spec/style_ref/`)。
+2. 美術:Codex 出 full + arm-free;`view_check.py` 加入新方向的判斷;`back_fit.py` + `view_skin.py --skin view_<name>`。
+3. 動作:`actions/directional/<view>_*.yaml`,`view: {skin: view_<name>, draw_order: standard}`。
+   零件切不完整(手臂少一段、披風被畫布切直)時:Codex 只重畫那個零件 → `tools/redraw_part.py <skin> <slot> raw.png --canvas`
+   → 重跑 `view_skin.py`(自動採用 `redrawn/`)→ `build_all.sh`;`view_qa` 的 `limb_chain` / `cape` / `cape_edges` 必須 PASS。
+4. 讓 `view_qa.py` / `leg_check.py` 讀新視角的 spec(`std_view()` 依 skin 名稱找視角),確認 gate 在新視角上真的會 FAIL(故意做壞一次)。
+5. 更新 `docs/LESSONS.md`、README、對應 SKILL.md。
+
+## Adding a shared action (example: block/run/slash/victory, 2026-11)
+1. Write `actions/directional/<name>.yaml` (front/side) and `back_<name>.yaml` (`extends: <name>.yaml`, `view: {skin: view_back, draw_order: standard}`).
+2. `CHAR=zhao_v2 venv/bin/python -m tools.action_gen all` until validate + legs PASS, then `CHAR=<c> bash tools/build_all.sh` for every char with actions_extra (view_qa runs limb_chain/cape gates on the new animations).
+3. Inspect frames, `pipeline.py regress --chars zhao,char2,zhao_v2`, then `--update` if intended.
+4. `venv/bin/python tools/action_previews.py <chars>` to refresh demo/actions/.
+
+## 武將掛載
+
+已有步戰包時，以 `venv/bin/python -m tools.mount build --general <id> --horse horse_bay --dry-run` 檢查語意和輸入，再依 [v3 建置與發佈](MOUNT.md#v3-建置與發佈) 建立暫存包和 QA。新增掛載部件的像素座標與 pivot 格式見 [v3 切件交接](MOUNT.md#v3-切件交接)。
+# 經驗教訓(LESSONS)— 給接手的 AI / 工程師
+
+本檔記錄這個專案**每一次犯過的錯、怎麼修、為什麼現在有對應的驗證器**。新增角色或動作前請先讀完;
+規則的權威來源仍是 `spec/STANDARD.md` + `spec/standard.json`(本檔只解釋「為什麼」)。
+
+修正分兩類,報告時一律標示:
+- **rig 端**:骨架 / 預設動作 / 產生器 / 驗證器參數(`spec/*.json`、`actions/*.yaml`、`tools/*`)。
+- **切圖端**:來源美術、切件、對位(Codex 重繪、`auto_cut.py`、`view_skin.py`)。
+
+---
+
+## 1. 過去的錯誤與修正
+
+| # | 症狀(使用者看到的) | 根因 | 修正 | 守門驗證器 |
+|---|---|---|---|---|
+| 1 | **反關節膝蓋**:突刺跨步或鏡像後膝蓋往後彎 | 2 骨 IK 的 bend 方向沒有跟著朝向;鏡像(scaleX −1)後 bend 正負反轉;髖太高導致 IK 過伸翻轉 | 腿改加權網格;bend 方向寫在 `rig_spec.json`(共用 `ik_bend_positive false`);髖高度關鍵格避免過伸;正常 + 鏡像都驗 | `tools/leg_check.py` `knee_forward`(膝蓋必須在髖-踝連線的「面向前方」一側,正常與鏡像各驗一次) |
+| 2 | **鏡像後變左手出槍** | 只把 root scaleX −1,右手變成畫面上的遠側手,看起來像左撇子 | 產生 `hand_mirror` rig skin(`tools/hand_mirror.py`):鏡像時手臂鏈交換肩膀,保持右手持槍;小兵同理(`soldier_rig.py`);弓兵因剛體拉弦臂無法交換,列入 `hand_mirror.skip_loadouts` | `hand_mirror.draw_order` / `hand_mirror.follow`;`[hand_mirror] PASS` |
+| 3 | **背面視角看到胸口**(身體正面朝鏡頭、只有頭轉過去 = 扭轉) | Codex 重繪時只轉頭不轉身體 | 角度定義改為 side_ur:頭、軀幹、髖、腿**同一方向**朝右上,看得到 30–60% 側臉;附客戶 mockup 參考圖;pass 03 被拒、pass 04 通過 | `tools/view_check.py`(以 `codex exec` 視覺審查 torso_facing / head_facing / chest_frontal / face_visible_pct,扭轉即 FAIL) |
+| 4 | **披風切壞**(披風破洞、被手臂切出缺口、碎片) | 披風從「有手臂」的那張圖切,手臂遮住的地方是空的 | 每次出兩張:完整圖 + **無手臂 T-pose 圖**;身體 / 披風從無手臂圖切(`view_skin.py --body`),手臂後方隱藏區以 `--fill pony=81` 補畫;小碎島丟棄 | `view_qa` `part_islands`、`part_holes`、`body_holes`(INFO + 圖) |
+| 5 | **從背後出槍**(槍與持槍手畫在身體後面) | 背面視角沿用正面的 draw order 反轉 | side_ur 的近側手是**右手**:右臂 + 槍畫在軀幹 / 頭 / 披風之前;所有視角動作共用 `standard.json views.back.draw_order`,預設檔只能寫 `draw_order: standard` | gen.py 對自訂 drawOrder 直接報錯;`view_qa` `weapon_near_side`、`grip_near_arm` |
+| 6 | **左手(遠側手)消失**:攻擊時看不到左手握桿 | 遠側手 `l_arm` 畫在軀幹後面;side 切圖只切到一小塊拳頭碎片 | `l_arm` 移到頭之後、近側手臂之前(在軀幹 / 披風 / 頭之上);`l_arm` **保留預設美術**(完整前臂 + 拳頭,`grip_hands.keep_default`),不被 view skin 取代 | `view_qa` `grip_hands_order`、`grip_hands_visible`(前手 IK 全開時兩手 ≥ 60% 可見)、`grip_hands_default_art` |
+| 7 | **腳底平放 / 側向**,與 3/4 右上側身不符 | 視角動作沿用正面的水平腳掌 | 產生器對視角預設的 `l_foot_ik`/`r_foot_ik` 加 `views.back.feet.angle_deg`(14°,腳尖朝右上) | `leg_check` `foot_angle`(視角動作偏差 > `tol_deg` 3° 即 FAIL;正面動作仍是 `foot_level`) |
+| 8 | **武器拿錯**:張飛(char2)一開始拿偃月刀(那是關羽的) | 原圖候選直接沿用 | Codex 單獨重畫**丈八蛇矛**零件(`characters/char2/weapon/`),放在共用 `spear` slot | 人工審查;`standard.weapon.axis`(槍桿傾斜) |
+| 9 | 右臂被拉長 / 手肘翻轉 | 槍與手線性內插 | `two_hand_spear` 求解器:後肩相對關鍵格 + 30fps 烘焙 | validate `ik_reach`、`bend_side`、`stretch` |
+| 10 | 槍掃過臉 | 槍轉動時畫在頭前 | 轉動區間 drawOrder 把槍放在頭後 | 人工看 contact sheet |
+| 11 | 側視手臂帶著一塊紅布 / 皮膚碎片飛走 | 手臂 slot 切到第二個島 | `view_skin.py` 手臂 slot 只保留最大一塊 | `view_qa` `arm_one_piece` |
+| 12 | char2 手臂較短,前手到不了槍桿 | 動作以趙雲比例寫 | `char.json` 的 `joints` + 分肢 `motion_scale`;`tools/proportions.py` 計算 | validate `ik_reach` |
+| 13 | 小兵走路滑步 | 原地走 + 角色不移動 | 戰鬥中 `walk` 播放時角色以 `tiers.soldier.legs.walk_ground_speed` 移動 | 人工看 battle demo |
+| 14 | **張飛 side_ur 左手斷掉**:拳頭浮在臉旁的槍桿上,看不到連到肩膀的手臂 | (a) char2 預設 `l_arm` 美術只有前臂 + 拳頭(沒有上臂);(b) `back_spear_thrust` 的 0.15 鍵(槍桿 28°+15° 很陡)用 `shaft_nearest` 把前手放到肩膀**後上方**(手肘朝上),蓄力時槍桿 30° 上仰正好穿過遠側肩膀,前手只能縮在肩膀旁(肩-拳 60–90 px,手臂 229 px 折成一團,上臂被軀幹蓋住) | (a) Codex 重畫**完整側視遠側手臂**(肩→上臂→肘→前臂→護腕→拳,同盒子、同 2 骨網格權重)`tools/redraw_part.py`;(b) 視角預設用新的 `weapon.key_patch` 改 0.15/0.30/0.44 三個鍵並插入 0.08 中間鍵(`insert: true`,避免 IK 淡入時目標掃過肩膀、手臂在 0.10–0.13 折成一團):槍桿放平、整支槍往前 50–80 px,前手在胸前(肩-拳 110–175 px,手肘朝下)。衝刺高度(line)不變 | `view_qa` `limb_chain.<anim>.far_arm/near_arm`(逐格只渲染該手臂鏈:肩膀所在的塊必須就是拳頭所在的塊,沿骨骼路徑的覆蓋率 ≥ 0.9)|
+| 15 | **張飛披風破碎**:邊緣被直線切掉、碎片、突刺時分離 | 披風是從 fit 圖「切」出來的:原圖畫布把披風左緣切直;一部分下擺被分給腿 / 裙子 slot;fit 切圖本來就會碎 | Codex 重畫**整件側視披風**(一塊、無洞、無直切邊)放進同一個 `pony` 盒子,網格權重照舊;`view_skin.py` 把被重畫 slot 的**舊美術**(和它相連的紅色像素)從鄰近 slot 移除(`--drop-old-low skirt,l_leg,r_leg` 用預設 alpha),移除後剩下的小碎塊(< 主塊 2%)也丟掉;趙雲的 `pony`(馬尾)同樣被盒子左緣切直 → 重畫完整馬尾 | `view_qa` `cape.<anim>.pony`(逐格:一塊、無洞、碰到肩膀 / 軀幹 / 頭)、`cape_edges.<skin>.pony`(盒邊不得有長直邊)、`redrawn_part`(重畫檔本身一塊、無洞、離盒邊 ≥ 3 px,且與 skin 內的檔案相同) |
+| 16 | **重畫的遠側手臂仍不連肩**(limb_chain 每格 FAIL,渲染出來手臂偏到骨骼右側、肘關節懸空) | (a) Codex 畫的手臂置中在盒子裡,但 rig 的骨骼線(肩 (-15,3) → 肘 (7,119) → 腕 (60,217),part px)貼著盒子左緣,肩關節甚至在**盒子外**;(b) `l_arm` 是加權網格(linkedmesh),舊的 `pad` 只支援 region,盒子長不大 | (a) `skin_add` 的 `pad:` 支援加權網格:在放大的盒子上重建網格(同 setup 仿射、權重取盒內最近點雙線性、骨骼局部座標由 setup 算);(b) `redraw_part.py --landmarks` 用 TPS 把畫出來的肩/肘/腕/拳對到骨骼線(每點加左右 ±35 px 剛性點保持手臂寬度,不拉胖);char2 `l_arm` pad 66x28。**重畫的部件必須落在骨骼線上,不能只是『塞進盒子』** | `limb_chain`(逐格)+ 人工看 zoom 圖;`redrawn_part` 檢查放大後盒子邊緣不被裁切 |
+
+> 原則:**錯誤要在來源修**(spec / 工具參數 → rig spec / 預設動作 → 重出美術)。禁止在圖集頁上修像素、禁止放寬容差、
+> 禁止 `rig_override` / `motion_scale` / `cut_override` 去「湊過」驗證,禁止手改 `out/*.json`(`out/zhao.json`(趙雲基準)
+> 必須位元組不變,hash `a97c85b6cbf21be2`)。
+
+## 2. 每個驗證器為什麼存在
+
+| 驗證器 | 檔案 | 抓什麼 | 起因 |
+|---|---|---|---|
+| `spec_check` | `tools/spec_check.py` + `tools/standard.py` | 來源圖尺寸 / 風格、零件、關節重疊 ≥ 18 px、512 圖集、ASTC 6×6、rig 與 STANDARD 一致 | 切件參數散落、關節處斷開 |
+| `validate` | `tools/action_gen/validate.py` | 逐格以真實 spine-webgl runtime 取樣:腳不滑、槍水平、IK 可達、肘膝彎向、雙手握槍、伸縮上限、循環無縫 | #1、#9 |
+| `leg_check` | `tools/leg_check.py` | `knee_forward`、`foot_level` / `foot_angle`、`shin_lean`(正常 + 鏡像) | #1、#7 |
+| `hand_mirror` | `tools/hand_mirror.py` | 鏡像後仍右手持武器 | #2 |
+| `view_check` | `tools/view_check.py` | 視角美術是否扭轉(Codex 視覺審查) | #3 |
+| `view_qa` | `tools/view_qa.py` | `weapon_near_side`、`grip_near_arm`、`grip_hands_order/visible/default_art`、`arm_one_piece`、`part_islands/holes`、`body_holes`、`limb_chain`(逐格手臂連續)、`cape`(逐格披風一塊並連著肩膀)、`cape_edges`、`redrawn_part` | #4、#5、#6、#11、#14、#15 |
+| `skin_combo_check` | `tools/skin_combo_check.py` | 所有合法 skin 組合可同時套用,互斥組合(`skin_compose.exclusive`)被拒 | 疊 skin 時 slot 衝突 |
+| `pipeline.py regress` | `tools/pipeline.py`、`tests/golden/` | golden hash + 逐格驗證 + pose sheet 差異 | 改共用工具時不小心改到別的角色 |
+
+## 3. Spine 4.2 JSON / draw order / skins / IK / 鏡像 的坑
+
+- **版本**:JSON 寫 `"spine": "4.2.40"`;runtime 用 `@esotericsoftware/spine-webgl` 4.2(`render/spine-webgl.js`)。4.1 以前的 JSON 不相容(IK 的 `softness`、`physics` 欄位等)。
+- **draw order**:動畫的 `drawOrder` 關鍵格是**相對 setup 順序的 offset**,不是絕對列表;要算實際順序請用 `tools/view_qa.py` 的 `eff_order()`。視角動作的順序只能來自 `standard.json views.back.draw_order`(gen.py 會擋 preset 裡的 drawOrder)。
+- **skins**:skin 可以帶 skin-only 骨骼 / 約束 / slot(`hand_mirror`、`view_back`),但這類 rig skin 不是用 `skin_add.py` 做的;一般換裝 skin(`weapon_*`、`outfit_*`)用 `skin_add.py`,區塊尺寸必須與 default 完全相同(view skin 可用 `pad:` 對稱加大)。
+  組合順序:view → cosmetic → rig;一個 actor 最多一個 view skin;武將 `hand_mirror` + `view_back` 互斥。
+- **網格權重**:四肢是加權網格(關節雙骨權重),換 skin 時 linked mesh 沿用權重,所以替換圖必須和原圖**同畫布同位置**。
+- **IK**:`mix` 0→1→0 控制前手何時握槍;`bendPositive` 與鏡像相乘後才是真實彎向 —— 一定要驗鏡像。
+- **鏡像**:一律 root `scaleX = −1`(runtime),絕不預先翻轉圖片;鏡像後要配 `hand_mirror` 才會是右手。
+- **foot IK 骨**掛在 root、rotation 0,靴子權重綁在它上面 —— 所以腳掌角度 = foot IK 骨的 rotate 時間軸。
+- **atlas**:`pma: false`、padding 2、512×512;透明區 RGB 做 bleed;ASTC 由引擎匯入端處理(附的 .astc 是參考)。
+
+## 4. Codex 重繪流程與有效的提示詞
+
+- 只用 Codex CLI 內建圖像生成(`codex exec`),不要用其他生圖工具。典型用法(repo 根目錄):
+  ```bash
+  codex exec -s workspace-write -C "$PWD" -i 參考1.png -i 參考2.png - < characters/<id>/codex_side_ur/prompt.md
+  ```
+  讓 Codex 先讀 `skills/spine-source-art/SKILL.md`;每次輸出都要求寫一行自我檢查到 `codex_notes.md`。
+- 有效的提示結構(完整範例:`characters/zhao_v2/codex_side_ur/prompt_04.md`、`characters/char2/codex_side_ur/prompt.md`):
+  1. 逐張說明每張輸入圖的**用途**(編輯目標 / 只取角度 / 只取關節位置 / 只取材質),並寫「never copy its look」。
+  2. 給出**工作畫布座標**:頭、肩、肘、拳、髖、膝、踝、地面線 y(例如 865×1875、地面 y≈1857),近側拳頭放在黃色握環上。
+  3. 方向寫成可檢查的句子:「torso, hips, skirt, legs face image-RIGHT, same direction as the head;chest plate edge-on」。
+  4. 一次出兩張:A 完整姿勢、B 同一人物雙臂水平伸直(無手臂遮擋身體)。
+  5. 純色背景 `#00B140`,無陰影、無武器、無文字;最多 2–3 次嘗試。
+  6. 要求自我檢查:torso 方向 / head 方向 / chest frontal 是或否。
+- 被拒的經驗:只轉頭不轉身體(扭轉)、腳底不在同一地面線、近側拳頭偏離握環、綠幕不均勻(`prep_source.py` 會先 key 掉)。
+  位置誤差用 `tools/back_fit.py --landmarks`(相似變換 + TPS)修,不要用 rig override。
+- **切出來的零件會碎,整件重畫才完整**:fit 圖切 slot 時,被遮住或被畫布切掉的部分永遠補不回來(浮空拳頭、直邊披風)。
+  需要完整零件時請 Codex 在原尺寸工作畫布上**只畫那一個零件**(綠幕、同位置同比例、黃框 = 盒子、離盒邊 ≥ 20 px、一塊無洞),
+  再 `CHAR=c venv/bin/python tools/redraw_part.py view_back <slot> raw.png --canvas [--scale S] [--shift=DX,DY]`
+  (負數要寫 `--shift=-40,60`)→ 檔案寫到 `parts/skins/<skin>/redrawn/<slot>.png`,`view_skin.py` 自動採用並把舊美術從鄰近
+  slot 移除。範例提示:`characters/char2/codex_side_ur/redraw/prompt.md`(手臂 + 披風)、`characters/zhao_v2/codex_side_ur/redraw/prompt.md`(馬尾)。
+  Codex 的自我檢查常說「沒通過」(小碎塊、離邊 18 px),`redraw_part.py` 會保留最大塊並縮放進盒子,以它的 `check` 結果為準。
+- 新的驗證器要**先對舊美術跑一次確認會 FAIL**(limb_chain / cape_edges 在舊 char2 美術上都 FAIL),再換新美術確認 PASS。
+- 武器單獨一張(筆直、無飄帶、標出握點),`auto_cut.py weapon` 轉到握持軸;每位武將用自己的歷史武器(趙雲:槍;張飛:丈八蛇矛)。
+
+## 5. 渲染管線小技巧
+
+- `render/render.mjs`(headless Chrome + spine-webgl;可用 `CHROME=/path/to/chrome` 指定瀏覽器):
+  `cd render && CHAR=char2 node render.mjs poses skin view_back "back_spear_thrust|0.56|/tmp/x.png"`;
+  選項順序 `skin`、`tint`、`flip`、`only <slots>`、`cam '{"bg":[1,0,1]}'`(洋紅背景方便做遮罩比對)。輸出 1280×720。
+- 戰鬥 demo:`venv/bin/python tools/pipeline.py render-demo demo/battle/battle_spec.json`(battle.mjs 出圖 → ffmpeg H.264)。
+- **宣稱修好之前一定要看渲染圖**;每次用新的 jpg 檔名,避免看到快取的舊圖。放大看手、腳、膝蓋、披風邊緣。
+- 驗證器的暫存圖可用 `--keep DIR` 保留(`view_qa.py --keep`),FAIL 訊息會指出圖在哪裡。
+
+## 6. 已知限制 / Roadmap
+
+- 弓兵鏡像後是左手(`hand_mirror.skip_loadouts`:剛體拉弦臂交換後搆不到箭尾)。→ 需要 2 骨手臂 + 重切手臂美術。
+- 武將的 side_ur 視角(`view_back`)不能與 `hand_mirror` 疊用(`skin_compose.exclusive.general`),所以 side_ur 武將不鏡像;
+  舊版 `demo/battle/battle_spec.json` 中鏡像的張飛沒有套 `hand_mirror`(會是左手),請以 `battle_spec_swapped.json` 為準。
+- `pauldron_l` 有小碎塊(太小不納入 gate)。
+- side_ur 突刺時槍桿上仰 30°,遠側拳頭在肩膀上方約 150 px(下巴高度)是衝刺線決定的(使用者要求不調高度);手臂是連續的,但上臂有一段在軀幹後面。
+- 腳掌角度是整隻靴子旋轉近似(沒有獨立腳掌骨),腳跟可能略高於地面線。
+- CI 只跑靜態檢查(GitHub runner 沒有 GPU/Chrome 渲染);完整 regress 需在本機跑。
+- 尚未完成:手臂交叉 / 後拳擋下巴的自動檢查、char2 側視腿邊紅色碎布、小兵 2 骨手臂、肩膀縫隙。
+
+## 9. AI 自我糾正門（pipeline check / accept-source）
+
+接手的 AI **不可**在 FAIL 時放寬容差、手改 `out/*.json`、或跳過檢查硬過關。工具會擋住並印出 FIX 區塊。
+
+### 怎麼用
+```bash
+venv/bin/python tools/pipeline.py accept-source <id>   # 來源門：source,style；FAIL → 禁止 cut/build
+venv/bin/python tools/pipeline.py compose <id>         # compose_source 後立刻重跑 source,style
+venv/bin/python tools/pipeline.py check --char <id>    # 依角色跑 validators + FIX
+venv/bin/python tools/pipeline.py check --char <id> --stage source,action
+venv/bin/python tools/pipeline.py regress              # 未 build 角色 = SKIP（不是 FAIL）
+```
+
+### FIX 區塊長什麼樣
+```
+========== FIX [view_qa.limb_chain] ==========
+檢查: view_qa.limb_chain.back_spear_thrust.far_arm
+量測: cover=0.42 at t=0.15
+要求: >= 0.9
+端別: 切圖端 (cut-side)
+原因: …
+要改: … / 技能: skills/… ; docs/LESSONS.md #14
+怎麼修: 1. … 2. …
+禁止: 禁止放寬 limb_chain.min_cover;禁止手改 atlas/JSON 像素
+重跑: CHAR=<id> venv/bin/python tools/pipeline.py check --char <id>
+=================================
+```
+配方表在 `tools/ai_gate.py` 的 `RECIPES`（對應本檔 §1 各列）。尚無法量化的鎖定規則列在 `WARN_PLANS`（武器身分、3D Q 版風格）——不可忽略，也不可假裝已 FAIL 閘住。
+
+### 安全自動修正（允許）
+- 改 yaml/specs 後重跑 `build_all` / `action_gen` / `soldier_rig` / `skin_add`（含 pad）/ `redraw_part --landmarks` / `view_skin --fill`
+- `regress` 自動 SKIP 未 build 角色
+- 上一階段 FAIL → 拒絕進下一階段（accept-source / compose / 未 build 的 build）
+
+### 禁止
+- 放寬任何容差、刪 FAIL、手改 atlas/JSON、改 `out/zhao.json`、動 guan_yu/lu_bu 進行中來源、動 AI-Atomic-Framework
+
+
+exec
+/bin/bash -lc "cat skills/spine-preview-render/SKILL.md; sed -n '1,145p' render/render.mjs; cat render/package.json; rg -n 'def (check|regress)|preview|static' tools/pipeline.py; ls -l /opt/google/chrome/chrome-sandbox; cat /proc/sys/user/max_user_namespaces; rg 'Seccomp|NoNewPrivs' /proc/self/status; ls /sys/class/drm" in /tmp/xd-pr23
+ exited 2 in 0ms:
+---
+name: spine-preview-render
+description: Use to look at the result - render single poses, debug overlays, bone dumps, the preview MP4 and the contact sheet with the real spine-ts 4.2 runtime (headless Chrome). Required after any rig, preset, skin or atlas change, before reporting.
+---
+# spine-preview-render
+
+## Setup (once per box)
+- `cd render && npm ci` (playwright-core + spine-webgl 4.2); Chrome at `/usr/bin/google-chrome`.
+- 從倉庫根目錄用 `venv/bin/python -m tools.preview_server --cwd render -- <command>` 啟動表中的渲染命令。工具預設只在本機 8765 啟動自己的伺服器，正常、失敗或可捕捉中斷時都會等待它退出。相同專案的現有服務可重用，不會由本次命令停止。
+- `RENDER_PORT=8895` 可讓服務和渲染共用另一個埠。使用暫存輸出驗證，例如：
+
+  ```bash
+  output=$(mktemp -d)
+  RENDER_PORT=8895 venv/bin/python -m tools.preview_server --cwd render -- \
+    node render.mjs poses "setup|0|$output/pose.png"
+  ```
+
+## Commands (pass after `--cwd render --`)
+| Need | Command |
+|---|---|
+| Still frames | `node render.mjs poses cam '{"x":180,"y":560,"zoom":1.3}' "spear_thrust\|0.56\|../frames/v2/a.png" ...` (`setup\|0\|f.png` = setup pose) |
+| Skin | insert `skin <name>` before `cam` |
+| Only some slots (integrity check) | insert `only pony,torso,skirt` before `cam` (other slots hidden, no ground); `cam '{"bg":[1,0,1]}'` = magenta bg |
+| Debug colours + bones | insert `tint '{"l_arm":[1,0.3,0.3]}'` before `cam` |
+| Bone world dump | `node render.mjs bones "spear_thrust\|0.30"` |
+| Per-frame sample (validator) | `node render.mjs sample spear_thrust 60 ../frames/validate/x.json` |
+| Sequence | `rm -rf ../frames/main; node render.mjs seq cam '{"x":260,"y":590,"zoom":1.95}' seq.json` |
+
+`zoom` = world units per screen pixel (bigger = smaller character).
+
+MP4 (repo root): `ffmpeg -y -framerate 30 -i frames/main/%05d.png -c:v libx264 -pix_fmt yuv420p -crf 18 out/preview/zhao_preview.mp4`
+(check the frame pattern printed by `seq`). Contact sheet: `venv/bin/python scripts/contact.py` (renders its own frames).
+
+## Hard rules / must-nots
+- Always render with the real runtime; never judge a pose from the JSON numbers alone.
+- Look at frames at the key times of each beat (presets list `beats:`), zoomed on the joints that were changed
+  (knee in the lunge, front arm in the charge, hands on the weapon).
+- The Read tool caches images by path: write each new look to a NEW filename.
+- `frames/` is git-ignored; only `out/preview/*` deliverables are committed.
+
+## Verification checklist
+- [ ] Status line printed `{"s":"ok"...}` listing the expected animations.
+- [ ] Viewed the frames (not only generated them) and noted any visual defect with its time.
+- [ ] MP4 plays at 30 fps, yuv420p; contact sheet includes the close-ups the change was about.
+- [ ] Mirrored generals rendered with `skin hand_mirror flip` (battle spec: `"skin": "hand_mirror", "mirror": true`);
+  battle sheets include a hands close-up row and a legs/knees close-up row (`render.mjs sample` also dumps IK mixes `k`).
+- [ ] http server stopped.
+import { chromium } from 'playwright-core';
+import { previewOrigin } from './preview-origin.mjs';
+import fs from 'fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const [,,mode,...args]=process.argv;
+// character selection: CHAR=<id> (reads ../characters/<id>/char.json) -> serves <root>/out/<name>.json + atlas/<name>.atlas
+const CHAR=process.env.CHAR||'zhao';
+const assetDir=process.env.RENDER_ASSET_DIR;
+const renderDir=path.dirname(fileURLToPath(import.meta.url));
+const cfg=assetDir ? {} : JSON.parse(fs.readFileSync(path.join(renderDir,'..','characters',CHAR,'char.json')));
+const root=(cfg.root??`characters/${CHAR}`).replace(/^\.\/?/,'').replace(/\/$/,'');
+const BASE=assetDir ? '/assets/' : (root?`/${root}`:'')+'/out/';
+const NAME=assetDir ? process.env.RENDER_ASSET_NAME : cfg.name||CHAR;
+const origin=assetDir ? 'http://spine-preview.local' : previewOrigin;
+const browser=await chromium.launch({...(process.env.CHROME ? {executablePath:process.env.CHROME} : {channel:'chrome'}),args:['--use-gl=angle','--use-angle=swiftshader','--enable-unsafe-swiftshader','--no-sandbox']});
+const page=await browser.newPage({viewport:{width:1280,height:720}});
+page.on('console',m=>{if(m.type()==='error'||m.type()==='warning')console.log('[page]',m.text())});
+page.on('pageerror',e=>console.log('[pageerror]',e.message));
+const query=new URLSearchParams({base:BASE,name:NAME});
+if(assetDir){
+  const atlas=process.env.RENDER_ASSET_ATLAS;
+  if(atlas) query.set('atlas',atlas.split(path.sep).join('/'));
+  else if(!fs.existsSync(path.join(assetDir,'atlas',NAME+'.atlas'))) query.set('atlas',NAME+'.atlas');
+  // Serve assets from this invocation's worktree and output directory.
+  await page.route(origin+'/**',async route=>{
+    const pathname=decodeURIComponent(new URL(route.request().url()).pathname);
+    const prefix=pathname.startsWith(BASE) ? BASE : '/render/';
+    const directory=prefix===BASE ? assetDir : renderDir;
+    const file=path.resolve(directory,pathname.slice(prefix.length));
+    if(pathname.startsWith(prefix) && file.startsWith(path.resolve(directory)+path.sep) &&
+        fs.statSync(file,{throwIfNoEntry:false})?.isFile()){
+      await route.fulfill({path:file});
+    }else{
+      await route.fulfill({status:404});
+    }
+  });
+}
+await page.goto(`${origin}/render/index.html?${query}`);
+await page.waitForFunction(()=>window.status_!=='loading',null,{timeout:30000});
+const st=await page.evaluate(()=>({s:window.status_,e:window.errors,a:window.anims}));
+console.log(JSON.stringify(st));
+if(st.s!=='ok'){await browser.close();process.exit(2);}
+if(args[0]==='skin'){await page.evaluate(n=>window.skinName=n,args[1]); args.splice(0,2);}
+if(args[0]==='tint'){await page.evaluate(c=>window.tint=c,JSON.parse(args[1])); args.splice(0,2);}
+if(args[0]==='flip'){await page.evaluate(()=>window.flipX=true); args.splice(0,1);}   // runtime mirror: skeleton scaleX -1
+if(args[0]==='only'){await page.evaluate(l=>window.only=l.split(','),args[1]); args.splice(0,2);}   // QA: draw only these slots (no ground line)
+if(args[0]==='cam') {await page.evaluate(c=>Object.assign(window.cam,c),JSON.parse(args[1])); args.splice(0,2);}
+const save=async(name,t,file)=>{const d=await page.evaluate(([n,t])=>window.renderPose(n,t),[name,t]); fs.writeFileSync(file,Buffer.from(d.split(',')[1],'base64'));};
+if(mode==='sample'){ // anim fps outfile : dump every bone's world state per frame (used by tools/action_gen validate)
+  const [n,fps,f]=args; const out=await page.evaluate(([n,fps])=>{const a=skeleton.data.findAnimation(n); const N=Math.round(a.duration*fps); const fr=[];
+    for(let i=0;i<=N;i++){const t=i/fps; window.renderPose(n,t); const b={};
+      for(const x of skeleton.bones){b[x.data.name]=[x.worldX,x.worldY,x.a,x.b,x.c,x.d,x.ascaleX,x.arotation];}
+      const k={}; for(const c of skeleton.ikConstraints) k[c.data.name]=c.mix; fr.push({t,b,k});}
+    return {duration:a.duration,frames:fr};},[n,parseFloat(fps)]);
+  fs.writeFileSync(f,JSON.stringify(out)); console.log('sampled',n,out.frames.length);
+} else if(mode==='samplemany'){ // anim|fps|outfile ... : same dump as 'sample', one browser for many animations (tools/skin_combo_check.py)
+  for(const s of args){const [n,fps,f]=s.split('|'); const out=await page.evaluate(([n,fps])=>{const a=skeleton.data.findAnimation(n); const N=Math.round(a.duration*fps); const fr=[];
+    for(let i=0;i<=N;i++){const t=i/fps; window.renderPose(n,t); const b={};
+      for(const x of skeleton.bones){b[x.data.name]=[x.worldX,x.worldY,x.a,x.b,x.c,x.d,x.ascaleX,x.arotation,x.active?1:0];}
+      const k={}; for(const c of skeleton.ikConstraints) if(c.active) k[c.data.name]=c.mix; fr.push({t,b,k});}
+    return {duration:a.duration,frames:fr};},[n,parseFloat(fps)]);
+  fs.writeFileSync(f,JSON.stringify(out));} console.log('sampled',args.length);
+} else if(mode==='bones'){ for(const s of args){const [n,t]=s.split('|'); await page.evaluate(([n,t])=>window.renderPose(n,t),[n,parseFloat(t)]);
+   const r=await page.evaluate(()=>['l_upper','l_fore','l_grip','spear','r_upper','r_grip','chest'].map(b=>{const x=skeleton.findBone(b);return b+':'+x.worldX.toFixed(0)+','+x.worldY.toFixed(0)+' r'+x.getWorldRotationX().toFixed(0)}).join('  '));
+   console.log(n,t,r);} }
+else if(mode==='poses'){ // name:t:file ...
+  for(const s of args){const [n,t,f]=s.split('|'); await save(n==='setup'?null:n,parseFloat(t),f);}
+} else if(mode==='inspect'){
+  const {captures,metadata}=JSON.parse(fs.readFileSync(args[0]));
+  const rows=[];
+  for(const capture of captures){
+    const info=await page.evaluate(({clip,time,skin,flip,masks})=>{
+      const animation=skeleton.data.findAnimation(clip);
+      if(!animation || animation.duration<=0) throw Error('Missing or empty clip '+clip);
+      window.skinName=skin;
+      window.flipX=flip;
+      window.only=skeleton.slots.map(slot=>slot.data.name);
+      const full=window.renderPose(clip,time);
+      const bones=Object.fromEntries(skeleton.bones.filter(b=>b.active).map(b=>[
+        b.data.name,[b.worldX,b.worldY,b.a,b.b,b.c,b.d]
+      ]));
+      const shots={full};
+      for(const [name,slots] of Object.entries(masks)){
+        if(!slots.length) continue;
+        window.only=slots;
+        shots[name]=window.renderPose(clip,time);
+      }
+      return {duration:animation.duration,bones,shots};
+    },capture);
+    for(const [key,shot] of Object.entries(info.shots)){
+      fs.writeFileSync(capture.files[key],Buffer.from(shot.split(',')[1],'base64'));
+    }
+    rows.push({duration:info.duration,bones:info.bones});
+  }
+  fs.writeFileSync(metadata,JSON.stringify(rows));
+} else if(mode==='cycle_frames'){
+  const {action,frames,dir,masks,bones=[],idleReference=false,poseReference,includeEndpoint=false}=JSON.parse(fs.readFileSync(args[0]));
+  fs.mkdirSync(dir,{recursive:true});
+  const duration=await page.evaluate(n=>skeleton.data.findAnimation(n)?.duration??null,action);
+  if(!duration) throw Error('Missing or empty cycle '+action);
+  if(idleReference){
+    await page.evaluate(()=>window.only=skeleton.slots.map(slot=>slot.data.name));
+    await save(typeof idleReference==='string' ? idleReference : 'idle',0,`${dir}/idle_reference.png`);
+  }
+  const referencePose=poseReference && await page.evaluate(([poseReference,bones])=>{
+    window.only=skeleton.slots.map(slot=>slot.data.name);
+    window.renderPose(...poseReference);
+    return Object.fromEntries(bones.flatMap(name=>{
+      const b=skeleton.findBone(name);
+      return b ? [[name,[b.worldX,b.worldY,b.a,b.b,b.c,b.d]]] : [];
+    }));
+  },[poseReference,bones]);
+  const world=[];
+  let setup={};
+  for(let i=-1;i<=frames;i++){
+    const time=duration*i/frames;
+    const capture=await page.evaluate(([action,time,masks,bones,endpoint])=>{
+      window.only=skeleton.slots.map(slot=>slot.data.name);
+      const full=window.renderPose(action,time);
+      const transforms={};
+      for(const name of bones){
+        const b=skeleton.findBone(name);
+        if(b) transforms[name]=[b.worldX,b.worldY,b.a,b.b,b.c,b.d];
+      }
+      const result=action ? {full} : {};
+      if(action && !endpoint){
+        for(const [key,slots] of Object.entries(masks)){
+          window.only=slots;
+          result[key]=window.renderPose(action,time);
+        }
+      }
+      return {result,transforms};
+    },[i<0 ? null : action,time,masks,bones,i===frames && !idleReference && !includeEndpoint]);
+    if(i<0) setup=capture.transforms;
+    else world.push(capture.transforms);
+    for(const [key,shot] of Object.entries(capture.result)){
+      const n=String(i).padStart(4,'0');
+      fs.writeFileSync(`${dir}/${key}_${n}.png`,Buffer.from(shot.split(',')[1],'base64'));
+    }
+  }
+  fs.writeFileSync(`${dir}/capture.json`,JSON.stringify({action,duration,frames,setup,world,referencePose}));
+} else if(mode==='pose_masks'){
+  const spec=JSON.parse(fs.readFileSync(args[0]));
+  const output=await page.evaluate(({animation,time,variants})=>{
+{
+  "name": "render",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@esotericsoftware/spine-webgl": "4.2",
+    "playwright-core": "^1.64.1"
+  }
+}
+8:  build <id> [<id> ...] [--preview]        general: tools/build_all.sh, soldier: tools/soldier_rig.py
+15:  regress [--build] [--update] [--static] [--chars a,b]
+60:def check_id(i):
+78:          f'  4. {PY} tools/pipeline.py build {a.id} --preview   (re-gates source,style; STANDARD v1.0; never add rig_override/motion_scale)\n'
+110:          f'  3. {PY} tools/pipeline.py build {a.id} --preview' + ('\n  note: archers get no hand_mirror (spec tiers.soldier.hand_mirror.skip_loadouts)' if a.weapon == 'bow' else ''))
+112:def build(c, preview=False):
+115:        rc = run([PY, 'tools/soldier_rig.py'] + (['--preview'] if preview else []), env={'CHAR': c})
+132:    if preview: rc = run([BASH, 'tools/render_preview.sh'], env={'CHAR': c})
+136:    bad = [c for c in a.ids if build(c, a.preview)]
+212:    from preview_server import preview_server
+213:    with preview_server():
+279:    if a.static and not a.update:
+280:        # Keep the approved mount sources locked in the dependency-free static CI job.
+305:    if not a.static:
+306:        from preview_server import preview_server
+307:        with preview_server():
+329:        man.update(new); json.dump(man, open(MAN, 'w'), indent=1, sort_keys=True); print(f'[regress] updated {MAN}' + ('' if a.static else ' + pose sheets'))
+345:    p = S.add_parser('build'); p.add_argument('ids', nargs='+'); p.add_argument('--preview', action='store_true'); p.set_defaults(f=cmd_build)
+353:    p = S.add_parser('regress'); p.add_argument('--build', action='store_true'); p.add_argument('--update', action='store_true'); p.add_argument('--static', action='store_true')
+-rwsr-xr-x. 1 root root 15216 Oct 20 04:07 /opt/google/chrome/chrome-sandbox
+63991
+NoNewPrivs:	0
+Seccomp:	0
+Seccomp_filters:	0
+ls: cannot access '/sys/class/drm': No such file or directory
+
+exec
+/bin/bash -lc "git fetch origin && git for-each-ref --format='%(objectname)' refs/heads refs/remotes/origin | sort -u | wc -l; git log --all -i --oneline --extended-regexp --grep='頭冠|馬身中軸|蹄底|head crown|horse.*(axis|midline)|hoof.*(sole|bottom)|landmark|標註'" in /workspace/spine-trial-q4
+ succeeded in 1556ms:
+37
+86e3f7f Diagnose Ma Chao and Ma Dai and register cut layer landmarks
+d23c14c mount: add landmark-based saddle split primitive
+2d4f618 WIP: lower charge neck and cover landmark head motion
+93d055e feat(mount): generic quadruped mount cut tool, gait generator and rider attach contract
+5cce36f fix(lu_bu): 頭冠翎羽與裙下流蘇不再被切斷，移除頭後殘留畫戟
+617d2e9 Far arm on the bone line: skin_add pads weighted meshes, redraw_part --landmarks TPS registration; char2 view_back l_arm padded 66x28 + re-registered
+10ff241 side_ur view (alias of view_back): Zhao + Zhang Fei redrawn by Codex in a near side profile facing up-right with head and torso in the SAME direction (client mockup refs spec/style_ref/side_ur_ref_*.png); tools/view_check.py vision gate (twist / chest-frontal / back-frontal / face %) - zhao pass 03 FAIL (torso lower_right vs head right) -> pass 04 PASS, char2 pass 03 PASS; landmark TPS refit, view_skin, FAIL=0 both; battle demo + sheets re-rendered; STANDARD/spec/skills updated
+bbc042e Back 3/4 over-the-shoulder views (~half face visible) via Codex for zhao_v2 + char2: landmark fit on the shared skeleton, arm-free back body from a registered T-pose pass (view_skin --body), symmetric region padding (view_skin --pad / skin_add 'pad:') so the turned face is not clipped by the head box; STANDARD/spec/skills define the angle; FAIL=0, validate PASS
+d39ce1e Stage 3: back 3/4 views via Codex (landmark+TPS fit, view_back skin on the shared skeleton), directional presets back_idle/back_spear_thrust (+30 deg, foreshortened, reversed draw order)/spear_thrust_dr (-18 deg)/hit_recoil; solver direction/path/foreshorten/line anchor; zhao_v2+char2 FAIL=0, validate PASS
+
+exec
+/bin/bash -lc "git show origin/codex/issue-15-proportion-audit:docs/reports/issue-15-audit-progress.md; git show origin/codex/issue-15-proportion-audit:docs/reports/issue-15-rows-15-17-source-metrics.md; rg --files --hidden -g '"'!.git'"' docs export | rg -i '(reports|mount|annotat|landmark|axis)' | rg -v '(\\.atlas"'$|/spine/|/locked/)'"' | head -110" in /workspace/spine-trial-q4
+ succeeded in 0ms:
+# #15 工具比例稽核：40 項追蹤（草稿）
+
+Main: `0fc0bd4bf5aa59f67cb3b7255ef1c98e09ce108f`. Pinned report: `0218c06e00ffde4f558223e20fa74acce1141942` `docs/reports/tools-proportion-audit.md`. Independent parsing: 8 BUG, 32 RISK, 22 OK. All original rows kept in order. Blob equality is relative to the pinned report snapshot, not a functional pass. Changed blobs require review; unchanged blobs do not prove invariant behavior when callers or data differ. Mount rows retain their original grouping and get cut-side or rig-side based on the affected stage.
+
+| # | Report line | Class | Side | Exact main sources (blob prefixes) | Status |
+|---|---|---|---|---|---|
+| 01 | 13 | BUG | cut-side | `tools/prep_source.py` `a86e9d66` (same) | Height-only scale and reviewed landmarks; overwide fit fails without replacing output. Five `test_01_*` cases passed. |
+| 02 | 14 | RISK | cut-side | `tools/prep_source.py` `a86e9d66` (same) | Annotated route normalizes component area and preserves reviewed ornament seeds; legacy unannotated route unchanged. 4 test_02_* methods pass; real annotated art not validated. |
+| 03 | 16 | RISK | cut-side | `tools/measure_joints.py` `69e8176b` (changed) | Explicit low-confidence warning and strict no-write mode verified. Legacy silhouette translation and separate fit endpoints remain open. test_row03_*. |
+| 04 | 17 | RISK | cut-side | `tools/measure_joints.py` `69e8176b` (changed); `tools/fist_probe.py` `b6656d01` (same) | Optional reviewed chin/wrists/head height normalize the face/fist search; verified 1×/2×. Unannotated skin/face heuristics remain open. test_row04_*. |
+| 05 | 19 | RISK | cut-side | `tools/register.py` `593b044d` (same); `tools/compose_source.py` `ae951f6e` (same) | Explicit same-aspect annotation scaling preserves fixed canvas and normalized RANSAC/feather thresholds. Unknown crop/non-uniform use remains open. test_row05_*. |
+| 06 | 20 | RISK | cut-side | `tools/auto_cut.py` `28379604` (changed) | Canvas-safe reference overlay and rejection of mismatched diff inputs are fixed (2 tests); transfer between body types still needs reviewed cut landmarks. |
+| 07 | 21 | RISK | cut-side | `tools/auto_cut.py` `28379604` (changed) | Opt-in reviewed seam spans scale morphology lengths and areas consistently; legacy routes preserved (3 tests). No approved art configuration carries the new anchors yet. |
+| 08 | 23 | RISK | cut-side | `tools/auto_cut.py` `28379604` (changed) | Opt-in paired shaft points drive scale and placement for both stems, while retaining schema and STANDARD axis gate (3 tests); legacy configs lack paired landmarks and were not migrated. |
+| 09 | 25 | RISK | cut-side | `tools/fit_parts.py` (absent) | Historical branch-only tool; absent from main and current new-general route. Test `test_09_*`. No equivalent solver claimed. |
+| 10 | 27 | RISK | cut-side | `tools/pose_warp.py` `f240ed97` (same) | Mismatched canvases rejected; opt-in Jacobian gate blocks folds before writing (2 tests). Positive Jacobian is not shape preservation; automatic landmarks and TPS/width issues remain. |
+| 11 | 28 | RISK | cut-side | `tools/back_fit.py` `cabb78b1` (same) | Explicit landmarks can register without a fallback initial bbox (1 test). Existing bbox and weapon segmentation remain the unannotated default. |
+| 12 | 29 | RISK | cut-side | `tools/view_skin.py` `efdfae0b` (same) | Cross-edge slots preserve output format, and opt-in read-only missing/overlap diagnostics (1 test). Ownership segmentation, regional filter sizes and intentional overlap still need review. |
+| 13 | 30 | BUG | cut-side | `tools/redraw_part.py` `c585e333` (same); `tools/view_check.py` `e4d9cf65` (same) | Aspect-preserving patch in this draft; 6 synthetic tests pass; static/runtime not verified |
+| 14 | 32 | RISK | cut-side | `scripts/cut.py` `4164cf0e` (same); `scripts/spear.py` `840d0eb1` (same) | Supported new-general route verified with command spies; frozen Zhao data/script untouched. Test `test_14_*`. |
+| 15 | 41 | RISK | rig-side | `spec/standard.json` `9320751b` (same); `tools/standard.py` `7e697023` (same); `tools/spec_check.py` `5028dde4` (same) | Locked canvas, joint and chain contracts preserved. Reviewed anatomy read-only diagnostic and 2 tests; no gate replacement. |
+| 16 | 43 | RISK | rig-side | `tools/spec_check.py` `5028dde4` (same); `tools/source_art_check.py` `9353035a` (same) | Optional crown/chin/sole independent of pixel proxies (1 test). Real annotated benchmark still missing; old baseline WARN unchanged. |
+| 17 | 44 | RISK | rig-side | `tools/source_art_check.py` `9353035a` (same); `tools/spec_check.py` `5028dde4` (same); `spec/source_art_spec.json` `8a5f88dc` (same) | Optional chest endpoints separate anatomical diagnostics from silhouette/face proxies (1 test). Legacy style WARN unchanged. |
+| 18 | 46 | RISK | rig-side | `scripts/skeleton.py` `6cc643b2` (same); `spec/rig_spec.json` `b00056ca` (same) | Characterization test: normalized limb weighting across two widths and separate ankle-to-foot contribution. Cape and real poses unverified. |
+| 19 | 47 | RISK | rig-side | `scripts/atlas.py` `b42bd32e` (same); `scripts/skeleton.py` `6cc643b2` (same) | Characterization test: 6 px texture overlap and packing-independent original-size geometry. No rendered seam or serialized bone changes. |
+| 20 | 48 | RISK | rig-side | `spec/rig_spec.json` `b00056ca` (same); `spec/standard.json` `9320751b` (same); `tools/standard.py` `7e697023` (same); `tools/spec_check.py` `5028dde4` (same); `tools/action_gen/solvers.py` `9f53ed91` (same) | Characterization test: existing grip gate and two-hand solver. `grip_slide_min` and ‘only raise’ wording conflict with actual <=120 enforcement; not changed. |
+| 21 | 49 | RISK | rig-side | `tools/hand_mirror.py` `712080cc` (same) | Read-only: mirrored outer radius uses bone chain; inner radius adds fixed 25 u. Runtime hand contact evidence needed. |
+| 22 | 50 | RISK | rig-side | `tools/action_gen/gen.py` `4f4ce36d` (same); `tools/action_gen/solvers.py` `9f53ed91` (same); `tools/proportions.py` `3f153bb4` (same) | Read-only: torso/forearm/upper-arm scales distinct; uniform scaling of numeric params still needs units audit. |
+| 23 | 52 | RISK | rig-side | `tools/action_gen/validate.py` `74bb1c39` (same); `tools/leg_check.py` `ceec40e4` (same); `tools/skin_combo_check.py` `6635564c` (same); `spec/standard.json` `9320751b` (same) | Read-only: fixed foot/grip/loop gates and treadmill per-frame displacement are not normalized by elapsed time; no change. |
+| 24 | 53 | RISK | rig-side | `spec/standard.json` `9320751b` (same); `tools/view_qa.py` `f8132b59` (same) | Fixed OpenCV named 4-connectivity; diagonal 60 px² hole no longer missed. 2 tests, distinct hunk from #23. Renderer and coordinate normalization remain open. |
+| 25 | 76 | RISK | cut-side (mount) | `tools/mount/cut.py` `869486a7` (same); `tools/mount/rider.py` `db3eda36` (same); `tools/mount/saddle_split.py` `408e56a2` (same) | Reproduced. A normalized component changed keep/drop across resolutions (64 vs 256 px²); fixed top-column threshold also flipped. Review explicit intent and separate canvas/raster effects before modifying. |
+| 26 | 77 | BUG | cut-side (mount) | `tools/mount/cut.py` `869486a7` (same) | Reproduced. Width 20→40 altered inferred knee Y=90→80 with root fixed. Approved horse_sheet does not currently supply four complete explicit knee/root/sole sets; do not invent coordinates. |
+| 27 | 78 | RISK | cut-side (mount) | `tools/mount/cut.py` `869486a7` (same) | Reproduced. With a fixed approved bay chain, wider art doubled axial top/bottom extension. Existing approved leg art differs from the clean main recut; base regeneration is not an equivalence proof. |
+| 28 | 81 | BUG | rig-side (mount) | `tools/mount/build.py` `8cd2b212` (same) | Reproduced. Transparent body padding 100→140 changed seat/stirrup offset 10→14. Need a reviewed, stable body-axis scale and preserve approved seating evidence. |
+| 29 | 82 | BUG | rig-side (mount) | `tools/mount/build.py` `8cd2b212` (same) | Reproduced. Identical three-bone lengths and normalized mesh position yield weight 0→0.0197 when width 20→40. Need rendered knee/root/hoof checks, not a golden update. |
+| 30 | 83 | RISK | rig-side (mount) | `tools/mount/build.py` `8cd2b212` (same); `tools/mount/leg_art.py` `0c7bd492` (same) | Throat-only transparent padding now normalizes with the existing one-pixel crop. Approved horse_sheet overlay matches exact bytes with and without added padding (2 tests). True anatomy-scale and mesh-grid risks remain. |
+| 31 | 85 | BUG | rig-side (mount) | `tools/mount/combine.py` `292ec5ad` (changed) | Open; no independent regression yet |
+| 32 | 86 | BUG | rig-side (mount) | `tools/mount/combine.py` `292ec5ad` (changed); `spec/mount_contract.json` `8f3fc464` (same) | Open; no independent regression yet |
+| 33 | 88 | RISK | rig-side (mount) | `tools/mount/combine.py` `292ec5ad` (changed); `tools/mount/ride_torso.py` `079c5fe2` (same); `tools/mount/ride_neck.py` `2a46bb20` (same) | Open; no independent regression yet |
+| 34 | 90 | RISK | rig-side (mount) | `tools/mount/gait.py` `2b1b91c0` (same); `tools/mount/maneuvers.py` `a96797e4` (same) | Open; no independent regression yet |
+| 35 | 91 | RISK | rig-side (mount) | `spec/mount_contract.json` `8f3fc464` (same); `tools/mount/seated.py` `36ee4686` (same) | Open; no independent regression yet |
+| 36 | 93 | RISK | rig-side (mount) | `tools/mount/clearance.py` `c05cec06` (changed); `tools/mount/one_shot.py` `aa7ccd29` (same) | Open; no independent regression yet |
+| 37 | 94 | BUG | rig-side (mount) | `tools/mount/charge_qa.py` `1b4df591` (same) | Open; no independent regression yet |
+| 38 | 95 | RISK | rig-side (mount) | `tools/mount/charge_qa.py` `1b4df591` (same); `tools/mount/__main__.py` `218c4496` (same); `tools/mount/straddle_qa.py` `96ad0825` (changed) | Open; no independent regression yet |
+| 39 | 96 | RISK | rig-side (mount) | `tools/mount/seat_art.py` `14ae2509` (same); `tools/mount/seat_anim.py` `95d48cb2` (same) | Open; no independent regression yet |
+| 40 | 98 | RISK | rig-side (mount) | `tools/cavalry_rig.py` `0e4a5da5` (same) | Open; no independent regression yet |
+
+Row 09 / 14 tests live in `tests/test_tools_audit_i15_legacy_routes.py`; two positive and three mutation checks. Row 14 guards the supported new-general route, not manual legacy script invocation. Row 13 test names are all `test_13_*` in `tests/test_tools_audit_i15_redraw.py`. Five test methods show baseline failure, including two input-resolution subtests (six reported failures). Remaining WARNs require a full checkout; not inferred from synthetic tests.
+
+Row 01, cut-side: `tools/prep_source.py` and `tests/test_tools_audit_i15_prep.py`. With identical source heights but widths 400 and 600, original output heights were 1239 and 848. New code retains the 1239 case and rejects an overwide input without writing; reviewed crown, sole and pelvis landmarks preserve positions across scale, padding and visible width. Row 02 remains open.
+
+
+Rows 02–05 integration: all 22 current audit test methods passed using `python -B -X utf8 -m unittest discover -s tests -p 'test_tools_audit*.py' -v` with the repo Python dependencies on an isolated exact-source subset. This covers candidate routes, not complete repository static/golden/runtime acceptance or unresolved WARNs. No tolerance changes or asset/golden edits.
+
+
+Rows 25–30 comparison uses the unchanged main/report blobs for mount cut, build, rider, saddle split, leg art and contract. A clean main bay recut produced identical rig JSON and body/head/mane/tail image bytes but differed from the four committed leg art PNGs (552–777 alpha pixels at identical dimensions). No approved asset or golden was overwritten; this is a reason not to treat the recut as the approved reference. Row 30 isolated command `python -B -X utf8 -m unittest discover -s tests -p 'test_tools_audit_mount_r30.py' -v`: 2 pass on candidate, both fail before. Existing leg-art/saddle-split tests pass separately. Full mount generation, scene runtime, and all remaining WARNs not accepted.
+
+
+Rows 06–08 (`tools/auto_cut.py`, `tests/test_tools_audit_i15_auto_cut.py`): 8 focused test methods pass. Original implementation fails all 8 methods. Separately, 30 legacy synthetic cuts gave byte-equivalent pixels/bounding boxes and default primary and secondary weapon PNG/JSON were equivalent. Exact committed character assets were not recut or altered. Reviewed joint/shaft annotations are still needed for production adoption, and end-to-end runtime was not executed.
+
+
+Rows 10–12: 4 isolated CLI tests pass in `tests/test_tools_audit_rows10_12.py`. Synthetic compatibility comparison with main found identical stdout and seven outputs over three established valid unannotated routes. Output formal standard and gate tolerances remain unchanged; no art, animation, golden or rendered acceptance claim.
+
+
+Rows 15–17 details: [locked rig versus source metrics](issue-15-rows-15-17-source-metrics.md). No-landmark CLI byte-identical on six saved images and four strict checks, preserving the #19 WARN values and exit codes. Rows 18–20 are characterization only, not fixes; three deliberate mutations were detected by the three focused tests. Rows 21–23 are source-only. Row 24 tests passed on main and after applying the distinct hunk over PR #23. None of these tests proves rendered acceptance.
+# #15 第 15–17 項：骨架硬門與來源診斷
+
+核對基準：main `0fc0bd4bf5aa59f67cb3b7255ef1c98e09ce108f`；原報告 `0218c06e00ffde4f558223e20fa74acce1141942` 第 41、43、44 行。以下是獨立診斷，不更動任何許可門檻、素材或 golden。
+
+| 項次 | 對照基準與結果 | 何時可改成預設 |
+|---|---|---|
+| 15 | `spec/STANDARD.md` §3、`spec/standard.json` 的 577×1250／原點 (330,1245)、`tools/standard.py` 正規化關節 ±0.01 畫布高和骨鏈 ±5% 都是共享 rig 硬合約。程式檢查的是設定點，不能證明成圖的冠頂、下巴與靴底。獨立診斷報 `head_to_standing_height`，不覆蓋舊 `head_frac`。 | 需人工核准同定義的參考及候選美術地標，含可比的取樣座標；不能把舊 0.41 輸出當新冠頂／下巴／靴底量測的硬門。 |
+| 16 | `tools/spec_check.py:23–37`：地線固定 1245，最低有效 alpha 列離地線超過 8 px 仍為 WARN；16×16 角落是畫布取樣。來源工具的臉部 5×5、眼部 3×3、眼候選 25 px² 及胸列由臉高導出，是同畫布上傳統光柵代理，並非跨畫幅的解剖量。獨立診斷只從指定冠、下巴、靴底計算，不重用 alpha 極值。 | 要替代地線或臉／眼／胸區代理，需覆蓋前景、遮擋、不同頭飾與承重靴底等真實標註；舊 WARN、地線與像素測試不可靜默換義。 |
+| 17 | `tools/source_art_check.py:77–90` 的臉寬與胸／臉比會隨合法寬度變動，眼／臉寬用於 gaze/turn 則是局部角度訊號。原 `style.face_scale`、`style.head_frac` 0.8–1.2、`style.chest_w` 0.7–1.5，以及 WARN 等級完全保留。可選胸端點輸出胸跨度／站高，只作不同定義的獨立診斷。 | 需先決定寬度指標是否仍是風格目標；若要替換，先選定胸端點取樣定義與等效的參考族群，不可沿用舊門檻解釋新分母。 |
+
+`venv/bin/python tools/source_art_check.py <work.png> --landmarks <reviewed.json>` 可對單圖附加 `reviewed_anatomy`（`diagnostic_only`）。JSON 必含 `crown`、`chin`、`sole` 的原圖 `[x,y]`，可同時提供 `chest_left`、`chest_right`。點位是人工審核的輸入，不在此工具自行驗證圖像語意。省略參數時輸出完全沿用原測量。
+
+聚焦驗證：`venv/bin/python -X utf8 -m unittest discover -s tests -p 'test_tools_audit_i15_source_proxies.py' -v`。合成對照中，游離物使舊頭身代理 0.190 → 0.332，人工地標不變；皮膚框寬 90 → 180 px 使舊胸／臉比 3.333 → 1.667，人工量測不變。六個 #19 保存圖的舊版／候選 CLI 輸出逐位元一致；四項 `spec_check --strict` 輸出及退出碼一致（夏侯淵地線舊 WARN 與張飛兩版胸寬 WARN 仍在）。沒有跑完整 static 或 runtime。
+export/game/mounted-list.json
+export/mount/soldier_cavalry_blue/horse_bay/soldier_cavalry_blue__mount_horse_bay.json
+export/mount/soldier_cavalry_blue/horse_bay/mount_horse_bay_2.png
+export/mount/soldier_cavalry_blue/horse_bay/soldier_cavalry_blue__mount_horse_bay_leg_n_seated.png
+export/mount/soldier_cavalry_blue/horse_bay/soldier_cavalry_blue_1.png
+export/mount/soldier_cavalry_blue/horse_bay/mount_horse_bay_3.png
+export/mount/soldier_cavalry_blue/horse_bay/soldier_cavalry_blue__mount_horse_bay_ride_torso.png
+export/mount/soldier_cavalry_blue/horse_bay/soldier_cavalry_blue_2.png
+export/mount/soldier_cavalry_blue/horse_bay/soldier_cavalry_blue__mount_horse_bay_mounted_arrow.png
+export/mount/soldier_cavalry_blue/horse_bay/soldier_cavalry_blue__mount_horse_bay_ride_neck_charge.png
+export/mount/soldier_cavalry_blue/horse_bay/mount_horse_bay_1.png
+export/mount/soldier_cavalry_blue/horse_bay/soldier_cavalry_blue__mount_horse_bay_mounted_bow.png
+export/mount/soldier_cavalry_blue/horse_bay/soldier_cavalry_blue__mount_horse_bay_mounted_shield.png
+export/mount/soldier_cavalry_blue/horse_bay/soldier_cavalry_blue__mount_horse_bay_mounted_string.png
+export/mount/soldier_cavalry_blue/horse_bay/soldier_cavalry_blue__mount_horse_bay_leg_n_charge.png
+export/mount/soldier_cavalry_blue/horse_bay/mount_horse_bay_4.png
+export/mount/soldier_cavalry_blue/horse_bay/soldier_cavalry_blue__mount_horse_bay_neck.png
+docs/MOUNT.md
+export/mount/zhao/horse_bay/zhao_1.png
+export/mount/zhao/horse_bay/mount_horse_bay_2.png
+export/mount/zhao/horse_bay/mount_horse_bay_3.png
+export/mount/zhao/horse_bay/zhao__mount_horse_bay.json
+export/mount/zhao/horse_bay/zhao_4.png
+export/mount/zhao/horse_bay/zhao_2.png
+export/mount/zhao/horse_bay/zhao__mount_horse_bay_mounted_arrow.png
+export/mount/zhao/horse_bay/zhao__mount_horse_bay_ride_neck_charge.png
+export/mount/zhao/horse_bay/zhao__mount_horse_bay_mounted_string.png
+export/mount/zhao/horse_bay/zhao_3.png
+export/mount/zhao/horse_bay/zhao__mount_horse_bay_mounted_bow.png
+export/mount/zhao/horse_bay/zhao__mount_horse_bay_mounted_shield.png
+export/mount/zhao/horse_bay/mount_horse_bay_1.png
+export/mount/zhao/horse_bay/zhao__mount_horse_bay_l_leg_seated.png
+export/mount/zhao/horse_bay/zhao__mount_horse_bay_r_leg_charge.png
+export/mount/zhao/horse_bay/zhao__mount_horse_bay_l_leg_charge.png
+export/mount/zhao/horse_bay/zhao__mount_horse_bay_ride_torso.png
+export/mount/zhao/horse_bay/mount_horse_bay_4.png
+docs/standard/skeleton_landmarks_v1.json
+docs/standard/proportion_landmarks.json
+export/mount/soldier_cavalry_red/horse_bay/soldier_cavalry_red__mount_horse_bay_neck.png
+export/mount/soldier_cavalry_red/horse_bay/soldier_cavalry_red__mount_horse_bay_mounted_bow.png
+export/mount/soldier_cavalry_red/horse_bay/soldier_cavalry_red__mount_horse_bay.json
+export/mount/soldier_cavalry_red/horse_bay/mount_horse_bay_2.png
+export/mount/soldier_cavalry_red/horse_bay/mount_horse_bay_3.png
+export/mount/soldier_cavalry_red/horse_bay/soldier_cavalry_red__mount_horse_bay_ride_torso.png
+export/mount/soldier_cavalry_red/horse_bay/soldier_cavalry_red__mount_horse_bay_leg_n_seated.png
+export/mount/soldier_cavalry_red/horse_bay/soldier_cavalry_red__mount_horse_bay_leg_n_charge.png
+export/mount/soldier_cavalry_red/horse_bay/soldier_cavalry_red_2.png
+export/mount/soldier_cavalry_red/horse_bay/soldier_cavalry_red__mount_horse_bay_mounted_string.png
+export/mount/soldier_cavalry_red/horse_bay/soldier_cavalry_red__mount_horse_bay_ride_neck_charge.png
+export/mount/soldier_cavalry_red/horse_bay/soldier_cavalry_red__mount_horse_bay_mounted_shield.png
+export/mount/soldier_cavalry_red/horse_bay/soldier_cavalry_red_1.png
+export/mount/soldier_cavalry_red/horse_bay/mount_horse_bay_1.png
+export/mount/soldier_cavalry_red/horse_bay/soldier_cavalry_red__mount_horse_bay_mounted_arrow.png
+export/mount/soldier_cavalry_red/horse_bay/mount_horse_bay_4.png
+docs/plans/mount-generator-v3.md
+export/mount/zhao_v2/horse_bay/zhao_v2__mount_horse_bay.json
+export/mount/zhao_v2/horse_bay/zhao_v2_2.png
+export/mount/zhao_v2/horse_bay/zhao_v2__mount_horse_bay_mounted_bow.png
+export/mount/zhao_v2/horse_bay/zhao_v2_1.png
+export/mount/zhao_v2/horse_bay/mount_horse_bay_2.png
+export/mount/zhao_v2/horse_bay/zhao_v2_5.png
+export/mount/zhao_v2/horse_bay/mount_horse_bay_3.png
+export/mount/zhao_v2/horse_bay/zhao_v2__mount_horse_bay_mounted_arrow.png
+export/mount/zhao_v2/horse_bay/zhao_v2__mount_horse_bay_mounted_string.png
+export/mount/zhao_v2/horse_bay/zhao_v2_3.png
+export/mount/zhao_v2/horse_bay/zhao_v2__mount_horse_bay_mounted_shield.png
+export/mount/zhao_v2/horse_bay/zhao_v2_6.png
+export/mount/zhao_v2/horse_bay/mount_horse_bay_1.png
+export/mount/zhao_v2/horse_bay/zhao_v2_4.png
+export/mount/zhao_v2/horse_bay/mount_horse_bay_4.png
+export/mount/zhao_v2/horse_sheet/zhao_v2_2.png
+export/mount/zhao_v2/horse_sheet/zhao_v2_1.png
+export/mount/zhao_v2/horse_sheet/zhao_v2_5.png
+export/mount/zhao_v2/horse_sheet/zhao_v2__mount_horse_sheet_mounted_string.png
+export/mount/zhao_v2/horse_sheet/zhao_v2__mount_horse_sheet_mounted_shield.png
+export/mount/zhao_v2/horse_sheet/mount_horse_sheet_2.png
+export/mount/zhao_v2/horse_sheet/zhao_v2_3.png
+export/mount/zhao_v2/horse_sheet/zhao_v2__mount_horse_sheet_mounted_bow.png
+export/mount/zhao_v2/horse_sheet/zhao_v2_6.png
+export/mount/zhao_v2/horse_sheet/zhao_v2_4.png
+export/mount/zhao_v2/horse_sheet/zhao_v2__mount_horse_sheet_mounted_arrow.png
+export/mount/zhao_v2/horse_sheet/zhao_v2__mount_horse_sheet.json
+export/mount/zhao_v2/horse_sheet/mount_horse_sheet_1.png
+export/mount/zhao_v2/horse_war/mount_horse_war_3.png
+export/mount/zhao_v2/horse_war/zhao_v2_2.png
+export/mount/zhao_v2/horse_war/zhao_v2_1.png
+export/mount/zhao_v2/horse_war/zhao_v2_5.png
+export/mount/zhao_v2/horse_war/zhao_v2__mount_horse_war_mounted_shield.png
+export/mount/zhao_v2/horse_war/zhao_v2__mount_horse_war_mounted_arrow.png
+export/mount/zhao_v2/horse_war/zhao_v2_3.png
+export/mount/zhao_v2/horse_war/mount_horse_war_2.png
+export/mount/zhao_v2/horse_war/mount_horse_war_1.png
+export/mount/zhao_v2/horse_war/zhao_v2__mount_horse_war_mounted_string.png
+export/mount/zhao_v2/horse_war/mount_horse_war_4.png
+export/mount/zhao_v2/horse_war/zhao_v2_6.png
+export/mount/zhao_v2/horse_war/zhao_v2_4.png
+export/mount/zhao_v2/horse_war/zhao_v2__mount_horse_war.json
+export/mount/zhao_v2/horse_war/zhao_v2__mount_horse_war_mounted_bow.png
+docs/reports/mount_mock6_round1.md
+docs/reports/mount_mock7_slot_metrics.json
+docs/reports/mount_mock9_leg_visibility.json
+docs/reports/mount4_gap.md
+docs/reports/mount_mock9c.md
+docs/reports/mount_mock3_wip.md
+docs/reports/cav_anim2b_retreat_qa.json
+docs/reports/cav_anim2c_dash_in_qa.json
+docs/reports/xiahou-bow-1127.md
+docs/reports/q4-generals-post-cut-fit.md
+docs/reports/mount_anim2f.md
+docs/reports/q4-ma-dai-xiahou-yuan-view-back.md
+
+exec
+/bin/bash -lc "sed -n '1,220p' tools/preview_server.py; sed -n '180,212p;340,360p' tools/pipeline.py; cat render/preview-origin.mjs; git status --short; node -p 'require(\"/workspace/spine-trial-q4/render/node_modules/playwright-core/package.json\").version'; rg '\"version\"' render/package-lock.json | head -9; command -v unshare; for p in /proc/915386 /proc/1401870 /proc/750499; do readlink \""'$p/cwd"; done' in /tmp/xd-pr23
+ succeeded in 0ms:
+"""Own a repo-backed preview HTTP server for exactly one command or scope."""
+import argparse
+from contextlib import contextmanager
+import functools
+import http.client
+import os
+from pathlib import Path
+import signal
+import subprocess
+import sys
+import threading
+import time
+
+
+ROOT = Path(__file__).resolve().parent.parent
+ENTRY = '/render/index.html'
+LOOPBACK = {'127.0.0.1', 'localhost'}
+
+
+class PreviewInterrupted(KeyboardInterrupt):
+    def __init__(self, signum):
+        self.signum = signum
+
+
+def _stop(process, *, group=False):
+    """Reap only the child we spawned; never look up or kill a port owner."""
+    if process.poll() is None:
+        try:
+            if group:
+                os.killpg(process.pid, signal.SIGTERM)
+            else:
+                process.terminate()
+        except ProcessLookupError:
+            pass
+        try:
+            process.wait(timeout=2)
+        except subprocess.TimeoutExpired:
+            try:
+                if group:
+                    os.killpg(process.pid, signal.SIGKILL)
+                else:
+                    process.kill()
+            except ProcessLookupError:
+                pass
+    process.wait()
+
+
+def _probe(host, port, index, timeout):
+    """A TCP listener alone does not mean it can serve this checkout's preview."""
+    connection = http.client.HTTPConnection(host, port, timeout=timeout)
+    try:
+        connection.request('GET', ENTRY)
+        with connection.getresponse() as response:
+            return response.status == 200 and response.read(len(index) + 1) == index
+    except (OSError, http.client.HTTPException):
+        return False
+    finally:
+        connection.close()
+
+
+def _start(root, port):
+    return subprocess.Popen(
+        [sys.executable, '-m', 'http.server', str(port), '--bind', '127.0.0.1',
+         '--directory', str(root)],
+        cwd=root, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+    )
+
+
+@contextmanager
+def preview_server(*, root=ROOT, timeout=10.0):
+    """Yield the owned Popen, or None when reusing a service. Always reap owned PIDs."""
+    host = os.environ.get('RENDER_HOST') or '127.0.0.1'
+    port = int(os.environ.get('RENDER_PORT') or '8765')
+    if not 1 <= port <= 65535 or timeout <= 0:
+        raise ValueError('RENDER_PORT must be 1..65535 and the startup timeout must be positive')
+    root = Path(root).resolve()
+    index = (root / ENTRY.lstrip('/')).read_bytes()
+    process = None
+    previous = {}
+    deferred = True
+    pending = None
+
+    def interrupt(signum, _frame):
+        nonlocal pending
+        if deferred:
+            pending = signum
+        else:
+            raise PreviewInterrupted(signum)
+
+    try:
+        if threading.current_thread() is threading.main_thread():
+            for sig in (signal.SIGINT, signal.SIGTERM):
+                previous[sig] = signal.signal(sig, interrupt)
+        deadline = time.monotonic() + timeout
+        if not _probe(host, port, index, min(0.2, timeout)):
+            if host in LOOPBACK:
+                process = _start(root, port)
+            deferred = False
+            if pending is not None:
+                raise PreviewInterrupted(pending)
+            while (remaining := deadline - time.monotonic()) > 0:
+                if _probe(host, port, index, min(0.2, remaining)):
+                    # Another owner may win the bind race. An exited child is
+                    # reaped by poll; the service that answered remains untouched.
+                    if process is not None and process.poll() is not None:
+                        process = None
+                    break
+                if process is not None and process.poll() is not None:
+                    raise RuntimeError(f'Preview server exited ({process.returncode}): http://{host}:{port}{ENTRY}')
+                time.sleep(min(0.05, max(0, deadline - time.monotonic())))
+            else:
+                raise TimeoutError(f'Preview server not ready: http://{host}:{port}{ENTRY}')
+        deferred = False
+        if pending is not None:
+            raise PreviewInterrupted(pending)
+        yield process
+    finally:
+        deferred = True
+        try:
+            if process is not None:
+                _stop(process)
+        finally:
+            for sig, handler in previous.items():
+                signal.signal(sig, handler)
+
+
+def with_preview_server(function):
+    """Wrap a renderer entry point without changing its arguments or return value."""
+    @functools.wraps(function)
+    def run(*args, **kwargs):
+        with preview_server():
+            return function(*args, **kwargs)
+    return run
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--cwd', help='working directory for the render command')
+    parser.add_argument('command', nargs=argparse.REMAINDER, help='-- COMMAND [ARGS...]')
+    args = parser.parse_args(argv)
+    command = args.command[1:] if args.command[:1] == ['--'] else args.command
+    if not command:
+        parser.error('a render command is required')
+    group = os.name == 'posix'
+    try:
+        with preview_server():
+            # Register the child before making a caught signal interruptible.
+            # The CLI is single-threaded; temporarily defer both signals during spawn.
+            pending = []
+            signals = (signal.SIGINT, signal.SIGTERM)
+            previous = {sig: signal.signal(sig, lambda signum, _frame: pending.append(signum))
+                        for sig in signals}
+            child = None
+            try:
+                try:
+                    child = subprocess.Popen(command, cwd=args.cwd, start_new_session=group)
+                finally:
+                    for sig, handler in previous.items():
+                        signal.signal(sig, handler)
+                if pending:
+                    raise PreviewInterrupted(pending[0])
+                status = child.wait()
+                return status if status >= 0 else 128 - status
+            finally:
+                if child is not None and child.poll() is None:
+                    # A second signal must not interrupt reaping the command we started.
+                    previous = {sig: signal.signal(sig, signal.SIG_IGN) for sig in signals}
+                    try:
+                        _stop(child, group=group)
+                    finally:
+                        for sig, handler in previous.items():
+                            signal.signal(sig, handler)
+    except PreviewInterrupted as exc:
+        return 128 + exc.signum
+    except (OSError, ValueError, RuntimeError) as exc:
+        print(f'[preview] {exc}', file=sys.stderr)
+        return 1
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())
+
+def cmd_check(a):
+    """AI-facing gate: run validators and print structured FIX blocks. Default = all built chars or --char."""
+    import ai_gate
+    stages = [s.strip() for s in (a.stage or 'all').split(',') if s.strip()]
+    sel = [c.strip() for c in a.char.split(',') if c.strip()] if a.char else [c for c in chars() if is_built(c)]
+    if not a.char:
+        for c in chars():
+            if not is_built(c):
+                print(f'[pipeline] check SKIP {c}: not built (no skeleton JSON) — run build after accept-source')
+    if not sel:
+        die('no characters to check (pass --char or build some first)', 'tools/pipeline.py check')
+    bad = []
+    for c in sel:
+        if ai_gate.check_char(c, stages):
+            bad.append(c)
+    if bad:
+        print('[pipeline] check FAIL for: ' + ', '.join(bad))
+        print('[pipeline] 禁止放寬容差 / 手改 out/*.json / 跳過檢查。讀每則 FIX 區塊後重跑。')
+        sys.exit(1)
+    print('[pipeline] check PASS:', ', '.join(sel))
+
+def cmd_render_demo(a):
+
+    spec = os.path.abspath(a.spec); S = json.load(open(spec))
+    for x in S['actors']:
+        c = x.get('name'); j = cfg(c) if os.path.exists(f'characters/{c}/char.json') else None
+        sk = x.get('skin'); sk = sk.split(',') if isinstance(sk, str) else (sk or [])
+        if j and j.get('tier') != 'soldier' and x.get('mirror') and 'view_back' not in sk and 'hand_mirror' not in sk:
+            print(f'[pipeline] WARN {x.get("id")}: mirrored front-view general without skin hand_mirror is left-handed (spec/STANDARD.md §2 handedness)')
+    out = a.out or os.path.join('demo/battle/out', os.path.splitext(os.path.basename(spec))[0].replace('battle_spec', 'battle_demo') + '.mp4')
+    fr = tempfile.mkdtemp(prefix='demo_', dir='frames' if os.path.isdir('frames') else None)
+    from preview_server import preview_server
+    p = S.add_parser('new-general'); p.add_argument('id'); p.add_argument('--from', dest='src', default='char2'); p.set_defaults(f=cmd_new_general)
+    p = S.add_parser('new-soldier'); p.add_argument('id'); p.add_argument('--weapon', required=True, choices=['spear', 'sword', 'bow']); p.add_argument('--shield', action='store_true'); p.set_defaults(f=cmd_new_soldier)
+    p = S.add_parser('candidates'); p.add_argument('id'); p.set_defaults(f=cmd_candidates)
+    p = S.add_parser('accept-source'); p.add_argument('id'); p.set_defaults(f=cmd_accept_source)
+    p = S.add_parser('compose'); p.add_argument('id'); p.set_defaults(f=cmd_compose)
+    p = S.add_parser('build'); p.add_argument('ids', nargs='+'); p.add_argument('--preview', action='store_true'); p.set_defaults(f=cmd_build)
+    p = S.add_parser('add-action'); p.add_argument('name'); p.add_argument('--from', dest='src', required=True); p.add_argument('--dir', default='actions/directional')
+    p.add_argument('--chars'); p.add_argument('--tier', default='general', choices=['general', 'soldier']); p.add_argument('--build', action='store_true'); p.set_defaults(f=cmd_add_action)
+    p = S.add_parser('check', help='AI-facing validators + structured FIX blocks (zh-TW)')
+    p.add_argument('--char', help='comma list; default = all built characters')
+    p.add_argument('--stage', default='all', help='source,cut,build,action,soldier,all')
+    p.set_defaults(f=cmd_check)
+    p = S.add_parser('render-demo'); p.add_argument('spec'); p.add_argument('--out'); p.add_argument('--keep', action='store_true'); p.set_defaults(f=cmd_render_demo)
+    p = S.add_parser('regress'); p.add_argument('--build', action='store_true'); p.add_argument('--update', action='store_true'); p.add_argument('--static', action='store_true')
+    p.add_argument('--chars'); p.set_defaults(f=cmd_regress)
+    a = P.parse_args(); a.f(a)
+export const previewOrigin = `http://${process.env.RENDER_HOST || '127.0.0.1'}:${process.env.RENDER_PORT || '8765'}`;
+1.64.1
+  "version": "1.0.0",
+      "version": "1.0.0",
+      "version": "4.2.120",
+      "version": "4.2.120",
+      "version": "1.64.1",
+/usr/bin/unshare
+/workspace/spine-trial-cav2
+/workspace/spine-trial-q4
+/workspace/spine-trial
+
+exec
+/bin/bash -lc "git for-each-ref --format='%(objectname)' refs/heads refs/remotes/origin | sort -u | xargs -r git grep -I -i -l -E '頭冠|头冠|馬身中軸|马身中轴|蹄底|head[_ -]?(crown|crest|top)|horse.{0,12}(axis|midline|centerline)|body[_ -](axis|midline|centerline)|hoof[_ -]?(sole|bottom)|crown|蹄底' -- ':"'!*.svg'"' ':"'!*.js'"' ':"'!*.mjs'"' ':"'!*.html'"' | cut -d: -f2- | sort -u
+git log --all --format= --name-only | sort -u | rg -i 'landmark|annotat|markup|標註|marked|midline|overlay|head.?crown|horse.*(ref|guide|axis|diag|cut|pivot)|cavalry.*(ref|guide|axis|diag|cut|pivot)'" in /workspace/spine-trial-q4
+ succeeded in 1019ms:
+characters/char2/codex_back/landmarks.json
+characters/char2/codex_back34/landmarks.json
+characters/char2/codex_pose/pose_guide_overlay.png
+characters/char2/codex_side_ur/landmarks.json
+characters/char2/preview/skeleton_overlay.png
+characters/char2/preview/skeleton_overlay_before.png
+characters/guan_yu/codex_side_ur/landmarks.json
+characters/guan_yu/codex_side_ur/landmarks_est_overlay.png
+characters/guan_yu/codex_side_ur/landmarks_overlay.png
+characters/guan_yu/preview/skeleton_overlay.png
+characters/guan_yu/preview/skeleton_overlay_before.png
+characters/lu_bu/codex_side_ur/landmarks.json
+characters/lu_bu/codex_side_ur/landmarks_est_overlay.png
+characters/lu_bu/codex_side_ur/landmarks_overlay.png
+characters/lu_bu/preview/head3d_skeleton_overlay.png
+characters/lu_bu/preview/skeleton_overlay.png
+characters/lu_bu/preview/skeleton_overlay_before.png
+characters/ma_dai/codex_side_ur/landmarks.json
+characters/ma_dai/preview/head3d_skeleton_overlay.png
+characters/ma_dai/preview/skeleton_overlay.png
+characters/ma_dai/preview/skeleton_overlay_before.png
+characters/machao/codex_side_ur/landmarks.json
+characters/machao/preview/head3d_skeleton_overlay.png
+characters/machao/preview/skeleton_overlay.png
+characters/machao/preview/skeleton_overlay_before.png
+characters/pang_de/codex_side_ur/landmarks.json
+characters/pang_de/preview/skeleton_overlay.png
+characters/pang_de/preview/skeleton_overlay_before.png
+characters/xiahou_yuan/codex_side_ur/landmarks.json
+characters/xiahou_yuan/preview/skeleton_overlay.png
+characters/xiahou_yuan/preview/skeleton_overlay_before.png
+characters/zhang_liao/codex_side_ur/landmarks.json
+characters/zhang_liao/preview/skeleton_overlay.png
+characters/zhang_liao/preview/skeleton_overlay_before.png
+characters/zhang_liao/ref/standard_joints_overlay_zl_zf_zy.png
+characters/zhao/codex_test/silhouette_overlay.png
+characters/zhao_v2/codex_back/landmarks.json
+characters/zhao_v2/codex_back34/landmarks.json
+characters/zhao_v2/codex_side_ur/landmarks.json
+characters/zhao_v2/preview/skeleton_overlay.png
+characters/zhao_v2/preview/skeleton_overlay_before.png
+docs/reports/img/skeleton_overlay_all.png
+docs/reports/img/skeleton_overlay_all_after.png
+docs/reports/img/skeleton_zhao_v2_overlay.png
+docs/standard/proportion_landmarks.json
+docs/standard/skeleton_landmarks_v1.json
+src_assets/mount/cavalry_ref.png
+
+exec
+/bin/bash -lc "git for-each-ref --format='%(objectname)' refs/heads refs/remotes/origin | sort -u | xargs -r git grep -I -i -l -E '頭冠|头冠|馬身中軸|马身中轴|蹄底|head[_ -]?(crown|crest|top)|horse.{0,12}(axis|midline|centerline)|body[_ -](axis|midline|centerline)|hoof[_ -]?(sole|bottom)|crown' -- ':"'!*.svg'"' ':"'!*.js'"' ':"'!*.mjs'"' ':"'!*.html'"' | sed -E 's/"'^[[:xdigit:]]+://'"' | sort -u
+git log --all --name-only --format= -- docs/reports docs/standard reports mounts src_assets/mount | sort -u | rg -vi '(/out/|/parts/|cav.*metrics|\\.json"'$)'"' | head -250
+rg -n 'def check_char|stage|action_gen|leg_check' /tmp/xd-pr23/tools/ai_gate.py" in /workspace/spine-trial-q4
+ succeeded in 0ms:
+docs/reports/cav_batch1_idle.md
+docs/reports/gallop_reference/README.md
+docs/reports/gallop_reference/ref_gallop_sheet.png
+docs/reports/gallop_reference/ref_gallop_soldier.gif
+docs/reports/gallop_reference/ref_gallop_zhao.gif
+docs/reports/head3d-1127.md
+docs/reports/img/cape_attachment_before_after.png
+docs/reports/img/char2_weapon_before_after.png
+docs/reports/img/guan_yu_weapon_before_after.png
+docs/reports/img/head3d_lineup_before_after.png
+docs/reports/img/joint_alignment_after.png
+docs/reports/img/joint_alignment_before.png
+docs/reports/img/knee_motion_before_after.png
+docs/reports/img/ma_dai_before_after.png
+docs/reports/img/ma_dai_grip_before_after.png
+docs/reports/img/machao_before_after.png
+docs/reports/img/machao_hair_fix_before_after.png
+docs/reports/img/madai_fix_before_after.png
+docs/reports/img/q4_ratio_lineup.png
+docs/reports/img/ratio_v1_fall_end_before_after.png
+docs/reports/img/ratio_v1_lineup_after.png
+docs/reports/img/skeleton_overlay_all.png
+docs/reports/img/skeleton_overlay_all_after.png
+docs/reports/img/skeleton_zhao_v2_overlay.png
+docs/reports/issue-15-audit-progress.md
+docs/reports/issue-15-rows-15-17-source-metrics.md
+docs/reports/issue-19-source-warn-investigation.md
+docs/reports/joint-alignment-v1.md
+docs/reports/machao-madai-art-fix-1127.md
+docs/reports/machao-madai-broken-1126.md
+docs/reports/mount-generator-v3.1.md
+docs/reports/mount-v3-baseline.md
+docs/reports/mount3_review.md
+docs/reports/mount4_gap.md
+docs/reports/mount4_saddle_wip.md
+docs/reports/mount_actions_v2/cav_index.md
+docs/reports/mount_anim1b.md
+docs/reports/mount_anim1c.md
+docs/reports/mount_anim2c.md
+docs/reports/mount_anim2d.md
+docs/reports/mount_anim2e.md
+docs/reports/mount_anim2f.md
+docs/reports/mount_anim2g.md
+docs/reports/mount_anim2h.md
+docs/reports/mount_anim2i.md
+docs/reports/mount_anim_final.md
+docs/reports/mount_mock10.md
+docs/reports/mount_mock11.md
+docs/reports/mount_mock3_wip.md
+docs/reports/mount_mock4_result.md
+docs/reports/mount_mock5_wip.md
+docs/reports/mount_mock6_round1.md
+docs/reports/mount_mock7_diagnostic.md
+docs/reports/mount_mock8.md
+docs/reports/mount_mock9.md
+docs/reports/mount_mock9_integrated.md
+docs/reports/mount_mock9_prompts.md
+docs/reports/mount_mock9c.md
+docs/reports/mount_seatart.md
+docs/reports/mount_seated.md
+docs/reports/mount_seated2.md
+docs/reports/mount_seated3.md
+docs/reports/q4-generals-post-cut-fit.md
+docs/reports/q4-generals-standard-v1.md
+docs/reports/q4-generals-view-back.md
+docs/reports/q4-head-body-ratio.md
+docs/reports/q4-ma-dai-skirt-fix.md
+docs/reports/q4-ma-dai-xiahou-yuan-view-back.md
+docs/reports/ratio-normalize-v1.md
+docs/reports/tools-proportion-audit.md
+docs/reports/xiahou-bow-1127.md
+docs/standard/FALL_RUNTIME.md
+docs/standard/PROPORTION_v1.md
+docs/standard/img/proportion_v1.png
+docs/standard/skeleton-fit-check.md
+docs/standard/skeleton_template_v1.png
+docs/standard/xiahou-bow-rules.md
+mounts/horse_bay/saddle_clean_generated.png
+mounts/horse_bay/saddle_isolated_generated.png
+mounts/horse_bay/source.png
+mounts/horse_sheet/saddle_clean_generated.png
+mounts/horse_sheet/saddle_isolated_generated.png
+src_assets/mount/cavalry_parts_sheet.png
+src_assets/mount/cavalry_ref.png
+src_assets/mount/mock8_candidates/soldier_parts_unapproved.png
+src_assets/mount/mock8_candidates/soldier_torso_unapproved.png
+src_assets/mount/mock8_candidates/zhao_parts_unapproved.png
+src_assets/mount/mock8_candidates/zhao_torso_unapproved.png
+src_assets/mount/mock9_candidates/soldier_candidate_01.png
+src_assets/mount/mock9_candidates/soldier_candidate_02.png
+src_assets/mount/mock9_candidates/soldier_candidate_03.png
+src_assets/mount/mock9_candidates/zhao_candidate_01.png
+src_assets/mount/mock9_candidates/zhao_candidate_02.png
+src_assets/mount/mock9_candidates/zhao_candidate_03.png
+src_assets/mount/mock9c/soldier_cavalry_blue_torso.png
+src_assets/mount/mock9c/zhao_torso.png
+src_assets/mount/ride_neck/RESULT.md
+src_assets/mount/ride_neck/soldier_cavalry_blue_neck.png
+src_assets/mount/ride_neck/soldier_cavalry_blue_source.png
+src_assets/mount/ride_neck/zhao_neck.png
+src_assets/mount/ride_neck/zhao_source.png
+9:Used by tools/pipeline.py (`check`, `accept-source`, stage gates) and optionally
+74:              'CHAR=<ID> venv/bin/python tools/leg_check.py',
+76:         ban='禁止放寬 leg_check 容差;禁止手改 out/*.json'),
+82:              'CHAR=<ID> venv/bin/python tools/leg_check.py'],
+89:              'CHAR=<ID> venv/bin/python -m tools.action_gen validate'],
+96:              'CHAR=<ID> venv/bin/python tools/leg_check.py'],
+142:              'CHAR=<ID> venv/bin/python -m tools.action_gen all'],
+200:              'CHAR=<ID> venv/bin/python -m tools.action_gen validate'],
+207:              'CHAR=<ID> venv/bin/python -m tools.action_gen validate'],
+220:              'CHAR=<ID> venv/bin/python -m tools.action_gen validate'],
+227:              'CHAR=<ID> venv/bin/python -m tools.action_gen validate'],
+234:              'CHAR=<ID> venv/bin/python -m tools.action_gen validate'],
+241:              'CHAR=<ID> venv/bin/python -m tools.action_gen validate'],
+475:def check_char(cid: str, stages: list[str] | None = None) -> int:
+478:    stages: subset of source, cut, build, action, soldier, all (default all-relevant).
+479:    Returns number of failed stages (0 = all green).
+481:    stages = stages or ['all']
+482:    if 'all' in stages:
+484:            stages = ['soldier']
+486:            stages = ['source']
+488:            stages = ['source', 'cut', 'build', 'action']
+494:    print(f'[ai_gate] check {cid} stages={stages} built={is_built(cid)}')
+510:    if 'source' in stages and not is_soldier(cid) and not is_frozen(cid):
+518:    if not is_built(cid) and any(s in stages for s in ('cut', 'build', 'action')):
+520:        print_fix('golden', measured=f'{cid} not built', required='先 build 再 check --stage action',
+523:        # not counted as failed stage if only source was requested; if action requested, count
+524:        if any(s in stages for s in ('cut', 'build', 'action')):
+528:    if 'cut' in stages or 'build' in stages:
+532:    if 'action' in stages and not is_soldier(cid):
+533:        rc, out = _run([py, '-m', 'tools.action_gen', 'validate'], env={'CHAR': cid})
+534:        handle('action_gen.validate', rc, out)
+535:        rc, out = _run([py, 'tools/leg_check.py'], env={'CHAR': cid})
+536:        handle('leg_check', rc, out)
+542:    if 'soldier' in stages and is_soldier(cid):
+552:    print(f'[ai_gate] check {cid}: {"PASS" if failed == 0 else f"FAIL stages={failed}"}')
+560:    ap.add_argument('--stage', default='all',
+568:    stages = [s.strip() for s in args.stage.split(',') if s.strip()]
+569:    sys.exit(1 if check_char(args.char, stages) else 0)
+
+exec
+/bin/bash -lc "set -eu
+ln -s /workspace/spine-trial-q4/render/node_modules render/node_modules
+python3 - <<'PY'
+from pathlib import Path
+lines = Path('render/render.mjs').read_text().splitlines(keepends=True)
+targets = [idx for idx, line in enumerate(lines) if line.startswith('const browser=await chromium.launch(')]
+assert len(targets) == 1
+lines[targets[0]] = \"\"\"const browser=await chromium.launch({executablePath:'/usr/bin/google-chrome',headless:true,chromiumSandbox:true});
+try {
+const cdp = await browser.newBrowserCDPSession();
+const {gpu} = await cdp.send('SystemInfo.getInfo');
+console.log('[gpu]', JSON.stringify({devices:gpu.devices,webgl:gpu.featureStatus?.webgl,webgl2:gpu.featureStatus?.webgl2}));
+} catch (error) { console.log('[gpu]', error.message); }
+\"\"\"
+Path('render/xd-sandbox-test.mjs').write_text(''.join(lines))
+PY
+ss -H -ltnp '( sport = :18765 )'
+RENDER_HOST=127.0.0.1 RENDER_PORT=18765 DEBUG=pw:browser timeout --signal=TERM 50s /workspace/spine-trial-q4/venv/bin/python -B -m tools.preview_server --cwd render -- node xd-sandbox-test.mjs poses cam '{\"x\":180,\"y\":560,\"zoom\":1.3}' 'spear_thrust|0.56|/tmp/xd-pr23/xd_pose.png'" in /tmp/xd-pr23
+ succeeded in 1022ms:
+2026-11-27T07:57:51.997Z pw:browser <launching> /usr/bin/google-chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,AvoidCorsURLLoaderRestartOnRedirect,Translate,AutoDeElevate,OptimizationHints,NetworkTimeServiceQuerying,AimEnabled,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --enable-unsafe-swiftshader --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --user-data-dir=/tmp/playwright_chromiumdev_profile-KZCRs6 --remote-debugging-pipe --no-startup-window
+2026-11-27T07:57:52.017Z pw:browser <launched> pid=1428476
+2026-11-27T07:57:52.087Z pw:browser [pid=1428476][err] [1428476:1428503:1127/155752.086307:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+2026-11-27T07:57:52.109Z pw:browser [pid=1428476][err] [1428476:1428503:1127/155752.109475:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+2026-11-27T07:57:52.109Z pw:browser [pid=1428476][err] [1428476:1428503:1127/155752.109535:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+2026-11-27T07:57:52.109Z pw:browser [pid=1428476][err] [1428476:1428503:1127/155752.109548:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+2026-11-27T07:57:52.202Z pw:browser [pid=1428476][err] [1428476:1428503:1127/155752.202741:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+2026-11-27T07:57:52.203Z pw:browser [pid=1428476][err] [1428476:1428503:1127/155752.202764:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+2026-11-27T07:57:52.207Z pw:browser [pid=1428476][err] [1428476:1428476:1127/155752.206369:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.Properties.GetAll: object_path= /org/freedesktop/UPower/devices/DisplayDevice: unknown error type: 
+[gpu] {"devices":[{"vendorId":65535,"deviceId":65535,"vendorString":"Google Inc. (Google)","deviceString":"ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver-5.0.0)","driverVendor":"SwANGLE","driverVersion":"5.0.0"}],"webgl":"unavailable_software"}
+2026-11-27T07:57:52.379Z pw:browser [pid=1428476][err] [1428518:1428518:1127/155752.379477:ERROR:gpu/command_buffer/service/gl_utils.cc:431] [.WebGL-0x23ac022fe000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[page] [.WebGL-0x23ac022fe000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[page] Failed to load resource: the server responded with a status of 404 (File not found)
+{"s":"ok","e":[],"a":[["dash_in",1.2000000476837158],["dodge",0.6000000238418579],["duel_attack",1.600000023841858],["fall",1.7999999523162842],["hit",0.8999999761581421],["idle",2],["retreat",1.2000000476837158],["spear_thrust",1.600000023841858],["walk_in_place",1.2000000476837158]]}
+2026-11-27T07:57:52.464Z pw:browser [pid=1428476][err] [1428518:1428518:1127/155752.464065:ERROR:gpu/command_buffer/service/gl_utils.cc:431] [.WebGL-0x23ac022fe000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+2026-11-27T07:57:52.560Z pw:browser [pid=1428476][err] [1428518:1428518:1127/155752.555581:ERROR:gpu/command_buffer/service/gl_utils.cc:431] [.WebGL-0x23ac022fe000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+2026-11-27T07:57:52.574Z pw:browser [pid=1428476] <gracefully close start>
+[page] [.WebGL-0x23ac022fe000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[page] [.WebGL-0x23ac022fe000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+2026-11-27T07:57:52.629Z pw:browser [pid=1428476] <process did exit: exitCode=0, signal=null>
+2026-11-27T07:57:52.629Z pw:browser [pid=1428476] starting temporary directories cleanup
+2026-11-27T07:57:52.632Z pw:browser [pid=1428476] finished temporary directories cleanup
+2026-11-27T07:57:52.632Z pw:browser [pid=1428476] <gracefully close end>
+
+2026-11-27T07:58:11.514975Z ERROR codex_core::tools::router: error=exec_command failed: CreateProcess { message: "Rejected(\"`/bin/bash -lc \\\"set -eu\\nrm -f xd_pose.png\\ncat > xd-chrome-guard <<'EOF'\\n#\\\"'!/bin/sh\\nfor xd_arg do\\n    case \\\"$xd_arg\\\" in\\n        --no-sandbox|--no-sandbox=*|--enable-unsafe-swiftshader|--enable-unsafe-swiftshader=*)\\n            printf '\\\"'Rejected forbidden Chrome argument: %s\\\\\\\\n' \\\\\\\"\\\"'$xd_arg\\\" >&2\\n            exit 64\\n            ;;\\n    esa…455 chars truncated…der']\\\\\\\")\\npath.write_text(source)\\nPY\\nRENDER_HOST=127.0.0.1 RENDER_PORT=18765 DEBUG=pw:browser timeout --signal=TERM 50s /workspace/spine-trial-q4/venv/bin/python -B -m tools.preview_server --cwd render -- node xd-sandbox-test.mjs poses cam '{\\\\\\\"x\\\\\\\":180,\\\\\\\"y\\\\\\\":560,\\\\\\\"zoom\\\\\\\":1.3}' 'spear_thrust|0.56|/tmp/xd-pr23/xd_pose.png'\\\"` rejected: rm -f style commands are not permitted. Use a safer approach\")" }
+exec
+/bin/bash -lc "git for-each-ref --format='%(objectname)' refs/heads refs/remotes/origin | sort -u | xargs -r git grep -I -i -l -E '頭冠|头冠|馬身中軸|马身中轴|蹄底|head[_ -]?(crown|crest|top)|horse.{0,12}(axis|midline|centerline)|body[_ -](axis|midline|centerline)|hoof[_ -]?(sole|bottom)|crown' -- ':"'!*.svg'"' ':"'!*.js'"' ':"'!*.mjs'"' ':"'!*.html'"' | sed -E 's/"'^[[:xdigit:]]+://'"' | sort -u
+git log --all --oneline -- docs/standard/proportion_landmarks.json docs/standard/skeleton_landmarks_v1.json src_assets/mount/cavalry_ref.png docs/reports/gallop_reference
+rg -n -i '頭冠|头冠|冠頂|馬.{0,4}中軸|马.{0,4}中轴|蹄底|hoof sole|body.axis|midline|centerline|(?:crown|sole)\\b' docs/standard docs/reports --glob '*.md' --glob '*.json' --max-columns 180 --max-count 3" in /workspace/spine-trial-q4
+ succeeded in 0ms:
+a27d856 Restore full draw arm on the shared general bow rig
+c82adda Restore complete Q4 general textures at shared joints
+e952e1a test: add skeleton fit and static pipeline regression coverage (#16)
+b3176d5 Address general art feedback and align rigid weapon textures
+d094dd9 WIP backup: xy_bow art feedback (Codex hung 01:54 11/27)
+bfa6598 Align general knee art and stabilize shared combat attachments
+5a3b9ae Normalize Q4 general proportions and validate shared fall actions
+db343cb WIP: ratio normalize v1 (Codex ran out of credits; ma_dai final QA failing; not reviewed)
+3bac325 Define and check Zhao Yun general proportions
+076808d Add generated gallop timing references
+93d055e feat(mount): generic quadruped mount cut tool, gait generator and rider attach contract
+docs/standard/skeleton_template_v1.json:13:  "coordinates": "x right, y up, in head heights from the sole baseline",
+docs/reports/tools-proportion-audit.md:3:[Omitted long matching line]
+docs/reports/tools-proportion-audit.md:14:[Omitted long matching line]
+docs/reports/tools-proportion-audit.md:28:[Omitted long matching line]
+docs/reports/q4-head-body-ratio.md:67:| 呂布 | 下移 36 px | 上移 19 px | 冠頂下移、下巴上移，縮短頭部高度。紅羽保留原造型。 |
+docs/reports/mount_anim2c.md:14:Dash-in 的加速階段以 gallop 支撐與擺動高度重新求蹄底。最終接地格（從 0 開始）為 LH [0, 25]、LF [0, 10, 28]、RH [0, 10, 28]、RF [0, 17, 31]。
+docs/reports/mount_anim1c.md:4:[Omitted long matching line]
+docs/reports/mount_anim1c.md:6:[Omitted long matching line]
+docs/reports/mount_anim1b.md:9:| 動作 | 單週期／影片 | 落蹄（30 fps 蹄底判定） | 四蹄騰空 | 骨盆與鞍上下行程，各自 | 槍臉最近距離，小兵／趙雲 |
+docs/reports/mount_anim1b.md:15:[Omitted long matching line]
+docs/reports/ratio-normalize-v1.md:3:[Omitted long matching line]
+docs/reports/ratio-normalize-v1.md:25:[Omitted long matching line]
+
+exec
+/bin/bash -lc '/workspace/spine-trial-q4/venv/bin/python -B tools/pipeline.py check --char zhao --stage source,cut,build; /workspace/spine-trial-q4/venv/bin/python -B tools/pipeline.py regress --static' in /tmp/xd-pr23
+ succeeded in 2182ms:
+[ai_gate] check zhao stages=['source', 'cut', 'build'] built=True
+[spec_check] character zhao (root .)
+[PASS] source.background: 0/4 corners mostly opaque
+[WARN] source.margin: 2.7% of edge pixels opaque (art touching the canvas edge may be clipped)
+[PASS] source.size: 577x1250, character bbox x1-575 y1-1249
+[PASS] source.baseline: lowest opaque row 1249 vs baseline 1245 (|d|=4)
+[PASS] source.alpha: 3.3% semi-transparent coverage (soft halos blur the cut)
+[PASS] style.key_green: 0.00% of opaque pixels near the chroma-key green (keyed out / despilled)
+[PASS] style.face_turn: face turn to image right (3/4 view) +0.061 (ref +0.061, need >= 0.04)
+[PASS] style.gaze_x: gaze to image right +0.047 (ref +0.047, need >= 0.0)
+[PASS] style.face_scale: face width px 185 vs ref 185 (x1.00, allowed 0.8-1.2)
+[PASS] style.head_frac: head : body 0.413 vs ref 0.413 (x1.00, allowed 0.8-1.2)
+[PASS] style.chest_w: chest width / face width 1.773 vs ref 1.773 (x1.00, allowed 0.7-1.5)
+[PASS] style.light_lr: torso brightness L/R 1.005 vs ref 1.005 (|d|=0.000, max 0.15)
+[PASS] parts.head: 360x344 -> 270x258 on a 512 page
+[PASS] parts.l_arm: 132x283 -> 99x212 on a 512 page
+[PASS] parts.l_leg: 212x288 -> 159x216 on a 512 page
+[PASS] parts.pauldron_l: 81x116 -> 61x87 on a 512 page
+[PASS] parts.pauldron_r: 135x106 -> 101x80 on a 512 page
+[PASS] parts.pony: 551x551 -> 413x413 on a 512 page
+[PASS] parts.r_bracer: 115x106 -> 86x80 on a 512 page
+[PASS] parts.r_hand: 71x73 -> 53x55 on a 512 page
+[PASS] parts.r_leg: 166x301 -> 124x226 on a 512 page
+[PASS] parts.r_upper: 119x118 -> 89x88 on a 512 page
+[PASS] parts.skirt: 361x267 -> 271x200 on a 512 page
+[PASS] parts.spear_gold/spear1: 106x426 -> 80x320 on a 512 page
+[PASS] parts.spear_gold/spear2: 106x426 -> 80x320 on a 512 page
+[PASS] parts.spear_gold/spear3: 106x426 -> 80x320 on a 512 page
+[PASS] parts.torso: 356x275 -> 267x206 on a 512 page
+[WARN] joints: r_leg: segment r_shin overlaps the joint by 14px < margin 18px
+[WARN] joints: r_leg: segment r_thigh overlaps the joint by 16px < margin 18px
+[PASS] atlas.pages: 4 page(s) [('512', '512')]
+[PASS] atlas.pma: false,false,false,false
+[PASS] atlas.padding: 18 regions, 0 closer than 2px to the page edge
+[PASS] atlas.regions: 18 attachment regions present
+[PASS] astc.zhao_1.png: block 6x6, 118352 B (expect 6x6, 118352 B)
+[PASS] astc.zhao_2.png: block 6x6, 118352 B (expect 6x6, 118352 B)
+[PASS] astc.zhao_3.png: block 6x6, 118352 B (expect 6x6, 118352 B)
+[PASS] astc.zhao_4.png: block 6x6, 118352 B (expect 6x6, 118352 B)
+[PASS] rig.draw_order: matches rig_spec
+[PASS] rig.ik_r_leg.bendPositive: False
+[PASS] rig.ik_l_leg.bendPositive: False
+[PASS] rig.ik_l_arm.bendPositive: True
+[PASS] rig.spear_parent: weapon bone must be root-parented (holds a world-straight line)
+[PASS] rig.l_grip: setup front grip 230.0 along shaft (max 310)
+[PASS] rig.grip_side: front arm drawn BEHIND the shaft (fist on the far side)
+[PASS] standard.hard.atlas.page: 512 (standard 512)
+[PASS] standard.hard.atlas.padding: 2 (standard 2)
+[PASS] standard.hard.atlas.pma: False (standard False)
+[PASS] standard.hard.atlas.texture_scale: 0.75 (standard 0.75)
+[PASS] standard.hard.astc_block: 6x6 (standard 6x6)
+[PASS] standard.hard.char_overrides: no atlas/cut/action/draw-order overrides
+[PASS] standard.hard.origin: [330, 1245] (standard [330, 1245])
+[PASS] standard.hard.canvas: 577x1250 (standard 577x1250)
+[PASS] standard.hard.actions: actions/ = ['dash_in', 'dodge', 'duel_attack', 'fall', 'hit', 'idle', 'retreat', 'spear_thrust', 'walk_in_place'] (standard ['dash_in', 'dodge', 'duel_attack', 'fall', 'hit', 'idle', 'retreat', 'spear_thrust', 'walk_in_place'])
+[PASS] standard.hard.spine: zhao_rig.json spine 4.2.40 (standard 4.2)
+[PASS] standard.hard.spine: zhao.json spine 4.2.40 (standard 4.2)
+[PASS] standard.joint.hip: max offset 0 px (0.000 norm, max 0.01 = 12.5 px)
+[PASS] standard.joint.torso: max offset 0 px (0.000 norm, max 0.01 = 12.5 px)
+[PASS] standard.joint.chest: max offset 0 px (0.000 norm, max 0.01 = 12.5 px)
+[PASS] standard.joint.head: max offset 0 px (0.000 norm, max 0.01 = 12.5 px)
+[PASS] standard.joint.skirt: max offset 0 px (0.000 norm, max 0.01 = 12.5 px)
+[PASS] standard.joint.r_thigh: max offset 0 px (0.000 norm, max 0.01 = 12.5 px)
+[PASS] standard.joint.r_shin: max offset 0 px (0.000 norm, max 0.01 = 12.5 px)
+[PASS] standard.joint.l_thigh: max offset 0 px (0.000 norm, max 0.01 = 12.5 px)
+[PASS] standard.joint.l_shin: max offset 0 px (0.000 norm, max 0.01 = 12.5 px)
+[PASS] standard.joint.pauldron_r: max offset 0 px (0.000 norm, max 0.01 = 12.5 px)
+[PASS] standard.joint.pauldron_l: max offset 0 px (0.000 norm, max 0.01 = 12.5 px)
+[PASS] standard.joint.r_shoulder: max offset 0 px (0.000 norm, max 0.01 = 12.5 px)
+[PASS] standard.joint.l_upper: max offset 0 px (0.000 norm, max 0.01 = 12.5 px)
+[PASS] standard.joint.l_fore: max offset 0 px (0.000 norm, max 0.01 = 12.5 px)
+[PASS] standard.joint.weapon_grip: max offset 0 px (0.000 norm, max 0.01 = 12.5 px)
+[PASS] standard.limb.front_arm: length x1.000 of standard (max +-0.05)
+[PASS] standard.limb.leg_r: length x1.000 of standard (max +-0.05)
+[PASS] standard.limb.leg_l: length x1.000 of standard (max +-0.05)
+[PASS] standard.limb.torso: length x1.000 of standard (max +-0.05)
+[PASS] standard.limb.rear_arm: shoulder->fist x1.000 of standard
+[PASS] standard.motion_scale: 1.0 (standard 1.0 +-0.02: a per-character scale means the art deviates from the fixed proportions)
+[PASS] standard.weapon.shaft_front: 340 work px holdable ahead of the rear fist (min 340)
+[PASS] standard.weapon.grip_slide: 120 (standard 120; a longer slide compensates a short front shaft = deviation)
+[PASS] standard.rig_override: no other rig overrides
+[PASS] standard.weapon.axis: shaft lean k 0.151 (standard 0.1513 +-0.05)
+[PASS] standard.joint_overlap_min: 18 (min 18)
+[spec_check] FAIL=0 WARN=3
+[ai_gate] STAGE PASS: spec_check
+[ai_gate] WARN_PLANS (locked rules not yet mechanical FAIL — do not ignore):
+  - [identity.weapon] 角色武器必須正確(張飛=丈八蛇矛,關羽=青龍偃月刀) | plan: 目前靠人工 + STANDARD weapon.axis;下一步在 source_art_check 加武器輪廓/長度啟發式 WARN→FAIL | docs/LESSONS.md #8; skills/spine-source-art
+  - [style.chibi_3d] 物理感 3D 渲染 Q 版(非平塗二次元) | plan: style_ref 比對已存在;完全自動分類需視覺模型,維持 [R] 人工 + style 量化門 | spec/STANDARD.md; skills/spine-source-art
+[ai_gate] check zhao: PASS
+[pipeline] check PASS: zhao
+[regress] PASS golden.mount: approved mount hashes and cycles match
+[regress] PASS golden.char2: 14 outputs byte-identical
+[regress] PASS golden.guan_yu: 16 outputs byte-identical
+[regress] PASS golden.lu_bu: 16 outputs byte-identical
+[regress] PASS golden.soldier_bow_red: 4 outputs byte-identical
+[regress] PASS golden.soldier_cavalry_blue: 6 outputs byte-identical
+[regress] PASS golden.soldier_spear_blue: 4 outputs byte-identical
+[regress] PASS golden.zhao: 10 outputs byte-identical
+[regress] PASS golden.zhao_v2: 14 outputs byte-identical
+[regress] FAIL=0 SKIP=0
+
+exec
+/bin/bash -lc "ls -l xd_pose.png xd-chrome-guard; ss -ltnp '( sport = :8765 or sport = :8895 or sport = :18765 )'; rg -n 'const browser=' render/xd-sandbox-test.mjs; rg -n 'new (WebGL|Managed)|getContext|status_' render/index.html" in /tmp/xd-pr23
+ succeeded in 0ms:
+ls: cannot access 'xd-chrome-guard': No such file or directory
+-rw-r--r-- 1 box box 668965 Nov 27 15:57 xd_pose.png
+State  Recv-Q Send-Q Local Address:Port Peer Address:PortProcess                             
+LISTEN 0      5          127.0.0.2:8895      0.0.0.0:*    users:(("python3",pid=915386,fd=3))
+LISTEN 0      5          127.0.0.1:8765      0.0.0.0:*    users:(("python",pid=1401870,fd=3))
+LISTEN 0      5          127.0.0.1:8895      0.0.0.0:*    users:(("python",pid=750499,fd=3)) 
+16:const browser=await chromium.launch({executablePath:'/usr/bin/google-chrome',headless:true,chromiumSandbox:true});
+5:window.status_='loading'; window.errors=[];
+25:    window.status_='ok';
+26:  }catch(e){window.status_='error';window.errors.push(String(e&&e.stack||e));}
+
+exec
+/bin/bash -lc "python3 - <<'PY'
+from pathlib import Path
+p = Path('render/xd-sandbox-test.mjs')
+old = p.read_text()
+new = old.replace(\"headless:true,chromiumSandbox:true\", \"headless:true,chromiumSandbox:true,ignoreDefaultArgs:['--no-sandbox','--enable-unsafe-swiftshader']\")
+assert new "'!= old
+p.write_text(new)
+PY
+RENDER_HOST=127.0.0.1 RENDER_PORT=18765 DEBUG=pw:browser timeout 50s /workspace/spine-trial-q4/venv/bin/python -B -m tools.preview_server --cwd render -- node xd-sandbox-test.mjs poses cam '"'{\"x\":180,\"y\":560,\"zoom\":1.3}' 'spear_thrust|0.56|/tmp/xd-pr23/xd_verified_pose.png'" in /tmp/xd-pr23
+ succeeded in 813ms:
+2026-11-27T07:58:24.786Z pw:browser <launching> /usr/bin/google-chrome --disable-field-trial-config --disable-background-networking --disable-background-timer-throttling --disable-backgrounding-occluded-windows --disable-back-forward-cache --disable-breakpad --disable-client-side-phishing-detection --disable-component-extensions-with-background-pages --disable-component-update --no-default-browser-check --disable-default-apps --disable-dev-shm-usage --disable-edgeupdater --disable-extensions --disable-features=AvoidUnnecessaryBeforeUnloadCheckSync,DestroyProfileOnBrowserClose,DialMediaRouteProvider,GlobalMediaControls,HttpsUpgrades,LensOverlay,MediaRouter,PaintHolding,ThirdPartyStoragePartitioning,BlockOriginHeaderModificationOnRedirect,AvoidCorsURLLoaderRestartOnRedirect,Translate,AutoDeElevate,OptimizationHints,NetworkTimeServiceQuerying,AimEnabled,msForceBrowserSignIn,msEdgeUpdateLaunchServicesPreferredVersion --enable-features=CDPScreenshotNewSurface --allow-pre-commit-input --disable-hang-monitor --disable-ipc-flooding-protection --disable-popup-blocking --disable-prompt-on-repost --disable-renderer-backgrounding --disable-updater-scheduler --force-color-profile=srgb --metrics-recording-only --no-first-run --password-store=basic --use-mock-keychain --no-service-autorun --export-tagged-pdf --disable-search-engine-choice-screen --unsafely-disable-devtools-self-xss-warnings --edge-skip-compat-layer-relaunch --disable-infobars --disable-search-engine-choice-screen --disable-sync --headless --hide-scrollbars --mute-audio --blink-settings=primaryHoverType=2,availableHoverTypes=2,primaryPointerType=4,availablePointerTypes=4 --user-data-dir=/tmp/playwright_chromiumdev_profile-6WMsJD --remote-debugging-pipe --no-startup-window
+2026-11-27T07:58:24.791Z pw:browser <launched> pid=1431640
+2026-11-27T07:58:24.853Z pw:browser [pid=1431640][err] [1431640:1431667:1127/155824.853074:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+2026-11-27T07:58:24.874Z pw:browser [pid=1431640][err] [1431640:1431667:1127/155824.874264:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+2026-11-27T07:58:24.874Z pw:browser [pid=1431640][err] [1431640:1431667:1127/155824.874346:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+2026-11-27T07:58:24.874Z pw:browser [pid=1431640][err] [1431640:1431667:1127/155824.874359:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+2026-11-27T07:58:24.959Z pw:browser [pid=1431640][err] [1431640:1431667:1127/155824.958940:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+2026-11-27T07:58:24.959Z pw:browser [pid=1431640][err] [1431640:1431667:1127/155824.958971:ERROR:dbus/bus.cc:405] Failed to connect to the bus: Failed to connect to socket /run/dbus/system_bus_socket: No such file or directory
+2026-11-27T07:58:24.964Z pw:browser [pid=1431640][err] [1431640:1431640:1127/155824.963438:ERROR:dbus/object_proxy.cc:572] Failed to call method: org.freedesktop.DBus.Properties.GetAll: object_path= /org/freedesktop/UPower/devices/DisplayDevice: unknown error type: 
+[gpu] {"devices":[{"vendorId":65535,"deviceId":65535,"vendorString":"Google Inc. (Google)","deviceString":"ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver-5.0.0)","driverVendor":"SwANGLE","driverVersion":"5.0.0"}],"webgl":"unavailable_software"}
+2026-11-27T07:58:25.084Z pw:browser [pid=1431640][err] [1431682:1431682:1127/155825.084365:ERROR:gpu/command_buffer/service/gles2_cmd_decoder_passthrough.cc:1269] []Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader flag to opt in to lower security guarantees for trusted content.
+2026-11-27T07:58:25.096Z pw:browser [pid=1431640][err] [1431682:1431682:1127/155825.096079:ERROR:gpu/command_buffer/service/gl_utils.cc:431] [.WebGL-0x1004000fe000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[page] []Automatic fallback to software WebGL has been deprecated. Please use the --enable-unsafe-swiftshader flag to opt in to lower security guarantees for trusted content.
+[page] [.WebGL-0x1004000fe000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[page] Failed to load resource: the server responded with a status of 404 (File not found)
+{"s":"ok","e":[],"a":[["dash_in",1.2000000476837158],["dodge",0.6000000238418579],["duel_attack",1.600000023841858],["fall",1.7999999523162842],["hit",0.8999999761581421],["idle",2],["retreat",1.2000000476837158],["spear_thrust",1.600000023841858],["walk_in_place",1.2000000476837158]]}
+2026-11-27T07:58:25.188Z pw:browser [pid=1431640][err] [1431682:1431682:1127/155825.188360:ERROR:gpu/command_buffer/service/gl_utils.cc:431] [.WebGL-0x1004000fe000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+2026-11-27T07:58:25.256Z pw:browser [pid=1431640][err] [1431682:1431682:1127/155825.256434:ERROR:gpu/command_buffer/service/gl_utils.cc:431] [.WebGL-0x1004000fe000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+2026-11-27T07:58:25.264Z pw:browser [pid=1431640] <gracefully close start>
+[page] [.WebGL-0x1004000fe000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+[page] [.WebGL-0x1004000fe000]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels
+2026-11-27T07:58:25.328Z pw:browser [pid=1431640] <process did exit: exitCode=0, signal=null>
+2026-11-27T07:58:25.328Z pw:browser [pid=1431640] starting temporary directories cleanup
+2026-11-27T07:58:25.331Z pw:browser [pid=1431640] finished temporary directories cleanup
+2026-11-27T07:58:25.331Z pw:browser [pid=1431640] <gracefully close end>
+
+codex
+符合參數限制的重跑已用真實 Spine runtime 成功出圖。第一次啟動時，Playwright 自動加上了禁止的 SwiftShader 旗標，我已排除該次結果，並從重跑的 Chrome 命令列確認兩個禁止旗標都未出現。
+exec
+/bin/bash -lc "unshare --user --map-root-user --net true; ss -ltnp '( sport = :8765 or sport = :8895 or sport = :18765 )'; ps -p 1428476,1431640 -o pid,stat,comm; node -p 'require(\"/workspace/spine-trial-q4/render/node_modules/@esotericsoftware/spine-webgl/package.json\").version'; ls -l /tmp/xd-pr23/xd*" in /workspace/spine-trial-q4
+ succeeded in 0ms:
+State  Recv-Q Send-Q Local Address:Port Peer Address:PortProcess                             
+LISTEN 0      5          127.0.0.2:8895      0.0.0.0:*    users:(("python3",pid=915386,fd=3))
+LISTEN 0      5          127.0.0.1:8765      0.0.0.0:*    users:(("python",pid=1401870,fd=3))
+LISTEN 0      5          127.0.0.1:8895      0.0.0.0:*    users:(("python",pid=750499,fd=3)) 
+    PID STAT COMMAND
+4.2.120
+-rw-r--r-- 1 box box 668965 Nov 27 15:57 /tmp/xd-pr23/xd_pose.png
+-rw-r--r-- 1 box box 668965 Nov 27 15:58 /tmp/xd-pr23/xd_verified_pose.png
+
+exec
+/bin/bash -lc "git for-each-ref --format='%(objectname)' refs/heads refs/remotes/origin | sort -u | xargs -r git grep -I -i -l -E '頭冠|头冠|冠頂|馬身中軸|马身中轴|蹄底|head[_ -]?(crown|crest|top)|horse.{0,12}(axis|midline|centerline)|body[_ -](axis|midline|centerline)|hoof[_ -]?(sole|bottom)|crown' -- docs reports export mounts src_assets/mount | sed -E 's/"'^[[:xdigit:]]+://'"' | sort -u
+git log --all --format= --name-only -- docs reports export mounts src_assets/mount | sort -u | rg -i 'annotat|landmark|markup|標註|marked|midline|debug|overlay|ref|guide|diag|pivot|/(index|report|manifest|.*\\.meta)\\.json"'$'"' | rg -v '(/spine/|\\.atlas"'$)'"' | head -120
+cat docs/reports/gallop_reference/README.md
+head -30 docs/standard/proportion_landmarks.json
+git status --porcelain=v1 --untracked-files=all -- docs reports export" in /workspace/spine-trial-q4
+ succeeded in 1216ms:
+docs/MOUNT.md
+docs/reports/mount_anim1b.md
+docs/reports/mount_anim1c.md
+docs/reports/mount_anim2c.md
+docs/reports/q4-head-body-ratio.md
+docs/reports/ratio-normalize-v1.md
+docs/reports/tools-proportion-audit.md
+docs/standard/proportion_landmarks.json
+docs/standard/proportion_v1.json
+docs/reports/gallop_reference/README.md
+docs/reports/gallop_reference/ref_gallop_sheet.png
+docs/reports/gallop_reference/ref_gallop_soldier.gif
+docs/reports/gallop_reference/ref_gallop_zhao.gif
+docs/reports/img/skeleton_overlay_all.png
+docs/reports/img/skeleton_overlay_all_after.png
+docs/reports/img/skeleton_zhao_v2_overlay.png
+docs/reports/mount_mock7_diagnostic.md
+docs/standard/proportion_landmarks.json
+docs/standard/skeleton_landmarks_v1.json
+export/game/manifest.json
+mounts/horse_bay/out/mount_horse_bay.meta.json
+mounts/horse_sheet/out/mount_horse_sheet.meta.json
+mounts/horse_war/out/mount_horse_war.meta.json
+src_assets/mount/cavalry_ref.png
+# 原地奔跑節奏參考
+
+小兵與趙雲各有 8 格。每圈 600 ms，畫幅 444 × 415 px。縮圖 512 × 128 px，上排小兵、下排趙雲，從左至右播放。
+
+- [小兵 GIF](ref_gallop_soldier.gif)
+- [趙雲 GIF](ref_gallop_zhao.gif)
+- [逐格縮圖](ref_gallop_sheet.png)
+
+## 長槍亮面
+
+提交 `8bfff79`。在共用騎乘產生器加上依原貼圖區域名稱指定的亮面參數，本輪套用 `weapon_spear`。重新封裝自原步戰零件衍生的騎乘亮面區域，原區域的 alpha 與新版一致，網格、貼圖座標和長寬逐項相同。趙雲的靜態圖與 `514f276` 逐像素一致。以原 8-bit 亮度比較，槍頭平均由 134.72 增至 158.89，槍桿由 69.99 增至 120.05。小兵預覽寬 512 px。步戰 golden 靜態回歸 `FAIL=0 SKIP=0`。
+
+## 逐格觀察
+
+「鞍」以固定飾片估算馬軀幹的上下位移。「頭」量頭盔或臉部標點相對前一項鞍點的位移。各值都以第 1 格為基準，單位為 GIF 像素，正值往下。這些是從 AI 分格圖估算的幅度，部分蹄子重疊時以可見輪廓描述。用作 Spine 節奏參考時，落蹄順序仍應以原本步態契約確認。
+
+| 格／開始時間 | 小兵馬腿 | 小兵鞍／相對頭 | 趙雲馬腿 | 趙雲鞍／相對頭 |
+|---|---|---:|---|---:|
+| 1／0 ms | 一條後腿接近髖下落地，另一後腿往後伸。一前腿探前，另一前蹄收在胸下。 | 0／0 | 後側一蹄在髖下伸直，另一向後。一前腿伸遠，另一屈起。 | 0／0 |
+| 2／70 ms | 一後蹄、前探的前蹄在低位，另外兩蹄折起。 | 0／+2 | 後腿撐開，前探的前蹄落到低位，馬腹進入此圈最低點。 | +8／−8 |
+| 3／130 ms | 後蹄離開低位，一前腿伸直承接，另一前腿折在胸下。 | −10／+8 | 前腿交替伸開，後腿往後離地，開始由前腿支撐。 | −1／+1 |
+| 4／190 ms | 前蹄推離前的最後一段，後腿摺收，馬身繼續抬高。 | −14／+9 | 四腿往腹下收，前蹄推離後進入騰空段。 | −2／+2 |
+| 5／260 ms | 四蹄往腹下集中，馬身呈收腿騰空。 | −14／+7 | 四蹄收在腹下，馬身上升，前腿開始往後彎收。 | −8／+6 |
+| 6／340 ms | 騰空高點，前後腿屈收最緊，準備重伸。 | −18／+12 | 騰空高點，後腿壓到腹下，前腿仍屈起。 | −10／+8 |
+| 7／430 ms | 腿從腹下重新伸展，前腿向前探，後腿向下追落點。 | −11／+7 | 後腿往後下伸，近前腿向前探，逐步下降。 | −7／+5 |
+| 8／520 ms | 前後腿大幅分開，後腿拉長，銜接第 1 格的落地。 | −1／+1 | 前腿向前伸開、後腿伸長，馬身回到接近第 1 格。 | −3／+2 |
+
+小兵、趙雲的鞍點峰谷差約 18 px，頭部畫面峰谷差分別約 9／2 px。相對位置受生成圖的局部造型漂移影響，尤其小兵第 5 格、趙雲第 6 格的鞍點匹配較弱。這些數字適合比較起伏時機，精確幅度仍以 Spine 的鞍點和腳鐙為準。
+
+## 生成方式
+
+使用內建 ImageGen，以已核可的單張騎乘圖分別生成小兵、趙雲的等格 4×2 接觸表。提示指定同角度、同配色、右向原地跑、長槍維持平行與雙手握持，從後腿接觸經前腿推離、收腿騰空、伸腿回到首格。依列讀取八格，以鞍點對齊水平位置，保留原圖垂直起伏，再以共同調色盤組成 GIF。這些參考圖留在文件區，遊戲骨架與動作資料沿用原版。
+{
+ "zhao_v2": [
+  {
+   "sha256": "3347d836f0f3428a5f7059688da31e81c184ab8873070f50f8c8afb1ad724164",
+   "crown_y": 325,
+   "chin_y": 623,
+   "head_x": [
+    185,
+    539
+   ],
+   "boot_boxes": [
+    [
+     125,
+     1180,
+     184,
+     1250
+    ],
+    [
+     400,
+     1180,
+     575,
+     1250
+    ]
+   ]
+  }
+ ],
+ "zhao": [
+  {
+   "sha256": "456b097e3baf86057d4b8c5d6f6027e430249a3b6693f0bf0061efbb995bcd19",
+   "crown_y": 318,
+
+exec
+/bin/bash -lc "sed -n '1,220p' tests/test_preview_server.py; command -v ip; git status --short --untracked-files=all" in /tmp/xd-pr23
+ succeeded in 0ms:
+import os
+from pathlib import Path
+import signal
+import socket
+import subprocess
+import sys
+import tempfile
+import time
+from unittest import TestCase, mock
+from urllib.request import urlopen
+
+from tools import preview_server as preview
+
+
+class PreviewServerTest(TestCase):
+    def setUp(self):
+        sandbox = self.enterContext(tempfile.TemporaryDirectory())
+        self.root = Path(sandbox)
+        (self.root / 'render').mkdir()
+        self.index = b'<!doctype html><title>preview fixture</title>'
+        (self.root / 'render' / 'index.html').write_bytes(self.index)
+        requested = os.environ.get('PREVIEW_TEST_PORT')
+        with socket.socket() as sock:
+            if os.name == 'posix':
+                sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            sock.bind(('127.0.0.1', int(requested) if requested else 0))
+            self.port = sock.getsockname()[1]
+        self.url = f'http://127.0.0.1:{self.port}/render/index.html'
+        self.enterContext(mock.patch.dict(os.environ, {
+            'RENDER_HOST': '127.0.0.1', 'RENDER_PORT': str(self.port),
+        }))
+
+    def assert_serving(self):
+        with urlopen(self.url, timeout=1) as response:
+            self.assertEqual(response.read(), self.index)
+
+    def assert_reaped(self, process):
+        # Check wait() has already collected the process, before polling it.
+        self.assertIsNotNone(process.returncode)
+        with self.assertRaises(OSError):
+            socket.create_connection(('127.0.0.1', self.port), timeout=0.25)
+        with preview.preview_server(root=self.root) as replacement:
+            self.assertIsNotNone(replacement)
+            self.assert_serving()
+
+    def test_success_waits_and_releases_port(self):
+        with preview.preview_server(root=self.root) as process:
+            self.assertIsNotNone(process)
+            self.assertIsNone(process.poll())
+            self.assert_serving()
+        self.assert_reaped(process)
+
+    def test_exception_waits_and_releases_port(self):
+        with self.assertRaisesRegex(ValueError, 'render failed'):
+            with preview.preview_server(root=self.root) as process:
+                self.assert_serving()
+                raise ValueError('render failed')
+        self.assert_reaped(process)
+
+    def test_startup_timeout_reaps_failed_child(self):
+        # Real subprocess that stays alive but never starts serving.
+        with subprocess.Popen([sys.executable, '-c', 'import time; time.sleep(60)']) as process:
+            try:
+                with mock.patch.object(preview, '_start', return_value=process):
+                    with self.assertRaisesRegex(TimeoutError, 'not ready'):
+                        with preview.preview_server(root=self.root, timeout=0.2):
+                            self.fail('not-ready service must not reach the renderer')
+                self.assert_reaped(process)
+            finally:
+                if process.poll() is None:
+                    process.kill()
+
+    def start_external(self, root):
+        process = self.enterContext(subprocess.Popen([
+            sys.executable, '-m', 'http.server', str(self.port), '--bind', '127.0.0.1',
+            '--directory', str(root),
+        ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL))
+        # Register cleanup on the test fixture's own Popen, not on a port.
+        self.addCleanup(preview._stop, process)
+        until = time.monotonic() + 4
+        while time.monotonic() < until:
+            try:
+                with urlopen(self.url, timeout=0.2):
+                    return process
+            except OSError:
+                if process.poll() is not None:
+                    self.fail(f'test server exited {process.returncode}')
+                time.sleep(0.025)
+        self.fail('test server did not start')
+
+    def test_external_service_survives_reuse_and_render_failure(self):
+        external = self.start_external(self.root)
+        pid = external.pid
+        with mock.patch.object(preview, '_start', side_effect=AssertionError('no own launch')):
+            with preview.preview_server(root=self.root) as process:
+                self.assertIsNone(process)
+                self.assert_serving()
+            with self.assertRaises(ValueError):
+                with preview.preview_server(root=self.root):
+                    raise ValueError('render failed')
+        self.assertEqual(external.pid, pid)
+        self.assertIsNone(external.poll())
+        self.assert_serving()
+
+    def test_foreign_http_service_is_not_reused_or_stopped(self):
+        other = self.root / 'other'
+        (other / 'render').mkdir(parents=True)
+        (other / 'render' / 'index.html').write_text('unrelated')
+        external = self.start_external(other)
+        with self.assertRaisesRegex(RuntimeError, 'Preview server exited'):
+            with preview.preview_server(root=self.root):
+                self.fail('wrong server should not reach the renderer')
+        self.assertIsNone(external.poll())
+        with urlopen(self.url, timeout=1) as response:
+            self.assertEqual(response.read(), b'unrelated')
+
+    def test_sigint_and_sigterm_cleanup(self):
+        if os.name != 'posix':
+            self.skipTest('test delivers real POSIX signals to a child process')
+        code = '''
+import sys, time
+from tools.preview_server import preview_server, PreviewInterrupted
+try:
+    with preview_server(root=sys.argv[1]) as service:
+        print(service.pid, flush=True)
+        time.sleep(60)
+except PreviewInterrupted as exc:
+    raise SystemExit(128 + exc.signum)
+'''
+        for signum in (signal.SIGINT, signal.SIGTERM):
+            with self.subTest(signum=signum):
+                with subprocess.Popen([sys.executable, '-c', code, str(self.root)],
+                                      text=True, stdout=subprocess.PIPE) as command:
+                    try:
+                        import select
+                        self.assertTrue(select.select([command.stdout], [], [], 5)[0],
+                                        'preview child did not become ready')
+                        service_pid = int(command.stdout.readline())
+                        self.assert_serving()
+                        command.send_signal(signum)
+                        self.assertEqual(command.wait(timeout=5), 128 + signum)
+                        with self.assertRaises(ProcessLookupError):
+                            os.kill(service_pid, 0)
+                        with preview.preview_server(root=self.root):
+                            self.assert_serving()
+                    finally:
+                        if command.poll() is None:
+                            command.terminate()
+                            command.wait(timeout=5)
+
+    def test_cli_preserves_command_status(self):
+        for status in (0, 7):
+            with self.subTest(status=status):
+                program = ('from urllib.request import urlopen; '
+                           f'assert urlopen({self.url!r}, timeout=2).status == 200; '
+                           f'raise SystemExit({status})')
+                process = subprocess.run([
+                    sys.executable, '-m', 'tools.preview_server', '--cwd', str(self.root),
+                    '--', sys.executable, '-c', program,
+                ], capture_output=True, text=True, timeout=10)
+                self.assertEqual(process.returncode, status, process.stderr)
+                with self.assertRaises(OSError):
+                    socket.create_connection(('127.0.0.1', self.port), timeout=0.25)
+/usr/bin/ip
+?? render/node_modules
+?? render/xd-sandbox-test.mjs
+?? xd_pose.png
+?? xd_verified_pose.png
+
+exec
+/bin/bash -lc "git log --all -G '頭冠|头冠|馬身中軸|马身中轴|蹄底|head[_ -]?(crown|crest|top)|horse.{0,12}(axis|midline|centerline)|body[_ -](axis|midline|centerline)|hoof[_ -]?(sole|bottom)' --format='%h %s' -- docs reports export mounts src_assets/mount
+git for-each-ref --format='%(refname)' refs/heads refs/remotes/origin | wc -l
+git log -1 --format=%H -- mounts/horse_bay/mount.json
+git show origin/codex/issue-15-proportion-audit:mounts/horse_sheet/mount.json | rg -n 'sole|head|body|axis'
+git log -1 --format=%H -- docs/standard/proportion_landmarks.json
+git log -1 --format=%H -- src_assets/mount/cavalry_ref.png
+git show origin/codex/issue-15-proportion-audit:mounts/horse_bay/mount.json | rg -n 'sole|head|body|axis'
+find . -maxdepth 2 -type d -iname '*reports*'" in /workspace/spine-trial-q4
+ succeeded in 1368ms:
+8b9a2e5 fix: preserve mount throat underlay geometry across padding (audit row 30)
+0218c06 Audit Q4 cut and animation proportion assumptions
+77714bf Give mounted dash, retreat and thrust distinct action beats
+515b5f1 Preserve reviewed mounted thrust and maneuver baseline
+782b839 Verify cavalry hoof timing and stabilize gallop head in world space
+f1543fc Fix cavalry gait footfalls and continuous locomotion loops
+8d3f04b WIP mount v2: parts-sheet mounts, cavalry rider, straddle + thrust clearance QA
+49
+3bee6b074a308a5be424140160a52294634e8737
+7: "source_doc": "user parts sheet (white bg): row1 barding+saddle / neck+mane / head+bridle / tail, row2 4 thighs + 4 lower legs (row3 + spear = the cavalry rider, see characters/soldier_cavalry_blue)",
+22: "charge_head_offset": [25.0, 29.25],
+25:  "body": {
+122:   "at": "body.neck",
+126:   "parent": "body",
+129:    "head": [
+145:  "head": {
+162:   "motion": "head",
+191:   "at": "body.tail",
+195:   "parent": "body",
+370:  "forward_body_fraction": 0.1
+a27d856da931da6f5181ab7db8acbca14da83ac8
+93d055ec2f0b5a7adfca9a7c51073f41390d95af
+12: "body": {
+53:  "head": {
+189:   "parent": "head",
+254:   "sole": [
+275:   "sole": [
+296:   "sole": [
+317:   "sole": [
+441:  "forward_body_fraction": 0.1
+./docs/reports
+
+exec
+/bin/bash -lc "unshare --user --map-root-user --net bash -eu -c '
+ip link set lo up
+for xd_port in 8765 8895; do
+    PREVIEW_TEST_PORT=\""'$xd_port" PYTHONDONTWRITEBYTECODE=1 /workspace/spine-trial-q4/venv/bin/python -B -m unittest discover -s tests -p test_preview_server.py
+    printf "Verified port %s'"\\n\" \""'$xd_port"
+done
+ss -ltnp "( sport = :8765 or sport = :8895 )"
+test -z "$(ss -H -ltnp "( sport = :8765 or sport = :8895 )")"
+'"'" in /tmp/xd-pr23
+ succeeded in 2827ms:
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 1.371s
+
+OK
+Verified port 8765
+.......
+----------------------------------------------------------------------
+Ran 7 tests in 1.364s
+
+OK
+Verified port 8895
+State Recv-Q Send-Q Local Address:Port Peer Address:PortProcess
+
+exec
+/bin/bash -lc 'file xd_verified_pose.png
+install -m 644 xd_verified_pose.png /workspace/codex_jobs/xd_preview.png
+cmp xd_verified_pose.png /workspace/codex_jobs/xd_preview.png
+sha256sum /workspace/codex_jobs/xd_preview.png' in /tmp/xd-pr23
+ succeeded in 0ms:
+/bin/bash: line 1: file: command not found
+1659c33fb8f0d22839d0dbcd6cc454dbdc84b72057e34e5d7a47161ec7a7f2bc  /workspace/codex_jobs/xd_preview.png
+
+exec
+/bin/bash -lc "git for-each-ref --format='%(objectname)' refs/heads refs/remotes/origin | sort -u | xargs -r git grep -I -i -l -E 'head[ _-]?crown|crown_y|body[ _-]?(center[ _-]?line|mid[ _-]?line|axis)|longitudinal[ _-]?axis|central[ _-]?axis|馬(體|身|軀幹).{0,8}(中線|軸線|中軸)|蹄(底|掌|尖)|hoof[ _-]?(sole|bottom|contact)' -- docs reports export mounts src_assets/mount | sed -E 's/"'^[[:xdigit:]]+://'"' | sort -u
+git show origin/codex/issue-15-proportion-audit:docs/reports/tools-proportion-audit.md | sed -n '72,85p'
+git log --all --format= --name-only -- docs reports export mounts src_assets/mount | sort -u | rg -i '(measure|standard|landmark|annotat|diag|guide|marker|proportion|ref).*(\\.png|\\.jpe?g|\\.webp|\\.svg)"'$'"'" in /workspace/spine-trial-q4
+ succeeded in 0ms:
+docs/MOUNT.md
+docs/reports/cav_anim1c_gallop_qa.json
+docs/reports/cav_anim1c_trot_qa.json
+docs/reports/cav_anim1c_walk_qa.json
+docs/reports/cav_anim2b_charge_qa.json
+docs/reports/cav_anim2b_dash_in_qa.json
+docs/reports/cav_anim2b_duel_attack_qa.json
+docs/reports/cav_anim2b_gallop_thrust_qa.json
+docs/reports/cav_anim2b_retreat_qa.json
+docs/reports/cav_anim2c_dash_in_qa.json
+docs/reports/cav_anim2c_duel_attack_qa.json
+docs/reports/cav_anim2c_gallop_thrust_qa.json
+docs/reports/cav_anim2c_retreat_qa.json
+docs/reports/cav_anim2d_dash_in_qa.json
+docs/reports/cav_anim2d_duel_attack_qa.json
+docs/reports/cav_anim2d_gallop_thrust_qa.json
+docs/reports/cav_anim2d_retreat_qa.json
+docs/reports/cav_anim2f_dash_in_qa.json
+docs/reports/cav_anim2f_duel_attack_qa.json
+docs/reports/cav_anim2f_gallop_thrust_qa.json
+docs/reports/cav_anim2f_retreat_qa.json
+docs/reports/cav_anim2g_dash_in_qa.json
+docs/reports/cav_anim2g_duel_attack_qa.json
+docs/reports/cav_anim2g_gallop_thrust_qa.json
+docs/reports/cav_anim2g_retreat_qa.json
+docs/reports/cav_anim2h_dash_in_qa.json
+docs/reports/cav_anim2h_duel_attack_qa.json
+docs/reports/cav_anim2h_gallop_thrust_qa.json
+docs/reports/cav_anim2h_retreat_qa.json
+docs/reports/cav_anim2i_dash_in_qa.json
+docs/reports/cav_anim2i_duel_attack_qa.json
+docs/reports/cav_batch1b_metrics.json
+docs/reports/mount_anim1b.md
+docs/reports/mount_anim1c.md
+docs/reports/mount_anim2c.md
+docs/reports/tools-proportion-audit.md
+docs/standard/proportion_landmarks.json
+docs/standard/proportion_v1.json
+fatal: path 'docs/reports/tools-proportion-audit.md' exists on disk, but not in 'origin/codex/issue-15-proportion-audit'
+docs/reports/gallop_reference/ref_gallop_sheet.png
+docs/standard/img/proportion_v1.png
+docs/standard/skeleton_template_v1.png
+src_assets/mount/cavalry_ref.png
+
+exec
+/bin/bash -lc 'set -eu
+rm /tmp/xd-pr23/render/node_modules /tmp/xd-pr23/render/xd-sandbox-test.mjs /tmp/xd-pr23/xd_pose.png /tmp/xd-pr23/xd_verified_pose.png
+git worktree remove /tmp/xd-pr23
+test ! -e /tmp/xd-pr23
+git worktree list --porcelain | rg -F '"'/tmp/xd-pr23' && exit 1
+ss -ltnp '( sport = :8765 or sport = :8895 or sport = :18765 )'
+git status --short --branch
+/workspace/spine-trial-q4/venv/bin/python -B -c 'from PIL import Image; p=\"/workspace/codex_jobs/xd_preview.png\"; im=Image.open(p); print(im.format, im.size); im.verify()'" in /workspace/spine-trial-q4
+exec
+/bin/bash -lc "git show 0218c06e00ffde4f558223e20fa74acce1141942:docs/reports/tools-proportion-audit.md | sed -n '72,86p'
+venv/bin/python -B - <<'PY'
+from io import BytesIO
+from PIL import Image, ImageDraw
+import subprocess
+items = [
+('93d055e','src_assets/mount/cavalry_ref.png'),
+('076808d','docs/reports/gallop_reference/ref_gallop_sheet.png'),
+('HEAD','docs/standard/img/proportion_v1.png'),
+('HEAD','docs/standard/skeleton_template_v1.png'),
+]
+out = Image.new('RGB',(680,520),'white')
+draw = ImageDraw.Draw(out)
+for k,(ref,path) in enumerate(items):
+    blob = subprocess.run(['git','show',f'{ref}:{path}'],capture_output=True)
+    if blob.returncode:
+        print(path, 'unavailable at', ref)
+        continue
+    im = Image.open(BytesIO(blob.stdout)).convert('RGB')
+    im.thumbnail((330,230))
+    x=340*(k%2)+5
+    y=260*(k//2)
+    draw.text((x,y+5),path.split('/')[-1],fill='black')
+    out.paste(im,(x,y+25))
+out.save('/tmp/xd-reference-review.png')
+PY" in /workspace/spine-trial-q4
+ succeeded in 71ms:
+
+| 等級 | 檔案與行號 | 現況與風險 |
+| --- | --- | --- |
+| OK | `tools/mount/workflow.py:23–115`、`tools/mount/motion.py`、`tools/mount/clips.py:7–22` | v3 可重用鎖定 package、調用 combine 或沿用已核准 motion。cast 與共用步態的複製／時間對齊不會用貼圖寬推人物尺寸。 |
+| RISK | `tools/mount/cut.py:26–54,82–106,114–121,149–155,200–210,265–278,290–324,431–452`、`tools/mount/rider.py:69–80,104–121`、`tools/mount/saddle_split.py:35–57` | 固定來源空間的背景／碎塊清理、頂端延伸 tol=8、inpaint 半徑、畫布像素 pivot／crop／end、手填 scale。1 px 裁邊屬取樣。共用規則應在確認來源解析度與關節後，用關節軸與部件量測給縫隙大小，讓手填資料只負責定位。 |
+| BUG | `tools/mount/cut.py:240–259,315–327` | parts-sheet 沒有上段膝標記時，以底部寬度的一半回推膝 Y。改厚度會改膝高，繼而改骨長和步態。用明確膝、根及蹄底地標。 |
+| RISK | `tools/mount/cut.py:159–170,202–213` | leg search 半徑是 0.75×標註寬，resample 寬 1.6×，頂／底延伸 0.9×／0.12×腿寬。橫向遮罩可使用厚度。沿軸延伸用相鄰骨長，避免厚腿有額外縱向重疊。 |
+| OK | `tools/mount/cut.py:71–79,149–155`、`tools/mount/partsheet.py:64–90`、`tools/mount/rider.py:41–65` | 取軸長／使用座標地標與等比縮放，選用的站腿伸展依分節向量，沒有全角色寬度倍率。 |
+| OK | `tools/mount/build.py:57–73,82–114,321–395,450–471`、`spec/mount_contract.json:92–95` | 坐騎有明示的體型派生、body_height_scale 0.82 及腿／尾橫向目標寬對腿長。這是馬匹美術變形，骨長由地標或明示 leg_scale 更新。`leg_width_scale` 只經橫向 mesh 使用時，人物可變寬規則獨立。 |
+| BUG | `tools/mount/build.py:74–81` | rider saddle/stirrup 前移量乘馬身 part PNG 的寬。透明邊界、尾側裁切或厚度改版能讓同一座標的 rider pivot 平移。用髖至肩胛的 mount 軸和 saddle 地標決定。 |
+| BUG | `tools/mount/build.py:397–443` | `w`（馬腿原寬）決定膝、hoof 及根部縱向混權列和帶寬。腿厚一改，軸向的彎折波及位置也變。縱向權重用相鄰兩骨長，橫向厚度由美術 mesh 表達。 |
+| RISK | `tools/mount/build.py:130–158,181–208,408`、`tools/mount/leg_art.py:30–75` | 半徑至少 2 px、throat ellipse 半徑和中心按各自位圖寬高、mesh 行距約 9 px、leg art 寬額外 +6 px。依接縫局部地標及 leg segment 比例取樣。2 px 和 6 px 作 raster 最小量／安全襯邊可留在輸出端。 |
+| OK | `tools/mount/build.py:214–302,313–337,475–504,577–613,619–687,695` | atlas 使用固定格式與 texture scale，region/pivot 以實際 w/h、pivot、scale 換算。合成 stirrup 取合約相對腿長，idle paw、hit 和 secondary 使用骨長或角度。skeletal 1200×900 是輸出 bounds metadata。 |
+| BUG | `tools/mount/combine.py:147–158,216–234` | torso-based scale 另以變換後頭部矩形角點高度設上限。旋轉 head region 時，即使冠頂高度相同，寬度本身也可增加頂點 Y 並縮小整位騎手。對齊的矩形少了旋轉項仍受裁框與冠飾影響。用 head crown/hip 地標或標準冠頂位置取上限。 |
+| BUG | `tools/mount/combine.py:218–221,755–762`、`spec/mount_contract.json:244–246` | rider 目標 torso 長取整馬非腿貼圖 X 端點跨度，這是既有 tail→nose 造型合約。尾部／馬具、空白裁邊與 body width 會連動全騎手倍率。以穩定的馬匹解剖長度或高度替換來源，參考比例在既有基準重標定。 |
+
+ succeeded in 140ms:
+State  Recv-Q Send-Q Local Address:Port Peer Address:PortProcess                             
+LISTEN 0      5          127.0.0.2:8895      0.0.0.0:*    users:(("python3",pid=915386,fd=3))
+LISTEN 0      5          127.0.0.1:8765      0.0.0.0:*    users:(("python",pid=1401870,fd=3))
+LISTEN 0      5          127.0.0.1:8895      0.0.0.0:*    users:(("python",pid=750499,fd=3)) 
+## feat/q4-generals...origin/feat/q4-generals
+?? tools/joint_align_check.py
+PNG (1280, 720)
+
+exec
+/bin/bash -lc "set -eu
+rm /tmp/xd-reference-review.png
+cat > /workspace/codex_jobs/xd_verify_result.md <<'EOF'
+# 小豆查證結果
+
+## #18／PR #23
+- 用 "'`gh pr view 23` 核對 head，測試 commit 為 `07acfa54d5f3ecd31c1b3f05f565c9234426486e`。
+- 真實 Spine 預覽通過。沿用該 commit 的 HTTP 管理器、渲染器與素材，暫存測試副本只調整 Chrome 啟動和 GPU 診斷。Spine WebGL 4.2.120 回報 `s=ok`、`e=[]`。
+- 首次啟動時 Playwright 1.64.1 自動帶入 `--enable-unsafe-swiftshader`，該次結果作廢。重跑啟用 `chromiumSandbox: true`，實際 Chrome 命令列確認兩個禁止旗標均未出現。
+- Linux 6.12.113+、Google Chrome 156.0.8078.47 可在沙箱下以 headless 渲染。此環境無 `/dev/dri`，CDP 回報 ANGLE／SwiftShader 軟體渲染，Chrome 提示自動軟體 WebGL 回退已棄用。
+- 已目視檢查趙雲 `spear_thrust` 0.56 秒的 1280×720 PNG。原檔 `/tmp/xd-pr23/xd_verified_pose.png` 已複製至 `/workspace/codex_jobs/xd_preview.png`。
+- 真實預覽用 18765，測後 `ss -ltnp` 確認該埠無監聽。隔離網路中，8765、8895 的程序生命週期測試各 7/7 通過，測後 `ss -ltnp` 在兩埠均無監聽。
+- 主機上的既有監聽在測前、測後相同。8765 為 PID 1401870，8895 為 PID 915386、750499。本次程序均已退出，暫時 worktree `/tmp/xd-pr23` 已移除。
+- 靜態回歸 `FAIL=0 SKIP=0`。趙雲來源／裁切／建置檢查 `FAIL=0 WARN=3`，警告是原圖碰邊與右小腿、右大腿各一處接縫重疊不足。
+
+## #15／PR #24
+- **找不到**同時標出頭冠、馬身中軸及蹄底的已核可圖或資料。已查本地與 origin 全部分支、歷史、docs、reports、export 與騎乘參考圖。
+- PR #24 head `48cc1c867a8da67f7d5ebf9120e48f5b4c3d9d31` 的 `docs/reports/issue-15-audit-progress.md` 第 26 項記載馬蹄地標組仍缺，第 28 項記載馬身軸仍待審核。未推估座標。
+EOF
+wc -l /workspace/codex_jobs/xd_verify_result.md
+cat /workspace/codex_jobs/xd_verify_result.md
+test -s /workspace/codex_jobs/xd_preview.png' in /workspace/spine-trial-q4
+ succeeded in 0ms:
+15 /workspace/codex_jobs/xd_verify_result.md
+# 小豆查證結果
+
+## #18／PR #23
+- 用 `gh pr view 23` 核對 head，測試 commit 為 `07acfa54d5f3ecd31c1b3f05f565c9234426486e`。
+- 真實 Spine 預覽通過。沿用該 commit 的 HTTP 管理器、渲染器與素材，暫存測試副本只調整 Chrome 啟動和 GPU 診斷。Spine WebGL 4.2.120 回報 `s=ok`、`e=[]`。
+- 首次啟動時 Playwright 1.64.1 自動帶入 `--enable-unsafe-swiftshader`，該次結果作廢。重跑啟用 `chromiumSandbox: true`，實際 Chrome 命令列確認兩個禁止旗標均未出現。
+- Linux 6.12.113+、Google Chrome 156.0.8078.47 可在沙箱下以 headless 渲染。此環境無 `/dev/dri`，CDP 回報 ANGLE／SwiftShader 軟體渲染，Chrome 提示自動軟體 WebGL 回退已棄用。
+- 已目視檢查趙雲 `spear_thrust` 0.56 秒的 1280×720 PNG。原檔 `/tmp/xd-pr23/xd_verified_pose.png` 已複製至 `/workspace/codex_jobs/xd_preview.png`。
+- 真實預覽用 18765，測後 `ss -ltnp` 確認該埠無監聽。隔離網路中，8765、8895 的程序生命週期測試各 7/7 通過，測後 `ss -ltnp` 在兩埠均無監聽。
+- 主機上的既有監聽在測前、測後相同。8765 為 PID 1401870，8895 為 PID 915386、750499。本次程序均已退出，暫時 worktree `/tmp/xd-pr23` 已移除。
+- 靜態回歸 `FAIL=0 SKIP=0`。趙雲來源／裁切／建置檢查 `FAIL=0 WARN=3`，警告是原圖碰邊與右小腿、右大腿各一處接縫重疊不足。
+
+## #15／PR #24
+- **找不到**同時標出頭冠、馬身中軸及蹄底的已核可圖或資料。已查本地與 origin 全部分支、歷史、docs、reports、export 與騎乘參考圖。
+- PR #24 head `48cc1c867a8da67f7d5ebf9120e48f5b4c3d9d31` 的 `docs/reports/issue-15-audit-progress.md` 第 26 項記載馬蹄地標組仍缺，第 28 項記載馬身軸仍待審核。未推估座標。
+
+codex
+查證結果已寫入 [xd_verify_result.md](/workspace/codex_jobs/xd_verify_result.md)，共 15 行。
+
+- **#18／PR #23**：首次啟動時 Playwright 自動帶入禁止旗標，該次結果作廢。重跑確認兩個禁止旗標均未出現，Chrome 在沙箱下成功產生 [Spine 預覽 PNG](/workspace/codex_jobs/xd_preview.png)。8765、8895 在隔離網路中各通過 7 項測試，測後兩埠均無監聽。主機上的既有程序已保留，暫時 worktree 已移除。
+- **#15／PR #24**：**找不到**同時標出頭冠、馬身中軸及蹄底的已核可圖或資料。
+tokens used
+84,225
+查證結果已寫入 [xd_verify_result.md](/workspace/codex_jobs/xd_verify_result.md)，共 15 行。
+
+- **#18／PR #23**：首次啟動時 Playwright 自動帶入禁止旗標，該次結果作廢。重跑確認兩個禁止旗標均未出現，Chrome 在沙箱下成功產生 [Spine 預覽 PNG](/workspace/codex_jobs/xd_preview.png)。8765、8895 在隔離網路中各通過 7 項測試，測後兩埠均無監聽。主機上的既有程序已保留，暫時 worktree 已移除。
+- **#15／PR #24**：**找不到**同時標出頭冠、馬身中軸及蹄底的已核可圖或資料。
