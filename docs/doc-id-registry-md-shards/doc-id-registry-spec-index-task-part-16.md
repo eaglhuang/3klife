@@ -64,5 +64,6 @@
 | `doc_task_3187` | docs/agent-briefs/tasks/PROG/PROG-2-10117.md | [PROG-2-10117] pre-commit 編碼檢查在缺 tools_node 的 worktree（mailbox 分支）改走內建檢查 |
 | `doc_task_3188` | docs/agent-briefs/tasks/PROG/PROG-2-10118.md | [PROG-2-10118] 戰場部隊徽章避讓武將本體 |
 | `doc_task_3190` | docs/agent-briefs/tasks/PROG/PROG-2-10127.md | [PROG-2-10127] 年末典禮熱鬧感加強 |
+| `doc_task_3192` | docs/agent-briefs/tasks/PROG/PROG-2-10129.md | [PROG-2-10129] 三彈窗掛武將頭像與台詞 |
 | `doc_task_3194` | docs/agent-briefs/tasks/PROG/PROG-2-10131.md | [PROG-2-10131] 虎符卡乙版精簡與四階品階框（暗銅/銀/金/赤金） |
 | `doc_task_3195` | docs/agent-briefs/tasks/PROG/PROG-2-10124.md | [PROG-2-10124] 戰場右側 UI B0 缺陷：ui.ultimate.label 顯示原始 key、委任鈕字被截、寫死中文改 i18n |

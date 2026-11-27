@@ -242,8 +242,8 @@
                     "id": "sageName",
                     "widget": {
                       "top": 16,
-                      "left": 20,
-                      "right": 20
+                      "left": 130,
+                      "right": 420
                     },
                     "height": 38,
                     "text": "名士：－",
@@ -255,8 +255,8 @@
                     "id": "sageInfo",
                     "widget": {
                       "top": 62,
-                      "left": 20,
-                      "right": 20
+                      "left": 130,
+                      "right": 420
                     },
                     "height": 28,
                     "text": "",
