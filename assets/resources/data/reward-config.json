@@ -248,6 +248,34 @@
       "presentation": { "type": "instant", "args": {}, "skippable": true }
     },
     {
+      "id": "BUNDLE_MOONPARTY_GIFT_BRAVE",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "silver", "amount": 40 }],
+      "sources": ["fun02"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_MOONPARTY_GIFT_WISE",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "silver", "amount": 40 }],
+      "sources": ["fun02"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_MOONPARTY_GIFT_LOYAL",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "silver", "amount": 50 }],
+      "sources": ["fun02"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
+      "id": "BUNDLE_MOONPARTY_GIFT_PLAYFUL",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "silver", "amount": 30 }],
+      "sources": ["fun02"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
       "id": "BUNDLE_VICTORY_CHAT",
       "kind": "reward",
       "effects": [{ "kind": "friendship", "amount": 1 }],

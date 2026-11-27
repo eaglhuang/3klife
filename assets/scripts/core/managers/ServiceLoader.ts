@@ -80,6 +80,7 @@ import { DEFAULT_INSIGHT_CONFIG, DEFAULT_REWARD_CONFIG, normalizeRewardConfig, R
 import { isApiFail } from "../../shared/api/ApiProtocol";
 import { evaluateInsight, type InsightDecision } from "../dialogue/NpcDialogueCache";
 import { FriendshipService } from "../services/FriendshipService";
+import { FUN_STAGE_LINES_JSON, normalizeStageLines, setStageLines } from '../fun/FunStageLines';
 import { FRIENDSHIP_ACTION_WEIGHTS_JSON } from "../systems/FriendshipActionEngine";
 import { DEFAULT_STORY_CONFIG, normalizeStoryConfig, STORY_CONFIG_JSON, type StoryConfigV1 } from "../../shared/story/StoryConfig";
 import { ITEM_CONFIG_JSON, normalizeItemConfig, DEFAULT_ITEM_CONFIG, type ItemConfigV1 } from "../../shared/item/ItemConfig";
@@ -602,6 +603,7 @@ export class ServiceLoader {
             loadSafe<unknown>(DIALOGUE_MOOD_RULES_JSON, (raw) => { this.dialogue.setRules(raw); }),
             loadSafe<unknown>(FRIENDSHIP_ACTION_WEIGHTS_JSON, (raw) => { this.session.setFriendshipWeights(raw); }),
             loadSafe<unknown>(REWARD_CONFIG_JSON, (raw) => { this.rewardConfig = normalizeRewardConfig(raw); this.applyRewardConfig(); }),
+            loadSafe<unknown>(FUN_STAGE_LINES_JSON, (raw) => { setStageLines(normalizeStageLines(raw)); }),
             loadSafe<unknown>(QUEST_CONFIG_JSON, (raw) => { this.questConfig = normalizeQuestConfig(raw); this.localApi?.setQuestConfig(this.questConfig); }),
             loadSafe<unknown>(ITEM_CONFIG_JSON, (raw) => { this.itemConfig = normalizeItemConfig(raw); this.applyItemConfig(); }),
             loadSafe<unknown>(SUPPORT_CARDS_JSON, (raw) => { this.supportCards = normalizeSupportCards(raw); this.applyItemConfig(); }),

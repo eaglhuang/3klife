@@ -126,6 +126,7 @@ import { BREEDING_MIN_AGE } from '../../core/systems/BreedingSystem';
 import { RECRUIT_ROWS_PER_PAGE, RecruitHallController } from '../core/RecruitHallController';
 import { loadGeneralAvatar, loadGeneralPortrait } from '../core/GeneralAvatarLoader';
 import { bindAvatarTalk, setAvatarTalkProvider, showAvatarBubbleText } from '../core/AvatarTalkBubble';
+import { startFunLobbyDirector } from '../fun/FunLobbyDirector';
 import { HallMissionReportStack } from '../components/HallMissionReportStack';
 import { SeasonNewsPopup } from '../components/SeasonNewsPopup';
 import {
@@ -701,6 +702,8 @@ export class LobbyScene extends Component {
     private _openingUnavailable = false;
     /** 所有開場面板與大廳尚未掛載完成前，季報只能排隊（PROG-2-2208）。 */
     private _openingUiReady = false;
+    /** 新手樂趣小劇場排程的解除函式（離開大廳時呼叫） */
+    private _funDirectorStop: (() => void) | null = null;
     private _introTickScheduled = false;
     private _showcase: InitialShowcaseController | null = null;
     private _showcaseHost: UIScreenPreviewHost | null = null;
@@ -1056,6 +1059,8 @@ export class LobbyScene extends Component {
         }
         this._bindSaveRecoveryToast();
         void this._applyGachaMentorJournal();
+        // 新手樂趣 FUN-02／03／04（滿月酒、勝仗搭話、首次招募自我介紹；開場進行中不播，PROG-2-10185）
+        if (!this._isNewPlayer && !this._isOpeningInProgress()) this._funDirectorStop = startFunLobbyDirector(this.node);
 
         // 動態注入輕提示系統 (Toast)
         const toastNode = new Node('ToastContainer');
@@ -1271,6 +1276,8 @@ export class LobbyScene extends Component {
         this._lobbyHall = null;
         this._offBeforeSwitch?.();
         this._offBeforeSwitch = null;
+        this._funDirectorStop?.();
+        this._funDirectorStop = null;
         input.off(Input.EventType.KEY_UP, this._onEscapeKeyUp, this);
         for (const unsubscribe of this._sessionEventUnsubscribers) {
             unsubscribe();
