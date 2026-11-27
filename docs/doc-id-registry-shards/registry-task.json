@@ -17698,5 +17698,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10170.md",
     "title": "[PROG-2-10170] 任務詳情情報區長文字自動加高，en／ja 不再壓到風險／提示列",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3241",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10174.md",
+    "title": "[PROG-2-10174] 任務系統 en／ja／zh-CN 譯文校稿",
+    "category": "task"
   }
 ]
