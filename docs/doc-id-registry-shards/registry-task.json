@@ -17832,7 +17832,13 @@
     "category": "task"
   },
   {
-    "id": "doc_task_3279",
+    "id": "doc_task_3280",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10209.md",
+    "title": "[PROG-2-10209] Q 動畫管理器核心＋基本動作片段",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3284",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10212.md",
     "title": "[PROG-2-10212] WP4 場景註冊表＋任意場景切換 UI",
     "category": "task"
