@@ -26,3 +26,27 @@ Kenney 原始 License.txt：Creative Commons Zero, CC0；個人、教育、商�
 | ult_c_charge.ogg | 奧義蓄力（cutin 音效鍵 whoosh） | https://freesound.org/people/florianreichelt/sounds/683096/ （Woosh，原檔 683096__florianreichelt__woosh.mp3） | florianreichelt | CC0 1.0 | 2026-11-26 | 取 0～1.6 秒（原 1.73 秒），尾 80ms 淡出，峰值 0.5；16049 bytes |
 | ult_c_burst.ogg | 奧義爆發號角（cutin 音效鍵 roar） | https://freesound.org/people/adharca/sounds/539956/ （war horn，原檔 539956__adharca__war-horn.wav） | adharca | CC0 1.0 | 2026-11-26 | 取 0～2.4 秒（原 4.36 秒），尾 500ms 淡出，峰值 0.85；25749 bytes |
 | ult_c_tail.ogg | 奧義收尾深沉號角（cutin 音效鍵 ult_c_tail） | https://freesound.org/people/anderson91santos/sounds/714562/ （War Horn Dark Cinematic Sound Effect，原檔 .m4a） | anderson91santos | CC0 1.0 | 2026-11-26 | 取 0～3.2 秒（原 12.45 秒，AAC 以 Chrome Web Audio 解碼），尾 1 秒淡出，峰值 0.7；23849 bytes |
+
+## 2026-11-27 追加（PROG-2-10134，戰場音訊：小兵出手／受擊分兵種、戰場 BGM）
+
+全部為 Freesound CC0 1.0（Creative Commons 0），可商用、不強制署名；下載前已逐頁複核授權為 CC0（2026-11-26，見筆記夾 audio-downloads-1126\manifest.md，含原檔 SHA256）。Freesound 上傳者可事後改授權，來源頁網址留作日後查核。**沒有任何 CC-BY 素材，因此不需要署名頁。**
+加工一律用 `tools_node/gen-battle-audio-clips.py` 重現：立體聲左右平均轉單聲道、重取樣 44100Hz、取需要的段落、頭 3ms 淡入、尾端淡出、正規化到指定峰值（Vorbis 過衝超過 0.95 自動縮小）、編碼 OGG Vorbis。BGM 為多個 CC0 素材混成，混成方式見下表。
+
+| 檔名 | 用途 | 來源（素材頁） | 作者 | 授權 | 規格與加工 |
+|------|------|----------------|------|------|------------|
+| sfx_atk_blade.ogg | 步兵／工兵／醫護／水軍劈砍出手 | https://freesound.org/people/ethanchase7744/sounds/441666/ （sword slash.wav） | ethanchase7744 | CC0 1.0 | 取起音後 0.42 秒，峰值 0.8 |
+| sfx_atk_thrust.ogg | 槍兵突刺出手 | https://freesound.org/people/Breviceps/sounds/464839/ （Anime Sound Effect - Piercing impact / Stabbing） | Breviceps | CC0 1.0 | 取起音後 0.4 秒，峰值 0.8 |
+| sfx_atk_bow.ogg | 弓兵放箭出手 | https://freesound.org/people/saturdaysoundguy/sounds/394178/ （Longbow Release 1.wav） | saturdaysoundguy | CC0 1.0 | 取 0.05～0.53 秒，峰值 0.8 |
+| sfx_atk_arrow_whoosh.ogg | 弓兵放箭出手（與 sfx_atk_bow 輪播） | https://freesound.org/people/Ali_6868/sounds/384908/ （Arrow Whoosh 1） | Ali_6868 | CC0 1.0 | 取 0～0.5 秒，尾 150ms 淡出，峰值 0.6 |
+| sfx_atk_shield.ogg | 盾兵盾擊出手 | https://freesound.org/people/PixelsphereStudios/sounds/182112/ （Shield / sword hits.wav） | PixelsphereStudios | CC0 1.0 | 取第一下起音後 0.4 秒，峰值 0.8 |
+| sfx_atk_charge.ogg | 騎兵衝鋒出手（低頻鼓＋單拍馬蹄） | https://freesound.org/people/Terry93D/sounds/328009/ （Epic Drum.wav）＋本資料夾 cc0_hoof_single.ogg | Terry93D／Joseph Sardin | CC0 1.0 | 鼓取 0～0.55 秒與馬蹄單拍相加，峰值 0.85 |
+| sfx_hit_blade.ogg | 被刀劈打中 | https://freesound.org/people/qubodup/sounds/442769/ （Sword Hit） | qubodup | CC0 1.0 | 取 0～0.4 秒，峰值 0.8 |
+| sfx_hit_pierce.ogg | 被槍刺打中 | https://freesound.org/people/Twisted_Euphoria/sounds/205938/ （Arrow Impact） | Twisted_Euphoria | CC0 1.0 | 取 0.04～0.39 秒，峰值 0.8 |
+| sfx_hit_arrow.ogg | 被箭射中 | https://freesound.org/people/Ali_6868/sounds/384914/ （Arrow Impact 1） | Ali_6868 | CC0 1.0 | 取 0.06～0.36 秒，峰值 0.8 |
+| sfx_hit_clash.ogg | 擋下／盾兵受擊的金屬碰撞 | https://freesound.org/people/loudernoises/sounds/334169/ （Sword Clash） | loudernoises | CC0 1.0 | 取 0.02～0.47 秒，峰值 0.8 |
+| sfx_hit_wood.ogg | 盾兵受擊木盾悶響 | https://freesound.org/people/Breviceps/sounds/449955/ （Wooden Thud (Mono)） | Breviceps | CC0 1.0 | 原檔 16kHz 重取樣至 44.1kHz，取 0～0.4 秒，峰值 0.8 |
+| sfx_hit_body_a.ogg／sfx_hit_body_b.ogg | 重擊／騎兵衝撞受擊（肉體悶擊兩種） | https://freesound.org/people/Kinoton/sounds/503277/ （Face Punch, Body Impact, 4x） | Kinoton | CC0 1.0 | 以起音偵測取前兩下各 0.45 秒，峰值 0.85 |
+| bgm_battle_start.ogg | 戰場 BGM 開戰段（號角＋戰鼓前奏，9 秒，不循環） | https://freesound.org/people/kirmm/sounds/392180/ （Battle_horn_1.wav）＋ https://freesound.org/people/Sclolex/sounds/209546/ （warriordrums.wav） | kirmm／Sclolex | CC0 1.0 | 號角 0.06～4.66 秒（延後 0.5 秒進場）與戰鼓前 9 秒相加，尾 1 秒淡出，峰值 0.8 |
+| bgm_battle_tense.ogg | 戰場 BGM 緊張段（戰鼓循環，7.3 秒，循環播放） | https://freesound.org/people/PearceWilsonKing/sounds/274223/ （War Drum Loop） | PearceWilsonKing | CC0 1.0 | 全長，尾端與開頭 80ms 等功率交疊使循環接縫無爆音，峰值 0.65 |
+| bgm_battle_victory.ogg | 戰場 BGM 勝利段（小號凱旋，4.4 秒，不循環） | https://freesound.org/people/FunWithSound/sounds/456966/ （Success Fanfare Trumpets.mp3） | FunWithSound | CC0 1.0 | 取 0～4.4 秒，尾 0.8 秒淡出，峰值 0.8 |
+| bgm_battle_defeat.ogg | 戰場 BGM 敗北段（喪氣長號，3.6 秒，不循環） | https://freesound.org/people/kirbydx/sounds/175409/ （wah wah sad trombone.wav） | kirbydx | CC0 1.0 | 取 0.2～3.8 秒，尾 0.6 秒淡出，峰值 0.7 |

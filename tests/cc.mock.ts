@@ -317,6 +317,7 @@ export class Burst { time = 0; repeatCount = 1; repeatInterval = 0; count: any =
 export class AudioSource {
     loop = false;
     volume = 1;
+    playing = false;
     clip: AudioClip | null = null;
     play(): void {}
     pause(): void {}
