@@ -29,7 +29,8 @@ const { ccclass } = _decorator;
 
 const SCREEN_ID = 'lobby-mission-detail-dialog-screen';
 const CONTENT_PATH = 'ui-spec/content/lobby-mission-detail-dialog-states-v1';
-import { DETAIL_ACTION_BLOCKED_TEXT, resolveDetailActionStates } from '../core/HallDetailActionStates';
+import { detailActionBlockedText, missionText, resolveDetailActionStates, type MissionTr } from '../core/HallDetailActionStates';
+import { MISSION_COST_SHORT_MARKER } from '../mission/MissionDetailPresenter';
 import { applyIntelConfirmChoice, IntelConfirmChoice, resolveExecutePress } from '../core/HallExecuteConfirm';
 
 const CONTENT_TAG = 'LobbyMissionDetailDialog';
@@ -502,11 +503,11 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
 
         // 名冊沒有任何武將時不沿用設計稿預設的武將名，顯示空狀態文字
         if (options.length === 0) {
-            return { id: 'fallback-empty', label: '目前沒有可選武將', volunteer: false };
+            return { id: 'fallback-empty', label: this._mt('mission.detail.no_general', '目前沒有可選武將'), volunteer: false };
         }
         return {
             id: selected?.id ?? payloadId ?? payloadLabel ?? 'general-unknown',
-            label: payloadLabel || selected?.label || stateLabel || '未指定武將',
+            label: payloadLabel || selected?.label || stateLabel || this._mt('mission.detail.unspecified_general', '未指定武將'),
             volunteer: payload?.selectedGeneralVolunteer ?? selected?.volunteer ?? stateVolunteerVisible,
         };
     }
@@ -544,11 +545,11 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         this._setScrollContentBaseHeight();
     }
 
-    /** 耗費不足的那一行用紅字（doc_spec_1178 §5）：文字含「不足，現有」就染紅，之後補足了再還原 */
+    /** 耗費不足的那一行用紅字（doc_spec_1178 §5）：文字含不足標記（各語系 mission.detail.cost_short_marker）就染紅，之後補足了再還原 */
     private _shortageOrigColors = new WeakMap<Label, Color>();
     private _tintShortageLabels(): void {
         for (const label of this.node.getComponentsInChildren(Label)) {
-            const short = label.string.includes('不足，現有');
+            const short = label.string.includes(this._mt('mission.detail.cost_short_marker', MISSION_COST_SHORT_MARKER));
             const orig = this._shortageOrigColors.get(label);
             if (short) {
                 if (!orig) this._shortageOrigColors.set(label, label.color.clone());
@@ -696,8 +697,14 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
             button.interactable = true;
             const opacity = button.node.getComponent(UIOpacity) ?? button.node.addComponent(UIOpacity);
             opacity.opacity = enabled ? 255 : 120;
-            this._setActionSubtitle(action, states[action].enabled ? snapshot.actionBlockedText?.[action] : snapshot.actionBlockedText?.[action] ?? DETAIL_ACTION_BLOCKED_TEXT[states[action].reason ?? 'not-offered'], enabled);
+            this._setActionSubtitle(action, states[action].enabled ? snapshot.actionBlockedText?.[action] : snapshot.actionBlockedText?.[action] ?? detailActionBlockedText(states[action].reason ?? 'not-offered', this._tr), enabled);
         }
+    }
+
+    /** 翻譯函式：走 services().i18n；查不到鍵時由 missionText 退回繁中原文 */
+    private readonly _tr: MissionTr = (key, ...args) => services().i18n.t(key, ...args.map(String));
+    private _mt(key: string, fallback: string, ...args: Array<string | number>): string {
+        return missionText(this._tr, key, fallback, ...args);
     }
 
     /** 按鈕副標：可用時顯示耗費或效果，停用時直接寫原因，玩家不必點進去才知道（doc_spec_1342 §4） */
@@ -809,17 +816,17 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         const rowWidth = Math.max(300, panelWidth - ROW_PADDING * 2);
         const rows: MissionGeneralOption[] = this._availableGenerals.length > 0
             ? [...this._availableGenerals]
-            : [{ id: 'fallback-empty', label: '目前沒有可選武將', volunteer: false }];
+            : [{ id: 'fallback-empty', label: this._mt('mission.detail.no_general', '目前沒有可選武將'), volunteer: false }];
 
         // 有分組資訊時分「可派／不可派（附原因）」兩組，各加組標題（PROG-2-9152）；否則沿用單一標題
         const grouped = rows.some((r) => r.group !== undefined);
         const availableRows = rows.filter((r) => r.group === 'available');
         const unavailableRows = rows.filter((r) => r.group === 'unavailable');
         const sections: { title: string; items: MissionGeneralOption[] }[] = grouped
-            ? [{ title: `可派武將（${availableRows.length}）`, items: availableRows }]
-            : [{ title: '可選武將', items: rows }];
+            ? [{ title: this._mt('mission.detail.dropdown.available', '可派武將（{0}）', availableRows.length), items: availableRows }]
+            : [{ title: this._mt('mission.detail.dropdown.selectable', '可選武將'), items: rows }];
         if (grouped && unavailableRows.length > 0) {
-            sections.push({ title: `不可派武將（${unavailableRows.length}，附原因）`, items: unavailableRows });
+            sections.push({ title: this._mt('mission.detail.dropdown.unavailable', '不可派武將（{0}，附原因）', unavailableRows.length), items: unavailableRows });
         }
 
         let nodeCount = 0;
@@ -846,7 +853,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         this._placeDropdown(panelHeight);
     }
 
-    private _createDropdownHeader(parent: Node, panelWidth: number, title = '可選武將'): Node {
+    private _createDropdownHeader(parent: Node, panelWidth: number, title = this._mt('mission.detail.dropdown.selectable', '可選武將')): Node {
         const titleNode = new Node('DropdownTitle');
         titleNode.layer = parent.layer;
         titleNode.parent = parent;
@@ -923,7 +930,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
             rowNode,
             `GeneralOptionBadge_${this._sanitizeNodeName(option.id)}`,
             option.blockedText ? 150 : 110,
-            option.blockedText ?? '毛遂自薦',
+            option.blockedText ?? this._mt('mission.detail.volunteer', '毛遂自薦'),
             14,
             option.blockedText ? this._tok('settle.dropdown.blocked', new Color(255, 138, 122, 255)) : this._tok('settle.dropdown.badge', new Color(255, 210, 122, 255)),
             Label.HorizontalAlign.RIGHT,
@@ -1007,7 +1014,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         this._selectedGeneralVolunteer = option.volunteer === true;
 
         const badgeVisible = option.volunteer === true;
-        const badgeLabel = badgeVisible ? `${option.label} 毛遂自薦` : '';
+        const badgeLabel = badgeVisible ? this._mt('mission.detail.volunteer_badge', '{0} 毛遂自薦', option.label) : '';
 
         this._templateBinder?.setTexts({
             selectedGeneralLabel: option.label,
@@ -1039,7 +1046,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         }).states[action];
         const customBlock = snapshot.actionBlockedText?.[action];
         if (!blocked.enabled || customBlock) {
-            services().event.emit('SHOW_TOAST', { message: customBlock ?? DETAIL_ACTION_BLOCKED_TEXT[blocked.reason ?? 'not-offered'], duration: 2 });
+            services().event.emit('SHOW_TOAST', { message: customBlock ?? detailActionBlockedText(blocked.reason ?? 'not-offered', this._tr), duration: 2 });
             return false;
         }
 

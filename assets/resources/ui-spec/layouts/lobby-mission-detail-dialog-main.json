@@ -80,6 +80,7 @@
                     "id": "dialogTitleLabel",
                     "width": "100%",
                     "height": 24,
+                    "textKey": "mission.detail.ui.title",
                     "text": "任務詳情",
                     "styleSlot": "mission.dialog.label.header"
                   },
@@ -231,6 +232,7 @@
                         "name": "OverviewTitleLabel",
                         "width": "100%",
                         "height": 22,
+                        "textKey": "mission.detail.ui.overview",
                         "text": "任務概要",
                         "styleSlot": "mission.dialog.label.section"
                       },
@@ -274,6 +276,7 @@
                         "name": "IntelTitleLabel",
                         "width": "100%",
                         "height": 22,
+                        "textKey": "mission.detail.ui.intel_title",
                         "text": "情報揭示",
                         "styleSlot": "mission.dialog.label.section"
                       },
@@ -310,6 +313,7 @@
                             },
                             "height": 64,
                             "_doc": "PROG-2-10068：提示列可帶白話導讀共兩行，高度留 3 行（原 20 會讓兩行字縮成小字）。",
+                            "textKey": "mission.detail.ui.intel_fog",
                             "text": "目前情報仍不完整，派探子再探可看得更清楚",
                             "styleSlot": "mission.dialog.label.muted"
                           }
@@ -370,6 +374,7 @@
                         "name": "RewardTitleLabel",
                         "width": "100%",
                         "height": 22,
+                        "textKey": "mission.detail.ui.reward",
                         "text": "獎勵",
                         "styleSlot": "mission.dialog.label.section"
                       },
@@ -393,6 +398,7 @@
                             "name": "BaseRewardTitleLabel",
                             "width": "100%",
                             "height": 16,
+                            "textKey": "mission.detail.ui.reward_base",
                             "text": "基礎獎勵",
                             "styleSlot": "mission.dialog.label.badge"
                           },
@@ -427,6 +433,7 @@
                             "name": "PerfectRewardTitleLabel",
                             "width": "100%",
                             "height": 16,
+                            "textKey": "mission.detail.ui.reward_perfect",
                             "text": "完美達成加成",
                             "styleSlot": "mission.dialog.label.badge"
                           },
@@ -479,6 +486,7 @@
                         "name": "AssignmentTitleLabel",
                         "width": "100%",
                         "height": 22,
+                        "textKey": "mission.detail.ui.actor",
                         "text": "行動人物",
                         "styleSlot": "mission.dialog.label.section"
                       },
@@ -589,6 +597,7 @@
                         "name": "ResourceTitleLabel",
                         "width": "100%",
                         "height": 22,
+                        "textKey": "mission.detail.ui.cost_title",
                         "text": "資源耗費",
                         "styleSlot": "mission.dialog.label.section"
                       },
@@ -621,6 +630,7 @@
                                 "name": "FoodNameLabel",
                                 "width": 84,
                                 "height": 18,
+                                "textKey": "mission.detail.ui.cost_food",
                                 "text": "糧草",
                                 "styleSlot": "mission.dialog.label.cost"
                               },
@@ -696,6 +706,7 @@
                                 "name": "TroopNameLabel",
                                 "width": 84,
                                 "height": 18,
+                                "textKey": "mission.detail.ui.cost_troop",
                                 "text": "兵力",
                                 "styleSlot": "mission.dialog.label.cost"
                               },
@@ -773,6 +784,7 @@
                                 "bind": "costFundNameLabel",
                                 "width": 84,
                                 "height": 18,
+                                "textKey": "mission.detail.ui.cost_fund",
                                 "text": "金",
                                 "styleSlot": "mission.dialog.label.cost"
                               },
@@ -848,6 +860,7 @@
                                 "name": "TimeNameLabel",
                                 "width": 84,
                                 "height": 18,
+                                "textKey": "mission.detail.ui.cost_time",
                                 "text": "時間",
                                 "styleSlot": "mission.dialog.label.cost"
                               },
@@ -933,6 +946,7 @@
                     "height": 32,
                     "skinSlot": "mission.dialog.toggle",
                     "styleSlot": "mission.dialog.label.button",
+                    "textKey": "mission.detail.ui.ai_delegate",
                     "text": "AI 委任",
                     "bind": "aiDelegateChecked"
                   },
@@ -971,6 +985,7 @@
                         "width": "100%",
                         "height": 30,
                         "styleSlot": "mission.dialog.label.button",
+                        "textKey": "mission.detail.ui.btn_scout",
                         "text": "再探",
                         "widget": {
                           "top": 8,
@@ -1009,6 +1024,7 @@
                         "width": "100%",
                         "height": 30,
                         "styleSlot": "mission.dialog.label.button",
+                        "textKey": "mission.detail.ui.btn_wait",
                         "text": "等待",
                         "widget": {
                           "top": 8,
@@ -1047,6 +1063,7 @@
                         "width": "100%",
                         "height": 30,
                         "styleSlot": "mission.dialog.label.button",
+                        "textKey": "mission.detail.ui.btn_execute",
                         "text": "執行",
                         "widget": {
                           "top": 8,
@@ -1085,6 +1102,7 @@
                         "width": "100%",
                         "height": 30,
                         "styleSlot": "mission.dialog.label.button",
+                        "textKey": "mission.detail.ui.btn_assign",
                         "text": "委任",
                         "widget": {
                           "top": 8,

@@ -68,6 +68,7 @@ import { GeneralDetailComposite } from '../components/GeneralDetailComposite';
 import { canOpenSoulInject, SOUL_INJECT_REASON_I18N_KEY, soulInjectCandidatesFor, type SoulInjectCandidate } from '../../core/systems/SoulInjectCandidates';
 import { EliteTroopCodexComposite, type EliteTroopCodexOpenPayload } from '../components/EliteTroopCodexComposite';
 import { LobbyMissionDetailDialogComposite, type LobbyMissionActionKey, type LobbyMissionDetailDialogOpenPayload, type MissionGeneralOption } from '../components/LobbyMissionDetailDialogComposite';
+import { missionText, type MissionTr } from '../core/HallDetailActionStates';
 import { LobbyLeaderboardComposite, type LobbyLeaderboardOpenPayload } from '../components/LobbyLeaderboardComposite';
 import { SeasonReportComposite, type SeasonReportOpenPayload } from '../components/SeasonReportComposite';
 import { SandtableTerritoryComposite, type SandtableTerritoryOpenPayload } from '../components/SandtableTerritoryComposite';
@@ -5028,7 +5029,7 @@ export class LobbyScene extends Component {
     private async _dispatchHallMission(missionId: string, generalId: string | null): Promise<boolean> {
         const session = services().session;
         const service = session.missionService;
-        if (!service) { this._showToast('任務資料整理中，請稍後再試'); return false; }
+        if (!service) { this._showToast(this._missionText('mission.detail.toast.busy', '任務資料整理中，請稍後再試')); return false; }
         const result = await service.dispatch({
             requestId: session.nextMissionRequestId('dispatch'),
             missionId,
@@ -5042,16 +5043,18 @@ export class LobbyScene extends Component {
         const board = service.getBoard();
         const card = board.ok ? findCard(board.value, missionId) : undefined;
         const name = session.roster.find((g) => g.id === v.generalIds[0])?.name ?? v.generalIds[0];
+        const mt = (key: string, fallback: string, ...args: Array<string | number>): string => this._missionText(key, fallback, ...args);
         const spent = [
-            v.cost.grain > 0 ? `糧草 -${v.cost.grain}` : '',
-            v.cost.troops > 0 ? `兵源 -${v.cost.troops}` : '',
-            v.cost.gold > 0 ? `金 -${v.cost.gold}` : '',
-            v.cost.silver > 0 ? `銀兩 -${v.cost.silver}` : '',
-        ].filter((text) => text.length > 0).join('、');
+            v.cost.grain > 0 ? mt('mission.detail.toast.cost.grain', '糧草 -{0}', v.cost.grain) : '',
+            v.cost.troops > 0 ? mt('mission.detail.toast.cost.troops', '兵源 -{0}', v.cost.troops) : '',
+            v.cost.gold > 0 ? mt('ui.mission.cost.gold', '金 -{0}', v.cost.gold) : '',
+            v.cost.silver > 0 ? mt('ui.mission.cost.silver', '銀兩 -{0}', v.cost.silver) : '',
+        ].filter((text) => text.length > 0).join(mt('mission.detail.sep', '、'));
         const duration = Math.max(1, v.returnSeason - this._hallSeason());
         services().event.emit('SHOW_TOAST', {
-            message: `已派出${v.delegated ? '（委任）' : ''}${name}執行「${card?.title ?? missionId}」，${duration} 季後回報
-${spent}`,
+            message: mt(v.delegated ? 'mission.detail.toast.dispatched_delegate' : 'mission.detail.toast.dispatched',
+                v.delegated ? '已派出（委任）{0}執行「{1}」，{2} 季後回報\n{3}' : '已派出{0}執行「{1}」，{2} 季後回報\n{3}',
+                name, card?.title ?? missionId, duration, spent),
             duration: 3,
         });
         this._lobbyHall?.reactToDispatch((card?.difficulty ?? 'EASY') as Parameters<NonNullable<typeof this._lobbyHall>['reactToDispatch']>[0]);
@@ -5090,6 +5093,7 @@ ${spent}`,
             intelBands: data.balance.intelBands,
             selectedGeneralId,
             jargonGuide: this._missionJargonGuide(missionId),
+            tr: this._missionTr,
         });
     }
 
@@ -5127,12 +5131,12 @@ ${spent}`,
         const session = services().session;
         const service = session.missionService;
         if (!service) {
-            this._showToast('任務資料整理中，請稍後再試');
+            this._showToast(this._missionText('mission.detail.toast.busy', '任務資料整理中，請稍後再試'));
             return;
         }
         // 清單＝真實名冊全員：可派的在前；不可派者（出任務中、受傷、被囚、未畢業…）灰掉並附原因（PROG-2-9148）
         const cands = service.getCandidates(missionId);
-        if (!cands.ok) { this._showToast('此任務已不存在'); return; }
+        if (!cands.ok) { this._showToast(this._missionText('mission.detail.toast.not_found', '此任務已不存在')); return; }
         const candidates = cands.value;
         const eligible = candidates.filter((c) => c.block.length === 0);
         const lead = session.leadGeneralId;
@@ -5162,23 +5166,23 @@ ${spent}`,
         const service = session.missionService;
         const board = service?.getBoard();
         const card = board && board.ok ? findCard(board.value, missionId) : undefined;
-        if (!service || !card) { this._showToast('此任務已不存在'); return false; }
+        if (!service || !card) { this._showToast(this._missionText('mission.detail.toast.not_found', '此任務已不存在')); return false; }
         if (card.status === 'ACTIVE') { this._showToast(missionRowStatusText(card, this._hallSeason())); return false; }
         try {
             if (action === 're-scout') {
                 const result = await service.recon({ requestId: session.nextMissionRequestId('recon'), missionId });
                 if (result.ok === false) { this._showToast(result.text); return false; }
-                this._showToast(`再探完成，情報 +${result.value.gained}，目前 ${result.value.intel}%`);
+                this._showToast(this._missionText('mission.detail.toast.recon_done', '再探完成，情報 +{0}，目前 {1}%', result.value.gained, result.value.intel));
                 this._refreshHallDialog(missionId, snapshot.selectedGeneralId);
-                this._missionDetailDialogPanel?.showIntelGain(intelGainFloatText(result.value.gained, result.value.intel));
+                this._missionDetailDialogPanel?.showIntelGain(intelGainFloatText(result.value.gained, result.value.intel, this._missionTr));
                 return true;
             }
             if (action === 'wait') {
                 const result = await service.wait({ requestId: session.nextMissionRequestId('wait'), missionId });
                 if (result.ok === false) { this._showToast(result.text); return false; }
-                this._showToast(`等待一季：期限延長，情報 +${result.value.gained}，目前 ${result.value.intel}%`);
+                this._showToast(this._missionText('mission.detail.toast.wait_done', '等待一季：期限延長，情報 +{0}，目前 {1}%', result.value.gained, result.value.intel));
                 this._refreshHallDialog(missionId, snapshot.selectedGeneralId);
-                this._missionDetailDialogPanel?.showIntelGain(intelGainFloatText(result.value.gained, result.value.intel));
+                this._missionDetailDialogPanel?.showIntelGain(intelGainFloatText(result.value.gained, result.value.intel, this._missionTr));
                 return true;
             }
             const delegate = action === 'assign' || snapshot.aiDelegateChecked;
@@ -5188,7 +5192,7 @@ ${spent}`,
             return ok;
         } catch (error) {
             UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 大廳任務行動失敗', error);
-            this._showToast('任務行動失敗，請稍後再試');
+            this._showToast(this._missionText('mission.detail.toast.failed', '任務行動失敗，請稍後再試'));
             return false;
         } finally {
             this._refreshHallBoard();
@@ -8130,6 +8134,12 @@ ${spent}`,
     /** 子選單項目的畫面還沒就緒時，至少讓玩家知道不是壞掉（PROG-2-9121） */
     private _showNotOpenYet(): void {
         this._showToast(LOBBY_ACTION_NOT_OPEN_TEXT);
+    }
+
+    /** 任務詳情流程用的翻譯函式與取字（查不到鍵退回繁中原文） */
+    private readonly _missionTr: MissionTr = (key, ...args) => services().i18n.t(key, ...args.map(String));
+    private _missionText(key: string, fallback: string, ...args: Array<string | number>): string {
+        return missionText(this._missionTr, key, fallback, ...args);
     }
 
     private _showToast(message: string): void {

@@ -84,3 +84,4 @@
 | `doc_task_3229` | docs/agent-briefs/tasks/PROG/PROG-2-10164.md | [PROG-2-10164] 修正偵察面板幫我換上兩個重現錯誤 |
 | `doc_task_3232` | docs/agent-briefs/tasks/PROG/PROG-2-10165.md | [PROG-2-10165] 修復 PROG-2-9307 結算窗暗幕測試：測試替身缺 getComponentInChildren（run-cli 既有失敗） |
 | `doc_task_3234` | docs/agent-briefs/tasks/PROG/PROG-2-10163.md | [PROG-2-10163] 守城回大廳自動接典禮 |
+| `doc_task_3235` | docs/agent-briefs/tasks/PROG/PROG-2-10161.md | [PROG-2-10161] 修正：任務詳情畫面寫死中文標籤改走 i18n 四語 |
