@@ -20652,12 +20652,61 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_3271",
+      "id": "PROG-2-10204",
+      "title": "戰場結義效果：義兄弟同陣士氣＋生死相隨援護＋動態義兄弟合攻",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-27",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-28T02:50:46+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "動態人際關係規格 §3.1 戰場端接線：義兄弟同陣部署士氣+20、戰友／義兄弟相鄰致命傷害 50% 援護分攤 30%、relationsBetweenUnits 認 DYNAMIC_SWORN",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [
+        "assets/scripts/battle/controllers/BattleController.ts",
+        "assets/scripts/battle/runtime/BattleCombatResolver.ts",
+        "assets/scripts/core/systems/HistoricalPairs.ts",
+        "tests/KinBattleEffects.test.ts"
+      ],
+      "notes": "2026-11-27 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
-    "done": 381,
+    "done": 382,
     "in_progress": 6,
     "open": 91,
-    "total": 478
+    "total": 479
   }
 }

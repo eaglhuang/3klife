@@ -17818,5 +17818,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10203.md",
     "title": "[PROG-2-10203] 武將生活系統四份規格審查",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3271",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10204.md",
+    "title": "[PROG-2-10204] 戰場結義效果：義兄弟同陣士氣＋生死相隨援護＋動態義兄弟合攻",
+    "category": "task"
   }
 ]
