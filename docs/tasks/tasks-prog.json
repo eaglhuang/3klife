@@ -20407,6 +20407,55 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_3200",
+      "id": "PROG-2-10150",
+      "title": "每季小報：季末彈《本季大事記》搞笑小報（3 行大事＋武將吐槽，只用既有數據）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "feature",
+      "phase": "M0",
+      "created": "2026-11-27",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-27T11:19:06+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [
+        "docs/遊戲規格文件/系統規格書/每季小報規格書.md",
+        "assets/resources/data/season-news-rules.json",
+        "assets/scripts/core/systems/SeasonNews.ts",
+        "assets/scripts/ui/components/SeasonNewsPopup.ts"
+      ],
+      "notes": "2026-11-27 | 狀態: done | 驗證: 單元測試全過、tsc 0 錯、compute-gate quick 通過、無頭預覽截圖（空名冊安靜季，3 行補白小報顯示/點擊收起/佇列接續正常） | 變更: SeasonNews 純邏輯＋SeasonNewsPopup＋season-news-rules.json＋四語系＋LobbyScene 換季佇列接線＋規格書 doc_spec_1345 | 阻塞: 有武將吐槽的畫面截圖缺漏（無頭預覽注入名冊失敗，services 模組取不到），吐槽邏輯僅由單元測試覆蓋，待日後補拍",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {

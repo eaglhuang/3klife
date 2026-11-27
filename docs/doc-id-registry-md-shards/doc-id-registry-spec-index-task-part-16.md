@@ -69,6 +69,7 @@
 | `doc_task_3195` | docs/agent-briefs/tasks/PROG/PROG-2-10124.md | [PROG-2-10124] 戰場右側 UI B0 缺陷：ui.ultimate.label 顯示原始 key、委任鈕字被截、寫死中文改 i18n |
 | `doc_task_3198` | docs/agent-briefs/tasks/PROG/PROG-2-10138.md | [PROG-2-10138] 戰場七種戰法專屬特效（火水風回復加速鼓舞控制） |
 | `doc_task_3199` | docs/agent-briefs/tasks/PROG/PROG-2-10146.md | [PROG-2-10146] 武將介紹古文後接白話吐槽 |
+| `doc_task_3200` | docs/agent-briefs/tasks/PROG/PROG-2-10150.md | [PROG-2-10150] 每季小報：季末彈《本季大事記》搞笑小報（3 行大事＋武將吐槽，只用既有數據） |
 | `doc_task_3203` | docs/agent-briefs/tasks/PROG/PROG-2-10141.md | [PROG-2-10141] Toast 括號詞斷行修正（每行字數保守估算） |
 | `doc_task_3210` | docs/agent-briefs/tasks/PROG/PROG-2-10133.md | [PROG-2-10133] 戰場右側 UI B1 版面搬遷＋B2 統一按鈕元件＋B4 驗收 |
 | `doc_task_3213` | docs/agent-briefs/tasks/PROG/PROG-2-10136.md | [PROG-2-10136] 首場戰鬥新手提示 |

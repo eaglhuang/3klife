@@ -17586,6 +17586,12 @@
     "category": "task"
   },
   {
+    "id": "doc_task_3200",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10150.md",
+    "title": "[PROG-2-10150] 每季小報：季末彈《本季大事記》搞笑小報（3 行大事＋武將吐槽，只用既有數據）",
+    "category": "task"
+  },
+  {
     "id": "doc_task_3203",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10141.md",
     "title": "[PROG-2-10141] Toast 括號詞斷行修正（每行字數保守估算）",
