@@ -1871,5 +1871,9 @@
   "ui.general.quip.cai-shi": "劉琮の即位を推し、曹操に荊州を引き継ぐよう手紙を書いたの。一兵も動かさずに、持ち主が替わったのよ。この効率には、買収案件もうらやむわね！",
   "ui.general.quip.cao-hua": "二人の姉と一緒に後宮へ入ったの。目立つのは好きじゃなくて、漢と魏の交代の大嵐の中で、日常を守る穏やかな役だったわ。",
   "ui.general.quip.cao-xian": "姉妹の小さな揉め事を、一言で収めるのが得意なの。後宮の人間関係の調停役は、まるでわたしのために作られた仕事みたいよね！",
-  "ui.general.quip.xu-shi": "従順なふりをして、密かに辺鴻と連絡を取ったの。宴席で夫の名誉を取り戻したのよ。退いて進む、この策は孫権まで贈り物を寄越したわ！"
+  "ui.general.quip.xu-shi": "従順なふりをして、密かに辺鴻と連絡を取ったの。宴席で夫の名誉を取り戻したのよ。退いて進む、この策は孫権まで贈り物を寄越したわ！",
+  "mission.detail.btn.scout.sub": "兵糧 −{0}",
+  "mission.detail.btn.wait.sub": "期限 +1 季",
+  "mission.detail.btn.execute.sub": "自分で人選",
+  "mission.detail.btn.assign.sub": "自動で選出"
 }

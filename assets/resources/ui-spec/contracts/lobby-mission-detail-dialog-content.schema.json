@@ -15,13 +15,13 @@
       "type": "string",
       "required": true,
       "description": "任務標題。",
-      "bindPath": "DialogCard/ScrollView/ScrollContent/OverviewPanel/MissionTitleLabel"
+      "bindPath": "DialogCard/Body/ColLeft/OverviewPanel/MissionTitleLabel"
     },
     "missionBrief": {
       "type": "string",
       "required": true,
       "description": "任務摘要，會在情報不足時呈現模糊感。",
-      "bindPath": "DialogCard/ScrollView/ScrollContent/OverviewPanel/MissionBriefLabel"
+      "bindPath": "DialogCard/Body/ColLeft/OverviewPanel/MissionBriefLabel"
     },
     "intelRevealPercent": {
       "type": "number",
@@ -33,121 +33,121 @@
       "type": "string",
       "required": true,
       "description": "目前情報能顯示的任務內容；在 50% 狀態下應配合 fog mask 模糊呈現。",
-      "bindPath": "DialogCard/ScrollView/ScrollContent/IntelPanel/IntelBodyLabel"
+      "bindPath": "DialogCard/Body/ColLeft/IntelPanel/IntelBodyLabel"
     },
     "intelFogVisible": {
       "type": "boolean",
       "required": true,
       "description": "情報未完整時顯示模糊遮罩；100% 時應隱藏。",
-      "bindPath": "DialogCard/ScrollView/ScrollContent/IntelPanel/IntelFogMask"
+      "bindPath": "DialogCard/Body/ColLeft/IntelPanel/IntelFogMask"
     },
     "envScoutTerrainLine": {
       "type": "string",
       "required": true,
       "description": "環境偵察：地形格數一行（PROG-2-0403）。",
-      "bindPath": "DialogCard/ScrollView/ScrollContent/IntelPanel/EnvScoutPanel/EnvScoutTerrainLabel"
+      "bindPath": "DialogCard/Body/ColLeft/IntelPanel/EnvScoutPanel/EnvScoutTerrainLabel"
     },
     "envScoutWeatherLine": {
       "type": "string",
       "required": true,
       "description": "環境偵察：天氣預報一行（PROG-2-0403）。",
-      "bindPath": "DialogCard/ScrollView/ScrollContent/IntelPanel/EnvScoutPanel/EnvScoutWeatherLabel"
+      "bindPath": "DialogCard/Body/ColLeft/IntelPanel/EnvScoutPanel/EnvScoutWeatherLabel"
     },
     "intelHintLabel": {
       "type": "string",
       "required": true,
       "description": "提示派探子可再探、提升情報度的說明。",
-      "bindPath": "DialogCard/ScrollView/ScrollContent/IntelPanel/IntelFogMask/IntelFogLabel"
+      "bindPath": "DialogCard/Body/ColLeft/IntelPanel/IntelFogMask/IntelFogLabel"
     },
     "selectedGeneralLabel": {
       "type": "string",
       "required": true,
       "description": "目前下拉選中的行動武將顯示文字。",
-      "bindPath": "DialogCard/ScrollView/ScrollContent/AssignmentPanel/GeneralSelectButton/SelectedGeneralLabel"
+      "bindPath": "DialogCard/Body/ColMid/AssignmentPanel/GeneralSelectButton/SelectedGeneralLabel"
     },
     "volunteerBadgeVisible": {
       "type": "boolean",
       "required": true,
       "description": "是否顯示武將毛遂自薦標記。",
-      "bindPath": "DialogCard/ScrollView/ScrollContent/AssignmentPanel/VolunteerBadge"
+      "bindPath": "DialogCard/Body/ColMid/AssignmentPanel/VolunteerBadge"
     },
     "volunteerBadgeLabel": {
       "type": "string",
       "required": true,
       "description": "毛遂自薦標記文字，例如 關羽 毛遂自薦。",
-      "bindPath": "DialogCard/ScrollView/ScrollContent/AssignmentPanel/VolunteerBadge/VolunteerBadgeLabel"
+      "bindPath": "DialogCard/Body/ColMid/AssignmentPanel/VolunteerBadge/VolunteerBadgeLabel"
     },
     "generalSelectHintLabel": {
       "type": "string",
       "required": true,
       "description": "說明可下拉選擇武將、以及毛遂自薦提示的輔助文字。",
-      "bindPath": "DialogCard/ScrollView/ScrollContent/AssignmentPanel/GeneralSelectHintLabel"
+      "bindPath": "DialogCard/Body/ColMid/AssignmentPanel/GeneralSelectHintLabel"
     },
     "costFoodValueLabel": {
       "type": "string",
       "required": true,
       "description": "糧草耗費顯示文字。",
-      "bindPath": "DialogCard/ScrollView/ScrollContent/ResourcePanel/FoodRow/FoodHeadRow/FoodValueLabel"
+      "bindPath": "DialogCard/Body/ColRight/ResourcePanel/FoodRow/FoodHeadRow/FoodValueLabel"
     },
     "costFoodRatio": {
       "type": "number",
       "required": true,
       "description": "糧草視覺條比例，0~1。",
-      "bindPath": "DialogCard/ScrollView/ScrollContent/ResourcePanel/FoodRow/FoodBarTrack/FoodBarFill"
+      "bindPath": "DialogCard/Body/ColRight/ResourcePanel/FoodRow/FoodBarTrack/FoodBarFill"
     },
     "costTroopValueLabel": {
       "type": "string",
       "required": true,
       "description": "兵力耗費顯示文字。",
-      "bindPath": "DialogCard/ScrollView/ScrollContent/ResourcePanel/TroopRow/TroopHeadRow/TroopValueLabel"
+      "bindPath": "DialogCard/Body/ColRight/ResourcePanel/TroopRow/TroopHeadRow/TroopValueLabel"
     },
     "costTroopRatio": {
       "type": "number",
       "required": true,
       "description": "兵力視覺條比例，0~1。",
-      "bindPath": "DialogCard/ScrollView/ScrollContent/ResourcePanel/TroopRow/TroopBarTrack/TroopBarFill"
+      "bindPath": "DialogCard/Body/ColRight/ResourcePanel/TroopRow/TroopBarTrack/TroopBarFill"
     },
     "costFundNameLabel": {
       "type": "string",
       "required": true,
       "description": "耗費幣別名稱：金（國家公庫）或銀兩（家族）；兩種都耗時以「／」並列。",
-      "bindPath": "DialogCard/ScrollView/ScrollContent/ResourcePanel/SilverRow/SilverHeadRow/SilverNameLabel"
+      "bindPath": "DialogCard/Body/ColRight/ResourcePanel/SilverRow/SilverHeadRow/SilverNameLabel"
     },
     "costFundValueLabel": {
       "type": "string",
       "required": true,
       "description": "金／銀兩耗費顯示文字。",
-      "bindPath": "DialogCard/ScrollView/ScrollContent/ResourcePanel/SilverRow/SilverHeadRow/SilverValueLabel"
+      "bindPath": "DialogCard/Body/ColRight/ResourcePanel/SilverRow/SilverHeadRow/SilverValueLabel"
     },
     "costFundRatio": {
       "type": "number",
       "required": true,
       "description": "金／銀兩視覺條比例，0~1。",
-      "bindPath": "DialogCard/ScrollView/ScrollContent/ResourcePanel/SilverRow/SilverBarTrack/SilverBarFill"
+      "bindPath": "DialogCard/Body/ColRight/ResourcePanel/SilverRow/SilverBarTrack/SilverBarFill"
     },
     "costTimeValueLabel": {
       "type": "string",
       "required": true,
       "description": "時間耗費顯示文字。",
-      "bindPath": "DialogCard/ScrollView/ScrollContent/ResourcePanel/TimeRow/TimeHeadRow/TimeValueLabel"
+      "bindPath": "DialogCard/Body/ColRight/ResourcePanel/TimeRow/TimeHeadRow/TimeValueLabel"
     },
     "costTimeRatio": {
       "type": "number",
       "required": true,
       "description": "時間視覺條比例，0~1。",
-      "bindPath": "DialogCard/ScrollView/ScrollContent/ResourcePanel/TimeRow/TimeBarTrack/TimeBarFill"
+      "bindPath": "DialogCard/Body/ColRight/ResourcePanel/TimeRow/TimeBarTrack/TimeBarFill"
     },
     "rewardBaseLabel": {
       "type": "string",
       "required": true,
       "description": "基礎獎勵內容。",
-      "bindPath": "DialogCard/ScrollView/ScrollContent/RewardPanel/BaseRewardCard/RewardBaseLabel"
+      "bindPath": "DialogCard/Body/ColLeft/RewardPanel/BaseRewardCard/RewardBaseLabel"
     },
     "rewardPerfectLabel": {
       "type": "string",
       "required": true,
       "description": "完美達成加成內容。",
-      "bindPath": "DialogCard/ScrollView/ScrollContent/RewardPanel/PerfectRewardCard/RewardPerfectLabel"
+      "bindPath": "DialogCard/Body/ColLeft/RewardPanel/PerfectRewardCard/RewardPerfectLabel"
     },
     "aiDelegateChecked": {
       "type": "boolean",

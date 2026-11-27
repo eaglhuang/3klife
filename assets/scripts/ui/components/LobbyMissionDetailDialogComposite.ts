@@ -43,6 +43,15 @@ const DROPDOWN_TITLE_GAP = 10;
 
 export type LobbyMissionActionKey = 're-scout' | 'execute' | 'wait' | 'assign';
 
+/** 按鈕副標節點 id（單屏版面，doc_spec_1342 §4） */
+const ACTION_SUBTITLE_IDS: Record<LobbyMissionActionKey, string> = {
+    're-scout': 'btnScoutSub',
+    execute: 'btnExecuteSub',
+    wait: 'btnWaitSub',
+    assign: 'btnAssignSub',
+};
+/** 再探耗糧（doc_spec_1178 §6）；只用於副標顯示，實際扣款仍由任務流程決定 */
+const SCOUT_FOOD_COST = 50;
 const ACTION_BUTTON_IDS: Record<LobbyMissionActionKey, string> = {
     're-scout': 'btnScout',
     execute: 'btnExecute',
@@ -222,10 +231,10 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         this._templateBinder = binder;
         this._dialogCard = binder.getNode('DialogCard');
         this._dialogCardOpacity = this._dialogCard?.getComponent(UIOpacity) ?? this._dialogCard?.addComponent(UIOpacity) ?? null;
-        this._scrollContent = binder.getNode('scrollContent');
-        this._scrollContentTransform = this._scrollContent?.getComponent(UITransform) ?? null;
-        this._scrollContentLayout = this._scrollContent?.getComponent(Layout) ?? null;
-        this._scrollContentBaseHeight = this._scrollContentTransform?.height ?? this._scrollContentBaseHeight;
+        // 單屏版面（doc_spec_1342）沒有捲動區；下拉選單改浮在對話框上，不再撐高內容
+        this._scrollContent = this._dialogCard;
+        this._scrollContentTransform = null;
+        this._scrollContentLayout = null;
         this._aiDelegateToggle = binder.getNode('aiDelegateToggle')?.getComponent(Toggle) ?? null;
         this._actionButtons['re-scout'] = binder.getButton('btnScout');
         this._actionButtons.execute = binder.getButton('btnExecute');
@@ -554,7 +563,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
     /** 鎖定中的情報提示列用金色，一眼看出這張任務已派出、內容不會再變（PROG-2-9152） */
     private _lockedHintOrigColor: Color | null = null;
     private _tintLockedHint(locked: boolean): void {
-        const label = this._templateBinder?.getLabelByPath('DialogCard/ScrollView/ScrollContent/IntelPanel/IntelFogMask/IntelFogLabel');
+        const label = this._templateBinder?.getLabelByPath('DialogCard/Body/ColLeft/IntelPanel/IntelFogMask/IntelFogLabel');
         if (!label) return;
         if (!this._lockedHintOrigColor) this._lockedHintOrigColor = label.color.clone();
         label.color = locked ? this._tok('settle.text.accent', new Color(154, 91, 16, 255)) : this._lockedHintOrigColor;
@@ -687,7 +696,27 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
             button.interactable = true;
             const opacity = button.node.getComponent(UIOpacity) ?? button.node.addComponent(UIOpacity);
             opacity.opacity = enabled ? 255 : 120;
+            this._setActionSubtitle(action, states[action].enabled ? snapshot.actionBlockedText?.[action] : snapshot.actionBlockedText?.[action] ?? DETAIL_ACTION_BLOCKED_TEXT[states[action].reason ?? 'not-offered'], enabled);
         }
+    }
+
+    /** 按鈕副標：可用時顯示耗費或效果，停用時直接寫原因，玩家不必點進去才知道（doc_spec_1342 §4） */
+    private _setActionSubtitle(action: LobbyMissionActionKey, blockedText: string | undefined, enabled: boolean): void {
+        const label = this._templateBinder?.getLabel(ACTION_SUBTITLE_IDS[action]);
+        if (!label) return;
+        const t = (key: string, ...args: string[]): string => services().i18n.t(key, ...args);
+        label.string = enabled
+            ? (action === 're-scout' ? t('mission.detail.btn.scout.sub', String(SCOUT_FOOD_COST))
+                : action === 'wait' ? t('mission.detail.btn.wait.sub')
+                    : action === 'execute' ? t('mission.detail.btn.execute.sub')
+                        : t('mission.detail.btn.assign.sub'))
+            : (blockedText ?? '');
+        label.overflow = Label.Overflow.SHRINK;
+        // 副標跟主標同色、字小一點；不用 muted 色，不然金色主按鈕上看不清
+        const main = label.node.parent?.children[0]?.getComponent(Label);
+        label.fontSize = 14;
+        label.lineHeight = 18;
+        if (main) label.color = new Color(main.color.r, main.color.g, main.color.b, enabled ? 220 : 255);
     }
 
     private _onGeneralSelectButtonClick(): void {
@@ -717,7 +746,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
 
         const scrollContent = this._scrollContent;
         if (!scrollContent) {
-            throw new Error('[LobbyMissionDetailDialogComposite] missing scroll content');
+            throw new Error('[LobbyMissionDetailDialogComposite] missing dialog card');
         }
 
         const panel = new Node('GeneralSelectDropdownPanel');
@@ -725,7 +754,7 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         panel.parent = scrollContent;
 
         const transform = panel.addComponent(UITransform);
-        transform.setContentSize(this._scrollContentTransform?.width ?? 760, 120);
+        transform.setContentSize(this._dropdownWidth(), 120);
 
         const background = panel.addComponent(SolidBackground);
         background.color = this._tok('settle.dropdown.bg', new Color(43, 39, 36, 240));
@@ -746,17 +775,29 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
     }
 
     private _setDropdownSiblingIndex(): void {
-        if (!this._dropdownPanel || !this._scrollContent) {
-            return;
-        }
+        // 浮層：蓋在所有區塊與底部按鈕之上
+        this._dropdownPanel?.setSiblingIndex(this._scrollContent?.children.length ?? 0);
+    }
 
-        const assignmentPanel = this._templateBinder?.getNode('AssignmentPanel');
-        if (!assignmentPanel) {
-            this._dropdownPanel.setSiblingIndex(this._scrollContent.children.length - 1);
-            return;
-        }
+    /** 下拉選單寬度＝「更換武將」按鈕寬度（中欄寬），單屏版面下跟著欄寬走 */
+    private _dropdownWidth(): number {
+        const w = this._templateBinder?.getNode('generalSelectButton')?.getComponent(UITransform)?.width ?? 0;
+        return w > 0 ? w : 520;
+    }
 
-        this._dropdownPanel.setSiblingIndex(assignmentPanel.getSiblingIndex() + 1);
+    /** 把浮層貼在「更換武將」按鈕正下方（以對話框座標） */
+    private _placeDropdown(panelHeight: number): void {
+        const card = this._dialogCard;
+        const btn = this._templateBinder?.getNode('generalSelectButton');
+        const cardUi = card?.getComponent(UITransform);
+        const btnUi = btn?.getComponent(UITransform);
+        if (!card || !btn || !cardUi || !btnUi || !this._dropdownPanel) return;
+        const local = cardUi.convertToNodeSpaceAR(btn.worldPosition);
+        const x = local.x;
+        let y = local.y - btnUi.height / 2 - 6 - panelHeight / 2;
+        // 太長就上推，但不蓋到底部行動列（104px＋留邊）
+        y = Math.max(y, -cardUi.height / 2 + 112 + panelHeight / 2);
+        this._dropdownPanel.setPosition(x, y, 0);
     }
 
     private _populateDropdownPanel(): void {
@@ -764,9 +805,8 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         dropdown.removeAllChildren();
 
         const panelTransform = dropdown.getComponent(UITransform);
-        const scrollWidth = this._scrollContentTransform?.width ?? 760;
-        const panelWidth = Math.max(520, Math.floor(scrollWidth - ROW_PADDING * 2));
-        const rowWidth = Math.max(360, panelWidth - ROW_PADDING * 2);
+        const panelWidth = this._dropdownWidth();
+        const rowWidth = Math.max(300, panelWidth - ROW_PADDING * 2);
         const rows: MissionGeneralOption[] = this._availableGenerals.length > 0
             ? [...this._availableGenerals]
             : [{ id: 'fallback-empty', label: '目前沒有可選武將', volunteer: false }];
@@ -802,16 +842,8 @@ export class LobbyMissionDetailDialogComposite extends CompositePanel {
         dropdown.getComponent(Layout)?.updateLayout(true);
         dropdown.getComponent(Layout)?.updateLayout();
 
-        if (this._scrollContentTransform) {
-            this._scrollContentTransform.setContentSize(
-                this._scrollContentTransform.width,
-                this._scrollContentBaseHeight + panelHeight,
-            );
-        }
-
         this._setDropdownSiblingIndex();
-        this._scrollContentLayout?.updateLayout(true);
-        this._scrollContentLayout?.updateLayout();
+        this._placeDropdown(panelHeight);
     }
 
     private _createDropdownHeader(parent: Node, panelWidth: number, title = '可選武將'): Node {
