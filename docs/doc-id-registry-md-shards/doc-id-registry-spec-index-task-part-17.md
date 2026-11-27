@@ -105,5 +105,6 @@
 | `doc_task_3263` | docs/agent-briefs/tasks/PROG/PROG-2-10190.md | [PROG-2-10190] 戰法分組音效 |
 | `doc_task_3264` | docs/agent-briefs/tasks/PROG/PROG-2-10197.md | [PROG-2-10197] 市井大街改照 v2 密集版（規格第 9、10 章） |
 | `doc_task_3265` | docs/agent-briefs/tasks/PROG/PROG-2-10198.md | [PROG-2-10198] Q 頭生活單挑有真實後果規格補件 |
+| `doc_task_3266` | docs/agent-briefs/tasks/PROG/PROG-2-10201.md | [PROG-2-10201] 補完：大廳傭兵結義系統（條件清單、儀式演出、i18n、義兄弟羈絆預覽） |
 | `doc_task_3269` | docs/agent-briefs/tasks/PROG/PROG-2-10200.md | [PROG-2-10200] 日夜四季全域規則＋市井大街熱區裁定回寫 |
 | `doc_task_3270` | docs/agent-briefs/tasks/PROG/PROG-2-10203.md | [PROG-2-10203] 武將生活系統四份規格審查 |
