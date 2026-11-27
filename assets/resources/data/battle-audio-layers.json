@@ -1,5 +1,5 @@
 {
-  "_comment": "PROG-2-9729：戰鬥音效分層。PROG-2-9732：clipSource 切換音檔來源，cc0（預設）＝CC0 外部素材（cc0Clips 把 hit_block→金屬擊打、hit_heavy→肉體悶擊、footstep_hoof→單拍馬蹄），pitched＝變調代用版（兩版檔案都在，改這個值即可對照聽）。clip 名稱＝assets/bundles/audio/clips 內檔名（無副檔名），hit_*／footstep_* 是 tools_node/gen-audio-variants.js 預先產生的變調版本（引擎 AudioSource 不支援 pitch）。volume 為 [最小,最大] 隨機範圍。讀不到本檔時用 BattleAudioLayers.ts 的預設值。 PROG-2-10134：attack＝小兵出手音（依攻擊音效鍵 unit-attack-* 多檔輪播＋音量範圍）；hit.byStyle＝輕擊依攻擊方式（slash/thrust/bow/shield/charge）換檔；pool＝發聲池（maxVoices 同時發聲上限、attackReserve 留給受擊的槽、perSecond 類別每秒上限、clipDurationMs 占槽時間、duck 人多降音量）；preload＝戰前暖機清單；bgm＝戰場背景音樂三段（start 開戰／tense 緊張／victory／defeat，音量 0~1，秒數）。",
+  "_comment": "PROG-2-9729：戰鬥音效分層。PROG-2-9732：clipSource 切換音檔來源，cc0（預設）＝CC0 外部素材（cc0Clips 把 hit_block→金屬擊打、hit_heavy→肉體悶擊、footstep_hoof→單拍馬蹄），pitched＝變調代用版（兩版檔案都在，改這個值即可對照聽）。clip 名稱＝assets/bundles/audio/clips 內檔名（無副檔名），hit_*／footstep_* 是 tools_node/gen-audio-variants.js 預先產生的變調版本（引擎 AudioSource 不支援 pitch）。volume 為 [最小,最大] 隨機範圍。讀不到本檔時用 BattleAudioLayers.ts 的預設值。 PROG-2-10134：attack＝小兵出手音（依攻擊音效鍵 unit-attack-* 多檔輪播＋音量範圍）；hit.byStyle＝輕擊依攻擊方式（slash/thrust/bow/shield/charge）換檔；pool＝發聲池（maxVoices 同時發聲上限、attackReserve 留給受擊的槽、perSecond 類別每秒上限、clipDurationMs 占槽時間、duck 人多降音量）；preload＝戰前暖機清單；bgm＝戰場背景音樂三段（start 開戰／tense 緊張／victory／defeat，音量 0~1，秒數）。 PROG-2-10190：tactic＝戰法分組音效（key 為 TacticVfxGroups 七組 fire／water／wind／heal／haste／morale／stun，值為 clip 清單與音量範圍；戰法特效命中時一次施放播一聲，走發聲池 tactic 類別，perSecond.tactic 為每秒上限）。",
   "clipSource": "cc0",
   "cc0Clips": {
     "hit_block": "cc0_block_metal_bright",
@@ -198,7 +198,8 @@
     ],
     "perSecond": {
       "attack": 5,
-      "hit": 7
+      "hit": 7,
+      "tactic": 3
     },
     "defaultDurationMs": 450,
     "clipDurationMs": {
@@ -214,7 +215,14 @@
       "sfx_hit_clash": 450,
       "sfx_hit_wood": 400,
       "sfx_hit_body_a": 450,
-      "sfx_hit_body_b": 450
+      "sfx_hit_body_b": 450,
+      "tactic_fire": 1200,
+      "tactic_water": 1400,
+      "tactic_wind": 1300,
+      "tactic_heal": 1000,
+      "tactic_haste": 600,
+      "tactic_morale": 1300,
+      "tactic_stun": 1000
     },
     "duck": {
       "perVoice": 0.06,
@@ -246,7 +254,14 @@
     "cc0_block_metal_bright",
     "cc0_hit_flesh",
     "die",
-    "boom"
+    "boom",
+    "tactic_fire",
+    "tactic_water",
+    "tactic_wind",
+    "tactic_heal",
+    "tactic_haste",
+    "tactic_morale",
+    "tactic_stun"
   ],
   "bgm": {
     "enabled": true,
@@ -267,5 +282,60 @@
     "crossfadeSec": 1.5,
     "tenseLeadSec": 1.5,
     "stopFadeSec": 1.0
+  },
+  "tactic": {
+    "clips": {
+      "fire": [
+        "tactic_fire"
+      ],
+      "water": [
+        "tactic_water"
+      ],
+      "wind": [
+        "tactic_wind"
+      ],
+      "heal": [
+        "tactic_heal"
+      ],
+      "haste": [
+        "tactic_haste"
+      ],
+      "morale": [
+        "tactic_morale"
+      ],
+      "stun": [
+        "tactic_stun"
+      ]
+    },
+    "volume": {
+      "fire": [
+        0.7,
+        0.85
+      ],
+      "water": [
+        0.7,
+        0.85
+      ],
+      "wind": [
+        0.65,
+        0.8
+      ],
+      "heal": [
+        0.7,
+        0.85
+      ],
+      "haste": [
+        0.65,
+        0.8
+      ],
+      "morale": [
+        0.7,
+        0.85
+      ],
+      "stun": [
+        0.7,
+        0.85
+      ]
+    }
   }
 }

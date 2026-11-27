@@ -50,3 +50,17 @@ Kenney 原始 License.txt：Creative Commons Zero, CC0；個人、教育、商�
 | bgm_battle_tense.ogg | 戰場 BGM 緊張段（戰鼓循環，7.3 秒，循環播放） | https://freesound.org/people/PearceWilsonKing/sounds/274223/ （War Drum Loop） | PearceWilsonKing | CC0 1.0 | 全長，尾端與開頭 80ms 等功率交疊使循環接縫無爆音，峰值 0.65 |
 | bgm_battle_victory.ogg | 戰場 BGM 勝利段（小號凱旋，4.4 秒，不循環） | https://freesound.org/people/FunWithSound/sounds/456966/ （Success Fanfare Trumpets.mp3） | FunWithSound | CC0 1.0 | 取 0～4.4 秒，尾 0.8 秒淡出，峰值 0.8 |
 | bgm_battle_defeat.ogg | 戰場 BGM 敗北段（喪氣長號，3.6 秒，不循環） | https://freesound.org/people/kirbydx/sounds/175409/ （wah wah sad trombone.wav） | kirbydx | CC0 1.0 | 取 0.2～3.8 秒，尾 0.6 秒淡出，峰值 0.7 |
+
+## 2026-11-27 追加（PROG-2-10190，戰法分組音效）
+
+七檔皆來自 BigSoundBank（Joseph Sardin 錄製與整理），頁面標示授權為 CC0（公眾領域，可商用、不強制署名；https://bigsoundbank.com/licenses.html ），下載前已逐頁複核，下載日期 2026-11-27，原檔為站上 OGG 預覽版（未註冊、未登入）。加工一律：立體聲左右平均轉單聲道、重取樣 44100Hz、裁切、淡入淡出、（火／風／水）高通去低頻轟隆、火與加速做動態壓縮、正規化到目標響度（RMS 0.09～0.14，峰值不超過 0.9，與現有 sfx 的 RMS 0.06～0.22 相近）、編碼 OGG Vorbis 單聲道 44100Hz。
+
+| 檔名 | 用途 | 來源（素材頁） | 授權 | 規格與加工 |
+|------|------|----------------|------|------------|
+| tactic_fire.ogg | 火系戰法（火燒、火計）：點燃爆燃＋燃燒劈啪 | https://bigsoundbank.com/gasoline-fire-2-s1341.html （Gasoline fire #2） | CC0 | 取 0～2.0 秒，高通 80Hz、動態壓縮（冪次 0.55）讓尾段劈啪聽得到，尾 0.45 秒淡出；RMS 0.14 |
+| tactic_water.ogg | 水系戰法（水淹、江潮）：急流奔騰 | https://bigsoundbank.com/small-waterfall-2-s0219.html （Small waterfall #2） | CC0 | 取最響的 2.2 秒（原檔第 24.3 秒起），高通 150Hz，頭 0.12 秒淡入、尾 0.5 秒淡出；RMS 0.14 |
+| tactic_wind.ogg | 風系戰法（諸葛風暴）：強風呼嘯 | https://bigsoundbank.com/strong-wind-2-s0152.html （Strong wind #2） | CC0 | 取最響的 2.0 秒（原檔第 22.1 秒起），高通 120Hz，頭 0.45 秒漸強、尾 0.6 秒淡出；RMS 0.12 |
+| tactic_heal.ogg | 回復戰法：柔和風鈴上行 | https://bigsoundbank.com/chimes-dream-5-s2083.html （Chimes dream #5） | CC0 | 取 0～1.6 秒，尾 0.35 秒淡出；RMS 0.09（柔和，刻意比其他組小） |
+| tactic_haste.ogg | 加速戰法：咻 | https://bigsoundbank.com/whoosh-4-s1796.html （Whoosh #4） | CC0 | 取 0.1～0.9 秒，動態壓縮（冪次 0.7），尾 0.2 秒淡出；RMS 0.12 |
+| tactic_morale.ogg | 鼓舞戰法：三擊戰鼓（漸重） | https://bigsoundbank.com/bass-tom-1-s2338.html 、https://bigsoundbank.com/medium-tom-1-s2333.html 、https://bigsoundbank.com/bass-tom-2-s2339.html （Bass tom #1、Medium tom #1、Bass tom #2） | CC0 | 三個鼓聲依 0／0.32／0.64 秒疊接（第三擊加重 1.3 倍），總長 2.0 秒、尾 0.4 秒淡出；RMS 0.14 |
+| tactic_stun.ogg | 控制戰法：悶響＋鐵鍊＋落鎖 | https://bigsoundbank.com/bass-tom-1-s2338.html 、https://bigsoundbank.com/small-chain-3-s0357.html 、https://bigsoundbank.com/barn-lock-locking-s1540.html （Bass tom #1 低通 400Hz、Small chain #3、Barn lock locking） | CC0 | 悶響 0 秒、鐵鍊 0.12 秒、落鎖 0.62 秒疊接，總長 1.6 秒、尾 0.35 秒淡出；RMS 0.12 |
