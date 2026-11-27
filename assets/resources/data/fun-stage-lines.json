@@ -1,0 +1,352 @@
+{
+  "schema": "fun-stage-lines.v1",
+  "id": "FUN_STAGE_LINES",
+  "note": "武將一律古代口吻；osKey／os 是主角的內心 OS（心想），不是武將說的。數值與句庫由企劃改這份 JSON。",
+  "recruit": {
+    "entries": {
+      "guan-yu": {
+        "intro": "fun.fun04.guan_yu.intro",
+        "os": "fun.fun04.guan_yu.os"
+      },
+      "zhang-fei": {
+        "intro": "fun.fun04.zhang_fei.intro",
+        "os": "fun.fun04.zhang_fei.os"
+      },
+      "zhao-yun": {
+        "intro": "fun.fun04.zhao_yun.intro",
+        "os": "fun.fun04.zhao_yun.os"
+      },
+      "zhuge-liang": {
+        "intro": "fun.fun04.zhuge_liang.intro",
+        "os": "fun.fun04.zhuge_liang.os"
+      },
+      "diao-chan": {
+        "intro": "fun.fun04.diao_chan.intro",
+        "os": "fun.fun04.diao_chan.os"
+      },
+      "sun-shang-xiang": {
+        "intro": "fun.fun04.sun_shang_xiang.intro",
+        "os": "fun.fun04.sun_shang_xiang.os"
+      }
+    },
+    "fallbackByTrait": {
+      "Brave": [
+        {
+          "intro": "fun.fun04.fb.brave.1.intro",
+          "os": "fun.fun04.fb.brave.1.os"
+        },
+        {
+          "intro": "fun.fun04.fb.brave.2.intro",
+          "os": "fun.fun04.fb.brave.2.os"
+        }
+      ],
+      "Wise": [
+        {
+          "intro": "fun.fun04.fb.wise.1.intro",
+          "os": "fun.fun04.fb.wise.1.os"
+        },
+        {
+          "intro": "fun.fun04.fb.wise.2.intro",
+          "os": "fun.fun04.fb.wise.2.os"
+        }
+      ],
+      "Loyal": [
+        {
+          "intro": "fun.fun04.fb.loyal.1.intro",
+          "os": "fun.fun04.fb.loyal.1.os"
+        },
+        {
+          "intro": "fun.fun04.fb.loyal.2.intro",
+          "os": "fun.fun04.fb.loyal.2.os"
+        }
+      ],
+      "Playful": [
+        {
+          "intro": "fun.fun04.fb.playful.1.intro",
+          "os": "fun.fun04.fb.playful.1.os"
+        },
+        {
+          "intro": "fun.fun04.fb.playful.2.intro",
+          "os": "fun.fun04.fb.playful.2.os"
+        }
+      ]
+    },
+    "announceByTrait": {
+      "Brave": "fun.fun04.announce.brave",
+      "Wise": "fun.fun04.announce.wise",
+      "Loyal": "fun.fun04.announce.loyal",
+      "Playful": "fun.fun04.announce.playful"
+    },
+    "rules": {
+      "maxIntroPerBatch": 3
+    }
+  },
+  "moon": {
+    "entries": {
+      "liu-bei": {
+        "toast": "fun.fun02.liu_bei.toast",
+        "os": "fun.fun02.liu_bei.os",
+        "gift": "fun.fun02.liu_bei.gift"
+      },
+      "guan-yu": {
+        "toast": "fun.fun02.guan_yu.toast",
+        "os": "fun.fun02.guan_yu.os",
+        "gift": "fun.fun02.guan_yu.gift"
+      },
+      "zhang-fei": {
+        "toast": "fun.fun02.zhang_fei.toast",
+        "os": "fun.fun02.zhang_fei.os",
+        "gift": "fun.fun02.zhang_fei.gift"
+      },
+      "zhao-yun": {
+        "toast": "fun.fun02.zhao_yun.toast",
+        "os": "fun.fun02.zhao_yun.os",
+        "gift": "fun.fun02.zhao_yun.gift"
+      },
+      "zhuge-liang": {
+        "toast": "fun.fun02.zhuge_liang.toast",
+        "os": "fun.fun02.zhuge_liang.os",
+        "gift": "fun.fun02.zhuge_liang.gift"
+      },
+      "diao-chan": {
+        "toast": "fun.fun02.diao_chan.toast",
+        "os": "fun.fun02.diao_chan.os",
+        "gift": "fun.fun02.diao_chan.gift"
+      },
+      "sun-shang-xiang": {
+        "toast": "fun.fun02.sun_shang_xiang.toast",
+        "os": "fun.fun02.sun_shang_xiang.os",
+        "gift": "fun.fun02.sun_shang_xiang.gift"
+      }
+    },
+    "fallbackByTrait": {
+      "Brave": [
+        {
+          "toast": "fun.fun02.fb.brave.1.toast",
+          "os": "fun.fun02.fb.brave.1.os"
+        },
+        {
+          "toast": "fun.fun02.fb.brave.2.toast",
+          "os": "fun.fun02.fb.brave.2.os"
+        }
+      ],
+      "Wise": [
+        {
+          "toast": "fun.fun02.fb.wise.1.toast",
+          "os": "fun.fun02.fb.wise.1.os"
+        },
+        {
+          "toast": "fun.fun02.fb.wise.2.toast",
+          "os": "fun.fun02.fb.wise.2.os"
+        }
+      ],
+      "Loyal": [
+        {
+          "toast": "fun.fun02.fb.loyal.1.toast",
+          "os": "fun.fun02.fb.loyal.1.os"
+        },
+        {
+          "toast": "fun.fun02.fb.loyal.2.toast",
+          "os": "fun.fun02.fb.loyal.2.os"
+        }
+      ],
+      "Playful": [
+        {
+          "toast": "fun.fun02.fb.playful.1.toast",
+          "os": "fun.fun02.fb.playful.1.os"
+        },
+        {
+          "toast": "fun.fun02.fb.playful.2.toast",
+          "os": "fun.fun02.fb.playful.2.os"
+        }
+      ]
+    },
+    "giftByTrait": {
+      "Brave": "fun.fun02.gift.brave",
+      "Wise": "fun.fun02.gift.wise",
+      "Loyal": "fun.fun02.gift.loyal",
+      "Playful": "fun.fun02.gift.playful"
+    },
+    "giftBundles": {
+      "Brave": "BUNDLE_MOONPARTY_GIFT_BRAVE",
+      "Wise": "BUNDLE_MOONPARTY_GIFT_WISE",
+      "Loyal": "BUNDLE_MOONPARTY_GIFT_LOYAL",
+      "Playful": "BUNDLE_MOONPARTY_GIFT_PLAYFUL"
+    },
+    "guestCount": {
+      "min": 3,
+      "max": 5
+    },
+    "lateSeasons": 4
+  },
+  "victory": {
+    "templates": [
+      {
+        "id": "v_big_brave",
+        "resultBand": "bigWin",
+        "traits": [
+          "Brave"
+        ],
+        "genders": [
+          "any"
+        ],
+        "textKey": "fun.victory.big_brave.text",
+        "osKey": "fun.victory.big_brave.os"
+      },
+      {
+        "id": "v_big_wise",
+        "resultBand": "bigWin",
+        "traits": [
+          "Wise"
+        ],
+        "genders": [
+          "any"
+        ],
+        "textKey": "fun.victory.big_wise.text",
+        "osKey": "fun.victory.big_wise.os"
+      },
+      {
+        "id": "v_big_playful",
+        "resultBand": "bigWin",
+        "traits": [
+          "Playful"
+        ],
+        "genders": [
+          "any"
+        ],
+        "textKey": "fun.victory.big_playful.text",
+        "osKey": "fun.victory.big_playful.os"
+      },
+      {
+        "id": "v_big_loyal",
+        "resultBand": "bigWin",
+        "traits": [
+          "Loyal"
+        ],
+        "genders": [
+          "any"
+        ],
+        "textKey": "fun.victory.big_loyal.text",
+        "osKey": "fun.victory.big_loyal.os"
+      },
+      {
+        "id": "v_big_brave_f",
+        "resultBand": "bigWin",
+        "traits": [
+          "Brave"
+        ],
+        "genders": [
+          "F"
+        ],
+        "textKey": "fun.victory.big_brave_f.text",
+        "osKey": "fun.victory.big_brave_f.os"
+      },
+      {
+        "id": "v_close_brave",
+        "resultBand": "closeWin",
+        "traits": [
+          "Brave"
+        ],
+        "genders": [
+          "any"
+        ],
+        "textKey": "fun.victory.close_brave.text",
+        "osKey": "fun.victory.close_brave.os"
+      },
+      {
+        "id": "v_close_wise",
+        "resultBand": "closeWin",
+        "traits": [
+          "Wise"
+        ],
+        "genders": [
+          "any"
+        ],
+        "textKey": "fun.victory.close_wise.text",
+        "osKey": "fun.victory.close_wise.os"
+      },
+      {
+        "id": "v_close_loyal",
+        "resultBand": "closeWin",
+        "traits": [
+          "Loyal"
+        ],
+        "genders": [
+          "any"
+        ],
+        "textKey": "fun.victory.close_loyal.text",
+        "osKey": "fun.victory.close_loyal.os"
+      },
+      {
+        "id": "v_close_playful",
+        "resultBand": "closeWin",
+        "traits": [
+          "Playful"
+        ],
+        "genders": [
+          "any"
+        ],
+        "textKey": "fun.victory.close_playful.text",
+        "osKey": "fun.victory.close_playful.os"
+      },
+      {
+        "id": "v_win_loyal",
+        "resultBand": "win",
+        "traits": [
+          "Loyal"
+        ],
+        "genders": [
+          "any"
+        ],
+        "textKey": "fun.victory.win_loyal.text",
+        "osKey": "fun.victory.win_loyal.os"
+      },
+      {
+        "id": "v_win_brave",
+        "resultBand": "win",
+        "traits": [
+          "Brave"
+        ],
+        "genders": [
+          "any"
+        ],
+        "textKey": "fun.victory.win_brave.text",
+        "osKey": "fun.victory.win_brave.os"
+      },
+      {
+        "id": "v_win_wise",
+        "resultBand": "win",
+        "traits": [
+          "Wise"
+        ],
+        "genders": [
+          "any"
+        ],
+        "textKey": "fun.victory.win_wise.text",
+        "osKey": "fun.victory.win_wise.os"
+      },
+      {
+        "id": "v_win_playful",
+        "resultBand": "win",
+        "traits": [
+          "Playful"
+        ],
+        "genders": [
+          "any"
+        ],
+        "textKey": "fun.victory.win_playful.text",
+        "osKey": "fun.victory.win_playful.os"
+      }
+    ],
+    "rules": {
+      "noRepeatTalker": true,
+      "maxPerSeason": 3,
+      "highlightWeight": 3,
+      "rewardCapPerGeneralPerSeason": 2
+    },
+    "reward": {
+      "bundleId": "BUNDLE_VICTORY_CHAT",
+      "grantKeyFmt": "fun03.{generalId}.{seasonNo}.{n}"
+    }
+  }
+}

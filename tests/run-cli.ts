@@ -22,6 +22,7 @@ import { createYearEndCeremonyPodiumSuite } from './YearEndCeremonyPodium.test';
 import { createYear1GoalsSuite } from './Year1Goals.test';
 import { createBloodlineY3Y5EventsSuite } from './BloodlineY3Y5Events.test';
 import { createBloodlineChildLedgerSuite } from './BloodlineChildLedger.test';
+import { createFunStageLinesSuite } from './FunStageLines.test';
 
 /**
  * 只在 Node.js CLI 環境（ts-node）下執行。
@@ -98,6 +99,7 @@ if (typeof window === 'undefined') {
     runner.register(createYear1GoalsSuite());
     runner.register(createBloodlineY3Y5EventsSuite());
     runner.register(createBloodlineChildLedgerSuite());
+    runner.register(createFunStageLinesSuite());
 
     const summary = await runner.runAll(layerFilter);
 

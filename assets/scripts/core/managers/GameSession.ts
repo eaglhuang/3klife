@@ -264,6 +264,7 @@ import { childTalkTopicFor, loadChildTalkConfig, type ChildTalkConfig } from '..
 import { bloodlineSilverCost, emptyBloodlineEventState, loadBloodlineY3Y5Events, type BloodlineEventState, type BloodlineEventTable } from '../systems/BloodlineY3Y5Events';
 import { applyBloodlineEffectsToLedger, applyBloodlineStatDeltas, isEmptyBloodlineGrowth, normalizeBloodlineGrowthSave, queueBloodlineGrowthEvents, resolvePendingBloodlineEvent, type PendingBloodlineEvent } from '../systems/BloodlineGrowthSettlement';
 import { cloneFunState, emptyFunState, isEmptyFunState, normalizeFunState, type FunState } from '../fun/FunState';
+import { getStageLines, queueVictoryChat, victoryBandOf } from '../fun/FunStageLines';
 import { CHILD_FAVOR_DEFAULT, addChildFavor, addChildInteraction, childInteractionCountOf, childTalkCountOf, childTalkedThisYear, cloneChildLedger, childFavorOf, recordChildTalk, emptyChildLedger, isEmptyChildLedger, normalizeChildLedger, seedChildFavor, type BloodlineChildLedgerState } from '../systems/BloodlineChildLedger';
 import { resolveFactorColor } from '../systems/FactorInheritance';
 import { insertSpiritCard, replaceSpiritCard, setPrimarySpiritCard, unequipSpiritCard, type SpiritSlotFlowResult } from '../systems/SpiritSlotFlow';
@@ -509,6 +510,8 @@ export const GAME_SESSION_EVENTS = {
     Year1GoalsChanged: 'game-session-year1-goals-changed',
     /** payload: GeneralConfig[]（本次新加入名冊的武將） */
     RosterChanged: 'game-session-roster-changed',
+    /** payload: GeneralConfig[]（本次「招募」進名冊的新武將；結緣納配偶不算；新手樂趣 FUN-04 首次招募自我介紹用，PROG-2-10185） */
+    GeneralsRecruited: 'game-session-generals-recruited',
     /** payload: undefined（第一次打贏戰鬥；新手開場第四幕紅顏的觸發點，只發一次） */
     FirstBattleCleared: 'game-session-first-battle-cleared',
     /** payload: PlayerSaveSnapshot */
@@ -5910,6 +5913,29 @@ export class GameSession implements AcademyRecordPort {
     }
 
     /** 戰後寫入出戰武將的記憶：勝敗（主將加重）與單挑勝負（PROG-2-9146）；戰場內部不動，只吃戰後已有的結果 */
+    /**
+     * 新手樂趣 FUN-03：勝仗後排一場搭話（本場出戰、成年、未被擒的武將挑一位；連兩場不同人、每季最多 3 次）。
+     * 只寫存檔裡的「待播搭話」，回到大廳才由大廳演出；資料表沒載入就不排（不影響結算）。
+     */
+    private _queueVictoryChat(deployedIds: readonly string[], options: RecordBattleOptions): void {
+        const lines = getStageLines();
+        if (!lines) return;
+        const roster = this._roster.getAll();
+        const performance = options.performance ?? {};
+        const mine = deployedIds.map((id) => roster.find((g) => g.id === id)).filter((g): g is GeneralConfig => !!g);
+        if (mine.length === 0) return;
+        const topKills = Math.max(0, ...mine.map((g) => performance[g.id]?.kills ?? 0));
+        const hpRatios = mine.map((g) => options.hpRatioAfterBattle?.[g.id]).filter((v): v is number => typeof v === 'number');
+        const lowest = hpRatios.length > 0 ? Math.min(...hpRatios) : 1;
+        const candidates = mine.map((g) => ({
+            id: g.id, name: g.name, gender: g.gender, age: g.age, personality: g.personality,
+            highlight: (topKills > 0 && (performance[g.id]?.kills ?? 0) === topKills) || (hpRatios.length > 0 && options.hpRatioAfterBattle?.[g.id] === lowest && lowest < 0.5),
+        }));
+        const season = this._clock.state.totalSeasonsElapsed;
+        const next = queueVictoryChat(lines, this._funState, candidates, { seasonNo: season, resultBand: victoryBandOf(hpRatios) }, this._magistrateUid ?? '');
+        if (next) this._funState = next;
+    }
+
     private _recordMindBattle(deployedIds: readonly string[], won: boolean, options: RecordBattleOptions): void {
         const season = this._clock.state.totalSeasonsElapsed;
         const roster = this._roster.getAll();
@@ -7301,6 +7327,8 @@ export class GameSession implements AcademyRecordPort {
             this._emit(GAME_SESSION_EVENTS.RosterChanged, added);
             // 納配偶內部也走這裡，但那是結緣不是招募（首年目標）
             if (!this._enrollingSpouse) this.reportYear1Goal({ type: 'recruit' });
+            // 新手樂趣 FUN-04：首次招募自我介紹（結緣納配偶不算招募）
+            if (!this._enrollingSpouse) this._emit(GAME_SESSION_EVENTS.GeneralsRecruited, added);
         }
         // 三國日報素材（暫定判定）：轉蛋抽到新武將算成功，全是重複算失敗
         if (options.rebirthOnDuplicate && (added.length > 0 || duplicates.length > 0)) {
@@ -7395,6 +7423,7 @@ export class GameSession implements AcademyRecordPort {
             if (result === 'player-win') this._seasonActivity.battlesWon += 1; else this._seasonActivity.battlesLost += 1;
             this._recordEventJournal(result === 'player-win' ? 'BATTLE_WIN' : 'BATTLE_LOSE', this._journalSubjects(deployedIds));
             this._recordMindBattle(deployedIds, result === 'player-win', options);
+            if (result === 'player-win' && !options.defense) this._queueVictoryChat(deployedIds, options);
         }
         const comradeChanged = this._recordBattleComrades(result, Boolean(options.sortie));
         const mercenaryChanged = this._recordTrialMercenaryBattles(deployedIds, result);
