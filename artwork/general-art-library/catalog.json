@@ -950,9 +950,9 @@
             "version": "0004",
             "file": "standing/lu_ling_qi__呂玲綺__standing_0004.png",
             "status": "review-pending",
-            "sha256": "9ebd7c305ede38f3ed0d47db1873ab9af6ba8e53d91de3f3688bfe32390b8357",
+            "sha256": "762628445e5f8a2bb633af59f6c8ae48ddf7510b233e0203c3dbc7bba03df9bb",
             "canvas": "1024x1536 RGBA",
-            "note": "半寫實成熟女性立繪；胸腰胯曲線與上臂、前臂、大腿、小腿均豐潤自然、不畫肌肉線；銀紫輕甲、鎖骨與上臂露膚；低仰角三分之四側面；武器與人物四周至少2%透明安全距離。"
+            "note": "半寫實成熟女性立繪；豐滿胸線與收腰S曲線、上臂前臂自然飽滿；大腿小腿修長收細而不纖弱；頸部修長略露，頭部約30度三分之四側轉；銀紫輕甲與白皙膚色；武器和人物四周保留透明安全距離。"
           }
         ]
       },
@@ -995,13 +995,13 @@
             "version": "0004",
             "file": "battle/lu_ling_qi__呂玲綺__battle_0004.png",
             "status": "review-pending",
-            "sha256": "ae36ad2ea9ac709981d6d96e7d6c7608929d26fb9c1933ae06db65933ecc4ecf",
+            "sha256": "5e084c2f8dd9df8c154775d63901cce256679596f4ee3d68ed0ef632772f3a7b",
             "canvas": "1024x1536 RGBA",
             "weaponClass": "crescent halberd",
             "poseLabel": "前跨旋身斜刺",
             "gaze": "forward-three-quarter",
             "sourceStanding": "standing/lu_ling_qi__呂玲綺__standing_0004.png",
-            "note": "沿用靜態立繪的銀紫造型與飽滿成熟體態；上臂、前臂、大腿、小腿自然豐潤且無肌肉線；低仰角三分之四前跨斜刺；方天戟桿身由頭至尾筆直連續，經細線軸檢查；全身與戟端距畫布邊至少2%。"
+            "note": "沿用靜態立繪的銀紫造型、豐滿胸線、收腰曲線與自然飽滿上臂前臂；大腿小腿修長收細而不纖弱；頭部約30度三分之四側轉，頸部修長略露；方天戟桿身由頭至尾筆直連續並經細軸線檢查；全身與戟端留透明安全距離。"
           }
         ]
       },
