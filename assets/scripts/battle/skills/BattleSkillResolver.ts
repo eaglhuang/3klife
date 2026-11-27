@@ -51,6 +51,8 @@ export interface BattleSkillExecutionContext {
   addUnitBurn?(unit: TroopUnit): void;
   /** 戰法格子特效（火計、水計）：施放命中的格子要播哪種格子 hook；舊測試 context 可不提供 */
   emitGridVfx?(kind: 'grid-fire' | 'grid-water-ripple', cell: { lane: number; depth: number }): void;
+  /** 戰法分組特效命中格（PROG-2-10138）：施放成功後送出受影響單位所在格，View 蓄力結束時播命中特效 */
+  emitTacticHit?(skillId: string, group: string, cells: ReadonlyArray<{ lane: number; depth: number }>): void;
   applyDamage(unit: TroopUnit, damage: number, casterFaction: Faction): void;
   healUnit(unit: TroopUnit, amount: number, casterFaction: Faction): void;
   applyBuff(unit: TroopUnit, effect: StatusEffect, turns: number): void;

@@ -142,6 +142,7 @@
 | OpeningIntroController.ts | doc_spec_0031 | 概: 第一幕「情懷定錨」的逐頁流程（純邏輯，不依賴 cc）。 |
 | PortraitFrameFit.ts | 未登錄：使用者裁定 2026-10-26（每張立繪比例相同、頭高一致，左右與下身可被框切 | 概: 把全身立繪擺進瘦長框：臉高統一、眼睛同高、臉中心對齊框中線（純數學，不依賴 cc） |
 | PortraitGallery.ts | 未登錄：使用者裁定 2026-10-26（紅顏、名將池一頁六框全身立繪，超過六位翻頁）； | 概: 「一頁六框立繪」的分頁與選取（純邏輯，不依賴 cc） |
+| PopupGeneralSpeaker.ts | doc_spec_1343 | 概: 彈窗共用的武將大頭像＋一句台詞（少年投靠、名士占卜、家族血統樹；PROG-2-10129）。 |
 | PrisonerPopupController.ts | doc_spec_0021 | 概: 俘虜四選一彈窗的流程（純邏輯，不依賴 cc） |
 | RankProgressText.ts | doc_spec_0014 | 概: 官職進度開窗的文字（純邏輯，不依賴 cc） |
 | BloodlineVignetteText.ts | doc_ui_0012, doc_spec_0011 | 概: 血統小傳開窗的文字（純邏輯，不依賴 cc）；暫定解鎖規則：取得開 1 格、每轉多 1 格、命紋覺醒全開（PROG-2-1428） |

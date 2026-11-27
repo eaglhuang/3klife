@@ -406,6 +406,8 @@ export interface GeneralConfig {
   ancestorsSummary?: string;
   awakeningTitle?: string;
   historicalAnecdote?: string;
+  /** 古文後的白話吐槽（zh-TW 原文；i18n 鍵 ui.general.quip.<id> 優先，PROG-2-10146） */
+  historicalQuip?: string;
   bloodlineRumor?: string;
   crestHint?: string;
   crestState?: GeneralDetailCrestState;

@@ -87,7 +87,7 @@
                 "id": "youthPickLabel0",
                 "widget": {
                   "vCenter": true,
-                  "left": 24,
+                  "left": 124,
                   "right": 24
                 },
                 "height": 80,
@@ -114,7 +114,7 @@
                 "id": "youthPickLabel1",
                 "widget": {
                   "vCenter": true,
-                  "left": 24,
+                  "left": 124,
                   "right": 24
                 },
                 "height": 80,
@@ -141,7 +141,7 @@
                 "id": "youthPickLabel2",
                 "widget": {
                   "vCenter": true,
-                  "left": 24,
+                  "left": 124,
                   "right": 24
                 },
                 "height": 80,
@@ -168,7 +168,7 @@
                 "id": "youthPickLabel3",
                 "widget": {
                   "vCenter": true,
-                  "left": 24,
+                  "left": 124,
                   "right": 24
                 },
                 "height": 80,
@@ -195,7 +195,7 @@
                 "id": "youthPickLabel4",
                 "widget": {
                   "vCenter": true,
-                  "left": 24,
+                  "left": 124,
                   "right": 24
                 },
                 "height": 80,
