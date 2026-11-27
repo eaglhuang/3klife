@@ -63,7 +63,7 @@ import { MoveDustEmitter } from "./MoveDustEmitter";
 import { TacticVfxPlayer } from "./TacticVfxPlayer";
 import type { TacticVfxGroup } from "../shared/TacticVfxGroups";
 import { SpineUnitOverlay } from "./SpineGeneralOverlay";
-import { GeneralPortraitStandee, STANDEE_HEIGHT_PX, needsStandeeFallback } from "./GeneralPortraitStandee";
+import { GeneralPortraitStandee, STANDEE_HEIGHT_PX, needsStandeeFallback, shouldLoadHeroModel } from "./GeneralPortraitStandee";
 import { generalSpineConfig, resolveRidingTier, setMountedList, squadMemberCount, troopSpineConfig, troopSpineConfigWithFallback } from '../shared/UnitPresentationConfig';
 import { DuelExchange } from '../shared/DuelPresentationCore';
 import { BATTLE_VISUAL_TIMING, buildHitShakeSteps, hitScaleNeighborDepth, planHitFeedback, planMoveSegment } from "./BattlePresentationTiming";
@@ -1550,7 +1550,8 @@ export class UnitRenderer extends Component {
       view.worldNode.setScale(Vec3.ONE);
       view.bodyNode.active = false;
       view.modelRoot.active = false;
-      if (!view.heroLoading) {
+      // PROG-2-10154：有可用 Spine 時不載 3D 主將（貼圖約 190MB 卻被 Spine 蓋掉）；Spine 沒有或載不起來才載後備
+      if (!view.heroLoading && shouldLoadHeroModel(this.generalSpine(general, faction)?.path, path => this.spineUnits.hasFailed(path))) {
         void this.ensureGeneralHeroModel(view, faction);
       }
     }
@@ -1800,8 +1801,7 @@ export class UnitRenderer extends Component {
 
     bodyNode.active = false;
 
-    void this.ensureGeneralHeroModel(view, faction);
-
+    // 3D 主將改由 updateSingleGeneralView 判斷 Spine 後再載（PROG-2-10154），建立時不無條件載入
     return view;
   }
 
