@@ -17656,5 +17656,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10153.md",
     "title": "[PROG-2-10153] 年末頒獎典禮 A 版領獎台實作",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3229",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10164.md",
+    "title": "[PROG-2-10164] 修正偵察面板幫我換上兩個重現錯誤",
+    "category": "task"
   }
 ]

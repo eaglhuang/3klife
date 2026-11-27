@@ -7,6 +7,8 @@ import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 import { DEFAULT_AUTOFILL_RULES, parseAutofillRules, planTacticAutofill, type TacticAutofillInput } from '../assets/scripts/core/systems/TacticAutofill';
 import { buildScoutAutofillHooks, effectiveTacticSlots } from '../assets/scripts/ui/core/ScoutAutofillBinding';
 import { buildLobbyScout, ScoutPanelController } from '../assets/scripts/ui/core/ScoutPanelController';
+import { buildBattleConfig, COMMON_TACTIC_ID } from '../assets/scripts/core/systems/BattleRoster';
+import { Faction } from '../assets/scripts/shared/CommonEnums';
 
 const ROOT = path.resolve(__dirname, '..');
 const TAGS = {
@@ -126,10 +128,76 @@ export function createTacticAutofillSuite(): TestSuite {
         assert.isTrue(ctrl.isConfirming());
     });
 
+    suite.test('兩個智力槽：偵察面板預覽的槽位＝戰場實際帶的槽位（通用計謀排在前面也不吃掉智力槽）', () => {
+        // 智力 30 → 2 槽；存檔裡通用計謀排第一格（轉蛋／舊資料常見）
+        const lead = { id: 'a', name: 'A', int: 30, tacticSlots: [
+            { slotId: 'slot-1', tacticId: COMMON_TACTIC_ID, source: 'inborn' },
+            { slotId: 'slot-2', tacticId: 'tactic-insp-lance-thrust', source: 'gacha' },
+            { slotId: 'slot-3', tacticId: 'tactic-insp-inspire', source: 'gacha' },
+        ] } as unknown as GeneralConfig;
+        const previewIds = [COMMON_TACTIC_ID, ...effectiveTacticSlots(lead).map((s) => s.tacticId)];
+        const battleIds = (buildBattleConfig(lead, Faction.Player).tacticSlots ?? []).map((s) => s.tacticId);
+        assert.equals(previewIds.slice().sort().join(','), battleIds.slice().sort().join(','));
+        assert.equals(3, battleIds.length);
+        // 套用後存回去的槽位，戰場同樣要帶滿「加速＋A＋B」
+        const stored = [{ slotId: 'slot-1', tacticId: 'tactic-insp-lance-thrust', source: 'learned' }, { slotId: 'slot-2', tacticId: 'tactic-insp-inspire', source: 'learned' }, { slotId: 'slot-3', tacticId: COMMON_TACTIC_ID, source: 'inborn' }];
+        const after = buildBattleConfig({ ...lead, tacticSlots: stored } as unknown as GeneralConfig, Faction.Player).tacticSlots ?? [];
+        assert.equals('tactic-insp-lance-thrust,tactic-insp-inspire,tactic-insp-haste', after.map((s) => s.tacticId).join(','));
+    });
+
+    const writeCase = (write: (leadRef: { v: GeneralConfig }, slots: readonly { slotId: string; tacticId: string }[]) => boolean) => {
+        const encounter = { id: 'e', name: 'e', theme: '攻城', playerGeneralId: 'a', enemyGeneralId: 'b', requiredLoadout: ['破城'], highlyRecommendedLoadout: ['鼓舞'], enemyInitialDeployment: [] } as unknown as EncounterConfig;
+        const ref = { v: { id: 'a', name: 'A', int: 90, tacticSlots: [{ slotId: 'slot-1', tacticId: 'tactic-insp-slow', source: 'gacha' }], learnedTactics: ['TAC_LANCE_THRUST', 'TAC_INSPIRE'] } as unknown as GeneralConfig };
+        const rebuild = () => buildLobbyScout(encounter, null, effectiveTacticSlots(ref.v).map((s) => s.tacticId), TAGS);
+        const hooks = buildScoutAutofillHooks({
+            encounter, currentLead: () => ref.v, tagTable: TAGS, rules: DEFAULT_AUTOFILL_RULES, nameOf: (id) => `N:${id}`,
+            writeSlots: (_id, slots) => write(ref, slots), rebuild,
+        });
+        const ctrl = new ScoutPanelController();
+        void ctrl.ask(rebuild(), hooks);
+        return { ctrl, ref };
+    };
+
+    suite.test('寫入回傳失敗：面板不顯示已換上、不改狀態、顯示失敗訊息，戰法槽維持原樣', () => {
+        const { ctrl, ref } = writeCase(() => false);
+        ctrl.autofill();
+        const view = ctrl.getView();
+        assert.isFalse(ctrl.isAutofillApplied());
+        assert.isFalse(view.texts.scoutAutofillNote.startsWith('已換上'));
+        assert.isTrue(view.texts.scoutAutofillNote.includes('失敗'));
+        assert.equals('tactic-insp-slow', (ref.v.tacticSlots ?? []).map((s) => s.tacticId).join(','));
+        assert.equals('幫我換上', view.texts.scoutAutofillLabel);
+    });
+
+    suite.test('寫入回傳成功但實際資料沒變：從最新資料重讀驗證，不顯示已換上', () => {
+        const { ctrl } = writeCase(() => true);
+        ctrl.autofill();
+        assert.isFalse(ctrl.isAutofillApplied());
+        assert.isFalse(ctrl.getView().texts.scoutAutofillNote.startsWith('已換上'));
+        assert.isTrue(ctrl.getView().texts.scoutAutofillNote.includes('失敗'));
+    });
+
+    suite.test('寫入成功且資料確實更新：才顯示已換上；復原寫入失敗時維持已換上並提示失敗', () => {
+        let allow = true;
+        const { ctrl, ref } = writeCase((leadRef, slots) => {
+            if (!allow) return false;
+            leadRef.v = { ...leadRef.v, tacticSlots: slots.map((s) => ({ ...s })) } as GeneralConfig;
+            return true;
+        });
+        ctrl.autofill();
+        assert.isTrue(ctrl.isAutofillApplied());
+        assert.isTrue(ctrl.getView().texts.scoutAutofillNote.startsWith('已換上'));
+        assert.isTrue((ref.v.tacticSlots ?? []).some((s) => s.tacticId === 'tactic-insp-lance-thrust'));
+        allow = false;
+        ctrl.autofill();
+        assert.isTrue(ctrl.isAutofillApplied());
+        assert.isTrue(ctrl.getView().texts.scoutAutofillNote.includes('失敗'));
+    });
+
     suite.test('四語系字串齊全、版面與大廳接線都有新節點', () => {
         for (const lang of ['zh-TW', 'zh-CN', 'en', 'ja']) {
             const table = JSON.parse(fs.readFileSync(path.join(ROOT, `assets/resources/i18n/${lang}.json`), 'utf8')) as Record<string, string>;
-            for (const k of ['autofillBtn', 'autofillUndo', 'autofillPreview', 'autofillDone', 'autofillSwap', 'autofillFill', 'autofillNone', 'autofillBlocked']) {
+            for (const k of ['autofillBtn', 'autofillUndo', 'autofillPreview', 'autofillDone', 'autofillSwap', 'autofillFill', 'autofillNone', 'autofillBlocked', 'autofillFailed']) {
                 assert.isTrue(typeof table[`scout.${k}`] === 'string' && table[`scout.${k}`].length > 0, `${lang} ${k}`);
             }
         }
