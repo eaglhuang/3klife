@@ -8,7 +8,8 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
  * 職責：
  *   1. 顯示滾動式戰鬥日誌
  *   2. BtnCollapse：折疊/展開日誌區（tween 0.3s）
- *   3. Auto/x2/⚙ 控制列位於日誌上方（常駐顯示）
+ *   3. 自動／委任／加速／戰報／設定 5 個功能鈕在頂欄右側橫排（常駐顯示，PROG-2-10133 B1；
+ *      外觀由 BattleButtonStyle 統一繪製，開關型按鈕用「啟用中」狀態）
  *
  * 遷移重點：
  *   - buildScreen() → mount('battle-log-screen')
@@ -24,6 +25,8 @@ import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { EVENT_NAMES } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
+import { BattleButtonStyle } from './BattleButtonStyle';
+import type { BattleIconId } from './BattleButtonIcons';
 
 const { ccclass, property } = _decorator;
 
@@ -58,6 +61,8 @@ export class BattleLogComposite extends CompositePanel {
     private _btnSpeed:   Node | null = null;
     private _btnDelegate: Node | null = null;
     private _delegateActive = false;
+    /** 5 個功能鈕的統一外觀（key＝節點名） */
+    private readonly _fnStyles = new Map<string, BattleButtonStyle>();
 
     // ── 生命週期 ─────────────────────────────────────────────────────────────
 
@@ -159,6 +164,7 @@ export class BattleLogComposite extends CompositePanel {
         this._btnAuto  = binder.getNode('BtnAuto');
         this._btnSpeed = binder.getNode('BtnSpeed');
         this._btnDelegate = binder.getNode('BtnDelegate');
+        this._attachFnButtons(binder);
         this.setDelegateActive(false);
         this._btnDelegate?.on(Button.EventType.CLICK, this._onDelegateClick, this);
         this._btnAuto?.on(Button.EventType.CLICK,    this._onAutoClick,    this);
@@ -204,13 +210,31 @@ export class BattleLogComposite extends CompositePanel {
         this.scrollView?.scrollToBottom(0.05);
     }
 
-    /** 委任鈕的亮暗跟控制器實際狀態走（PROG-2-1766）；由戰場橋接層呼叫 */
+    /**
+     * 頂欄 5 個功能鈕掛上統一外觀（圖示在上、2 字說明在下；觸控範圍吃滿 76×72，可視底板 68×60）。
+     * 文字走 i18n key，語系切換時由 BattleButtonStyle 自己重寫。
+     */
+    private _attachFnButtons(binder: UITemplateBinder): void {
+        const defs: Array<[string, BattleIconId, string]> = [
+            ['BtnAuto', 'auto', 'battle.hud.fn.auto'],
+            ['BtnDelegate', 'delegate', 'battle.hud.fn.delegate'],
+            ['BtnSpeed', 'speed', 'battle.hud.fn.speed'],
+            ['BtnCollapse', 'log', 'battle.hud.fn.log'],
+            ['BtnSetting', 'settings', 'battle.hud.fn.settings'],
+        ];
+        for (const [name, icon, captionKey] of defs) {
+            const node = binder.getNode(name);
+            if (!node) continue;
+            this._fnStyles.set(name, BattleButtonStyle.attach(node, {
+                variant: 'secondary', icon, iconLayout: 'top', captionKey, fontSize: 22, bold: true, insetX: 4, insetY: 6,
+            }));
+        }
+    }
+
+    /** 委任鈕的「啟用中」跟控制器實際狀態走（PROG-2-1766）；由戰場橋接層呼叫 */
     public setDelegateActive(active: boolean): void {
         this._delegateActive = active;
-        const btn = this._btnDelegate;
-        if (!btn) return;
-        const op = btn.getComponent(UIOpacity) ?? btn.addComponent(UIOpacity);
-        op.opacity = active ? 255 : 130;
+        this._fnStyles.get('BtnDelegate')?.setActive(active);
     }
 
     // ── 私有：按鈕事件處理 ───────────────────────────────────────────────────
@@ -224,10 +248,9 @@ export class BattleLogComposite extends CompositePanel {
         UCUFLogger.info(LogCategory.UI, '[BattleLogComposite] AutoBattle pressed');
     }
 
-    /** 自動代打鈕亮暗跟戰場實際狀態走（PROG-2-9707）；由戰場橋接層呼叫 */
+    /** 自動代打鈕的「啟用中」跟戰場實際狀態走（PROG-2-9707）；由戰場橋接層呼叫 */
     public setAutoActive(active: boolean): void {
-        const op = this._btnAuto?.getComponent('cc.UIOpacity') as any;
-        if (op) op.opacity = active ? 180 : 255;
+        this._fnStyles.get('BtnAuto')?.setActive(active);
     }
 
     private _onDelegateClick(): void {
@@ -243,12 +266,9 @@ export class BattleLogComposite extends CompositePanel {
         this._syncSpeedButton();
     }
 
-    /** x2 亮起（opacity 180）；速度鈕可能還沒掛 UIOpacity（首戰一開場就是 x2），亮起時補掛 */
+    /** x2 時加速鈕進入「啟用中」（首戰一開場就是 x2 也成立） */
     private _syncSpeedButton(): void {
-        const btn = this._btnSpeed;
-        if (!btn) return;
-        const op = btn.getComponent(UIOpacity) ?? (this._speed === 2 ? btn.addComponent(UIOpacity) : null);
-        if (op) op.opacity = this._speed === 2 ? 180 : 255;
+        this._fnStyles.get('BtnSpeed')?.setActive(this._speed === 2);
     }
 
     /** 戰鬥速度切換（x1 ↔ x2） */
@@ -292,6 +312,8 @@ export class BattleLogComposite extends CompositePanel {
      * 蓋到敵方主將與棋盤最右兩行（PROG-2-9389）。
      */
     private _applyCollapsedState(collapsed: boolean, animated: boolean): void {
+        // 戰報鈕：日誌展開中＝啟用中
+        this._fnStyles.get('BtnCollapse')?.setActive(!collapsed);
         const panelNode = this._logPanelNode;
         if (!panelNode) return;
         const op = panelNode.getComponent(UIOpacity) ?? panelNode.addComponent(UIOpacity);

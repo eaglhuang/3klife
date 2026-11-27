@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "$note": "PROG-2-10135 暫定：偵察面板「幫我換上」的挑選規則。scoreOrder 由前到後比較（越大越好）；troopTypeTags 是敵軍兵種（TroopType 字串）→ 較適合的對策標籤，只在同分時加權，標籤對照皆待企劃定稿。規則稿：tactic-autofill-rule-1126。",
+  "scoreOrder": ["requiredCovered", "totalCovered", "troopBonus", "level"],
+  "troopTypeTags": {
+    "cavalry": ["牽制", "守城"],
+    "archer": ["突破", "夜戰"],
+    "shield": ["破城", "火攻"],
+    "pikeman": ["直取敵首", "突破"],
+    "infantry": ["鼓舞", "抗混亂"],
+    "navy": ["火攻", "避水陣"],
+    "engineer": ["直取敵首", "遠攻"],
+    "medic": ["直取敵首"]
+  }
+}

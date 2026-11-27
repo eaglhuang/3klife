@@ -136,6 +136,9 @@ export class ResultPopupComposite extends CompositePanel {
     private _description = '';
     /** 結算窗掛載完成前追加的細項先存這裡，顯示後補上（PROG-2-9132） */
     private readonly _details = new ResultDetailsBuffer();
+    /** 戰報重點三列（PROG-2-10137）；null＝沒有重點，直接顯示完整明細 */
+    private _highlights: readonly ResultDetailRow[] | null = null;
+    private _detailExpanded = false;
     /** 明細列節點池：結算窗重複使用，列節點只建一次，下一場重設文字（手機省節點） */
     private readonly _detailRows: Node[] = [];
     /** 預載中的主將頭像（PROG-2-9427） */
@@ -179,6 +182,7 @@ export class ResultPopupComposite extends CompositePanel {
             DescLabel: verdict ?? '',
         });
         this._applyReadableVerdict();
+        this._applyDetailToggle();
         this._renderDetails(detailLines);
         this._applyResultTone(result.resultType);
         // 地格標籤層、戰鬥紀錄等面板在場景載入後才加進 Canvas，會排在結算窗之上（PROG-2-1878）
@@ -228,6 +232,8 @@ ${result.description}
 
     public hide(): void {
         this._details.reset();
+        this._highlights = null;
+        this._detailExpanded = false;
         const emergency = this.node.getChildByName?.('EmergencyResult');
         if (emergency) emergency.active = false;
         if (!this._visible) return;
@@ -284,6 +290,27 @@ ${result.description}
     public setReplayAllowed(allowed: boolean): void {
         this._replayAllowed = allowed;
         this._applyReplayVisibility();
+    }
+
+    /** 設定下一次結算窗的戰報重點（首功、最強技能、勝敗原因）；傳 null 或空陣列就維持完整明細 */
+    public setHighlights(rows: readonly ResultDetailRow[] | null): void {
+        this._highlights = rows && rows.length > 0 ? rows : null;
+        this._detailExpanded = false;
+        this._applyDetailToggle();
+    }
+
+    private _applyDetailToggle(): void {
+        const btn = this._binder?.getButton('BtnToggleDetail')?.node;
+        if (!btn) return;
+        btn.active = this._highlights !== null;
+        const label = btn.getComponentInChildren(Label);
+        if (label) label.string = this._detailExpanded ? tr('ui.result.hl.collapse', '收合詳細戰報') : tr('ui.result.hl.expand', '展開詳細戰報');
+    }
+
+    private _onClickToggleDetail(): void {
+        this._detailExpanded = !this._detailExpanded;
+        this._applyDetailToggle();
+        this._renderDetails(this._description.split('\n').slice(1));
     }
 
     /** 設定下一次結算窗的「下一步建議」按鈕文字；null 就不顯示（戰敗敗因診斷，PROG-2-9712） */
@@ -347,7 +374,12 @@ ${result.description}
         const width = content.getComponent(UITransform)?.contentSize.width ?? 1000;
         const style = detailStyleFor(currentScreenCssScale(), this._theme);
         let used = 0;
-        for (const section of buildResultSections(lines)) {
+        const hl = this._highlights;
+        if (hl) {
+            this._fillHeader(this._takeRow(content, used++), tr('ui.result.hl.title', '戰報重點'), width, style);
+            hl.forEach((row, index) => this._fillRow(this._takeRow(content, used++), row, width, index % 2 === 0, style));
+        }
+        for (const section of hl && !this._detailExpanded ? [] : buildResultSections(lines)) {
             const title = RESULT_SECTION_TITLE[section.id];
             this._fillHeader(this._takeRow(content, used++), tr(title.key, title.fallback), width, style);
             section.rows.forEach((row, index) => this._fillRow(this._takeRow(content, used++), row, width, index % 2 === 0, style));
@@ -528,6 +560,8 @@ ${result.description}
         binder.getButton('BtnBack')?.node.on(Button.EventType.CLICK, this._onClickBack, this);
         binder.getButton('BtnReplay')?.node.on(Button.EventType.CLICK, this._onClickReplay, this);
         binder.getButton('BtnAdvice')?.node.on(Button.EventType.CLICK, this._onClickAdvice, this);
+        binder.getButton('BtnToggleDetail')?.node.on(Button.EventType.CLICK, this._onClickToggleDetail, this);
+        this._applyDetailToggle();
         this._applyReplayVisibility();
         // 點暗幕不關閉結算窗：戰鬥已結束、棋盤不能再操作，關掉後玩家沒有任何出口會卡在戰場（PROG-2-9307）。
         // 只能從「返回大廳」或「再戰一次」離開；暗幕只負責擋住底下的點擊。

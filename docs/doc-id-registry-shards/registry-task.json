@@ -17580,9 +17580,57 @@
     "category": "task"
   },
   {
+    "id": "doc_task_3199",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10146.md",
+    "title": "[PROG-2-10146] 武將介紹古文後接白話吐槽",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3200",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10150.md",
+    "title": "[PROG-2-10150] 每季小報：季末彈《本季大事記》搞笑小報（3 行大事＋武將吐槽，只用既有數據）",
+    "category": "task"
+  },
+  {
     "id": "doc_task_3203",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10141.md",
     "title": "[PROG-2-10141] Toast 括號詞斷行修正（每行字數保守估算）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3210",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10133.md",
+    "title": "[PROG-2-10133] 戰場右側 UI B1 版面搬遷＋B2 統一按鈕元件＋B4 驗收",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3213",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10136.md",
+    "title": "[PROG-2-10136] 首場戰鬥新手提示",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3214",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10137.md",
+    "title": "[PROG-2-10137] 戰後重點整理三條",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3215",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10160.md",
+    "title": "[PROG-2-10160] 武將白話吐槽補 en／ja 語系與王異性別修正",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3216",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10154.md",
+    "title": "[PROG-2-10154] 戰場：有 Spine／立繪時不載隱藏的 3D 主將模型",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3217",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10135.md",
+    "title": "[PROG-2-10135] 偵察面板戰法一鍵自動配置",
     "category": "task"
   }
 ]
