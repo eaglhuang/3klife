@@ -17662,5 +17662,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10164.md",
     "title": "[PROG-2-10164] 修正偵察面板幫我換上兩個重現錯誤",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3232",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10165.md",
+    "title": "[PROG-2-10165] 修復 PROG-2-9307 結算窗暗幕測試：測試替身缺 getComponentInChildren（run-cli 既有失敗）",
+    "category": "task"
   }
 ]

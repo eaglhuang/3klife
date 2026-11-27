@@ -81,3 +81,5 @@
 | `doc_task_3221` | docs/agent-briefs/tasks/PROG/PROG-2-10156.md | [PROG-2-10156] 戰場：VFX 表／池預熱／Spine 預載並行載入 |
 | `doc_task_3224` | docs/agent-briefs/tasks/PROG/PROG-2-10157.md | [PROG-2-10157] 戰場：騎兵 Spine 圖集重打包 |
 | `doc_task_3227` | docs/agent-briefs/tasks/PROG/PROG-2-10153.md | [PROG-2-10153] 年末頒獎典禮 A 版領獎台實作 |
+| `doc_task_3229` | docs/agent-briefs/tasks/PROG/PROG-2-10164.md | [PROG-2-10164] 修正偵察面板幫我換上兩個重現錯誤 |
+| `doc_task_3232` | docs/agent-briefs/tasks/PROG/PROG-2-10165.md | [PROG-2-10165] 修復 PROG-2-9307 結算窗暗幕測試：測試替身缺 getComponentInChildren（run-cli 既有失敗） |
