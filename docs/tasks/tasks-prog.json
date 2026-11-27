@@ -20601,12 +20601,63 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_3266",
+      "id": "PROG-2-10201",
+      "title": "補完：大廳傭兵結義系統（條件清單、儀式演出、i18n、義兄弟羈絆預覽）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-27",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-28T01:33:13+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "盤點規格與實作落差並補完核心流程：發起→條件判定→儀式演出→結果寫入→羈絆效果",
+      "related": [],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [
+        "assets/scripts/core/systems/MercenaryOath.ts",
+        "assets/scripts/ui/core/MercenaryPanelController.ts",
+        "assets/scripts/ui/scenes/LobbyScene.ts",
+        "assets/resources/ui-spec/layouts/mercenary-panel-main.json",
+        "tests/MercenaryOath.test.ts",
+        "artifacts/ui-review/oath-1128/gap.md"
+      ],
+      "notes": "2026-11-27 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
     "done": 381,
-    "in_progress": 5,
+    "in_progress": 6,
     "open": 91,
-    "total": 477
+    "total": 478
   }
 }

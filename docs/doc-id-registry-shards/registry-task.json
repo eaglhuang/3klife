@@ -17788,5 +17788,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10197.md",
     "title": "[PROG-2-10197] 市井大街改照 v2 密集版（規格第 9、10 章）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3266",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10201.md",
+    "title": "[PROG-2-10201] 補完：大廳傭兵結義系統（條件清單、儀式演出、i18n、義兄弟羈絆預覽）",
+    "category": "task"
   }
 ]
