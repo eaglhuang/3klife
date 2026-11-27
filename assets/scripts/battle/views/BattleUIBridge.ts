@@ -99,6 +99,8 @@ import {
 import {
   BATTLE_AUDIO_CUE,
   playBattleAudio,
+  playTacticSfx,
+  setBattleBgmResult,
   playBattleClip,
   battleAudioLayers,
   ensureAudioLayersConfig,
@@ -582,21 +584,21 @@ export class BattleUIBridge {
    * 受擊音效＋受擊特效。delaySec 預設沿用 recoilStartDelaySec（舊路徑：等攻擊方撞過來）；
    * PROG-2-9412 命中路徑已經等到命中瞬間才呼叫，傳 0 不再多等。
    */
-  private _scheduleBattleUnitHitFeedback(lane: number, depth: number, damageSource?: string, delaySec: number = BATTLE_VISUAL_TIMING.recoilStartDelaySec, hitTier?: HitTier, dotTickSfx?: DotTickSfx | 'none'): Promise<void> {
+  private _scheduleBattleUnitHitFeedback(lane: number, depth: number, damageSource?: string, delaySec: number = BATTLE_VISUAL_TIMING.recoilStartDelaySec, hitTier?: HitTier, dotTickSfx?: DotTickSfx | 'none', attackStyle?: string | null): Promise<void> {
     const hitAudioKey = resolveBattleUnitHitSfxKey(damageSource);
     // PROG-2-9729：夜襲先機打擊維持雷聲；其餘依輕／重／擋下／致命分層挑變調 clip 與隨機音量
     // PROG-2-9862：回合扣血 tick（dotTickSfx 有值）不走分層受擊音；'none' 代表同回合已響過，整段靜音
     const useLayers = !dotTickSfx && !!hitTier && hitAudioKey === BATTLE_AUDIO_CUE.unitHitCommon;
     // PROG-2-10021：輕擊同一瞬間太多聲就略過（不退回舊 cue）；輪播避免連續兩次同一檔
     const hitThrottled = useLayers && !tryAcquireHitSfx(hitSfxState, hitTier!, Date.now(), battleAudioLayers);
-    const picked = useLayers && !hitThrottled ? pickHitSfx(hitTier!, battleAudioLayers, Math.random, hitSfxState) : null;
+    const picked = useLayers && !hitThrottled ? pickHitSfx(hitTier!, battleAudioLayers, Math.random, hitSfxState, attackStyle) : null;
     const layered = picked && picked.clip ? picked : null;
     const hitEffectKey = resolveBattleUnitHitEffectKey(damageSource);
     const play = () => {
       if (dotTickSfx === 'none') { /* 同回合同單位已響過 DOT tick */ }
       else if (dotTickSfx) playBattleAudio(dotTickSfx.cue, dotTickSfx.volume);
       else if (hitThrottled) { /* 輕擊音節流：略過這一聲 */ }
-      else if (layered) playBattleClip(layered.clip, layered.volume);
+      else if (layered) playBattleClip(layered.clip, layered.volume, hitTier === 'light' ? 'hit' : 'hit-heavy'); // PROG-2-10134：入發聲池，致命／重擊／擋下優先於輕擊與出手
       else playBattleAudio(hitAudioKey);
       playBattleFlowEffectAtCell(services().effect, this.ctx.boardRenderer, hitEffectKey, lane, depth, 0.9, 0.12);
     };
@@ -778,7 +780,9 @@ export class BattleUIBridge {
             // 擋下的聲音由受擊分層的 block 層負責（原本另播 shield 再疊 hurt）
             c.unitRenderer?.playBuffConsumeValue(hitLane, hitDepth, BLOCK_FLOAT_TEXT.shield);
           }
-          const hitFeedbackPromise = this._scheduleBattleUnitHitFeedback(hitLane, hitDepth, data.damageSource, impactSec > 0 ? 0 : undefined, hitTier, dotTickSfx);
+          // PROG-2-10134：小兵打出的傷害，輕擊受擊音依攻擊方式（刀劈／槍刺／箭／盾／騎兵）換檔；主將或無攻擊者維持原本輕擊池
+          const hitAttackStyle = attackerUnit && !this._generalWeaponSfxOf(data.attackerId ?? '') ? attackStyleFor(attackerUnit.type) : null;
+          const hitFeedbackPromise = this._scheduleBattleUnitHitFeedback(hitLane, hitDepth, data.damageSource, impactSec > 0 ? 0 : undefined, hitTier, dotTickSfx, hitAttackStyle);
           // 暴擊命中額外播 boom（與既有攻擊／受擊音效疊加）
           // 致命暴擊不再疊 boom（已有 hit_lethal＋die）；其餘 boom 與 die 由 playBattleAudio 錯開 80ms
           const critAudioPromise = data.isCrit && shouldPlayCritBoom(lethal, battleAudioLayers)
@@ -1164,6 +1168,8 @@ export class BattleUIBridge {
     const fxGroup = data.sourceType === SkillSourceType.Ultimate ? null : tacticVfxGroupOf(skillId);
     const pending = fxGroup ? takePendingTacticHit(skillId) : null;
     const grouped = fxGroup ? (this.ctx.unitRenderer?.playTacticHit(fxGroup, data.faction, pending?.cells ?? []) ?? 0) > 0 : false;
+    // PROG-2-10190：分組特效播出就配一聲對應音效（一次施放一聲）
+    if (grouped && fxGroup) playTacticSfx(fxGroup);
     if (!grouped) {
       playBattleGeneralSkillEffect(services().effect, this.ctx.boardRenderer,
         this.ctx.unitRenderer?.getGeneralSidelineWorldPosition(data.faction) ?? null, effectKey, 1.35);
@@ -1471,6 +1477,7 @@ export class BattleUIBridge {
     // 勝敗音效（PROG-2-9357）：平手不播
     if (data.result === 'player-win') playBattleAudio(BATTLE_AUDIO_CUE.battleVictory);
     else if (data.result === 'enemy-win') playBattleAudio(BATTLE_AUDIO_CUE.battleDefeat);
+    setBattleBgmResult(data.result); // PROG-2-10134：戰場 BGM 換勝利／敗北曲，平手淡出
     this.appendLog(battleEndLogLine(data.result));
     this.hideEnemyThinkingPanel();
     // 結算寫回與結果彈窗互相隔離（PROG-2-9404）：寫回名冊丟錯、或彈窗掛載失敗（畫面規格下載 404）都不能讓玩家看不到結果

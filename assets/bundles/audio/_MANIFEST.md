@@ -25,6 +25,9 @@
 | cc0_block_metal_bright.ogg | `"cc0_block_metal_bright"` | 格擋音（PROG-2-10077，Kenney impactMetal_light_001，CC0），`cc0Clips.hit_block` 指向它；cc0_hit_metal 保留 | ✅ 使用中 | `BattleAudioLayers.ts` |
 | cc0_hit_metal.ogg / cc0_hit_flesh.ogg / cc0_hoof_single.wav | `"cc0_hit_metal"` 等 | CC0 外部素材（PROG-2-9732）：金屬擊打取代 hit_block、肉體悶擊取代 hit_heavy、單拍馬蹄取代 footstep_hoof；`battle-audio-layers.json` 的 `clipSource` 設 `cc0`（預設）使用，設 `pitched` 回到變調代用版。授權見 `clips/LICENSES-cc0.md` | ✅ 使用中 | `BattleAudioLayers.ts` `resolveClipName` |
 | ult_c_charge.ogg / ult_c_burst.ogg / ult_c_tail.ogg | `"ult_c_charge"` 等 | 奧義 C 組（PROG-2-10081，使用者 11/26 試聽選定）：蓄力 Woosh、爆發 war horn、收尾 War Horn Dark Cinematic，皆 Freesound CC0，已裁短轉單聲道 ogg；授權見 `clips/LICENSES-cc0.md` | ✅ 使用中 | `cutinSupport.ts` `CUTIN_SFX_FALLBACK`（whoosh／roar）、`CUTIN_ULT_TAIL_CLIP`；`UltCutinDirector` 分鏡音效 |
+| sfx_atk_blade／sfx_atk_thrust／sfx_atk_bow／sfx_atk_arrow_whoosh／sfx_atk_shield／sfx_atk_charge .ogg | `"sfx_atk_*"` | 小兵出手音，依兵種（劈砍／槍刺／箭／盾擊／騎兵衝鋒）分檔（PROG-2-10134）；Freesound CC0，授權見 `clips/LICENSES-cc0.md` | ✅ 使用中 | `BattleAudio.ts` `playBattleAudio`（`pickUnitAttackSfx`），設定 `data/battle-audio-layers.json` 的 `attack` |
+| sfx_hit_blade／sfx_hit_pierce／sfx_hit_arrow／sfx_hit_clash／sfx_hit_wood／sfx_hit_body_a／sfx_hit_body_b .ogg | `"sfx_hit_*"` | 小兵受擊音，輕擊依攻擊方式分檔、重擊與擋下擴充（PROG-2-10134）；Freesound CC0 | ✅ 使用中 | `BattleUIBridge.ts` `_scheduleBattleUnitHitFeedback`（`pickHitSfx` 的 `byStyle`） |
+| tactic_fire／tactic_water／tactic_wind／tactic_heal／tactic_haste／tactic_morale／tactic_stun .ogg | `"tactic_*"` | 戰法分組特效音效（PROG-2-10190）：火＝點燃爆燃、水＝瀑布急流、風＝強風呼嘯、回復＝風鈴上行、加速＝咻、鼓舞＝三擊戰鼓、控制＝悶響鐵鍊落鎖；BigSoundBank CC0，已裁切轉單聲道 ogg；授權與來源見 `clips/LICENSES-cc0.md` | ✅ 使用中 | `BattleUIBridge.ts` `_presentGeneralSkillUsed` → `BattleAudio.ts` `playTacticSfx`（`battle-audio-layers.json` 的 `tactic` 區塊） |
 | heal.mp3 | `"heal"` | 治療 | 🚧 WIP | — |
 | hurt.mp3 | `"hurt"` | 受擊 | 🚧 WIP | — |
 | laser.mp3 | `"laser"` | 雷射 | 🚧 WIP | — |
@@ -47,7 +50,9 @@
 
 | 檔名 | 使用場景 | 使用狀態 |
 |------|---------|---------|
-| _(尚未加入 BGM)_ | — | — |
+| bgm_battle_start.ogg | 戰場開戰段（號角＋戰鼓前奏，淡入，不循環）；PROG-2-10134，多個 Freesound CC0 素材混成，授權見 `clips/LICENSES-cc0.md` | ✅ 使用中（`BattleBgm.ts`，由 `BattleScene` 開戰呼叫） |
+| bgm_battle_tense.ogg | 戰場緊張段（戰鼓循環，開戰段尾端交叉淡入） | ✅ 使用中 |
+| bgm_battle_victory.ogg／bgm_battle_defeat.ogg | 戰場結束勝利號角／敗北短曲（交叉淡入，不循環）；平手淡出、離開戰場停止 | ✅ 使用中 |
 
 ---
 

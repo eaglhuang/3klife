@@ -17728,5 +17728,77 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10185.md",
     "title": "[PROG-2-10185] FUN-02／03／04 實作",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3244",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10119.md",
+    "title": "[PROG-2-10119] 批次補舊 PROG 卡 frontmatter task_id（讓 ATM importer 可匯入）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3247",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10184.md",
+    "title": "[PROG-2-10184] 新世界觀改寫（純規格）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3250",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10186.md",
+    "title": "[PROG-2-10186] MYS-01 UI 碎片延伸四項",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3253",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10189.md",
+    "title": "[PROG-2-10189] 三題裁決寫入規格",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3255",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10140.md",
+    "title": "[PROG-2-10140] 趙雲奧義 roar 延後至衝擊點＋洪流水花改藍白",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3257",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10134.md",
+    "title": "[PROG-2-10134] 戰場音訊：小兵攻擊／受擊分兵種音效、戰場 BGM 三段、音效池與預載",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3258",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10188.md",
+    "title": "[PROG-2-10188] 武將生活化「Q 版社會」規格（純規格）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3260",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10191.md",
+    "title": "[PROG-2-10191] 使用者裁決寫入規格（純文件）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3261",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10192.md",
+    "title": "[PROG-2-10192] 回寫使用者 11/28 裁決",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3263",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10190.md",
+    "title": "[PROG-2-10190] 戰法分組音效",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3264",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10197.md",
+    "title": "[PROG-2-10197] 市井大街改照 v2 密集版（規格第 9、10 章）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3265",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10198.md",
+    "title": "[PROG-2-10198] Q 頭生活單挑有真實後果規格補件",
+    "category": "task"
   }
 ]

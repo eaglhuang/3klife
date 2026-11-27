@@ -9,9 +9,13 @@
  * 4. 出手音到命中音的間隔上限（只改音效排程時間，不碰動畫）。
  * 5. clipSource 開關（PROG-2-9732）：'cc0' 用 CC0 外部素材取代金屬擊打／肉體悶擊／單拍馬蹄三個變調代用檔，
  *    'pitched' 維持 9729 的變調代用版；兩版檔案都在，方便對照聽。
+ * 6. （PROG-2-10134）小兵出手音依兵種（劈砍／槍刺／箭／盾擊／騎兵衝鋒）、受擊音依攻擊方式（byStyle）分檔；
+ *    發聲池（pool）限制同時發聲數、類別每秒上限、受擊優先於出手；preload 清單戰前預載；bgm 戰場背景音樂三段。
  * 所有數值在 data/battle-audio-layers.json；讀不到用這裡的預設。
  */
 import { TroopType } from '../../shared/CommonEnums';
+import { DEFAULT_SFX_VOICE_POOL, parseSfxVoicePoolConfig, type SfxVoicePoolConfig } from './SfxVoicePool';
+import { DEFAULT_BATTLE_BGM, parseBattleBgmConfig, type BattleBgmConfig } from './BattleBgm';
 
 export type HitTier = 'light' | 'heavy' | 'block' | 'lethal';
 export type Range = readonly [number, number];
@@ -33,6 +37,8 @@ export interface BattleAudioLayersConfig {
     tiers: Record<HitTier, HitTierSpec>;
     /** 輕擊音節流（PROG-2-10021）：windowMs 內最多 maxPerWindow 聲，避免群體同幀受擊疊音爆音 */
     lightThrottle: { windowMs: number; maxPerWindow: number };
+    /** 輕擊依攻擊方式（slash／thrust／bow／shield／charge）換 clip 與音量（PROG-2-10134）；沒列的方式用 tiers.light */
+    byStyle: Record<string, HitTierSpec>;
   };
   footstep: {
     clips: Record<string, string>;
@@ -45,6 +51,16 @@ export interface BattleAudioLayersConfig {
   };
   dieBoom: { staggerMs: number; skipBoomOnLethal: boolean };
   attackSfx: { maxGapToImpactSec: number; immediateStyles: string[] };
+  /** 小兵出手音（PROG-2-10134）：以攻擊音效鍵（unit-attack-*）為 key，每鍵多個 clip 輪播、各自音量範圍 */
+  attack: { clips: Record<string, string[]>; volume: Record<string, Range> };
+  /** 戰法分組音效（PROG-2-10190）：以特效分組（fire／water／wind／heal／haste／morale／stun）為 key，每組多個 clip 輪播、各自音量範圍 */
+  tactic: { clips: Record<string, string[]>; volume: Record<string, Range> };
+  /** 發聲池（PROG-2-10134）：同時發聲上限、優先級、類別每秒上限、人多降音量 */
+  pool: SfxVoicePoolConfig;
+  /** 戰前預載清單（PROG-2-10134）：這些 clip 在載入戰場時先解碼／暖機，避免第一次播放延遲 */
+  preload: string[];
+  /** 戰場背景音樂（PROG-2-10134） */
+  bgm: BattleBgmConfig;
 }
 
 export const DEFAULT_BATTLE_AUDIO_LAYERS: BattleAudioLayersConfig = {
@@ -56,11 +72,18 @@ export const DEFAULT_BATTLE_AUDIO_LAYERS: BattleAudioLayersConfig = {
     shieldTroopBlocks: true,
     tiers: {
       light: { clips: ['hit_light', 'hurt', 'weapon', 'bat'], volume: [0.7, 0.9], clipVolumeScale: { weapon: 0.6, bat: 0.6 } },
-      heavy: { clips: ['hit_heavy'], volume: [0.9, 1.0] },
-      block: { clips: ['hit_block'], volume: [0.8, 1.0] },
+      heavy: { clips: ['hit_heavy', 'sfx_hit_body_a', 'sfx_hit_body_b'], volume: [0.9, 1.0] },
+      block: { clips: ['hit_block', 'sfx_hit_clash', 'sfx_hit_wood'], volume: [0.8, 1.0], clipVolumeScale: { sfx_hit_wood: 0.8 } },
       lethal: { clips: ['hit_lethal'], volume: [0.95, 1.0] },
     },
     lightThrottle: { windowMs: 60, maxPerWindow: 2 },
+    byStyle: {
+      slash: { clips: ['sfx_hit_blade'], volume: [0.65, 0.85] },
+      thrust: { clips: ['sfx_hit_pierce'], volume: [0.65, 0.85] },
+      bow: { clips: ['sfx_hit_arrow'], volume: [0.6, 0.8] },
+      shield: { clips: ['sfx_hit_wood', 'sfx_hit_clash'], volume: [0.6, 0.8] },
+      charge: { clips: ['sfx_hit_body_a', 'sfx_hit_body_b'], volume: [0.7, 0.9] },
+    },
   },
   footstep: {
     clips: {
@@ -76,6 +99,40 @@ export const DEFAULT_BATTLE_AUDIO_LAYERS: BattleAudioLayersConfig = {
   },
   dieBoom: { staggerMs: 80, skipBoomOnLethal: true },
   attackSfx: { maxGapToImpactSec: 0.18, immediateStyles: ['bow', 'charge'] },
+  // 出手音比受擊小聲（受擊 0.65～0.9、出手 0.45～0.65），混戰時聽得到「被打中」多於「揮出去」
+  attack: {
+    clips: {
+      'unit-attack-common': ['sfx_atk_blade'],
+      'unit-attack-thrust': ['sfx_atk_thrust'],
+      'unit-attack-shield': ['sfx_atk_shield'],
+      'unit-attack-bow': ['sfx_atk_bow', 'sfx_atk_arrow_whoosh'],
+      'unit-attack-primary': ['sfx_atk_charge'],
+    },
+    volume: {
+      'unit-attack-common': [0.5, 0.65], 'unit-attack-thrust': [0.5, 0.65], 'unit-attack-shield': [0.5, 0.65],
+      'unit-attack-bow': [0.45, 0.6], 'unit-attack-primary': [0.5, 0.65],
+    },
+  },
+  // 戰法分組音效（PROG-2-10190）：與 TacticVfxGroups 的 7 組一一對應；音量比受擊略小，不蓋過命中聲
+  tactic: {
+    clips: {
+      fire: ['tactic_fire'], water: ['tactic_water'], wind: ['tactic_wind'], heal: ['tactic_heal'],
+      haste: ['tactic_haste'], morale: ['tactic_morale'], stun: ['tactic_stun'],
+    },
+    volume: {
+      fire: [0.7, 0.85], water: [0.7, 0.85], wind: [0.65, 0.8], heal: [0.7, 0.85],
+      haste: [0.65, 0.8], morale: [0.7, 0.85], stun: [0.7, 0.85],
+    },
+  },
+  pool: DEFAULT_SFX_VOICE_POOL,
+  preload: [
+    'cc0_hoof_single', 'hoof_gallop', 'footstep_hoof', 'skill1', 'skill7',
+    'sfx_atk_blade', 'sfx_atk_thrust', 'sfx_atk_bow', 'sfx_atk_arrow_whoosh', 'sfx_atk_shield', 'sfx_atk_charge',
+    'sfx_hit_blade', 'sfx_hit_pierce', 'sfx_hit_arrow', 'sfx_hit_clash', 'sfx_hit_wood', 'sfx_hit_body_a', 'sfx_hit_body_b',
+    'hit_light', 'hit_heavy', 'hit_lethal', 'cc0_block_metal_bright', 'cc0_hit_flesh', 'die', 'boom',
+    'tactic_fire', 'tactic_water', 'tactic_wind', 'tactic_heal', 'tactic_haste', 'tactic_morale', 'tactic_stun',
+  ],
+  bgm: DEFAULT_BATTLE_BGM,
 };
 
 function num(v: unknown, fallback: number, min = 0, max = Number.POSITIVE_INFINITY): number {
@@ -140,6 +197,7 @@ export function parseBattleAudioLayersConfig(raw: unknown): BattleAudioLayersCon
         windowMs: num((hit.lightThrottle ?? {}).windowMs, d.hit.lightThrottle.windowMs),
         maxPerWindow: num((hit.lightThrottle ?? {}).maxPerWindow, d.hit.lightThrottle.maxPerWindow),
       },
+      byStyle: parseByStyle(hit.byStyle, d.hit.byStyle),
     },
     footstep: {
       clips,
@@ -158,7 +216,43 @@ export function parseBattleAudioLayersConfig(raw: unknown): BattleAudioLayersCon
       maxGapToImpactSec: num(as.maxGapToImpactSec, d.attackSfx.maxGapToImpactSec),
       immediateStyles: strList(as.immediateStyles, d.attackSfx.immediateStyles),
     },
+    attack: parseAttack(root.attack, d.attack),
+    tactic: parseTactic(root.tactic, d.tactic),
+    pool: parseSfxVoicePoolConfig(root.pool),
+    preload: strList(root.preload, d.preload),
+    bgm: parseBattleBgmConfig(root.bgm),
   };
+}
+
+function parseByStyle(v: unknown, fallback: Record<string, HitTierSpec>): Record<string, HitTierSpec> {
+  if (!v || typeof v !== 'object') return fallback;
+  const out: Record<string, HitTierSpec> = {};
+  for (const [style, spec] of Object.entries(v as Record<string, any>)) {
+    const clips = strList(spec?.clips, []);
+    if (clips.length === 0) continue;
+    out[style] = { clips, volume: range(spec?.volume, [0.65, 0.85]), clipVolumeScale: scaleMap(spec?.clipVolumeScale) };
+  }
+  return Object.keys(out).length > 0 ? out : fallback;
+}
+
+function parseTactic(v: unknown, fallback: BattleAudioLayersConfig['tactic']): BattleAudioLayersConfig['tactic'] {
+  if (!v || typeof v !== 'object') return fallback;
+  const src = v as Record<string, any>;
+  const clips: Record<string, string[]> = { ...fallback.clips };
+  const volume: Record<string, Range> = { ...fallback.volume };
+  if (src.clips && typeof src.clips === 'object') for (const [k, list] of Object.entries(src.clips as Record<string, unknown>)) { const l = strList(list, []); if (l.length) clips[k] = l; }
+  if (src.volume && typeof src.volume === 'object') for (const [k, r] of Object.entries(src.volume as Record<string, unknown>)) volume[k] = range(r, volume[k] ?? [0.7, 0.85]);
+  return { clips, volume };
+}
+
+function parseAttack(v: unknown, fallback: BattleAudioLayersConfig['attack']): BattleAudioLayersConfig['attack'] {
+  if (!v || typeof v !== 'object') return fallback;
+  const src = v as Record<string, any>;
+  const clips: Record<string, string[]> = { ...fallback.clips };
+  const volume: Record<string, Range> = { ...fallback.volume };
+  if (src.clips && typeof src.clips === 'object') for (const [k, list] of Object.entries(src.clips as Record<string, unknown>)) { const l = strList(list, []); if (l.length) clips[k] = l; }
+  if (src.volume && typeof src.volume === 'object') for (const [k, r] of Object.entries(src.volume as Record<string, unknown>)) volume[k] = range(r, volume[k] ?? [0.5, 0.65]);
+  return { clips, volume };
 }
 
 /** 在 [min,max] 內取值；rand 為 0~1 亂數（可注入，方便測試）。 */
@@ -197,7 +291,7 @@ export function resolveClipName(clip: string, cfg: BattleAudioLayersConfig = DEF
 export interface PickedSfx { clip: string; volume: number }
 
 /** 受擊音選檔狀態：各層上一次播的 clip（避免連續兩次相同）＋輕擊最近播放時間戳（節流用）。 */
-export interface HitSfxState { lastClip: Partial<Record<HitTier, string>>; lightRecent: number[] }
+export interface HitSfxState { lastClip: Record<string, string>; lightRecent: number[] }
 
 export function createHitSfxState(): HitSfxState {
   return { lastClip: {}, lightRecent: [] };
@@ -207,17 +301,46 @@ export function createHitSfxState(): HitSfxState {
  * 依層挑 clip 與隨機音量。給了 state 且池內有 2 個以上 clip 時，不會連續兩次挑到同一個；
  * 池為空（設定被清空）回傳 clip 為空字串，呼叫端應退回舊 cue 不崩。
  */
-export function pickHitSfx(tier: HitTier, cfg: BattleAudioLayersConfig = DEFAULT_BATTLE_AUDIO_LAYERS, rand: () => number = Math.random, state?: HitSfxState): PickedSfx {
-  const spec = cfg.hit.tiers[tier];
+export function pickHitSfx(tier: HitTier, cfg: BattleAudioLayersConfig = DEFAULT_BATTLE_AUDIO_LAYERS, rand: () => number = Math.random, state?: HitSfxState, attackStyle?: string | null): PickedSfx {
+  // PROG-2-10134：輕擊依攻擊方式換檔（刀劈、槍刺、箭、盾、騎兵各一種受擊聲）；輪播狀態獨立記在 'light:<style>'
+  const styled = tier === 'light' && attackStyle ? cfg.hit.byStyle[attackStyle] : undefined;
+  const spec = styled ?? cfg.hit.tiers[tier];
+  const key = styled ? 'light:' + attackStyle : tier;
   const pool = spec?.clips ?? [];
   if (pool.length === 0) return { clip: '', volume: pickInRange(spec?.volume ?? [1, 1], rand) };
-  const last = state?.lastClip[tier];
+  const last = state?.lastClip[key];
   const candidates = pool.length > 1 && last !== undefined ? pool.filter(c => c !== last) : pool;
   const list = candidates.length > 0 ? candidates : pool;
   const raw = list[Math.min(list.length - 1, Math.floor(rand() * list.length))];
-  if (state) state.lastClip[tier] = raw;
+  if (state) state.lastClip[key] = raw;
   const scale = spec.clipVolumeScale?.[raw] ?? 1;
   return { clip: resolveClipName(raw, cfg), volume: pickInRange(spec.volume, rand) * scale };
+}
+
+/** 小兵出手音選檔（PROG-2-10134）：依攻擊音效鍵挑 clip（多檔輪播、不連續重複）與音量；沒設定回 null（呼叫端退回舊 cue）。 */
+export function pickUnitAttackSfx(cueKey: string, cfg: BattleAudioLayersConfig = DEFAULT_BATTLE_AUDIO_LAYERS, rand: () => number = Math.random, state?: HitSfxState): PickedSfx | null {
+  const pool = cfg.attack.clips[cueKey];
+  if (!pool || pool.length === 0) return null;
+  const stateKey = 'attack:' + cueKey;
+  const last = state?.lastClip[stateKey];
+  const filtered = pool.length > 1 && last !== undefined ? pool.filter(c => c !== last) : pool;
+  const list = filtered.length > 0 ? filtered : pool;
+  const raw = list[Math.min(list.length - 1, Math.floor(rand() * list.length))];
+  if (state) state.lastClip[stateKey] = raw;
+  return { clip: resolveClipName(raw, cfg), volume: pickInRange(cfg.attack.volume[cueKey] ?? [0.5, 0.65], rand) };
+}
+
+/** 戰法分組音效選檔（PROG-2-10190）：依特效分組挑 clip（多檔輪播、不連續重複）與音量；該組沒設定回 null（不播）。 */
+export function pickTacticSfx(group: string, cfg: BattleAudioLayersConfig = DEFAULT_BATTLE_AUDIO_LAYERS, rand: () => number = Math.random, state?: HitSfxState): PickedSfx | null {
+  const pool = cfg.tactic.clips[group];
+  if (!pool || pool.length === 0) return null;
+  const stateKey = 'tactic:' + group;
+  const last = state?.lastClip[stateKey];
+  const filtered = pool.length > 1 && last !== undefined ? pool.filter(c => c !== last) : pool;
+  const list = filtered.length > 0 ? filtered : pool;
+  const raw = list[Math.min(list.length - 1, Math.floor(rand() * list.length))];
+  if (state) state.lastClip[stateKey] = raw;
+  return { clip: resolveClipName(raw, cfg), volume: pickInRange(cfg.tactic.volume[group] ?? [0.7, 0.85], rand) };
 }
 
 /** 輕擊音這一刻能不能播（windowMs 內最多 maxPerWindow 聲）；能播就登記。非輕擊層不節流，永遠 true。 */

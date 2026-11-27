@@ -47,7 +47,7 @@
       "shakeFrames": 8,
       "sfx": [
         { "key": "hit_heavy", "offset": 0 },
-        { "key": "roar", "offset": 0.03 }
+        { "key": "roar", "offset": 0.25 }
       ]
     }
   ],

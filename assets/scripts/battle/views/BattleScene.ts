@@ -11,7 +11,7 @@ import {
 } from "../../core/config/Constants";
 import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { services } from "../../core/managers/ServiceLoader";
-import { installBattleSfxGate, uninstallBattleSfxGate } from "../shared/BattleAudio";
+import { installBattleSfxGate, uninstallBattleSfxGate, startBattleBgm } from "../shared/BattleAudio";
 import { bindHeldTallyInstances } from '../../core/config/TallyCardCatalog';
 import { tallyBattleInfoOf } from "../../core/systems/TigerTallyStar";
 import { IBattleEntryParams, DEFAULT_BATTLE_ENTRY_PARAMS, formatBattleEntryLog, formatBattleStageTitle } from '../../shared/BattleEntryParams';
@@ -564,6 +564,8 @@ export class BattleScene extends Component {
       this._startupBlocker?.destroy();
       this._startupBlocker = null;
       await this._signalCaptureReadyIfNeeded();
+      // 戰場 BGM（PROG-2-10134）：UI 就緒、玩家看得到戰場時才開始，開戰段淡入後交叉淡入緊張段；截圖模式不播
+      if (!isBattleCaptureMode) startBattleBgm();
 
       UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] ✅ start() 全部完成");
     } catch (e) {

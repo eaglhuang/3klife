@@ -1,18 +1,120 @@
 {
-  "_comment": "PROG-2-9729：戰鬥音效分層。PROG-2-9732：clipSource 切換音檔來源，cc0（預設）＝CC0 外部素材（cc0Clips 把 hit_block→金屬擊打、hit_heavy→肉體悶擊、footstep_hoof→單拍馬蹄），pitched＝變調代用版（兩版檔案都在，改這個值即可對照聽）。clip 名稱＝assets/bundles/audio/clips 內檔名（無副檔名），hit_*／footstep_* 是 tools_node/gen-audio-variants.js 預先產生的變調版本（引擎 AudioSource 不支援 pitch）。volume 為 [最小,最大] 隨機範圍。讀不到本檔時用 BattleAudioLayers.ts 的預設值。",
+  "_comment": "PROG-2-9729：戰鬥音效分層。PROG-2-9732：clipSource 切換音檔來源，cc0（預設）＝CC0 外部素材（cc0Clips 把 hit_block→金屬擊打、hit_heavy→肉體悶擊、footstep_hoof→單拍馬蹄），pitched＝變調代用版（兩版檔案都在，改這個值即可對照聽）。clip 名稱＝assets/bundles/audio/clips 內檔名（無副檔名），hit_*／footstep_* 是 tools_node/gen-audio-variants.js 預先產生的變調版本（引擎 AudioSource 不支援 pitch）。volume 為 [最小,最大] 隨機範圍。讀不到本檔時用 BattleAudioLayers.ts 的預設值。 PROG-2-10134：attack＝小兵出手音（依攻擊音效鍵 unit-attack-* 多檔輪播＋音量範圍）；hit.byStyle＝輕擊依攻擊方式（slash/thrust/bow/shield/charge）換檔；pool＝發聲池（maxVoices 同時發聲上限、attackReserve 留給受擊的槽、perSecond 類別每秒上限、clipDurationMs 占槽時間、duck 人多降音量）；preload＝戰前暖機清單；bgm＝戰場背景音樂三段（start 開戰／tense 緊張／victory／defeat，音量 0~1，秒數）。 PROG-2-10190：tactic＝戰法分組音效（key 為 TacticVfxGroups 七組 fire／water／wind／heal／haste／morale／stun，值為 clip 清單與音量範圍；戰法特效命中時一次施放播一聲，走發聲池 tactic 類別，perSecond.tactic 為每秒上限）。",
   "clipSource": "cc0",
-  "cc0Clips": { "hit_block": "cc0_block_metal_bright", "hit_heavy": "cc0_hit_flesh", "footstep_hoof": "cc0_hoof_single" },
+  "cc0Clips": {
+    "hit_block": "cc0_block_metal_bright",
+    "hit_heavy": "cc0_hit_flesh",
+    "footstep_hoof": "cc0_hoof_single"
+  },
   "hit": {
     "heavyMaxHpRatio": 0.2,
     "critIsHeavy": true,
     "shieldTroopBlocks": true,
     "tiers": {
-      "light": { "clips": ["hit_light", "hurt", "weapon", "bat"], "volume": [0.7, 0.9], "clipVolumeScale": { "weapon": 0.6, "bat": 0.6 } },
-      "heavy": { "clips": ["hit_heavy"], "volume": [0.9, 1.0] },
-      "block": { "clips": ["hit_block"], "volume": [0.8, 1.0] },
-      "lethal": { "clips": ["hit_lethal"], "volume": [0.95, 1.0] }
+      "light": {
+        "clips": [
+          "hit_light",
+          "hurt",
+          "weapon",
+          "bat"
+        ],
+        "volume": [
+          0.7,
+          0.9
+        ],
+        "clipVolumeScale": {
+          "weapon": 0.6,
+          "bat": 0.6
+        }
+      },
+      "heavy": {
+        "clips": [
+          "hit_heavy",
+          "sfx_hit_body_a",
+          "sfx_hit_body_b"
+        ],
+        "volume": [
+          0.9,
+          1.0
+        ]
+      },
+      "block": {
+        "clips": [
+          "hit_block",
+          "sfx_hit_clash",
+          "sfx_hit_wood"
+        ],
+        "volume": [
+          0.8,
+          1.0
+        ],
+        "clipVolumeScale": {
+          "sfx_hit_wood": 0.8
+        }
+      },
+      "lethal": {
+        "clips": [
+          "hit_lethal"
+        ],
+        "volume": [
+          0.95,
+          1.0
+        ]
+      }
     },
-    "lightThrottle": { "windowMs": 60, "maxPerWindow": 2 }
+    "lightThrottle": {
+      "windowMs": 60,
+      "maxPerWindow": 2
+    },
+    "byStyle": {
+      "slash": {
+        "clips": [
+          "sfx_hit_blade"
+        ],
+        "volume": [
+          0.65,
+          0.85
+        ]
+      },
+      "thrust": {
+        "clips": [
+          "sfx_hit_pierce"
+        ],
+        "volume": [
+          0.65,
+          0.85
+        ]
+      },
+      "bow": {
+        "clips": [
+          "sfx_hit_arrow"
+        ],
+        "volume": [
+          0.6,
+          0.8
+        ]
+      },
+      "shield": {
+        "clips": [
+          "sfx_hit_wood",
+          "sfx_hit_clash"
+        ],
+        "volume": [
+          0.6,
+          0.8
+        ]
+      },
+      "charge": {
+        "clips": [
+          "sfx_hit_body_a",
+          "sfx_hit_body_b"
+        ],
+        "volume": [
+          0.7,
+          0.9
+        ]
+      }
+    }
   },
   "footstep": {
     "clips": {
@@ -24,7 +126,10 @@
       "medic": "footstep_light",
       "cavalry": "footstep_hoof"
     },
-    "volumeScale": [0.8, 1.0],
+    "volumeScale": [
+      0.8,
+      1.0
+    ],
     "nominalIntervalMs": 180,
     "intervalJitter": 0.2,
     "windowMs": 120,
@@ -37,6 +142,200 @@
   },
   "attackSfx": {
     "maxGapToImpactSec": 0.18,
-    "immediateStyles": ["bow", "charge"]
+    "immediateStyles": [
+      "bow",
+      "charge"
+    ]
+  },
+  "attack": {
+    "clips": {
+      "unit-attack-common": [
+        "sfx_atk_blade"
+      ],
+      "unit-attack-thrust": [
+        "sfx_atk_thrust"
+      ],
+      "unit-attack-shield": [
+        "sfx_atk_shield"
+      ],
+      "unit-attack-bow": [
+        "sfx_atk_bow",
+        "sfx_atk_arrow_whoosh"
+      ],
+      "unit-attack-primary": [
+        "sfx_atk_charge"
+      ]
+    },
+    "volume": {
+      "unit-attack-common": [
+        0.5,
+        0.65
+      ],
+      "unit-attack-thrust": [
+        0.5,
+        0.65
+      ],
+      "unit-attack-shield": [
+        0.5,
+        0.65
+      ],
+      "unit-attack-bow": [
+        0.45,
+        0.6
+      ],
+      "unit-attack-primary": [
+        0.5,
+        0.65
+      ]
+    }
+  },
+  "pool": {
+    "maxVoices": 8,
+    "attackReserve": 3,
+    "voiceExempt": [
+      "footstep",
+      "other"
+    ],
+    "perSecond": {
+      "attack": 5,
+      "hit": 7,
+      "tactic": 3
+    },
+    "defaultDurationMs": 450,
+    "clipDurationMs": {
+      "sfx_atk_blade": 420,
+      "sfx_atk_thrust": 400,
+      "sfx_atk_bow": 480,
+      "sfx_atk_arrow_whoosh": 500,
+      "sfx_atk_shield": 400,
+      "sfx_atk_charge": 550,
+      "sfx_hit_blade": 400,
+      "sfx_hit_pierce": 350,
+      "sfx_hit_arrow": 300,
+      "sfx_hit_clash": 450,
+      "sfx_hit_wood": 400,
+      "sfx_hit_body_a": 450,
+      "sfx_hit_body_b": 450,
+      "tactic_fire": 1200,
+      "tactic_water": 1400,
+      "tactic_wind": 1300,
+      "tactic_heal": 1000,
+      "tactic_haste": 600,
+      "tactic_morale": 1300,
+      "tactic_stun": 1000
+    },
+    "duck": {
+      "perVoice": 0.06,
+      "minScale": 0.6
+    }
+  },
+  "preload": [
+    "cc0_hoof_single",
+    "hoof_gallop",
+    "footstep_hoof",
+    "skill1",
+    "skill7",
+    "sfx_atk_blade",
+    "sfx_atk_thrust",
+    "sfx_atk_bow",
+    "sfx_atk_arrow_whoosh",
+    "sfx_atk_shield",
+    "sfx_atk_charge",
+    "sfx_hit_blade",
+    "sfx_hit_pierce",
+    "sfx_hit_arrow",
+    "sfx_hit_clash",
+    "sfx_hit_wood",
+    "sfx_hit_body_a",
+    "sfx_hit_body_b",
+    "hit_light",
+    "hit_heavy",
+    "hit_lethal",
+    "cc0_block_metal_bright",
+    "cc0_hit_flesh",
+    "die",
+    "boom",
+    "tactic_fire",
+    "tactic_water",
+    "tactic_wind",
+    "tactic_heal",
+    "tactic_haste",
+    "tactic_morale",
+    "tactic_stun"
+  ],
+  "bgm": {
+    "enabled": true,
+    "clips": {
+      "start": "bgm_battle_start",
+      "tense": "bgm_battle_tense",
+      "victory": "bgm_battle_victory",
+      "defeat": "bgm_battle_defeat"
+    },
+    "volume": {
+      "start": 0.32,
+      "tense": 0.22,
+      "victory": 0.4,
+      "defeat": 0.32
+    },
+    "startLengthSec": 9,
+    "fadeInSec": 1.2,
+    "crossfadeSec": 1.5,
+    "tenseLeadSec": 1.5,
+    "stopFadeSec": 1.0
+  },
+  "tactic": {
+    "clips": {
+      "fire": [
+        "tactic_fire"
+      ],
+      "water": [
+        "tactic_water"
+      ],
+      "wind": [
+        "tactic_wind"
+      ],
+      "heal": [
+        "tactic_heal"
+      ],
+      "haste": [
+        "tactic_haste"
+      ],
+      "morale": [
+        "tactic_morale"
+      ],
+      "stun": [
+        "tactic_stun"
+      ]
+    },
+    "volume": {
+      "fire": [
+        0.7,
+        0.85
+      ],
+      "water": [
+        0.7,
+        0.85
+      ],
+      "wind": [
+        0.65,
+        0.8
+      ],
+      "heal": [
+        0.7,
+        0.85
+      ],
+      "haste": [
+        0.65,
+        0.8
+      ],
+      "morale": [
+        0.7,
+        0.85
+      ],
+      "stun": [
+        0.7,
+        0.85
+      ]
+    }
   }
 }
