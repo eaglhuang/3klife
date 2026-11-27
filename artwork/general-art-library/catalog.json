@@ -8543,17 +8543,17 @@
             "version": "0001",
             "file": "small_avatars/zhang_xing_cai__張星彩__small_avatar_0001.png",
             "status": "review-pending",
-            "sha256": "9344ED6FECBD584490C8DDAFF23B5EF69113D519149685875999A435D0CA9B8F",
+            "sha256": "161F0D39DC37AB925C4C2EAE1FA60ECFB79BD534D07D07E454ED2A23EBED983C",
             "canvas": "256x256 RGBA",
             "sourceStandingFile": "standing/zhang_xing_cai__張星彩__standing_0001.png",
             "method": "crop-only; resampled to 256x256 RGBA",
             "cropBox": {
-              "x": 362,
+              "x": 388,
               "y": 78,
-              "width": 350,
-              "height": 350
+              "width": 320,
+              "height": 320
             },
-            "note": "大頭裁切到肩線，目標頭部外框約佔畫面 70–75%；待 PM 審核。"
+            "note": "大頭裁切到肩線；縮圖自檢頭部外框高度約 71%、水平中心偏差約 2.4%（排除冠飾與長辮）；待 PM 審核。"
           }
         ],
         "activeVersion": "0001"
