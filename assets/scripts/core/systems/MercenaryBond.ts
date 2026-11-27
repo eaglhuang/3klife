@@ -1,5 +1,7 @@
 // @spec-source → MVP遊戲驗證規格書 §E #11、§I Mercenary；傭兵系統規格書：試用轉永久 §3；WBS v3 MVP-09
 /** 傭兵 6 日結義（試用→結義）的純邏輯；由大廳傭兵面板（MercenaryPanelController）與存檔模型（MercenarySaveModel）使用。 */
+import type { MercenaryGrowth } from './MercenaryGrowthSnapshot';
+
 export const TRIAL_DAYS = 6;
 export type MercenaryStatus = 'Trial' | 'Bonded' | 'Expired';
 
@@ -20,6 +22,8 @@ export interface MercenaryState {
     battles?: number;
     /** 選填：戰勝場數（插畫階段 3 用）；戰鬥結算尚未寫入，舊存檔視為 0。 */
     wins?: number;
+    /** 選填：試用期成長（等級、經驗、戰法），結義時凍結成快照繼承（MERC-12，PROG-2-10207）；寫入來源另卡，舊存檔沒有。 */
+    growth?: MercenaryGrowth;
 }
 
 export type MercenaryEvent =

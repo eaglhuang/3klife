@@ -73,6 +73,33 @@
             ]
           },
           {
+            "type": "button",
+            "name": "BtnOpenOathHall",
+            "id": "btnOpenOathHall",
+            "widget": {
+              "top": 16,
+              "left": 1070
+            },
+            "width": 160,
+            "height": 48,
+            "skinSlot": "mp.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "BtnOpenOathHallLabel",
+                "id": "btnOpenOathHallLabel",
+                "widget": {
+                  "vCenter": true,
+                  "left": 0,
+                  "right": 0
+                },
+                "height": 40,
+                "text": "結義堂",
+                "styleSlot": "mp.label.button"
+              }
+            ]
+          },
+          {
             "type": "label",
             "name": "MercEmptyLabel",
             "id": "mercEmptyLabel",

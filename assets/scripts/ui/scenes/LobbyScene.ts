@@ -223,6 +223,7 @@ import type { LobbyHub } from '../../core/systems/LobbyHubSchema';
 import { HALL_EMPTY_THEME_CATALOG, resolveHallTheme, type HallThemeFrame } from '../../core/systems/LobbyThemeResolver';
 import type { HallBoardKey } from '../../core/systems/HallMissionBoard';
 import { MercenaryPanelController, MERC_PANEL_MAX_ROWS, fallenOwnerLabel } from '../core/MercenaryPanelController';
+import { OathHallController, OATH_HALL_MAX_ROWS, oathHallText } from '../core/OathHallController';
 import { rivalRulerIds } from '../../core/systems/FallenOfficerMarket';
 import { GovernorHallController, GovernorTerritoryInfo } from '../core/GovernorHallController';
 import { BAG_CATEGORY_TABS, BAG_ROW_SLOTS, ItemBagController, type ItemBagGeneralTarget } from '../core/ItemBagController';
@@ -678,6 +679,9 @@ export class LobbyScene extends Component {
     /** 每位武將、每種事件上一句說的是哪句，連點時避開同一句 */
     private readonly _hallChatLast = new Map<string, string>();
     private _mercPanelHost: UIScreenPreviewHost | null = null;
+    /** 結義堂（桃園結義、名酒宴飲、割袍斷義，PROG-2-10207）：入口在傭兵面板的「結義堂」鈕 */
+    private _oathHall: OathHallController | null = null;
+    private _oathHallHost: UIScreenPreviewHost | null = null;
     private _mercPanel: MercenaryPanelController | null = null;
     private _govHallHost: UIScreenPreviewHost | null = null;
     private _govHall: GovernorHallController | null = null;
@@ -3476,6 +3480,8 @@ export class LobbyScene extends Component {
 
     /** 傭兵面板（MERC-07）：隱藏掛載，入口在城池主選單「武將 → 傭兵結義」（PROG-2-1152），對外提供 openMercenaryPanel()。 */
     private async _mountMercenaryPanel(): Promise<void> {
+        // 結義參數（好感門檻、名酒路線、離隊留念分級）來自 oath-config.json；缺檔用預設
+        services().session.setOathConfig(await this._loadDataJson<unknown>('data/oath-config'));
         this._mercPanel = new MercenaryPanelController({
             mercenaries: () => services().session.mercenaries.mercenaries,
             info: (state) => {
@@ -3514,11 +3520,75 @@ export class LobbyScene extends Component {
         this._mercPanelHost = await this._mountPreviewScreenHost('MercenaryPanelHost', 'mercenary-panel-screen', [
             { buttonId: 'btnClose', handler: () => { this._closeMercenaryPanel(); } },
             { buttonId: 'btnMercBond', handler: () => { void this._onClickMercenaryBond(); } },
+            { buttonId: 'btnOpenOathHall', handler: () => { this.openOathHall(); } },
             { buttonId: 'btnMercHire', handler: () => { void this._mercPanel?.hireTrial().then(() => this._refreshMercenaryPanel()); } },
             { buttonId: 'btnMercHireFemale', handler: () => { void this._mercPanel?.hireFemale().then(() => this._refreshMercenaryPanel()); } },
             ...rowBindings,
         ]);
         this._mercPanelHost.node.active = false;
+        await this._mountOathHall();
+    }
+
+    /** 結義堂：隱藏掛載，資料來自 GameSession（盟約狀態、配對好感、名酒庫存）；規則在 SwornPact／WineBanquet。 */
+    private async _mountOathHall(): Promise<void> {
+        const session = (): ReturnType<typeof services>['session'] => services().session;
+        const nameOf = (id: string): string => this._generals.find((g) => g.id === id)?.name ?? session().roster.find((g) => g.id === id)?.name ?? id;
+        this._oathHall = new OathHallController({
+            lead: () => session().leadGeneralId,
+            nameOf,
+            candidates: () => {
+                const lead = session().leadGeneralId;
+                return session().roster
+                    .filter((g) => g.id !== lead && g.status !== 'dead')
+                    .map((g) => ({ id: g.id, name: g.name ?? g.id }))
+                    .sort((a, b) => (lead ? session().pairAffinity(lead, b.id) - session().pairAffinity(lead, a.id) : 0) || a.id.localeCompare(b.id));
+            },
+            affinity: (a, b) => session().pairAffinity(a, b),
+            sworn: () => session().swornState(),
+            config: () => session().oathConfig,
+            itemCount: (itemId) => session().itemCount(itemId),
+            formPact: (ids) => session().formSwornPact(ids),
+            sever: (offender, victim) => session().severSwornTies(offender, victim),
+            banquet: (wine, host, guest) => session().holdWineBanquet(wine, host, guest),
+            ritual: (kind, lines) => this._playOathHallRitual(kind, lines),
+            lookup: (key, ...args) => services().i18n.t(key, ...args),
+        });
+        const rows = Array.from({ length: OATH_HALL_MAX_ROWS }, (_, i) => ({ buttonId: `btnOathRow${i}`, handler: () => { this._oathHall?.select(i); this._refreshOathHall(); } }));
+        const act = (run: () => Promise<unknown> | void): (() => void) => () => { void Promise.resolve(run()).catch((e) => UCUFLogger.warn(LogCategory.DATA, '[LobbyScene] 結義堂操作失敗', e)).finally(() => this._refreshOathHall()); };
+        this._oathHallHost = await this._mountPreviewScreenHost('OathHallHost', 'oath-hall-screen', [
+            { buttonId: 'btnClose', handler: () => { if (this._oathHallHost) this._oathHallHost.node.active = false; } },
+            { buttonId: 'btnOathWine', handler: act(() => this._oathHall?.cycleWine()) },
+            { buttonId: 'btnOathBanquet', handler: act(() => this._oathHall?.banquet()) },
+            { buttonId: 'btnOathPact', handler: act(() => this._oathHall?.formPact()) },
+            { buttonId: 'btnOathSever', handler: act(() => this._oathHall?.sever()) },
+            ...rows,
+        ]);
+        this._oathHallHost.node.active = false;
+    }
+
+    public openOathHall(): void {
+        const host = this._oathHallHost;
+        if (!host || !this._oathHall) {
+            this._showNotOpenYet();
+            return;
+        }
+        this._oathHall.reset();
+        host.node.active = true;
+        this._bringNodeToFront(host.node);
+        this._refreshOathHall();
+    }
+
+    private _refreshOathHall(): void {
+        const binder = this._oathHallHost?.binder;
+        if (!binder || !this._oathHall) return;
+        const view = this._oathHall.getView();
+        applyFlowView(binder, view);
+    }
+
+    /** 結義堂儀式（桃園結義／割袍斷義）：沿用結義儀式的全螢幕節點，逐句淡入淡出，點擊略過。 */
+    private _playOathHallRitual(kind: 'pact' | 'sever', lines: string[]): Promise<void> {
+        const title = oathHallText((k, ...a) => services().i18n.t(k, ...a), kind === 'pact' ? 'ritualPactTitle' : 'ritualSeverTitle');
+        return this._playRitualSteps(title, lines.map((text) => ({ text, ms: 2200 })));
     }
 
     /** 從候選武將隨機招一位試用傭兵：成功回傳武將名，沒有候選或招募失敗回傳 null */
@@ -4388,11 +4458,16 @@ export class LobbyScene extends Component {
     }
 
     private async _playOathRitual(generalName: string, partnerName: string | null): Promise<void> {
-        const ui = this._ensureOathRitualUi();
         const steps: OathRitualStep[] = buildOathRitual(generalName, partnerName, (k, ...a) => services().i18n.t(k, ...a));
+        await this._playRitualSteps(this._oathText('ritualTitle'), steps);
+    }
+
+    /** 儀式逐句播放（結義、桃園結義、割袍斷義共用同一個全螢幕節點）。 */
+    private async _playRitualSteps(title: string, steps: ReadonlyArray<{ text: string; ms: number }>): Promise<void> {
+        const ui = this._ensureOathRitualUi();
         this._oathSkipped = false;
         this.oathRitualTrace.length = 0;
-        ui.title.string = this._oathText('ritualTitle');
+        ui.title.string = title;
         ui.hint.string = this._oathText('ritualSkip');
         ui.node.active = true;
         this._bringNodeToFront(ui.node);

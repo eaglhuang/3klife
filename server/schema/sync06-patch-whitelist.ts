@@ -119,6 +119,7 @@ export const SYNC_PATCH_ROOT_KEYS: readonly string[] = [
     'lineageQueue',
     'rivals',
     'mercenaries',
+    'swornPacts',
     'femaleSystem',
     'onboarding',
     'openingLetter',
