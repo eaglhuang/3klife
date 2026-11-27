@@ -1,0 +1,105 @@
+{
+  "schema": "life-proto-street.v1",
+  "note": "生活層原型：佔位市井大街。只放資料，不放畫面程式。venues 是市井大街的 16 個場景（與 life-scenes.json 的 mkt 區同 id），順序即版面順序。",
+  "venues": [
+    "mkt_street",
+    "mkt_inn",
+    "mkt_tavern",
+    "mkt_theater",
+    "mkt_teahouse",
+    "mkt_tailor",
+    "mkt_smithy",
+    "mkt_carpenter",
+    "mkt_grocery",
+    "mkt_clinic",
+    "mkt_pawn",
+    "mkt_bookshop",
+    "mkt_guild",
+    "mkt_match",
+    "mkt_gamble",
+    "mkt_bath"
+  ],
+  "activityByScene": {
+    "mkt_tavern": "drink",
+    "mkt_teahouse": "tea",
+    "mkt_bookshop": "read",
+    "mkt_smithy": "train",
+    "mkt_guild": "train"
+  },
+  "sleepScenes": [
+    "mkt_inn"
+  ],
+  "sleepSlots": [
+    6,
+    7
+  ],
+  "defaultActivity": "idle",
+  "pairKind": "chat",
+  "buildingColors": [
+    "C98B5A",
+    "B5735A",
+    "D2A24C",
+    "9B6FA8",
+    "6FA38F",
+    "5F8FC4",
+    "A8A8B0",
+    "B08A5E"
+  ],
+  "headColors": [
+    "E8785A",
+    "6EAAE6",
+    "82C878",
+    "E6C864",
+    "C98BD6",
+    "78D2D2",
+    "E69AA0",
+    "B4A06E",
+    "A0A0E6",
+    "D2A06E"
+  ],
+  "ground": {
+    "spring": "8FBF6A",
+    "summer": "6FB04F",
+    "autumn": "C9A04F",
+    "winter": "E8EEF4"
+  },
+  "roadColor": "B8A58A",
+  "layout": {
+    "landscapeCols": 8,
+    "portraitCols": 4,
+    "marginXRel": 0.03,
+    "marginTopRel": 0.13,
+    "marginBottomRel": 0.17,
+    "buildingHeightRel": 0.5,
+    "yardHeightRel": 0.38,
+    "headRelCell": 0.26,
+    "headMaxPx": 64,
+    "headMinPx": 36
+  },
+  "walk": {
+    "speedPxPerSec": 70,
+    "idleMinSec": 1.2,
+    "idleMaxSec": 3.5,
+    "wanderRel": 0.36,
+    "transitSpeedPxPerSec": 300
+  },
+  "clock": {
+    "startQuarter": 1,
+    "startSlotSeq": 2,
+    "autoAdvance": true
+  },
+  "tier": "high",
+  "names": {
+    "zhang_fei": "張飛",
+    "zhuge_liang": "諸葛亮",
+    "guan_yu": "關羽",
+    "liu_bei": "劉備",
+    "zhao_yun": "趙雲",
+    "cao_cao": "曹操",
+    "lu_bu": "呂布",
+    "zhou_yu": "周瑜",
+    "diao_chan": "貂蟬",
+    "sun_shangxiang": "孫尚香"
+  },
+  "intel": 65
+}

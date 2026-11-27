@@ -3241,5 +3241,9 @@
   "life.panel.slotBadge": "{0} · {1}",
   "life.panel.companions": "Companions",
   "life.scene.underConstruction": "Under construction",
-  "life.scene.placeholderHint": "Still being built. Feel free to look around."
+  "life.scene.placeholderHint": "Still being built. Feel free to look around.",
+  "life.proto.enter": "Life layer (dev)",
+  "life.proto.btn.slot": "Slot: {0} ▶",
+  "life.proto.btn.season": "Season: {0} ▶",
+  "life.proto.stats": "Heads {0}  Symbols {1}  Sprites {2}"
 }
