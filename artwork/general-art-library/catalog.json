@@ -8480,6 +8480,86 @@
       }
     },
     {
+      "uid": "zhang-xing-cai",
+      "name": "張星彩",
+      "standing": {
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "standing/zhang_xing_cai__張星彩__standing_0001.png",
+            "status": "review-pending",
+            "sha256": "19EE4839F414F09A063F2A0F2075B50A14284DAE8522199DB0CEBF6A7BCA20E7",
+            "canvas": "1024x1536 RGBA",
+            "note": "張星彩四件組候選：中性站姿、直槍、雙腿完整可辨；待 PM 審核。"
+          }
+        ],
+        "activeVersion": "0001"
+      },
+      "battle": {
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "battle/zhang_xing_cai__張星彩__battle_0001.png",
+            "status": "review-pending",
+            "sha256": "616FDFBE6AD0CE5B46681224E1BE2989F708C0DD04F899EC97B607001F9A9941",
+            "canvas": "1024x1536 RGBA",
+            "weaponClass": "spear",
+            "poseLabel": "C-style defensive parry",
+            "gaze": "three-quarter toward viewer",
+            "sourceStandingFile": "standing/zhang_xing_cai__張星彩__standing_0001.png",
+            "note": "C 式斜架格擋，槍桿保持連續直線；待 PM 審核。"
+          }
+        ],
+        "activeVersion": "0001"
+      },
+      "avatar": {
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "avatars/zhang_xing_cai__張星彩__avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "32B41F67EBB6E1A37529FBC5B406FDA21CAB7A98E10D5AD13F21E9727B61BD85",
+            "canvas": "256x256 RGBA",
+            "sourceStandingFile": "standing/zhang_xing_cai__張星彩__standing_0001.png",
+            "method": "crop-only; resampled to 256x256 RGBA",
+            "cropBox": {
+              "x": 281,
+              "y": 90,
+              "width": 512,
+              "height": 512
+            },
+            "note": "半身裁切至完整胸甲底線，頭部置中；待 PM 審核。"
+          }
+        ],
+        "activeVersion": "0001"
+      },
+      "smallAvatar": {
+        "status": "review-pending",
+        "history": [
+          {
+            "version": "0001",
+            "file": "small_avatars/zhang_xing_cai__張星彩__small_avatar_0001.png",
+            "status": "review-pending",
+            "sha256": "9344ED6FECBD584490C8DDAFF23B5EF69113D519149685875999A435D0CA9B8F",
+            "canvas": "256x256 RGBA",
+            "sourceStandingFile": "standing/zhang_xing_cai__張星彩__standing_0001.png",
+            "method": "crop-only; resampled to 256x256 RGBA",
+            "cropBox": {
+              "x": 362,
+              "y": 78,
+              "width": 350,
+              "height": 350
+            },
+            "note": "大頭裁切到肩線，目標頭部外框約佔畫面 70–75%；待 PM 審核。"
+          }
+        ],
+        "activeVersion": "0001"
+      }
+    },
+    {
       "uid": "liu-bao",
       "name": "劉豹",
       "standing": {
