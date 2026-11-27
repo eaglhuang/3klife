@@ -17656,5 +17656,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10153.md",
     "title": "[PROG-2-10153] 年末頒獎典禮 A 版領獎台實作",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3230",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10161.md",
+    "title": "[PROG-2-10161] 修正：任務詳情畫面寫死中文標籤改走 i18n 四語",
+    "category": "task"
   }
 ]
