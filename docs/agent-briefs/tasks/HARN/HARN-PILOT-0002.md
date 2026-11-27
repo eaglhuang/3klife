@@ -1,6 +1,7 @@
 ---
 doc_id: doc_task_0030
 id: HARN-PILOT-0002
+task_id: HARN-PILOT-0002
 priority: P1
 phase: Phase4
 created: 2026-05-04

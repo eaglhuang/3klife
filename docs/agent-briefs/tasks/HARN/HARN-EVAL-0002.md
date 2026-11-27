@@ -1,6 +1,7 @@
 ---
 doc_id: doc_task_0012
 id: HARN-EVAL-0002
+task_id: HARN-EVAL-0002
 priority: P2
 phase: Phase2
 created: 2026-05-04

@@ -1,6 +1,7 @@
 ---
 doc_id: doc_task_0035
 id: HARN-TRC-0004
+task_id: HARN-TRC-0004
 priority: P2
 phase: Phase2
 created: 2026-05-04

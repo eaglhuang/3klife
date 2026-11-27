@@ -1,6 +1,7 @@
 ---
 doc_id: doc_task_0156
 id: SYS-SKILL-CORE-0001
+task_id: SYS-SKILL-CORE-0001
 priority: P0
 phase: M1-E
 created: 2026-04-15

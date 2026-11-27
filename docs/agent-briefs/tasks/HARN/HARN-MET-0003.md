@@ -1,6 +1,7 @@
 ---
 doc_id: doc_task_0028
 id: HARN-MET-0003
+task_id: HARN-MET-0003
 priority: P2
 phase: Phase3
 created: 2026-05-04
