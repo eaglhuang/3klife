@@ -68,6 +68,7 @@ import { BATTLE_RESULT_BEAT, battleResultBannerOf, shouldHoldBeforeResult } from
 import type { BattleResult } from '../BattleTypes';
 import { BattleSpecialActionTracker, specialActionDisplayName, toUnitHitObservation, type UnitDamagedPayload } from '../../core/systems/BattleSpecialActions';
 import { strategistHudViewOf } from '../shared/StrategistHudView';
+import { setPendingTacticHit, takePendingTacticHit, tacticVfxGroupOf, type TacticVfxGroup } from '../shared/TacticVfxGroups';
 import { salvageLootTexts, tacticFlashOf, TACTIC_FLASH_TIMING, TACTIC_GRID_VFX_BLOCKS, tacticGridVfxStats, type TacticGridHookKind } from '../shared/TacticVfxHooks';
 import type { StageSalvageGainedEvent } from '../shared/StageSalvage';
 import { salvageGainItems } from '../../core/systems/StrategistHud';
@@ -410,6 +411,7 @@ export class BattleUIBridge {
       svc.event.on(EVENT_NAMES.GeneralSkillUsed,        this._onGeneralSkillUsed.bind(this)),
       svc.event.on(EVENT_NAMES.GeneralSkillUsed,        this._noteEnemySkillRevealed.bind(this)),
       svc.event.on(EVENT_NAMES.TacticGridVfx,           this._onTacticGridVfx.bind(this)),
+      svc.event.on(EVENT_NAMES.TacticHitVfx,            this._onTacticHitVfx.bind(this)),
       svc.event.on(EVENT_NAMES.SelfBurstChanged,        this._onSelfBurstChanged.bind(this)),
       svc.event.on(EVENT_NAMES.StageSalvageGained, this._onStageSalvageGained.bind(this)),
       svc.event.on(EVENT_NAMES.TeamAuraChanged,         this._onTeamAuraChanged.bind(this)),
@@ -1067,6 +1069,11 @@ export class BattleUIBridge {
     this.highlights.observePlayerDamage(data.damage, attacker ? data.attackerId : null, name);
   }
 
+  /** 戰法分組特效命中格（PROG-2-10138）：先記下，等蓄力結束的 _presentGeneralSkillUsed 取走才播（只留最新一筆） */
+  private _onTacticHitVfx(data: { skillId: string; group: TacticVfxGroup; cells: { lane: number; depth: number }[] }): void {
+    setPendingTacticHit({ skillId: data.skillId, group: data.group, cells: data.cells });
+  }
+
   private _onGeneralSkillUsed(data: { faction: Faction; skillId?: string; skillName?: string; sourceType?: SkillSourceType; generalName?: string }): void {
     if (data.faction === Faction.Player) {
       const skillId = data.skillId ?? data.skillName;
@@ -1118,6 +1125,9 @@ export class BattleUIBridge {
         // PROG-2-9438：蓄力有聲（漸強），出手有重音；奧義走立繪分鏡另有音效，不經過這裡
         playBattleAudio(SKILL_CAST_SFX.charge.cue, SKILL_CAST_SFX.charge.volume);
         this.ctx.unitRenderer?.playGeneralCharge(data.faction, plan.chargeSec);
+        // PROG-2-10138：戰法依效果分組的前搖（施放者身上匯聚），時間與蓄力同長，不增加總時長
+        const fxGroup = data.sourceType === SkillSourceType.Ultimate ? null : tacticVfxGroupOf(skillId);
+        if (fxGroup) this.ctx.unitRenderer?.playTacticWindup(fxGroup, data.faction, plan.chargeSec);
         await new Promise<void>(resolve => this.scene.scheduleOnce(() => resolve(), plan.chargeSec));
         playBattleAudio(SKILL_CAST_SFX.release.cue, SKILL_CAST_SFX.release.volume);
       }
@@ -1135,8 +1145,14 @@ export class BattleUIBridge {
     const caster = data.faction === Faction.Player ? this.ctx.pg : this.ctx.eg;
     const effectKey = resolveBattleGeneralSkillEffectKey(data.sourceType, [caster?.templateId, caster?.id],
       key => !!services().effect.getEffectDef(key));
-    playBattleGeneralSkillEffect(services().effect, this.ctx.boardRenderer,
-      this.ctx.unitRenderer?.getGeneralSidelineWorldPosition(data.faction) ?? null, effectKey, 1.35);
+    // PROG-2-10138：非奧義戰法有歸類就播分組特效（命中格＋餘韻），不再疊通用光效；沒歸類或播不出來退回通用光效
+    const fxGroup = data.sourceType === SkillSourceType.Ultimate ? null : tacticVfxGroupOf(skillId);
+    const pending = fxGroup ? takePendingTacticHit(skillId) : null;
+    const grouped = fxGroup ? (this.ctx.unitRenderer?.playTacticHit(fxGroup, data.faction, pending?.cells ?? []) ?? 0) > 0 : false;
+    if (!grouped) {
+      playBattleGeneralSkillEffect(services().effect, this.ctx.boardRenderer,
+        this.ctx.unitRenderer?.getGeneralSidelineWorldPosition(data.faction) ?? null, effectKey, 1.35);
+    }
 
     // SSR／UR 戰法：施放方主將半身立繪閃現（戰法系統 §H-2，PROG-2-1861）
     const flash = tacticFlashOf(skillId, data.faction === Faction.Player ? 'player' : 'enemy');

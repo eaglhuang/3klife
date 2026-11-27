@@ -254,6 +254,8 @@ export const EVENT_NAMES = {
   GeneralSkillUsed:  "general-skill-used",
   /** 火計／水計格子 hook（PROG-2-9960）：payload { kind: grid-fire | grid-water-ripple, lane, depth } */
   TacticGridVfx: "tactic-grid-vfx",
+  /** 戰法分組特效命中格（PROG-2-10138）：payload { skillId, group, cells: {lane, depth}[] } */
+  TacticHitVfx: "tactic-hit-vfx",
   LastSpurtEntered: "last-spurt-entered",
   StaminaExhausted: "stamina-exhausted",
   TallySpiritInserted: "tally-spirit-inserted",

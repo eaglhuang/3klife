@@ -2387,6 +2387,19 @@
       "verticalAlign": "CENTER",
       "overflow": "RESIZE_HEIGHT"
     },
+    "auto.character-ds3-tab-overview.overviewbioquip": {
+      "kind": "label-style",
+      "font": "fonts/notosans_tc/notosans_tc",
+      "fontSize": 13,
+      "lineHeight": 18,
+      "letterSpacing": 0,
+      "color": "rarityGold",
+      "outlineColor": "colorOutlineDark",
+      "outlineWidth": 2,
+      "horizontalAlign": "START",
+      "verticalAlign": "TOP",
+      "overflow": "CLAMP"
+    },
     "auto.character-ds3-tab-overview.overviewstoryexpand": {
       "kind": "color-rect",
       "color": "secondary",

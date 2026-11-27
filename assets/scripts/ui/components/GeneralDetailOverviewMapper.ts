@@ -59,6 +59,9 @@ export interface GeneralDetailOverviewData {
         personalityValue: string;
         bloodlineBody: string;
         biographyBody: string;
+        /** 古文後白話吐槽（PROG-2-10146）；沒有則空字串 */
+        biographyQuip: string;
+        biographyQuipKey: string;
         crestTitle: string;
         crestHint: string;
         crestState: GeneralDetailCrestState;
@@ -94,6 +97,8 @@ export interface GeneralDetailOverviewContentState {
     bloodlineCardTitle: string;
     bloodlineBody: string;
     biographyBody: string;
+    biographyQuip?: string;
+    biographyQuipKey?: string;
     footerTitle: string;
     crestTitle: string;
     crestHint: string;
@@ -246,6 +251,8 @@ export function buildGeneralDetailOverview(config: GeneralConfig, femaleSource: 
             personalityValue: buildPersonalitySummary(config),
             bloodlineBody: buildBloodlineBody(config),
             biographyBody: buildBiographyBody(config),
+            biographyQuip: (config.historicalQuip ?? '').trim(),
+            biographyQuipKey: `ui.general.quip.${config.id}`,
             crestTitle: CREST_TITLE_DISPLAY[crestState],
             crestHint: buildCrestHint(config, crestState),
             crestState,
@@ -344,6 +351,8 @@ export function buildGeneralDetailOverviewContentState(
         bloodlineCardTitle: '血脈',
         bloodlineBody: overview.cards.bloodlineBody,
         biographyBody: overview.cards.biographyBody,
+        biographyQuip: overview.cards.biographyQuip,
+        biographyQuipKey: overview.cards.biographyQuipKey,
         footerTitle: overview.header.title,
         crestTitle: overview.cards.crestTitle,
         crestHint: overview.cards.crestHint,
