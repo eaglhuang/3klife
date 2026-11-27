@@ -1,0 +1,98 @@
+{
+  "schema": "q-symbol-groups.v1",
+  "atlas": {
+    "cellSize": 64,
+    "columns": 8,
+    "parts": {
+      "z_big":        { "cell": 0,  "shape": "square" },
+      "z_small":      { "cell": 1,  "shape": "square" },
+      "weapon_sword": { "cell": 2,  "shape": "triangle" },
+      "weapon_spear": { "cell": 3,  "shape": "triangle" },
+      "jar":          { "cell": 4,  "shape": "circle" },
+      "drop":         { "cell": 5,  "shape": "circle" },
+      "aroma_a":      { "cell": 6,  "shape": "circle" },
+      "aroma_b":      { "cell": 7,  "shape": "circle" },
+      "book":         { "cell": 8,  "shape": "square" },
+      "page":         { "cell": 9,  "shape": "square" },
+      "cup":          { "cell": 10, "shape": "square" },
+      "steam":        { "cell": 11, "shape": "circle" },
+      "dot":          { "cell": 12, "shape": "circle" },
+      "bubble":       { "cell": 13, "shape": "circle" },
+      "bolt":         { "cell": 14, "shape": "triangle" },
+      "anger":        { "cell": 15, "shape": "square" },
+      "heart":        { "cell": 16, "shape": "triangle" }
+    }
+  },
+  "activities": {
+    "sleep": { "symbol": "S01", "bubble": null, "face": "sleepy", "bodyClip": "sleep" },
+    "train": { "symbol": "S02", "weaponFromGeneral": true, "face": "angry", "bodyClip": "idle" },
+    "drink": { "symbol": "S04", "face": "drunk", "blushByAlcohol": true, "bodyClip": "idle" },
+    "read":  { "symbol": "S05", "face": "focus", "bodyClip": "idle" },
+    "tea":   { "symbol": "S10", "face": "smile", "bodyClip": "idle" },
+    "idle":  { "symbol": "S50", "face": "default", "bodyClip": "idle" }
+  },
+  "symbols": {
+    "S01": {
+      "layers": [
+        { "part": ["z_small", "z_small", "z_big"], "motion": "floatUp", "count": 3, "period": 1.6, "rise": 0.8, "sway": 0.12, "grow": 0.6, "fade": [0.2, 0.7], "offset": [0.25, 0.1] }
+      ],
+      "tint": "#BFD7FF", "lod1": "staticFirst", "lod2": "static"
+    },
+    "S02": {
+      "layers": [
+        { "part": "weapon_by_general", "motion": "orbit", "radius": 0.9, "ratio": 0.35, "period": 1.2, "spin": 360 }
+      ],
+      "tint": "#FFE08A", "lod1": "staticFirst", "lod2": "static"
+    },
+    "S04": {
+      "layers": [
+        { "part": "jar", "motion": "pour", "angle": [0, 60], "period": 2.0, "primary": true, "size": 1.3, "tint": "#D9A05B" },
+        { "part": "drop", "motion": "floatUp", "count": 2, "rise": -0.5, "period": 0.6, "offset": [0.3, -0.1], "size": 0.5, "tint": "#8FC8FF" },
+        { "part": ["aroma_a", "aroma_b"], "motion": "drift", "count": 2, "period": 3.0, "dir": [0.1, 0.5], "offset": [-0.3, 0.1], "size": 0.6, "tint": "#F2D9B0" }
+      ],
+      "tint": "#FFFFFF", "lod1": "primary", "lod2": "static"
+    },
+    "S05": {
+      "layers": [
+        { "part": "book", "motion": "wobble", "amp": 3, "period": 2.8, "primary": true, "size": 1.2, "tint": "#C79A6B" },
+        { "part": "page", "motion": "flip", "period": 1.4, "offset": [0.12, 0], "size": 1.0, "tint": "#FFF6DC" }
+      ],
+      "tint": "#FFFFFF", "lod1": "primary", "lod2": "static"
+    },
+    "S10": {
+      "layers": [
+        { "part": "cup", "motion": "wobble", "amp": 5, "period": 2.0, "primary": true, "size": 1.0, "tint": "#9CC7A0" },
+        { "part": "steam", "motion": "floatUp", "count": 2, "rise": 0.5, "period": 1.4, "offset": [0, 0.3], "size": 0.5, "sway": 0.08, "tint": "#FFFFFF" }
+      ],
+      "tint": "#FFFFFF", "lod1": "primary", "lod2": "static"
+    },
+    "S50": {
+      "layers": [
+        { "part": "dot", "motion": "bounce", "count": 3, "period": 1.2, "amp": 0.15, "stagger": 0.15, "spread": 0.28, "size": 0.5 }
+      ],
+      "tint": "#D8D8D8", "lod1": "primary", "lod2": "static"
+    }
+  },
+  "pairs": {
+    "chat": {
+      "layers": [
+        { "part": "bubble", "motion": "bounce", "period": 1.4, "amp": 0.12, "size": 1.3 }
+      ],
+      "tint": "#FFFFFF", "lod1": "primary", "lod2": "static"
+    },
+    "fight": {
+      "layers": [
+        { "part": "anger", "motion": "pulse", "period": 0.5, "amp": 0.2, "primary": true, "size": 1.2, "tint": "#FF5A4D" },
+        { "part": "bolt", "motion": "spark", "count": 3, "period": 0.8, "radius": 0.5, "size": 0.7, "tint": "#FFE14D" }
+      ],
+      "tint": "#FFFFFF", "lod1": "primary", "lod2": "static"
+    },
+    "love": {
+      "layers": [
+        { "part": "heart", "motion": "pulse", "period": 1.2, "amp": 0.15, "primary": true, "size": 1.2, "tint": "#FF7FA8" },
+        { "part": "heart", "motion": "drift", "count": 2, "period": 3.0, "dir": [0.3, 0.5], "size": 0.6, "tint": "#FFB0C8" }
+      ],
+      "tint": "#FFFFFF", "lod1": "primary", "lod2": "static"
+    }
+  }
+}
