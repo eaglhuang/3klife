@@ -5,10 +5,11 @@ import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
  * Wave 3 migration from TigerTallyPanel - manage complex 4-card battle unit roster
  * 
  * 職責：
- *   1. 顯示最多 4 張兵種卡片（固定 160px 高）
- *   2. 每張卡片填入名稱、攻血、糧草費用、稀有度框、冷卻遮罩
- *   3. 點擊卡片 → emit CardSelected 事件
- *   4. 冷卻卡片只顯示遮罩，點擊仍可查看資訊
+ *   1. 顯示最多 4 張虎符卡（比例 287:142，PROG-2-10131 乙版精簡）
+ *   2. 卡面只放重點：兵種章、名稱、品階、持有武將、星級、糧耗、共鳴、灌注小章、出戰中；
+ *      攻／防／命、投入兵力、限調改由短按面板顯示（UnitInfoPanel）
+ *   3. 品階 4 級 R／SR／SSR／UR 與四種收集狀態的色板、素材路徑全讀 ui-spec/tiger-tally-card-theme.json
+ *   4. 點擊卡片 → emit CardSelected 事件；派不出去的卡（軍勢、糧草、條件不足）灰態，點擊仍可查看資訊
  */
 import { _decorator, Button, Color, EventTouch, Label, Node, Sprite, SpriteFrame, UITransform, Widget } from 'cc';
 import { services } from '../../core/managers/ServiceLoader';
@@ -18,6 +19,15 @@ import { UI_EVENTS } from '../core/UIEvents';
 import { emitDeployDragDebug, isCardTap } from './DeployDragDebug';
 import { logBattleUIPosition } from './BattleUIDiag';
 import { TroopTypeBadge } from '../shared/TroopTypeBadge';
+import {
+    buildTallyCardFaceB,
+    TallyCardFaceB,
+    TallyCardTheme,
+    TallyTierTheme,
+    validateTallyCardTheme,
+    withTallyCardTextFallback,
+    Rgba,
+} from '../../core/systems/TallyCardStyle';
 
 const { ccclass } = _decorator;
 
@@ -34,7 +44,6 @@ const UNIT_TYPE_BADGES: Record<string, { icon: string; color: Color }> = {
 
 const DEFAULT_BADGE_DEF = { icon: '？', color: new Color(220, 220, 220, 255) };
 const TALLY_CARD_ART_FALLBACK_PATH = 'ui/tiger-tally/card-art/troops/spriteFrame';
-const WHITE = new Color(255, 255, 255, 255);
 
 /**
  * 卡上文字改點陣快取（PROG-2-9714）：畫好的字打包進動態圖集，與同在圖集內的底板圖合成同一批繪製。
@@ -48,82 +57,43 @@ function useBitmapCacheForCardLabels(cardNode: Node): void {
         if (label.cacheMode === Label.CacheMode.NONE) label.cacheMode = Label.CacheMode.BITMAP;
     }
 }
-const TALLY_SHELL_CORE_BORDER = [40, 40, 40, 40] as const;
-const RARITY_TEXT_COLORS: Record<TallyCardData['rarity'], Color> = {
-    normal: new Color(210, 172, 114, 255),
-    rare: new Color(150, 216, 206, 255),
-    epic: new Color(255, 223, 142, 255),
-    legendary: new Color(255, 214, 118, 255),
-    mythic: new Color(226, 244, 232, 255),
-};
-const TALLY_TIER_STYLE: Record<TallyCardData['rarity'], {
-    coreTint: Color;
-    plaqueTint: Color;
-    chipTint: Color;
-    bandTint: Color;
-    railDarkTint: Color;
-    railAccentTint: Color;
-    badgeTint: Color;
-    accentActive: boolean;
-}> = {
-    normal: {
-        coreTint: new Color(174, 139, 92, 255),
-        plaqueTint: new Color(188, 152, 105, 255),
-        chipTint: new Color(156, 124, 82, 255),
-        bandTint: new Color(150, 118, 76, 255),
-        railDarkTint: new Color(96, 74, 58, 255),
-        railAccentTint: new Color(132, 92, 54, 255),
-        badgeTint: new Color(170, 140, 90, 255),
-        accentActive: false,
-    },
-    rare: {
-        coreTint: new Color(115, 150, 152, 255),
-        plaqueTint: new Color(144, 193, 191, 255),
-        chipTint: new Color(92, 139, 142, 255),
-        bandTint: new Color(86, 128, 133, 255),
-        railDarkTint: new Color(49, 83, 97, 255),
-        railAccentTint: new Color(126, 207, 201, 255),
-        badgeTint: new Color(98, 168, 176, 255),
-        accentActive: true,
-    },
-    epic: {
-        coreTint: new Color(192, 155, 93, 255),
-        plaqueTint: new Color(232, 194, 118, 255),
-        chipTint: new Color(205, 167, 90, 255),
-        bandTint: new Color(214, 172, 98, 255),
-        railDarkTint: new Color(104, 73, 35, 255),
-        railAccentTint: new Color(246, 195, 90, 255),
-        badgeTint: new Color(222, 183, 104, 255),
-        accentActive: true,
-    },
-    legendary: {
-        coreTint: new Color(176, 118, 66, 255),
-        plaqueTint: new Color(241, 196, 111, 255),
-        chipTint: new Color(197, 132, 67, 255),
-        bandTint: new Color(206, 143, 74, 255),
-        railDarkTint: new Color(108, 53, 33, 255),
-        railAccentTint: new Color(255, 182, 56, 255),
-        badgeTint: new Color(231, 176, 88, 255),
-        accentActive: true,
-    },
-    mythic: {
-        coreTint: new Color(188, 175, 132, 255),
-        plaqueTint: new Color(233, 243, 226, 255),
-        chipTint: new Color(181, 190, 156, 255),
-        bandTint: new Color(172, 188, 151, 255),
-        railDarkTint: new Color(71, 99, 110, 255),
-        railAccentTint: new Color(152, 225, 211, 255),
-        badgeTint: new Color(192, 226, 214, 255),
-        accentActive: true,
-    },
-};
+const TALLY_THEME_PATH = 'ui-spec/tiger-tally-card-theme';
+/** 卡圖當背景層的基礎暗化（乘色），讓前景文字讀得清楚 */
+const ART_BASE_SHADE = 150;
+/** 星階共鳴卡的描邊色（淺金） */
+const ENHANCED_RING_COLOR: Rgba = [255, 230, 140, 200];
+/** 外光暈比框圖大一圈的倍率 */
+const GLOW_SCALE = 1.06;
+
+let themePromise: Promise<TallyCardTheme | null> | null = null;
+/** 主題資料只載一次；載入失敗或欄位不全就回 null（呼叫端改用內建預設色，不讓卡面空白），且不快取失敗結果 */
+function loadTallyCardTheme(): Promise<TallyCardTheme | null> {
+    if (!themePromise) {
+        themePromise = services().resource.loadJson<TallyCardTheme>(TALLY_THEME_PATH).then((raw) => {
+            const problems = validateTallyCardTheme(raw);
+            if (problems.length > 0) {
+                UCUFLogger.warn(LogCategory.UI, `[TigerTallyComposite] 主題資料不合格：${problems.join('；')}`);
+                themePromise = null;
+                return null;
+            }
+            return raw;
+        }).catch(() => { themePromise = null; return null; });
+    }
+    return themePromise;
+}
+
+function toColor(c: Rgba, brightness = 1, alphaScale = 1): Color {
+    return new Color(
+        Math.round(c[0] * brightness),
+        Math.round(c[1] * brightness),
+        Math.round(c[2] * brightness),
+        Math.round(c[3] * alphaScale),
+    );
+}
 
 import { TallyCardData } from '../../shared/TallyCardContract';
 import { guardTicketApplies, withDefenseGuideFallback } from '../../core/systems/DefenseGuide';
 export type { TallyCardData } from '../../shared/TallyCardContract';
-
-/** 卡面數字前綴（#2107-5）：攻擊、生命、糧草費 */
-export const TALLY_STAT_PREFIX = { atk: '攻', hp: '命', cost: '糧' } as const;
 
 @ccclass('TigerTallyComposite')
 export class TigerTallyComposite extends CompositePanel {
@@ -196,8 +166,8 @@ export class TigerTallyComposite extends CompositePanel {
             widget.isAlignRight = true;
             widget.isAbsoluteTop = false;
             widget.isAbsoluteRight = false;
-            widget.top = 0.02;
-            widget.right = 0.04;
+            widget.top = 0.5;
+            widget.right = 0.24;
             cardNode.addChild(badge);
         }
         const label = badge.getComponent(Label);
@@ -246,50 +216,19 @@ export class TigerTallyComposite extends CompositePanel {
             }
             cardNode.active = true;
 
-            const nameLabel = this._templateBinder.getNode(`UnitName${slot}`)?.getComponent(Label);
-            if (nameLabel) { nameLabel.string = data.unitName; }
-
-            const subLabelNode = this._templateBinder.getNode(`UnitSub${slot}`);
-            const subLabel = subLabelNode?.getComponent(Label);
-            if (subLabel) {
-                subLabel.string = data.unitSub || data.unitType;
-                subLabelNode!.active = false;
-            }
-
-            const atkLabel = this._templateBinder.getNode(`AtkLabel${slot}`)?.getComponent(Label);
-            // 卡面常駐標示數字意義（#2107-5）：收起教學後仍看得出 攻擊／生命／糧草費
-            if (atkLabel) { atkLabel.string = `${TALLY_STAT_PREFIX.atk}${data.atk}`; }
-
-            const hpLabel = this._templateBinder.getNode(`HpLabel${slot}`)?.getComponent(Label);
-            if (hpLabel) { hpLabel.string = `${TALLY_STAT_PREFIX.hp}${data.hp}`; }
-
-            const costLabel = this._templateBinder.getNode(`CostBadge${slot}`)?.getComponent(Label);
-            if (costLabel) {
-                costLabel.overflow = Label.Overflow.SHRINK;
-                costLabel.string = `${TALLY_STAT_PREFIX.cost}${data.cost}`;
-            }
-
-            const rarityLabel = this._templateBinder.getNode(`RarityLabel${slot}`)?.getComponent(Label);
-            if (rarityLabel) {
-                rarityLabel.string = this._resolveRarityLabel(data);
-                rarityLabel.color = this._resolveRarityTextColor(data.rarity);
-            }
-
-            const starsLabel = this._templateBinder.getNode(`StarsLabel${slot}`)?.getComponent(Label);
-            if (starsLabel) {
-                starsLabel.string = this._resolveStars(data);
-                starsLabel.color = this._resolveRarityTextColor(data.rarity);
-            }
+            const face = buildTallyCardFaceB(data, withTallyCardTextFallback((k, ...a) => services().i18n.t(k, ...a)));
+            this._applyFaceTexts(slot, face);
             useBitmapCacheForCardLabels(cardNode);
             this._applyGuardTicketBadge(cardNode, slot, data);
 
             const loadSeq = ++this._cardLoadSeq[slot - 1];
-            void this._applyShellFamily(cardNode, slot, data, loadSeq);
-            void this._applyCardArt(slot, data, loadSeq);
+            void this._applyTheme(cardNode, slot, face, loadSeq);
+            void this._applyCardArt(slot, data, face, loadSeq);
             this._applyUnitTypeBadge(slot, data, loadSeq);
 
+            // 派不出去（軍勢、糧草、條件不足）的灰態：遮罩蓋全卡，框圖與卡圖另外染暗（見 _applyTheme）
             const disabledMask = this._templateBinder.getNode(`DisabledMask${slot}`);
-            if (disabledMask) { disabledMask.active = data.isDisabled ?? false; }
+            if (disabledMask) { disabledMask.active = face.grayed; }
 
             // 短按（按下到放開幾乎沒移動）→ 開兵種資訊面板。
             // 不能靠按鈕的點擊事件：下面為了重綁拖曳會把這張卡的按下監聽整批拔掉，按鈕就收不到點擊了（PROG-2-9390）。
@@ -357,80 +296,137 @@ export class TigerTallyComposite extends CompositePanel {
         }
     }
 
-    private async _applyShellFamily(cardNode: Node, slot: number, data: TallyCardData, loadSeq: number): Promise<void> {
-        const tier = this._resolveShellTier(data.rarity);
-        await Promise.all([
-            this._applyShellSprite(cardNode.getComponent(Sprite), `ui/tiger-tally/frame-parts/${tier}/tally_frame_core_${tier}`, loadSeq, slot, true),
-            this._applyShellSprite(this._templateBinder?.getSprite(`FrameShell${slot}`) ?? null, `ui/tiger-tally/frame-parts/${tier}/tally_frame_full_${tier}`, loadSeq, slot),
-            this._applyShellSprite(this._templateBinder?.getSprite(`FrameTitlePlaque${slot}`) ?? null, `ui/tiger-tally/frame-parts/${tier}/tally_frame_title_plaque_${tier}`, loadSeq, slot),
-            this._applyShellSprite(this._templateBinder?.getSprite(`FrameLeftChip${slot}`) ?? null, `ui/tiger-tally/frame-parts/${tier}/tally_frame_left_chip_${tier}`, loadSeq, slot),
-            this._applyShellSprite(this._templateBinder?.getSprite(`FrameRarityBadgePlaque${slot}`) ?? null, `ui/tiger-tally/frame-parts/${tier}/tally_frame_rarity_badge_plaque_${tier}`, loadSeq, slot),
-            this._applyShellSprite(this._templateBinder?.getSprite(`FrameRightRailDark${slot}`) ?? null, `ui/tiger-tally/frame-parts/${tier}/tally_frame_side_rail_dark_${tier}`, loadSeq, slot),
-            this._applyShellSprite(this._templateBinder?.getSprite(`FrameBottomBand${slot}`) ?? null, `ui/tiger-tally/frame-parts/${tier}/tally_frame_bottom_band_${tier}`, loadSeq, slot),
-        ]);
-
-        const amberRail = this._templateBinder?.getSprite(`FrameRightRailAmber${slot}`) ?? null;
-        if (!amberRail) return;
-        const style = TALLY_TIER_STYLE[data.rarity] ?? TALLY_TIER_STYLE.epic;
-        this._applyTierTint(cardNode, slot, data.rarity);
-        const useAmberAccent = style.accentActive;
-        amberRail.node.active = useAmberAccent;
-        if (useAmberAccent) {
-            await this._applyShellSprite(amberRail, `ui/tiger-tally/frame-parts/${tier}/tally_frame_side_rail_amber_${tier}`, loadSeq, slot);
-            amberRail.color = style.railAccentTint;
-        }
+    /** 乙版卡面文字：只放重點欄位，其餘改在短按面板（UnitInfoPanel）；文字全走 i18n */
+    private _applyFaceTexts(slot: number, face: TallyCardFaceB): void {
+        const binder = this._templateBinder;
+        if (!binder) return;
+        const setText = (name: string, text: string, show = true): void => {
+            const node = binder.getNode(`${name}${slot}`);
+            if (!node) return;
+            const label = node.getComponent(Label);
+            if (label) label.string = text;
+            node.active = show;
+        };
+        setText('UnitName', face.name);
+        setText('UnitSub', face.ownerLine, face.ownerLine !== '');
+        setText('StarsLabel', face.starsText);
+        setText('CostBadge', face.grainText);
+        setText('ResonanceLabel', face.resonanceText);
+        setText('RarityLabel', face.tier);
+        setText('InfuseBadge', face.infuseText, face.infuseBadge !== null);
+        setText('DeployedFlag', face.deployedText, face.deployedText !== '');
     }
 
-    private _applyTierTint(cardNode: Node, slot: number, rarity: TallyCardData['rarity']): void {
-        const style = TALLY_TIER_STYLE[rarity] ?? TALLY_TIER_STYLE.epic;
-        const cardSprite = cardNode.getComponent(Sprite);
-        if (cardSprite) {
-            cardSprite.color = style.coreTint;
+    /** 框圖、拉絲層、外光暈與文字色：全部依主題資料（品階色板與素材路徑）；缺正式框圖就用共用佔位框乘品階色 */
+    private async _applyTheme(cardNode: Node, slot: number, face: TallyCardFaceB, loadSeq: number): Promise<void> {
+        const theme = await loadTallyCardTheme();
+        if (!theme || !this._isLoadSeqCurrent(slot, loadSeq)) return;
+        const binder = this._templateBinder;
+        if (!binder) return;
+        const tt = theme.tiers[face.tier];
+        const bright = face.brightness;
+
+        const own = await this._loadThemeFrame(tt.frame);
+        const frame = own ?? await this._loadThemeFrame(theme.placeholderFrame);
+        if (!this._isLoadSeqCurrent(slot, loadSeq)) return;
+        const frameSprite = binder.getSprite(`FrameShell${slot}`);
+        if (frame && frameSprite) {
+            this._applySliced(frameSprite, frame, theme);
+            // 正式框圖自帶色，不再染；佔位框是白底，乘品階色
+            frameSprite.color = own ? toColor([255, 255, 255, 255], bright) : toColor(tt.frameTint, bright);
+            this._fitToCard(cardNode, frameSprite.node, theme, true);
+        }
+        this._applyGlow(cardNode, slot, frame, theme, tt, face);
+
+        const brushed = await this._loadThemeFrame(theme.brushed);
+        if (!this._isLoadSeqCurrent(slot, loadSeq)) return;
+        const brushedSprite = binder.getSprite(`FrameBrushed${slot}`);
+        if (brushed && brushedSprite) {
+            brushedSprite.spriteFrame = brushed;
+            brushedSprite.type = Sprite.Type.TILED;
+            brushedSprite.color = new Color(255, 255, 255, Math.round(theme.brushedOpacity * bright));
+            this._fitToCard(cardNode, brushedSprite.node, theme, false);
+            brushedSprite.node.active = true;
+        } else if (brushedSprite) {
+            brushedSprite.node.active = false;
         }
 
-        const tintMap: Array<[string, Color]> = [
-            [`FrameShell${slot}`, style.coreTint],
-            [`FrameTitlePlaque${slot}`, style.plaqueTint],
-            [`FrameRarityBadgePlaque${slot}`, style.plaqueTint],
-            [`FrameLeftChip${slot}`, style.chipTint],
-            [`FrameBottomBand${slot}`, style.bandTint],
-            [`FrameRightRailDark${slot}`, style.railDarkTint],
-        ];
-        for (const [id, color] of tintMap) {
-            const sprite = this._templateBinder?.getSprite(id);
-            if (sprite) sprite.color = color;
+        const setColor = (name: string, color: Color): void => {
+            const label = binder.getNode(`${name}${slot}`)?.getComponent(Label);
+            if (label) label.color = color;
+        };
+        setColor('UnitName', toColor(tt.accent, bright));
+        setColor('StarsLabel', toColor(tt.accent, bright));
+        const rarityLabel = binder.getNode(`RarityLabel${slot}`)?.getComponent(Label);
+        if (rarityLabel) {
+            rarityLabel.color = toColor(tt.chipText, bright);
+            rarityLabel.outlineColor = toColor([tt.chipBg[0], tt.chipBg[1], tt.chipBg[2], 255]);
         }
+        if (face.infuseBadge) setColor('InfuseBadge', toColor(face.infuseBadge === 'lv8' ? theme.infuse.lv8Color : theme.infuse.lv5Color));
     }
 
-    private async _applyShellSprite(
-        sprite: Sprite | null,
-        path: string,
-        loadSeq: number,
-        slot: number,
-        sliced = false,
-    ): Promise<void> {
-        if (!sprite) return;
-
-        const spriteFrame = await services().resource.loadSpriteFrame(path, { preferTextureFallback: true }).catch(() => null);
-        if (!spriteFrame || !this._isLoadSeqCurrent(slot, loadSeq)) return;
-
-        sprite.spriteFrame = spriteFrame;
-        sprite.color = WHITE;
-        if (sliced && sprite.spriteFrame) {
-            sprite.type = Sprite.Type.SLICED;
-            sprite.sizeMode = Sprite.SizeMode.CUSTOM;
-            const [top, right, bottom, left] = TALLY_SHELL_CORE_BORDER;
-            sprite.spriteFrame.insetTop = top;
-            sprite.spriteFrame.insetRight = right;
-            sprite.spriteFrame.insetBottom = bottom;
-            sprite.spriteFrame.insetLeft = left;
-        } else {
-            sprite.type = Sprite.Type.SIMPLE;
+    /** 外光暈：框圖放大一圈墊在後面。SSR／UR 依主題有常駐光暈；R／SR 只有星階共鳴時畫淺金描邊；節點只在需要時才建 */
+    private _applyGlow(cardNode: Node, slot: number, frame: SpriteFrame | null, theme: TallyCardTheme, tt: TallyTierTheme, face: TallyCardFaceB): void {
+        const name = `FrameGlow${slot}`;
+        const color = tt.glow ?? (face.enhancedGlow ? ENHANCED_RING_COLOR : null);
+        let glow = cardNode.getChildByName(name);
+        if (!color || !frame) {
+            if (glow) glow.active = false;
+            return;
         }
+        if (!glow) {
+            glow = new Node(name);
+            glow.layer = cardNode.layer;
+            glow.addComponent(UITransform);
+            glow.addComponent(Sprite);
+            cardNode.addChild(glow);
+            glow.setSiblingIndex(0);
+        }
+        const sprite = glow.getComponent(Sprite)!;
+        this._applySliced(sprite, frame, theme);
+        sprite.color = toColor(color, face.brightness);
+        this._fitToCard(cardNode, glow, theme, true, GLOW_SCALE);
+        glow.active = true;
+    }
+
+    private async _loadThemeFrame(path: string): Promise<SpriteFrame | null> {
+        return services().resource.loadSpriteFrame(path, { preferTextureFallback: true }).catch(() => null);
+    }
+
+    private _applySliced(sprite: Sprite, frame: SpriteFrame, theme: TallyCardTheme): void {
+        sprite.spriteFrame = frame;
+        sprite.type = Sprite.Type.SLICED;
+        sprite.sizeMode = Sprite.SizeMode.CUSTOM;
+        const [left, top, right, bottom] = theme.sliceBorder;
+        frame.insetLeft = left;
+        frame.insetTop = top;
+        frame.insetRight = right;
+        frame.insetBottom = bottom;
         sprite.node.active = true;
     }
 
-    private async _applyCardArt(slot: number, data: TallyCardData, loadSeq: number): Promise<void> {
+    /**
+     * 把框圖類節點鋪滿整張卡。scaled=true：節點等比縮放（卡寬 / 設計寬），尺寸補回設計座標，
+     * 使九宮格切邊在 224 寬下維持 287 設計稿的比例；scaled=false：不縮放，直接用卡片尺寸（拉絲層用，平鋪格不跟著縮）。
+     */
+    private _fitToCard(cardNode: Node, node: Node, theme: TallyCardTheme, scaled: boolean, extra = 1): void {
+        const cardUi = cardNode.getComponent(UITransform);
+        const ui = node.getComponent(UITransform);
+        if (!cardUi || !ui) return;
+        const w = cardUi.width > 0 ? cardUi.width : theme.cardWidth;
+        const h = cardUi.height > 0 ? cardUi.height : theme.cardHeight;
+        node.setPosition(0, 0, 0);
+        if (!scaled) {
+            node.setScale(1, 1, 1);
+            ui.setContentSize(w, h);
+            return;
+        }
+        const base = w / theme.cardWidth;
+        node.setScale(base * extra, base * extra, 1);
+        ui.setContentSize(w / base, h / base);
+    }
+
+    private async _applyCardArt(slot: number, data: TallyCardData, face: TallyCardFaceB, loadSeq: number): Promise<void> {
         const artSprite = this._templateBinder?.getSprite(`ArtBg${slot}`) ?? this._templateBinder?.getSprite(`artBg${slot}`);
         if (!artSprite) return;
 
@@ -443,7 +439,10 @@ export class TigerTallyComposite extends CompositePanel {
         if (!spriteFrame || !this._isLoadSeqCurrent(slot, loadSeq)) return;
 
         artSprite.spriteFrame = spriteFrame;
-        artSprite.color = WHITE;
+        // 卡圖當背景層：先暗化讓前景文字清楚；LOCKED 全黑剪影、DISCOVERED 更暗
+        const shade = face.artMode === 'silhouette' ? 0 : face.artMode === 'dim' ? ART_BASE_SHADE * 0.6 : ART_BASE_SHADE;
+        const v = Math.round(shade * face.brightness);
+        artSprite.color = new Color(v, v, v, 255);
         artSprite.node.active = true;
     }
 
@@ -514,70 +513,7 @@ export class TigerTallyComposite extends CompositePanel {
             .replace(/^_+|_+$/g, '');
     }
 
-    private _resolveShellTier(rarity: TallyCardData['rarity']): 'r' | 'sr' | 'ssr' | 'ur' | 'lr' {
-        switch (rarity) {
-            case 'normal':
-                return 'r';
-            case 'rare':
-                return 'sr';
-            case 'epic':
-                return 'ssr';
-            case 'legendary':
-                return 'ur';
-            case 'mythic':
-                return 'lr';
-            default:
-                return 'ssr';
-        }
-    }
-
-    private _resolveRarityTextColor(rarity: TallyCardData['rarity']): Color {
-        return RARITY_TEXT_COLORS[rarity] ?? RARITY_TEXT_COLORS.epic;
-    }
-
     private _isLoadSeqCurrent(slot: number, loadSeq: number): boolean {
         return this._cardLoadSeq[slot - 1] === loadSeq;
-    }
-
-    private _resolveRarityLabel(data: TallyCardData): string {
-        if (typeof data.rarityLabel === 'string' && data.rarityLabel.trim().length > 0) {
-            return data.rarityLabel.trim().toUpperCase();
-        }
-
-        switch (data.rarity) {
-            case 'normal':
-                return 'R';
-            case 'rare':
-                return 'SR';
-            case 'epic':
-                return 'SSR';
-            case 'legendary':
-                return 'UR';
-            case 'mythic':
-                return 'LR';
-            default:
-                return 'R';
-        }
-    }
-
-    private _resolveStars(data: TallyCardData): string {
-        if (typeof data.stars === 'string' && data.stars.trim().length > 0) {
-            return data.stars;
-        }
-
-        switch (data.rarity) {
-            case 'normal':
-                return '★';
-            case 'rare':
-                return '★★';
-            case 'epic':
-                return '★★★';
-            case 'legendary':
-                return '★★★★';
-            case 'mythic':
-                return '★★★★★';
-            default:
-                return '';
-        }
     }
 }

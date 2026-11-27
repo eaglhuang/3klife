@@ -16,7 +16,7 @@ export function createTallyCardBatchingSuite(): TestSuite {
         assert.isTrue(src.includes('if (label.cacheMode === Label.CacheMode.NONE) label.cacheMode = Label.CacheMode.BITMAP;'));
         assert.isFalse(src.includes('Label.CacheMode.CHAR'), '字元圖集是全專案稀缺預算，卡面不可用 CHAR');
         const populate = src.slice(src.indexOf('private _populateCards'));
-        const starsAt = populate.indexOf('starsLabel.string = this._resolveStars(data);');
+        const starsAt = populate.indexOf('this._applyFaceTexts(slot, face);');
         const switchAt = populate.indexOf('useBitmapCacheForCardLabels(cardNode);');
         assert.isTrue(starsAt > 0 && switchAt > starsAt, '要在最後一個字串設好之後才切快取模式');
     });

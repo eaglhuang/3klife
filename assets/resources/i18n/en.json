@@ -1564,5 +1564,13 @@
   "ui.ceremony.crowd.lose.1": "(pats your shoulder) It is fine, {0} watches this list every year. You get used to it.",
   "ui.ceremony.crowd.lose.2": "(snickers) Shh, not so loud. Next year's champion might just be you.",
   "ui.ceremony.crowd.lose.3": "(hands over seeds) Here, have a snack to calm down. It is on {0}.",
-  "ui.ceremony.crowd.say": "{0}: {1}"
+  "ui.ceremony.crowd.say": "{0}: {1}",
+  "ui.tally.card.grain": "Food {0}",
+  "ui.tally.card.resonance": "Bond +{0}%",
+  "ui.tally.card.owner": "Held by {0}",
+  "ui.tally.card.unowned": "Not owned",
+  "ui.tally.card.unknown_name": "???",
+  "ui.tally.card.deployed": "In battle",
+  "ui.tally.card.infuse_lv5": "Inf5",
+  "ui.tally.card.infuse_lv8": "Inf8"
 }

@@ -1496,5 +1496,13 @@
   "ui.ceremony.crowd.lose.1": "（肩をぽん）大丈夫、{0}は毎年この番付を見てるから慣れっこだよ。",
   "ui.ceremony.crowd.lose.2": "（くすくす）しーっ、笑い声が大きいよ。来年の一位はあなたかも。",
   "ui.ceremony.crowd.lose.3": "（種を差し出す）これでも食べて落ち着いて。{0}のおごりだ。",
-  "ui.ceremony.crowd.say": "{0}：{1}"
+  "ui.ceremony.crowd.say": "{0}：{1}",
+  "ui.tally.card.grain": "糧 {0}",
+  "ui.tally.card.resonance": "共鳴 +{0}%",
+  "ui.tally.card.owner": "所持 {0}",
+  "ui.tally.card.unowned": "未入手",
+  "ui.tally.card.unknown_name": "？？？",
+  "ui.tally.card.deployed": "出陣中",
+  "ui.tally.card.infuse_lv5": "注5",
+  "ui.tally.card.infuse_lv8": "注8"
 }

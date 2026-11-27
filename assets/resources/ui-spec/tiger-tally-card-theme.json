@@ -1,0 +1,58 @@
+{
+  "_doc": "虎符卡主題資料（PROG-2-10131）。品階 4 級 R／SR／SSR／UR＝暗銅／銀／金／赤金，與轉蛋稀有度一致。換季節或節慶主題、交件正式框圖，只改這份資料的色碼與路徑，不動邏輯。框圖路徑缺檔時退回 placeholderFrame（白底乘 frameTint）。色碼為 [R,G,B,A]。",
+  "version": 1,
+  "cardWidth": 287,
+  "cardHeight": 142,
+  "sliceBorder": [56, 40, 40, 40],
+  "brushed": "ui/tiger-tally/theme/brushed-128",
+  "brushedOpacity": 70,
+  "placeholderFrame": "ui/tiger-tally/theme/tally_frame_placeholder",
+  "infuse": {
+    "lv5": "ui/tiger-tally/theme/tally_infuse_lv5",
+    "lv8": "ui/tiger-tally/theme/tally_infuse_lv8",
+    "lv5Color": [223, 229, 236, 255],
+    "lv8Color": [241, 196, 83, 255]
+  },
+  "tiers": {
+    "R": {
+      "name": "暗銅",
+      "frameTint": [138, 90, 44, 255],
+      "accent": [253, 241, 216, 255],
+      "glow": null,
+      "chipBg": [0, 0, 0, 130],
+      "chipText": [232, 176, 116, 255],
+      "frame": "ui/tiger-tally/theme/tally_frame_r_bronze",
+      "emblem": "ui/tiger-tally/theme/tally_emblem_tiger_r"
+    },
+    "SR": {
+      "name": "銀",
+      "frameTint": [154, 163, 173, 255],
+      "accent": [236, 241, 247, 255],
+      "glow": null,
+      "chipBg": [0, 0, 0, 130],
+      "chipText": [255, 255, 255, 255],
+      "frame": "ui/tiger-tally/theme/tally_frame_sr_silver",
+      "emblem": "ui/tiger-tally/theme/tally_emblem_tiger_sr"
+    },
+    "SSR": {
+      "name": "金",
+      "frameTint": [200, 150, 30, 255],
+      "accent": [255, 241, 168, 255],
+      "glow": [255, 200, 60, 150],
+      "chipBg": [0, 0, 0, 130],
+      "chipText": [255, 241, 168, 255],
+      "frame": "ui/tiger-tally/theme/tally_frame_ssr_gold",
+      "emblem": "ui/tiger-tally/theme/tally_emblem_tiger_ssr"
+    },
+    "UR": {
+      "name": "赤金",
+      "frameTint": [185, 64, 42, 255],
+      "accent": [255, 210, 122, 255],
+      "glow": [255, 90, 40, 190],
+      "chipBg": [122, 43, 208, 255],
+      "chipText": [255, 255, 255, 255],
+      "frame": "ui/tiger-tally/theme/tally_frame_ur_redgold",
+      "emblem": "ui/tiger-tally/theme/tally_emblem_tiger_ur"
+    }
+  }
+}

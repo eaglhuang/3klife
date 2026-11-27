@@ -1565,5 +1565,13 @@
   "ui.ceremony.crowd.lose.1": "（拍拍肩）沒事沒事，{0}年年來看榜，習慣就好。",
   "ui.ceremony.crowd.lose.2": "（偷笑）噓，別笑太大聲，明年的榜首搞不好就是你。",
   "ui.ceremony.crowd.lose.3": "（遞上瓜子）來，吃點東西壓壓驚，{0}請客。",
-  "ui.ceremony.crowd.say": "{0}：{1}"
+  "ui.ceremony.crowd.say": "{0}：{1}",
+  "ui.tally.card.grain": "糧 {0}",
+  "ui.tally.card.resonance": "共鳴 +{0}%",
+  "ui.tally.card.owner": "持有 {0}",
+  "ui.tally.card.unowned": "未獲得",
+  "ui.tally.card.unknown_name": "？？？",
+  "ui.tally.card.deployed": "出戰中",
+  "ui.tally.card.infuse_lv5": "灌5",
+  "ui.tally.card.infuse_lv8": "灌8"
 }
