@@ -5086,6 +5086,7 @@ ${spent}`,
             intelBands: data.balance.intelBands,
             selectedGeneralId,
             jargonGuide: this._missionJargonGuide(missionId),
+            tr: (key, ...args) => services().i18n.t(key, ...args.map(String)),
         });
     }
 
@@ -5166,7 +5167,7 @@ ${spent}`,
                 if (result.ok === false) { this._showToast(result.text); return false; }
                 this._showToast(`再探完成，情報 +${result.value.gained}，目前 ${result.value.intel}%`);
                 this._refreshHallDialog(missionId, snapshot.selectedGeneralId);
-                this._missionDetailDialogPanel?.showIntelGain(intelGainFloatText(result.value.gained, result.value.intel));
+                this._missionDetailDialogPanel?.showIntelGain(intelGainFloatText(result.value.gained, result.value.intel, (key, ...args) => services().i18n.t(key, ...args.map(String))));
                 return true;
             }
             if (action === 'wait') {
@@ -5174,7 +5175,7 @@ ${spent}`,
                 if (result.ok === false) { this._showToast(result.text); return false; }
                 this._showToast(`等待一季：期限延長，情報 +${result.value.gained}，目前 ${result.value.intel}%`);
                 this._refreshHallDialog(missionId, snapshot.selectedGeneralId);
-                this._missionDetailDialogPanel?.showIntelGain(intelGainFloatText(result.value.gained, result.value.intel));
+                this._missionDetailDialogPanel?.showIntelGain(intelGainFloatText(result.value.gained, result.value.intel, (key, ...args) => services().i18n.t(key, ...args.map(String))));
                 return true;
             }
             const delegate = action === 'assign' || snapshot.aiDelegateChecked;

@@ -55,12 +55,38 @@ export interface DetailActionStates {
     needsIntelConfirm: boolean;
 }
 
+/** 任務詳情的翻譯函式（services().i18n.t 的形狀）；查不到鍵時回傳鍵名本身 */
+export type MissionTr = (key: string, ...args: Array<string | number>) => string;
+
+/**
+ * 取任務詳情的翻譯文字：有翻譯函式且查得到就用譯文，否則用繁中原文（{0}、{1} 代入參數）。
+ * 純邏輯測試不載語系時，原文維持現狀，不會露出鍵名。
+ */
+export function missionText(tr: MissionTr | undefined, key: string, fallback: string, ...args: Array<string | number>): string {
+    if (tr) {
+        const text = tr(key, ...args);
+        if (text !== key) return text;
+    }
+    return fallback.replace(/\{(\d+)\}/g, (_m, i: string) => String(args[Number(i)] ?? ''));
+}
+
 /** 停用的按鈕被點到時，給玩家看的原因（點了不能毫無反應，PROG-2-9123）。 */
 export const DETAIL_ACTION_BLOCKED_TEXT: Readonly<Record<DetailActionDisabledReason, string>> = Object.freeze({
     'not-offered': '此任務沒有提供這個行動',
     'full-intel': '情報已完整',
     'need-general': '請先選擇武將，或勾選 AI 委任',
 });
+
+/** 停用原因的語系鍵（zh-TW 原文即上表） */
+export const DETAIL_ACTION_BLOCKED_KEY: Readonly<Record<DetailActionDisabledReason, string>> = Object.freeze({
+    'not-offered': 'mission.detail.blocked.not_offered',
+    'full-intel': 'mission.detail.blocked.full_intel',
+    'need-general': 'mission.detail.blocked.need_general',
+});
+
+export function detailActionBlockedText(reason: DetailActionDisabledReason, tr?: MissionTr): string {
+    return missionText(tr, DETAIL_ACTION_BLOCKED_KEY[reason], DETAIL_ACTION_BLOCKED_TEXT[reason]);
+}
 
 export function isFullIntel(intelRevealPercent: number): boolean {
     // 判斷統一走 HallTaskIntel（F-5）：缺值、非數字視為預設 50，未滿 100 不算完整（PROG-2-1005）
