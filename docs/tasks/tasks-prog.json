@@ -20258,12 +20258,65 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_3198",
+      "id": "PROG-2-10138",
+      "title": "戰場七種戰法專屬特效（火水風回復加速鼓舞控制）",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P2",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-27",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-27T09:54:26+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "戰場戰法施放原本全共用 battle_skill_seed 一種光效。依效果分火、水、風、回復、加速、鼓舞、控制七組，各做前搖→命中→餘韻的程式繪製（Graphics）特效，粒子池有上限、同屏有上限。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "七組戰法各有可辨識的前搖、命中、餘韻特效",
+        "同屏特效數與粒子數有上限且不每幀配置",
+        "單元測試鎖定分組對應與上限",
+        "七種特效實機命中瞬間截圖"
+      ],
+      "deliverables": [
+        "assets/scripts/battle/shared/TacticVfxGroups.ts",
+        "assets/scripts/battle/views/TacticVfxPlayer.ts",
+        "tests/TacticVfxGroups.test.ts"
+      ],
+      "notes": "2026-11-27 | 狀態: in-progress | 驗證: pending | 變更: task-card-opener 產生骨架 | 阻塞: 無",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
-    "done": 373,
+    "done": 375,
     "in_progress": 5,
     "open": 91,
-    "total": 469
+    "total": 471
   }
 }
