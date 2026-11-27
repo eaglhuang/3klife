@@ -17764,5 +17764,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10188.md",
     "title": "[PROG-2-10188] 武將生活化「Q 版社會」規格（純規格）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3260",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10191.md",
+    "title": "[PROG-2-10191] 使用者裁決寫入規格（純文件）",
+    "category": "task"
   }
 ]
