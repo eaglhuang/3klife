@@ -96,8 +96,8 @@ export function moveDustFor(troopType: TroopType | string | null | undefined, te
 /** 水淹水花（PROG-2-10100）：被洪流沖走或卡在水流格時，腳點濺起的濁浪；共用揚塵粒子池，只換顏色與飄散。 */
 export const FLOOD_SPLASH_SPEC: MoveDustSpec = { kind: 'splash', scale: 1.15, particleMin: 5, particleMax: 8 };
 /** 水花顏色（濁黃綠到泛白的浪頭），兩端之間隨機取。 */
-export const SPLASH_COLOR_MUD = { r: 112, g: 138, b: 120 } as const;
-export const SPLASH_COLOR_FOAM = { r: 214, g: 232, b: 236 } as const;
+export const SPLASH_COLOR_MUD = { r: 96, g: 128, b: 166 } as const;
+export const SPLASH_COLOR_FOAM = { r: 200, g: 225, b: 255 } as const;
 /** 漂流中每隔幾秒濺一次水花。 */
 export const FLOOD_SPLASH_INTERVAL_SEC = 0.45;
 
