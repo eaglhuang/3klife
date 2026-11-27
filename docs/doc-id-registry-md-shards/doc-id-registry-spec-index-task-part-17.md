@@ -93,6 +93,7 @@
 | `doc_task_3242` | docs/agent-briefs/tasks/PROG/PROG-2-10177.md | [PROG-2-10177] 新手第一年樂趣四功能實作 |
 | `doc_task_3243` | docs/agent-briefs/tasks/PROG/PROG-2-10179.md | [PROG-2-10179] 武將說溜嘴破綻語與言論圖鑑系統規格書 |
 | `doc_task_3244` | docs/agent-briefs/tasks/PROG/PROG-2-10119.md | [PROG-2-10119] 批次補舊 PROG 卡 frontmatter task_id（讓 ATM importer 可匯入） |
+| `doc_task_3246` | docs/agent-briefs/tasks/PROG/PROG-2-10185.md | [PROG-2-10185] FUN-02／03／04 實作 |
 | `doc_task_3247` | docs/agent-briefs/tasks/PROG/PROG-2-10184.md | [PROG-2-10184] 新世界觀改寫（純規格） |
 | `doc_task_3250` | docs/agent-briefs/tasks/PROG/PROG-2-10186.md | [PROG-2-10186] MYS-01 UI 碎片延伸四項 |
 | `doc_task_3253` | docs/agent-briefs/tasks/PROG/PROG-2-10189.md | [PROG-2-10189] 三題裁決寫入規格 |
@@ -103,4 +104,10 @@
 | `doc_task_3261` | docs/agent-briefs/tasks/PROG/PROG-2-10192.md | [PROG-2-10192] 回寫使用者 11/28 裁決 |
 | `doc_task_3263` | docs/agent-briefs/tasks/PROG/PROG-2-10190.md | [PROG-2-10190] 戰法分組音效 |
 | `doc_task_3264` | docs/agent-briefs/tasks/PROG/PROG-2-10197.md | [PROG-2-10197] 市井大街改照 v2 密集版（規格第 9、10 章） |
+| `doc_task_3265` | docs/agent-briefs/tasks/PROG/PROG-2-10198.md | [PROG-2-10198] Q 頭生活單挑有真實後果規格補件 |
+| `doc_task_3266` | docs/agent-briefs/tasks/PROG/PROG-2-10201.md | [PROG-2-10201] 補完：大廳傭兵結義系統（條件清單、儀式演出、i18n、義兄弟羈絆預覽） |
 | `doc_task_3269` | docs/agent-briefs/tasks/PROG/PROG-2-10200.md | [PROG-2-10200] 日夜四季全域規則＋市井大街熱區裁定回寫 |
+| `doc_task_3270` | docs/agent-briefs/tasks/PROG/PROG-2-10203.md | [PROG-2-10203] 武將生活系統四份規格審查 |
+| `doc_task_3273` | docs/agent-briefs/tasks/PROG/PROG-2-10213.md | [PROG-2-10213] WP3 武將作息與喜好引擎 |
+| `doc_task_3275` | docs/agent-briefs/tasks/PROG/PROG-2-10211.md | [PROG-2-10211] WP5 日夜四季調色與疊層程式框架 |
+| `doc_task_3280` | docs/agent-briefs/tasks/PROG/PROG-2-10209.md | [PROG-2-10209] Q 動畫管理器核心＋基本動作片段 |

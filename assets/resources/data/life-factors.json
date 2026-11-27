@@ -1,0 +1,547 @@
+{
+  "schema": "life-factors.v1",
+  "drawExponent": 1.6,
+  "currentSceneBonus": 20,
+  "recentScenePenalty": 30,
+  "adjacentMoveChance": 0.1,
+  "sociabilityWeight": 12,
+  "homeSleepBonus": 60,
+  "chronotypeSlotFit": {
+    "day": {
+      "1": 1.1,
+      "2": 1.05,
+      "3": 1,
+      "4": 1,
+      "5": 1,
+      "6": 0.9,
+      "7": 1
+    },
+    "night": {
+      "1": 0.85,
+      "2": 0.9,
+      "3": 1,
+      "4": 1,
+      "5": 1.1,
+      "6": 1.2,
+      "7": 1
+    }
+  },
+  "occupancyDefaultScene": {
+    "academy": "edu_academy",
+    "campaign": "gov_dais",
+    "medical:pregnant": "home_general",
+    "medical:nursing": "home_nursery",
+    "mercenary": "mkt_guild",
+    "defense": "mil_city",
+    "governance": "gov_office"
+  },
+  "rules": [
+    {
+      "id": "office_promoted",
+      "factor": "office",
+      "when": {
+        "kind": "office",
+        "change": "promoted"
+      },
+      "effects": [
+        {
+          "areas": [
+            "gov",
+            "mil"
+          ],
+          "delta": 30
+        },
+        {
+          "dynamic": "workScenes",
+          "slots": [
+            2,
+            4
+          ],
+          "delta": 40
+        }
+      ],
+      "fadeQuarters": 4
+    },
+    {
+      "id": "office_demoted",
+      "factor": "office",
+      "when": {
+        "kind": "office",
+        "change": "demoted"
+      },
+      "effects": [
+        {
+          "scenes": [
+            "mkt_tavern"
+          ],
+          "delta": 25
+        },
+        {
+          "scenes": [
+            "home_general"
+          ],
+          "delta": 15
+        },
+        {
+          "areas": [
+            "gov"
+          ],
+          "delta": -20
+        }
+      ],
+      "fadeQuarters": 4
+    },
+    {
+      "id": "child_young",
+      "factor": "child",
+      "when": {
+        "kind": "child",
+        "nursing": false
+      },
+      "effects": [
+        {
+          "scenes": [
+            "home_nursery",
+            "home_garden",
+            "home_general"
+          ],
+          "delta": 35
+        },
+        {
+          "scenes": [
+            "mkt_tavern"
+          ],
+          "delta": -15
+        },
+        {
+          "scenes": [
+            "mkt_gamble"
+          ],
+          "delta": -20
+        }
+      ]
+    },
+    {
+      "id": "child_nursing",
+      "factor": "child",
+      "when": {
+        "kind": "child",
+        "nursing": true
+      },
+      "effects": [
+        {
+          "scenes": [
+            "home_nursery"
+          ],
+          "delta": 50
+        },
+        {
+          "scenes": [
+            "home_garden",
+            "home_general"
+          ],
+          "delta": 35
+        },
+        {
+          "scenes": [
+            "mkt_tavern"
+          ],
+          "delta": -15
+        },
+        {
+          "scenes": [
+            "mkt_gamble"
+          ],
+          "delta": -20
+        }
+      ]
+    },
+    {
+      "id": "season_spring",
+      "factor": "season",
+      "when": {
+        "kind": "season",
+        "season": "spring"
+      },
+      "effects": [
+        {
+          "areas": [
+            "out"
+          ],
+          "delta": 15
+        },
+        {
+          "scenes": [
+            "out_peach",
+            "home_garden"
+          ],
+          "delta": 15
+        }
+      ]
+    },
+    {
+      "id": "season_summer",
+      "factor": "season",
+      "when": {
+        "kind": "season",
+        "season": "summer"
+      },
+      "effects": [
+        {
+          "scenes": [
+            "out_river",
+            "mkt_bath",
+            "mkt_teahouse"
+          ],
+          "delta": 15
+        },
+        {
+          "scenes": [
+            "mil_barracks",
+            "mil_range"
+          ],
+          "delta": -10
+        }
+      ]
+    },
+    {
+      "id": "season_autumn",
+      "factor": "season",
+      "when": {
+        "kind": "season",
+        "season": "autumn"
+      },
+      "effects": [
+        {
+          "scenes": [
+            "out_forest",
+            "out_orchard",
+            "out_farm"
+          ],
+          "delta": 15
+        }
+      ]
+    },
+    {
+      "id": "season_winter",
+      "factor": "season",
+      "when": {
+        "kind": "season",
+        "season": "winter"
+      },
+      "effects": [
+        {
+          "scenes": [
+            "out_spring",
+            "mkt_tavern",
+            "mkt_inn",
+            "mkt_teahouse"
+          ],
+          "delta": 15
+        },
+        {
+          "areas": [
+            "out"
+          ],
+          "delta": -15
+        }
+      ]
+    },
+    {
+      "id": "mood_high",
+      "factor": "mood",
+      "when": {
+        "kind": "moodAbove",
+        "value": 20
+      },
+      "effects": [
+        {
+          "scenes": [
+            "mkt_theater",
+            "mkt_tavern",
+            "mkt_street"
+          ],
+          "perMood": 0.4
+        }
+      ]
+    },
+    {
+      "id": "mood_low",
+      "factor": "mood",
+      "when": {
+        "kind": "moodBelow",
+        "value": -20
+      },
+      "effects": [
+        {
+          "scenes": [
+            "out_river",
+            "out_bamboo",
+            "home_garden"
+          ],
+          "perMood": 0.5
+        },
+        {
+          "scenes": [
+            "mkt_street"
+          ],
+          "delta": -15
+        }
+      ]
+    },
+    {
+      "id": "mood_angry",
+      "factor": "mood",
+      "when": {
+        "kind": "angry"
+      },
+      "effects": [
+        {
+          "scenes": [
+            "mil_arena",
+            "mil_range",
+            "mkt_tavern"
+          ],
+          "delta": 30
+        }
+      ]
+    },
+    {
+      "id": "bond_here",
+      "factor": "bond",
+      "when": {
+        "kind": "bond"
+      },
+      "effects": [
+        {
+          "dynamic": "bondScenes",
+          "delta": 25
+        },
+        {
+          "dynamic": "bondSharedScenes",
+          "delta": 10
+        }
+      ]
+    },
+    {
+      "id": "friend_high",
+      "factor": "friendship",
+      "when": {
+        "kind": "friendshipAtLeast",
+        "value": 20
+      },
+      "effects": [
+        {
+          "dynamic": "lordScenes",
+          "delta": 20
+        },
+        {
+          "scenes": [
+            "home_lord",
+            "mkt_street"
+          ],
+          "delta": 20
+        }
+      ]
+    },
+    {
+      "id": "friend_low",
+      "factor": "friendship",
+      "when": {
+        "kind": "friendshipAtMost",
+        "value": -20
+      },
+      "effects": [
+        {
+          "dynamic": "avoidLordScenes",
+          "delta": -40
+        },
+        {
+          "scenes": [
+            "mkt_tavern"
+          ],
+          "delta": 20
+        }
+      ]
+    },
+    {
+      "id": "event_war",
+      "factor": "worldEvent",
+      "when": {
+        "kind": "worldEvent",
+        "event": "war"
+      },
+      "effects": [
+        {
+          "scenes": [
+            "mil_barracks",
+            "mil_city",
+            "mil_beacon"
+          ],
+          "delta": 40
+        },
+        {
+          "scenes": [
+            "mkt_theater",
+            "mkt_gamble"
+          ],
+          "delta": -20
+        }
+      ]
+    },
+    {
+      "id": "event_plague",
+      "factor": "worldEvent",
+      "when": {
+        "kind": "worldEvent",
+        "event": "plague"
+      },
+      "effects": [
+        {
+          "scenes": [
+            "mkt_clinic",
+            "edu_temple"
+          ],
+          "delta": 35
+        },
+        {
+          "scenes": [
+            "mkt_street",
+            "mkt_bath"
+          ],
+          "delta": -25
+        }
+      ]
+    },
+    {
+      "id": "event_harvest",
+      "factor": "worldEvent",
+      "when": {
+        "kind": "worldEvent",
+        "event": "harvest"
+      },
+      "effects": [
+        {
+          "scenes": [
+            "out_farm",
+            "mkt_tavern",
+            "mkt_street"
+          ],
+          "delta": 25
+        }
+      ]
+    },
+    {
+      "id": "event_disaster",
+      "factor": "worldEvent",
+      "when": {
+        "kind": "worldEvent",
+        "event": "disaster"
+      },
+      "effects": [
+        {
+          "scenes": [
+            "mil_granary",
+            "edu_clan"
+          ],
+          "delta": 25
+        },
+        {
+          "areas": [
+            "out"
+          ],
+          "delta": -30
+        }
+      ]
+    },
+    {
+      "id": "faction_wei",
+      "factor": "faction",
+      "when": {
+        "kind": "faction",
+        "faction": "wei"
+      },
+      "effects": [
+        {
+          "areas": [
+            "gov",
+            "mil"
+          ],
+          "delta": 10
+        }
+      ]
+    },
+    {
+      "id": "faction_shu",
+      "factor": "faction",
+      "when": {
+        "kind": "faction",
+        "faction": "shu"
+      },
+      "effects": [
+        {
+          "scenes": [
+            "out_peach",
+            "mkt_teahouse"
+          ],
+          "delta": 10
+        },
+        {
+          "areas": [
+            "edu"
+          ],
+          "delta": 10
+        }
+      ]
+    },
+    {
+      "id": "faction_wu",
+      "factor": "faction",
+      "when": {
+        "kind": "faction",
+        "faction": "wu"
+      },
+      "effects": [
+        {
+          "scenes": [
+            "mkt_tavern"
+          ],
+          "delta": 10
+        }
+      ]
+    },
+    {
+      "id": "faction_neutral",
+      "factor": "faction",
+      "when": {
+        "kind": "faction",
+        "faction": "neutral"
+      },
+      "effects": [
+        {
+          "areas": [
+            "mkt"
+          ],
+          "delta": 10
+        }
+      ]
+    },
+    {
+      "id": "injury_rest",
+      "factor": "injury",
+      "when": {
+        "kind": "injured"
+      },
+      "effects": [
+        {
+          "scenes": [
+            "mkt_clinic",
+            "home_general",
+            "out_spring"
+          ],
+          "delta": 30
+        }
+      ]
+    }
+  ]
+}
