@@ -15,13 +15,15 @@ export function createBattleHudIssue2086Suite(): TestSuite {
         const r = battleCoachPlacement(1920, 1080, [buff]);
         assert.isTrue(!!r); assert.isTrue(r!.y >= 594); assert.isFalse(coachRectsOverlap(r!, buff));
     });
-    suite.test('卡牌數字說明與 atk hp cost 實際欄位對應，不誤稱蓄力', () => {
+    suite.test('卡牌數字說明與乙版卡面欄位對應，不誤稱蓄力（PROG-2-10131：攻／命移到短按面板）', () => {
         const text = OPERATION_GUIDE.deploy.message;
-        assert.contains(text, '「糧15」是糧草費用'); assert.contains(text, '「攻40／命100」是攻擊／生命');
+        assert.contains(text, '「糧 15」是糧草費用'); assert.contains(text, '點一下卡片查看');
+        assert.isFalse(text.includes('攻40／命100'));
         assert.contains(text, '不是蓄力'); assert.contains(text, 'SP');
         const src = fs.readFileSync(path.join(__dirname, '../assets/scripts/ui/components/TigerTallyComposite.ts'), 'utf8');
-        // #2107-5：卡面常駐前綴
-        assert.contains(src, "TALLY_STAT_PREFIX = { atk: '攻', hp: '命', cost: '糧' }"); assert.contains(src, '${TALLY_STAT_PREFIX.atk}${data.atk}'); assert.contains(src, '${TALLY_STAT_PREFIX.cost}${data.cost}');
+        // 乙版卡面只放糧耗與共鳴，不再常駐攻／命前綴；數字由 buildTallyCardFaceB 組字並走 i18n
+        assert.isFalse(src.includes('TALLY_STAT_PREFIX'));
+        assert.contains(src, 'buildTallyCardFaceB');
     });
     suite.test('SP 建構前到達的 80 上限保留，未取得上限不顯示 0/0', withZhTwI18n(() => {
         const hud: any = { _spLabel: null, _chargeLabel: null, _spReadyLabel: null, _spFill: null };
@@ -36,7 +38,7 @@ export function createBattleHudIssue2086Suite(): TestSuite {
         const layout = JSON.parse(fs.readFileSync(path.join(__dirname, '../assets/resources/ui-spec/layouts/tiger-tally-main.json'), 'utf8'));
         const skin = JSON.parse(fs.readFileSync(path.join(__dirname, '../assets/resources/ui-spec/skins/tiger-tally-default.json'), 'utf8'));
         const names: any[] = []; const walk = (n: any) => { if (/^UnitName\d+$/.test(n.name ?? '')) names.push(n); (n.children ?? []).forEach(walk); }; walk(layout.root);
-        assert.equals(4, names.length); assert.isTrue(names.every(n => n.height >= 40));
+        assert.equals(4, names.length); assert.isTrue(names.every(n => n.height >= skin.slots['tally.label.name'].lineHeight));
         assert.equals('SHRINK', skin.slots['tally.label.name'].overflow);
         const line = strategistHudLogLine({ hazardsThisTurn: ['火場'], interactiveObjects: [], salvage: { stone: 0, wood: 0, supply: 0, intel: 0, weaponMaterial: 0, instructorExp: 0 }, missingCounters: [], environmentBonus: '平原 +10%、水域 -25%' });
         assert.contains(line, '\n危害 火場'); assert.isFalse(line.includes('｜')); assert.isFalse(line.includes('|'));

@@ -62,8 +62,9 @@ function auditBattleHud(options={}) {
   const sample=docs[2].root.children[0];
   const nameNode=get(sample.children,'UnitName1'),costNode=get(sample.children,'CostBadge1');
   if(overlap(rect(nameNode,cardRect.width,sample.height),rect(costNode,cardRect.width,sample.height)))add(key,'card-label-overlap','name / cost','card title covers deploy cost');
-  const star=get(sample.children,'FrameBottomBand1'),atk=get(sample.children,'AtkLabel1'),hp=get(sample.children,'HpLabel1');
-  if(overlap(rect(star,cardRect.width,sample.height),rect(atk,cardRect.width,sample.height))||overlap(rect(star,cardRect.width,sample.height),rect(hp,cardRect.width,sample.height)))add(key,'card-label-overlap','stars / combat stats','rarity row covers attack/HP');
+  // 乙版卡面（PROG-2-10131）：卡面文字列彼此不可重疊（攻／命已移到短按面板）
+  const faceRows=['UnitName1','RarityLabel1','UnitSub1','StarsLabel1','InfuseBadge1','CostBadge1','ResonanceLabel1','DeployedFlag1'].map(name=>get(sample.children,name)).filter(n=>n&&n.active!==false).map(n=>({name:n.name,...rect(n,cardRect.width,sample.height)}));
+  for(let i=0;i<faceRows.length;i++)for(let j=i+1;j<faceRows.length;j++)if(overlap(faceRows[i],faceRows[j]))add(key,'card-label-overlap',`${faceRows[i].name} / ${faceRows[j].name}`,'card face rows overlap');
   const ultimate=get(commands,'UltimateBtn');const labels=ultimate.children.filter(n=>n.type==='label');
   const boxes=labels.map(n=>({name:n.name,...rect(n,ultimate.width,ultimate.height)}));
   if(boxes.length===2&&overlap(boxes[0],boxes[1]))add(key,'label-overlap','UltimateBtn',boxes);
