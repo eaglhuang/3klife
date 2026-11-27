@@ -1,6 +1,7 @@
 ---
 doc_id: doc_task_0007
 id: HARN-ART-0002
+task_id: HARN-ART-0002
 priority: P0
 phase: Phase1
 created: 2026-05-04

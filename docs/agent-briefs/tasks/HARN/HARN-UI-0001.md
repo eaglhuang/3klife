@@ -1,6 +1,7 @@
 ---
 doc_id: doc_task_0036
 id: HARN-UI-0001
+task_id: HARN-UI-0001
 priority: P1
 phase: G
 created: 2026-05-04

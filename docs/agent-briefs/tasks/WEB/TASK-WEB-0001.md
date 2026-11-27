@@ -1,6 +1,7 @@
 ---
 doc_id: doc_task_0392
 id: TASK-WEB-0001
+task_id: TASK-WEB-0001
 priority: P2
 phase: external-comms
 created: 2026-05-25

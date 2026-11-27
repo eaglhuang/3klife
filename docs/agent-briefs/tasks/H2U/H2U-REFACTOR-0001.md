@@ -1,6 +1,7 @@
 ---
 doc_id: doc_task_0224
 id: "H2U-REFACTOR-0001"
+task_id: H2U-REFACTOR-0001
 priority: "P2"
 owner: "vs-code-gpt-5.3-codex"
 status: "done"

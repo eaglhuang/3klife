@@ -1,6 +1,7 @@
 ---
 doc_id: doc_task_0025
 id: HARN-LOG-0004
+task_id: HARN-LOG-0004
 priority: P2
 phase: G
 created: 2026-05-04
