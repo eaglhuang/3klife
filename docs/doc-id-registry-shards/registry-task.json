@@ -17818,5 +17818,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10203.md",
     "title": "[PROG-2-10203] 武將生活系統四份規格審查",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3277",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10212.md",
+    "title": "[PROG-2-10212] WP4 場景註冊表＋任意場景切換 UI",
+    "category": "task"
   }
 ]
