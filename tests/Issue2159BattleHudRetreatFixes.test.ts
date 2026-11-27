@@ -1,5 +1,6 @@
 // @spec-source → Issue #2159；PROG-2-9034
 import { TestSuite, assert } from './TestRunner';
+import { withZhTwI18n } from './seedZhTwI18n';
 import { EVENT_NAMES, Faction } from '../assets/scripts/core/config/Constants';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
 import { BattleController } from '../assets/scripts/battle/controllers/BattleController';
@@ -111,7 +112,7 @@ export function createIssue2159BattleHudRetreatFixesSuite(): TestSuite {
         }
     });
 
-    suite.test('BattleHUDComposite.show 與 ActionCommandComposite.mount 可接收並渲染初期 SP，不殘留準備中佔位字', async () => {
+    suite.test('BattleHUDComposite.show 與 ActionCommandComposite.mount 可接收並渲染初期 SP，不殘留準備中佔位字', withZhTwI18n(async () => {
         services().initialize();
         const ccMod = require('cc');
         const oldOff = ccMod.director?.off;
@@ -188,7 +189,7 @@ export function createIssue2159BattleHudRetreatFixesSuite(): TestSuite {
             cmd['_unsubs']?.forEach((fn: () => void) => fn());
             if (cmd['_unsubs']) cmd['_unsubs'].length = 0;
         }
-    });
+    }));
 
     suite.test('UnitRenderer 夾限主將名牌避開左側虎符列與右上軍師區，且 UnitOverlayRoot 置於最底層', () => {
         // 1920x1080 基準：左緣虎符安全界 -570、右緣軍師安全界 530、上下 [-220, 310]
