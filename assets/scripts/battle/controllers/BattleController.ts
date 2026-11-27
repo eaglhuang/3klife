@@ -1,7 +1,7 @@
 // @spec-source → 見 docs/cross-reference-index.md
 import { ascensionOf, awardBattleFame, type BattleAscendedEvent } from "../runtime/BattleAscensionRuntime";
 import { BattleFameSource } from "../shared/InBattleAscension";
-import { generalRankForFame } from "../../core/systems/GeneralRankProgress";
+import { GENERAL_RANK_MAX, generalRankForFame } from "../../core/systems/GeneralRankProgress";
 import { troopCapturedLine } from "../../core/systems/NumericalScriptLines";
 import type { GeneralCaptureRecord } from "../../shared/GeneralCaptureContract";
 import { resolveAiDeployPreference, deployPreferenceForTroops } from '../../core/systems/AiDeployTroopPick';
@@ -918,6 +918,16 @@ export class BattleController {
     if (!this.sortie) return null;
     this.syncSortieWithField();
     return this.sortie;
+  }
+
+  /**
+   * 出牌不足說明面板「怎麼補」要的條件（doc_spec_1341 §5.3）。
+   * canRetreat：場上是否有可撤回的我方部隊——目前戰場沒有玩家主動撤回單位的入口，固定 false，待有入口再接。
+   * canPromote：我方主將尚未到最高階（升階會補兵）。
+   */
+  public getDeployHelpContext(): { canRetreat: boolean; canPromote: boolean } {
+    const rank = this.state.generalAscension.get(Faction.Player)?.generalRank ?? 0;
+    return { canRetreat: false, canPromote: this.sortie !== null && rank < GENERAL_RANK_MAX };
   }
 
   /** 戰後結算：剩餘部隊返還、計算戰損與城市兵源變化；沒有出征帳本時回傳 null */

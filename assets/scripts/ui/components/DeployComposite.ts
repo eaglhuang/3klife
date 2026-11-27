@@ -8,7 +8,14 @@
  *
  * Unity 對照：等同 MonoBehaviour 完整搬進 CompositePanel 容器，spec 已覆蓋全部 UI 節點。
  */
-import { foodShortMessage } from '../../core/systems/SortieDeployScripts';
+import {
+  deployHowToFix,
+  deploySheetTitleKey,
+  deployShortToast,
+  describeDeployShortfall,
+  foodShortMessage,
+  resourceSnapshot,
+} from '../../core/systems/SortieDeployScripts';
 import {
   _decorator,
   Color,
@@ -25,7 +32,14 @@ import {
   Widget,
 } from 'cc';
 import { GAME_CONFIG, TROOP_DEPLOY_COST, TroopType } from '../../core/config/Constants';
-import { deploySuggestionCopy, nextRedirectStep, type RedirectPrompt } from '../../core/systems/SortieDeploy';
+import {
+  checkDeploy,
+  DEPLOY_SUGGESTION_CANDIDATES,
+  deploySuggestionCopy,
+  nextRedirectStep,
+  suggestLowCostDeploy,
+  type RedirectPrompt,
+} from '../../core/systems/SortieDeploy';
 import { IDeployController, IDeployRuntimeLike } from '../../shared/interfaces/IBattleUIComponents';
 import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
@@ -39,6 +53,8 @@ import { UCUFLogger, LogLevel } from '../../core/utils/UCUFLogger';
 import { TurnBannerComposite } from './TurnBannerComposite';
 import { turnBannerVisibleSeconds } from '../core/TurnBannerTiming';
 import { EnemyThinkingComposite } from './EnemyThinkingComposite';
+import { BattleResourceBar } from './BattleResourceBar';
+import { DeployShortSheet, type DeploySheetSpec } from './DeployShortSheet';
 
 const { ccclass } = _decorator;
 
@@ -87,6 +103,10 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
   private dragHoverCallback: ((point: { x: number; y: number } | null) => void) | null = null;
   private _cardSelectedUnsub: (() => void) | null = null;
   private _cardDragUnsub: (() => void) | null = null;
+  private _cardShortUnsub: (() => void) | null = null;
+  /** 常駐資源列與出牌不足說明面板（doc_spec_1341）；掛在戰場 UI 根上，第一次用到才建 */
+  private resourceBar: BattleResourceBar | null = null;
+  private shortSheet: DeployShortSheet | null = null;
   private _lastDragMoveLogAt = 0;
 
   private isMounted = false;
@@ -114,6 +134,98 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
   public updateFood(food: number): void {
     this.currentFood = food;
     this.updateSelectionLabels();
+    this.refreshResources();
+  }
+
+  /** 常駐資源列重畫：軍勢（出征帳本）與糧草的目前值／總量；沒有出征帳本只顯示糧草（doc_spec_1341 §3.2） */
+  public refreshResources(): void {
+    const host = this.node.parent;
+    if (!host?.isValid) return;
+    if (!this.resourceBar?.isValid) this.resourceBar = BattleResourceBar.mount(host);
+    const sortie = this.ctrl?.getSortieState?.() ?? null;
+    const maxFood = services().battle?.getMaxFood?.() ?? this.currentFood;
+    this.resourceBar.setSnapshot(resourceSnapshot(sortie, { cur: this.currentFood, max: Math.max(maxFood, this.currentFood) }));
+  }
+
+  /** 選中兵牌時，在資源列標出派出後會剩多少；null 取消（doc_spec_1341 §3.5） */
+  private setSelectionPreview(type: TroopType | null): void {
+    this.unschedule(this._clearSelectionPreview);
+    const sortie = this.ctrl?.getSortieState?.() ?? null;
+    if (!type || !sortie || !this.resourceBar?.isValid) {
+      this.resourceBar?.setPreview(null);
+      return;
+    }
+    this.resourceBar.setPreview(checkDeploy(sortie, { troopType: type }).cost);
+    // 點選後沒有「取消選取」的入口，數秒後自動收掉預覽線
+    this.scheduleOnce(this._clearSelectionPreview, 4);
+  }
+
+  private _clearSelectionPreview = (): void => {
+    this.resourceBar?.setPreview(null);
+  };
+
+  private troopName(type: string): string {
+    const key = `battle.troop.${type}`;
+    const text = services().i18n.t(key);
+    return text === key ? this.toTroopDisplayName(type as TroopType) : text;
+  }
+
+  /** 點了派不出去的卡：開「缺多少、從哪扣、怎麼補」說明面板（doc_spec_1341 §5.2） */
+  private openShortSheet(index: number, data: TallyCardData): void {
+    const host = this.node.parent;
+    const sortie = this.ctrl?.getSortieState?.() ?? null;
+    if (!host?.isValid || !sortie) return;
+    const type = data.unitType as TroopType;
+    const sf = describeDeployShortfall(sortie, { troopType: type });
+    if (sf.kind === 'ok') return;
+    if (!this.shortSheet?.isValid) this.shortSheet = DeployShortSheet.mount(host);
+    const t = (k: string, ...a: string[]): string => services().i18n.t(k, ...a);
+    const unit = this.troopName(type);
+    const help = this.ctrl?.getDeployHelpContext?.() ?? { canRetreat: false, canPromote: false };
+    const suggestion = suggestLowCostDeploy(sortie, type, DEPLOY_SUGGESTION_CANDIDATES);
+    const redirect = suggestion
+      ? (() => {
+          const cost = checkDeploy(sortie, { troopType: suggestion }).cost;
+          return { troopName: this.troopName(suggestion), troopCost: cost.troopCost, foodCost: cost.foodCost };
+        })()
+      : null;
+    const gapText = (g: { gap: number }): string => (g.gap > 0 ? t('battle.deploy.sheet.gap', String(g.gap)) : t('battle.deploy.sheet.enough'));
+    const spec: DeploySheetSpec = {
+      title: t(deploySheetTitleKey(sf.kind)),
+      summary: t('battle.deploy.sheet.summary', unit, String(sf.troops.need), String(sf.food.need)),
+      headers: { need: t('battle.deploy.sheet.head.need'), have: t('battle.deploy.sheet.head.have'), gap: t('battle.deploy.sheet.head.gap') },
+      rows: [
+        { name: t('battle.deploy.sheet.row.troops'), need: String(sf.troops.need), have: String(sf.troops.have), gap: gapText(sf.troops), ok: sf.troops.gap === 0 },
+        { name: t('battle.deploy.sheet.row.food'), need: String(sf.food.need), have: String(sf.food.have), gap: gapText(sf.food), ok: sf.food.gap === 0 },
+      ],
+      source: t('battle.deploy.sheet.source'),
+      how: deployHowToFix(sf, { ...help, redirect }).map((c) => t(c.key, ...c.args)),
+      buttons: [],
+    };
+    // 改派不自動代換：只把選取改成建議兵種，仍要玩家自己拖出去（doc_spec_0377 §3.2）
+    if (suggestion && redirect) {
+      spec.buttons.push({
+        label: t('battle.deploy.sheet.btn.redirect', redirect.troopName, String(redirect.troopCost)),
+        primary: true,
+        onClick: () => {
+          this.selectedType = suggestion as TroopType;
+          this.selectedUnitName = '';
+          this.selectedTally = null;
+          this.shortSheet?.hide();
+          this.setSelectionPreview(this.selectedType);
+          this.showToast(t('battle.deploy.redirected', redirect.troopName));
+        },
+      });
+    }
+    spec.buttons.push({
+      label: t('battle.deploy.sheet.btn.info'),
+      onClick: () => {
+        this.shortSheet?.hide();
+        services().event.emit(UI_EVENTS.CardSelected, { index, data });
+      },
+    });
+    spec.buttons.push({ label: t('battle.deploy.sheet.btn.ok'), onClick: () => this.shortSheet?.hide() });
+    this.shortSheet.show(spec);
   }
 
   /**
@@ -140,6 +252,11 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
 
   /** 未指定時長時由 ToastMessage 停留 2 秒（主戰場UI §4.1，PROG-2-1894） */
   public showToast(message: string, duration?: number, options?: ToastOptions): void {
+    // 常駐資源列與提示條同在頂部：提示要蓋在資源列上面，不然「軍勢不足」會被擋住
+    const bar = this.resourceBar?.node;
+    let anchor: Node | null = (this.toast as unknown as { node?: Node } | null)?.node ?? null;
+    while (anchor && bar?.isValid && anchor.parent !== bar.parent) anchor = anchor.parent;
+    if (anchor?.isValid && bar?.isValid && bar.getSiblingIndex() > anchor.getSiblingIndex()) bar.setSiblingIndex(anchor.getSiblingIndex());
     void this.toast?.show(message, duration, options);
   }
 
@@ -209,6 +326,8 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
     this._cardSelectedUnsub = null;
     this._cardDragUnsub?.();
     this._cardDragUnsub = null;
+    this._cardShortUnsub?.();
+    this._cardShortUnsub = null;
     this.endDrag();
     this.unmount();
   }
@@ -244,7 +363,16 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
         this.selectedUnitName = payload.data.unitName?.trim() || this.toTroopDisplayName(this.selectedType);
         this.selectedTally = tallyDeployRefOf(payload.data);
         this.updateSelectionLabels();
+        this.shortSheet?.hide();
+        this.setSelectionPreview(this.selectedType);
       },
+    );
+
+    // 派不出去的卡被點了：開說明面板，而不是兵種資訊
+    this._cardShortUnsub?.();
+    this._cardShortUnsub = services().event.on(
+      UI_EVENTS.CardShortTapped,
+      (payload: { index: number; data: TallyCardData }) => this.openShortSheet(payload.index, payload.data),
     );
 
     // [UCUF Wave 2] 接收 TigerTallyComposite 的 CardDragStart → 啟動 ghost drag
@@ -260,6 +388,7 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
         this.selectedUnitName = payload.data.unitName?.trim() || this.toTroopDisplayName(this.selectedType);
         this.selectedTally = tallyDeployRefOf(payload.data);
         this.updateSelectionLabels();
+        this.setSelectionPreview(this.selectedType);
         // 本回合已達部署上限就不開始拖曳，直接提示（與 tryDeployTroop 的 limit 同一判斷）
         if (this.ctrl?.getPlayerDeployProgress?.().reached) {
           this.showToast(DEPLOY_LIMIT_TOAST);
@@ -270,6 +399,7 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
     );
 
     this.updateSelectionLabels();
+    this.refreshResources();
   }
 
   private beginDrag(ev: EventTouch, type: TroopType): void {
@@ -350,6 +480,7 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
       hadGhost: !!this.ghostNode,
     });
     this._dragState = DeployDragState.Idle;
+    this.resourceBar?.setPreview(null);
     this.ghostNode?.destroy();
     this.ghostNode = null;
     this.dragHoverCallback?.(null);
@@ -444,7 +575,7 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
       const step = nextRedirectStep(this.redirectPrompt, { troopType: this.selectedType, lane: this.selectedLane }, outcome.suggestion ?? null);
       this.redirectPrompt = step.prompt;
       if (step.action === 'arm' && step.troopType) {
-        this.showToast(`${this.getDeployFailMessage(outcome.reason)}\n${deploySuggestionCopy(this.toTroopDisplayName(step.troopType as TroopType))}，再點一次確認改派`);
+        this.showToast(`${this.getDeployFailMessage(outcome.reason, this.selectedType)}\n${deploySuggestionCopy(this.toTroopDisplayName(step.troopType as TroopType))}，再點一次確認改派`);
         return;
       }
       if (step.action === 'confirm' && step.troopType) {
@@ -457,7 +588,7 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
       this.node.emit('playerDeployed');
       return;
     }
-    this.showToast(this.getDeployFailMessage(outcome.reason));
+    this.showToast(this.getDeployFailMessage(outcome.reason, this.selectedType));
   }
 
   private toTroopDisplayName(type: TroopType): string {
@@ -471,13 +602,20 @@ export class DeployComposite extends CompositePanel implements IDeployRuntimeLik
     return map[type] ?? String(type);
   }
 
-  private getDeployFailMessage(reason?: string): string {
+  private getDeployFailMessage(reason?: string, type?: TroopType): string {
+    const t = (k: string, ...a: string[]): string => services().i18n.t(k, ...a);
     if (reason === 'battle-locked') return '目前流程鎖定，暫時無法部署';
     if (reason === 'limit') return DEPLOY_LIMIT_TOAST;
     if (reason === 'occupied') return '目標格已有單位，請改放其他格子';
-    if (reason === 'troops-short') return '⚠ 軍勢不足，這張卡派不出去（本場兵力快用完了）';
-    if (reason === 'field-limit') return '⚠ 場上部隊已滿，請先等待退場或撤回部隊';
     if (reason === 'order-refused') return '⚠ 主將忠誠不足，本回合拒絕執行命令';
+    // 兵／糧／場上已滿：有出征帳本就直接講缺多少（doc_spec_1341 §5.1）；沒有帳本才退回簡短句
+    const sortie = type ? this.ctrl?.getSortieState?.() ?? null : null;
+    if (sortie && type && (reason === 'troops-short' || reason === 'field-limit' || reason === 'food-short' || reason === undefined)) {
+      const call = deployShortToast(describeDeployShortfall(sortie, { troopType: type }), this.troopName(type));
+      if (call) return t(call.key, ...call.args);
+    }
+    if (reason === 'troops-short') return t('battle.deploy.sheet.title.troops');
+    if (reason === 'field-limit') return t('battle.deploy.toast.field');
     return foodShortMessage(this.currentFood);
   }
 }
