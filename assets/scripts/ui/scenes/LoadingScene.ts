@@ -1305,8 +1305,8 @@ export class LoadingScene extends Component {
                 this._requireMissionDetailNonEmptyLabel(root, 'DialogCard/HeaderBar/DialogTitleLabel');
                 this._requireMissionDetailNonEmptyLabel(root, 'DialogCard/Body/ColLeft/OverviewPanel/MissionTitleLabel');
                 this._requireMissionDetailNonEmptyLabel(root, 'DialogCard/Body/ColLeft/IntelPanel/IntelBodyLabel');
-                this._requireMissionDetailNonEmptyLabel(root, 'DialogCard/Body/ColLeft/RewardPanel/RewardBaseLabel');
-                this._requireMissionDetailNonEmptyLabel(root, 'DialogCard/Body/ColLeft/RewardPanel/RewardPerfectLabel');
+                this._requireMissionDetailNonEmptyLabel(root, 'DialogCard/Body/ColRight/RewardPanel/RewardBaseLabel');
+                this._requireMissionDetailNonEmptyLabel(root, 'DialogCard/Body/ColRight/RewardPanel/RewardPerfectLabel');
                 this._requireMissionDetailNode(root, 'DialogCard/FooterBar/AiDelegateRow/AiDelegateToggle');
                 this._requireMissionDetailNode(root, 'DialogCard/Body/ColMid/AssignmentPanel/GeneralSelectButton');
 

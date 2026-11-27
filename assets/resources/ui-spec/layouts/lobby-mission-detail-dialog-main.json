@@ -260,7 +260,6 @@
                     "type": "panel",
                     "name": "IntelPanel",
                     "width": "100%",
-                    "height": 300,
                     "skinSlot": "mission.dialog.section.bg",
                     "layout": {
                       "type": "vertical",
@@ -268,7 +267,8 @@
                       "paddingTop": 14,
                       "paddingBottom": 14,
                       "paddingLeft": 16,
-                      "paddingRight": 16
+                      "paddingRight": 16,
+                      "resizeMode": "container"
                     },
                     "children": [
                       {
@@ -285,39 +285,8 @@
                         "name": "IntelBodyLabel",
                         "id": "intelBodyLabel",
                         "width": "100%",
-                        "height": 110,
                         "styleSlot": "mission.dialog.label.body",
                         "bind": "intelBody"
-                      },
-                      {
-                        "type": "panel",
-                        "name": "IntelFogMask",
-                        "id": "intelFogMask",
-                        "widget": {
-                          "left": 16,
-                          "right": 16,
-                          "bottom": 14
-                        },
-                        "height": 84,
-                        "skinSlot": "mission.dialog.fog.mask",
-                        "_doc": "情報度未滿 100% 時顯示；內容由 intelRevealPercent / intelFogVisible 決定。",
-                        "bind": "intelFogVisible",
-                        "children": [
-                          {
-                            "type": "label",
-                            "name": "IntelFogLabel",
-                            "widget": {
-                              "top": 10,
-                              "left": 0,
-                              "right": 0
-                            },
-                            "height": 64,
-                            "_doc": "PROG-2-10068：提示列可帶白話導讀共兩行，高度留 3 行（原 20 會讓兩行字縮成小字）。",
-                            "textKey": "mission.detail.ui.intel_fog",
-                            "text": "目前情報仍不完整，派探子再探可看得更清楚",
-                            "styleSlot": "mission.dialog.label.muted"
-                          }
-                        ]
                       },
                       {
                         "type": "panel",
@@ -325,11 +294,11 @@
                         "id": "envScoutPanel",
                         "skinSlot": "mission.dialog.env.bg",
                         "width": "100%",
-                        "height": 122,
                         "_doc": "環境偵察（PROG-2-0403）：事實（一條一行，最多四行）與風險／期限一行，位於情報區最下方。PROG-2-9152 把事實行加高，長事實會換行而不是縮成小字。",
                         "layout": {
                           "type": "vertical",
-                          "spacing": 4
+                          "spacing": 4,
+                          "resizeMode": "container"
                         },
                         "children": [
                           {
@@ -337,7 +306,6 @@
                             "name": "EnvScoutTerrainLabel",
                             "id": "envScoutTerrainLabel",
                             "width": "100%",
-                            "height": 88,
                             "styleSlot": "mission.dialog.label.body",
                             "bind": "envScoutTerrainLine"
                           },
@@ -346,107 +314,39 @@
                             "name": "EnvScoutWeatherLabel",
                             "id": "envScoutWeatherLabel",
                             "width": "100%",
-                            "height": 22,
                             "styleSlot": "mission.dialog.label.body",
                             "bind": "envScoutWeatherLine"
                           }
                         ]
-                      }
-                    ]
-                  },
-                  {
-                    "type": "panel",
-                    "name": "RewardPanel",
-                    "width": "100%",
-                    "height": 238,
-                    "skinSlot": "mission.dialog.section.bg",
-                    "layout": {
-                      "type": "vertical",
-                      "spacing": 8,
-                      "paddingTop": 14,
-                      "paddingBottom": 14,
-                      "paddingLeft": 16,
-                      "paddingRight": 16
-                    },
-                    "children": [
-                      {
-                        "type": "label",
-                        "name": "RewardTitleLabel",
-                        "width": "100%",
-                        "height": 22,
-                        "textKey": "mission.detail.ui.reward",
-                        "text": "獎勵",
-                        "styleSlot": "mission.dialog.label.section"
                       },
                       {
                         "type": "panel",
-                        "name": "BaseRewardCard",
-                        "width": "100%",
-                        "height": 68,
-                        "skinSlot": "mission.dialog.reward.base.bg",
-                        "layout": {
-                          "type": "vertical",
-                          "spacing": 2,
-                          "paddingTop": 8,
-                          "paddingBottom": 8,
-                          "paddingLeft": 12,
-                          "paddingRight": 12
-                        },
+                        "name": "IntelFogMask",
+                        "id": "intelFogMask",
+                        "skinSlot": "mission.dialog.fog.mask",
+                        "_doc": "情報度未滿 100% 時顯示；內容由 intelRevealPercent / intelFogVisible 決定。",
+                        "bind": "intelFogVisible",
                         "children": [
                           {
                             "type": "label",
-                            "name": "BaseRewardTitleLabel",
-                            "width": "100%",
-                            "height": 16,
-                            "textKey": "mission.detail.ui.reward_base",
-                            "text": "基礎獎勵",
-                            "styleSlot": "mission.dialog.label.badge"
-                          },
-                          {
-                            "type": "label",
-                            "name": "RewardBaseLabel",
-                            "id": "rewardBaseLabel",
-                            "width": "100%",
-                            "height": 34,
-                            "styleSlot": "mission.dialog.label.reward",
-                            "bind": "rewardBaseLabel"
+                            "name": "IntelFogLabel",
+                            "_doc": "PROG-2-10170：提示列改入流程（原為貼底固定 84），高度隨文字加高，en／ja 長字不再壓到風險列。",
+                            "textKey": "mission.detail.ui.intel_fog",
+                            "text": "目前情報仍不完整，派探子再探可看得更清楚",
+                            "styleSlot": "mission.dialog.label.muted",
+                            "width": "100%"
                           }
-                        ]
-                      },
-                      {
-                        "type": "panel",
-                        "name": "PerfectRewardCard",
-                        "width": "100%",
-                        "height": 74,
-                        "skinSlot": "mission.dialog.reward.perfect.bg",
+                        ],
                         "layout": {
                           "type": "vertical",
-                          "spacing": 2,
-                          "paddingTop": 8,
-                          "paddingBottom": 8,
-                          "paddingLeft": 12,
-                          "paddingRight": 12
+                          "spacing": 0,
+                          "paddingTop": 10,
+                          "paddingBottom": 10,
+                          "paddingLeft": 0,
+                          "paddingRight": 0,
+                          "resizeMode": "container"
                         },
-                        "children": [
-                          {
-                            "type": "label",
-                            "name": "PerfectRewardTitleLabel",
-                            "width": "100%",
-                            "height": 16,
-                            "textKey": "mission.detail.ui.reward_perfect",
-                            "text": "完美達成加成",
-                            "styleSlot": "mission.dialog.label.badge"
-                          },
-                          {
-                            "type": "label",
-                            "name": "RewardPerfectLabel",
-                            "id": "rewardPerfectLabel",
-                            "width": "100%",
-                            "height": 40,
-                            "styleSlot": "mission.dialog.label.reward",
-                            "bind": "rewardPerfectLabel"
-                          }
-                        ]
+                        "width": "100%"
                       }
                     ]
                   }
@@ -904,6 +804,100 @@
                                 "_doc": "TS 依 costTimeRatio 調整填充寬度或 clip。"
                               }
                             ]
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "type": "panel",
+                    "name": "RewardPanel",
+                    "width": "100%",
+                    "skinSlot": "mission.dialog.section.bg",
+                    "layout": {
+                      "type": "vertical",
+                      "spacing": 8,
+                      "paddingTop": 14,
+                      "paddingBottom": 14,
+                      "paddingLeft": 16,
+                      "paddingRight": 16,
+                      "resizeMode": "container"
+                    },
+                    "children": [
+                      {
+                        "type": "label",
+                        "name": "RewardTitleLabel",
+                        "width": "100%",
+                        "height": 22,
+                        "textKey": "mission.detail.ui.reward",
+                        "text": "獎勵",
+                        "styleSlot": "mission.dialog.label.section"
+                      },
+                      {
+                        "type": "panel",
+                        "name": "BaseRewardCard",
+                        "width": "100%",
+                        "skinSlot": "mission.dialog.reward.base.bg",
+                        "layout": {
+                          "type": "vertical",
+                          "spacing": 2,
+                          "paddingTop": 8,
+                          "paddingBottom": 8,
+                          "paddingLeft": 12,
+                          "paddingRight": 12,
+                          "resizeMode": "container"
+                        },
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "BaseRewardTitleLabel",
+                            "width": "100%",
+                            "height": 16,
+                            "textKey": "mission.detail.ui.reward_base",
+                            "text": "基礎獎勵",
+                            "styleSlot": "mission.dialog.label.badge"
+                          },
+                          {
+                            "type": "label",
+                            "name": "RewardBaseLabel",
+                            "id": "rewardBaseLabel",
+                            "width": "100%",
+                            "styleSlot": "mission.dialog.label.reward",
+                            "bind": "rewardBaseLabel"
+                          }
+                        ]
+                      },
+                      {
+                        "type": "panel",
+                        "name": "PerfectRewardCard",
+                        "width": "100%",
+                        "skinSlot": "mission.dialog.reward.perfect.bg",
+                        "layout": {
+                          "type": "vertical",
+                          "spacing": 2,
+                          "paddingTop": 8,
+                          "paddingBottom": 8,
+                          "paddingLeft": 12,
+                          "paddingRight": 12,
+                          "resizeMode": "container"
+                        },
+                        "children": [
+                          {
+                            "type": "label",
+                            "name": "PerfectRewardTitleLabel",
+                            "width": "100%",
+                            "height": 16,
+                            "textKey": "mission.detail.ui.reward_perfect",
+                            "text": "完美達成加成",
+                            "styleSlot": "mission.dialog.label.badge"
+                          },
+                          {
+                            "type": "label",
+                            "name": "RewardPerfectLabel",
+                            "id": "rewardPerfectLabel",
+                            "width": "100%",
+                            "styleSlot": "mission.dialog.label.reward",
+                            "bind": "rewardPerfectLabel"
                           }
                         ]
                       }
