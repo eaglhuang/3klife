@@ -17728,5 +17728,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10119.md",
     "title": "[PROG-2-10119] 批次補舊 PROG 卡 frontmatter task_id（讓 ATM importer 可匯入）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3248",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10140.md",
+    "title": "[PROG-2-10140] 趙雲奧義 roar 延後至衝擊點＋洪流水花改藍白",
+    "category": "task"
   }
 ]
