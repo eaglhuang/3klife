@@ -3,22 +3,26 @@
     {
       "id": "npc_fill_1",
       "name": "陳登",
-      "nameKey": "npc.house.chendeng"
+      "nameKey": "npc.house.chendeng",
+      "portraitId": "chen-deng"
     },
     {
       "id": "npc_fill_2",
       "name": "張昭",
-      "nameKey": "npc.house.zhangzhao"
+      "nameKey": "npc.house.zhangzhao",
+      "portraitId": "zhang-zhao"
     },
     {
       "id": "npc_fill_3",
       "name": "審配",
-      "nameKey": "npc.house.shenpei"
+      "nameKey": "npc.house.shenpei",
+      "portraitId": "shen-pei"
     },
     {
       "id": "npc_fill_4",
       "name": "沮授",
-      "nameKey": "npc.house.jushou"
+      "nameKey": "npc.house.jushou",
+      "portraitId": "ju-shou"
     }
   ],
   "npcFillDefaultRatios": [

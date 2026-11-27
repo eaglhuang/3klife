@@ -128,18 +128,12 @@ interface TimedEvent {
 }
 
 /**
- * 各幕事件表。第 1 幕開場敲鑼；第 2 幕換幕敲鑼，名次依金、銀、銅序亮框，金框亮起同時掌聲。
+ * 各幕事件表。第 1 幕開場敲鑼；第 2 幕換幕敲鑼；各榜的名次揭曉（季軍→亞軍→冠軍倒敘）與冠軍掌聲由 YearEndCeremonyPodium.ceremonyBoardReveals 依榜秒數排（PROG-2-10153）。
  * 第 3 幕沒有事件（框保持亮著）。所有 at 必須小於該幕停留秒數（測試鎖住）。
  */
 export const CEREMONY_TIMELINE: Readonly<Record<CeremonyAct, readonly TimedEvent[]>> = {
     1: [{ at: 0, event: { type: 'cue', cue: 'gong' } }],
-    2: [
-        { at: 0, event: { type: 'cue', cue: 'gong' } },
-        { at: 0.8, event: { type: 'reveal', rank: 1 } },
-        { at: 0.8, event: { type: 'cue', cue: 'applause' } },
-        { at: 1.9, event: { type: 'reveal', rank: 2 } },
-        { at: 3.0, event: { type: 'reveal', rank: 3 } },
-    ],
+    2: [{ at: 0, event: { type: 'cue', cue: 'gong' } }],
     3: [],
 };
 
