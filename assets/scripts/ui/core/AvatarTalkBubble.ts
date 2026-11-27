@@ -25,6 +25,7 @@ import {
 import { HallChatStore, parseChatBook } from '../../core/systems/HallChatLines';
 import { LocalLobbyDialogueProvider, type LobbyDialogueProvider } from '../../core/systems/LobbyDialogueProvider';
 import { UCUFLogger, LogCategory } from '../../core/utils/UCUFLogger';
+import { tryToddlerBarkTap } from '../fun/FunToddlerBarkView';
 
 const BUBBLE_NODE_NAME = 'AvatarTalkBubble';
 /** 顯示後再把泡泡提到最上層的時間點（毫秒）：蓋過點擊後才開出的詳情面板 */
@@ -96,6 +97,8 @@ export function bindAvatarTalk(node: Node | null | undefined, generalId: string 
 
 /** 立即讓某位武將在頭像節點旁說一句（也供測試與其他入口呼叫）。回傳實際說的結果。 */
 export function showAvatarTalk(anchor: Node, generalId: string): AvatarTalkResult {
+    // 未滿 5 歲的孩子：改出童言童語＋小動作（新手樂趣 FUN-01，PROG-2-10177），不走成人台詞
+    if (tryToddlerBarkTap(anchor, generalId)) return { kind: 'cooldown' };
     ensureProvider();
     const result = _picker.speak(generalId);
     if (result.kind === 'cooldown') return result;
@@ -109,9 +112,9 @@ export function showAvatarTalk(anchor: Node, generalId: string): AvatarTalkResul
 }
 
 /** 在任意節點旁顯示一句指定文字（任務派出等非「點頭像」的觸發點共用同一個泡泡；PROG-2-9966） */
-export function showAvatarBubbleText(anchor: Node, text: string): void {
+export function showAvatarBubbleText(anchor: Node, text: string, holdSec: number = AVATAR_TALK_HOLD_SEC): void {
     if (!anchor.isValid || !text) return;
-    presentBubble(anchor, text);
+    presentBubble(anchor, text, holdSec);
 }
 
 /** 立刻關掉泡泡（離開畫面、開面板時可呼叫） */
@@ -200,7 +203,7 @@ function collectButtonRects(root: Node, anchor: Node, bubble: Node, maxW: number
     return rects;
 }
 
-function presentBubble(anchor: Node, text: string): void {
+function presentBubble(anchor: Node, text: string, holdSec: number = AVATAR_TALK_HOLD_SEC): void {
     const root = rootOf(anchor);
     if (!root) return;
     const anchorUi = anchor.getComponent(UITransform);
@@ -247,7 +250,7 @@ function presentBubble(anchor: Node, text: string): void {
     g.stroke();
 
     bubble.active = true;
-    _holdUntil = Date.now() + AVATAR_TALK_HOLD_SEC * 1000;
+    _holdUntil = Date.now() + holdSec * 1000;
     raiseBubble(root);
     // 點頭像可能同時開了詳情／換頁（新面板會蓋在上面）：稍後再提到最上層，讓泡泡不被蓋掉
     for (const delay of RAISE_DELAYS_MS) {
@@ -262,7 +265,7 @@ function presentBubble(anchor: Node, text: string): void {
     _hideTimer = setTimeout(() => {
         _hideTimer = null;
         if (_bubble?.isValid) _bubble.active = false;
-    }, AVATAR_TALK_HOLD_SEC * 1000);
+    }, holdSec * 1000);
     UCUFLogger.info(LogCategory.UI, `[AvatarTalk] ${anchor.name} root=${root.name} side=${rect.side} overlap=${Math.round(rect.overlap)} → ${text.slice(0, 24)}`);
 }
 
