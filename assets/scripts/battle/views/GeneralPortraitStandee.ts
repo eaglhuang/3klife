@@ -18,6 +18,14 @@ export function needsStandeeFallback(spinePath: string | null | undefined, spine
   return !spinePath || spineFailed(spinePath);
 }
 
+/**
+ * 是否要載隱藏的 3D 主將模型（PROG-2-10154）：它的貼圖約 190MB，只在 Spine 沒有或確定載不起來時才當最後後備。
+ * 主將板上棋子另有立繪站牌可退；場邊主將沒有站牌，所以 Spine 失敗時直接退 3D。
+ */
+export function shouldLoadHeroModel(spinePath: string | null | undefined, spineFailed: (path: string) => boolean): boolean {
+  return needsStandeeFallback(spinePath, spineFailed);
+}
+
 /** 站牌顯示高度（畫面像素）：與 Spine 主將的標籤到腳底距離（230）一致，兩種外觀站位大小不跳。 */
 export const STANDEE_HEIGHT_PX = 230;
 
