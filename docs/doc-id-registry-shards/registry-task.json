@@ -17740,5 +17740,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10186.md",
     "title": "[PROG-2-10186] MYS-01 UI 碎片延伸四項",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3253",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10189.md",
+    "title": "[PROG-2-10189] 三題裁決寫入規格",
+    "category": "task"
   }
 ]
