@@ -1,0 +1,59 @@
+{
+  "schema": "life-roster.v1",
+  "includeKinds": [
+    "retainer",
+    "visitor"
+  ],
+  "generals": [
+    {
+      "id": "zhang_fei",
+      "kind": "retainer",
+      "faction": "shu"
+    },
+    {
+      "id": "zhuge_liang",
+      "kind": "retainer",
+      "faction": "shu"
+    },
+    {
+      "id": "guan_yu",
+      "kind": "retainer",
+      "faction": "shu"
+    },
+    {
+      "id": "liu_bei",
+      "kind": "retainer",
+      "faction": "shu"
+    },
+    {
+      "id": "zhao_yun",
+      "kind": "retainer",
+      "faction": "shu"
+    },
+    {
+      "id": "cao_cao",
+      "kind": "visitor",
+      "faction": "wei"
+    },
+    {
+      "id": "lu_bu",
+      "kind": "visitor",
+      "faction": "neutral"
+    },
+    {
+      "id": "zhou_yu",
+      "kind": "visitor",
+      "faction": "wu"
+    },
+    {
+      "id": "diao_chan",
+      "kind": "retainer",
+      "faction": "neutral"
+    },
+    {
+      "id": "sun_shangxiang",
+      "kind": "visitor",
+      "faction": "wu"
+    }
+  ]
+}

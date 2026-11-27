@@ -17820,7 +17820,19 @@
     "category": "task"
   },
   {
-    "id": "doc_task_3277",
+    "id": "doc_task_3273",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10213.md",
+    "title": "[PROG-2-10213] WP3 武將作息與喜好引擎",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3275",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10211.md",
+    "title": "[PROG-2-10211] WP5 日夜四季調色與疊層程式框架",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3279",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10212.md",
     "title": "[PROG-2-10212] WP4 場景註冊表＋任意場景切換 UI",
     "category": "task"
