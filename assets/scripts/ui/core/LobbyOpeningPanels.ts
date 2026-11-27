@@ -50,7 +50,11 @@ export interface LobbyOpeningPanelPorts {
     /** 確定開局後收掉宿命池畫面 */
     closeDestinyPool?: () => void;
     /** 開場信件的標題與本文（已查好 i18n 的字串） */
-    openingLetterText?: () => { title: string; body: string; button?: string };
+    openingLetterText?: () => { title: string; body: string; button?: string; sender?: string };
+    /** 開場信件顯示時通知宿主（方案 B 在信旁開彈幕層，PROG-2-10149）；refresh 會重複呼叫，宿主要自己防重入 */
+    onLetterShown?: (host: LobbyOpeningPanelHost) => void;
+    /** 開場信件關閉時通知宿主收彈幕層 */
+    onLetterClosed?: () => void;
     /** 開場面板完成顯示／退場後，通知宿主重查延後彈窗。 */
     onOverlayChanged?: () => void;
     warn: (message: string, error?: unknown) => void;
@@ -160,13 +164,19 @@ export class LobbyOpeningPanels {
         if (host.binder) {
             const text = this._ports.openingLetterText?.() ?? { title: '', body: '' };
             // 信裡寫「就按下：啟動宿命轉蛋」，按鈕字要跟信對得上；沒給 button 就維持版面原字
-            host.binder.setTexts({ openingLetterTitle: text.title, openingLetterBody: text.body, ...(text.button ? { btnCloseOpeningLetterLabel: text.button } : {}) });
+            host.binder.setTexts({
+                openingLetterTitle: text.title, openingLetterBody: text.body,
+                ...(text.button ? { btnCloseOpeningLetterLabel: text.button } : {}),
+                ...(text.sender !== undefined ? { openingLetterSender: text.sender } : {}),
+            });
         }
+        this._ports.onLetterShown?.(host);
     }
 
     public async closeOpeningLetter(): Promise<void> {
         const host = this._openingLetterHost;
         if (host) host.node.active = false;
+        this._ports.onLetterClosed?.();
         try {
             await this._ports.session().markOpeningLetterSeen();
         } catch (error) {

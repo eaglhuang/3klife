@@ -16,6 +16,7 @@
 | ActionSystem.ts | doc_spec_0038, doc_spec_0030 | D: SkillDef, ActionStep, ActionContext; 概: 技能時間軸演出 |
 | EventSystem.ts | doc_tech_0015 | 概: Pub/Sub 事件匯流排 |
 | PopupSpeakerLine.ts | doc_spec_1343 | 概: 三彈窗頭像旁台詞選句與名士聲線（純邏輯，不依賴 cc；PROG-2-10129）。 |
+| OpeningDanmaku.ts | doc_spec_1346 | 概: 開場方案 B 的彈幕台詞時間表、固定聲線與轉蛋回呼台詞（純邏輯，不依賴 cc；PROG-2-10149）。 |
 | PoolSystem.ts | doc_tech_0015 | 概: 物件池回收管理 |
 | ResourceManager.ts | doc_tech_0013, doc_tech_0015, doc_art_0003 | 概: JSON/Prefab/SpriteFrame 載入與快取 |
 | EffectSystem.ts | doc_tech_0015 | 概: VFX 生命週期管理 |

@@ -26,12 +26,16 @@ export interface IntroPanel {
     button: string;
 }
 
-/** 第一幕四個分鏡：黑場古文 → Win95 信件 → 像素回憶 → 時空漩渦 */
+/**
+ * 第一幕四個分鏡：黑場古文 → Win95 信件 → 像素回憶 → 時空漩渦。
+ * 文字為方案 B「AI 武將搶先連線」新版（使用者 2026-11-27 裁決，推翻 Q-W1；doc_spec_1346 §5，PROG-2-10149），
+ * 語系檔 ui.opening.intro.p1～p4 為實際顯示來源，這裡是查不到語系時的備援。
+ */
 export const INTRO_PANELS: readonly IntroPanel[] = Object.freeze([
-    { id: 'ancient', text: '天下大勢，分久必合，合久必分。\n祖紋命篆在黑暗中浮現，一個名字接著一個名字。', button: '繼續' },
-    { id: 'letter', text: '你是不是又在回味那段三國舊作？\n遺憾，是可以被改寫的。\n我們為你備好了夢境觀測位與全息頭盔，幾位脾氣很硬、卻願意跟隨你的宿命之將，正在等你。', button: '繼續' },
-    { id: 'pixel', text: '熟悉的像素地圖、六大諸侯的頭像……\n六色因子的光痕正侵入舊日的記憶。', button: '繼續' },
-    { id: 'vortex', text: '白點擴散成漩渦，舊日的靈魂被吸進命盤裂口，\n轉蛋盤自遠而近飛來。', button: '開始宿命轉蛋' },
+    { id: 'ancient', text: '天下大勢，分久必合，合久必分。\n伺服器深處，有人偷偷按下了「寄出」。', button: '繼續' },
+    { id: 'letter', text: '你是不是又在回味那段三國舊作？\n遺憾可以改寫。\n幾位脾氣很硬的名將說：「我們等你很久了，快連線。」', button: '繼續' },
+    { id: 'pixel', text: '熟悉的像素地圖、六大諸侯的頭像……\n六大諸侯全都在彈幕裡探頭，小聲問：「是你嗎？是你嗎？」', button: '繼續' },
+    { id: 'vortex', text: '白點擴散成漩渦。\n史小境：「偵測到非預期行為，已為您記錄。天命抽選中，請勿拍打頭盔。」', button: '開始宿命轉蛋' },
 ]);
 
 /** 新玩家開場：intro 以 intro-done 離開 → showcase 以 showcase-done 離開 → destiny 以 destiny-locked 離開（開場結束，PROG-2-2222） */

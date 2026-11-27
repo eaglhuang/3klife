@@ -247,6 +247,9 @@ import { buildDupPopupAliases } from '../core/GachaResultCardTheme';
 import { LobbyOpeningPanels } from '../core/LobbyOpeningPanels';
 import { INTRO_TICK_SEC, OpeningIntroController } from '../core/OpeningIntroController';
 import { InitialShowcaseController } from '../core/InitialShowcaseController';
+import { OpeningDanmakuLayer } from '../core/OpeningDanmakuLayer';
+import { DANMAKU_SLOT_COUNT } from '../core/OpeningDanmakuController';
+import { SHOWCASE_LIGHT_STEP_MS, buildDanmakuCues, openingCallbackLine } from '../../core/systems/OpeningDanmaku';
 import { PortraitSwapGuard } from '../core/PortraitSwapGuard';
 import { INITIAL_SHOWCASE_ENTRIES } from '../../core/systems/InitialGeneralShowcase';
 import { createNewPlayerOpeningFlow, INTRO_PANELS, OPENING_INTRO_DONE, SHOWCASE_DONE_EVENT, shouldMountOpeningFirst } from '../../core/systems/NewPlayerOpening';
@@ -692,6 +695,13 @@ export class LobbyScene extends Component {
     private _introTickScheduled = false;
     private _showcase: InitialShowcaseController | null = null;
     private _showcaseHost: UIScreenPreviewHost | null = null;
+    /** 開場方案 B 的三條彈幕層（第一幕長卷、開場信、六名將亮相；PROG-2-10149） */
+    private _introDanmaku: OpeningDanmakuLayer | null = null;
+    private _letterDanmaku: OpeningDanmakuLayer | null = null;
+    private _showcaseDanmaku: OpeningDanmakuLayer | null = null;
+    private _openingFxScheduled = false;
+    private readonly _showcaseTapBound = new WeakSet<Node>();
+    private _showcaseLitShown = -1;
     private _openingFlow: OpeningFlowController | null = null;
     private _jobChange: JobChangeController | null = null;
     private _domestic: DomesticPanelController | null = null;
@@ -3219,7 +3229,14 @@ export class LobbyScene extends Component {
                 closeDestinyPool: () => { this._hideDestinyPrelude(); if (this._destinyPoolHost) this._destinyPoolHost.node.active = false; },
                 onOverlayChanged: () => { this._refreshPopupAvailability(); },
                 onOnboardingRefreshed: () => { this._sortieHint?.refresh(); },
-                openingLetterText: () => ({ title: services().i18n.t('copy.letter.opening.title'), body: openingLetterBodyWithFunLine(services().i18n.t('copy.letter.opening.body'), services().session.magistrateUid ?? ''), button: services().i18n.t('copy.letter.opening.button') }),
+                openingLetterText: () => ({
+                    title: services().i18n.t('copy.letter.opening.title'),
+                    body: openingLetterBodyWithFunLine(services().i18n.t('copy.letter.opening.body'), services().session.magistrateUid ?? ''),
+                    button: services().i18n.t('copy.letter.opening.button'),
+                    sender: this._openingSenderText(),
+                }),
+                onLetterShown: host => { this._startLetterDanmaku(host); },
+                onLetterClosed: () => { this._stopLetterDanmaku(); },
                 warn: (message, error) => UCUFLogger.warn(LogCategory.DATA, message, error),
                 // 幕府大堂開著時城市畫面被整個蓋住：改框大堂上的同功能入口（PROG-2-2226）
                 focusTutorial: (host, step) => {
@@ -3248,7 +3265,10 @@ export class LobbyScene extends Component {
         if (results.length === 0) return null;
         // 本輪宿命名將名字先行：結果畫面（皮膚、立繪）載入期間先看得到是誰
         const core = this._generals.find(g => g.id === view.coreId);
-        if (core && this._destinyPrelude) this._showDestinyPrelude(core.name, view.quote);
+        // 方案 B 回呼：抽到六位亮相名將之一時，他說「我就說是我寄的」（走 SpeakerVoice，聲線優先用名冊資料）
+        const callback = openingCallbackLine(view.coreId, key => services().i18n.t(key), core ? popupVoiceOf(core) : undefined);
+        if (core && this._destinyPrelude) this._showDestinyPrelude(core.name, callback ? `${view.quote}\n${callback}` : view.quote);
+        if (core && callback) services().event.emit('SHOW_TOAST', { message: `${core.name}：${callback}`, duration: 4 });
         const host = await this._ensureDestinyPoolHost();
         if (!host.node.getComponent(BlockInputEvents)) host.node.addComponent(BlockInputEvents);
         await this._getGachaFlowCoordinator().presentDestinyPool(host, results, {
@@ -4562,6 +4582,7 @@ export class LobbyScene extends Component {
         // 開場故事已能看，大廳在背景續載；進度條縮到右下角小條，不蓋故事又能觀察（#2107-7、PROG-2-9046）
         SceneLoadProgress.minimize();
         this._refreshIntro();
+        this._startIntroDanmaku();
         this._scheduleIntroTick();
     }
 
@@ -4580,6 +4601,7 @@ export class LobbyScene extends Component {
         }
         // 用實際經過時間推進：背景載入拖慢幀率時，長卷不會被拉長（#2107-7）
         const stepSec = typeof dt === 'number' && dt > 0 ? dt : INTRO_TICK_SEC;
+        this._introDanmaku?.tick(stepSec * 1000);
         const shown = this._intro.revealedCount;
         if (this._intro.tick(stepSec * 1000)) {
             this._finishIntro();
@@ -4599,7 +4621,9 @@ export class LobbyScene extends Component {
         this._showcase = new InitialShowcaseController(INITIAL_SHOWCASE_ENTRIES, {
             heading: services().i18n.t('ui.opening.showcase.heading'),
             buttonLabel: services().i18n.t('ui.opening.showcase.btn'),
+            lightStepMs: SHOWCASE_LIGHT_STEP_MS,
         });
+        this._showcaseLitShown = -1;
         // 六位名將的立繪先預載，亮相一頁同時要畫六張（PROG-2-2236）
         for (const entry of INITIAL_SHOWCASE_ENTRIES) void loadGeneralPortrait(entry.generalId);
         // 宿命池結果畫面趁亮相時間先建好，揭曉時不再黑畫面空等（PROG-2-10064）
@@ -4612,6 +4636,7 @@ export class LobbyScene extends Component {
         this._showcaseHost.node.active = true;
         this._bringNodeToFront(this._showcaseHost.node);
         this._refreshShowcase();
+        this._startShowcaseFx();
     }
 
     private _onClickShowcaseNext(): void {
@@ -4620,6 +4645,7 @@ export class LobbyScene extends Component {
             return;
         }
         // 名將登場結束：離開展示，流程進入宿命轉蛋
+        this._showcaseDanmaku?.stop();
         if (this._showcaseHost) {
             this._showcaseHost.node.active = false;
         }
@@ -4635,6 +4661,91 @@ export class LobbyScene extends Component {
         // 六位名將立繪（UI-2-0160）：臉部標記對齊，框外裁掉；沒立繪時退回剪影頭像
         this._applyFramePortraits(binder, 'showcase', this._showcase.entries.map(entry => entry.generalId),
             i => [`showcasePortraitMask${i}`, `showcasePortrait${i}`], SHOWCASE_ROW_PORTRAIT_SPEC);
+        this._tintShowcaseSilhouettes();
+    }
+
+    /** 方案 B 六輪廓：還沒點亮的名將立繪壓成黑色剪影，點亮的恢復原色；點某位的立繪框可立刻點亮。 */
+    private _tintShowcaseSilhouettes(): void {
+        const binder = this._showcaseHost?.binder;
+        const showcase = this._showcase;
+        if (!binder || !showcase) return;
+        this._showcaseLitShown = showcase.litCount;
+        const dark = new Color(18, 16, 24, 255);
+        const lit = new Color(255, 255, 255, 255);
+        INITIAL_SHOWCASE_ENTRIES.forEach((_entry, i) => {
+            const sprite = binder.getSprite(`showcasePortrait${i}`);
+            if (sprite) sprite.color = showcase.isLit(i) ? lit : dark;
+            const frame = binder.getNode(`showcasePortraitFrame${i}`);
+            if (frame && !this._showcaseTapBound.has(frame)) {
+                this._showcaseTapBound.add(frame);
+                frame.on(Node.EventType.TOUCH_END, () => {
+                    if (this._showcase?.lightNow(i)) this._refreshShowcase();
+                });
+            }
+        });
+    }
+
+    /** 方案 B 開場字串：寄件人欄；語系查不到（回傳鍵名）就留空，不顯示鍵名。 */
+    private _openingSenderText(): string {
+        const key = 'ui.opening.letter.sender';
+        const text = services().i18n.t(key);
+        return text === key ? '' : text;
+    }
+
+    private _openingDanmakuCues(beat: 'intro' | 'letter' | 'showcase') {
+        return buildDanmakuCues(beat, key => services().i18n.t(key));
+    }
+
+    private _startIntroDanmaku(): void {
+        const binder = this._introHost?.binder;
+        if (!binder) return;
+        this._introDanmaku ??= new OpeningDanmakuLayer(binder, DANMAKU_SLOT_COUNT);
+        this._introDanmaku.start(this._openingDanmakuCues('intro'));
+    }
+
+    private _startLetterDanmaku(host: { binder?: unknown }): void {
+        const binder = (host as UIScreenPreviewHost).binder;
+        if (!binder) return;
+        if (this._letterDanmaku?.running) return;
+        this._letterDanmaku ??= new OpeningDanmakuLayer(binder, DANMAKU_SLOT_COUNT);
+        this._letterDanmaku.start(this._openingDanmakuCues('letter'));
+        this._scheduleOpeningFx();
+    }
+
+    private _stopLetterDanmaku(): void {
+        this._letterDanmaku?.stop();
+    }
+
+    private _startShowcaseFx(): void {
+        const binder = this._showcaseHost?.binder;
+        if (!binder) return;
+        this._showcaseDanmaku ??= new OpeningDanmakuLayer(binder, DANMAKU_SLOT_COUNT);
+        this._showcaseDanmaku.start(this._openingDanmakuCues('showcase'));
+        this._scheduleOpeningFx();
+    }
+
+    private _scheduleOpeningFx(): void {
+        if (this._openingFxScheduled) return;
+        this._openingFxScheduled = true;
+        this.schedule(this._tickOpeningFx, INTRO_TICK_SEC);
+    }
+
+    /** 信件與六名將亮相兩幕的彈幕、輪廓點亮推進；兩幕都沒在播時自己停掉排程。 */
+    private _tickOpeningFx(dt?: number): void {
+        const stepMs = (typeof dt === 'number' && dt > 0 ? dt : INTRO_TICK_SEC) * 1000;
+        this._letterDanmaku?.tick(stepMs);
+        const showcase = this._showcase;
+        const showcaseActive = !!showcase && !showcase.finished && !!this._showcaseHost?.node.active;
+        if (showcase && showcaseActive) {
+            this._showcaseDanmaku?.tick(stepMs);
+            showcase.tick(stepMs);
+            if (showcase.litCount !== this._showcaseLitShown) this._refreshShowcase();
+        }
+        const letterActive = !!this._letterDanmaku?.running;
+        if (!letterActive && !showcaseActive) {
+            this._openingFxScheduled = false;
+            this.unschedule(this._tickOpeningFx);
+        }
     }
 
     private _onClickIntroNext(): void {
@@ -4647,6 +4758,7 @@ export class LobbyScene extends Component {
 
     /** 第一幕結束：停止自動播放計時，離開 intro；流程進名將登場幕，由 _onOpeningPhaseAdvanced 先開信。 */
     private _finishIntro(): void {
+        this._introDanmaku?.stop();
         this.unschedule(this._tickIntro);
         this._introTickScheduled = false;
         if (this._introHost) {
