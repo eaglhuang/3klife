@@ -15,6 +15,7 @@
  */
 import { TroopType } from '../../shared/CommonEnums';
 import { DEFAULT_SFX_VOICE_POOL, parseSfxVoicePoolConfig, type SfxVoicePoolConfig } from './SfxVoicePool';
+import { EXTRA_TACTIC_SFX_CLIPS, TACTIC_VFX_EXTRA_GROUPS } from './TacticVfxExtraGroups';
 import { DEFAULT_BATTLE_BGM, parseBattleBgmConfig, type BattleBgmConfig } from './BattleBgm';
 
 export type HitTier = 'light' | 'heavy' | 'block' | 'lethal';
@@ -118,10 +119,13 @@ export const DEFAULT_BATTLE_AUDIO_LAYERS: BattleAudioLayersConfig = {
     clips: {
       fire: ['tactic_fire'], water: ['tactic_water'], wind: ['tactic_wind'], heal: ['tactic_heal'],
       haste: ['tactic_haste'], morale: ['tactic_morale'], stun: ['tactic_stun'],
+      // 第二批 13 組（PROG-2-10236）：沿用既有音檔，與 battle-audio-layers.json 一致
+      ...Object.fromEntries(Object.entries(EXTRA_TACTIC_SFX_CLIPS).map(([k, v]) => [k, [...v]])),
     },
     volume: {
       fire: [0.7, 0.85], water: [0.7, 0.85], wind: [0.65, 0.8], heal: [0.7, 0.85],
       haste: [0.65, 0.8], morale: [0.7, 0.85], stun: [0.7, 0.85],
+      ...Object.fromEntries(TACTIC_VFX_EXTRA_GROUPS.map(k => [k, [0.65, 0.8] as Range])),
     },
   },
   pool: DEFAULT_SFX_VOICE_POOL,
