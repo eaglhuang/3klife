@@ -17950,5 +17950,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10239.md",
     "title": "[PROG-2-10239] 戰場量測與打擊感 Juice",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3332",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10244.md",
+    "title": "[PROG-2-10244] 夫妻戰場合攻改 26%",
+    "category": "task"
   }
 ]

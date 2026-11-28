@@ -259,12 +259,12 @@ export function createKinBattleEffectsSuite(): TestSuite {
     });
 
     // ── 合攻關係來源 ──
-    suite.test('kinLevelBetween：動態義兄弟視同義兄弟（合攻 26%）；戰友 20%；夫妻 0；與史實並存取最高', () => {
+    suite.test('kinLevelBetween：動態義兄弟視同義兄弟（合攻 26%）；戰友 20%；夫妻 26%；與史實並存取最高', () => {
         assert.equals('SWORN', kinLevelBetween(null, OATH, 'merc-a', 'zhao-yun'));
         assert.equals(0.26, Math.round(comboChanceOfLevel(kinLevelBetween(null, OATH, 'merc-a', 'zhao-yun')) * 100) / 100);
         assert.equals(0.2, comboChanceOfLevel(kinLevelBetween(null, COMRADE, 'zhao-yun', 'ma-chao')), '戰友合攻 20%');
         assert.equals('SPOUSE', kinLevelBetween(null, [{ uidA: 'a', uidB: 'b', type: 'SPOUSE' }], 'a', 'b'));
-        assert.equals(0, comboChanceOfLevel('SPOUSE'), '夫妻合攻 0');
+        assert.equals(0.26, comboChanceOfLevel('SPOUSE'), '夫妻合攻 26%（使用者裁決 11/28）');
         assert.equals('NONE', kinLevelBetween(HISTORIC, [], 'a', 'b'), '無關係');
         assert.equals('SWORN', kinLevelBetween(HISTORIC, [{ uidA: 'liu-bei', uidB: 'guan-yu', type: 'COMRADE' }], 'liu-bei', 'guan-yu'), '史實義兄弟壓過動態戰友');
     });
