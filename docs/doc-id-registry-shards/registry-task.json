@@ -17992,5 +17992,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10254.md",
     "title": "[PROG-2-10254] 修 playtest-online 在 12:00 發版時失敗的 7 步",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3344",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10264.md",
+    "title": "[PROG-2-10264] 規格書：街上偶遇他國武將＋武將作息表",
+    "category": "task"
   }
 ]
