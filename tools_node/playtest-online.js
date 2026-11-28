@@ -1161,6 +1161,8 @@ async function main() {
             // 官職晉升解鎖彈窗（PROG-2-9151）：升官時蓋住整個大廳，要先按「知道了」
             { kind: 'rank-unlock', specs: [{ name: '^BtnRankUnlockOk$' }] },
             { kind: 'season-report', specs: [{ name: '^BtnClose$', under: '^SeasonReportComposite$' }] },
+            // 三國小報彈窗：季報之後出現、全螢幕透明接收層（SeasonNewsPopup 根節點 TOUCH_END，點一下收起），不收會擋住底欄與後面所有步驟
+            { kind: 'season-news', specs: [{ name: '^SeasonNewsPopup$' }] },
             { kind: 'season-report-x', specs: [{ name: '.*', text: '^\\s*[Xx×]\\s*$', under: '^SeasonReportRoot$', button: true }] },
             { kind: 'season-event', specs: [{ name: '^SeasonEventOptionA$' }] },
             { kind: 'chronicle-choice', specs: [{ name: '^SeasonChronicleEncounterA$' }, { name: '^SeasonChronicleEncounterB$' }] },
@@ -1326,6 +1328,7 @@ async function main() {
             // 任務牆下緣的進行中列在詳情窗開著時可能讀不到：退而讀詳情窗「行動人物」欄位（派出的就是他）
             if (!busyName) busyName = String((await rm.textOfNodeName('SelectedGeneralLabel')) || '').trim();
             rec.detail.busyGeneral = busyName;
+            const busyRowText = '^' + busyName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '出任務中';
             if (!busyName) throw new Error(`讀不到派出的武將名（列狀態：${statusTexts.join(' / ')}）`);
             await closeMissionLayers();
             await waitToastGone();
@@ -1344,7 +1347,8 @@ async function main() {
             // 出任務中的列排在清單最後：用滑鼠滾輪把下拉往下捲到看得見，再真點
             let reachedBusyRow = false;
             for (let i = 0; i < 80 && !reachedBusyRow; i++) {
-                const hit = await rm.locate({ name: '^GeneralOption_', text: busyName });
+                // 下拉分「可派／不可派」兩區，不可派區還有同名開頭的「張飛之千金」：用「名字＋出任務中」精準比對，避免撞到別列
+                const hit = await rm.locate({ name: '^GeneralOption_', text: busyRowText });
                 // 命中檢查不看捲動遮罩：列在視窗內但被詳情窗底部遮住也會回 ok，所以另外要求列的畫面座標落在下拉可視範圍（約 y 200～800）
                 if (hit && hit.found && hit.ok && hit.page && hit.page.y > 200 && hit.page.y < 800) { reachedBusyRow = true; break; }
                 await page.mouse.move(960, 600);
@@ -1353,7 +1357,7 @@ async function main() {
             }
             if (!reachedBusyRow) throw new Error(`滾輪捲了 80 次，「${busyName}」那列仍沒進到下拉可視範圍`);
             await shot(rec, 'loop-busy-row-visible');
-            await rm.click({ name: '^GeneralOption_', text: busyName }, `下拉裡出任務中的「${busyName}」`);
+            await rm.click({ name: '^GeneralOption_', text: busyRowText }, `下拉裡出任務中的「${busyName}」`);
             await delay(600);
             const afterPick = (await rm.textOfNodeName('SelectedGeneralLabel')) || '';
             rec.detail.afterPickBusy = afterPick;
@@ -1443,7 +1447,10 @@ async function main() {
             }, 15000, async () => `商業任務詳情窗 15 秒內沒有渲染出報酬列（文字：${(await readDialog()).slice(0, 20).join(' / ')}）`);
             let dialogTexts = await readDialog();
             rec.detail.reconClicks = 0;
+            // 每次再探吃糧草 50，而派出本身也要糧草（詳情窗「資源耗費」糧草欄）：再探到只剩執行所需糧草就停，否則會因糧草不足派不出去
+            const execFood = Number(((dialogTexts[dialogTexts.indexOf('糧草') + 1] || '40').match(/^\d+/) || ['40'])[0]) || 40;
             while (rec.detail.reconClicks < 3 && !(intelOf(dialogTexts) >= 90)) {
+                if ((await readTopbar()).food - 50 < execFood) { rec.detail.reconStoppedForFood = true; break; }
                 await waitToastGone();
                 const before = intelOf(dialogTexts);
                 await rm.click({ name: '^BtnScout$', under: MISSION_DIALOG }, '再探');

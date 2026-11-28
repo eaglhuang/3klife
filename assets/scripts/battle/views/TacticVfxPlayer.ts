@@ -25,6 +25,8 @@ import {
   type Rgb, type TacticVfxGroup, type TacticVfxRecipe,
 } from '../shared/TacticVfxGroups';
 import type { TacticHitMotif, TacticWindupMotif } from '../shared/TacticVfxExtraGroups';
+import { PersistLoopSlots, STATUS_PERSIST_VFX, grantLoopCount, type LoopSlot } from '../shared/StatusPersistVfx';
+import type { StatusIconKind } from '../shared/UnitStatusIcons';
 
 const TAU = Math.PI * 2;
 
@@ -60,6 +62,9 @@ const easeOut = (u: number): number => 1 - (1 - u) * (1 - u);
 
 let additiveWarned = false;
 
+/** 減益循環的整體尺寸倍率（戰場單位小，原尺寸看不清） */
+const LOOP_SIZE_BOOST = 1.7;
+
 export class TacticVfxPlayer {
   private node: Node | null = null;
   private g: Graphics | null = null;
@@ -68,6 +73,10 @@ export class TacticVfxPlayer {
   private dirty = false;
   private seedCounter = 1;
   private readonly col = new Color(255, 255, 255, 255);
+  /** 減益持續循環（PROG-2-10253）：固定 6 格槽位，畫在同一個加色 Graphics 上，不新增節點 */
+  private readonly persist = new PersistLoopSlots();
+  /** 畫循環時重用的暫存 Fx（只用來借 dot／line／ring／star 的配色與座標），整場一份 */
+  private readonly loopFx: Fx = { active: true, hit: false, group: 'weaken', t: 0, dur: 1, x: 0, y: 0, facing: 1, scale: 1, seed: 0, n: 0, recipe: TACTIC_VFX_RECIPES.weaken, windupMotif: null, hitMotif: null };
 
   constructor(private readonly getParent: () => Node | null, private readonly layer: () => number) {
     for (let i = 0; i < TACTIC_VFX_BUDGET.maxFx; i++) {
@@ -87,6 +96,24 @@ export class TacticVfxPlayer {
     const r = TACTIC_VFX_RECIPES[group];
     return this.spawn(group, true, x, y, facing, scale, tacticHitTotalSec(group), r.particlesPerCell);
   }
+
+  /** 減益循環：每幀開頭先呼叫，之後對每個要顯示的單位 loopOffer，最後 loopEnd（沒被 offer 的槽開始淡出） */
+  public loopBegin(): void { this.persist.begin(); }
+
+  /** 登記一個帶減益的單位（x、y＝腳點疊層座標，scale＝1 表示一格 64px）。回傳是否登記成功。 */
+  public loopOffer(key: string, kind: StatusIconKind, x: number, y: number, facing: 1 | -1, scale: number): boolean {
+    if (!STATUS_PERSIST_VFX[kind]) return false;
+    const parent = this.getParent();
+    if (!parent?.isValid) return false;
+    if (!this.persist.offer(key, kind, x, y, Math.max(0.4, Math.min(2.5, scale)), facing)) return false;
+    this.ensureNode(parent);
+    return true;
+  }
+
+  public loopEnd(): void { this.persist.end(); }
+
+  /** 單位陣亡或移除：立即回收，不淡出 */
+  public loopRelease(key: string, instant = true): void { this.persist.release(key, instant); }
 
   private spawn(group: TacticVfxGroup, hit: boolean, x: number, y: number, facing: 1 | -1, scale: number, dur: number, want: number): boolean {
     const parent = this.getParent();
@@ -113,10 +140,12 @@ export class TacticVfxPlayer {
   public update(dt: number): void {
     const g = this.g;
     if (!g || !this.node?.isValid) return;
+    this.persist.step(dt);
     let fxN = 0;
     let particles = 0;
     for (const f of this.pool) if (f.active) { fxN++; particles += f.n; }
-    if (fxN === 0) {
+    const loopsWanted = this.persist.activeCount();
+    if (fxN === 0 && loopsWanted === 0) {
       if (this.dirty) { g.clear(); this.dirty = false; this.node.active = false; }
       tacticVfxStats.activeFx = 0; tacticVfxStats.activeParticles = 0;
       return;
@@ -132,6 +161,19 @@ export class TacticVfxPlayer {
       fxN++; particles += f.n;
       if (f.hit) this.drawHit(g, f); else this.drawWindup(g, f);
     }
+    // 減益循環讓位給施放特效：預算吃緊時先砍循環（PROG-2-10253，規格 §5）
+    if (loopsWanted > 0) {
+      const grant = grantLoopCount(loopsWanted, fxN, particles, TACTIC_VFX_BUDGET.maxFx, TACTIC_VFX_BUDGET.maxParticles);
+      let drawn = 0;
+      for (const slot of this.persist.slots) {
+        if (slot.key === null || slot.fade <= 0 || !slot.kind) continue;
+        if (drawn >= grant) { tacticVfxStats.loopSkipped++; continue; }
+        const per = this.drawLoop(g, slot);
+        drawn++; fxN++; particles += per;
+      }
+      tacticVfxStats.loopUnits = drawn;
+      if (drawn > tacticVfxStats.peakLoopUnits) tacticVfxStats.peakLoopUnits = drawn;
+    } else tacticVfxStats.loopUnits = 0;
     tacticVfxStats.activeFx = fxN;
     tacticVfxStats.activeParticles = particles;
     if (fxN > tacticVfxStats.peakFx) tacticVfxStats.peakFx = fxN;
@@ -142,6 +184,7 @@ export class TacticVfxPlayer {
     if (this.node?.isValid) this.node.destroy();
     this.node = null; this.g = null;
     for (const f of this.pool) f.active = false;
+    this.persist.clearAll();
     tacticVfxStats.nodes = 0;
   }
 
@@ -935,6 +978,148 @@ export class TacticVfxPlayer {
     for (let i = 0; i < f.n; i++) {
       const p = clamp01(life * (0.8 + 0.5 * rnd(f.seed, i, 1)));
       this.dot(g, f, f.x + (rnd(f.seed, i, 2) - 0.5) * 50 * S, f.y - 10 * S + p * 14 * S, 1.4 * S, a * Math.sin(p * Math.PI));
+    }
+  }
+
+  // ───────────── 減益持續循環（PROG-2-10253）─────────────
+
+  /** 畫一個單位的循環；回傳這個循環占用的粒子數 */
+  private drawLoop(g: Graphics, slot: LoopSlot): number {
+    const kind = slot.kind as StatusIconKind;
+    const def = STATUS_PERSIST_VFX[kind];
+    if (!def) return 0;
+    const f = this.loopFx;
+    f.recipe = TACTIC_VFX_RECIPES[def.group];
+    f.x = slot.x; f.y = slot.y; f.t = slot.t; f.seed = slot.seed; f.facing = slot.facing; f.n = def.particles;
+    // 單位在戰場上約 90px 高，原尺寸的小圖形看不清；整體放大 LOOP_SIZE_BOOST 倍，垂直位置常數已按放大後的身體比例寫（腳點＝0）
+    const S = slot.scale * LOOP_SIZE_BOOST;
+    const a = slot.fade * 0.85;
+    switch (def.motif) {
+      case 'droop-mist': this.loopDroopMist(g, f, a, S); break;
+      case 'shiver': this.loopShiver(g, f, a, S); break;
+      case 'frost-ring': this.loopFrostRing(g, f, a, S); break;
+      case 'ban-mark': this.loopBanMark(g, f, a, S); break;
+      case 'orbit-swirl': this.loopOrbitSwirl(g, f, a, S); break;
+      case 'stun-stars': this.loopStunStars(g, f, a, S); break;
+      default: break;
+    }
+    return def.particles;
+  }
+
+  /** 水滴／冷汗：尖端朝上、底部圓潤的細長水滴，三層（外暈、本體、亮核）疊出漸層，沒有硬邊 */
+  private drop(g: Graphics, f: Fx, x: number, y: number, len: number, wid: number, a: number): void {
+    const rc = f.recipe;
+    for (let layer = 0; layer < 3; layer++) {
+      const k = layer === 0 ? 1.7 : layer === 1 ? 1 : 0.45;
+      const l = len * (layer === 0 ? 1.18 : layer === 1 ? 1 : 0.62);
+      const w = wid * k;
+      this.setFill(g, layer === 0 ? rc.glow : layer === 1 ? rc.main : rc.core, a * (layer === 0 ? 0.26 : layer === 1 ? 0.85 : 0.9));
+      g.moveTo(x, y + l);
+      g.bezierCurveTo(x + w * 0.15, y + l * 0.5, x + w, y + l * 0.12, x + w * 0.95, y - w * 0.25);
+      g.bezierCurveTo(x + w * 0.7, y - w * 1.25, x - w * 0.7, y - w * 1.25, x - w * 0.95, y - w * 0.25);
+      g.bezierCurveTo(x - w, y + l * 0.12, x - w * 0.15, y + l * 0.5, x, y + l);
+      g.close(); g.fill();
+    }
+  }
+
+  /** 虛弱：肩頭兩團柔霧下垂、細長水滴自肩落下（低頻） */
+  private loopDroopMist(g: Graphics, f: Fx, a: number, S: number): void {
+    const cy = f.y + 12 * S;
+    for (let side = -1; side <= 1; side += 2) {
+      const sway = Math.sin(f.t * 1.7 + side * 1.3) * 1.6 * S;
+      for (let k = 0; k < 3; k++) {
+        this.setFill(g, k === 2 ? f.recipe.main : f.recipe.glow, a * (0.10 + k * 0.05));
+        g.ellipse(f.x + side * 11 * S + sway, cy + 10 * S - k * 0.9 * S, (13 - k * 3.5) * S, (7 - k * 1.8) * S); g.fill();
+      }
+    }
+    for (let i = 0; i < f.n; i++) {
+      const p = (f.t * 0.62 + i / f.n + rnd(f.seed, i, 1) * 0.15) % 1;
+      const x = f.x + ((i % 2 === 0 ? -1 : 1) * (9 + 3 * rnd(f.seed, i, 2))) * S;
+      this.drop(g, f, x, cy + 13 * S - p * 24 * S, 11 * S, 2.4 * S, a * Math.sin(p * Math.PI));
+    }
+  }
+
+  /** 恐懼：頭兩側快速顫動的短弧線，冷汗滴向外甩出再落下 */
+  private loopShiver(g: Graphics, f: Fx, a: number, S: number): void {
+    const hy = f.y + 24 * S;
+    this.setFill(g, f.recipe.glow, a * 0.07); g.ellipse(f.x, f.y + 13 * S, 20 * S, 28 * S); g.fill();
+    for (let side = -1; side <= 1; side += 2) {
+      for (let j = 0; j < 3; j++) {
+        const jit = Math.sin(f.t * 34 + j * 2.1 + side) * 1.1 * S;
+        const bx = f.x + side * (15 + j * 4.5) * S + jit;
+        const by = hy - 3 * S + j * 2 * S;
+        const al = a * (0.85 - j * 0.22);
+        this.line(g, f, bx, by + 6 * S, bx + side * 2.2 * S, by, 1.4 * S, al);
+        this.line(g, f, bx + side * 2.2 * S, by, bx, by - 6 * S, 1.4 * S, al);
+      }
+    }
+    for (let i = 0; i < 2; i++) {
+      const side = i === 0 ? -1 : 1;
+      const p = (f.t * 0.85 + i * 0.5) % 1;
+      this.drop(g, f, f.x + side * (11 + p * 15) * S, hy + 2 * S - p * p * 18 * S, 8 * S, 1.9 * S, a * Math.sin(p * Math.PI));
+    }
+  }
+
+  /** 緩速：腳下一圈淡青冰霜環（緩慢呼吸）、環上細長冰刺，環內由內向外漸淡 */
+  private loopFrostRing(g: Graphics, f: Fx, a: number, S: number): void {
+    const cy = f.y + 1 * S;
+    const breathe = 1 + Math.sin(f.t * 2.2) * 0.05;
+    const rx = 23 * S * breathe;
+    const ry = 9 * S * breathe;
+    for (let k = 0; k < 3; k++) {
+      this.setFill(g, f.recipe.glow, a * (0.07 + k * 0.045));
+      g.ellipse(f.x, cy, rx * (1 - k * 0.28), ry * (1 - k * 0.28)); g.fill();
+    }
+    this.ring(g, f, f.x, cy, rx, ry, 1.6 * S, a * 0.75);
+    const spikes = 7;
+    for (let i = 0; i < spikes; i++) {
+      const ang = (i / spikes) * TAU + 0.4;
+      const px = f.x + Math.cos(ang) * rx;
+      const py = cy + Math.sin(ang) * ry;
+      const h = (7.5 + 3.5 * Math.sin(f.t * 1.6 + i * 1.7)) * S;
+      const w = 2.2 * S;
+      for (let layer = 0; layer < 2; layer++) {
+        const k = layer === 0 ? 1.6 : 1;
+        this.setFill(g, layer === 0 ? f.recipe.glow : f.recipe.core, a * (layer === 0 ? 0.3 : 0.85));
+        g.moveTo(px - w * k, py); g.lineTo(px, py + h * (layer === 0 ? 1.15 : 1)); g.lineTo(px + w * k, py); g.close(); g.fill();
+      }
+    }
+  }
+
+  /** 封射：身前一個細邊「禁」圈（圓環＋斜槓），柔光底、緩慢呼吸 */
+  private loopBanMark(g: Graphics, f: Fx, a: number, S: number): void {
+    const cx = f.x + f.facing * 15 * S;
+    const cy = f.y + 14 * S;
+    const r = 8 * S * (1 + Math.sin(f.t * 3) * 0.04);
+    for (let k = 0; k < 3; k++) {
+      this.setFill(g, f.recipe.glow, a * (0.08 + k * 0.05));
+      g.circle(cx, cy, r * (1.9 - k * 0.45)); g.fill();
+    }
+    this.setStroke(g, f.recipe.glow, a * 0.35, 4.2 * S); g.circle(cx, cy, r); g.stroke();
+    this.setStroke(g, f.recipe.main, a, 1.9 * S); g.circle(cx, cy, r); g.stroke();
+    const d = r * 0.72;
+    this.line(g, f, cx - d, cy + d, cx + d, cy - d, 1.9 * S, a);
+  }
+
+  /** 混亂／被控制：頭頂一圈橢圓軌道，亮點繞行（前後交錯大小與亮度） */
+  private loopOrbitSwirl(g: Graphics, f: Fx, a: number, S: number): void {
+    const hy = f.y + 27 * S;
+    this.ring(g, f, f.x, hy, 15 * S, 5.5 * S, 1.1 * S, a * 0.45);
+    for (let i = 0; i < f.n; i++) {
+      const ang = f.t * 3.4 + i * (TAU / f.n);
+      const sn = Math.sin(ang);
+      this.dot(g, f, f.x + Math.cos(ang) * 15 * S, hy + sn * 5.5 * S, (1.5 + 0.9 * sn) * S, a * (0.6 + 0.4 * sn));
+    }
+  }
+
+  /** 暈眩／定身：頭頂 3 顆小星繞行（循環版 stun 星星，低頻） */
+  private loopStunStars(g: Graphics, f: Fx, a: number, S: number): void {
+    const hy = f.y + 27 * S;
+    this.ring(g, f, f.x, hy, 14 * S, 5 * S, 1 * S, a * 0.35);
+    for (let i = 0; i < f.n; i++) {
+      const ang = f.t * 2.6 + i * (TAU / f.n);
+      const sn = Math.sin(ang);
+      this.star(g, f, f.x + Math.cos(ang) * 14 * S, hy + sn * 5 * S, (3.8 + 1.2 * sn) * S, (1.6 + 0.5 * sn) * S, a * (0.65 + 0.35 * sn), f.t * 3 + i);
     }
   }
 }
