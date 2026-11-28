@@ -3359,5 +3359,13 @@
   "battle.skill_effect.tally-changban-push": "【控制】長坂震退：震飛周圍敵軍，把他們推開一格",
   "ui.marriage.tag.oath_matchmaker": "義{0}作媒 +{1}%",
   "ui.marriage.tag.rival_mutation": "宿敵交融・狼性突變+{0}%",
-  "ui.marriage.tag.comrade_bonus": "同袍默契 +{0}%"
+  "ui.marriage.tag.comrade_bonus": "同袍默契 +{0}%",
+  "ui.honor_wall.title": "歷年榮譽牆",
+  "ui.honor_wall.btn_entry": "榮譽牆",
+  "ui.honor_wall.empty": "尚無歷年榜單紀錄，請先完成第 1 年年終典禮。",
+  "ui.honor_wall.current_year_preview": "進行中：第 {year} 年（目前第 {rank} 名・{score} 分）",
+  "ui.honor_wall.year_row": "第 {year} 年｜第 {rank} 名（{score} 分）",
+  "ui.honor_wall.top_three_label": "本屆前三名",
+  "ui.honor_wall.speech_summary": "冠軍感言：{speech}",
+  "ui.honor_wall.badge_label": "榮譽徽章：{badgeName}"
 }

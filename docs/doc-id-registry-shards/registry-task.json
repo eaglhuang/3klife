@@ -18052,5 +18052,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10274.md",
     "title": "基本資訊",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3356",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10275.md",
+    "title": "PROG-2-10275：方案 B — 歷年榮譽牆核心資料模型與設定",
+    "category": "task"
   }
 ]

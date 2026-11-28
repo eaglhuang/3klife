@@ -7266,7 +7266,7 @@
     "category": "spec"
   },
   {
-    "id": "doc_spec_1381",
+    "id": "doc_spec_1180",
     "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書.md",
     "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引）",
     "category": "spec"
@@ -7278,7 +7278,7 @@
     "category": "spec"
   },
   {
-    "id": "doc_spec_1383",
+    "id": "doc_spec_1273",
     "path": "docs/遊戲規格文件/系統規格書/世界觀與故事總綱規格書.md",
     "title": "世界觀與故事總綱規格書（分片索引）",
     "category": "spec"
@@ -7674,7 +7674,7 @@
     "category": "spec"
   },
   {
-    "id": "doc_spec_1449",
+    "id": "doc_spec_1179",
     "path": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計.md",
     "title": "學府修業畫面與接線設計（分片索引）",
     "category": "spec"
@@ -7848,7 +7848,7 @@
     "category": "spec"
   },
   {
-    "id": "doc_spec_1478",
+    "id": "doc_spec_1328",
     "path": "docs/遊戲規格文件/系統規格書/騎術系統與馬廄規格書.md",
     "title": "騎術系統與馬廄規格書（分片索引）",
     "category": "spec"
@@ -7941,6 +7941,12 @@
     "id": "doc_spec_1493",
     "path": "docs/遊戲規格文件/整併疑問書.md",
     "title": "整併疑問書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1494",
+    "path": "docs/遊戲規格文件/系統規格書/歷年榮譽牆系統規格書.md",
+    "title": "歷年榮譽牆系統規格書",
     "category": "spec"
   }
 ]

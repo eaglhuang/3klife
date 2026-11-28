@@ -147,3 +147,4 @@
 | `doc_task_3353` | docs/agent-briefs/tasks/PROG/PROG-2-10270.md | [PROG-2-10270] 戰場 Spine 多頁圖集執行期合併 |
 | `doc_task_3354` | docs/agent-briefs/tasks/PROG/PROG-2-10278.md | [PROG-2-10278] 規格書：生活層抓起放下 |
 | `doc_task_3355` | docs/agent-briefs/tasks/PROG/PROG-2-10274.md | 基本資訊 |
+| `doc_task_3356` | docs/agent-briefs/tasks/PROG/PROG-2-10275.md | PROG-2-10275：方案 B — 歷年榮譽牆核心資料模型與設定 |

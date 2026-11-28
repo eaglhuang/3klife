@@ -3290,5 +3290,13 @@
   "battle.skill_effect.tally-changban-push": "【制圧】長坂震退：周囲の敵を1マス弾き飛ばす",
   "ui.marriage.tag.oath_matchmaker": "義{0}仲介 +{1}%",
   "ui.marriage.tag.rival_mutation": "宿敵融合・狼性変異+{0}%",
-  "ui.marriage.tag.comrade_bonus": "戦友の絆 +{0}%"
+  "ui.marriage.tag.comrade_bonus": "戦友の絆 +{0}%",
+  "ui.honor_wall.title": "歴代栄誉の壁",
+  "ui.honor_wall.btn_entry": "栄誉の壁",
+  "ui.honor_wall.empty": "歴代記録はまだありません。1年目の年末式典を完了してください。",
+  "ui.honor_wall.current_year_preview": "進行中：第{year}年（現在{rank}位・{score}点）",
+  "ui.honor_wall.year_row": "第{year}年｜{rank}位（{score}点）",
+  "ui.honor_wall.top_three_label": "今期トップ3",
+  "ui.honor_wall.speech_summary": "優勝コメント：{speech}",
+  "ui.honor_wall.badge_label": "栄誉バッジ：{badgeName}"
 }
