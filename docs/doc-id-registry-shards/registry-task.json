@@ -17986,5 +17986,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10246.md",
     "title": "[PROG-2-10246] 武將天生戰法／奧義模板＋覆寫資料落地",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3343",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10254.md",
+    "title": "[PROG-2-10254] 修 playtest-online 在 12:00 發版時失敗的 7 步",
+    "category": "task"
   }
 ]
