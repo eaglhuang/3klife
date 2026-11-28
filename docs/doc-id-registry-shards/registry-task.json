@@ -17962,5 +17962,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10244.md",
     "title": "[PROG-2-10244] 夫妻戰場合攻改 26%",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3333",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10240.md",
+    "title": "[PROG-2-10240] 武將技能特效第二批：減益／光聖／號令",
+    "category": "task"
   }
 ]

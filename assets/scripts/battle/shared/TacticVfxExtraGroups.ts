@@ -16,16 +16,20 @@
 import type { Rgb, TacticVfxRecipe } from './TacticVfxGroups';
 
 /** 前搖動機（施放者身上，蓄力 0.4 秒內） */
-export type TacticWindupMotif = 'converge' | 'ring' | 'streak' | 'orbit' | 'glint';
+export type TacticWindupMotif = 'converge' | 'ring' | 'streak' | 'orbit' | 'glint' | 'rise' | 'shout';
 
 /** 命中動機（受影響格） */
 export type TacticHitMotif =
     | 'bolts' | 'shards' | 'bubbles' | 'slashes' | 'thrust' | 'rain' | 'dash'
-    | 'mist' | 'dome' | 'chain' | 'runes' | 'cycle' | 'quake';
+    | 'mist' | 'dome' | 'chain' | 'runes' | 'cycle' | 'quake'
+    // 第三批（PROG-2-10240）：減益／光聖／號令
+    | 'droop' | 'swirl' | 'halo' | 'cleanse' | 'judgement' | 'banner' | 'soundwave';
 
 export type TacticVfxExtraGroup =
     | 'thunder' | 'ice' | 'poison' | 'slash' | 'pierce' | 'charge' | 'volley'
-    | 'shadow' | 'guard' | 'chain' | 'arcane' | 'renew' | 'quake';
+    | 'shadow' | 'guard' | 'chain' | 'arcane' | 'renew' | 'quake'
+    // 第三批（PROG-2-10240）：減益（虛弱／恐懼、混亂／魅惑）、光聖（祝福、淨化、神罰）、號令（鼓舞號令、戰吼）
+    | 'weaken' | 'confuse' | 'bless' | 'purify' | 'smite' | 'rally' | 'warcry';
 
 export interface TacticVfxExtraRecipe extends TacticVfxRecipe {
     windup: TacticWindupMotif;
@@ -34,6 +38,12 @@ export interface TacticVfxExtraRecipe extends TacticVfxRecipe {
 
 export const TACTIC_VFX_EXTRA_GROUPS: readonly TacticVfxExtraGroup[] = Object.freeze([
     'thunder', 'ice', 'poison', 'slash', 'pierce', 'charge', 'volley', 'shadow', 'guard', 'chain', 'arcane', 'renew', 'quake',
+    'weaken', 'confuse', 'bless', 'purify', 'smite', 'rally', 'warcry',
+]);
+
+/** 第三批 7 組（PROG-2-10240）；單測用來確認這 7 組每組都有招式或狀態掛點 */
+export const TACTIC_VFX_BATCH3_GROUPS: readonly TacticVfxExtraGroup[] = Object.freeze([
+    'weaken', 'confuse', 'bless', 'purify', 'smite', 'rally', 'warcry',
 ]);
 
 const rgb = (r: number, g: number, b: number): Rgb => [r, g, b];
@@ -66,6 +76,21 @@ export const EXTRA_TACTIC_VFX_RECIPES: Readonly<Record<TacticVfxExtraGroup, Tact
     renew: { main: rgb(255, 170, 70), glow: rgb(220, 100, 30), core: rgb(255, 240, 200), particlesPerCell: 10, windupParticles: 8, hitSec: 0.3, tailSec: 0.6, windup: 'converge', hit: 'cycle' },
     // 震地：褐色裂痕、碎石與塵
     quake: { main: rgb(190, 140, 95), glow: rgb(120, 80, 45), core: rgb(255, 225, 175), particlesPerCell: 14, windupParticles: 8, hitSec: 0.3, tailSec: 0.55, windup: 'ring', hit: 'quake' },
+    // ───── 第三批（PROG-2-10240）─────
+    // 虛弱／恐懼：灰紫下沉箭頭＋冷汗滴落（上身後的減益）
+    weaken: { main: rgb(195, 150, 240), glow: rgb(115, 80, 190), core: rgb(235, 220, 250), particlesPerCell: 8, windupParticles: 6, hitSec: 0.3, tailSec: 0.6, windup: 'converge', hit: 'droop' },
+    // 混亂／魅惑／離間：玫紅旋轉星點繞頭
+    confuse: { main: rgb(240, 90, 150), glow: rgb(170, 40, 110), core: rgb(255, 225, 240), particlesPerCell: 8, windupParticles: 6, hitSec: 0.3, tailSec: 0.6, windup: 'orbit', hit: 'swirl' },
+    // 祝福：金白光環降下＋光柱＋上浮光點
+    bless: { main: rgb(255, 245, 190), glow: rgb(255, 205, 90), core: rgb(255, 255, 255), particlesPerCell: 10, windupParticles: 8, hitSec: 0.35, tailSec: 0.6, windup: 'rise', hit: 'halo' },
+    // 淨化：淡紫白漣漪由腳向頭掃過
+    purify: { main: rgb(225, 235, 255), glow: rgb(150, 170, 255), core: rgb(255, 255, 255), particlesPerCell: 10, windupParticles: 8, hitSec: 0.35, tailSec: 0.6, windup: 'rise', hit: 'cleanse' },
+    // 神罰：天降金白光柱＋十字衝擊
+    smite: { main: rgb(255, 240, 170), glow: rgb(255, 120, 90), core: rgb(255, 255, 255), particlesPerCell: 12, windupParticles: 8, hitSec: 0.3, tailSec: 0.5, windup: 'ring', hit: 'judgement' },
+    // 號令／鼓舞：橘紅戰旗升起飄揚
+    rally: { main: rgb(255, 130, 50), glow: rgb(200, 50, 30), core: rgb(255, 235, 190), particlesPerCell: 10, windupParticles: 6, hitSec: 0.3, tailSec: 0.6, windup: 'rise', hit: 'banner' },
+    // 戰吼：向前擴散的聲波環與放射短線
+    warcry: { main: rgb(255, 240, 200), glow: rgb(255, 150, 60), core: rgb(255, 255, 255), particlesPerCell: 10, windupParticles: 6, hitSec: 0.3, tailSec: 0.5, windup: 'shout', hit: 'soundwave' },
 });
 
 /**
@@ -82,13 +107,13 @@ export const TACTIC_VFX_SKILL_GROUP: Readonly<Record<string, TacticVfxExtraGroup
     // 箭雨／毒
     'tally-hundred-steps': 'volley', 'tally-poison-arrow': 'poison',
     // 雷
-    'cao-cao-tactics': 'thunder', 'tally-wei-zhen-hua-xia': 'thunder',
+    'cao-cao-tactics': 'thunder', 'tally-wei-zhen-hua-xia': 'smite',
     // 冰（緩速）
     'mentor-slow': 'ice',
     // 暗（奇襲、離間、挾令、司馬懿）
-    'insp-night-raid': 'shadow', 'sima-yi-shadow': 'shadow', 'sow-discord': 'shadow', 'cao-cao-ult-control': 'shadow',
+    'insp-night-raid': 'shadow', 'sima-yi-shadow': 'weaken', 'sow-discord': 'confuse', 'cao-cao-ult-control': 'confuse',
     // 防禦（護盾、無敵、反擊）
-    'insp-shield': 'guard', 'zhao-yun-immortal': 'guard', 'you-qi-counter': 'guard', 'tally-counter-weak': 'guard',
+    'insp-shield': 'guard', 'zhao-yun-immortal': 'bless', 'you-qi-counter': 'guard', 'tally-counter-weak': 'guard',
     // 連環
     'lian-huan-chain': 'chain', 'tally-link': 'chain',
     // 文擊／奇策
@@ -97,6 +122,15 @@ export const TACTIC_VFX_SKILL_GROUP: Readonly<Record<string, TacticVfxExtraGroup
     'liu-bei-reset': 'renew', 'wei-zhen-reset': 'renew', 'zhang-he-adaptive-camp': 'renew',
     // 震地（強制位移、橫掃爆發）
     'lu-bu-rampage': 'quake', 'empty-fort': 'quake', 'tally-changban-push': 'quake', 'tally-wushuang': 'quake',
+    // ───── 第三批（PROG-2-10240）：表優先於第一批歸類，把原本落在第一批／第二批近似組的招式改歸專屬組 ─────
+    // 混亂／魅惑
+    'diao-chan-charm': 'confuse',
+    // 祝福（復活）／淨化（醫療）
+    'cao-cao-ult-revive': 'bless', 'medical-aid': 'purify',
+    // 號令／鼓舞
+    'mentor-morale': 'rally', 'liu-bei-rally': 'rally', 'cao-cao-revelry': 'rally',
+    // 戰吼
+    'zhang-fei-roar': 'warcry', 'insp-taunt': 'warcry',
 });
 
 /** 第二批各組的音效：沿用既有音檔（不新增檔案、不改發聲池上限），音量範圍同第一批。與 battle-audio-layers.json 的 tactic 區塊一致。 */
@@ -114,4 +148,21 @@ export const EXTRA_TACTIC_SFX_CLIPS: Readonly<Record<TacticVfxExtraGroup, readon
     arcane: ['skill1'],
     renew: ['buff'],
     quake: ['boom'],
+    weaken: ['hurt'],
+    confuse: ['wave'],
+    bless: ['light'],
+    purify: ['tactic_heal_sparkle'],
+    smite: ['laser'],
+    rally: ['tactic_morale'],
+    warcry: ['skill3'],
+});
+
+/**
+ * 狀態上身（BuffApplied）→ 分組：減益上身時在目標格補一段命中特效（減益施加表現）。
+ * 中毒走 playPoisonHit 的既有紫綠光罩，不在此表；控制（暈眩／定身）沿用第一批 stun，不在此表。
+ */
+export const STATUS_DEBUFF_VFX_GROUP: Readonly<Record<string, TacticVfxExtraGroup>> = Object.freeze({
+    weak: 'weaken',
+    'no-shoot': 'weaken',
+    slow: 'ice',
 });

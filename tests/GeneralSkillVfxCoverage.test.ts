@@ -2,7 +2,7 @@
  * GeneralSkillVfxCoverage.test.ts — 武將技能特效覆蓋（PROG-2-10236）
  *
  * 鎖住：
- * - 每個可施放（非殼）的戰法／專屬技都有專屬特效分組（第一批 7 組＋第二批 13 組），不再落到通用光效；
+ * - 每個可施放（非殼）的戰法／專屬技都有專屬特效分組（第一批 7 組＋第二批 13 組＋第三批 7 組），不再落到通用光效；
  * - 第二批每組都有配方（前搖動機＋命中動機＝前搖→主體→命中三段）、主色與全部 20 組互不相同、粒子與時間在手機預算內；
  * - 招式對照表只指向存在且可施放的招式，不蓋掉第一批的歸類；
  * - 每組都有音效（沿用既有音檔、音檔存在、不擴充發聲池）；
@@ -16,7 +16,7 @@ import {
     TACTIC_VFX_ALL_GROUPS, TACTIC_VFX_BUDGET, TACTIC_VFX_EXTRA_GROUPS, TACTIC_VFX_GROUPS, TACTIC_VFX_RECIPES,
     extraTacticRecipeOf, tacticHitTotalSec, tacticVfxGroupOf,
 } from '../assets/scripts/battle/shared/TacticVfxGroups';
-import { EXTRA_TACTIC_SFX_CLIPS, TACTIC_VFX_SKILL_GROUP } from '../assets/scripts/battle/shared/TacticVfxExtraGroups';
+import { EXTRA_TACTIC_SFX_CLIPS, STATUS_DEBUFF_VFX_GROUP, TACTIC_VFX_BATCH3_GROUPS, TACTIC_VFX_SKILL_GROUP } from '../assets/scripts/battle/shared/TacticVfxExtraGroups';
 import { DEFAULT_BATTLE_AUDIO_LAYERS, parseBattleAudioLayersConfig, pickTacticSfx } from '../assets/scripts/battle/shared/BattleAudioLayers';
 import { VFX_BLOCK_REGISTRY } from '../assets/scripts/core/config/vfx-block-registry';
 import { ultimateEffectKeyOf } from '../assets/scripts/battle/views/BattleFlowVfx';
@@ -42,9 +42,9 @@ export function createGeneralSkillVfxCoverageSuite(): TestSuite {
         assert.equals('', missing.join(','), `落到通用光效的招式：${missing.join(',')}`);
     });
 
-    suite.test('20 組配方：第二批有前搖＋命中動機、主色互不相同、時間與粒子在預算內', () => {
-        assert.equals(13, TACTIC_VFX_EXTRA_GROUPS.length);
-        assert.equals(20, TACTIC_VFX_ALL_GROUPS.length);
+    suite.test('27 組配方：第二、三批有前搖＋命中動機、主色互不相同、時間與粒子在預算內', () => {
+        assert.equals(20, TACTIC_VFX_EXTRA_GROUPS.length);
+        assert.equals(27, TACTIC_VFX_ALL_GROUPS.length);
         const seen = new Set<string>();
         for (const group of TACTIC_VFX_ALL_GROUPS) {
             const recipe = TACTIC_VFX_RECIPES[group];
@@ -54,7 +54,7 @@ export function createGeneralSkillVfxCoverageSuite(): TestSuite {
             assert.isTrue(tacticHitTotalSec(group) <= TACTIC_VFX_BUDGET.maxTotalSec + 1e-9, `${group} 命中＋餘韻超過上限`);
             seen.add(recipe.main.join(','));
         }
-        assert.equals(20, seen.size, '20 組主色必須互不相同');
+        assert.equals(27, seen.size, '27 組主色必須互不相同');
         for (const group of TACTIC_VFX_EXTRA_GROUPS) {
             const extra = extraTacticRecipeOf(group);
             assert.isTrue(!!extra && !!extra.windup && !!extra.hit, `${group} 缺前搖或命中動機`);
@@ -62,7 +62,7 @@ export function createGeneralSkillVfxCoverageSuite(): TestSuite {
         for (const group of TACTIC_VFX_GROUPS) assert.equals(null, extraTacticRecipeOf(group), `${group} 是第一批，不該有動機`);
     });
 
-    suite.test('招式對照表只指向存在且可施放的招式，且不與第一批歸類重複', () => {
+    suite.test('招式對照表只指向存在且可施放的招式，表優先於第一批歸類，且每個第二、三批分組都有招式', () => {
         const ids = Object.keys(TACTIC_VFX_SKILL_GROUP);
         assert.isTrue(ids.length >= 30, `第二批招式數 ${ids.length}`);
         const used = new Set<string>();
@@ -71,13 +71,50 @@ export function createGeneralSkillVfxCoverageSuite(): TestSuite {
             assert.isTrue(!!profile, `${id} 沒有 profile`);
             assert.isFalse(!!profile!.pendingEffect, `${id} 是殼 profile，不該列入`);
             assert.isTrue(TACTIC_VFX_EXTRA_GROUPS.includes(TACTIC_VFX_SKILL_GROUP[id]), `${id} 對到未知分組`);
-            assert.equals(TACTIC_VFX_SKILL_GROUP[id], tacticVfxGroupOf(id), `${id} 被第一批規則搶走，表內項目失效`);
+            assert.equals(TACTIC_VFX_SKILL_GROUP[id], tacticVfxGroupOf(id), `${id} 沒有以表為準`);
             used.add(TACTIC_VFX_SKILL_GROUP[id]);
         }
-        assert.equals(13, used.size, '每個第二批分組至少要有一個招式使用');
+        assert.equals(20, used.size, '每個第二、三批分組至少要有一個招式使用');
+        // 第三批改歸類後，第一批 7 組仍各自至少有一個招式（不能被搬空）
+        const base = new Set<string>();
+        for (const p of listBattleSkillProfiles()) {
+            if (p.pendingEffect) continue;
+            const grp = tacticVfxGroupOf(p.battleSkillId);
+            if (grp && TACTIC_VFX_GROUPS.includes(grp as never)) base.add(grp);
+        }
+        assert.equals(7, base.size, `第一批分組被搬空：只剩 ${[...base].join(',')}`);
     });
 
-    suite.test('第二批每組有音效：預設與 JSON 一致、音檔存在、不擴充發聲池', () => {
+    suite.test('第三批 7 組（減益／光聖／號令）：前搖→主體→命中三段動機齊備、有招式或狀態掛點、音效群組存在', () => {
+        assert.equals(7, TACTIC_VFX_BATCH3_GROUPS.length);
+        for (const group of TACTIC_VFX_BATCH3_GROUPS) {
+            const extra = extraTacticRecipeOf(group)!;
+            assert.isTrue(!!extra.windup && !!extra.hit, `${group} 缺前搖或命中動機`);
+            assert.isTrue(extra.windupParticles >= 4 && extra.particlesPerCell >= 4, `${group} 粒子量不足以成形`);
+            const skills = Object.keys(TACTIC_VFX_SKILL_GROUP).filter((id) => TACTIC_VFX_SKILL_GROUP[id] === group);
+            assert.isTrue(skills.length > 0, `${group} 沒有任何招式使用`);
+            assert.isTrue((EXTRA_TACTIC_SFX_CLIPS[group] ?? []).length > 0, `${group} 缺音效群組`);
+        }
+        // 減益狀態上身掛點：只指向存在的分組，且涵蓋虛弱／封射／緩速
+        for (const [status, group] of Object.entries(STATUS_DEBUFF_VFX_GROUP)) assert.isTrue(TACTIC_VFX_ALL_GROUPS.includes(group), `${status} 掛到未知分組 ${group}`);
+        for (const status of ['weak', 'no-shoot', 'slow']) assert.isTrue(!!STATUS_DEBUFF_VFX_GROUP[status], `${status} 缺減益特效掛點`);
+        // 規格指定的對應
+        assert.equals('warcry', tacticVfxGroupOf('zhang-fei-roar'));
+        assert.equals('confuse', tacticVfxGroupOf('sow-discord'));
+        assert.equals('rally', tacticVfxGroupOf('mentor-morale'));
+        assert.equals('smite', tacticVfxGroupOf('tally-wei-zhen-hua-xia'));
+    });
+
+    suite.test('View 層每個前搖／命中動機都有畫法（避免資料表新增動機卻沒人畫）', () => {
+        const src = fs.readFileSync(path.join(root, 'assets/scripts/battle/views/TacticVfxPlayer.ts'), 'utf8');
+        for (const group of TACTIC_VFX_EXTRA_GROUPS) {
+            const r = extraTacticRecipeOf(group)!;
+            assert.isTrue(src.includes(`case '${r.windup}'`), `${group} 的前搖動機 ${r.windup} 沒有畫法`);
+            assert.isTrue(src.includes(`case '${r.hit}'`), `${group} 的命中動機 ${r.hit} 沒有畫法`);
+        }
+    });
+
+    suite.test('第二、三批每組有音效：預設與 JSON 一致、音檔存在、不擴充發聲池', () => {
         const json = data('data/battle-audio-layers.json');
         const cfg = parseBattleAudioLayersConfig(json);
         const clipsDir = path.join(root, 'assets/bundles/audio/clips');
