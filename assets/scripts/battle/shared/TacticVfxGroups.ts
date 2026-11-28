@@ -16,10 +16,24 @@
 import { StatusEffect } from '../../core/config/Constants';
 import { resolveBattleSkillProfile } from '../skills/BattleSkillProfiles';
 import { tacticElementOfSkill } from './TacticVfxHooks';
+import {
+    EXTRA_TACTIC_VFX_RECIPES, TACTIC_VFX_EXTRA_GROUPS, TACTIC_VFX_SKILL_GROUP,
+    type TacticVfxExtraGroup, type TacticVfxExtraRecipe,
+} from './TacticVfxExtraGroups';
 
-export type TacticVfxGroup = 'fire' | 'water' | 'wind' | 'heal' | 'haste' | 'morale' | 'stun';
+/** 第一批 7 組（程式內建專屬畫法）；第二批 13 組見 TacticVfxExtraGroups（PROG-2-10236，資料表＋通用動機） */
+export type TacticVfxBaseGroup = 'fire' | 'water' | 'wind' | 'heal' | 'haste' | 'morale' | 'stun';
+export type TacticVfxGroup = TacticVfxBaseGroup | TacticVfxExtraGroup;
 
-export const TACTIC_VFX_GROUPS: readonly TacticVfxGroup[] = Object.freeze(['fire', 'water', 'wind', 'heal', 'haste', 'morale', 'stun']);
+/** 第一批 7 組。第二批用 TACTIC_VFX_EXTRA_GROUPS，兩批合併用 TACTIC_VFX_ALL_GROUPS。 */
+export const TACTIC_VFX_GROUPS: readonly TacticVfxBaseGroup[] = Object.freeze(['fire', 'water', 'wind', 'heal', 'haste', 'morale', 'stun']);
+export { TACTIC_VFX_EXTRA_GROUPS };
+export const TACTIC_VFX_ALL_GROUPS: readonly TacticVfxGroup[] = Object.freeze([...TACTIC_VFX_GROUPS, ...TACTIC_VFX_EXTRA_GROUPS]);
+
+/** 是否為第二批分組（View 層用動機畫法，而不是第一批的專屬畫法） */
+export function isExtraTacticGroup(group: TacticVfxGroup): group is TacticVfxExtraGroup {
+    return Object.prototype.hasOwnProperty.call(EXTRA_TACTIC_VFX_RECIPES, group);
+}
 
 /** 風系戰法：諸葛風暴。戰法資料沒有 element 欄位，依 battleSkillId 對應（與水計同做法）。 */
 export const WIND_TACTIC_IDS: readonly string[] = Object.freeze(['zhuge-liang-storm']);
@@ -35,7 +49,8 @@ export function tacticVfxGroupOf(battleSkillId: string): TacticVfxGroup | null {
     if (profile.statusEffect === StatusEffect.Haste) return 'haste';
     if (profile.effectKind === 'morale' || profile.effectKind === 'tile-buff') return 'morale';
     if (profile.statusEffect === StatusEffect.Stun || profile.effectKind === 'root') return 'stun';
-    return null;
+    // 第二批（PROG-2-10236）：第一批沒歸類的招式依資料表歸組；表裡沒有的仍沿用通用光效
+    return TACTIC_VFX_SKILL_GROUP[battleSkillId] ?? null;
 }
 
 export type Rgb = readonly [number, number, number];
@@ -55,7 +70,7 @@ export interface TacticVfxRecipe {
 }
 
 /** 7 組配色與粒子量。數值是視覺設計，由總 PM 授權自訂；之後可整表搬成 JSON。 */
-export const TACTIC_VFX_RECIPES: Readonly<Record<TacticVfxGroup, TacticVfxRecipe>> = Object.freeze({
+const BASE_TACTIC_VFX_RECIPES: Readonly<Record<TacticVfxBaseGroup, TacticVfxRecipe>> = Object.freeze({
     fire:   { main: [255, 110, 40],  glow: [255, 60, 20],   core: [255, 235, 160], particlesPerCell: 16, windupParticles: 10, hitSec: 0.3,  tailSec: 0.6 },
     water:  { main: [70, 170, 255],  glow: [30, 110, 230],  core: [220, 245, 255], particlesPerCell: 14, windupParticles: 8,  hitSec: 0.3,  tailSec: 0.6 },
     wind:   { main: [170, 255, 200], glow: [90, 220, 150],  core: [245, 255, 250], particlesPerCell: 14, windupParticles: 8,  hitSec: 0.3,  tailSec: 0.5 },
@@ -64,6 +79,17 @@ export const TACTIC_VFX_RECIPES: Readonly<Record<TacticVfxGroup, TacticVfxRecipe
     morale: { main: [255, 200, 60],  glow: [235, 90, 40],   core: [255, 245, 200], particlesPerCell: 14, windupParticles: 10, hitSec: 0.3,  tailSec: 0.6 },
     stun:   { main: [190, 120, 255], glow: [120, 60, 220],  core: [255, 245, 150], particlesPerCell: 8,  windupParticles: 6,  hitSec: 0.35, tailSec: 0.6 },
 });
+
+/** 20 組總配方（第一批 7 組＋第二批 13 組）；第二批的配方另帶 windup／hit 動機 */
+export const TACTIC_VFX_RECIPES: Readonly<Record<TacticVfxGroup, TacticVfxRecipe>> = Object.freeze({
+    ...BASE_TACTIC_VFX_RECIPES,
+    ...EXTRA_TACTIC_VFX_RECIPES,
+});
+
+/** 取第二批配方（含動機）；第一批回 null */
+export function extraTacticRecipeOf(group: TacticVfxGroup): TacticVfxExtraRecipe | null {
+    return isExtraTacticGroup(group) ? EXTRA_TACTIC_VFX_RECIPES[group] : null;
+}
 
 /** 全場預算：同時特效記錄數、同時粒子數、單次施放最多播幾格、命中＋餘韻最長秒數 */
 export const TACTIC_VFX_BUDGET = Object.freeze({
@@ -124,7 +150,7 @@ export interface TacticVfxStats {
 
 export function createTacticVfxStats(): TacticVfxStats {
     const played = {} as Record<TacticVfxGroup, number>;
-    for (const group of TACTIC_VFX_GROUPS) played[group] = 0;
+    for (const group of TACTIC_VFX_ALL_GROUPS) played[group] = 0;
     return { played, skipped: 0, trimmed: 0, activeFx: 0, activeParticles: 0, peakFx: 0, peakParticles: 0, nodes: 0 };
 }
 
