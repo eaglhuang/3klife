@@ -10,10 +10,11 @@
  * Unity 對照：Buff 圖示列的 ViewModel；View 層（UnitStatusIconBar）只負責把結果畫出來。
  */
 import { StatusEffect } from '../../shared/CommonEnums';
+import { MAX_DEBUFFS_PER_UNIT } from './StatusDebuffCap';
 
 /** 圖示種類；顯示字與顏色由 STATUS_ICON_DEFS 決定 */
 export type StatusIconKind =
-  | 'stun' | 'rooted' | 'controlled' | 'poison' | 'burn' | 'weak' | 'slow' | 'no-shoot'
+  | 'stun' | 'rooted' | 'controlled' | 'poison' | 'burn' | 'weak' | 'fear' | 'slow' | 'no-shoot'
   | 'defense-down' | 'attack-down' | 'accuracy-down' | 'hp-down' | 'morale-down'
   | 'invincible' | 'shield' | 'attack-up' | 'defense-up' | 'hp-up' | 'morale-up'
   | 'haste' | 'crit-up' | 'kin-aura';
@@ -35,6 +36,7 @@ export const STATUS_ICON_DEFS: Readonly<Record<StatusIconKind, StatusIconDef>> =
   'poison':        { glyph: '毒', isDebuff: true,  order: 3 },
   'burn':          { glyph: '燃', isDebuff: true,  order: 3 },
   'weak':          { glyph: '弱', isDebuff: true,  order: 4 },
+  'fear':          { glyph: '懼', isDebuff: true,  order: 4 }, // PROG-2-10253：獨立恐懼狀態，與虛弱同級
   'slow':          { glyph: '緩', isDebuff: true,  order: 5 },
   'no-shoot':      { glyph: '封', isDebuff: true,  order: 6 },
   'defense-down':  { glyph: '防', isDebuff: true,  order: 7 },
@@ -172,6 +174,7 @@ export function computeUnitStatusIcons(unit: UnitStatusSource, ctx: UnitStatusCo
       case StatusEffect.Rooted: add('rooted', e.remainingTurns); break;
       case StatusEffect.Slow: add('slow', e.remainingTurns); break;
       case StatusEffect.Weak: add('weak', e.remainingTurns); break;
+      case StatusEffect.Fear: add('fear', e.remainingTurns); break;
       case StatusEffect.NoShoot: add('no-shoot', e.remainingTurns); break;
       case StatusEffect.Invincible: add('invincible', e.remainingTurns); break;
       case StatusEffect.Haste: add('haste', e.remainingTurns); break;
@@ -210,7 +213,9 @@ export function computeUnitStatusIcons(unit: UnitStatusSource, ctx: UnitStatusCo
     if (mass.dotPct > 0) add('poison', mass.turnsLeft);
   }
 
-  const all = Array.from(byKind.values()).sort(compareStatusIcons);
+  // PROG-2-10253：同一單位減益最多 6 個（排序後取前 6，被擠掉的是優先序最低者）
+  let debuffSeen = 0;
+  const all = Array.from(byKind.values()).sort(compareStatusIcons).filter((i) => !i.isDebuff || ++debuffSeen <= MAX_DEBUFFS_PER_UNIT);
   const limit = Math.max(0, maxVisible);
   const icons = all.slice(0, limit);
   const overflow = Math.max(0, all.length - icons.length);

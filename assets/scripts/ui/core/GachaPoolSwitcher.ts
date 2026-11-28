@@ -33,6 +33,11 @@ export class GachaPoolSwitcher {
         private readonly _onShown?: (pool: GachaPoolDef, index: number) => void,
         /** 每個載入步驟的逾時（毫秒），測試可縮短 */
         private readonly _stepTimeoutMs: number = GACHA_POOL_STEP_TIMEOUT_MS,
+        /**
+         * 右側內容（原稿模板）每次掛上後立刻呼叫：模板裡寫死的保底、機率數字要在真資料回來前蓋成載入狀態（#2811 第 6 項）。
+         * 連點時只有最後一次切換會呼叫。
+         */
+        private readonly _onContentMounted?: (pool: GachaPoolDef) => void,
     ) {}
 
     public get index(): number {
@@ -74,18 +79,22 @@ export class GachaPoolSwitcher {
         // 限定池與名將池共用橫幅節點，以節點名判斷，避免後面的池把同一節點關掉
         for (const each of this._pools) actives[each.banner] = each.banner === pool.banner;
         this._port.setActives(actives);
+        // 畫面上可能還留著原稿模板或上一池的數字：資料回來前先蓋成載入狀態
+        this._onContentMounted?.(pool);
 
         // 資源下載 404／無回應時，每一步最多等 _stepTimeoutMs；逾時當失敗，後備是照樣把文字與橫幅寫完，轉蛋不會卡住
         const guard = <T>(task: Promise<T>, fallback: T, step: string): Promise<T> =>
             awaitWithTimeout(task, this._stepTimeoutMs, fallback, { label: `gacha-pool:${pool.key}:${step}` });
         await guard(this._port.switchLazySlot(GACHA_CONTENT_SLOT, pool.contentFragment), false, 'slot');
         if (seq !== this._seq) return;
+        this._onContentMounted?.(pool);
         await guard(this._port.applyTabRegionsForFragment(pool.contentFragment), undefined, 'regions');
         if (seq !== this._seq) return;
         if (pool.section) {
             await guard(this._port.mountSection(pool.section.anchor, pool.section.fragment, pool.section.replaceContent), null, 'section');
             if (seq !== this._seq) return;
         }
+        this._onContentMounted?.(pool);
         this._port.setTexts({ ...gachaPullBarTexts(), ...gachaPoolBannerTexts(pool) });
         this._onShown?.(pool, index);
     }

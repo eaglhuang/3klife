@@ -134,3 +134,11 @@
 | `doc_task_3332` | docs/agent-briefs/tasks/PROG/PROG-2-10244.md | [PROG-2-10244] 夫妻戰場合攻改 26% |
 | `doc_task_3333` | docs/agent-briefs/tasks/PROG/PROG-2-10240.md | [PROG-2-10240] 武將技能特效第二批：減益／光聖／號令 |
 | `doc_task_3334` | docs/agent-briefs/tasks/PROG/PROG-2-10243.md | [PROG-2-10243] 戰場打擊感 Juice 第二批（閃白擊退、三段緩動、衝擊環、刀光殘影、輝光） |
+| `doc_task_3337` | docs/agent-briefs/tasks/PROG/PROG-2-10248.md | [PROG-2-10248] 戰場三份一頁規格草稿 |
+| `doc_task_3340` | docs/agent-briefs/tasks/PROG/PROG-2-10246.md | [PROG-2-10246] 武將天生戰法／奧義模板＋覆寫資料落地 |
+| `doc_task_3343` | docs/agent-briefs/tasks/PROG/PROG-2-10254.md | [PROG-2-10254] 修 playtest-online 在 12:00 發版時失敗的 7 步 |
+| `doc_task_3344` | docs/agent-briefs/tasks/PROG/PROG-2-10264.md | [PROG-2-10264] 規格書：街上偶遇他國武將＋武將作息表 |
+| `doc_task_3345` | docs/agent-briefs/tasks/PROG/PROG-2-10253.md | [PROG-2-10253] 戰場技能補齊 |
+| `doc_task_3346` | docs/agent-briefs/tasks/PROG/PROG-2-10258.md | [PROG-2-10258] 市井大街 Q 頭生活雛形 |
+| `doc_task_3348` | docs/agent-briefs/tasks/PROG/PROG-2-10250.md | [PROG-2-10250] 戰場 draw call 合批（目標 <60）與頓格設定開關 |
+| `doc_task_3349` | docs/agent-briefs/tasks/PROG/PROG-2-10269.md | [PROG-2-10269] 修 #2811 第 6、9 項 |

@@ -9,6 +9,7 @@
  * 宿命池（開局六位）不動；這裡是開局後的「指名招募」，讓玩家自己挑人。
  */
 import type { GeneralConfig } from '../../core/models/GeneralUnit';
+import { lobbyActionLock, lockedActionToast } from '../../core/systems/OfficerFeatureUnlocks';
 import { PORTRAIT_GALLERY_PAGE_SIZE, PortraitGallery, PortraitGalleryItem } from './PortraitGallery';
 
 export interface RecruitHallFlowView {
@@ -30,6 +31,23 @@ export interface RecruitHallDeps {
 
 export const RECRUIT_ROWS_PER_PAGE = PORTRAIT_GALLERY_PAGE_SIZE;
 export const RECRUIT_GOLD_COST = 3000;
+
+export interface RecruitHallAccess {
+    readonly allowed: boolean;
+    /** 擋下時給玩家看的提示（含官職經驗需求與目前進度）；允許時為空字串 */
+    readonly message: string;
+}
+
+/**
+ * 招賢館能不能進：大廳選單入口與內政畫面入口共用這一個判斷（#2811 第 9 項），
+ * 官職階位未達 officer-feature-unlocks.json 設定的解鎖階位（第 2 階）兩邊都擋；達到兩邊都開。
+ * 沒有「只預覽」的入口：能進就是完整招賢館（招募仍受黃金與名冊限制）。
+ */
+export function recruitHallAccess(officerTier: number, officerExp?: number): RecruitHallAccess {
+    const lock = lobbyActionLock('recruitHall', officerTier);
+    if (!lock.locked) return { allowed: true, message: '' };
+    return { allowed: false, message: lockedActionToast('招賢館', lock, officerExp) };
+}
 
 function statLine(g: GeneralConfig): string {
     return `武${g.str ?? 0} 智${g.int ?? 0} 統${g.lea ?? 0} 政${g.pol ?? 0} 魅${g.cha ?? 0}`;

@@ -39,18 +39,18 @@
 | `doc_ai_0033` | .agents/workflows/ui-verify.md | Context Budget Guard |
 | `doc_ai_0034` | .github/instructions/ucuf-compliance.instructions.md | UCUF CompositePanel 合規指令 |
 | `doc_ai_0035` | docs/agent-briefs/atm-task-template.md | ATM 任務卡模板 |
-| `doc_ai_0036` | .github/instructions/atm-atom-map-refactor.instructions.md | ATM Atom Map Refactor |
-| `doc_ai_0037` | .github/instructions/atm-create.instructions.md | ATM Create |
-| `doc_ai_0038` | .github/instructions/atm-evidence.instructions.md | ATM Evidence |
-| `doc_ai_0039` | .github/instructions/atm-governance-router.instructions.md | ATM Governance Router |
-| `doc_ai_0040` | .github/instructions/atm-handoff.instructions.md | ATM Handoff |
-| `doc_ai_0041` | .github/instructions/atm-internal-build-sync.instructions.md | ATM Internal Build Sync |
-| `doc_ai_0042` | .github/instructions/atm-lock.instructions.md | ATM Lock |
-| `doc_ai_0043` | .github/instructions/atm-next.instructions.md | ATM Next |
-| `doc_ai_0044` | .github/instructions/atm-orient.instructions.md | ATM Orient |
-| `doc_ai_0045` | .github/instructions/atm-task-intent-resolver.instructions.md | ATM Task Intent Resolver |
-| `doc_ai_0046` | .github/instructions/atm-upgrade-scan.instructions.md | ATM Upgrade Scan |
 | `doc_ai_0047` | docs/agent-briefs/npc-brain-handoff-2026-05-29.md | `npc-brain` 資料演進與交接摘要 |
+| `doc_ai_0048` | .github/instructions/atm-atom-map-refactor.instructions.md | ATM Atom Map Refactor |
+| `doc_ai_0049` | .github/instructions/atm-create.instructions.md | ATM Create |
+| `doc_ai_0050` | .github/instructions/atm-evidence.instructions.md | ATM Evidence |
+| `doc_ai_0051` | .github/instructions/atm-governance-router.instructions.md | ATM Governance Router |
+| `doc_ai_0052` | .github/instructions/atm-handoff.instructions.md | ATM Handoff |
+| `doc_ai_0053` | .github/instructions/atm-internal-build-sync.instructions.md | ATM Internal Build Sync |
+| `doc_ai_0054` | .github/instructions/atm-lock.instructions.md | ATM Lock |
+| `doc_ai_0055` | .github/instructions/atm-next.instructions.md | ATM Next |
+| `doc_ai_0056` | .github/instructions/atm-orient.instructions.md | ATM Orient |
+| `doc_ai_0057` | .github/instructions/atm-task-intent-resolver.instructions.md | ATM Task Intent Resolver |
+| `doc_ai_0058` | .github/instructions/atm-upgrade-scan.instructions.md | ATM Upgrade Scan |
 
 ## Agent Skill 專用 (`doc_agentskill`)
 

@@ -371,6 +371,43 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     statusTurns: 1,
     battleLogKey: 'skill.insp_taunt.control',
   },
+  // ───── 3 招新 profile（PROG-2-10253，doc_spec_1360；11/28 裁決：問 1～5 皆採 A，曹仁穩固＝定身）─────
+  // 郭嘉．遺計：敵方全體最多 4 目標、依距離衰減，上虛弱 2 回合（攻擊 ×0.7）；純減益不傷血
+  'guo-jia-legacy': {
+    battleSkillId: 'guo-jia-legacy',
+    targetMode: BattleSkillTargetMode.EnemyAll,
+    manualTargeting: false,
+    autoAimMode: 'all-enemies',
+    effectKind: 'control',
+    coefficient: 0,
+    maxTargets: 4,
+    falloffRule: 'linear-step',
+    statusEffect: StatusEffect.Weak,
+    statusTurns: 2,
+    battleLogKey: 'skill.guo_jia_legacy.hit',
+  },
+  // 大喬．國色：友軍全體士氣 +15（建議範圍 10～20），不附狀態；沿用鼓舞結算
+  'da-qiao-beauty': {
+    battleSkillId: 'da-qiao-beauty',
+    targetMode: BattleSkillTargetMode.AllyAll,
+    effectKind: 'morale',
+    coefficient: 0,
+    moraleBonus: 15,
+    battleLogKey: 'skill.da_qiao_beauty.buff',
+  },
+  // 曹仁．穩固：敵方單體最前排定身 1 回合（守將釘住正面）；沿用控制結算，狀態為 Rooted
+  'cao-ren-steadfast': {
+    battleSkillId: 'cao-ren-steadfast',
+    targetMode: BattleSkillTargetMode.EnemySingle,
+    manualTargeting: false,
+    autoAimMode: 'frontmost-enemy',
+    effectKind: 'control',
+    coefficient: 0,
+    maxTargets: 1,
+    statusEffect: StatusEffect.Rooted,
+    statusTurns: 1,
+    battleLogKey: 'skill.cao_ren_steadfast.hit',
+  },
   // 威震華夏（PROG-2-0773）：單體敵軍傷害；第 1 回合 ×2，擊殺後施放者再行動 1 次（規格 戰法系統 威震華夏）
   'tally-wei-zhen-hua-xia': {
     battleSkillId: 'tally-wei-zhen-hua-xia',

@@ -2682,96 +2682,6 @@
     "category": "other"
   },
   {
-    "id": "doc_other_2706",
-    "path": ".github/ISSUE_TEMPLATE/bug_report.md",
-    "title": "問題描述",
-    "category": "other"
-  },
-  {
-    "id": "doc_other_2707",
-    "path": ".github/ISSUE_TEMPLATE/feature_request.md",
-    "title": "功能描述",
-    "category": "other"
-  },
-  {
-    "id": "doc_other_2708",
-    "path": ".github/ISSUE_TEMPLATE/rfc.md",
-    "title": "RFC 摘要",
-    "category": "other"
-  },
-  {
-    "id": "doc_other_2709",
-    "path": ".github/prompts/atm-atom-map-refactor.prompt.md",
-    "title": "ATM Atom Map Refactor",
-    "category": "other"
-  },
-  {
-    "id": "doc_other_2710",
-    "path": ".github/prompts/atm-create.prompt.md",
-    "title": "ATM Create",
-    "category": "other"
-  },
-  {
-    "id": "doc_other_2711",
-    "path": ".github/prompts/atm-evidence.prompt.md",
-    "title": "ATM Evidence",
-    "category": "other"
-  },
-  {
-    "id": "doc_other_2712",
-    "path": ".github/prompts/atm-governance-router.prompt.md",
-    "title": "ATM Governance Router",
-    "category": "other"
-  },
-  {
-    "id": "doc_other_2713",
-    "path": ".github/prompts/atm-handoff.prompt.md",
-    "title": "ATM Handoff",
-    "category": "other"
-  },
-  {
-    "id": "doc_other_2714",
-    "path": ".github/prompts/atm-internal-build-sync.prompt.md",
-    "title": "ATM Internal Build Sync",
-    "category": "other"
-  },
-  {
-    "id": "doc_other_2715",
-    "path": ".github/prompts/atm-lock.prompt.md",
-    "title": "ATM Lock",
-    "category": "other"
-  },
-  {
-    "id": "doc_other_2716",
-    "path": ".github/prompts/atm-next.prompt.md",
-    "title": "ATM Next",
-    "category": "other"
-  },
-  {
-    "id": "doc_other_2717",
-    "path": ".github/prompts/atm-orient.prompt.md",
-    "title": "ATM Orient",
-    "category": "other"
-  },
-  {
-    "id": "doc_other_2718",
-    "path": ".github/prompts/atm-task-intent-resolver.prompt.md",
-    "title": "ATM Task Intent Resolver",
-    "category": "other"
-  },
-  {
-    "id": "doc_other_2719",
-    "path": ".github/prompts/atm-upgrade-scan.prompt.md",
-    "title": "ATM Upgrade Scan",
-    "category": "other"
-  },
-  {
-    "id": "doc_other_2720",
-    "path": ".github/pull_request_template.md",
-    "title": "Pull Request",
-    "category": "other"
-  },
-  {
     "id": "doc_other_2721",
     "path": "docs/學習文件/Harness Engineering for Language Agents.md",
     "title": "Harness Engineering for Language Agents",
@@ -11907,6 +11817,96 @@
     "id": "doc_other_4243",
     "path": "docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-17.md",
     "title": "Doc ID Registry Markdown Index — Spec / Index / Task",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_4244",
+    "path": ".github/ISSUE_TEMPLATE/bug_report.md",
+    "title": "問題描述",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_4245",
+    "path": ".github/ISSUE_TEMPLATE/feature_request.md",
+    "title": "功能描述",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_4246",
+    "path": ".github/ISSUE_TEMPLATE/rfc.md",
+    "title": "RFC 摘要",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_4247",
+    "path": ".github/prompts/atm-atom-map-refactor.prompt.md",
+    "title": "ATM Atom Map Refactor",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_4248",
+    "path": ".github/prompts/atm-create.prompt.md",
+    "title": "ATM Create",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_4249",
+    "path": ".github/prompts/atm-evidence.prompt.md",
+    "title": "ATM Evidence",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_4250",
+    "path": ".github/prompts/atm-governance-router.prompt.md",
+    "title": "ATM Governance Router",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_4251",
+    "path": ".github/prompts/atm-handoff.prompt.md",
+    "title": "ATM Handoff",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_4252",
+    "path": ".github/prompts/atm-internal-build-sync.prompt.md",
+    "title": "ATM Internal Build Sync",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_4253",
+    "path": ".github/prompts/atm-lock.prompt.md",
+    "title": "ATM Lock",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_4254",
+    "path": ".github/prompts/atm-next.prompt.md",
+    "title": "ATM Next",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_4255",
+    "path": ".github/prompts/atm-orient.prompt.md",
+    "title": "ATM Orient",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_4256",
+    "path": ".github/prompts/atm-task-intent-resolver.prompt.md",
+    "title": "ATM Task Intent Resolver",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_4257",
+    "path": ".github/prompts/atm-upgrade-scan.prompt.md",
+    "title": "ATM Upgrade Scan",
+    "category": "other"
+  },
+  {
+    "id": "doc_other_4258",
+    "path": ".github/pull_request_template.md",
+    "title": "Pull Request",
     "category": "other"
   }
 ]

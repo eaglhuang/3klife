@@ -3,16 +3,19 @@
  * LifeProtoEntry — 從大廳進入生活層原型的開發入口
  *
  * 開發旗標（任一成立才出現入口，正式玩家看不到）：
- *  - 網址帶 ?lifeProto=1（只放入口鈕）或 ?lifeProto=open（進大廳後自動打開生活層）。
+ *  - 網址帶 ?lifeProto=1（只放入口鈕）或 ?lifeProto=open（進大廳後自動打開生活層）；
+ *  - ?lifeProto=street（進大廳後自動打開「市井大街 Q 頭生活雛形」，PROG-2-10258）。
  * 入口＝大廳 Canvas 左下的小按鈕；生活層是蓋在大廳上的全螢幕疊層，回大廳就銷毀疊層，大廳本身一個節點都不動。
  */
 import { Color, Layers, Node } from 'cc';
 import { services } from '../../../core/managers/ServiceLoader';
 import { LifeProtoScene } from './LifeProtoScene';
+import { StreetQHeadProto } from './StreetQHeadProto';
 import { fitLabel, makeBox, makeLabel, placeBox } from './LifeUiKit';
 
 const ENTRY_NODE = 'LifeProtoEntryButton';
 const LAYER_NODE = 'LifeProtoLayer';
+const STREET_NODE = 'StreetQHeadLayer';
 
 function queryFlag(): string | null {
     try {
@@ -50,6 +53,20 @@ export class LifeProtoEntry {
         btn.setPosition(-cw / 2 + 12, -ch / 2 + 84, 0);
         btn.on(Node.EventType.TOUCH_END, () => LifeProtoEntry.open(canvas));
         if (flag === 'open') LifeProtoEntry.open(canvas);
+        if (flag === 'street') LifeProtoEntry.openStreet(canvas);
+    }
+
+    /** 市井大街 Q 頭生活雛形：全螢幕疊層，離開就銷毀 */
+    public static openStreet(canvas: Node): void {
+        if (canvas.getChildByName(STREET_NODE)) return;
+        const layer = new Node(STREET_NODE);
+        layer.layer = Layers.Enum.UI_2D;
+        canvas.addChild(layer);
+        const scene = layer.addComponent(StreetQHeadProto);
+        scene.init(
+            (k, ...a) => services().i18n.t(k, ...a),
+            () => { if (layer.isValid) layer.destroy(); },
+        );
     }
 
     public static open(canvas: Node): void {
