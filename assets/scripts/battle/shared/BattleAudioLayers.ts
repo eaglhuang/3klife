@@ -125,7 +125,7 @@ export const DEFAULT_BATTLE_AUDIO_LAYERS: BattleAudioLayersConfig = {
     clips: {
       fire: ['tactic_fire'], water: ['tactic_water'], wind: ['tactic_wind'], heal: ['tactic_heal'],
       haste: ['tactic_haste'], morale: ['tactic_morale'], stun: ['tactic_stun'],
-      // 第二批 13 組（PROG-2-10236）：沿用既有音檔，與 battle-audio-layers.json 一致
+      // 第二、三批 20 組（PROG-2-10236、10240）：沿用既有音檔，與 battle-audio-layers.json 一致
       ...Object.fromEntries(Object.entries(EXTRA_TACTIC_SFX_CLIPS).map(([k, v]) => [k, [...v]])),
     },
     volume: {

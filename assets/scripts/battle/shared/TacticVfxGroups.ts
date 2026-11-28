@@ -21,7 +21,7 @@ import {
     type TacticVfxExtraGroup, type TacticVfxExtraRecipe,
 } from './TacticVfxExtraGroups';
 
-/** 第一批 7 組（程式內建專屬畫法）；第二批 13 組見 TacticVfxExtraGroups（PROG-2-10236，資料表＋通用動機） */
+/** 第一批 7 組（程式內建專屬畫法）；第二批 13 組（PROG-2-10236）與第三批 7 組（PROG-2-10240）見 TacticVfxExtraGroups，資料表＋通用動機 */
 export type TacticVfxBaseGroup = 'fire' | 'water' | 'wind' | 'heal' | 'haste' | 'morale' | 'stun';
 export type TacticVfxGroup = TacticVfxBaseGroup | TacticVfxExtraGroup;
 
@@ -42,6 +42,9 @@ export const WIND_TACTIC_IDS: readonly string[] = Object.freeze(['zhuge-liang-st
 export function tacticVfxGroupOf(battleSkillId: string): TacticVfxGroup | null {
     const profile = resolveBattleSkillProfile(battleSkillId);
     if (!profile) return null;
+    // 資料表優先（PROG-2-10240）：表內招式（第二、三批）以表為準，可把近似的第一批歸類改成專屬組；表外才走第一批規則
+    const tabled = TACTIC_VFX_SKILL_GROUP[battleSkillId];
+    if (tabled) return tabled;
     if (tacticElementOfSkill(battleSkillId, profile.tags) === 'fire' || profile.burnOnHit || profile.effectKind === 'push-fire') return 'fire';
     if (tacticElementOfSkill(battleSkillId, profile.tags) === 'water') return 'water';
     if (WIND_TACTIC_IDS.includes(battleSkillId)) return 'wind';
@@ -49,8 +52,7 @@ export function tacticVfxGroupOf(battleSkillId: string): TacticVfxGroup | null {
     if (profile.statusEffect === StatusEffect.Haste) return 'haste';
     if (profile.effectKind === 'morale' || profile.effectKind === 'tile-buff') return 'morale';
     if (profile.statusEffect === StatusEffect.Stun || profile.effectKind === 'root') return 'stun';
-    // 第二批（PROG-2-10236）：第一批沒歸類的招式依資料表歸組；表裡沒有的仍沿用通用光效
-    return TACTIC_VFX_SKILL_GROUP[battleSkillId] ?? null;
+    return null; // 沒歸類：沿用通用光效
 }
 
 export type Rgb = readonly [number, number, number];
@@ -80,7 +82,7 @@ const BASE_TACTIC_VFX_RECIPES: Readonly<Record<TacticVfxBaseGroup, TacticVfxReci
     stun:   { main: [190, 120, 255], glow: [120, 60, 220],  core: [255, 245, 150], particlesPerCell: 8,  windupParticles: 6,  hitSec: 0.35, tailSec: 0.6 },
 });
 
-/** 20 組總配方（第一批 7 組＋第二批 13 組）；第二批的配方另帶 windup／hit 動機 */
+/** 27 組總配方（第一批 7 組＋第二批 13 組＋第三批 7 組）；第二批的配方另帶 windup／hit 動機 */
 export const TACTIC_VFX_RECIPES: Readonly<Record<TacticVfxGroup, TacticVfxRecipe>> = Object.freeze({
     ...BASE_TACTIC_VFX_RECIPES,
     ...EXTRA_TACTIC_VFX_RECIPES,

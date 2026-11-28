@@ -22,6 +22,7 @@ import { statusEffectFloatText, POISON_STATUS_ID } from '../shared/StatusEffectL
 import { ensureBattleUiFeedbackLoaded, getBattleUiFeedback, isPlateFadeTask, planHealSteps, statusFloatWithStacks } from '../shared/BattleUiFeedback';
 import { overrideFloatTextStyle } from '../../core/systems/FloatTextStyle';
 import { BLOCK_FLOAT_TEXT, shieldHitFeedback, type DamageBlockReason } from '../shared/BlockFeedback';
+import { STATUS_DEBUFF_VFX_GROUP } from '../shared/TacticVfxExtraGroups';
 import { StatusCueThrottle, statusFloatTypeOf, statusMakesTargetFlinch, statusPolarityOf, statusWaveDelaySec } from '../shared/StatusApplyFeedback';
 import { salvageSummaryLines } from '../../core/systems/StageSalvageSettlement';
 import { isDefenseDeployBlocked, withDefenseGuideFallback } from '../../core/systems/DefenseGuide';
@@ -1761,6 +1762,9 @@ export class BattleUIBridge {
         const cue = polarity === 'buff' ? BATTLE_AUDIO_CUE.buffGained : BATTLE_AUDIO_CUE.debuffGained;
         if (this.statusCueThrottle.shouldPlay(cue, Date.now())) playBattleAudio(cue);
         if (statusMakesTargetFlinch(polarity)) this.ctx.unitRenderer?.playHitAnimation(live.id, null);
+        // PROG-2-10240：減益上身（虛弱／封射／緩速）在目標格補一段分組特效，與施放當下的戰法特效分開（沒掛點的狀態不播）
+        const debuffFx = STATUS_DEBUFF_VFX_GROUP[data.effect];
+        if (debuffFx) this.ctx.unitRenderer?.playTacticHit(debuffFx, live.faction === Faction.Player ? Faction.Enemy : Faction.Player, [{ lane: live.lane, depth: live.depth }]);
         if (data.effect === POISON_STATUS_ID) {
           // PROG-2-9731：毒箭命中要有上身回饋——紫綠光罩住受擊者＋紫綠「中毒」字（使用者選「毒紫綠」）
           this.ctx.unitRenderer?.playPoisonHit?.(live.id);

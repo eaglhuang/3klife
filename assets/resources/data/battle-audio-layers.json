@@ -352,6 +352,27 @@
       ],
       "quake": [
         "boom"
+      ],
+      "weaken": [
+        "hurt"
+      ],
+      "confuse": [
+        "wave"
+      ],
+      "bless": [
+        "light"
+      ],
+      "purify": [
+        "tactic_heal_sparkle"
+      ],
+      "smite": [
+        "laser"
+      ],
+      "rally": [
+        "tactic_morale"
+      ],
+      "warcry": [
+        "skill3"
       ]
     },
     "volume": {
@@ -432,6 +453,34 @@
         0.8
       ],
       "quake": [
+        0.65,
+        0.8
+      ],
+      "weaken": [
+        0.65,
+        0.8
+      ],
+      "confuse": [
+        0.65,
+        0.8
+      ],
+      "bless": [
+        0.65,
+        0.8
+      ],
+      "purify": [
+        0.65,
+        0.8
+      ],
+      "smite": [
+        0.65,
+        0.8
+      ],
+      "rally": [
+        0.65,
+        0.8
+      ],
+      "warcry": [
         0.65,
         0.8
       ]

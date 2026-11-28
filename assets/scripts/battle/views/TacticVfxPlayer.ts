@@ -499,6 +499,25 @@ export class TacticVfxPlayer {
           this.setStroke(g, f.recipe.main, a * 0.9, 2.2 * S); g.arc(f.x, f.y, R, a0, a0 + 0.9, true); g.stroke();
         }
         break;
+      case 'rise':
+        // 腳下光環升起，光點沿身體往上飄（祝福／淨化／號令的預備）
+        this.ring(g, f, f.x, f.y - 14 * S, (22 - 6 * u) * S, (22 - 6 * u) * 0.38 * S, 2 * S, a * 0.8);
+        for (let i = 0; i < f.n; i++) {
+          const p = clamp01(u * (0.9 + 0.5 * rnd(f.seed, i, 2)) + rnd(f.seed, i, 3) * 0.15);
+          this.dot(g, f, f.x + (rnd(f.seed, i, 1) - 0.5) * 30 * S, f.y - 14 * S + p * 48 * S, (2.2 - p) * S, a * Math.sin(p * Math.PI));
+        }
+        break;
+      case 'shout':
+        // 朝前方擴散的三道聲波弧（戰吼預備）
+        for (let k = 0; k < 3; k++) {
+          const p = clamp01(u * 1.25 - k * 0.2);
+          if (p <= 0) continue;
+          const R = (8 + 26 * p) * S; const a0 = f.facing > 0 ? -0.8 : Math.PI - 0.8;
+          this.setStroke(g, f.recipe.glow, a * (1 - p) * 0.4, 5 * S); g.arc(f.x + f.facing * 8 * S, f.y + 6 * S, R, a0, a0 + 1.6, true); g.stroke();
+          this.setStroke(g, f.recipe.main, a * (1 - p), 2 * S); g.arc(f.x + f.facing * 8 * S, f.y + 6 * S, R, a0, a0 + 1.6, true); g.stroke();
+        }
+        this.dot(g, f, f.x + f.facing * 8 * S, f.y + 6 * S, (2 + 3 * u) * S, a);
+        break;
       case 'glint': {
         // 兵器處亮起十字閃光：越蓄越大，邊緣射出短光線
         const gx = f.x + f.facing * 14 * S; const gy = f.y + 6 * S; const r = (4 + 18 * easeOut(u)) * S;
@@ -529,6 +548,13 @@ export class TacticVfxPlayer {
       case 'runes': this.hitRunes(g, f, burst, life, a, S); break;
       case 'cycle': this.hitCycle(g, f, burst, life, a, S); break;
       case 'quake': this.hitQuake(g, f, burst, life, a, S); break;
+      case 'droop': this.hitDroop(g, f, burst, life, a, S); break;
+      case 'swirl': this.hitSwirl(g, f, burst, life, a, S); break;
+      case 'halo': this.hitHalo(g, f, burst, life, a, S); break;
+      case 'cleanse': this.hitCleanse(g, f, burst, life, a, S); break;
+      case 'judgement': this.hitJudgement(g, f, burst, life, a, S); break;
+      case 'banner': this.hitBanner(g, f, burst, life, a, S); break;
+      case 'soundwave': this.hitSoundwave(g, f, burst, life, a, S); break;
     }
   }
 
@@ -777,6 +803,138 @@ export class TacticVfxPlayer {
       const y = cy + vy * t - 140 * S * t * t;
       if (y < cy - 4 * S) continue;
       this.dot(g, f, f.x + vx * t, y, (2 - life) * S, a);
+    }
+  }
+
+  // ───────────── 第三批（PROG-2-10240）：減益／光聖／號令 ─────────────
+
+  /** 虛弱／恐懼：灰紫光暈壓在身上，三枚「∨」下沉箭頭，冷汗滴落，腳下裂環 */
+  private hitDroop(g: Graphics, f: Fx, burst: number, life: number, a: number, S: number): void {
+    const e = easeOut(clamp01(burst * 1.2));
+    this.setFill(g, f.recipe.glow, a * 0.42); g.ellipse(f.x, f.y - 2 * S, 24 * S * (0.5 + e * 0.5), 28 * S * (0.5 + e * 0.5)); g.fill();
+    for (let k = 0; k < 3; k++) {
+      const p = clamp01(life * 1.5 - k * 0.15);
+      if (p <= 0) continue;
+      const x = f.x + (k - 1) * 11 * S; const y = f.y + 44 * S - p * 44 * S; const al = a * Math.sin(p * Math.PI);
+      this.line(g, f, x - 8 * S, y + 8 * S, x, y, 3 * S, al);
+      this.line(g, f, x, y, x + 8 * S, y + 8 * S, 3 * S, al);
+    }
+    for (let i = 0; i < f.n; i++) {
+      const p = clamp01(life * (0.8 + 0.5 * rnd(f.seed, i, 1)) - rnd(f.seed, i, 2) * 0.2);
+      if (p <= 0) continue;
+      this.dot(g, f, f.x + (rnd(f.seed, i, 3) - 0.5) * 30 * S, f.y + 26 * S - p * 40 * S, 1.5 * S, a * Math.sin(p * Math.PI));
+    }
+    this.ring(g, f, f.x, f.y - 12 * S, (10 + 18 * e) * S, (10 + 18 * e) * 0.42 * S, 1.6 * S, a * 0.7);
+  }
+
+  /** 混亂／魅惑／離間：星點繞頭旋轉（前後交錯大小），頭頂一顆旋轉小星與雙層橢圓軌道 */
+  private hitSwirl(g: Graphics, f: Fx, burst: number, life: number, a: number, S: number): void {
+    const e = easeOut(clamp01(burst * 1.3)); const hy = f.y + 22 * S;
+    this.ring(g, f, f.x, hy, 17 * S * e, 7 * S * e, 1.4 * S, a * 0.7);
+    this.ring(g, f, f.x, hy, 11 * S * e, 4.5 * S * e, 1.2 * S, a * 0.5);
+    for (let i = 0; i < f.n; i++) {
+      const ang = f.t * 7 + i * (TAU / f.n); const sn = Math.sin(ang);
+      this.dot(g, f, f.x + Math.cos(ang) * 17 * S * e, hy + sn * 7 * S * e, (1.5 + 0.8 * sn) * S, a * (0.6 + 0.4 * sn));
+    }
+    this.star(g, f, f.x, hy + 14 * S, 6.5 * S * e, 2.8 * S * e, a * 0.9, f.t * 4);
+  }
+
+  /** 祝福：光柱自天而降，金白光環套到頭上，光點上浮 */
+  private hitHalo(g: Graphics, f: Fx, burst: number, life: number, a: number, S: number): void {
+    const e = easeOut(clamp01(burst * 1.2));
+    this.setFill(g, f.recipe.glow, a * 0.16); g.rect(f.x - 11 * S * e, f.y - 14 * S, 22 * S * e, 74 * S); g.fill();
+    this.setFill(g, f.recipe.main, a * 0.3); g.rect(f.x - 5 * S * e, f.y - 14 * S, 10 * S * e, 74 * S); g.fill();
+    const hy = f.y + (50 - 26 * e) * S;
+    this.ring(g, f, f.x, hy, 13 * S, 4.5 * S, 2.4 * S, a);
+    this.ring(g, f, f.x, f.y - 12 * S, (8 + 14 * e) * S, (8 + 14 * e) * 0.4 * S, 1.6 * S, a * 0.7);
+    for (let i = 0; i < f.n; i++) {
+      const p = clamp01(life * (0.9 + 0.5 * rnd(f.seed, i, 1)) - rnd(f.seed, i, 2) * 0.2);
+      if (p <= 0) continue;
+      this.dot(g, f, f.x + (rnd(f.seed, i, 3) - 0.5) * 28 * S, f.y - 12 * S + p * 56 * S, 1.6 * S, a * Math.sin(p * Math.PI));
+    }
+  }
+
+  /** 淨化：三道漣漪環由腳向頭掃過，淡色十字光點上升 */
+  private hitCleanse(g: Graphics, f: Fx, burst: number, life: number, a: number, S: number): void {
+    this.setFill(g, f.recipe.glow, a * 0.18); g.ellipse(f.x, f.y - 12 * S, 24 * S, 9 * S); g.fill();
+    for (let k = 0; k < 3; k++) {
+      const p = clamp01(life * 1.5 - k * 0.2);
+      if (p <= 0) continue;
+      const rx = (22 - 6 * p) * S;
+      this.ring(g, f, f.x, f.y - 12 * S + p * 46 * S, rx, rx * 0.36, 2 * S, a * Math.sin(p * Math.PI));
+    }
+    for (let i = 0; i < f.n; i++) {
+      const p = clamp01(life * (0.9 + 0.5 * rnd(f.seed, i, 1)) - rnd(f.seed, i, 2) * 0.2);
+      if (p <= 0) continue;
+      const x = f.x + (rnd(f.seed, i, 3) - 0.5) * 34 * S; const y = f.y - 10 * S + p * 52 * S; const al = a * Math.sin(p * Math.PI);
+      this.line(g, f, x - 2.5 * S, y, x + 2.5 * S, y, 1 * S, al); this.line(g, f, x, y - 2.5 * S, x, y + 2.5 * S, 1 * S, al);
+    }
+  }
+
+  /** 神罰：金白光柱劈下（命中瞬間最亮），落點十字閃光與擴散環，放射火花 */
+  private hitJudgement(g: Graphics, f: Fx, burst: number, life: number, a: number, S: number): void {
+    const flash = burst < 1 ? 1 : Math.max(0.15, 1 - (life - 0.3) * 1.5);
+    const w = (14 - 6 * clamp01(life * 1.4)) * S;
+    this.setFill(g, f.recipe.glow, a * 0.2 * flash); g.rect(f.x - w * 1.6, f.y - 8 * S, w * 3.2, 96 * S); g.fill();
+    this.setFill(g, f.recipe.main, a * 0.6 * flash); g.rect(f.x - w, f.y - 8 * S, w * 2, 96 * S); g.fill();
+    this.setFill(g, f.recipe.core, a * 0.9 * flash); g.rect(f.x - w * 0.4, f.y - 8 * S, w * 0.8, 96 * S); g.fill();
+    const e = easeOut(clamp01(burst * 1.2)); const r = (8 + 16 * e) * S;
+    this.line(g, f, f.x - r, f.y - 4 * S, f.x + r, f.y - 4 * S, 2.4 * S, a * flash);
+    this.line(g, f, f.x, f.y - 4 * S - r * 0.6, f.x, f.y - 4 * S + r * 0.6, 2.4 * S, a * flash);
+    const ee = easeOut(clamp01(life * 1.6));
+    this.ring(g, f, f.x, f.y - 8 * S, (8 + 34 * ee) * S, (8 + 34 * ee) * 0.42 * S, 2.4 * S, a * (1 - clamp01(life * 1.6)));
+    for (let i = 0; i < f.n; i++) {
+      const p = clamp01(burst * (0.8 + 0.5 * rnd(f.seed, i, 1)));
+      const ang = rnd(f.seed, i, 2) * TAU; const R = (6 + 26 * easeOut(p)) * S;
+      this.dot(g, f, f.x + Math.cos(ang) * R, f.y - 6 * S + Math.sin(ang) * R * 0.6, 1.5 * S, a * (1 - p));
+    }
+  }
+
+  /** 號令／鼓舞：戰旗桿升起，旗面隨風起伏，旗側人字箭頭上飄與彩屑落下 */
+  private hitBanner(g: Graphics, f: Fx, burst: number, life: number, a: number, S: number): void {
+    const e = easeOut(clamp01(burst * 1.2)); const h = 50 * e * S; const px = f.x - 6 * S; const base = f.y - 12 * S;
+    this.line(g, f, px, base, px, base + h, 2 * S, a);
+    if (e > 0.3) {
+      const top = base + h; const segs = 4; const len = 26 * S;
+      for (let layer = 0; layer < 2; layer++) {
+        const grow = layer === 0 ? 1.18 : 1;
+        this.setFill(g, layer === 0 ? f.recipe.glow : f.recipe.main, layer === 0 ? a * 0.35 : a * 0.9);
+        g.moveTo(px, top);
+        for (let sg = 1; sg <= segs; sg++) g.lineTo(px + (sg / segs) * len * grow, top + Math.sin(f.t * 9 + sg) * 2.5 * S * (sg / segs));
+        for (let sg = segs; sg >= 0; sg--) g.lineTo(px + (sg / segs) * len * grow, top - 15 * S * grow + Math.sin(f.t * 9 + sg) * 2.5 * S * (sg / segs));
+        g.close(); g.fill();
+      }
+    }
+    for (let k = 0; k < 2; k++) {
+      const p = clamp01(life * 1.4 - k * 0.2);
+      if (p <= 0) continue;
+      const y = base + h + (6 + p * 14) * S; const x = f.x + 14 * S; const al = a * Math.sin(p * Math.PI);
+      this.line(g, f, x - 5 * S, y - 4 * S, x, y, 2 * S, al); this.line(g, f, x, y, x + 5 * S, y - 4 * S, 2 * S, al);
+    }
+    for (let i = 0; i < f.n; i++) {
+      const p = clamp01(life * (0.8 + 0.5 * rnd(f.seed, i, 1)) - rnd(f.seed, i, 2) * 0.15);
+      if (p <= 0) continue;
+      this.dot(g, f, f.x + (rnd(f.seed, i, 3) - 0.5) * 38 * S, base + 54 * S - p * 56 * S, 1.4 * S, a * Math.sin(p * Math.PI));
+    }
+  }
+
+  /** 戰吼：以目標為心的三道聲波環接連擴散，放射短線與震起塵點 */
+  private hitSoundwave(g: Graphics, f: Fx, burst: number, life: number, a: number, S: number): void {
+    const cy = f.y + 4 * S;
+    for (let k = 0; k < 3; k++) {
+      const p = clamp01(life * 1.7 - k * 0.2);
+      if (p <= 0) continue;
+      const R = (10 + 34 * p) * S;
+      this.ring(g, f, f.x, cy, R, R * 0.8, (3 - 2 * p) * S, a * (1 - p));
+    }
+    const e = easeOut(clamp01(burst * 1.3));
+    for (let j = 0; j < 8; j++) {
+      const ang = (j / 8) * TAU + 0.2; const r0 = (10 + 20 * e) * S;
+      this.line(g, f, f.x + Math.cos(ang) * r0, cy + Math.sin(ang) * r0 * 0.8, f.x + Math.cos(ang) * (r0 + 8 * S), cy + Math.sin(ang) * (r0 + 8 * S) * 0.8, 1.6 * S, a * (1 - clamp01(burst) * 0.4));
+    }
+    for (let i = 0; i < f.n; i++) {
+      const p = clamp01(life * (0.8 + 0.5 * rnd(f.seed, i, 1)));
+      this.dot(g, f, f.x + (rnd(f.seed, i, 2) - 0.5) * 50 * S, f.y - 10 * S + p * 14 * S, 1.4 * S, a * Math.sin(p * Math.PI));
     }
   }
 }

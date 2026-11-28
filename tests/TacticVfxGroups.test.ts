@@ -22,13 +22,15 @@ export function createTacticVfxGroupsSuite(): TestSuite {
         assert.equals('fire', tacticVfxGroupOf('tally-fire-god-hunt'));
         assert.equals('water', tacticVfxGroupOf('sun-quan-tide'));
         assert.equals('wind', tacticVfxGroupOf('zhuge-liang-storm'));
-        assert.equals('heal', tacticVfxGroupOf('medical-aid'));
-        assert.equals('heal', tacticVfxGroupOf('liu-bei-rally'));
+        assert.equals('purify', tacticVfxGroupOf('medical-aid'));
+        assert.equals('rally', tacticVfxGroupOf('liu-bei-rally'));
         assert.equals('haste', tacticVfxGroupOf('insp-haste'));
-        assert.equals('morale', tacticVfxGroupOf('mentor-morale'));
+        assert.equals('rally', tacticVfxGroupOf('mentor-morale'));
         assert.equals('morale', tacticVfxGroupOf('eight-formation'));
-        assert.equals('stun', tacticVfxGroupOf('insp-taunt'));
-        assert.equals('stun', tacticVfxGroupOf('diao-chan-charm'));
+        assert.equals('warcry', tacticVfxGroupOf('insp-taunt'));
+        assert.equals('confuse', tacticVfxGroupOf('diao-chan-charm'));
+        assert.equals('heal', tacticVfxGroupOf('xiahou-dun-eye-devour'));
+        assert.equals('stun', tacticVfxGroupOf('tally-changban-root'));
     });
 
     suite.test('殼戰法與不存在的戰法不歸類（沿用通用光效；純傷害招式第二批已有分組）', () => {
