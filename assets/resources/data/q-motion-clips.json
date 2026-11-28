@@ -86,6 +86,15 @@
         "y": { "type": "sineBurst", "amp": 0.05, "cycles": 2 }
       }
     },
+    "sip": {
+      "loop": false,
+      "duration": 1.3,
+      "fadeInSec": 0.1,
+      "channels": {
+        "rot": { "type": "bell", "amp": -16 },
+        "y": { "type": "bell", "amp": 0.04 }
+      }
+    },
     "shake": {
       "loop": false,
       "duration": 0.5,

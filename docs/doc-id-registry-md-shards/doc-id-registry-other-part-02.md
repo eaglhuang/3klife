@@ -168,21 +168,6 @@
 | `doc_other_2703` | docs/美術-武將大招分鏡規範-01-交付與連貫.md | 武將大招漫畫分鏡繪圖規範（1/3）交付與連貫 |
 | `doc_other_2704` | docs/美術-武將大招分鏡規範-02-拍點畫風與接入.md | 武將大招漫畫分鏡繪圖規範（2/3）拍點、畫風、武將表與遊戲內接入 |
 | `doc_other_2705` | docs/美術-武將大招分鏡規範-03-提示詞與驗收.md | 武將大招漫畫分鏡繪圖規範（3/3）提示詞與驗收 |
-| `doc_other_2706` | .github/ISSUE_TEMPLATE/bug_report.md | 問題描述 |
-| `doc_other_2707` | .github/ISSUE_TEMPLATE/feature_request.md | 功能描述 |
-| `doc_other_2708` | .github/ISSUE_TEMPLATE/rfc.md | RFC 摘要 |
-| `doc_other_2709` | .github/prompts/atm-atom-map-refactor.prompt.md | ATM Atom Map Refactor |
-| `doc_other_2710` | .github/prompts/atm-create.prompt.md | ATM Create |
-| `doc_other_2711` | .github/prompts/atm-evidence.prompt.md | ATM Evidence |
-| `doc_other_2712` | .github/prompts/atm-governance-router.prompt.md | ATM Governance Router |
-| `doc_other_2713` | .github/prompts/atm-handoff.prompt.md | ATM Handoff |
-| `doc_other_2714` | .github/prompts/atm-internal-build-sync.prompt.md | ATM Internal Build Sync |
-| `doc_other_2715` | .github/prompts/atm-lock.prompt.md | ATM Lock |
-| `doc_other_2716` | .github/prompts/atm-next.prompt.md | ATM Next |
-| `doc_other_2717` | .github/prompts/atm-orient.prompt.md | ATM Orient |
-| `doc_other_2718` | .github/prompts/atm-task-intent-resolver.prompt.md | ATM Task Intent Resolver |
-| `doc_other_2719` | .github/prompts/atm-upgrade-scan.prompt.md | ATM Upgrade Scan |
-| `doc_other_2720` | .github/pull_request_template.md | Pull Request |
 | `doc_other_2721` | docs/學習文件/Harness Engineering for Language Agents.md | Harness Engineering for Language Agents |
 | `doc_other_2722` | docs/agent-briefs/reports/PROG-2-0018-front6-readiness-audit.md | PROG-2-0018 Front6 Mainline Injection Readiness Audit |
 | `doc_other_2723` | docs/agent-briefs/reports/PROG-2-0018-needs-fill-readiness-audit.md | PROG-2-0018 Needs-Fill Mainline Injection Readiness Audit |
@@ -295,3 +280,18 @@
 | `doc_other_2830` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0024-batch-status-progress.task.md | TASK-AAO-0024 — batch status 增強 |
 | `doc_other_2831` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0025-tasks-show-planning-doc.task.md | TASK-AAO-0025 — tasks show --planning-doc |
 | `doc_other_2832` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0026-atm-status-overview.task.md | TASK-AAO-0026 — atm status 綜覽 |
+| `doc_other_2833` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0027-dev-runner-guidance.task.md | TASK-AAO-0027 — dev runner 提示 |
+| `doc_other_2834` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0028-batch-playbook-docs.task.md | TASK-AAO-0028 — batch playbook 文件化 |
+| `doc_other_2835` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0029-task-lifecycle-deprecation.task.md | TASK-AAO-0029 — Low-level task lifecycle deprecation |
+| `doc_other_2836` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0030-crlf-policy.task.md | TASK-AAO-0030 — CRLF policy |
+| `doc_other_2837` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0031-background-work-pause-advisory.task.md | TASK-AAO-0031 — Background work pause advisory |
+| `doc_other_2838` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0032-artifact-commit-policy.task.md | TASK-AAO-0032 — Artifact commit policy 收斂 |
+| `doc_other_2839` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0033-aao-final-dogfood-sync.task.md | TASK-AAO-0033 — Final dogfood rerun 與雙 repo sync |
+| `doc_other_2840` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0034-next-selector-routing-memory.task.md | TASK-AAO-0034 — next explicit selector 與 routing memory |
+| `doc_other_2841` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0035-command-surface-consolidation-help-examples.task.md | TASK-AAO-0035 — Command surface consolidation 與 help examples |
+| `doc_other_2842` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0036-aao-acceptance-test-plan-premises.task.md | TASK-AAO-0036 — AAO acceptance test plan 與前提固化 |
+| `doc_other_2843` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0037-batch-checkpoint-commit-window.task.md | TASK-AAO-0037 — Batch checkpoint commit window |
+| `doc_other_2844` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0038-task-import-contract-fidelity.task.md | TASK-AAO-0038 — Task import contract fidelity |
+| `doc_other_2845` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0039-planning-only-ledger-audit-boundary.task.md | TASK-AAO-0039 — Planning-only ledger audit boundary |
+| `doc_other_2846` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0040-sandbox-git-process-diagnostic.task.md | TASK-AAO-0040 — Sandbox git process diagnostics |
+| `doc_other_2847` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0041-batch-checkpoint-hold.task.md | TASK-AAO-0041 — batch checkpoint --hold |

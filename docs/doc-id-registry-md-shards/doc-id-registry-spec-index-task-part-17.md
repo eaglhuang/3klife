@@ -139,3 +139,6 @@
 | `doc_task_3343` | docs/agent-briefs/tasks/PROG/PROG-2-10254.md | [PROG-2-10254] 修 playtest-online 在 12:00 發版時失敗的 7 步 |
 | `doc_task_3344` | docs/agent-briefs/tasks/PROG/PROG-2-10264.md | [PROG-2-10264] 規格書：街上偶遇他國武將＋武將作息表 |
 | `doc_task_3345` | docs/agent-briefs/tasks/PROG/PROG-2-10253.md | [PROG-2-10253] 戰場技能補齊 |
+| `doc_task_3346` | docs/agent-briefs/tasks/PROG/PROG-2-10258.md | [PROG-2-10258] 市井大街 Q 頭生活雛形 |
+| `doc_task_3347` | docs/agent-briefs/tasks/PROG/PROG-2-10266.md | [PROG-2-10266] 戰場小兵頭頂 HUD 改單行 A 款＋兵種剪影圖示＋戰場 draw call 量測與圖集合批＋頓格開關 |
+| `doc_task_3348` | docs/agent-briefs/tasks/PROG/PROG-2-10269.md | [PROG-2-10269] 修 #2811 第 6、9 項 |
