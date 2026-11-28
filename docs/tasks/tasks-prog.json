@@ -20786,12 +20786,64 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_3296",
+      "id": "PROG-2-10221",
+      "title": "結義戰場效果補強：士氣整場常駐、生死相隨九宮格、傭兵結義 id 同一套",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-28",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-28T09:59:52+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "接續 PROG-2-10204：(1) 義兄弟同陣士氣 +20 整場常駐不衰減不疊加；(3) 生死相隨相鄰改九宮格含斜角；(4) 傭兵結義 generalUid 與虎符 templateId 同一套 id，確認 recordMercenaryOath 的 _leadGeneralId 與戰場 pg.id 一致並補測試",
+      "related": [
+        "PROG-2-10204"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [
+        "assets/scripts/battle/shared/Morale.ts",
+        "assets/scripts/core/models/TroopUnit.ts",
+        "assets/scripts/battle/runtime/BattleCombatResolver.ts",
+        "tests/KinBattleEffects.test.ts",
+        "tests/MercenaryOathWiring.test.ts"
+      ],
+      "notes": "2026-11-28 | 狀態: done | 驗證: KinBattleEffects 新增常駐／九宮格斜角測試、MercenaryOathWiring 新增同一套 id 測試，run-cli 全過、tsc 0 錯 | 變更: Morale.moraleFloor 整場常駐（不計時、到期回下限、clearMorale 照舊）、生死相隨掃描改九宮格、確認 resolveLeadGeneralId=戰場 pg.id 且傭兵 general.id=模板 id=虎符 sourceTemplateId | 阻塞: 無（主將不可出戰被替補時結義對象不在名單，屬預期）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
-    "done": 381,
-    "in_progress": 6,
-    "open": 80,
-    "total": 480
+    "done": 383,
+    "in_progress": 7,
+    "open": 91,
+    "total": 481
   }
 }
