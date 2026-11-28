@@ -71,7 +71,7 @@ function fightAndCollect(linked: boolean, roll: number): KinComboPayload[] {
 
     const resolver = new BattleCombatResolver({
         state: ctrl.state,
-        relationsBetween: (a, b) => ctrl.relationsBetweenUnits(a, b),
+        kinLevelBetween: (a, b) => ctrl.kinLevelBetweenUnits(a, b),
         getPlayerGeneralUnitId: () => null,
         getEnemyGeneralUnitId: () => null,
         setPlayerGeneralUnitId: () => undefined,

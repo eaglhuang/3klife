@@ -20838,12 +20838,69 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_3302",
+      "id": "PROG-2-10227",
+      "title": "羈絆戰場效果整併實作：單一等級模型、兄弟齊心光環、九宮格合攻與援護",
+      "owner": "ClaudeCode_claude-opus-5-5",
+      "priority": "P1",
+      "status": "done",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-28",
+      "created_by_agent": "ClaudeCode_claude-opus-5-5",
+      "started_at": "2026-11-28T10:47:54+08:00",
+      "started_by_agent": "ClaudeCode_claude-opus-5-5",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "依 doc_spec_1358 實作：kin-battle-effects.json 資料驅動、kinLevelBetween 等級、光環 3 格切比雪夫距離攻防+25%暴擊+15%、合攻九宮格（義兄弟26%戰友20%夫妻0、追加50%）、援護九宮格含夫妻、防爆炸四規則與測試",
+      "related": [
+        "PROG-2-10217",
+        "PROG-2-10204",
+        "PROG-2-10221"
+      ],
+      "depends": [],
+      "acceptance": [],
+      "deliverables": [
+        "assets/resources/data/kin-battle-effects.json",
+        "assets/scripts/core/systems/KinBattleConfig.ts",
+        "assets/scripts/core/systems/KinBattleEffects.ts",
+        "assets/scripts/core/systems/ComboAttackKin.ts",
+        "assets/scripts/battle/runtime/BattleCombatResolver.ts",
+        "assets/scripts/battle/controllers/BattleController.ts",
+        "tests/KinAura.test.ts",
+        "tests/KinStackingCap.test.ts"
+      ],
+      "notes": "2026-11-28 | 狀態: done | 驗證: run-cli 10339 全過、tsc 0 錯、compute-gate quick 4/4；新增 KinAura／KinStackingCap 測試、改寫合攻與援護測試；web-desktop 實跑：部署後兩位義兄弟士氣 +20、光環旗標 true、攻擊 35→52.5（×1.2 士氣×1.25 光環）、防禦 25→31.25、頭上出現「士」「義」圖示，截圖在共用筆記夾 kin-unify-1128 | 變更: kin-battle-effects.json 資料驅動、kinLevelBetween 等級、光環 3 格切比雪夫、合攻九宮格（義兄弟 26%／戰友 20%／夫妻 0）、援護九宮格含夫妻且等級高者優先、kin-aura 圖示 | 阻塞: 無（斜角援護與飄字未在實跑驗，單測已覆蓋；D1 夫妻合攻待使用者確認）",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
-    "done": 383,
+    "done": 384,
     "in_progress": 7,
     "open": 91,
-    "total": 481
+    "total": 482
   }
 }

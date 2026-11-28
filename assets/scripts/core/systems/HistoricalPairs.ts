@@ -10,7 +10,6 @@
  */
 import { HistoricalRelation, parseHistoricalRelation } from './KinRelation';
 import type { AffinityResolver } from './BreedingSystem';
-import { dynamicComboRelationsBetween, type KinPairLike } from './KinBattleEffects';
 
 export interface HistoricalPairLoadResult {
     table: HistoricalPairTable;
@@ -83,23 +82,4 @@ export function affinityResolverOf(table: HistoricalPairTable): AffinityResolver
 export function conceptionModBetween(table: HistoricalPairTable, templateA: string, templateB: string): number {
     const mod = table.relationBetween(templateA, templateB)?.extraEffects.conceptionRateMod;
     return mod !== undefined && Number.isFinite(mod) && mod > 0 ? mod : 1;
-}
-
-/**
- * 戰場合攻用：兩個部隊背後武將（模板 id）的史實關係（外加動態義兄弟），回傳陣列供 comboChanceOfPair 使用。
- * 任一端沒有模板 id、或史實與動態都沒有配對，回傳空陣列（不觸發合攻）。
- */
-export function combatRelationsBetween(
-    table: HistoricalPairTable | null,
-    templateA: string | null,
-    templateB: string | null,
-    dynamicRelations: ReadonlyArray<KinPairLike> = [],
-): HistoricalRelation[] {
-    if (!templateA || !templateB) return [];
-    const relations: HistoricalRelation[] = [];
-    const relation = table?.relationBetween(templateA, templateB);
-    if (relation) relations.push(relation);
-    // 動態義兄弟（結義傭兵）視同史實義兄弟；與史實關係並存時由 comboChanceOfPair 取 Max，不疊乘
-    relations.push(...dynamicComboRelationsBetween(dynamicRelations, templateA, templateB));
-    return relations;
 }
