@@ -1,0 +1,20 @@
+{
+  "schema": "life-street-first-visit.v1",
+  "note": "市井大街首訪任務（QSOC-01 第 9.5 節，使用者 11/28 裁決）。帶路家臣＝親密度最高；目標 3 位，家臣不足用他國遊歷武將補；完成給 rewardBundleId（走共用獎勵框架，內容在 reward-config.json）並解鎖送禮。",
+  "targetCount": 3,
+  "guideKind": "retainer",
+  "targetKindOrder": ["retainer", "visitor"],
+  "unlockFeature": "gift",
+  "rewardBundleId": "BUNDLE_STREET_FIRST_VISIT",
+  "escort": {
+    "stops": ["mkt_tavern", "mkt_teahouse", "mkt_smithy"],
+    "secondsPerStop": 2.5
+  },
+  "i18n": {
+    "progress": "life.street_first.progress",
+    "complete": "life.street_first.complete",
+    "guideIntro": "life.street_first.guide_intro",
+    "found": "life.street_first.found",
+    "giftUnlocked": "life.street_first.gift_unlocked"
+  }
+}

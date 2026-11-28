@@ -56,7 +56,8 @@ export function createInteractionQuotaSuite(): TestSuite {
     suite.test('市井大街開放：第一場戰鬥前不開，之後（第一季起）開；條件來自 JSON', () => {
         assert.isTrue(DEFAULT_STREET_OPEN_CONFIG.openAfterFirstBattle, '預設要先打第一場');
         assert.isTrue(!isStreetOpen({ firstBattleDone: false, seasonIndex: 1 }), '戰前不開');
-        assert.isTrue(isStreetOpen({ firstBattleDone: true, seasonIndex: 1 }), '戰後開');
+        assert.isTrue(!isStreetOpen({ firstBattleDone: true, seasonIndex: 1 }), '戰後但家臣帶逛未走完：不開（PROG-2-10229 起 tutorialEscortRequired=true）');
+        assert.isTrue(isStreetOpen({ firstBattleDone: true, seasonIndex: 1, tutorialDone: true }), '戰後且帶逛走完：開');
         const strict = { openAfterFirstBattle: true, openSeasonMin: 2, tutorialEscortRequired: true };
         assert.isTrue(!isStreetOpen({ firstBattleDone: true, seasonIndex: 1, tutorialDone: true }, strict), '季數不足');
         assert.isTrue(!isStreetOpen({ firstBattleDone: true, seasonIndex: 2 }, strict), '教學未播');
