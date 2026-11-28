@@ -119,6 +119,11 @@
 | `doc_task_3294` | docs/agent-briefs/tasks/PROG/PROG-2-10204.md | [PROG-2-10204] 戰場結義效果：義兄弟同陣士氣＋生死相隨援護＋動態義兄弟合攻 |
 | `doc_task_3295` | docs/agent-briefs/tasks/PROG/PROG-2-10219.md | [PROG-2-10219] 生活層程式對齊 11/28 使用者裁決 |
 | `doc_task_3297` | docs/agent-briefs/tasks/PROG/PROG-2-10217.md | [PROG-2-10217] 羈絆戰場效果整併方案規格書 |
+| `doc_task_3299` | docs/agent-briefs/tasks/PROG/PROG-2-10229.md | [PROG-2-10229] 市井大街首訪任務 |
 | `doc_task_3300` | docs/agent-briefs/tasks/PROG/PROG-2-10223.md | [PROG-2-10223] 血統與結緣體驗強化四項 |
-| `doc_task_3321` | docs/agent-briefs/tasks/PROG/PROG-2-10235.md | [PROG-2-10235] 血統與結緣四項 UI 掛點與 GameSession 接線 |
-| `doc_task_3322` | docs/agent-briefs/tasks/PROG/PROG-2-10225.md | [PROG-2-10225] 年末典禮觀眾台詞：第 4～5 名勉勵與結義彩蛋 |
+| `doc_task_3306` | docs/agent-briefs/tasks/PROG/PROG-2-10215.md | [PROG-2-10215] 戰法音效回饋修正：回復／水淹 |
+| `doc_task_3307` | docs/agent-briefs/tasks/PROG/PROG-2-10225.md | [PROG-2-10225] 年末典禮觀眾台詞：第 4～5 名勉勵與結義彩蛋 |
+| `doc_task_3308` | docs/agent-briefs/tasks/PROG/PROG-2-10233.md | [PROG-2-10233] Q 頭表情系統核心 |
+| `doc_task_3315` | docs/agent-briefs/tasks/PROG/PROG-2-10221.md | [PROG-2-10221] 結義戰場效果補強：士氣整場常駐、生死相隨九宮格、傭兵結義 id 同一套 |
+| `doc_task_3317` | docs/agent-briefs/tasks/PROG/PROG-2-10231.md | [PROG-2-10231] 生活層 Q 頭兩人切磋 |
+| `doc_task_3323` | docs/agent-briefs/tasks/PROG/PROG-2-10235.md | [PROG-2-10235] 血統與結緣四項 UI 掛點與 GameSession 接線 |

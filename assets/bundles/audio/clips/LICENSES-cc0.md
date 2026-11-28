@@ -64,3 +64,15 @@ Kenney 原始 License.txt：Creative Commons Zero, CC0；個人、教育、商�
 | tactic_haste.ogg | 加速戰法：咻 | https://bigsoundbank.com/whoosh-4-s1796.html （Whoosh #4） | CC0 | 取 0.1～0.9 秒，動態壓縮（冪次 0.7），尾 0.2 秒淡出；RMS 0.12 |
 | tactic_morale.ogg | 鼓舞戰法：三擊戰鼓（漸重） | https://bigsoundbank.com/bass-tom-1-s2338.html 、https://bigsoundbank.com/medium-tom-1-s2333.html 、https://bigsoundbank.com/bass-tom-2-s2339.html （Bass tom #1、Medium tom #1、Bass tom #2） | CC0 | 三個鼓聲依 0／0.32／0.64 秒疊接（第三擊加重 1.3 倍），總長 2.0 秒、尾 0.4 秒淡出；RMS 0.14 |
 | tactic_stun.ogg | 控制戰法：悶響＋鐵鍊＋落鎖 | https://bigsoundbank.com/bass-tom-1-s2338.html 、https://bigsoundbank.com/small-chain-3-s0357.html 、https://bigsoundbank.com/barn-lock-locking-s1540.html （Bass tom #1 低通 400Hz、Small chain #3、Barn lock locking） | CC0 | 悶響 0 秒、鐵鍊 0.12 秒、落鎖 0.62 秒疊接，總長 1.6 秒、尾 0.35 秒淡出；RMS 0.12 |
+
+## 2026-11-28 追加（PROG-2-10215，回復／水淹重混）
+
+使用者試聽後回饋回復太小聲、水淹少了「嘩啦嘩啦」連續水聲。BigSoundBank 對腳本下載回 403（擋自動存取），故**不引入新素材來源**：全部由上方已記載的 CC0 素材（tactic_heal 的 Chimes dream #5、tactic_water 的 Small waterfall #2、tactic_wind 的 Strong wind #2，皆為 BigSoundBank CC0）加上程式合成的雜訊／正弦（無授權問題）混音而成，腳本見 `tools/gen-tactic-heal-flood-sfx.py`（固定亂數種子，可重現）。輸出一律單聲道 44100Hz Vorbis。
+
+| 檔名 | 用途 | 素材與加工 |
+|------|------|------------|
+| tactic_heal.ogg（改版） | 回復主音，1.7 秒 | Chimes dream #5 變調 1／1.25／1.5／2 倍，依 0／0.13／0.26／0.40 秒疊成上行琶音＋多重回授殘響；疊 Strong wind #2 帶通 500～2800Hz 的氣流（鼓脹包絡）；疊 1318／1975／2637Hz 三泛音正弦衰減光暈尾音；軟削峰後 RMS 0.15（舊版 0.09） |
+| tactic_heal_sparkle.ogg（新） | 回復閃光，0.5 秒，執行期疊 2～3 次 | Chimes dream #5 升八度、高通 600Hz、淡出；RMS 0.10 |
+| tactic_water.ogg（改版） | 水淹主音，2.4 秒 | 合成噪音三段帶通（200～700／500～1800／1200～4500Hz）漸寬的水湧 whoosh；Small waterfall #2 兩層（原速＋降 0.88 倍變調，錯位 0.3 秒）；原檔尾段高通 400Hz 當水流尾巴；軟削峰後 RMS 0.15 |
+| tactic_splash_a.ogg／tactic_splash_b.ogg（新） | 水花，0.5 秒，執行期每次施放疊 3～5 聲 | 純合成：高頻帶通噪音快速衰減＋稀疏水珠劈啪（高通 2.5kHz）；兩種音色輪換；RMS 0.14 |
+

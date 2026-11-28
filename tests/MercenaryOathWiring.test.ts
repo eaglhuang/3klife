@@ -1,5 +1,6 @@
 import { TestSuite, assert } from './TestRunner';
 import { GameSession, InMemoryRosterStore } from '../assets/scripts/core/managers/GameSession';
+import { hasSwornBrotherInLineup } from '../assets/scripts/core/systems/KinBattleEffects';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 
 // 結義傭兵事件呼叫端（PROG-2-0533）：暫定以出戰主將為結義對象。
@@ -42,6 +43,21 @@ export function createMercenaryOathWiringSuite(): TestSuite {
         const second = await session.recordMercenaryOath('merc-1');
         assert.isTrue(second !== null && second.ok && !second.created);
         assert.equals(1, session.dynamicRelations.listFor('merc-1').length);
+    });
+
+    suite.test('同一套 id：傭兵 general.id（=模板 id）與主將 id 記入結義，戰場以虎符模板 id＋主將 id 讀得到', async () => {
+        const session = new GameSession(3);
+        session.setRosterStore(new InMemoryRosterStore([leadGeneral('lead-1'), leadGeneral('merc-1')]));
+        assert.isTrue(await session.setLeadGeneral('lead-1'));
+        await session.recordMercenaryOath('merc-1');
+        // 戰場主將 id = 大廳 resolveLeadGeneralId（可出戰時即 _leadGeneralId）
+        const pgId = session.resolveLeadGeneralId('zhang-fei');
+        assert.equals('lead-1', pgId);
+        const snapshot = session.dynamicRelations.snapshot();
+        // 傭兵虎符 sourceTemplateId = 傭兵 general.id；名單 = 主將 id
+        assert.isTrue(hasSwornBrotherInLineup(null, snapshot, 'merc-1', [pgId]), '傭兵部隊見得到主將義兄弟');
+        assert.isTrue(hasSwornBrotherInLineup(null, snapshot, 'lead-1', ['merc-1']), '主將部隊見得到傭兵義兄弟');
+        assert.isTrue(!hasSwornBrotherInLineup(null, snapshot, 'merc-1', ['someone-else']), '名單外不算');
     });
 
     return suite;
