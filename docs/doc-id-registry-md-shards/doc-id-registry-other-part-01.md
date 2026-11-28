@@ -9,7 +9,6 @@
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
 | `doc_other_0000` | docs/ai_atomic_framework/turn-artifact-retention-policy.md | ATM Turn Artifact Retention and Rotation Policy |
-| `doc_other_0001` | .github/agents/sanguo-term-researcher.agent.md | Inputs |
 | `doc_other_0002` | docs/決策-Mobile-Offline-2026-04-23.md | 決策：Mobile-first Offline Support（2026-04-23） |
 | `doc_other_0005` | docs/battle-entry-unification-checklist.md | 戰場入口統一 — Checklist |
 | `doc_other_0008` | docs/html-to-ucuf/history/html_skill_plan2.md | HTML Skill Plan 2 |
@@ -295,3 +294,4 @@
 | `doc_other_0801` | docs/ai_atomic_framework/governance-optimization/ATM-GOV-Governance-Program-Plan.md | ATM GOV Governance Program Plan |
 | `doc_other_0802` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0101-actor-identity-registry.task.md | ATM-GOV-0101 Actor Identity Registry and Git Identity Contract |
 | `doc_other_0803` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0102-atomic-task-claim-lease.task.md | ATM-GOV-0102 Atomic Task Claim, Lease, Renew, Release, Handoff, Takeover |
+| `doc_other_0804` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0103-task-reservation-lifecycle.task.md | ATM-GOV-0103 Task Opening and Reservation Lifecycle |

@@ -8,22 +8,6 @@
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
-| `doc_other_3694` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0353-memoize-planning-root-resolution-per-process-for-next-route-latency.task.md | ATM-GOV-0353 Memoize planning root resolution per process for next route latency |
-| `doc_other_3695` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0354-resolve-validator-contract-anchors-from-owning-surfaces-not-frozen-paths.task.md | ATM-GOV-0354 Resolve validator contract anchors from owning surfaces not frozen paths |
-| `doc_other_3696` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0355-make-neutral-steward-patch-application-real-and-fail-closed.task.md | ATM-GOV-0355 Make neutral steward patch application real and fail closed |
-| `doc_other_3697` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0356-repair-standard-profile-fixtures-and-gate-ordering-diagnostics.task.md | ATM-GOV-0356 Repair standard profile fixtures and gate ordering diagnostics |
-| `doc_other_3698` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0357-land-validator-contract-subject-resolver-deliverables.task.md | ATM-GOV-0357 Land validator contract subject resolver deliverables |
-| `doc_other_3699` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0358-consume-successor-evidence-in-canonical-four-plan-certificate.task.md | ATM-GOV-0358 Consume successor evidence in canonical four-plan certificate |
-| `doc_other_3700` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0359-compile-runbook-item-and-wave-exit-evidence.task.md | ATM-GOV-0359 Compile complete runbook item and wave-exit evidence |
-| `doc_other_3701` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0360-bind-the-four-plan-independent-certificate-to-observed-evidence-and-the-live-remote.task.md | ATM-GOV-0360 Bind the four-plan independent certificate to observed evidence and the live remote |
-| `doc_other_3702` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0361-independently-recompute-four-plan-objective-backlog-and-charter-verdict.task.md | ATM-GOV-0361 Independently recompute four-plan objective backlog and charter verdict |
-| `doc_other_3703` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0362-independently-recompute-runbook-wave-exits-and-live-remote-release-verdict.task.md | ATM-GOV-0362 Independently recompute runbook wave exits and live remote release verdict |
-| `doc_other_3704` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0363-make-governed-operations-own-and-clean-their-transient-residue.task.md | ATM-GOV-0363 Make governed operations own and clean their transient residue |
-| `doc_other_3705` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0364-remove-the-governance-round-trip-tax-on-a-single-task-card.task.md | ATM-GOV-0364 Remove the governance round-trip tax on a single task card |
-| `doc_other_3706` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0365-land-subcommand-help-dispatch-and-the-round-trip-backlog-dispositions.task.md | ATM-GOV-0365 Land the scope-amendment disposition |
-| `doc_other_3707` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0366-disclose-the-owner-lane-source-in-lane-capability-refusals.task.md | ATM-GOV-0366 Disclose the owner-lane source in lane capability refusals |
-| `doc_other_3708` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0367-record-the-close-write-rollback-that-an-identical-retry-resolves.task.md | ATM-GOV-0367 Record the close-write rollback that an identical retry resolves |
-| `doc_other_3709` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0368-let-one-command-satisfy-every-emergency-permission-it-needs.task.md | ATM-GOV-0368 Let one command satisfy every emergency permission it needs |
 | `doc_other_3710` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0369-make-cross-task-mutation-ownership-require-current-authority-snapshots.task.md | ATM-GOV-0369 Make cross-task mutation ownership require current authority snapshots |
 | `doc_other_3711` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0370-bind-runner-publication-outputs-to-producer-authority-before-taskflow-close-bundling.task.md | ATM-GOV-0370 Bind runner publication outputs to producer authority before taskflow close bundling |
 | `doc_other_3712` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0371-fail-closed-when-governed-commit-tree-diverges-from-sealed-candidate.task.md | ATM-GOV-0371 Fail closed when governed commit tree diverges from sealed candidate |
@@ -295,3 +279,19 @@
 | `doc_other_3978` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0091-python-language-adapter-map.task.md | TASK-RFT-0091 - Split Python Language Adapter Atom Map |
 | `doc_other_3979` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0092-replacement-lane-map.task.md | TASK-RFT-0092 - Split Replacement Lane Atom Map |
 | `doc_other_3980` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0093-internal-release-map.task.md | TASK-RFT-0093 - Split Internal Release Command |
+| `doc_other_3981` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0094-commit-range-guard-map.task.md | TASK-RFT-0094 - Split Commit Range Guard |
+| `doc_other_3982` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0095-upgrade-proposal-map.task.md | TASK-RFT-0095 - Split Upgrade Proposal Command |
+| `doc_other_3983` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0096-core-spec-parser-final-600.task.md | TASK-RFT-0096 - Split Core Spec Parser Under 600 Lines |
+| `doc_other_3984` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0097-global-physical-line-budget-gate.task.md | TASK-RFT-0097 - Establish Global Physical-Line-Budget Gate |
+| `doc_other_3985` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0098-touched-file-physical-line-admission.task.md | TASK-RFT-0098 - Touched-File Physical-Line Admission Gate |
+| `doc_other_3986` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0099-semantic-atomization-metrics.task.md | TASK-RFT-0099 - Semantic Atomization Metrics for RFT Gate Evidence |
+| `doc_other_3987` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0100-continuation-card-generation.task.md | TASK-RFT-0100 - Automatic RFT Continuation-Card Generation |
+| `doc_other_3988` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0101-rehabilitate-git-governance-transaction-facade-after-preservation-wip.task.md | TASK-RFT-0101 Rehabilitate git-governance transaction facade after preservation WIP |
+| `doc_other_3989` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0102-git-governance-typed-implementation-modules.task.md | TASK-RFT-0102 - Expand git-governance implementation carrier into typed bounded modules |
+| `doc_other_3990` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0103-pre-commit-hook-parity-contract.task.md | TASK-RFT-0103 - Align pre-commit hook parity test with unique staged task context |
+| `doc_other_3991` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0104-tasks-legacy-semantic-modules.task.md | TASK-RFT-0104 - Extract bounded semantic modules from tasks legacy implementation |
+| `doc_other_3992` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0105-closure-packet-semantic-modules.task.md | TASK-RFT-0105 - Extract bounded semantic modules from closure-packet schema implementation |
+| `doc_other_3993` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0106-task-ledger-validator-semantic-modules.task.md | TASK-RFT-0106 - Extract bounded semantic modules from task-ledger validator implementation |
+| `doc_other_3994` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0107-extract-bounded-semantic-modules-from-tasks-legacy-implementation.task.md | TASK-RFT-0107 Extract bounded semantic modules from tasks legacy implementation |
+| `doc_other_3995` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0108-extract-bounded-semantic-modules-from-evidence-bundle-io-implementation.task.md | TASK-RFT-0108 Extract bounded semantic modules from evidence bundle IO implementation |
+| `doc_other_3996` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0109-extract-bounded-semantic-modules-from-pre-commit-hook-implementation.task.md | TASK-RFT-0109 Extract bounded semantic modules from pre-commit hook implementation |

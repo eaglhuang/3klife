@@ -8,22 +8,6 @@
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
-| `doc_other_3120` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0099-deliver-bounded-quickfix-workflow-with-fewer-operator-decisions.task.md | TASK-PRF-0099 Deliver bounded quickfix workflow with fewer operator decisions |
-| `doc_other_3121` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0100-verify-convergence-release-against-fixed-product-acceptance.task.md | TASK-PRF-0100 Verify convergence release against fixed product acceptance |
-| `doc_other_3122` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0101-integrate-millisecond-cost-score-into-product-proof.task.md | TASK-PRF-0101 Integrate millisecond cost score into product proof |
-| `doc_other_3123` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0102-instrument-mandatory-atm-gates-with-millisecond-telemetry.task.md | TASK-PRF-0102 Instrument mandatory ATM gates with millisecond telemetry |
-| `doc_other_3124` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0103-short-circuit-doctor-integration-parity-checks.task.md | TASK-PRF-0103 Short-circuit doctor integration parity checks |
-| `doc_other_3125` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0104-run-30-run-millisecond-gate-latency-benchmark.task.md | TASK-PRF-0104 Run 30-run millisecond gate latency benchmark |
-| `doc_other_3126` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0105-optimize-highest-cumulative-route-resolution-latency-hotspot.task.md | TASK-PRF-0105 Optimize highest cumulative route-resolution latency hotspot |
-| `doc_other_3127` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0106-reduce-governance-readiness-git-process-startup.task.md | TASK-PRF-0106 Reduce governance readiness Git process startup |
-| `doc_other_3128` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0107-restore-installable-npm-chart-lifecycle-without-inflating-the-bundle.task.md | TASK-PRF-0107 Restore installable npm chart lifecycle without inflating the bundle |
-| `doc_other_3129` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0108-eliminate-duplicate-package-dist-build-during-onefile-root-drop-assembly.task.md | TASK-PRF-0108 Eliminate duplicate package-dist build during onefile/root-drop assembly |
-| `doc_other_3130` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0109-defer-full-framework-status-from-normal-next-guidance.task.md | TASK-PRF-0109 Defer full framework status from normal next guidance |
-| `doc_other_3131` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0110-preserve-multi-agent-parallelism-while-shrinking-public-command-runtime.task.md | TASK-PRF-0110 Preserve multi-agent parallelism while shrinking public command runtime |
-| `doc_other_3132` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0111-complete-full-atm-command-and-mandatory-gate-millisecond-coverage.task.md | TASK-PRF-0111 Complete full ATM command and mandatory-gate millisecond coverage |
-| `doc_other_3133` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0112-next-readiness-git.task.md | TASK-PRF-0112 Integrate deferred next readiness probes and bounded Git scans |
-| `doc_other_3134` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0113-npm-trusted-publishing.task.md | TASK-PRF-0113 Move the npm release workflow to Trusted Publishing without token fallback |
-| `doc_other_3135` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0114-build-dry-run-capable-paired-benchmark-executor.task.md | TASK-PRF-0114 Build dry-run capable paired benchmark executor |
 | `doc_other_3136` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0115-isolate-cli-sweep-build-outputs-and-reduce-required-ci-wall-time.task.md | TASK-PRF-0115 Isolate CLI sweep build outputs and reduce required CI wall time |
 | `doc_other_3137` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0116-reconcile-current-product-ci-failure-dispositions-from-raw-lifecycle-evidence.task.md | TASK-PRF-0116 Reconcile current Product CI failure dispositions from raw lifecycle evidence |
 | `doc_other_3138` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0117-reseal-the-frozen-runner-from-the-current-committed-source.task.md | TASK-PRF-0117 Reseal the frozen runner from the current committed source |
@@ -295,3 +279,19 @@
 | `doc_other_3404` | docs/ai_atomic_framework/external-public-repo-cases/TASK-EPR-0001-fastapi-public-source-snapshot-case.md | TASK-EPR-0001 FastAPI Public-Source Snapshot Case |
 | `doc_other_3405` | docs/ai_atomic_framework/framework-drafts/adopter-sentinel-external-profile.md | Adopter Sentinel — External Profile as Downstream Evidence |
 | `doc_other_3406` | docs/ai_atomic_framework/framework-drafts/release-parity-gate.md | Release Parity Gate |
+| `doc_other_3407` | docs/ai_atomic_framework/framework-drafts/release-trust-ops.md | Release Trust Continuous Verification |
+| `doc_other_3408` | docs/ai_atomic_framework/framework-function-atomization-manifest-shards/manifest-inventory.md | Framework Function Atomization Manifest — Function Inventory 與 Gate |
+| `doc_other_3409` | docs/ai_atomic_framework/framework-function-atomization-manifest-shards/manifest-machine-readable.md | Framework Function Atomization Manifest — Machine-Readable Inventory |
+| `doc_other_3410` | docs/ai_atomic_framework/framework-function-atomization-manifest.md | Framework Function Atomization Manifest |
+| `doc_other_3411` | docs/ai_atomic_framework/git-boundary-admission/git-boundary-admission-plan.md | ATM Git Boundary Admission Plan |
+| `doc_other_3412` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0001-pre-push-admission-architecture-contract.task.md | TASK-GIT-0001 |
+| `doc_other_3413` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0002-git-diff-to-mutation-request-converter.task.md | TASK-GIT-0002 |
+| `doc_other_3414` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0003-format-adapter-remote-diff-bridge.task.md | TASK-GIT-0003 |
+| `doc_other_3415` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0004-git-admission-cli.task.md | TASK-GIT-0004 |
+| `doc_other_3416` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0005-pre-push-hook-installer.task.md | TASK-GIT-0005 |
+| `doc_other_3417` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0006-git-boundary-evidence-envelope.task.md | TASK-GIT-0006 |
+| `doc_other_3418` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0007-neutral-steward-git-apply-dry-run.task.md | TASK-GIT-0007 |
+| `doc_other_3419` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0008-structured-file-fixture-suite.task.md | TASK-GIT-0008 |
+| `doc_other_3420` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0009-post-push-fail-fallback.task.md | TASK-GIT-0009 |
+| `doc_other_3421` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0010-operator-policy-and-bypass-audit.task.md | TASK-GIT-0010 |
+| `doc_other_3422` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0011-adopter-docs-and-runbook.task.md | TASK-GIT-0011 |

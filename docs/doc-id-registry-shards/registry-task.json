@@ -18004,5 +18004,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10253.md",
     "title": "[PROG-2-10253] 戰場技能補齊",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3346",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10258.md",
+    "title": "[PROG-2-10258] 市井大街 Q 頭生活雛形",
+    "category": "task"
   }
 ]
