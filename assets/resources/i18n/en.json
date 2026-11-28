@@ -3317,5 +3317,13 @@
   "battle.skill_name.tally-changban-root": "Changban Roar",
   "battle.skill_effect.tally-changban-root": "【Control】Changban Roar：A roar that roots nearby enemies in place",
   "battle.skill_name.tally-changban-push": "Changban Shockwave",
-  "battle.skill_effect.tally-changban-push": "【Control】Changban Shockwave：Blast nearby enemies back by one tile"
+  "battle.skill_effect.tally-changban-push": "【Control】Changban Shockwave：Blast nearby enemies back by one tile",
+  "ui.honor_wall.title": "Hall of Honor",
+  "ui.honor_wall.btn_entry": "Honor Wall",
+  "ui.honor_wall.empty": "No annual records yet. Complete Year 1 Ceremony first.",
+  "ui.honor_wall.current_year_preview": "In Progress: Year {year} (Rank #{rank} · {score} pts)",
+  "ui.honor_wall.year_row": "Year {year} | Rank #{rank} ({score} pts)",
+  "ui.honor_wall.top_three_label": "Top Three",
+  "ui.honor_wall.speech_summary": "Champion Speech: {speech}",
+  "ui.honor_wall.badge_label": "Honor Badge: {badgeName}"
 }

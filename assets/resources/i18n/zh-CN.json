@@ -3317,5 +3317,13 @@
   "battle.skill_name.tally-changban-root": "长坂雄咆",
   "battle.skill_effect.tally-changban-root": "【控制】长坂雄咆：一声怒吼吓得周围敌军定在原地",
   "battle.skill_name.tally-changban-push": "长坂震退",
-  "battle.skill_effect.tally-changban-push": "【控制】长坂震退：震飞周围敌军，把他们推开一格"
+  "battle.skill_effect.tally-changban-push": "【控制】长坂震退：震飞周围敌军，把他们推开一格",
+  "ui.honor_wall.title": "历年荣誉墙",
+  "ui.honor_wall.btn_entry": "荣誉墙",
+  "ui.honor_wall.empty": "暂无历年榜单记录，请先完成第 1 年年终典礼。",
+  "ui.honor_wall.current_year_preview": "进行中：第 {year} 年（当前第 {rank} 名・{score} 分）",
+  "ui.honor_wall.year_row": "第 {year} 年｜第 {rank} 名（{score} 分）",
+  "ui.honor_wall.top_three_label": "本届前三名",
+  "ui.honor_wall.speech_summary": "冠军感言：{speech}",
+  "ui.honor_wall.badge_label": "荣誉徽章：{badgeName}"
 }

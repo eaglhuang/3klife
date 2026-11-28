@@ -3249,5 +3249,13 @@
   "battle.skill_name.tally-changban-root": "長坂の咆哮",
   "battle.skill_effect.tally-changban-root": "【制圧】長坂の咆哮：咆哮で周囲の敵を足止めする",
   "battle.skill_name.tally-changban-push": "長坂震退",
-  "battle.skill_effect.tally-changban-push": "【制圧】長坂震退：周囲の敵を1マス弾き飛ばす"
+  "battle.skill_effect.tally-changban-push": "【制圧】長坂震退：周囲の敵を1マス弾き飛ばす",
+  "ui.honor_wall.title": "歴代栄誉の壁",
+  "ui.honor_wall.btn_entry": "栄誉の壁",
+  "ui.honor_wall.empty": "歴代記録はまだありません。1年目の年末式典を完了してください。",
+  "ui.honor_wall.current_year_preview": "進行中：第{year}年（現在{rank}位・{score}点）",
+  "ui.honor_wall.year_row": "第{year}年｜{rank}位（{score}点）",
+  "ui.honor_wall.top_three_label": "今期トップ3",
+  "ui.honor_wall.speech_summary": "優勝コメント：{speech}",
+  "ui.honor_wall.badge_label": "栄誉バッジ：{badgeName}"
 }
