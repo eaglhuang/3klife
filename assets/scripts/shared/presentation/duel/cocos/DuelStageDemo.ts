@@ -13,6 +13,7 @@ import type { QAnimBudget, QClipLibrary } from '../../anim/types';
 import { startDuel } from '../../../../core/life/duel/DuelInvite';
 import { DEFAULT_DUEL_CONFIG } from '../../../../core/life/duel/DuelSim';
 import type { DuelFighter, DuelMode, DuelResult } from '../../../../core/life/duel/DuelTypes';
+import { services } from '../../../../core/managers/ServiceLoader';
 import { InteractionQuota } from '../../../../ui/life/InteractionQuota';
 import { DuelStageView } from './DuelStageView';
 
@@ -60,17 +61,25 @@ export class DuelStageDemo extends Component {
         const s = seed ?? 1000 + ++this.seq;
         const out = startDuel({ a: GUAN, b: ZHANG, mode, seed: s }, { id: ZHANG.id }, true, this.quota);
         if (!out.started || !out.result) {
-            this.setCaption(`互動次數不足：${out.reason ?? ''}`);
+            this.setCaption(this.t('life.duel.caption.noQuota', out.reason ?? ''));
             return false;
         }
-        this.setCaption(`${mode === 'friendly' ? '點到為止' : '認真切磋'}（剩餘免費互動 ${this.quota.freeRemaining}）`);
+        this.setCaption(this.t('life.duel.caption.start', this.t(mode === 'friendly' ? 'life.duel.mode.friendly' : 'life.duel.mode.serious'), String(this.quota.freeRemaining)));
         return this.stage.start(out.result, { headH: this.headH, colors: [new Color(110, 170, 230, 255), new Color(232, 120, 90, 255)], speed: this.speed }, (r) => this.onDone(r));
     }
 
     private onDone(r: DuelResult): void {
-        const who = r.winner === 'a' ? '關羽勝' : r.winner === 'b' ? '張飛勝' : '平手';
-        const hurt = r.injury ? `，${r.injury.targetId === 'guanyu' ? '關羽' : '張飛'}${r.injury.level === 'severe' ? '重傷' : '輕傷'}` : '，無傷勢';
-        this.setCaption(`${who}（${r.rounds} 回合 ${r.outcomeTier}${hurt}）`);
+        const name = (id: string): string => this.t(id === 'guanyu' ? 'life.duel.name.guanyu' : 'life.duel.name.zhangfei');
+        const who = r.winner === 'a' ? this.t('life.duel.result.a', name('guanyu')) : r.winner === 'b' ? this.t('life.duel.result.b', name('zhangfei')) : this.t('life.duel.result.draw');
+        const hurt = r.injury
+            ? this.t('life.duel.injury.hurt', name(r.injury.targetId), this.t(r.injury.level === 'severe' ? 'life.duel.injury.severe' : 'life.duel.injury.light'))
+            : this.t('life.duel.injury.none');
+        this.setCaption(this.t('life.duel.caption.result', who, String(r.rounds), this.t(`life.duel.tier.${r.outcomeTier}`), hurt));
+    }
+
+    /** 文字一律走 i18n（四語系），不寫死字串、不直接顯示內部代碼 */
+    private t(key: string, ...args: string[]): string {
+        return services().i18n.t(key, ...args);
     }
 
     private setCaption(text: string): void {

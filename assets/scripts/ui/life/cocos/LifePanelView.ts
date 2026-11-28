@@ -31,7 +31,7 @@ interface RowNode {
     dragged: boolean;
 }
 
-const C_PANEL = new Color(28, 32, 44, 244);
+const C_PANEL = new Color(28, 32, 44, 255);
 const C_ROW = new Color(54, 62, 84, 255);
 const C_ROW_CUR = new Color(92, 78, 40, 255);
 const C_TAB = new Color(40, 46, 64, 255);
@@ -109,6 +109,9 @@ export class LifePanelView {
         this.searchPlaceholder = ph;
         this.searchText = tx;
         this.searchEdit = this.searchBox.addComponent(EditBox);
+        // EditBox 的 onLoad 會自建 TEXT_LABEL／PLACEHOLDER_LABEL（預設字 "Label"）；我們用自己的兩個文字節點，內建的要刪掉
+        this.searchBox.getChildByName('TEXT_LABEL')?.destroy();
+        this.searchBox.getChildByName('PLACEHOLDER_LABEL')?.destroy();
         this.searchEdit.textLabel = tx;
         this.searchEdit.placeholderLabel = ph;
         this.searchEdit.maxLength = 12;

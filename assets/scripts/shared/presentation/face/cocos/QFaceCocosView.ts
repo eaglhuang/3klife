@@ -36,6 +36,13 @@ export class QFaceAtlas {
     }
 }
 
+/**
+ * 五官尺寸（佔大頭寬度的比例）。規格（Q版表情系統規格書）只固定錨點座標與 scale 欄位，沒有固定部件大小，
+ * 所以這裡是程式常數：11/28 驗收「1920 寬畫面上看不清楚」把眼 0.22→0.27、嘴 0.26→0.30、紅暈 0.20→0.24、符號 0.20→0.24。
+ * 眼距 0.32、眼嘴縱距 0.23，放大後部件格子仍不互相蓋住五官本體。
+ */
+export const FACE_PART_RATIO = { eye: 0.27, mouth: 0.30, blush: 0.24, mark: 0.24 } as const;
+
 function makePart(parent: Node, name: string): Sprite {
     const n = new Node(name);
     n.layer = Layers.Enum.UI_2D;
@@ -90,19 +97,19 @@ export class QFaceView implements IQFaceView {
             sp.node.setPosition((a.x - 0.5) * S, (0.5 - a.y) * S, 0);
             sp.getComponent(UITransform)!.setContentSize(w * (a.scale ?? 1), w * (a.scale ?? 1));
         };
-        place(this.eyeL, anchors.eyeL, S * 0.22);
-        place(this.eyeR, anchors.eyeR, S * 0.22);
-        place(this.mouth, anchors.mouth, S * 0.26);
-        place(this.blushL, anchors.blushL, S * 0.2);
-        place(this.blushR, anchors.blushR, S * 0.2);
+        place(this.eyeL, anchors.eyeL, S * FACE_PART_RATIO.eye);
+        place(this.eyeR, anchors.eyeR, S * FACE_PART_RATIO.eye);
+        place(this.mouth, anchors.mouth, S * FACE_PART_RATIO.mouth);
+        place(this.blushL, anchors.blushL, S * FACE_PART_RATIO.blush);
+        place(this.blushR, anchors.blushR, S * FACE_PART_RATIO.blush);
         this.mark0.node.setPosition(S * 0.38, S * 0.38, 0);
         this.mark1.node.setPosition(-S * 0.38, S * 0.38, 0);
-        this.mark0.getComponent(UITransform)!.setContentSize(S * 0.2, S * 0.2);
-        this.mark1.getComponent(UITransform)!.setContentSize(S * 0.2, S * 0.2);
+        this.mark0.getComponent(UITransform)!.setContentSize(S * FACE_PART_RATIO.mark, S * FACE_PART_RATIO.mark);
+        this.mark1.getComponent(UITransform)!.setContentSize(S * FACE_PART_RATIO.mark, S * FACE_PART_RATIO.mark);
         this.eyeLActive = anchors.eyeL.disabled !== true;
         this.eyeL.node.active = this.eyeLActive;
-        this.eyeBase = S * 0.22;
-        this.mouthBase = S * 0.26;
+        this.eyeBase = S * FACE_PART_RATIO.eye;
+        this.mouthBase = S * FACE_PART_RATIO.mouth;
         this.root.active = true;
     }
 

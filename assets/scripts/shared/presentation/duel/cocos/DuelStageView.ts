@@ -4,6 +4,7 @@
  * 核心取樣在 ../DuelPlayback（引擎中立）；這裡只做「把取樣值寫到節點」：
  *  - 兩顆 Q 頭（QHeadView，節點走 QActorPool）＋ 各自的武器掛點 weaponHand（空時可掛 Q 版武器，預設畫一把簡化劍）。
  *  - 跳字池 12（Label，不逐個建）、血條池 4（前條立刻扣、後條追上；顏色 >50% 綠、20～50% 黃、<20% 紅）。
+ *  - 所有動態建立的節點一律經 addChildInherit 加進舞台，layer 跟 root 一致（否則 UI 相機看不到）。
  *  - 動畫管理器（QAnimManager）只負責待機呼吸與勝者跳；切磋位移由取樣值疊加在管理器輸出之後（同一幀）。
  * 不用逐幀圖、不用 tween；整個舞台只在 update(dt) 一處推進。
  * 備註：血條目前用 Graphics 畫（等 q-common 圖集有血條 Sliced 圖再換 Sprite fillRange，規格 4.4）。
@@ -14,6 +15,7 @@ import type { DuelConfig, DuelResult, DuelSide } from '../../../../core/life/due
 import type { QAnimManager } from '../../anim/QAnimManager';
 import { INVALID_HANDLE, type ActorHandle } from '../../anim/types';
 import { QActorPool } from '../../anim/QActorPool';
+import { addChildInherit } from '../../NodeLayer';
 import { createQHeadPool, type QHeadView } from '../../anim/cocos/QAnimCocosView';
 import {
     buildDuelTimeline, createDuelFrame, sampleDuel,
@@ -124,7 +126,7 @@ export class DuelStageView {
             view.setup(color, opts.headH);
             view.root.active = true;
             view.root.setPosition(-dir * half, 0, 0);
-            this.root.addChild(view.root);
+            addChildInherit(this.root, view.root);
             const handle = this.anim.register(view);
             if (handle === INVALID_HANDLE) {
                 this.headPool.release(view);
@@ -137,7 +139,7 @@ export class DuelStageView {
             weaponHand.addComponent(UITransform).setContentSize(8, 8);
             const weaponGfx = weaponHand.addComponent(Graphics);
             this.drawDefaultSword(weaponGfx, opts.headH);
-            view.root.addChild(weaponHand);
+            addChildInherit(view.root, weaponHand);
             const flash = new Node('flash');
             flash.addComponent(UITransform).setContentSize(opts.headH, opts.headH);
             const fg = flash.addComponent(Graphics);
@@ -146,9 +148,9 @@ export class DuelStageView {
             fg.fill();
             const flashOpacity = flash.addComponent(UIOpacity);
             flashOpacity.opacity = 0;
-            view.root.addChild(flash);
+            addChildInherit(view.root, flash);
             bar.node.active = true;
-            this.root.addChild(bar.node);
+            addChildInherit(this.root, bar.node);
             this.sides[side] = { view, handle, dir, baseX: -dir * half, weaponHand, weaponGfx, flash, flashOpacity, bar };
             return true;
         };
@@ -249,7 +251,7 @@ export class DuelStageView {
             const fl = this.floatPool.acquire();
             if (!fl) break;
             fl.node.active = true;
-            this.root.addChild(fl.node);
+            addChildInherit(this.root, fl.node);
             this.activeFloats.push(fl);
         }
         for (let i = 0; i < this.activeFloats.length; i++) {
