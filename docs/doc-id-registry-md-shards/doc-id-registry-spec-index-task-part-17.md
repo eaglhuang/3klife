@@ -137,4 +137,14 @@
 | `doc_task_3337` | docs/agent-briefs/tasks/PROG/PROG-2-10248.md | [PROG-2-10248] 戰場三份一頁規格草稿 |
 | `doc_task_3340` | docs/agent-briefs/tasks/PROG/PROG-2-10246.md | [PROG-2-10246] 武將天生戰法／奧義模板＋覆寫資料落地 |
 | `doc_task_3343` | docs/agent-briefs/tasks/PROG/PROG-2-10254.md | [PROG-2-10254] 修 playtest-online 在 12:00 發版時失敗的 7 步 |
-| `doc_task_3344` | docs/agent-briefs/tasks/PROG/PROG-2-10275.md | PROG-2-10275：方案 B — 歷年榮譽牆核心資料模型與設定 |
+| `doc_task_3344` | docs/agent-briefs/tasks/PROG/PROG-2-10264.md | [PROG-2-10264] 規格書：街上偶遇他國武將＋武將作息表 |
+| `doc_task_3345` | docs/agent-briefs/tasks/PROG/PROG-2-10253.md | [PROG-2-10253] 戰場技能補齊 |
+| `doc_task_3346` | docs/agent-briefs/tasks/PROG/PROG-2-10258.md | [PROG-2-10258] 市井大街 Q 頭生活雛形 |
+| `doc_task_3347` | docs/agent-briefs/tasks/PROG/PROG-2-10266.md | [PROG-2-10266] 戰場小兵頭頂 HUD 改單行 A 款＋兵種剪影圖示＋戰場 draw call 量測與圖集合批＋頓格開關 |
+| `doc_task_3348` | docs/agent-briefs/tasks/PROG/PROG-2-10269.md | [PROG-2-10269] 修 #2811 第 6、9 項 |
+| `doc_task_3349` | docs/agent-briefs/tasks/PROG/PROG-2-10271.md | PROG-2-10271：方案 C — 結緣選角畫面顯示關係標籤與加成 |
+| `doc_task_3352` | docs/agent-briefs/tasks/PROG/PROG-2-10250.md | [PROG-2-10250] 戰場 draw call 合批（目標 <60）與頓格設定開關 |
+| `doc_task_3353` | docs/agent-briefs/tasks/PROG/PROG-2-10270.md | [PROG-2-10270] 戰場 Spine 多頁圖集執行期合併 |
+| `doc_task_3354` | docs/agent-briefs/tasks/PROG/PROG-2-10278.md | [PROG-2-10278] 規格書：生活層抓起放下 |
+| `doc_task_3355` | docs/agent-briefs/tasks/PROG/PROG-2-10274.md | 基本資訊 |
+| `doc_task_3356` | docs/agent-briefs/tasks/PROG/PROG-2-10275.md | PROG-2-10275：方案 B — 歷年榮譽牆核心資料模型與設定 |

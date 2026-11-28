@@ -13,9 +13,16 @@ import { troopTypeGlyph } from '../../shared/TallyCardContract';
 
 /** 兵種剪影資源前綴；交件路徑固定為 sprites/battle/battle_unit_type_icon_<key> */
 export const TROOP_TYPE_ICON_PREFIX = 'sprites/battle/battle_unit_type_icon_';
-/** 部隊徽章底圖（2 倍解析度；左 80x80 九宮格底框、右 80x80 兵種圓章），由 tools_node/gen-battle-badge-atlas.py 產生 */
+/** 部隊徽章底圖（2 倍解析度，5x2 格每格 80x80；第一列底框、圓章、騎、步、盾，第二列弓、槍、工、醫、水），由 tools_node/gen-battle-badge-atlas.py 產生 */
 export const BADGE_ATLAS_PATH = 'sprites/battle/battle_badge_atlas';
 const BADGE_ATLAS_CELL = 80;
+/** 兵種剪影在底圖中的格位（欄, 列）；與 gen-battle-badge-atlas.py 同步。剪影放同一張底圖，戰場頭頂與 UI 才能和圓章合批。 */
+export const BADGE_ATLAS_ICON_CELLS: Readonly<Record<string, readonly [number, number]>> = {
+    cavalry: [2, 0], infantry: [3, 0], shield: [4, 0],
+    archer: [0, 1], pikeman: [1, 1], engineer: [2, 1], medic: [3, 1], navy: [4, 1],
+};
+/** 實心色塊在底圖的位置 [x, y, w, h]：醫兵十字中央，周圍 2 像素都是同色，雙線性取樣不會滲到別色 */
+export const BADGE_ATLAS_SOLID_RECT: readonly [number, number, number, number] = [277, 95, 8, 8];
 const BADGE_ATLAS_INSET = 30;
 /** 底圖 2 倍解析度，節點縮 0.5 還原 */
 export const BADGE_ATLAS_SCALE = 0.5;
@@ -27,7 +34,14 @@ const TROOP_BADGE_OUTLINE_WIDTH = 2;
 const WHITE = new Color(255, 255, 255, 255);
 
 export type SpriteFrameLoader = (path: string) => Promise<SpriteFrame | null>;
-const defaultLoader: SpriteFrameLoader = (path) => services().resource.loadSpriteFrame(path).catch(() => null);
+/** 預設載入器：兵種剪影從底圖切格（同貼圖可合批）；底圖沒有的兵種才退回單獨圖檔路徑 */
+const defaultLoader: SpriteFrameLoader = (path) => {
+    const key = path.startsWith(TROOP_TYPE_ICON_PREFIX) ? path.slice(TROOP_TYPE_ICON_PREFIX.length) : '';
+    if (BADGE_ATLAS_ICON_CELLS[key]) {
+        return loadBadgeAtlasFrames().then((frames) => frames?.icons[key] ?? null);
+    }
+    return services().resource.loadSpriteFrame(path).catch(() => null);
+};
 
 /** 兵種代號正規化（與資源 key 一致）：小寫、非英數字換底線 */
 export function normalizeTroopTypeKey(raw: string | null | undefined): string {
@@ -61,8 +75,12 @@ export function loadTroopTypeIconFrame(raw: string | null | undefined, loader: S
 export interface BadgeAtlasFrames {
     /** 左格：九宮格底框 */
     bg: SpriteFrame;
-    /** 右格：金圈深底圓章 */
+    /** 第二格：金圈深底圓章 */
     disc: SpriteFrame;
+    /** 兵種剪影（單色象牙白），key 見 BADGE_ATLAS_ICON_CELLS */
+    icons: Record<string, SpriteFrame>;
+    /** 實心象牙色小塊（醫兵十字內 8x8）：血條等純色條用，與其他徽章元素同圖合批；乘 color 上色 */
+    solid: SpriteFrame;
 }
 
 let atlasLoad: Promise<BadgeAtlasFrames | null> | null = null;
@@ -72,19 +90,25 @@ export function loadBadgeAtlasFrames(): Promise<BadgeAtlasFrames | null> {
     if (!atlasLoad) {
         atlasLoad = services().resource.loadSpriteFrame(BADGE_ATLAS_PATH, { tags: ['battle'] })
             .then((base) => {
-                const cut = (x: number): SpriteFrame => {
+                const cut = (col: number, row = 0): SpriteFrame => {
                     const frame = new SpriteFrame();
                     frame.packable = false;
                     frame.texture = base.texture;
-                    frame.rect = new Rect(x, 0, BADGE_ATLAS_CELL, BADGE_ATLAS_CELL);
+                    frame.rect = new Rect(col * BADGE_ATLAS_CELL, row * BADGE_ATLAS_CELL, BADGE_ATLAS_CELL, BADGE_ATLAS_CELL);
                     return frame;
                 };
+                const icons: Record<string, SpriteFrame> = {};
+                for (const [key, [col, row]] of Object.entries(BADGE_ATLAS_ICON_CELLS)) icons[key] = cut(col, row);
                 const bg = cut(0);
                 bg.insetLeft = BADGE_ATLAS_INSET;
                 bg.insetRight = BADGE_ATLAS_INSET;
                 bg.insetTop = BADGE_ATLAS_INSET;
                 bg.insetBottom = BADGE_ATLAS_INSET;
-                return { bg, disc: cut(BADGE_ATLAS_CELL) };
+                const solid = new SpriteFrame();
+                solid.packable = false;
+                solid.texture = base.texture;
+                solid.rect = new Rect(...BADGE_ATLAS_SOLID_RECT);
+                return { bg, disc: cut(1), icons, solid };
             })
             .catch(() => null);
     }

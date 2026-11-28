@@ -70,3 +70,13 @@ export function saveJuicePrefs(prefs: JuicePrefs): boolean {
         return false;
     }
 }
+
+/** 命中頓格開關按鈕的 i18n 鍵（預設開；PROG-2-10266）。 */
+export function hitStopToggleKey(enabled: boolean): string {
+    return enabled ? 'battle.settings.hitstop.on' : 'battle.settings.hitstop.off';
+}
+
+/** 切換命中頓格偏好：回傳新偏好（不改傳入物件），鏡頭震動維持原值。 */
+export function toggleHitStopPref(prefs: JuicePrefs): JuicePrefs {
+    return { ...prefs, hitStop: !prefs.hitStop };
+}

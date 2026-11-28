@@ -29,7 +29,9 @@ export type TacticVfxExtraGroup =
     | 'thunder' | 'ice' | 'poison' | 'slash' | 'pierce' | 'charge' | 'volley'
     | 'shadow' | 'guard' | 'chain' | 'arcane' | 'renew' | 'quake'
     // 第三批（PROG-2-10240）：減益（虛弱／恐懼、混亂／魅惑）、光聖（祝福、淨化、神罰）、號令（鼓舞號令、戰吼）
-    | 'weaken' | 'confuse' | 'bless' | 'purify' | 'smite' | 'rally' | 'warcry';
+    | 'weaken' | 'confuse' | 'bless' | 'purify' | 'smite' | 'rally' | 'warcry'
+    // 召喚（PROG-2-10253，doc_spec_1359）：青綠陣圈升起＋召喚物落點光暈（零新動機）
+    | 'summon';
 
 export interface TacticVfxExtraRecipe extends TacticVfxRecipe {
     windup: TacticWindupMotif;
@@ -38,7 +40,7 @@ export interface TacticVfxExtraRecipe extends TacticVfxRecipe {
 
 export const TACTIC_VFX_EXTRA_GROUPS: readonly TacticVfxExtraGroup[] = Object.freeze([
     'thunder', 'ice', 'poison', 'slash', 'pierce', 'charge', 'volley', 'shadow', 'guard', 'chain', 'arcane', 'renew', 'quake',
-    'weaken', 'confuse', 'bless', 'purify', 'smite', 'rally', 'warcry',
+    'weaken', 'confuse', 'bless', 'purify', 'smite', 'rally', 'warcry', 'summon',
 ]);
 
 /** 第三批 7 組（PROG-2-10240）；單測用來確認這 7 組每組都有招式或狀態掛點 */
@@ -91,6 +93,8 @@ export const EXTRA_TACTIC_VFX_RECIPES: Readonly<Record<TacticVfxExtraGroup, Tact
     rally: { main: rgb(255, 130, 50), glow: rgb(200, 50, 30), core: rgb(255, 235, 190), particlesPerCell: 10, windupParticles: 6, hitSec: 0.3, tailSec: 0.6, windup: 'rise', hit: 'banner' },
     // 戰吼：向前擴散的聲波環與放射短線
     warcry: { main: rgb(255, 240, 200), glow: rgb(255, 150, 60), core: rgb(255, 255, 255), particlesPerCell: 10, windupParticles: 6, hitSec: 0.3, tailSec: 0.5, windup: 'shout', hit: 'soundwave' },
+    // 召喚（PROG-2-10253）：青綠陣圈收束、召喚物落點穹頂光暈
+    summon: { main: rgb(130, 245, 190), glow: rgb(40, 170, 130), core: rgb(235, 255, 245), particlesPerCell: 12, windupParticles: 8, hitSec: 0.35, tailSec: 0.6, windup: 'converge', hit: 'dome' },
 });
 
 /**
@@ -131,6 +135,8 @@ export const TACTIC_VFX_SKILL_GROUP: Readonly<Record<string, TacticVfxExtraGroup
     'mentor-morale': 'rally', 'liu-bei-rally': 'rally', 'cao-cao-revelry': 'rally',
     // 戰吼
     'zhang-fei-roar': 'warcry', 'insp-taunt': 'warcry',
+    // 3 招新 profile（PROG-2-10253）：遺計＝虛弱組、國色＝祝福組（morale 原會落到 rally／morale 組，故必須寫表）；穩固走 stun 判斷（Rooted），不寫表
+    'guo-jia-legacy': 'weaken', 'da-qiao-beauty': 'bless', 'summon-militia': 'summon',
 });
 
 /** 第二批各組的音效：沿用既有音檔（不新增檔案、不改發聲池上限），音量範圍同第一批。與 battle-audio-layers.json 的 tactic 區塊一致。 */
@@ -155,6 +161,7 @@ export const EXTRA_TACTIC_SFX_CLIPS: Readonly<Record<TacticVfxExtraGroup, readon
     smite: ['laser'],
     rally: ['tactic_morale'],
     warcry: ['skill3'],
+    summon: ['teleport'],
 });
 
 /**

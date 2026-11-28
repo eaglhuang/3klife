@@ -201,7 +201,10 @@ export function createAvatarTalkSuite(): TestSuite {
         assert.equals(0, tight.overlap, '上下被擋時改放右側或左側');
         assert.isTrue(tight.side === 'right' || tight.side === 'left');
         const wall = [buttonAbove, buttonBelow, { x: 300, y: 0, width: 400, height: 200 }, { x: -300, y: 0, width: 400, height: 200 }];
-        const worst = layoutAvatarBubble({ ...base, anchor, avoid: wall });
+        const topFree = layoutAvatarBubble({ ...base, anchor, avoid: wall });
+        assert.equals(0, topFree.overlap, '四邊都被擋時，保底貼畫面頂端避開按鈕');
+        const sealed = [...wall, { x: 0, y: 330, width: 1280, height: 120 }, { x: 0, y: -330, width: 1280, height: 120 }];
+        const worst = layoutAvatarBubble({ ...base, anchor, avoid: sealed });
         assert.isTrue(worst.overlap > 0, '無處可放時仍回傳（壓到最少的位置），不丟錯');
     });
 
@@ -213,7 +216,7 @@ export function createAvatarTalkSuite(): TestSuite {
 
     suite.test('換頁後泡泡會搬到還在畫面上的 Canvas（名冊列頭像 → 詳情）', () => {
         const src = fs.readFileSync(path.resolve(__dirname, '../assets/scripts/ui/core/AvatarTalkBubble.ts'), 'utf8');
-        assert.isTrue(src.includes('rehomeBubble()') && src.includes('activeInHierarchy'), '頭像所在頁收起時應搬移泡泡');
+        assert.isTrue(src.includes('rehomeBubble(') && src.includes('activeInHierarchy'), '頭像所在頁收起時應搬移泡泡');
     });
 
     suite.test('招賢館、名冊、十連結果、大廳主將頭像都已綁定點擊說話', () => {

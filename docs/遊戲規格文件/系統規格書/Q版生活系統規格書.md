@@ -6,6 +6,7 @@
 > **定位**：「Q 版社會」四份規格的第 3 份。管武將「怎麼過生活」：喜好、作息、場景、動態符號、互動、搶物品、送禮。
 > **姊妹篇**：Q版動作系統與動畫管理器（QACT-01）、Q版表情系統（QFACE-01）、Q版社會總規格書（QSOC-01：情報、場景切換、市井大街第一版、美術需求）
 > **裁決紀錄（11/28）**：互動免費次數（每季 6 次）＋銀兩、搶物品看關係、單挑有真實後果（使用者本人裁決，已與戰場專家對齊（11/28 審查）；細節見 6.4.1）、生活層武將範圍＝家臣＋本城訪客、情報併入現有情報系統。**11/28 使用者本人第二批裁決**：①切磋邀約時自選「點到為止」或「認真切磋」（預設認真）；②免費互動改每季 6 次；③Lv5 情報改給下一時段預測；④兩棟馬市都對應 `mkt_horse`；⑤不對稱頭（夏侯惇眼罩）照常水平翻轉；⑥家臣身分永遠可見；⑦前期街上冷清靠他國武將遊歷事件補，不做無名路人。
+> **11/28 新增**：第 6.8 節「抓起放下」（使用者新點子：長按抓起武將放到建築看反應，或放到另一位武將身上讓兩人相遇聊天；規則 PM 暫定）。**11/28 使用者本人勾選延伸玩法全做並新增兩項**，見第 6.9 節 `pickPlaceExt`。
 > **依賴**：共用框架總綱（`doc_spec_1182`，九個框架代號 SHP 商店、ITM 物品庫存、QST 任務、RWD 獎勵、SKL 技能、STY 劇情演出、OCC 人員占用、FRD 友誼、COL 收藏／圖鑑）、物品庫存 Base（`doc_spec_1184`）、人員占用 Base（`doc_spec_1248`）、友誼行為權重表（`friendship-action-weights.json`）、神秘圖鑑總規格書（`doc_spec_1350`）、說溜嘴破綻語（`doc_spec_1348`）、每季小報（`doc_spec_1345`）、武將台詞系統（共用框架）、大廳季度推進時間發動機（時間發動機總綱）
 > **世界觀**：武將都是標準古人，照正史演自己；偶爾有怪事（異事）混進來，只收進神秘圖鑑，不改正史路線（`doc_spec_1350`）。生活層是「觀察與互動的小社會」，不改年度主線；**單挑只透過「傷勢旗標」影響下一場戰場的屬性，不改戰場 HP、兵力與戰場核心規則**（已與戰場專家對齊（11/28 審查））。
 
@@ -114,7 +115,7 @@ score(s) = clamp( base(s) × slotFit(s,t) + Σ adj_f(s) , 0 , 200 )
 
 ### 2.4 活躍名冊（誰會出現在生活層）
 
-**使用者 11/28 裁決：生活層看得到的武將＝我方家臣＋本城訪客（外交使者、傭兵、浪人、俘虜）。**他國武將不常駐；只在「遊歷」事件時偶爾出現（事件由企劃另寫）。前期家臣少、街上冷清時，**多放他國武將遊歷事件**補人氣（使用者 11/28 裁決）；**不做無名路人 Q 頭**，街上每顆 Q 頭都是有名有姓的武將。範圍寫在 `life-roster.json`，日後要調只改資料。
+**使用者 11/28 裁決：生活層看得到的武將＝我方家臣＋本城訪客（外交使者、傭兵、浪人、俘虜）。**他國武將不常駐；只在「遊歷」事件時偶爾出現（事件規格見 `doc_spec_1362` QENC-01；作息卡見 `doc_spec_1363` QSCHED-01）。前期家臣少、街上冷清時，**多放他國武將遊歷事件**補人氣（使用者 11/28 裁決）；**不做無名路人 Q 頭**，街上每顆 Q 頭都是有名有姓的武將。範圍寫在 `life-roster.json`，日後要調只改資料。
 
 ## 3. 作息排程
 
@@ -573,6 +574,7 @@ score(s) = clamp( base(s) × slotFit(s,t) + Σ adj_f(s) , 0 , 200 )
 | 超過 | 用完可花**銀兩**買額外次數：第 7 次 5 兩，之後每次 +2 兩，單次上限 15 兩，每季最多買 12 次 |
 | 框架 | 商店框架（SHP）商品 `life_extra_interaction`，銀兩＝家族私房（不是金）；詳細規則與資料檔見 QSOC-01 4.4.1 |
 | 與季上限 | 友誼框架的「每武將每季次數上限」照舊；被季上限擋下的互動不扣次數、不收銀兩 |
+| 抓起放下 | 抓放本身不扣；放到另一位武將身上且友誼有變動才扣 1 次（6.8.4）|
 | 被動事件 | 武將主動找你、追逐小劇場後續、歸還物品，不扣次數 |
 
 ### 6.1 搭話 `talk`
@@ -712,6 +714,399 @@ score(s) = clamp( base(s) × slotFit(s,t) + Σ adj_f(s) , 0 , 200 )
 
 > 數值落在現有 −30～+30 範圍；每季次數上限防刷。11/28 審查補欄：上表原缺 6.4 的「點到為止 +1」（`life_duel_draw`）、6.5 的「歸還 +1」（`life_grab_return`）、仇人「−8」（`life_grab_enemy`）三個行為代號；實作補進 `friendship-action-weights.json` 時，每筆還要帶該檔既有的 `label` 欄位（走 i18n key）。6.4 的「Wise 性格不愛打 ×0.5」目前**沒有**對應的 `personalityModifiers`（現有 Wise 只有 `admin`、`diplomacy`），實作時要在該檔補 `Wise.combat: 0.5`，該檔是全遊戲共用，補前請知會友誼框架負責人。
 
+### 6.8 抓起放下 `pickPlace`（使用者 11/28 新點子；PM 暫定；延伸玩法見 6.9）
+
+> 玩家「抓起」武將，放到不同建築看反應，或直接放到另一位武將身上讓兩人相遇聊天。本節是第 6 章第 7 種互動，是「看熱鬧」型玩法：低成本、愛心滿滿、反應有哏。
+
+#### 6.8.1 操作
+
+| 步驟 | 規則 |
+|---|---|
+| 抓起 | **長按 Q 頭 0.35 秒**（小於 0.35 秒仍是點開圓形選單）；手機拇指友善，感應半徑 ≥ 44 像素。抓起時武將腳離地、Q 頭放大 1.15 倍、地面留影子，手指離開前其作息暫停（`lifeClock` 凍結該武將，不丟時段）|
+| 拖曳 | 跟著手指移動，頭上符號換成「被拎起」符號（`S_PICKED`，掙扎兩腳晃動）；拖到邊緣自動捲動場景；拖曳中可滑到場景切換鈕上方 0.6 秒換區（只在同一大圖切區，不跨大圖）|
+| 熱區提示 | 拖到可放的建築熱區：建築外框亮起（亮度 +20%）；拖到另一位武將身上：目標武將 Q 頭亮圈＋雙方連線虛線；不可放的位置：紅色禁止符號＋手放開會彈回原處 |
+| 放手 | 在熱區放手 → 傳送到該場景入口（`sceneEnter` 動畫 0.4 秒）→ 播反應（6.8.2）。在空地放手 → 原地落下站穩，不算放置。在非法位置放手 → 彈回抓起前位置，不扣次數、不冷卻 |
+| 取消 | 拖回自己原位置、或按取消鈕（右下角，≥ 44 像素） |
+| 高階機／低階機 | 抓起的 Q 頭走單一「拖曳層」節點（重用，不 new），拖曳中場景符號全降為靜態（手機記憶體優先）|
+
+> 版面保留直式彈性：熱區、取消鈕走錨點與 `life-area-maps.json` 區域資料，不寫死橫式。
+
+#### 6.8.2 放到建築：反應演出
+
+放下後取該武將對該場景的**評價**，三級：`love`（喜歡）、`neutral`（普通）、`hate`（討厭），算法：
+
+```
+score = affinityScene[sceneId] ?? affinityTag 取該場景 tag 最大值   // 0～100，見 2.1
+level = score >= 70 ? love : score <= 25 ? hate : neutral
+```
+
+| 評價 | 演出 | 後續 |
+|---|---|---|
+| `love` | 頭上「開心」符號（星＋哈）＋跳字台詞 1 句（走台詞框架 `pickplace_scene_love`）；Q 頭跳一下 | 該武將接下來 **1 個時段**留在該場景做原本活動（作息被覆寫），心情 +3 |
+| `neutral` | 「？」符號，看一圈，台詞「嗯？來這裡做什麼」 | 原地待 1 個時段後回到正常作息，心情 ±0 |
+| `hate` | 抱怨符號（汗＋怒氣），台詞抱怨；0.8 秒後**自己走回**原本所在場景（`run`＋跳字「我走了」），性格 `Brave` 加碼罵一句，`Loyal` 對主角不發怒只嘆氣 | 心情 −3；友誼不扣（只是被拎來拎去，主角是在玩）；**連續 3 次**被放進同一討厭場景，該武將 1 個時段拒絕被抓（頭上小「哼」）|
+| 特殊 `prop` | 該場景有該武將專屬 `props`（如酒館酒罐）時，`love` 會自動拿起道具，順便觸發稀有舉止（5.8）機率 ×2 | 計入舉止簿 |
+| 特殊 `event` | 場景有互動事件表（3.4 `events`）時，`love` 有 20% 機率直接觸發該場景事件（如酒館拼酒）| 走原事件流程，事件的次數與獎勵照該事件規則 |
+
+**生活條件**：場景營業時段（`openSlots`）外放下，建築是關門的：武將站在門口，跳字「打烊了」，視為 `neutral`，且不留在場景（直接回原位）。場景人數已滿（`capacity`）時放下的武將擠在門口，跳字「滿了」，同樣視為 `neutral`。
+
+#### 6.8.3 放到另一位武將身上：相遇聊天
+
+放手對象是**另一位在場景中的武將 Q 頭**（需在同一大場景、在畫面中，不在占用）：
+
+1. **兩人湊在一起**：被抓的武將落在目標旁（`pairSocket`），兩人 Q 頭各自轉頭面對對方（`faceTo`），頭上冒「驚訝」「！」。
+2. **判定相遇類型**（取第一個符合的，由 `life-pickplace-meet.json` 定義，見 6.8.7）：夫妻／結緣中 → `couple`；友誼 ≥ +20 → `friend`；友誼 −19～+19 → `acquaint`；友誼 ≤ −20 → `rival`；宿敵／仇人 → `enemy`；雙方都是老友且同一勢力主君以下 → `sworn`（結義時為 `sworn` 加成）。
+3. **聊天演出**：兩人中間掛雙人互動符號（5.5，單一元素、占 1 個符號名額）：`couple` 愛心；`friend` 大笑；`acquaint` 對話泡；`rival` 閃電吵架；`enemy` 吵架＋被主角拉開。演出約 6～8 秒，點擊可跳過。
+4. **台詞**：走武將台詞共用框架（`dialogue.request`，不自己寫死）。請求參數：`speakerId`、`listenerId`、`topic: "pickplace_meet"`、`meetType`、**性別參數**（說話者性別、聽者性別，用於「兄台／姑娘／夫人」等稱呼與語尾）、`relationTags`（友誼段、是否結義／夫妻／宿敵、同勢力）、`favorability`（友誼值）、`mood`、`scene`（所在場景 id）、`season`、`worldEvent`。聊天 2～3 句交替，台詞由中台跨玩家快取＋遊戲端快取供應；**離線／AI 失敗時用 `life-pickplace-meet.json` 的備援罐頭句**（每 `meetType` ≥ 6 句，含男男、男女、女女、女男四種性別變體）。
+5. **後果**：依 `meetType` 結算（下表）；友誼加值一律經 `FriendshipService.add`，伺服器權威。
+
+| meetType | 友誼 | 心情 | 其他 |
+|---|---|---|---|
+| `couple` | +2（`life_pickplace_couple`）| 雙方 +4 | 羈絆點 +1（每季 1 次）|
+| `friend` | +2（`life_pickplace_friend`）| 雙方 +3 | 小機率交換消息（情報 +1，走情報系統）|
+| `acquaint` | +1（`life_pickplace_acquaint`）| 雙方 +1 | 初識者有 10% 機率「互相自我介紹」解鎖彼此名冊關係 |
+| `rival` | −1（`life_pickplace_rival`）| 雙方 −3 | 主角可點「勸架」：友誼回 +1、心情 −0，需該武將 `stubbornness` < 70 |
+| `enemy` | −2（`life_pickplace_enemy`）| 雙方 −5 | 宿敵觸發 `rivalBrawl` 小劇場（見第 10 章勾選項）|
+
+**友誼防刷**：同一對武將（無序）每日（遊戲 1 季內的生活時鐘轉 1 圈為 1 日）只有**第 1 次**相遇加友誼；之後只有演出與台詞，不加友誼；每位武將每季因「被放到別人身上」獲得的友誼總量 ≤ +6（`perSeasonCap` 於 `life-friendship-actions.json` 設定）。
+
+#### 6.8.4 次數與成本（建議，待確認）
+
+| 項目 | 規則 |
+|---|---|
+| 抓放本身 | **不扣每季 6 次免費互動**（6.0），也不收銀兩：看熱鬧型玩法，應該能自由玩、不用算次數 |
+| 相遇加好感 | 只有「放到另一位武將身上」且**友誼有變動**時，才算 1 次互動，從每季 6 次扣（用完可花銀兩買，規則同 6.0）；沒變動的（防刷後的第 2 次）不扣 |
+| 為什麼這樣 | 抓放只改位置與心情，不產生永久數值；扣次數的是會永久加好感的那一步，避免用抓放洗好感，又不會讓玩家玩一玩被收費 |
+| 被季上限擋下 | 不扣次數、不收銀兩（同 6.0）|
+| 抓放冷卻 | 同一武將被抓起放下後 **15 秒（真實時間）** 內不可再被抓（頭上「暈」符號）；同一玩家 60 秒內最多抓 8 次；連續 10 次無效操作（彈回、空地放）暫停 30 秒 |
+
+#### 6.8.5 不能抓的人與差異
+
+| 對象 | 規則 |
+|---|---|
+| **被占用中的武將**（出征、學府、任務、閉關、待產；人員占用框架 OCC）| **不能抓**：長按沒反應，頭上短暫跳「忙」符號；不在畫面中的武將也不能被抓 |
+| 主角自己 | 不能抓 |
+| **家臣**（我方）| 完整支援：放建築有反應、放到別人有聊天、有加好感 |
+| **本城訪客（他國武將，QENC-01）**| 可抓，但**只做演出，不加友誼、不改心情**；放到討厭場景不會「走回去」而是離開後 1 個時段不再出現；放到我方武將身上有聊天，台詞用 `acquaint`／`rival`（看勢力關係）|
+| 他國君主、俘虜、病重、傷重 | 不能抓（傷者頭上「傷」符號；傷勢見 6.4.1）|
+| 性別／年齡 | 0～4 歲幼童不能被抓（改「摸頭」，見 6.9.3；5～14 歲孩子可被抓放進私塾，見 6.9.5）；懷孕待產中不能抓 |
+| 搶物品進行中、追逐小劇場中 | 暫停抓放，結算完才可抓 |
+| 主角代理頭 | 不能抓（主角單挑落敗不寫傷勢的既有規則不變）|
+
+#### 6.8.6 與生活層其他系統的關係
+
+- **作息**：抓放是覆寫（`lifeClock` override），結束後回到 2.3 正常挑場景；覆寫最長 1 個時段，不改 `life-profile.json`。
+- **神秘圖鑑**：把武將放到近現代主題場景（若有）不會觸發說溜嘴；偷聽仍照 5.7。
+- **舉止簿**：放進愛好場景提高稀有舉止機率（見 6.8.2）。
+- **存檔**：抓放結果（位置覆寫、友誼加減、次數）經伺服器 API；單機版走本機 adapter。位置覆寫只存在生活層暫態，不存檔。
+- **情報**：被放到同場景的武將不洩漏情報，除非是 `friend` 相遇的 10% 交換消息。
+
+#### 6.8.7 資料驅動（新增檔案，實作時補進 `life-friendship-actions.json`）
+
+**`life-pickplace-scene-reactions.json`**（建築反應表）：
+
+```json
+{
+  "schema": "life-pickplace-scene-reactions.v1",
+  "thresholds": { "love": 70, "hate": 25 },
+  "reactions": {
+    "love":    { "symbol": "S_HAPPY",   "dialogueTopic": "pickplace_scene_love",    "stayslots": 1, "moodDelta": 3 },
+    "neutral": { "symbol": "S_QUESTION","dialogueTopic": "pickplace_scene_neutral", "stayslots": 0, "moodDelta": 0 },
+    "hate":    { "symbol": "S_COMPLAIN","dialogueTopic": "pickplace_scene_hate",    "stayslots": 0, "moodDelta": -3, "walkBack": true, "walkBackDelaySec": 0.8 }
+  },
+  "personalityVariants": { "Brave": "pickplace_scene_hate_brave", "Loyal": "pickplace_scene_hate_loyal" },
+  "sceneOverrides": {
+    "mkt_tavern": { "zhang_fei": "love", "zhuge_liang": "neutral" },
+    "edu_library": { "zhang_fei": "hate" }
+  },
+  "propBonus": { "gestureChanceMul": 2.0 },
+  "eventChanceOnLove": 0.2,
+  "closedSceneAs": "neutral",
+  "fullSceneAs": "neutral",
+  "hateRepeatThreshold": 3
+}
+```
+
+**`life-pickplace-meet.json`**（相遇台詞觸發條件與備援罐頭句）：
+
+```json
+{
+  "schema": "life-pickplace-meet.v1",
+  "meetTypes": [
+    { "id": "couple",   "when": { "relation": ["spouse", "courting"] },            "symbol": "S_HEART",   "fd": 2,  "mood": 4,  "bond": 1 },
+    { "id": "friend",   "when": { "friendshipMin": 20 },                            "symbol": "S_LAUGH",   "fd": 2,  "mood": 3,  "infoChance": 0.1 },
+    { "id": "acquaint", "when": { "friendshipMin": -19, "friendshipMax": 19 },      "symbol": "S_TALK",    "fd": 1,  "mood": 1,  "introChance": 0.1 },
+    { "id": "rival",    "when": { "friendshipMax": -20 },                          "symbol": "S_SPARK",   "fd": -1, "mood": -3, "peaceMaker": true },
+    { "id": "enemy",    "when": { "relation": ["nemesis", "feud"] },               "symbol": "S_SPARK",   "fd": -2, "mood": -5 }
+  ],
+  "dailyPairCap": 1,
+  "perGeneralSeasonFdCap": 6,
+  "cooldownRealSec": 15,
+  "dialogue": {
+    "topic": "pickplace_meet",
+    "params": ["speakerGender", "listenerGender", "relationTags", "favorability", "mood", "scene", "season", "worldEvent"],
+    "fallbackLinesKeyPrefix": "life.pickplace.meet",
+    "fallbackVariants": ["mm", "mf", "ff", "fm"],
+    "fallbackLinesPerType": 6
+  }
+}
+```
+
+> 文字一律 i18n key（第 8 章規則），上例只用 id。`life_pickplace_*` 行為代號實作時補進 `friendship-action-weights.json`（各帶 `label`）；`perSeasonCap` 合計 ≤ 6。
+
+#### 6.8.8 驗收
+
+1. 長按 0.35 秒抓起、拖曳、放下，手機拇指單手可操作；短按仍開圓形選單。
+2. 張飛放酒館 `love`（開心符號＋台詞＋留 1 時段），放藏書閣 `hate`（抱怨後走回）；諸葛亮反過來；`neutral` 走「？」演出。連放同一討厭場景 3 次後拒絕被抓。
+3. 打烊、滿員場景放下都視為 `neutral`，不扣次數。
+4. 放到另一位武將身上：夫妻（愛心）、好友（大笑）、普通（對話泡）、宿敵（吵架）各走一次；台詞經台詞框架，帶性別參數，離線備援四種性別變體都有。
+5. 同一對武將同日第 2 次相遇不再加友誼；每武將每季因本玩法友誼總量 ≤ +6；15 秒冷卻、60 秒 8 次上限有效。
+6. 被占用中武將、5 歲以下、傷重者、主角代理頭不能抓；他國訪客可抓但不加友誼。
+7. 抓放本身不扣每季 6 次；放到武將身上且友誼有變動才扣 1 次；被季上限擋下不扣。
+8. 所有友誼變動經 `FriendshipService.add`；客戶端不直接改值；重新登入後一致。
+
+### 6.9 抓起放下延伸玩法 `pickPlaceExt`（使用者 11/28 本人勾選：6 項全做；數值由 PM 暫定，全放 JSON）
+
+> 來源：6.8 原列 5 個延伸點子，使用者本人勾選全部要做，並新增「放小孩進私塾」「抓小偷給治安官」兩項。本節把「待使用者勾選」轉為正式規格。**只有規格，不含程式**；實作卡由總 PM 另開。
+
+#### 6.9.0 六項總表與共用規則
+
+| # | 代號 | 玩法 | 放下對象組合 | 接哪個既有框架 |
+|---|---|---|---|---|
+| 1 | `rivalBrawl` | 宿敵大吵：勸架或煽風 | 武將 → 宿敵武將（meetType `enemy`／`rival`）| FRD、6.4 單挑邀約 |
+| 2 | `drinkContest` | 酒館拼酒小遊戲 | 武將 → 武將，或雙方都在酒館 | FRD、RWD（小）、舉止簿 |
+| 3a | `pat` | 摸頭 | 成年武將 → 0～4 歲幼童 | FRD、幼年環境（`結緣生育輔助道具與幼年環境功能規格書`）|
+| 3b | `matchmaker` | 媒人撮合 | 單身男 → 單身女（或反之）| 既有姻緣流程（FEM-03，11/26 裁決已併單一姻緣流程），**不另開流程** |
+| 4 | `trainDrop` | 練兵場對練 | 武將 → `mil_arena`／`mil_barracks`／`mil_range` | SKL（小經驗）、FRD |
+| 5 | `tutorEnroll` | 把小孩放到武將旁邊，機率加入其私塾 | 5～14 歲孩子 → 有開班的武將 | 武將私塾補習班（`doc_spec_1280`）、ITM（推薦卡）|
+| 6 | `thiefCatch` | 把小偷放到治安武將旁邊，機率破案 | 小偷 NPC → 治安武將 | RWD、QST（治安巡查）、城池治安（`CITY-RIOT-01`）|
+
+**共用規則（六項皆適用，6.8 的限制全部沿用）**
+
+1. **判定順序**：放手後先判定 6.8.3 的 `meetType`／場景，再依下表「觸發條件」看是否進入延伸玩法；條件不符則退回 6.8 原本的相遇聊天或建築反應，不丟錯誤。
+2. **友誼防刷（合併上限）**：6.8 基本相遇的「每武將每季 ≤ +6」不變；**延伸玩法另設合計每武將每季 ≤ +4**（`perGeneralSeasonFdCapExt`），兩者互不佔用，總上限 +10。同一對武將（無序）每日（生活時鐘轉 1 圈）對**同一種延伸玩法**只有第 1 次加友誼，之後只有演出與台詞。
+3. **次數成本**：沿用 6.8.4——抓放本身不扣每季 6 次；只有「友誼有變動」的那一步才扣 1 次；被季上限擋下不扣。`pat`、`tutorEnroll`、`thiefCatch` 的結果不是武將間友誼，**不扣**每季 6 次，改用各自的每日／每季上限（見各項）。
+4. **占用（OCC）**：延伸玩法**不新增占用類型、不寫占用**；被 OCC 占用中的武將不能抓、也不能當放下對象（6.8.5）。一切「停留／自動對練」都是 6.8.6 的 `lifeClock` 覆寫（最長 1 個時段）。出征、學府、閉關、待產者全數排除。
+5. **伺服器權威**：所有友誼、經驗、獎勵、報名經伺服器 API，單機版走本機 adapter；客戶端只播演出。位置覆寫不存檔。
+6. **台詞**：全部走台詞共用框架 `dialogue.request`，共用參數同 6.8.3（`speakerId`、`listenerId`、`relationTags`、`favorability`、`mood`、`scene`、`season`、`worldEvent`），**必帶性別參數**（`speakerGender`、`listenerGender`，用於稱呼與語尾；幼童與小偷也要帶性別）。離線備援罐頭句每個 `topic` ≥ 6 句，含 `mm／mf／ff／fm` 四種變體，進 `life-pickplace-ext.json` 的 `fallbackLinesKeyPrefix`（i18n key，不存中文字面）。
+7. **性別與年齡一致性**：稱呼與演出以性別參數決定（例如「大叔／大姐」「小弟弟／小妹妹」），不寫死男性。懷孕待產、傷重者不能參與（6.8.5）。
+8. **他國訪客**：只做演出，不加友誼、不給獎勵、不計報名；`thiefCatch` 若治安者是訪客則不成立（只有我方家臣可擔任）。
+
+#### 6.9.1 宿敵大吵 `rivalBrawl`
+
+| 項目 | 規則 |
+|---|---|
+| **觸發條件** | 6.8.3 判定為 `enemy`（宿敵／仇人）或 `rival` 且友誼 ≤ −30；雙方都在畫面、未被占用；`rivalBrawl` 當日該對尚未結算過 |
+| **演出** | 兩人頭頂閃電連線（`S_SPARK`），Q 頭互推、對吼 4～6 秒；畫面下方出現兩顆大按鈕：**【勸架】**、**【煽風】**（≥ 44 像素，6 秒不點視為放任：吵完各自走開，友誼 −1、心情 −3，同 6.8.3 `rival`）|
+| **勸架機率** | `p_calm = clamp(0.30 + 0.5 × (1 − (stubbornnessA + stubbornnessB) / 200) + 0.10 × avgFriendLevelToPlayer, 0.05, 0.90)`；`avgFriendLevelToPlayer` 為雙方對主角友誼級別平均（0～1，≥ +20 為 1）。成功：兩人友誼 **+1**（`life_pickplace_calm`）、心情 ±0、旁邊跳「謝了」；失敗：友誼 −1、心情 −3。任一方 `stubbornness` ≥ 90 勸架一律失敗（頭上「哼」）|
+| **煽風機率** | `p_duel = clamp(0.30 + 0.004 × (stubbornnessA + stubbornnessB) / 2 + 0.20 × (任一方 Brave) − 0.20 × (任一方 Loyal 且對主角友誼 ≥ +40), 0.05, 0.90)`。成功：兩人說「來打！」，**只發出單挑邀約**，由 6.4 的接受率與流程接手（單挑的次數、傷勢、友誼規則全部照 6.4，本節不重複）；失敗：兩人瞪一眼各自走開。煽風本身友誼 −1（`life_pickplace_provoke`），**對雙方好感都扣**，不扣主角每季次數 |
+| **上限** | 每對每日 1 次大吵結算；每季「煽風」最多 2 次（`provokeSeasonCap`）；勸架無季上限但加友誼受 6.9.0 合併上限；每次大吵冷卻同 6.8.4 的 15 秒 |
+| **台詞** | `topic: "pickplace_brawl"`，子類 `brawl_calm`、`brawl_provoke`、`brawl_fail`；性別參數決定罵人用語強度（台詞框架出，不寫死）|
+| **占用／友誼** | 不寫 OCC；友誼走 `FriendshipService.add`；煽風接 6.4 單挑時，輸方傷勢規則由 6.4.1 決定 |
+
+#### 6.9.2 酒館拼酒小遊戲 `drinkContest`
+
+| 項目 | 規則 |
+|---|---|
+| **觸發條件** | 場景為 `mkt_tavern`，且：①兩位武將**都被放進酒館**，或 ②一位在酒館、另一位被放到他身上；雙方皆成年（≥ 16 歲）、未被占用、不是「滴酒不沾」（`life-profile.json` 新增旗標 `abstain`，預設 false）、`mood` ≥ −20；酒館營業中、人數未滿 |
+| **玩法** | 自動進入 5 拍節奏拼酒（約 12 秒）：每拍玩家點一次「乾杯」鈕，**點在節拍視窗內**＝替雙方加油，視窗外＝不加分；玩家可點任一方頭像「站台」，該方 `hits` 加權 ×1.5 |
+| **勝負公式** | `drinkPower = 40 + 0.3 × vitality + 15 × likesWine − 10 × fatigueFlag + rand(0,10)`（`likesWine`＝`affinityTag.wine ≥ 70`）；`pWinA = clamp(0.5 + (drinkPowerA − drinkPowerB) / 200 + 0.05 × (hitsA − hitsB), 0.1, 0.9)`，亂數由 `seed` 決定可重現 |
+| **結果** | 贏家：心情 +3，**雙方友誼 +2**（`life_pickplace_drink`，輸贏皆加，因為是一起喝）；輸家：頭上酒氣符號，心情 −2，並進入「微醺」旗標——下 1 個時段作息改去 `home_general` 睡覺（`lifeClock` 覆寫）；雙方都是 `likesWine` 時多 1 句專屬台詞，且**稀有舉止機率 ×2**（沿用 6.8.2 `propBonus`）|
+| **上限** | 同一對每日 1 次；每武將每日最多參加 2 場（第 3 場說「喝不下了」）；每季每武將因拼酒獲得友誼 ≤ +4（含在 6.9.0 合併上限內）|
+| **獎勵** | 無實體獎勵（只有友誼與舉止簿）；舉止簿觸發後照 5.8 規則 |
+| **台詞** | `topic: "pickplace_drink"`，子類 `drink_win`、`drink_lose`、`drink_both_like`；參數加 `drinkResult`、`likesWine` |
+| **占用／友誼** | 不寫 OCC；微醺只是生活層旗標；友誼成功扣 1 次每季互動（有友誼變動）|
+
+#### 6.9.3 摸頭 `pat` 與 媒人撮合 `matchmaker`
+
+**摸頭 `pat`**
+
+| 項目 | 規則 |
+|---|---|
+| **觸發條件** | 被抓的是**成年**武將（≥ 16 歲、未被占用），放到 **0～4 歲幼童**身上或旁邊（幼童本身不能被抓，6.8.5）；幼童所在場景為 `home_nursery`、家宅、庭院或市井街道；幼童必須是我方家族／家臣子嗣或本城訪客的孩子 |
+| **演出** | 大人蹲下（`crouch`），摸頭 2 秒，頭上愛心；幼童反應二選一：笑（拍手跳）或怕生（躲到家長身後）|
+| **機率** | `p_like = clamp(0.50 + 0.004 × charm + 0.20 × isKin + 0.10 × hasOwnChild − 0.30 × (Brave 且 好戰 tag), 0.10, 0.95)`；`isKin`＝是該幼童的親人（父母／祖輩／兄姊）；`charm` 為魅力屬性（欄位名以 GeneralConfig 為準）|
+| **結果** | `like`：幼童親近值 +1（`childCloseness`，幼年環境既有欄位；親人 ×2），大人心情 +2；`shy`：無加成，大人頭上汗滴「怎麼哭了」，不扣不加 |
+| **家長感謝** | 若幼童家長武將在線：友誼 **+1**（`life_pickplace_pat_thanks`），**每家長每季 1 次**；家長對放置的大人（非親人）也友誼 +1，但不另算——只算家長對主角的 +1 |
+| **上限** | 每幼童每日 1 次加親近、每季親近 ≤ +6（`patChildSeasonCap`）；家長感謝每季 1 次；不扣每季 6 次 |
+| **台詞** | `topic: "pickplace_pat"`，子類 `pat_like`、`pat_shy`；性別參數＝大人性別＋幼童性別（「小弟弟／小妹妹」）；備援罐頭句含幼童稱呼變體 |
+| **占用／友誼** | 不寫 OCC；占用中（待產、哺乳）的家長不能被抓，但仍可收到感謝（走信箱）|
+
+**媒人撮合 `matchmaker`**
+
+| 項目 | 規則 |
+|---|---|
+| **觸發條件** | 被抓的單身武將放到另一位單身異性武將身上（雙方皆成年、未婚、未被占用）；**資格判定一律呼叫既有結緣資格檢驗**（`結緣資格十一項排他檢驗與精力待產扣減狀態機規格書`＋血統／性別結緣條件 FEM-03），不在生活層重寫條件 |
+| **演出** | 符合：兩人間出現「紅線」符號（`S_REDTHREAD`，占 1 個符號名額）＋雙方臉紅，並跳出按鈕**【去提親】**；不符合：只當一般相遇聊天（6.8.3，`acquaint`／`friend`），台詞用性別參數表達「只是朋友」之感，**不顯示紅線、不洩漏不符原因** |
+| **接姻緣流程** | 點【去提親】＝打開既有「相親／結緣」單一姻緣流程，**預選這一對**，其後的資格確認、聘禮、受孕、待產全部照原流程與費用，**不另開流程、不新增結緣分支**。生活層只提供「入口＋加成」 |
+| **加成** | 帶入既有媒人加權公式（11/22 裁決）的輸入欄位 `matchmakerBonus`（預設 +0.05；雙方友誼 ≥ +20 時 +0.10；雙方皆 `likes` 同一場景 tag 時 +0.03；總上限 +0.15），**不改公式本身** |
+| **上限** | 每對每季 1 次紅線提示；每季全部撮合提示 ≤ 3 次（`matchmakerSeasonCap`）；已拒絕過同一對則該對本季不再出現；不扣每季 6 次（友誼不變）|
+| **台詞** | `topic: "pickplace_matchmaker"`，子類 `match_ok`、`match_no`；性別參數必帶（男男／女女放到一起時一律走 `match_no`，台詞自然帶過，不指責）|
+| **占用／友誼** | 不寫 OCC；提親後待產等占用由姻緣流程自行寫入；友誼本身不變 |
+
+#### 6.9.4 練兵場對練 `trainDrop`
+
+| 項目 | 規則 |
+|---|---|
+| **觸發條件** | 被抓的武將放進 `mil_arena`、`mil_barracks`、`mil_range`；該武將評價為 `love` 或 `neutral`（`hate` 者直接走 6.8.2 走回）；場景營業且未滿；非傷者（輕傷可對練但經驗減半，重傷不行）；**必須有對手**：放下時場景內有另一位武將，或同時放兩位 |
+| **演出** | 兩人自動對練 1 個時段（生活層約 10 秒演出，可跳過）：交叉武器（S49）＋火花；主角不介入 |
+| **機率與結果** | 無輸贏機率。結算：兩人各得「生活層訓練經驗」+（`trainExpBase` 2，上限為當日 NORMAL 官職經驗底數的 10%，`doc_spec` 官職經驗規格），並獲得一個**疲勞旗標**（`fatigueFlag`，只影響生活層 `mood −2` 並在下 1 時段 `drinkPower` −10，**不影響戰場、不影響任何數值**）；兩人友誼 +1（`life_pickplace_train`，雙方皆 ≥ 10 歲才加）；若其一是教官、另一是子嗣學員，經驗 ×1.5（取代，不疊加）|
+| **上限** | 每武將每日經驗最多 1 次、每季 ≤ 6 次（`trainSeasonCap`）；每對每日友誼 1 次；每季每武將練兵友誼 ≤ +3；友誼有變動才扣 1 次每季 6 次 |
+| **台詞** | `topic: "pickplace_train"`，子類 `train_start`、`train_end`、`train_tired`；性別參數必帶 |
+| **占用／友誼** | 不寫 OCC（避免與出征／學府排程衝突）；占用中者不能被抓；經驗走 SKL 框架的「小量經驗」端點，不直接寫屬性 |
+
+#### 6.9.5 把小孩放進武將私塾 `tutorEnroll`（使用者新增）
+
+接 `武將私塾補習班系統規格書`（`doc_spec_1280`，shard-a 第 3、4 章）。
+
+| 項目 | 規則 |
+|---|---|
+| **孩子資格** | 本節把 6.8.5 的「5 歲以下不能被抓」放寬為：**5～14 歲的孩子可被抓**（開蒙後），條件＝私塾學生資格（shard-a 3.2）：活著、非 `academy`／`expedition`／重傷、非外國敵對、未已在某私塾。0～4 歲仍不能被抓（走 6.9.3 摸頭）。**15 歲起進學府，不再適用**。孩子可為我方子嗣、家臣子嗣；本城訪客的孩子不適用 |
+| **武將資格（被放到的對象）** | 必須是**已開班**的我方武將（shard-a 3.1，且該期班級未滿 `capacity`、未處於「休課」）。沒開班的武將：只有普通相遇聊天（6.8.3），台詞可帶一句「我沒開班」。他國 AI 的虛擬私塾**不適用**（避免玩家替他國招生）|
+| **演出** | 孩子被放到老師身旁：老師彎腰看他、頭上「？」，翻看他的資質（簡短浮出資質小圖示）；成功時老師拍孩子的頭、頭上「歡迎」符號，孩子頭上出現小書包；失敗時老師搖頭、說「還沒到時候」，孩子被輕輕送回 |
+| **成功機率** | `p_enroll = clamp(0.20 + 0.003 × teacherCharm + 0.15 × childTalentTag + 0.15 × isKinOfTeacher + 0.10 × (老師對主角友誼 ≥ +20) + 0.05 × (季節為開學季) − 0.20 × (班級容量剩 1 位), 0.05, 0.85)`；`childTalentTag`＝孩子有任一 ≥ 60 的專長屬性（0／1）；`isKinOfTeacher`＝老師的子嗣／親屬（0／1）|
+| **成功後** | **不自動扣款、不直接入班**：發出一張「**試聽邀請**」，視同 shard-a 4.3 推薦卡的虛擬等價物（`ITEM_TUTOR_TRIAL`，不佔背包，當日未使用即消失）；玩家點【報名】才開啟既有報名／學費 escrow 彈窗（第 4 章原流程，學費照原價，**減免首期 20%**，`trialDiscount` 放 JSON）；點【不用】則作廢，不影響友誼。入班後的上課、教室、友誼推算、休課全部照 shard-a／shard-b 原規則 |
+| **上限** | 每孩子每季最多被放 2 次（失敗 1 次後同老師本季不再試）；每位老師每季最多收 3 位「放進來」的學生（`tutorEnrollSeasonCap`）；每日全玩家最多 6 次抓小孩；不扣每季 6 次，**也不給友誼**（避免洗好感）；成功報名後老師對家長（主角）友誼 +1（`life_pickplace_enroll`），每老師每季 1 次，計入合併上限 |
+| **台詞** | `topic: "pickplace_tutor"`，子類 `tutor_welcome`、`tutor_decline`、`kid_nervous`；參數加 `childAge`、`childGender`、`schoolLevel`（私塾級別）；孩子的話按年齡分短句與長句 |
+| **占用／友誼** | 入班後上課占用 `tutorLearn`（OCC 既有類型，見 doc_spec_1280 第 10 章），由私塾系統寫入，不由生活層寫入；友誼同班同學推算走私塾友誼公式，不經 6.8 |
+
+#### 6.9.6 把小偷放到治安武將旁邊 `thiefCatch`（使用者新增）
+
+**(一) 小偷 NPC `npc_thief` 出現條件**
+
+小偷不是名冊武將，是生活層的臨時**路人 NPC**（無友誼、無名冊、無性別以外的資料），不存檔，只存在於當季當日的場景。
+
+| 條件 | 規則 |
+|---|---|
+| **地點** | 只在市井／市集類場景現身：`mkt_*`（街道、市集、客棧、酒館、商鋪）與 `gov_gate` 附近；不在宅邸、牢房、戰場 |
+| **治安條件** | 依本城治安指數（`publicOrder`，城池治安規格書）：`ORDERLY（≥ 80）` 出現率 0%；`60～79` 每時段 2%；`UNREST（40～59）` 每時段 8%；`RIOTOUS（20～39）` 每時段 18%；`< 20` 暴動中不刷小偷（改走黃巾流寇事件）。`spawnChance` 放 JSON |
+| **數量與壽命** | 同一城同一時段**最多 1 隻**；每日最多 3 隻；出現後存活 1 個時段，之後自行逃離；被放下失敗也會逃離 |
+| **外觀** | 蒙面或縮頭的小人，頭上 `S_THIEF`（偷偷摸摸符號，新增，掛 5.x 符號組），可被抓（本玩法的 6.8.5 例外：小偷是**可被抓**對象，**不受 15 秒冷卻限制，但同一小偷只能被放 2 次**）；性別隨機（帶性別參數給台詞）|
+| **為何會出現** | 玩家看得到小偷「偷錢袋」小演出（5 秒），被偷的是隨機路人（無實際損失），給玩家一個抓的理由；若玩家沒抓，小偷逃離時城池治安**本季** −0（不扣，避免處罰；只有任務與事件才扣治安）|
+
+**(二) 治安職位判定 `peaceKeeper`**
+
+只有我方家臣、且符合下列**任一**條件的武將，才算「負責治安」的武將（`life-pickplace-roles.json` 的 `peaceKeeper` 規則，PM 暫定）：
+
+| # | 條件 | 說明 |
+|---|---|---|
+| 1 | 本城**太守**（`gov_office` 主官；官職規格書的城守職位）| 一座城只有 1 位 |
+| 2 | **郡城縣令**（`magistrate`，成年子嗣內政職位，見 `非培育子嗣內政職位加成與未成年減半模型規格書`）| 成年才算，未成年子嗣不算 |
+| 3 | 本季正**承接「治安巡查」類任務**（大廳 `HALL_DOM_*`、tag `security`，如 `HALL_DOM_003` 治安巡查）的武將 | 任務進行中（`Is_Accepted=true`、未完成）才算 |
+| 4 | 將階 ≥ 校尉（Rank ≥ 1）**且**專長 tag 含 `guard`／`patrol`（巡邏、守衛）| 沒掛 tag 者不算；避免所有軍官都成治安官 |
+
+> 第 1、2 項是**官職**身分，不占用 OCC；第 3 項由 QST 框架提供任務狀態，不新增占用。判定一律查「官職系統權限快照」與 QST 狀態，不在生活層另存。被占用中（出征、學府、閉關、待產、重傷）者**不算治安武將**，放下時視為普通相遇聊天。
+
+**(三) 觸發與機率**
+
+| 項目 | 規則 |
+|---|---|
+| **觸發** | 小偷被放到 `peaceKeeper` 武將身上；兩人皆未被占用；小偷本時段尚未被放第 2 次；武將**不是**被抓的一方（放的是小偷）|
+| **演出** | 治安武將大喊「站住！」（走台詞），小偷掙扎；成功：武將一把拎起小偷、頭上「得意」符號、小偷被綁起「押去府衙」走場；失敗：小偷滑脫跑掉，武將跳字「跑了！」並追 2 秒 |
+| **機率** | `p_catch = clamp(0.25 + 0.004 × (war + int) / 2 + 0.10 × (publicOrder < 40) + 0.05 × (場景為 gov_gate／mil_city／mkt_street) + 0.05 × (官職為太守或縣令), 0.10, 0.85)`；`war`、`int` 為武力、智力（欄位名以 GeneralConfig 為準）|
+| **失敗** | 小偷逃離，**可再被放一次**（給另一位治安武將）；第 2 次也失敗或換地點則小偷消失；不扣次數、不扣友誼 |
+
+**(四) 破案獎勵（接獎勵框架 RWD）**
+
+成功破案發 `reward-bundle.v1` 加 `reward-pool.v1` 的組合（`BUNDLE_LIFE_THIEF_CAUGHT`＋`POOL_LIFE_THIEF_LOOT`，放 JSON；機率與數值 PM 暫定）：
+
+| 項目 | 內容 |
+|---|---|
+| 固定獎 | 該城治安**本季 +1**（`publicOrder`，季結算時加；每城每季 ≤ +3）；治安武將官職經驗 +2（不超過 `NORMAL` 底數 18 的 10%，沿用官職經驗規格）；武將對主角友誼 +1（`life_pickplace_thief`，計入 6.9.0 合併上限）|
+| 獎池 `POOL_LIFE_THIEF_LOOT` | 權重抽 1 項：N 銀兩 20～60（60%）；R 小件物品（贓物退還，如藥草、糧袋，30%）；SR 稀有小件或「線索」（情報 +1，9%）；SSR 稀有道具（1%）；`disclosure.public=false`（非付費抽取，不需公開機率表）；無 pity |
+| 展示 | `presentation: { type: "chest", args: { skin: "wood" } }`——小木箱彈出，不跳全螢幕 |
+
+**(五) 上限防刷**
+
+| 項目 | 上限 |
+|---|---|
+| 小偷刷新 | 每城每日 ≤ 3 隻、每時段 ≤ 1 隻（見(一)）|
+| 破案獎勵 | **每日 ≤ 2 次**、**每季 ≤ 6 次**（`thiefRewardSeasonCap`）；超過仍有演出與台詞，但不發獎池與治安加成 |
+| 同一治安武將 | 每日 ≤ 2 次獎勵；友誼加成每季 1 次 |
+| 不扣每季 6 次 | 是（結果不是武將間友誼）|
+
+**(六) 台詞與占用／友誼**
+
+- 台詞 `topic: "pickplace_thief"`，子類 `thief_catch`、`thief_escape`、`thief_plead`（小偷求饒）；參數加 `thiefGender`、`publicOrder`、`peaceKeeperRole`（太守／縣令／巡查／校尉）；治安武將的性格決定語氣（`Brave` 大喝、`Loyal` 公事公辦、`Gentle` 勸其自首）。
+- 不寫 OCC；治安職位判定只讀官職快照與 QST 狀態；友誼只有破案 +1 一項；獎勵走 RWD 的 `reward.grant` 端點（伺服器權威、冪等、帶 `sourceType: "life.thiefCatch"`、`dedupeKey: 小偷ID`），重送不重複發獎。
+
+#### 6.9.7 資料驅動：`life-pickplace-ext.json`（新增，實作時一併補 `life-pickplace-roles.json`）
+
+```json
+{
+  "schema": "life-pickplace-ext.v1",
+  "common": { "perGeneralSeasonFdCapExt": 4, "perPairDailyOnce": true },
+  "rivalBrawl": {
+    "calm":    { "base": 0.30, "stubbornnessWeight": 0.5, "friendLevelWeight": 0.10, "min": 0.05, "max": 0.90, "fd": 1, "stubbornBlock": 90 },
+    "provoke": { "base": 0.30, "stubbornnessWeight": 0.004, "braveBonus": 0.20, "loyalPenalty": 0.20, "min": 0.05, "max": 0.90, "fd": -1 },
+    "provokeSeasonCap": 2, "idleSec": 6
+  },
+  "drinkContest": {
+    "minAge": 16, "beats": 5, "basePower": 40, "vitalityWeight": 0.3, "likesWineBonus": 15, "fatiguePenalty": 10,
+    "winMood": 3, "loseMood": -2, "fd": 2, "dailyPerGeneral": 2, "seasonFdCap": 4, "tipsyNextSlot": "home_general"
+  },
+  "pat": {
+    "maxChildAge": 4, "minAdultAge": 16,
+    "base": 0.50, "charmWeight": 0.004, "kinBonus": 0.20, "ownChildBonus": 0.10, "braveHostilePenalty": 0.30,
+    "closenessGain": 1, "kinMul": 2, "childSeasonCap": 6, "parentThanksFd": 1, "parentThanksSeasonCap": 1
+  },
+  "matchmaker": {
+    "eligibility": "FEM-03", "bonusBase": 0.05, "bonusFriend": 0.10, "bonusSharedLikes": 0.03, "bonusMax": 0.15,
+    "pairSeasonCap": 1, "allSeasonCap": 3, "entry": "marriage.flow.preselect"
+  },
+  "trainDrop": {
+    "scenes": ["mil_arena", "mil_barracks", "mil_range"], "slotOverride": 1, "expBase": 2, "expMaxRatioOfNormal": 0.10,
+    "instructorMul": 1.5, "injuredMul": 0.5, "fatigueMood": -2, "fd": 1, "minAgeForFd": 10, "dailyExp": 1, "seasonExpCap": 6, "seasonFdCap": 3
+  },
+  "tutorEnroll": {
+    "minAge": 5, "maxAge": 14, "base": 0.20, "charmWeight": 0.003, "talentBonus": 0.15, "kinBonus": 0.15, "friendBonus": 0.10,
+    "enrollSeasonBonus": 0.05, "lastSeatPenalty": 0.20, "min": 0.05, "max": 0.85,
+    "trialItem": "ITEM_TUTOR_TRIAL", "trialDiscount": 0.20, "childSeasonTries": 2, "teacherSeasonCap": 3, "dailyPickCap": 6, "fd": 1
+  },
+  "thiefCatch": {
+    "spawn": { "orderly": 0.0, "calm": 0.02, "unrest": 0.08, "riotous": 0.18, "perCityDailyMax": 3, "perSlotMax": 1, "lifeSlots": 1 },
+    "retryMax": 1,
+    "catch": { "base": 0.25, "statWeight": 0.004, "lowOrderBonus": 0.10, "hotSceneBonus": 0.05, "officeBonus": 0.05, "min": 0.10, "max": 0.85 },
+    "reward": { "bundle": "BUNDLE_LIFE_THIEF_CAUGHT", "pool": "POOL_LIFE_THIEF_LOOT", "order": 1, "orderSeasonCapPerCity": 3, "officeExp": 2, "fd": 1, "dailyCap": 2, "seasonCap": 6 }
+  },
+  "dialogue": {
+    "topics": ["pickplace_brawl", "pickplace_drink", "pickplace_pat", "pickplace_matchmaker", "pickplace_train", "pickplace_tutor", "pickplace_thief"],
+    "params": ["speakerGender", "listenerGender", "relationTags", "favorability", "mood", "scene", "season", "worldEvent"],
+    "fallbackLinesKeyPrefix": "life.pickplace.ext", "fallbackVariants": ["mm", "mf", "ff", "fm"], "fallbackLinesPerTopic": 6
+  }
+}
+```
+
+**`life-pickplace-roles.json`**（`peaceKeeper` 判定，不存人名）：
+
+```json
+{
+  "schema": "life-pickplace-roles.v1",
+  "peaceKeeper": {
+    "anyOf": [
+      { "office": "city_governor" },
+      { "childPost": "magistrate", "adultOnly": true },
+      { "questTag": "security", "state": "accepted" },
+      { "rankMin": 1, "skillTagsAny": ["guard", "patrol"] }
+    ],
+    "excludeOcc": ["campaign", "expedition", "academy", "medical", "retreat"]
+  }
+}
+```
+
+> 行為代號補進 `friendship-action-weights.json`（各帶 `label`）：`life_pickplace_calm`、`life_pickplace_provoke`、`life_pickplace_drink`、`life_pickplace_pat_thanks`、`life_pickplace_train`、`life_pickplace_enroll`、`life_pickplace_thief`。新增符號 `S_THIEF`、`S_REDTHREAD`（掛 5 章符號組；總數 50 → 52，符號預覽頁驗收數同步）。文字一律 i18n key。
+
+#### 6.9.8 延伸驗收
+
+1. **宿敵大吵**：宿敵放到一起出現閃電連線與【勸架】【煽風】；勸架成功友誼 +1，煽風成功只發單挑邀約（由 6.4 接手）；6 秒不選視為放任；煽風每季 ≤ 2 次；`stubbornness` ≥ 90 勸架必失敗。
+2. **拼酒**：兩人在酒館出現 5 拍拼酒；贏家心情 +3、雙方友誼 +2（同日同對只加 1 次）；輸家微醺下時段回家睡；未成年、`abstain` 者進不了拼酒。
+3. **摸頭**：成年武將放到 0～4 歲幼童身旁觸發；親人親近值 ×2；家長感謝每季 1 次；幼童本身不能被抓、5～14 歲孩子才可被抓。
+4. **媒人**：符合 FEM-03 條件才出現紅線與【去提親】；不符合不洩漏原因；點【去提親】進既有姻緣流程並預選該對，無任何新分支；`matchmakerBonus` 有上限 +0.15。
+5. **對練**：演武場／兵營放進兩人對練 1 時段，各得小量經驗與疲勞旗標（只影響生活層心情）；每武將每季練兵經驗 ≤ 6 次、友誼 ≤ +3。
+6. **私塾**：5～14 歲孩子放到已開班武將旁，依 `p_enroll` 成功後發「試聽邀請」，玩家點【報名】才扣學費（減免 20%）；沒開班、班級已滿、0～4 歲、15 歲以上都不觸發；每老師每季 ≤ 3 位。
+7. **小偷**：治安 ≥ 80 不出現小偷；`UNREST` 起依機率出現，每時段 ≤ 1 隻；小偷放到太守／縣令／治安巡查中／帶 `guard` tag 的校尉身上才判定破案；被占用者不算；成功發獎池與治安 +1，每日 ≤ 2 次、每季 ≤ 6 次；失敗小偷可再放一次。
+8. **共通**：六項台詞皆走台詞框架且帶性別參數，離線備援四種性別變體齊全；友誼變動全經 `FriendshipService.add`；延伸友誼合計每武將每季 ≤ +4；不寫 OCC；重新登入後結果一致。
+
 ## 7. 框架對應總表
 
 | 本書功能 | 商店 SHP | 庫存 ITM | 任務 QST | 獎勵 RWD | 技能 SKL | 劇情 STY | 占用 OCC | 友誼 FRD |
@@ -742,6 +1137,10 @@ COL 收藏／圖鑑（第 9 套框架，已成立）：舉止簿、神秘圖鑑�
 | `life-gift-events.json` | 送禮事件表 |
 | `life-friendship-actions.json` | 生活層友誼行為（第 6.7） |
 | `life-injury.json` | 輕傷／重傷休養季數、屬性係數（−10%／−20%）、升級重傷條件、療傷價格（第 6.4.1）|
+| `life-pickplace-scene-reactions.json` | 抓起放下：建築反應表（喜歡／普通／討厭、個性變體、場景覆寫；第 6.8.7）|
+| `life-pickplace-meet.json` | 抓起放下：相遇類型觸發條件、友誼心情數值、台詞參數與離線備援罐頭句（第 6.8.7）|
+| `life-pickplace-ext.json` | 抓起放下延伸：宿敵大吵、拼酒、摸頭、媒人、對練、放進私塾、抓小偷的機率公式權重、每日／每季上限、獎勵綁定、台詞 topic 與備援（第 6.9.7）|
+| `life-pickplace-roles.json` | 抓起放下延伸：治安武將 `peaceKeeper` 判定規則（官職、縣令、治安巡查任務、帶 guard 標籤的校尉；第 6.9.7）|
 
 ## 9. 驗收
 
@@ -755,9 +1154,12 @@ COL 收藏／圖鑑（第 9 套框架，已成立）：舉止簿、神秘圖鑑�
 8. 第 7 次互動起要扣銀兩，價格依序 5、7、9…最高 15；換季後恢復 6 次免費。
 9. 單挑輸方進輕傷（1 季、屬性 −10%），連輸進重傷（−20%，不與輕傷或 0720 WOUNDED 疊加）；傷者仍可出征；主角代理頭落敗不寫傷勢；只有宿敵死鬥輸方會被擒，全程沒有任何武將陣亡；傷勢經伺服器 API 寫入。（已與戰場專家對齊（11/28 審查））
 10. 搶物品：好友笑笑搶回、普通歸還、關係差生氣各走一次，追逐小劇場至少出現一次。
+11. 抓起放下：依 6.8.8 八項驗收。
+12. 抓起放下延伸玩法：依 6.9.8 八項驗收（宿敵大吵、拼酒、摸頭與媒人、對練、放進私塾、抓小偷、共通）。
 
 ## 10. 待辦
 
 - 實作卡：生活資料與場景挑選器、符號系統、互動（搭話／送禮／邀約／單挑／搶物品）各一卡（總 PM 開）。
 - 工具：批次初始化 `life-profile.json`（依性格、專長、史實愛好）。
 - 各場景互動事件文案：由企劃分批補，先做市井大街一版 13 個。
+- 抓起放下（6.8）實作卡：拖曳層與熱區、建築反應表、相遇聊天與台詞請求各一卡（總 PM 開）；延伸玩法（6.9）另開：宿敵大吵與拼酒、摸頭與媒人撮合（接姻緣流程）、對練與放進私塾（接私塾規格）、小偷 NPC 與治安判定與破案獎勵各一卡；`life_pickplace_*` 行為代號補進 `friendship-action-weights.json`。

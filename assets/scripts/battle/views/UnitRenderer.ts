@@ -4,7 +4,9 @@ import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { perfBegin, perfEnd, perfFrame } from "./BattlePerfProbe";
 import { BadgeBatchLayers } from "./BadgeBatchLayers";
 import { setCacheModeDeferred } from "../../ui/core/LabelLayoutDeferral";
-import { BADGE_ATLAS_SCALE, TroopTypeBadge, loadBadgeAtlasFrames } from "../../ui/shared/TroopTypeBadge";
+import { TroopTypeBadge } from "../../ui/shared/TroopTypeBadge";
+import { UnitHpBarSprites } from "./UnitHpBarSprites";
+import { UNIT_HP_BAR_H, UNIT_HUD_FONT, UNIT_HUD_ICON_D, UNIT_HUD_ICON_X, UNIT_HUD_NUM_W, UNIT_HUD_NUM_X, UNIT_HUD_ROW_H, UNIT_HUD_W, hudScaleFor } from "../shared/UnitHudLayout";
 import { troopTypeGlyph } from "../../shared/TallyCardContract";
 import { awaitWithTimeout } from "../../core/utils/AwaitGuard";
 import {
@@ -26,7 +28,6 @@ import {
   Node,
   Prefab,
   Sprite,
-  SpriteFrame,
   SkinnedMeshRenderer,
   Texture2D,
   primitives,
@@ -42,7 +43,6 @@ import {
   Vec3,
   VerticalTextAlignment,
   resources,
-  Rect,
   JsonAsset,
 } from "cc";
 import { BattleTactic, EVENT_NAMES, Faction, GAME_CONFIG, TroopType } from "../../core/config/Constants";
@@ -61,12 +61,13 @@ import { DEPLOY_LANDING_PUFFS, RiderDeployDrop, deployLandingDust, deployLanding
 import { playBattleAudio, playBattleFootstep } from "../shared/BattleAudio";
 import { MoveDustEmitter } from "./MoveDustEmitter";
 import { TacticVfxPlayer } from "./TacticVfxPlayer";
+import { STATUS_PERSIST_VFX, pickPersistKind, selectLoopUnits, type LoopCandidate } from "../shared/StatusPersistVfx";
 import type { TacticVfxGroup } from "../shared/TacticVfxGroups";
 import { SpineUnitOverlay } from "./SpineGeneralOverlay";
 import { GeneralPortraitStandee, STANDEE_HEIGHT_PX, needsStandeeFallback, shouldLoadHeroModel } from "./GeneralPortraitStandee";
 import { generalSpineConfig, resolveRidingTier, setMountedList, squadMemberCount, TroopSpineConfigCache, troopSpineConfig } from '../shared/UnitPresentationConfig';
 import { DuelExchange } from '../shared/DuelPresentationCore';
-import { applyJuicePrefs, attackEaseFor, battleHitStopGate, battleUltimateWindow, flashCurveFor, getBattleJuice, hitStopSecFor, juiceNowSec, knockbackMul, moveEaseFor, parseBattleJuice, resolveHitKind, setBattleJuice, shakeTierFor, type HitKind } from "../shared/BattleJuice";
+import { applyJuicePrefs, attackEaseFor, battleHitStopGate, battleUltimateWindow, flashCurveFor, getBattleJuice, floatOffset, hitStopSecFor, juiceNowSec, knockbackMul, moveEaseFor, parseBattleJuice, resolveHitKind, setBattleJuice, shakeTierFor, type HitKind } from "../shared/BattleJuice";
 import { BattleJuiceFx } from "./BattleJuiceFx";
 import { loadJuicePrefs } from "../../core/systems/BattleSettingsView";
 import { BATTLE_VISUAL_TIMING, buildHitShakeSteps, hitScaleNeighborDepth, planHitFeedback, planMoveSegment } from "./BattlePresentationTiming";
@@ -126,7 +127,7 @@ interface UnitView {
   labelOpacity: UIOpacity;
   bottomNameLabel: Label | null;
   /** 頭頂血條（主戰場UI規格書 §3.1，PROG-2-1874） */
-  hpBar: Graphics;
+  hpBar: UnitHpBarSprites;
   /** 上一次畫的血條狀態與掉血殘影（PROG-2-9412）；殘影由每幀 update 推進。 */
   hpState?: UnitHpBarState;
   hpChip?: HpChipState | null;
@@ -134,6 +135,10 @@ interface UnitView {
   statusBar: UnitStatusIconBar;
   /** 上一次盤點的狀態種類；null 代表還沒畫過（出陣時不彈出） */
   statusKinds: StatusIconKind[] | null;
+  /** 主減益（有持續表現表者，PROG-2-10253）；null＝沒有。用來決定身上循環特效與顏色濾鏡 */
+  persistKind: StatusIconKind | null;
+  /** 已畫到 Spine 骨架上的濾鏡所對應的主減益；與 persistKind 不同時，下一幀 sync 後補畫（骨架可能還沒載好） */
+  persistPainted?: StatusIconKind | null;
   /** 外部（如踩到地形 buff 格）要求下一次刷新時補播彈出＋光環：'buff' | 'debuff' */
   pendingStatusPulse: 'buff' | 'debuff' | null;
   /** 攻擊 ≥ 紅色門檻時，攻擊數字後方的脈動光環（PROG-2-9422）；第一次需要時才建立，之後重用 */
@@ -179,6 +184,10 @@ interface BadgeView {
   hpLabel: Label;
   opacity: UIOpacity;
   bottomNameLabel: Label | null;  // 下排兵種名稱（將軍無用）
+  /** 底框圖層代理節點（合批用；血條精靈掛這裡）。無合批圖層時就是名牌節點本身。 */
+  bgParent: Node;
+  /** 字圖層代理節點（合批用）；沒合批時是名牌節點本身。 */
+  textParent: Node;
 }
 
 /** PROG-2-9715：主將出陣從待命點衝到出陣格的秒數（約一格半距離，比小兵前進稍快，表現「衝出去」） */
@@ -188,23 +197,12 @@ const GENERAL_DASH_WAIT_SEC = 3;
 /** 單挑場邊位置離最外側那路的距離（以路寬計，PROG-2-9719）。 */
 const DUEL_SIDELINE_LANES = 1.1;
 
-/** 頭頂血條尺寸（名牌座標，名牌本身縮 0.7；PROG-2-1874） */
-const HP_BAR_WIDTH = 150;
-/** 頭頂狀態小圖示列：排在血條正上方，從名牌底板（寬 180）左緣開始，3 格不超出名牌寬度、不擠到隔壁路 */
-const STATUS_ICON_START_X = -90;
-/** 圖示列中心 y：名牌半高 39 + 血條（間距 4、高 8）+ 間距 4 + 圖示半高（PROG-2-9436：48/2） */
-const STATUS_ICON_Y = 39 + 4 + 8 + 4 + STATUS_ICON_SIZE / 2;
-const HP_BAR_HEIGHT = 8;
-/** 掉血殘影色：暖白偏金，在藍、紅血條上都看得清楚（PROG-2-9412）。 */
-const HP_BAR_CHIP_COLOR = new Color(255, 232, 190, 235);
-const HP_BAR_BACK_COLOR = new Color(22, 15, 9, 220);
-/** 血條上一次畫的內容（血量寬、殘影寬、色調；PROG-2-10239），沒變就不重畫。 */
-const hpBarDrawn = new WeakMap<Graphics, { w: number; c: number; tone: string }>();
-const HP_BAR_COLOR = {
-  player: new Color(70, 150, 255, 255),
-  enemy: new Color(230, 70, 60, 255),
-} as const;
-
+/** 部隊頭頂 HUD 的版面常數與畫面比例（純資料，見 shared/UnitHudLayout；PROG-2-10266） */
+const UNIT_STATUS_ICON_Y = UNIT_HUD_ROW_H / 2 + 4 + STATUS_ICON_SIZE / 2;
+const UNIT_STATUS_ICON_X = -UNIT_HUD_W / 2;
+/** 描邊色：我軍深藍、敵軍深紅；圓章染色同向 */
+const UNIT_HUD_OUTLINE = { player: new Color(6, 20, 64, 255), enemy: new Color(80, 8, 8, 255) } as const;
+const UNIT_HUD_DISC_TINT = { player: new Color(150, 195, 255, 255), enemy: new Color(255, 150, 140, 255) } as const;
 /**
  * 頭頂名牌徽章風格（PROG-2-9705，對齊格子 buff 徽章）：深色底＋金圈、兵種放金圈圓章、字一律黑描邊。
  * 顏色取自 TileBuffMarkers 的金圈與描邊色，兩邊看起來是同一套 UI。
@@ -218,6 +216,8 @@ const BADGE_TYPE_DISC_FILL = new Color(42, 28, 16, 255);
 
 /** 名牌旁精力能量環半徑（PROG-2-1853） */
 const VITALITY_RING_RADIUS = 24;
+/** 命中點／特效瞄準的身體中心高度（畫面像素）：單位站位點在腳底，特效要打在身體上。 */
+const HIT_BODY_Y = 26;
 /** 武將名牌徽章尺寸（createGeneralView 的 buildBadge 參數；避讓計算共用） */
 const GENERAL_PLATE_WIDTH = 186;
 const GENERAL_PLATE_HEIGHT = 40;
@@ -258,6 +258,8 @@ export class UnitRenderer extends Component {
 
   @property({ tooltip: "頭頂資訊距離單位的高度" })
   public labelHeight = 0.55;
+  /** 部隊頭頂 HUD 的投影高度：數字列貼近頭頂（PROG-2-10266，約 8px 內） */
+  public unitLabelHeight = 0.42;
 
   @property({ tooltip: "主將 cube 相對小兵尺寸倍率" })
   public generalScaleMultiplier = 1.5;
@@ -299,7 +301,6 @@ export class UnitRenderer extends Component {
   private readonly troopConfigCache = new TroopSpineConfigCache();
   private readonly badgeSolver = new BadgeAvoidSolver();
   /** 部隊框節點集合（弱參照），供 topUnitLabelIndex 由尾端找最上層部隊框 */
-  private readonly unitLabelNodes = new WeakSet<Node>();
   private readonly badgeEntryPool: StackBadgeEntry[] = [];
   private readonly hasSpineFailed = (path: string): boolean => this.spineUnits.hasFailed(path);
   /** 部隊框避讓武將本體（PROG-2-10118）：本體矩形暫存、各框目前的透明度比例（1 = 不透明，不在表內） */
@@ -326,6 +327,7 @@ export class UnitRenderer extends Component {
   private readonly slashShots = new SlashShotView(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   /** 攻擊特效試作（零貼圖單一 Graphics，JSON 驅動；?atkVfx=old 可退回舊特效） */
   /** PROG-2-10243：命中衝擊環／輝光、刀光拖尾、殘影（單一加色節點，開關在 battle-juice.json） */
+  private readonly vfxTarget = { x: 0, y: 0 };
   private readonly juiceFx = new BattleJuiceFx(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   private readonly attackVfx = new AttackVfxPlayer(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   /** 戰法分組特效（PROG-2-10138）：火／水／風／回復／加速／鼓舞／控制，單一加色 Graphics、預算見 TacticVfxGroups */
@@ -441,6 +443,7 @@ export class UnitRenderer extends Component {
         view.labelNode.destroy();
         this.spineUnits.remove(unitId);
         this.generalStandees.remove(unitId);
+        if (view.persistKind) { this.tacticVfx.loopRelease(unitId, true); this.persistDirty = true; } // 陣亡：循環立即回收（PROG-2-10253）
         this.unitViews.delete(unitId);
         this.carriedUnits.delete(unitId);
         this.splashTimers.delete(unitId);
@@ -901,9 +904,10 @@ export class UnitRenderer extends Component {
     try {
       const p = this.overlayPoint(defenderNode.worldPosition);
       if (!p) return;
-      const y = p.y + 26;
+      const y = p.y + HIT_BODY_Y;
       this.juiceFx.playGlow(p.x, y, kind);
       this.juiceFx.playRing(p.x, y, kind);
+      this.juiceFx.playSparks(p.x, y, kind);
     } catch (error) { console.warn('[UnitRenderer] 命中衝擊特效略過', error); }
   }
 
@@ -1143,7 +1147,8 @@ export class UnitRenderer extends Component {
       const sign = kind === "heal" ? "+" : "-";
       // 主戰場UI規格書 §3.2：暴擊用橘金放大字（PROG-2-1875）
       const dmgType: FloatTextType = unitValueFloatType(kind, unit.faction === Faction.Player, isCrit, heavy, damageSource);
-      this.spawnFloatText(`${sign}${value}`, dmgType, worldPos!, unit.id);
+      const fo = floatOffset(isCrit ? 'crit' : heavy ? 'heavy' : 'normal'); // 跳字偏頭頂右上，不蓋住被擊單位身體
+      this.spawnFloatText(`${sign}${value}`, dmgType, worldPos!, unit.id, fo);
 
       const currentView = this.unitViews.get(unit.id);
       if (currentView) {
@@ -1318,7 +1323,7 @@ export class UnitRenderer extends Component {
       if (unit) {
         this.updateFloodRaft(view, unit);
       }
-      this.projectWorldLabel(view.worldNode, view.labelNode, this.labelHeight);
+      this.projectWorldLabel(view.worldNode, view.labelNode, this.unitLabelHeight);
       if (unit) {
         const isGeneral = this.isGeneralAvatarUnit(unit);
         const general = isGeneral ? this.latestState?.getGeneral(unit.faction) : null;
@@ -1343,6 +1348,10 @@ export class UnitRenderer extends Component {
             unit.faction === Faction.Enemy ? -1 : 1, moving && !drifting, dt, view.labelNode.active,
             isGeneral ? 1 : squadMemberCount(unit.currentHp, unit.getEffectiveMaxHp()));
           view.visualNode.active = !shown;
+          if (shown && view.persistPainted !== view.persistKind) {
+            this.spineUnits.setTint(unitId, view.persistKind ? (STATUS_PERSIST_VFX[view.persistKind]?.tint ?? null) : null);
+            view.persistPainted = view.persistKind;
+          }
         } else { this.spineUnits.remove(unitId); view.visualNode.active = true; }
       }
     });
@@ -1380,6 +1389,7 @@ export class UnitRenderer extends Component {
     this.slashShots.update(dt);
     this.attackVfx.update(dt);
     this.juiceFx.update(dt);
+    this.updatePersistLoops();
     this.tacticVfx.update(dt);
     perfEnd('fxShots', t); t = perfBegin();
 
@@ -1390,6 +1400,55 @@ export class UnitRenderer extends Component {
     this.badgeLayers?.sync();
     perfEnd('badgeSync', t);
     perfEnd('lateUpdate', tAll);
+  }
+
+  /** 減益持續循環（PROG-2-10253）：本輪被選中播循環的單位 id；只在主減益變動時重算 */
+  private readonly persistSelected: string[] = [];
+  private persistDirty = false;
+  private persistScale = 1;
+  private persistScaleFrame = 0;
+
+  /**
+   * 每幀把「被選中的減益單位」腳點登記給 TacticVfxPlayer 畫循環（名額 ≤ MAX_LOOP_UNITS，selectLoopUnits 取捨）。
+   * 取名額只在主減益變動時重算；每幀只做 ≤ 6 次投影，不配置新物件（投影緩衝重用）。
+   */
+  private updatePersistLoops(): void {
+    const state = this.latestState;
+    if (this.persistDirty && state) {
+      this.persistDirty = false;
+      const cands: LoopCandidate[] = [];
+      this.unitViews.forEach((view, unitId) => {
+        if (!view.persistKind || !view.labelNode.active) return;
+        const unit = state.units.get(unitId);
+        if (!unit || unit.isDead()) return;
+        const generalOf = this.isGeneralAvatarUnit(unit) ? (unit.faction === Faction.Player ? 'player' : 'enemy') : null;
+        cands.push({ id: unitId, kind: view.persistKind, generalOf, centerDist: Math.abs(unit.lane - (GAME_CONFIG.GRID_LANES - 1) / 2) + Math.abs(unit.depth - (GAME_CONFIG.GRID_DEPTH - 1) / 2) });
+      });
+      const picked = selectLoopUnits(cands);
+      this.persistSelected.length = 0;
+      for (const id of picked) this.persistSelected.push(id);
+    }
+    this.tacticVfx.loopBegin();
+    if (this.persistSelected.length > 0 && state) {
+      if (this.persistScaleFrame-- <= 0) {
+        this.persistScaleFrame = 20;
+        const first = this.unitViews.get(this.persistSelected[0]);
+        const unit = state.units.get(this.persistSelected[0]);
+        const w = unit ? this.getUnitWorldPosition(unit.lane, unit.depth) : null;
+        const p = w ? this.tacticFxPoint(w) : null;
+        if (p && first) this.persistScale = p.scale;
+      }
+      for (const id of this.persistSelected) {
+        const view = this.unitViews.get(id);
+        const unit = state.units.get(id);
+        if (!view?.persistKind || !unit || unit.isDead() || !view.labelNode.active) continue;
+        const world = view.worldNode.getWorldPosition(this.labelWorldPosBuf);
+        world.y -= this.unitHeight * 0.5;
+        const p = this.overlayPoint(world);
+        if (p) this.tacticVfx.loopOffer(id, view.persistKind, p.x, p.y, unit.faction === Faction.Player ? 1 : -1, this.persistScale);
+      }
+    }
+    this.tacticVfx.loopEnd();
   }
 
   /** 數值帶增減量時字串變長，單行縮字塞進徽章（PROG-2-1870） */
@@ -1408,7 +1467,7 @@ export class UnitRenderer extends Component {
     }
     // 衝擊環／輝光／刀光／殘影任一項開著才預熱加色節點，全關就完全不建
     const j = getBattleJuice();
-    if (j.impactRing.enabled || j.glow.enabled || j.bladeTrail.enabled || j.afterimage.enabled) this.juiceFx.prewarm();
+    if (j.impactRing.enabled || j.glow.enabled || j.sparks.enabled || j.bladeTrail.enabled || j.afterimage.enabled) this.juiceFx.prewarm();
   }
 
   /** 讀高倍率攻擊提示門檻；讀不到就沿用預設（不影響戰鬥） */
@@ -1738,9 +1797,11 @@ export class UnitRenderer extends Component {
     try {
       const vfx = attackVfxFor(troopType);
       const from = attackerNode.worldPosition;
-      const a = this.overlayPoint(from); const ax = a?.x ?? 0; const ay = a?.y ?? 0;
+      // 特效瞄準身體中心而不是腳底（overlayPoint 是單位站位點），否則刀光會落在單位下方的空地
+      const a = this.overlayPoint(from); const ax = a?.x ?? 0; const ay = (a?.y ?? 0) + HIT_BODY_Y;
       const target = this.overlayPoint(targetPos);
-      if (a && target && this.tryAttackVfx(troopType, general, ax, ay, target.x, target.y, ratio, vfx.kind === 'arrow')) return;
+      if (a && target) { this.vfxTarget.x = target.x; this.vfxTarget.y = target.y + HIT_BODY_Y; }
+      if (a && target && this.tryAttackVfx(troopType, general, ax, ay, this.vfxTarget.x, this.vfxTarget.y, ratio, vfx.kind === 'arrow')) return;
       if (vfx.kind === 'arrow') {
         if (a && target) {
           this.arrowShots.shoot(ax, ay, target.x, target.y);
@@ -1761,7 +1822,9 @@ export class UnitRenderer extends Component {
     if (!node) return;
     try {
       const p = this.overlayPoint(node.worldPosition);
-      if (p) this.attackVfx.playCrit(p.x, p.y);
+      // 新的三層爆點（中心白熱＋外環＋火花）已涵蓋暴擊命中；舊的星芒只在爆點關閉時退回使用
+      const j = getBattleJuice();
+      if (p && !(j.impactRing.enabled || j.sparks.enabled || j.glow.enabled)) this.attackVfx.playCrit(p.x, p.y);
     } catch (error) { console.warn('[UnitRenderer] 暴擊特效略過', error); }
   }
 
@@ -1855,7 +1918,7 @@ export class UnitRenderer extends Component {
     const labelNode = new Node(`GeneralLabel_${faction}`);
     labelNode.layer = this.canvasNode?.layer ?? Layers.Enum.UI_2D;
     this.uiRoot?.addChild(labelNode);
-    const badge = this.buildBadge(labelNode, GENERAL_PLATE_WIDTH, GENERAL_PLATE_HEIGHT, null, null, true);
+    const badge = this.buildBadge(labelNode, GENERAL_PLATE_WIDTH, GENERAL_PLATE_HEIGHT);
     // 武將 HUD 標籤陣營色：玩家藍、敵軍紅
     badge.typeLabel.color = faction === Faction.Enemy
       ? new Color(255, 130, 130, 255)
@@ -1902,10 +1965,8 @@ export class UnitRenderer extends Component {
 
   /** uiRoot 底下最上層的部隊框兄弟索引；沒有回 -1（PROG-2-10155：由尾端往前找，不再逐框 getSiblingIndex）。 */
   private topUnitLabelIndex(): number {
-    const children = this.uiRoot?.children;
-    if (!children) return -1;
-    for (let i = children.length - 1; i >= 0; i -= 1) if (this.unitLabelNodes.has(children[i])) return i;
-    return -1;
+    const hud = this.hudRoot;
+    return hud && hud.isValid && hud.parent === this.uiRoot && hud.children.length > 0 ? hud.getSiblingIndex() : -1;
   }
 
   /**
@@ -2034,7 +2095,7 @@ export class UnitRenderer extends Component {
     const halfH = tf.contentSize.height / 2;
     let ext: LocalExtent = { left: -halfW, right: halfW, top: halfH, bottom: -halfH };
     const bar = view.hpBar?.node;
-    if (bar?.active) ext = { ...ext, top: Math.max(ext.top, bar.position.y + HP_BAR_HEIGHT / 2) };
+    if (bar?.active) ext = { ...ext, top: Math.max(ext.top, bar.position.y + UNIT_HP_BAR_H / 2) };
     return unionExtent(ext, view.statusBar?.localExtent() ?? null);
   }
 
@@ -2042,12 +2103,9 @@ export class UnitRenderer extends Component {
   private markBadgeHit(unitId: string): void {
     this.lastHitAt.set(unitId, this.badgeClock);
     const label = this.unitViews.get(unitId)?.labelNode;
-    if (!label?.isValid || label.parent !== this.uiRoot) return;
-    let topUnitIndex = -1;
-    this.unitViews.forEach((view) => {
-      if (view.labelNode.parent === this.uiRoot) topUnitIndex = Math.max(topUnitIndex, view.labelNode.getSiblingIndex());
-    });
-    if (label.getSiblingIndex() < topUnitIndex) label.setSiblingIndex(topUnitIndex);
+    if (!label?.isValid || !this.hudRoot || label.parent !== this.hudRoot) return;
+    const last = this.hudRoot.children.length - 1;
+    if (label.getSiblingIndex() < last) label.setSiblingIndex(last);
     this.badgeLayers?.bringToFront(label);
   }
 
@@ -2170,10 +2228,10 @@ export class UnitRenderer extends Component {
     const badgeLayers = this.ensureBadgeLayers();
     const labelNode = new Node(`UnitLabel_${unit.id}`);
     labelNode.layer = this.canvasNode?.layer ?? Layers.Enum.UI_2D;
-    this.uiRoot?.addChild(labelNode);
-    this.unitLabelNodes.add(labelNode);
-    const badge = this.buildBadge(labelNode, 170, 34, unit.type, badgeLayers);
-    const hpBar = this.buildHpBar(labelNode, 34 + 5);
+    this.ensureHudRoot()?.addChild(labelNode);
+    const hudScale = hudScaleFor(this.uiRoot?.getComponent(UITransform)?.width ?? 0, this.uiRoot?.getComponent(UITransform)?.height ?? 0);
+    const badge = this.buildUnitHud(labelNode, unit.type, unit.faction, badgeLayers, hudScale);
+    const hpBar = new UnitHpBarSprites(labelNode, badge.bgParent);
 
     // 敵軍單位：HUD 上方標籤顯示紅色，不需修改 badge.hpLabel（已是豉紅）
     if (unit.faction === Faction.Enemy) {
@@ -2198,8 +2256,9 @@ export class UnitRenderer extends Component {
       labelOpacity: badge.opacity,
       bottomNameLabel: badge.bottomNameLabel,
       hpBar,
-      statusBar: new UnitStatusIconBar(labelNode, STATUS_ICON_START_X, STATUS_ICON_Y),
+      statusBar: new UnitStatusIconBar(labelNode, UNIT_STATUS_ICON_X, UNIT_STATUS_ICON_Y, badgeLayers ? { bg: badge.bgParent, text: badge.textParent } : null),
       statusKinds: null,
+      persistKind: null,
       pendingStatusPulse: null,
       troopType: unit.type,
       usingTroopFormation: false,
@@ -2258,7 +2317,7 @@ export class UnitRenderer extends Component {
     const hpState = unitHpBarState(shownHp, unit.getEffectiveMaxHp(), unit.faction === Faction.Player);
     if (view.hpState) view.hpChip = hpChipOnChange(view.hpChip ?? null, view.hpState.ratio, hpState.ratio);
     view.hpState = hpState;
-    this.drawHpBar(view.hpBar, hpState, view.hpChip?.lag);
+    view.hpBar.draw(hpState, view.hpChip?.lag);
     this.refreshStatusIcons(view, unit);
 
     // 更新下排兵種名稱（小兵顯示完整對應名稱，將軍化身只顯示武將名；「將」徽章已另外標示，不加開發用括號字）
@@ -2274,7 +2333,7 @@ export class UnitRenderer extends Component {
     // worldNode 統一控制所有單位面向（cube placeholder 與 formation 模式皆相同）
     // formationRoot 不再負責旋轉，各 soldier 以 0° local rotation 繼承 worldNode 方向
     this.alignNodeToFactionFacing(view.worldNode, unit.faction);
-    this.projectWorldLabel(view.worldNode, view.labelNode, this.labelHeight);
+    this.projectWorldLabel(view.worldNode, view.labelNode, this.unitLabelHeight);
   }
 
   // ── PROG-2-9731 戰場 UI 演出（名牌戰鬥淡出、毒上身、治療光）──────────────
@@ -2364,7 +2423,15 @@ export class UnitRenderer extends Component {
     const list = computeUnitStatusIcons(unit, ctx);
     const { changed } = view.statusBar.apply(list);
     const gained = changed ? newlyGainedKinds(view.statusKinds, list.allKinds) : [];
-    if (changed) view.statusKinds = list.allKinds;
+    if (changed) {
+      view.statusKinds = list.allKinds;
+      // PROG-2-10253：減益持續視覺——主減益換了才重算名額與顏色濾鏡（簽名不變不重畫）
+      const persist = pickPersistKind(list.allKinds);
+      if (persist !== view.persistKind) {
+        view.persistKind = persist;
+        this.persistDirty = true;
+      }
+    }
     const pending = view.pendingStatusPulse;
     view.pendingStatusPulse = null;
     if (gained.length === 0 && !pending) return;
@@ -2413,7 +2480,7 @@ export class UnitRenderer extends Component {
       if (!isValid(label)) return null;
       const k = label.scale.x || 1;
       const p = label.position;
-      return this.tileBuffFlyTo.set(p.x + (STATUS_ICON_START_X + STATUS_ICON_SIZE / 2) * k, p.y + STATUS_ICON_Y * k, 0);
+      return this.tileBuffFlyTo.set(p.x + (UNIT_STATUS_ICON_X + STATUS_ICON_SIZE / 2) * k, p.y + UNIT_STATUS_ICON_Y * k, 0);
     };
     this.tileBuffMarkers.flyPickup(from, badge, target, () => {
       if (!isValid(view.labelNode)) return;
@@ -2422,15 +2489,60 @@ export class UnitRenderer extends Component {
     });
   }
 
-  /** 頭頂血條節點：放在名牌上緣之上（主戰場UI規格書 §3.1，PROG-2-1874） */
-  private buildHpBar(labelNode: Node, badgeHalfHeight: number): Graphics {
-    const barNode = new Node("HpBar");
-    barNode.layer = labelNode.layer;
-    labelNode.addChild(barNode);
-    barNode.addComponent(UITransform).setContentSize(HP_BAR_WIDTH, HP_BAR_HEIGHT);
-    barNode.setPosition(0, badgeHalfHeight + 4 + HP_BAR_HEIGHT / 2, 0);
-    barNode.active = false;
-    return barNode.addComponent(Graphics);
+  /**
+   * 部隊頭頂 HUD（PROG-2-10266）：[兵種圓章] 兵數 單行，無底板。沿用 BadgeBatchLayers 三層（圓章底／剪影／字），
+   * 兵種剪影與圓章同在 battle_badge_atlas，數字走 BITMAP 點陣快取。攻擊值與兵種名稱不顯示
+   * （節點放在停用的 Unused 下，updateUnitView 照常寫字不報錯），兵種名稱改由點選資訊面板顯示。
+   */
+  private buildUnitHud(rootNode: Node, troopType: TroopType, faction: Faction, layers: BadgeBatchLayers | null, scale: number): BadgeView {
+    const side = faction === Faction.Enemy ? "enemy" : "player";
+    rootNode.addComponent(UITransform).setContentSize(UNIT_HUD_W, UNIT_HUD_ROW_H);
+    const opacity = rootNode.addComponent(UIOpacity);
+    opacity.opacity = 255;
+    rootNode.setScale(scale, scale, 1);
+    const bgParent = layers ? layers.proxyFor(rootNode, "bg") : rootNode;
+    const textParent = layers ? layers.proxyFor(rootNode, "text") : rootNode;
+    const iconParent = layers ? layers.proxyFor(rootNode, "icon") : rootNode;
+    const clear = new Color(0, 0, 0, 0);
+    const white = new Color(245, 245, 245, 255);
+
+    const hpLabel = this.createBadgeSegment(textParent, "HpBadge", UNIT_HUD_NUM_X, UNIT_HUD_NUM_W, UNIT_HUD_FONT + 6, clear, white, UNIT_HUD_FONT);
+    hpLabel.node.parent!.setPosition(UNIT_HUD_NUM_X, 0, 0);
+    hpLabel.outlineColor = UNIT_HUD_OUTLINE[side];
+    hpLabel.outlineWidth = 4;
+    this.shrinkToFit(hpLabel);
+
+    const typeLabel = this.createBadgeSegment(textParent, "TypeBadge", UNIT_HUD_ICON_X, UNIT_HUD_ICON_D, UNIT_HUD_ICON_D, clear, white, 20);
+    typeLabel.node.parent!.setPosition(UNIT_HUD_ICON_X, 0, 0);
+    this.shrinkToFit(typeLabel);
+    const iconNode = new Node("TypeIcon");
+    iconNode.layer = iconParent.layer;
+    iconParent.addChild(iconNode);
+    const iconSize = UNIT_HUD_ICON_D * 0.8;
+    iconNode.addComponent(UITransform).setContentSize(iconSize, iconSize);
+    iconNode.setPosition(UNIT_HUD_ICON_X, 0, 0);
+    const icon = iconNode.addComponent(Sprite);
+    icon.type = Sprite.Type.SIMPLE;
+    icon.sizeMode = Sprite.SizeMode.CUSTOM;
+    TroopTypeBadge.attach(icon, { size: UNIT_HUD_ICON_D, discParent: bgParent, glyph: typeLabel }).setType(troopType);
+    const disc = bgParent.getChildByName("TypeDisc")?.getComponent(Sprite);
+    if (disc) disc.color = UNIT_HUD_DISC_TINT[side];
+
+    // 點陣快取：打包進動態圖集，與其他徽章文字共用貼圖可合批；不用 CHAR（字元圖集是全專案共用的稀缺預算）
+    for (const l of [typeLabel, hpLabel]) setCacheModeDeferred(l, Label.CacheMode.BITMAP);
+
+    const unused = new Node("Unused");
+    unused.layer = rootNode.layer;
+    unused.active = false;
+    rootNode.addChild(unused);
+    const attackLabel = this.createBadgeSegment(unused, "AttackBadge", 0, 40, 20, clear, white, 16);
+    const nameNode = new Node("NameLabel");
+    nameNode.layer = rootNode.layer;
+    unused.addChild(nameNode);
+    nameNode.addComponent(UITransform).setContentSize(100, 20);
+    const nameLabel = nameNode.addComponent(Label);
+    nameLabel.string = "";
+    return { rootNode, attackLabel, typeLabel, hpLabel, opacity, bottomNameLabel: nameLabel, bgParent, textParent };
   }
 
   /** 推進各單位的掉血殘影並重畫（PROG-2-9412）；沒有殘影的單位不動。 */
@@ -2438,40 +2550,8 @@ export class UnitRenderer extends Component {
     for (const view of this.unitViews.values()) {
       if (!view.hpChip || !view.hpState) continue;
       view.hpChip = stepHpChip(view.hpChip, view.hpState.ratio, dt);
-      if (view.hpBar?.isValid) this.drawHpBar(view.hpBar, view.hpState, view.hpChip?.lag);
+      if (view.hpBar?.isValid) view.hpBar.draw(view.hpState, view.hpChip?.lag);
     }
-  }
-
-  /** 受傷才顯示；我方藍、敵方紅。chipRatio：掉血殘影右端（PROG-2-9412），畫在主血條後面的淺色段。 */
-  private drawHpBar(g: Graphics, state: UnitHpBarState, chipRatio?: number): void {
-    g.node.active = state.visible;
-    if (!state.visible) return;
-    // PROG-2-10239：血量、殘影（取 1/4 像素精度）與色調都沒變就不重畫；每次重畫都會配置圓角路徑與顏色
-    const chip = chipRatio !== undefined && chipRatio > state.ratio ? Math.min(1, chipRatio) : -1;
-    const wPx = Math.round(state.ratio * HP_BAR_WIDTH * 4);
-    const cPx = chip < 0 ? -1 : Math.round(chip * HP_BAR_WIDTH * 4);
-    const drawn = hpBarDrawn.get(g);
-    if (drawn && drawn.w === wPx && drawn.c === cPx && drawn.tone === state.tone) return;
-    if (drawn) { drawn.w = wPx; drawn.c = cPx; drawn.tone = state.tone; } else hpBarDrawn.set(g, { w: wPx, c: cPx, tone: state.tone });
-    const x = -HP_BAR_WIDTH / 2;
-    const y = -HP_BAR_HEIGHT / 2;
-    g.clear();
-    g.fillColor = HP_BAR_BACK_COLOR;
-    g.roundRect(x - 2, y - 2, HP_BAR_WIDTH + 4, HP_BAR_HEIGHT + 4, 3);
-    g.fill();
-    // 金色細框（PROG-2-9705），與名牌金圈同色
-    g.lineWidth = 1.5;
-    g.strokeColor = BADGE_RING;
-    g.roundRect(x - 2, y - 2, HP_BAR_WIDTH + 4, HP_BAR_HEIGHT + 4, 3);
-    g.stroke();
-    if (chipRatio !== undefined && chipRatio > state.ratio) {
-      g.fillColor = HP_BAR_CHIP_COLOR;
-      g.rect(x, y, HP_BAR_WIDTH * Math.min(1, chipRatio), HP_BAR_HEIGHT);
-      g.fill();
-    }
-    g.fillColor = HP_BAR_COLOR[state.tone];
-    g.rect(x, y, HP_BAR_WIDTH * state.ratio, HP_BAR_HEIGHT);
-    g.fill();
   }
 
   /** 名牌左側精力能量環（武將壽命系統 §UI，PROG-2-1853）：底環＋精力弧＋百分比 */
@@ -2525,36 +2605,40 @@ export class UnitRenderer extends Component {
     view.vitalityText.color = ring.band === "exhausted" ? new Color(170, 170, 170, 255) : new Color(r, gr, b, 255);
   }
 
+  /**
+   * 部隊頭頂 HUD 專用根節點（PROG-2-10266）：永遠排在 uiRoot 最底（索引 0），之後建立的特效、跳字、武將名牌都在它之上，
+   * 特效不會被 HUD 蓋住；與 uiRoot 同座標同尺寸。uiRoot 換了（重建戰場）就重建。
+   */
+  private hudRoot: Node | null = null;
+  private ensureHudRoot(): Node | null {
+    const ui = this.uiRoot;
+    if (!ui) return null;
+    if (!this.hudRoot || !this.hudRoot.isValid || this.hudRoot.parent !== ui) {
+      const n = new Node("UnitHudRoot");
+      n.layer = this.canvasNode?.layer ?? Layers.Enum.UI_2D;
+      const tf = n.addComponent(UITransform);
+      const uiTf = ui.getComponent(UITransform);
+      if (uiTf) tf.setContentSize(uiTf.contentSize);
+      ui.addChild(n);
+      n.setSiblingIndex(0);
+      this.hudRoot = n;
+    }
+    return this.hudRoot;
+  }
+
   /** 部隊徽章合批圖層（PROG-2-9713）：uiRoot 換了（重建戰場）就重建 */
   private ensureBadgeLayers(): BadgeBatchLayers | null {
     if (!this.uiRoot) return null;
-    if (!this.badgeLayers || !this.badgeLayers.isValid || this.badgeLayers.bg.parent !== this.uiRoot) {
-      this.badgeLayers = new BadgeBatchLayers(this.uiRoot, this.canvasNode?.layer ?? Layers.Enum.UI_2D);
+    const hud = this.ensureHudRoot();
+    if (!hud) return null;
+    if (!this.badgeLayers || !this.badgeLayers.isValid || this.badgeLayers.bg.parent !== hud) {
+      this.badgeLayers = new BadgeBatchLayers(hud, this.canvasNode?.layer ?? Layers.Enum.UI_2D);
     }
     return this.badgeLayers;
   }
 
-  /** 底框精靈（九宮格，2 倍解析度縮 0.5）；底圖載好才指定 SpriteFrame；圓章改由 TroopTypeBadge 繪製（PROG-2-9724） */
-  private addBadgeBgSprite(parent: Node, w: number, h: number): void {
-    const node = new Node("Bg");
-    node.layer = parent.layer;
-    parent.addChild(node);
-    node.setScale(BADGE_ATLAS_SCALE, BADGE_ATLAS_SCALE, 1);
-    node.addComponent(UITransform).setContentSize(w / BADGE_ATLAS_SCALE, h / BADGE_ATLAS_SCALE);
-    const sprite = node.addComponent(Sprite);
-    sprite.sizeMode = Sprite.SizeMode.CUSTOM;
-    sprite.type = Sprite.Type.SLICED;
-    void loadBadgeAtlasFrames().then((frames) => {
-      if (frames && sprite.isValid) sprite.spriteFrame = frames.bg;
-    });
-  }
-
-  /**
-   * layers 有給（部隊徽章）時走分層合批：底框／圓章是共用底圖精靈、文字是 BITMAP 點陣快取，各自掛到共用圖層的代理節點；
-   * rootNode 只保留位置、縮放、透明度與尺寸。沒給（武將名牌）時維持原本的 Graphics 版（PROG-2-9713）。
-   */
-  private buildBadge(rootNode: Node, width: number, height: number, troopType: TroopType | null = null,
-    layers: BadgeBatchLayers | null = null, singleRow = false): BadgeView {
+  /** 武將名牌（單排、Graphics 版）；部隊頭頂 HUD 改走 buildUnitHud（PROG-2-10266）。 */
+  private buildBadge(rootNode: Node, width: number, height: number): BadgeView {
     const rootTf = rootNode.addComponent(UITransform);
     rootTf.setContentSize(width, height * 2 + 10);
     const opacity = rootNode.addComponent(UIOpacity);
@@ -2563,16 +2647,12 @@ export class UnitRenderer extends Component {
     // 將 HUD 縮小 (原本尺寸偏大)
     rootNode.setScale(0.7, 0.7, 1);
 
-    const bgParent = layers ? layers.proxyFor(rootNode, "bg") : rootNode;
-    const textParent = layers ? layers.proxyFor(rootNode, "text") : rootNode;
+    const textParent = rootNode;
     const bw = width + 10;
     // 單排名牌（武將）：沒有下排名稱，底板只包上排，位置仍以原上排為準（PROG-2-10080）
-    const bh = singleRow ? height + 14 : height * 2 + 10;
-    const bgCenterY = singleRow ? height / 2 + 2 : 0;
-    if (layers) {
-      // 底框：與 Graphics 版同色同尺寸；外框描邊外擴 1.5，所以精靈比框大 3
-      this.addBadgeBgSprite(bgParent, bw + 3, bh + 3);
-    } else {
+    const bh = height + 14;
+    const bgCenterY = height / 2 + 2;
+    {
       // 背景底板：提升頭頂資訊可讀性
       const bgNode = new Node("Bg");
       bgNode.layer = rootNode.layer;
@@ -2631,30 +2711,8 @@ export class UnitRenderer extends Component {
       18,
     );
     typeLabel.node.parent!.setPosition(0, topRowY, 0);
-    // 兵種圓章：金圈深底圓（畫在兵種剪影／單字後面），由 TroopTypeBadge 統一繪製（PROG-2-9724）
     const discR = segmentHeight / 2 + 1;
-    if (troopType) {
-      // 底圖圓章直徑 40 ＝部隊徽章 discR 18 的 2 倍解析度換算
-      const discSize = (discR / 18) * 40;
-      const iconParent = layers ? layers.proxyFor(rootNode, "icon") : typeLabel.node.parent!;
-      const iconNode = new Node("TypeIcon");
-      iconNode.layer = iconParent.layer;
-      iconParent.addChild(iconNode);
-
-      const iconTf = iconNode.addComponent(UITransform);
-      const iconSize = Math.max(18, Math.min(segmentHeight - 6, centerWidth - 8));
-      iconTf.setContentSize(iconSize, iconSize);
-      iconNode.setPosition(0, layers ? topRowY : 0, 0);
-
-      const icon = iconNode.addComponent(Sprite);
-      icon.type = Sprite.Type.SIMPLE;
-      icon.sizeMode = Sprite.SizeMode.CUSTOM;
-      icon.color = new Color(255, 255, 255, 255);
-
-      // 剪影載入前先顯示單字；剪影到了才換圖（同一顆圓章）
-      const badge = TroopTypeBadge.attach(icon, { size: discSize, discParent: layers ? bgParent : undefined, glyph: typeLabel });
-      badge.setType(troopType);
-    } else {
+    {
       const discNode = new Node("TypeDisc");
       discNode.layer = rootNode.layer;
       const typeSeg = typeLabel.node.parent!;
@@ -2715,7 +2773,7 @@ export class UnitRenderer extends Component {
     // 以擴充屬性保存引用，供 updateUnitView 快速更新
     (rootNode as any)._bottomNameLabel = nameStrLabel;
 
-    return { rootNode, attackLabel, typeLabel, hpLabel, opacity, bottomNameLabel: nameStrLabel };
+    return { rootNode, attackLabel, typeLabel, hpLabel, opacity, bottomNameLabel: nameStrLabel, bgParent: rootNode, textParent: rootNode };
   }
 
   private findUnitById(unitId: string): TroopUnit | null {

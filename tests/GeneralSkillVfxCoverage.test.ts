@@ -42,9 +42,9 @@ export function createGeneralSkillVfxCoverageSuite(): TestSuite {
         assert.equals('', missing.join(','), `落到通用光效的招式：${missing.join(',')}`);
     });
 
-    suite.test('27 組配方：第二、三批有前搖＋命中動機、主色互不相同、時間與粒子在預算內', () => {
-        assert.equals(20, TACTIC_VFX_EXTRA_GROUPS.length);
-        assert.equals(27, TACTIC_VFX_ALL_GROUPS.length);
+    suite.test('28 組配方：第二、三批有前搖＋命中動機、主色互不相同、時間與粒子在預算內', () => {
+        assert.equals(21, TACTIC_VFX_EXTRA_GROUPS.length);
+        assert.equals(28, TACTIC_VFX_ALL_GROUPS.length);
         const seen = new Set<string>();
         for (const group of TACTIC_VFX_ALL_GROUPS) {
             const recipe = TACTIC_VFX_RECIPES[group];
@@ -54,7 +54,7 @@ export function createGeneralSkillVfxCoverageSuite(): TestSuite {
             assert.isTrue(tacticHitTotalSec(group) <= TACTIC_VFX_BUDGET.maxTotalSec + 1e-9, `${group} 命中＋餘韻超過上限`);
             seen.add(recipe.main.join(','));
         }
-        assert.equals(27, seen.size, '27 組主色必須互不相同');
+        assert.equals(28, seen.size, '28 組主色必須互不相同');
         for (const group of TACTIC_VFX_EXTRA_GROUPS) {
             const extra = extraTacticRecipeOf(group);
             assert.isTrue(!!extra && !!extra.windup && !!extra.hit, `${group} 缺前搖或命中動機`);
@@ -74,7 +74,7 @@ export function createGeneralSkillVfxCoverageSuite(): TestSuite {
             assert.equals(TACTIC_VFX_SKILL_GROUP[id], tacticVfxGroupOf(id), `${id} 沒有以表為準`);
             used.add(TACTIC_VFX_SKILL_GROUP[id]);
         }
-        assert.equals(20, used.size, '每個第二、三批分組至少要有一個招式使用');
+        assert.equals(21, used.size, '每個第二、三批分組至少要有一個招式使用');
         // 第三批改歸類後，第一批 7 組仍各自至少有一個招式（不能被搬空）
         const base = new Set<string>();
         for (const p of listBattleSkillProfiles()) {

@@ -17995,6 +17995,66 @@
   },
   {
     "id": "doc_task_3344",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10264.md",
+    "title": "[PROG-2-10264] 規格書：街上偶遇他國武將＋武將作息表",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3345",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10253.md",
+    "title": "[PROG-2-10253] 戰場技能補齊",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3346",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10258.md",
+    "title": "[PROG-2-10258] 市井大街 Q 頭生活雛形",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3347",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10266.md",
+    "title": "[PROG-2-10266] 戰場小兵頭頂 HUD 改單行 A 款＋兵種剪影圖示＋戰場 draw call 量測與圖集合批＋頓格開關",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3348",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10269.md",
+    "title": "[PROG-2-10269] 修 #2811 第 6、9 項",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3349",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10271.md",
+    "title": "PROG-2-10271：方案 C — 結緣選角畫面顯示關係標籤與加成",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3352",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10250.md",
+    "title": "[PROG-2-10250] 戰場 draw call 合批（目標 <60）與頓格設定開關",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3353",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10270.md",
+    "title": "[PROG-2-10270] 戰場 Spine 多頁圖集執行期合併",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3354",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10278.md",
+    "title": "[PROG-2-10278] 規格書：生活層抓起放下",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3355",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10274.md",
+    "title": "基本資訊",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3356",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10275.md",
     "title": "PROG-2-10275：方案 B — 歷年榮譽牆核心資料模型與設定",
     "category": "task"

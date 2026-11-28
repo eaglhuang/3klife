@@ -225,6 +225,8 @@ export const TROOP_DEPLOY_COST: Record<TroopType, number> = {
 export const SP_PER_KILL = 20;
 
 export const WEAK_ATTACK_MULTIPLIER = 0.7;
+/** 恐懼（PROG-2-10253）：被恐懼單位的攻擊傷害倍率；與虛弱同時存在時相乘 */
+export const FEAR_ATTACK_MULTIPLIER = 0.8;
 
 
 export const EVENT_NAMES = {

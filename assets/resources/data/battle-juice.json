@@ -1,5 +1,5 @@
 {
-  "_comment": "戰場打擊感參數（PROG-2-10239 第一批、PROG-2-10243 第二批）。純表現層，不改結算。每區 enabled=false 即回到舊版行為。第一批：hitStop 命中頓格秒數（scope=pair 只停攻守雙方、all 停全場，minGapSec 限流）；cameraShake 輕/中/重三級（heavy/crit/ultimate 指定各命中種類用哪一級，null=不震）；floatPop 跳字彈出倍率。第二批：flash 依命中種類覆寫閃白曲線（全白停幾格 holdFrames、退色 fadeSec、次方 fadePower）；knockback 擊退距離倍率（critMul／ultimateMul 為爆擊與奧義額外倍率）；ease 攻擊三段緩動（預備往後拉 windUp → 出手前衝 strike → 停頓 hold → 收招回位 recover，距離單位為畫面像素）與移動緩動（startEase 靜止起步、continueEase 行進中接續）；impactRing 命中衝擊環、glow 命中輝光（radiusPx 半徑、sec 秒數、widthPx 線寬、color RGB、alpha 峰值）；bladeTrail 刀光拖尾（近戰，弓兵不畫）；afterimage 攻擊殘影（身後漸隱色塊）。緩動名稱可用：linear、quadIn/Out/InOut、sineIn/Out/InOut、cubicIn/Out/InOut、backOut。讀不到或欄位錯誤時逐項用程式預設。",
+  "_comment": "戰場打擊感參數（PROG-2-10239 第一批、PROG-2-10243 第二批）。純表現層，不改結算。每區 enabled=false 即回到舊版行為。第一批：hitStop 命中頓格秒數（scope=pair 只停攻守雙方、all 停全場，minGapSec 限流）；cameraShake 輕/中/重三級（heavy/crit/ultimate 指定各命中種類用哪一級，null=不震）；floatPop 跳字彈出倍率（實際峰值＝樣式表 peakScale×倍率，爆擊約 1.3 倍後 0.12 秒內縮回）與位置偏移（偏被擊單位頭頂右上，不蓋身體）。第二批：flash 依命中種類覆寫閃白曲線（全白停幾格 holdFrames、退色 fadeSec、次方 fadePower）；knockback 擊退距離倍率（critMul／ultimateMul 為爆擊與奧義額外倍率）；ease 攻擊三段緩動（預備往後拉 windUp → 出手前衝 strike → 停頓 hold → 收招回位 recover，距離單位為畫面像素）與移動緩動（startEase 靜止起步、continueEase 行進中接續）；impactRing 命中衝擊環、glow 命中中心白熱閃光（1～2 幀量級）、sparks 飛濺火花（count 顆數、speedPx 初速、gravityPx 重力、lenPx 長度）、burstPalette 爆點色階暖白→橙→暗紅（衝擊環與火花共用）；爆點三層合起來主體約 0.25～0.35 秒；bladeTrail 舊刀光拖尾（預設關；刀光改由 attack-vfx.json 的 arcSlash 負責，已改為收尖月牙＋掃過動態）；afterimage 攻擊殘影（身後漸隱色塊）。緩動名稱可用：linear、quadIn/Out/InOut、sineIn/Out/InOut、cubicIn/Out/InOut、backOut。讀不到或欄位錯誤時逐項用程式預設。",
   "hitStop": {
     "enabled": true,
     "normalSec": 0.05,
@@ -54,12 +54,20 @@
   "glow": {
     "enabled": true,
     "maxActive": 8,
-    "normal": { "radiusPx": 30, "sec": 0.12, "widthPx": 0, "color": [255, 240, 210], "alpha": 0.5 },
-    "crit": { "radiusPx": 46, "sec": 0.16, "widthPx": 0, "color": [255, 215, 110], "alpha": 0.7 },
-    "ultimate": { "radiusPx": 70, "sec": 0.22, "widthPx": 0, "color": [255, 160, 80], "alpha": 0.85 }
+    "normal": { "radiusPx": 15, "sec": 0.09, "widthPx": 0, "color": [255, 250, 235], "alpha": 0.9 },
+    "crit": { "radiusPx": 21, "sec": 0.14, "widthPx": 0, "color": [255, 250, 230], "alpha": 1 },
+    "ultimate": { "radiusPx": 30, "sec": 0.18, "widthPx": 0, "color": [255, 245, 220], "alpha": 1 }
   },
-  "bladeTrail": {
+  "sparks": {
     "enabled": true,
+    "maxActive": 6,
+    "normal": { "count": 6, "speedPx": 150, "gravityPx": 420, "sec": 0.26, "lenPx": 16, "widthPx": 3.2, "alpha": 0.95 },
+    "crit": { "count": 9, "speedPx": 200, "gravityPx": 460, "sec": 0.32, "lenPx": 20, "widthPx": 3.8, "alpha": 1 },
+    "ultimate": { "count": 10, "speedPx": 260, "gravityPx": 480, "sec": 0.35, "lenPx": 24, "widthPx": 4.4, "alpha": 1 }
+  },
+  "burstPalette": { "white": [255, 244, 220], "orange": [255, 150, 50], "red": [150, 36, 20] },
+  "bladeTrail": {
+    "enabled": false,
     "maxActive": 4,
     "sec": 0.18,
     "arcRadiusPx": 40,
@@ -83,9 +91,13 @@
   },
   "floatPop": {
     "enabled": true,
-    "normalPeakMul": 1.1,
-    "heavyPeakMul": 1.1,
-    "critPeakMul": 1.15,
-    "popInMul": 1
+    "normalPeakMul": 0.85,
+    "heavyPeakMul": 0.7,
+    "critPeakMul": 0.65,
+    "popInMul": 0.55,
+    "normalOffsetXPx": 22,
+    "normalOffsetYPx": 30,
+    "critOffsetXPx": 44,
+    "critOffsetYPx": 46
   }
 }

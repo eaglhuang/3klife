@@ -133,6 +133,11 @@ export interface CenterRect {
     height: number;
 }
 
+/** 兩個中心矩形是否相交（泡泡擺位與事後檢查共用） */
+export function rectsOverlap(a: CenterRect, b: CenterRect): boolean {
+    return overlapArea(a, b) > 0;
+}
+
 function overlapArea(a: CenterRect, b: CenterRect): number {
     const w = Math.min(a.x + a.width / 2, b.x + b.width / 2) - Math.max(a.x - a.width / 2, b.x - b.width / 2);
     const h = Math.min(a.y + a.height / 2, b.y + b.height / 2) - Math.max(a.y - a.height / 2, b.y - b.height / 2);
@@ -173,6 +178,9 @@ export function layoutAvatarBubble(input: {
         { side: 'below', x: anchor.x, y: anchor.y - anchor.height / 2 - gap - height / 2 },
         { side: 'right', x: anchor.x + anchor.width / 2 + gap + width / 2, y: anchor.y },
         { side: 'left', x: anchor.x - anchor.width / 2 - gap - width / 2, y: anchor.y },
+        // 保底：畫面頂端、頭像水平位置（四邊都壓到操作列時，貼頂邊一定比壓住主按鈕好）
+        { side: 'above', x: anchor.x, y: halfH },
+        { side: 'above', x: 0, y: halfH },
     ];
     let best: BubbleRect | null = null;
     let bestScore = Infinity;
@@ -180,8 +188,9 @@ export function layoutAvatarBubble(input: {
         const rect: CenterRect = { x: clampX(candidate.x), y: clampY(candidate.y), width, height };
         let overlap = 0;
         for (const box of input.avoid ?? []) overlap += overlapArea(rect, box);
-        // 蓋住頭像本身比壓到按鈕更糟（被點的人要看得到）
-        const score = overlap + overlapArea(rect, anchor) * 4;
+        // 頭像本身也盡量不蓋（被點的人要看得到），但權重低於按鈕
+        // 壓到按鈕（主要操作列）比蓋到頭像更糟，權重更高
+        const score = overlap * 20 + overlapArea(rect, anchor) * 4;
         if (score < bestScore) {
             bestScore = score;
             best = { ...rect, side: candidate.side, overlap };

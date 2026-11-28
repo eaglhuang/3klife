@@ -320,7 +320,8 @@ export class BattleState {
     const control = this.controlledUnits.get(unitId);
     if (control) unit.faction = control.originalFaction;
     // 只有陣亡（血量歸零）才進紀錄；撤退脫離不算陣亡
-    if (unit.currentHp <= 0) this.fallenUnits.push(unit);
+    // 召喚物（doc_spec_1359）不留遺體：不進陣亡紀錄，免得被唯才是舉復活
+    if (unit.currentHp <= 0 && unit.summonedBy === null) this.fallenUnits.push(unit);
     this.units.delete(unitId);
     this.controlledUnits.delete(unitId);
     this.removeDamageLinksForUnit(unitId);

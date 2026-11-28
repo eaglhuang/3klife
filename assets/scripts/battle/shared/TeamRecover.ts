@@ -23,7 +23,7 @@ export interface TeamRecoverParams {
 }
 
 /** 淨化白名單與移除順序：控制類優先 */
-export const TEAM_RECOVER_CLEANSE_ORDER: readonly StatusEffect[] = [StatusEffect.Stun, StatusEffect.Rooted, StatusEffect.Slow, StatusEffect.Weak];
+export const TEAM_RECOVER_CLEANSE_ORDER: readonly StatusEffect[] = [StatusEffect.Stun, StatusEffect.Rooted, StatusEffect.Slow, StatusEffect.Weak, StatusEffect.Fear];
 
 export const MORALE_CAP = 100;
 

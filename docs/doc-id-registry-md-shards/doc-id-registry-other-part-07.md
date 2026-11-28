@@ -222,52 +222,52 @@
 | `doc_other_4192` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-13.md | Doc ID Registry Markdown Index — Spec / Index / Task |
 | `doc_other_4193` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-14.md | Doc ID Registry Markdown Index — Spec / Index / Task |
 | `doc_other_4194` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-15.md | Doc ID Registry Markdown Index — Spec / Index / Task |
-| `doc_other_4195` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md | Doc ID Registry Markdown Index — Spec / Index / Task |
-| `doc_other_4196` | docs/doc-id-registry-md-shards/doc-id-registry-stats.md | Doc ID Registry Markdown Index — 分類統計 |
-| `doc_other_4197` | docs/doc-id-registry-md-shards/doc-id-registry-tech-ui-art.md | Doc ID Registry Markdown Index — Tech / UI / Art / Data |
-| `doc_other_4198` | docs/doc-id-registry.md | 文件代號 Registry (doc-id-registry) |
-| `doc_other_4199` | docs/ecosystem/capability-sandbox-audit.md | Capability Sandbox & Security Audit — ATM Optional Governance Plugin |
-| `doc_other_4200` | docs/ecosystem/language-adapter-roadmap.md | 多語言 Adapter 擴張計畫 |
-| `doc_other_4201` | docs/ecosystem/performance-budget-police.md | Performance Budget Police — ATM Optional Governance Plugin |
-| `doc_other_4202` | docs/ecosystem/registry-db-vector-decision.md | 跨專案 Registry / DB / Vector — Core vs Plugin 決策文件 |
-| `doc_other_4203` | docs/i18n/base-shorten-batch1.md | 底座組 en 短標籤縮短（PROG-2-0896） |
-| `doc_other_4204` | docs/i18n/copy-review-checklist-2026-10-27.md | 正式版文案人工審稿清單（COPY-06，2026-10-27） |
-| `doc_other_4205` | docs/i18n/overflow-report-2026-10-21.md | i18n 寬度風險報告（2026-10-21） |
-| `doc_other_4206` | docs/i18n/system-lobby-toast-overflow-report.md | 系統共用／大廳／網路／提示 i18n 補全 — 版位風險摘要（PROG-2-0886，第 1 批） |
-| `doc_other_4207` | docs/keep-memory/gotcha_atm-claim-session-traps.md | ATM claim / session 陷阱 |
-| `doc_other_4208` | docs/keep-memory/gotcha_atm-close-sequence.md | ATM 收口標準序（約 20 次任務收口驗證，2026-07-12/13） |
-| `doc_other_4209` | docs/keep-memory/gotcha_atm-plan41-acc3-product-proof-window.md | Plan 4.1 ACC-3 只算封印 window 的 command 區間聯集 |
-| `doc_other_4210` | docs/keep-memory/gotcha_atm-skill-template-sync.md | skill 分發鏈：安裝副本 vs 源頭模板 |
-| `doc_other_4211` | docs/keep-memory/gotcha_atm-two-captain-close-storm.md | 雙隊長 close 風暴收斂戰術（MEM lane 實戰，2026-07-14/15） |
-| `doc_other_4212` | docs/keep-memory/gotcha_atm-two-captain-concurrency.md | 雙隊長並行守則（2026-07-12/13 與 codex-backlog-captain 12 小時實戰） |
-| `doc_other_4213` | docs/keep-memory/gotcha_planning-root-authority-resolution.md | Gotcha: Planning Root Authority Resolution & Ambiguity Fail-Closed |
-| `doc_other_4214` | docs/keep-memory/status_atm-plan41-0407-close-wait.md | 0407 close 等待 0406（2026-08-23） |
-| `doc_other_4215` | docs/keep-memory/status_atm-plan41-common-frozen-publication.md | Plan 4.1 共同 frozen publication（2026-08-23） |
-| `doc_other_4216` | docs/keep.registry.md | keep.registry — 跨專案記憶入口登錄表 |
-| `doc_other_4217` | docs/reports/3klife-cross-repo-packet-warning-baseline.md | 3KLife Cross-Repo Packet Warning Baseline |
-| `doc_other_4218` | docs/reports/3klife-legacy-baseline-warning-baseline.md | 3KLife Legacy Baseline Warning Baseline |
-| `doc_other_4219` | docs/reports/3klife-manual-done-closeback-backfill.md | 3KLife manual done closeback backfill |
-| `doc_other_4220` | docs/reports/3klife-planning-only-warning-baseline.md | 3KLife Planning-only Warning Baseline |
-| `doc_other_4221` | docs/reports/3klife-stale-claim-and-lock-cleanup.md | 3KLife Stale Claim And Lock Cleanup |
-| `doc_other_4222` | docs/reports/3klife-stale-runtime-lock-cleanup-closeout.md | 3KLife Stale Runtime Lock Cleanup Closeout |
-| `doc_other_4223` | docs/reports/3klife-task-audit-debt-triage.md | 3KLife Task Audit Debt Triage |
-| `doc_other_4224` | docs/reports/3klife-transition-event-missing-backfill.md | 3KLife Transition Event Missing Backfill |
-| `doc_other_4225` | docs/reports/3klife-transition-evidence-missing-backfill.md | 3KLife transition evidence missing backfill |
-| `doc_other_4226` | docs/reports/PROG-2-2210-web-source-assets.md | PROG-2-2210 網頁來源資產量測 |
-| `doc_other_4227` | docs/RFC_PROCESS.md | AI Atomic Framework — RFC 與社群貢獻流程 |
-| `doc_other_4228` | docs/tech/npc-brain-武將互動記憶系統.md | NPC Brain Memory System |
-| `doc_other_4229` | docs/tech/npc-brain-memory/api-contract.md | NPC Brain Memory System — API & Contract（§6-§8） |
-| `doc_other_4230` | docs/tech/npc-brain-memory/data-model.md | NPC Brain Memory System — Data Model（§4-§5） |
-| `doc_other_4231` | docs/tech/npc-brain-memory/ops.md | NPC Brain Memory System — Ops & Milestones（§9-§12） |
-| `doc_other_4232` | docs/ucuf-tech-shards/ucuf-core.md | UCUF 技術文件 — 現況與核心（實作現況 · 目錄 · §1–§6） |
-| `doc_other_4233` | docs/ucuf-tech-shards/ucuf-evolution.md | UCUF 技術文件 — 演進建議、遷移方案、規則引擎（§17–§19） |
-| `doc_other_4234` | docs/ucuf-tech-shards/ucuf-infra.md | UCUF 技術文件 — 遷移、規格、資源、日誌、診斷、測試（§7–§12） |
-| `doc_other_4235` | docs/ucuf-tech-shards/ucuf-runtime.md | UCUF 技術文件 — 記憶體、資料綁定、語系、效能（§13–§16） |
-| `doc_other_4236` | docs/ui-i18n/bloodline-overflow-report.md | 血脈頁語系譯文與寬度風險摘要（PROG-2-0742） |
-| `doc_other_4237` | docs/ui-vibe-pipeline-shards/ui-json-cocos.md | UI Vibe Pipeline — JSON 契約與 Cocos 模組（§4–§6） |
-| `doc_other_4238` | docs/ui-vibe-pipeline-shards/ui-pipeline-tail.md | UI Vibe Pipeline — 量產與管線（§10–§16） |
-| `doc_other_4239` | docs/ui-vibe-pipeline-shards/ui-skill-ops.md | UI Vibe Pipeline — Skill 與分工（§7 · When to Use · Procedure · References · §8–§9） |
-| `doc_other_4240` | docs/web-playtest-online.md | 線上試玩版無頭實玩驗收（playtest-online） |
-| `doc_other_4241` | docs/reports/q4-generals-bow-rule-and-route-1125.md | Q4 武將：持弓驗收規則 與 下一輪做法（11/25） |
-| `doc_other_4242` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-16.md | Doc ID Registry Markdown Index — Spec / Index / Task |
-| `doc_other_4243` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-17.md | Doc ID Registry Markdown Index — Spec / Index / Task |
+| `doc_other_4195` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-16.md | Doc ID Registry Markdown Index — Spec / Index / Task |
+| `doc_other_4196` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-17.md | Doc ID Registry Markdown Index — Spec / Index / Task |
+| `doc_other_4197` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md | Doc ID Registry Markdown Index — Spec / Index / Task |
+| `doc_other_4198` | docs/doc-id-registry-md-shards/doc-id-registry-stats.md | Doc ID Registry Markdown Index — 分類統計 |
+| `doc_other_4199` | docs/doc-id-registry-md-shards/doc-id-registry-tech-ui-art.md | Doc ID Registry Markdown Index — Tech / UI / Art / Data |
+| `doc_other_4200` | docs/doc-id-registry.md | 文件代號 Registry (doc-id-registry) |
+| `doc_other_4201` | docs/ecosystem/capability-sandbox-audit.md | Capability Sandbox & Security Audit — ATM Optional Governance Plugin |
+| `doc_other_4202` | docs/ecosystem/language-adapter-roadmap.md | 多語言 Adapter 擴張計畫 |
+| `doc_other_4203` | docs/ecosystem/performance-budget-police.md | Performance Budget Police — ATM Optional Governance Plugin |
+| `doc_other_4204` | docs/ecosystem/registry-db-vector-decision.md | 跨專案 Registry / DB / Vector — Core vs Plugin 決策文件 |
+| `doc_other_4205` | docs/i18n/base-shorten-batch1.md | 底座組 en 短標籤縮短（PROG-2-0896） |
+| `doc_other_4206` | docs/i18n/copy-review-checklist-2026-10-27.md | 正式版文案人工審稿清單（COPY-06，2026-10-27） |
+| `doc_other_4207` | docs/i18n/overflow-report-2026-10-21.md | i18n 寬度風險報告（2026-10-21） |
+| `doc_other_4208` | docs/i18n/system-lobby-toast-overflow-report.md | 系統共用／大廳／網路／提示 i18n 補全 — 版位風險摘要（PROG-2-0886，第 1 批） |
+| `doc_other_4209` | docs/keep-memory/gotcha_atm-claim-session-traps.md | ATM claim / session 陷阱 |
+| `doc_other_4210` | docs/keep-memory/gotcha_atm-close-sequence.md | ATM 收口標準序（約 20 次任務收口驗證，2026-07-12/13） |
+| `doc_other_4211` | docs/keep-memory/gotcha_atm-plan41-acc3-product-proof-window.md | Plan 4.1 ACC-3 只算封印 window 的 command 區間聯集 |
+| `doc_other_4212` | docs/keep-memory/gotcha_atm-skill-template-sync.md | skill 分發鏈：安裝副本 vs 源頭模板 |
+| `doc_other_4213` | docs/keep-memory/gotcha_atm-two-captain-close-storm.md | 雙隊長 close 風暴收斂戰術（MEM lane 實戰，2026-07-14/15） |
+| `doc_other_4214` | docs/keep-memory/gotcha_atm-two-captain-concurrency.md | 雙隊長並行守則（2026-07-12/13 與 codex-backlog-captain 12 小時實戰） |
+| `doc_other_4215` | docs/keep-memory/gotcha_planning-root-authority-resolution.md | Gotcha: Planning Root Authority Resolution & Ambiguity Fail-Closed |
+| `doc_other_4216` | docs/keep-memory/status_atm-plan41-0407-close-wait.md | 0407 close 等待 0406（2026-08-23） |
+| `doc_other_4217` | docs/keep-memory/status_atm-plan41-common-frozen-publication.md | Plan 4.1 共同 frozen publication（2026-08-23） |
+| `doc_other_4218` | docs/keep.registry.md | keep.registry — 跨專案記憶入口登錄表 |
+| `doc_other_4219` | docs/reports/3klife-cross-repo-packet-warning-baseline.md | 3KLife Cross-Repo Packet Warning Baseline |
+| `doc_other_4220` | docs/reports/3klife-legacy-baseline-warning-baseline.md | 3KLife Legacy Baseline Warning Baseline |
+| `doc_other_4221` | docs/reports/3klife-manual-done-closeback-backfill.md | 3KLife manual done closeback backfill |
+| `doc_other_4222` | docs/reports/3klife-planning-only-warning-baseline.md | 3KLife Planning-only Warning Baseline |
+| `doc_other_4223` | docs/reports/3klife-stale-claim-and-lock-cleanup.md | 3KLife Stale Claim And Lock Cleanup |
+| `doc_other_4224` | docs/reports/3klife-stale-runtime-lock-cleanup-closeout.md | 3KLife Stale Runtime Lock Cleanup Closeout |
+| `doc_other_4225` | docs/reports/3klife-task-audit-debt-triage.md | 3KLife Task Audit Debt Triage |
+| `doc_other_4226` | docs/reports/3klife-transition-event-missing-backfill.md | 3KLife Transition Event Missing Backfill |
+| `doc_other_4227` | docs/reports/3klife-transition-evidence-missing-backfill.md | 3KLife transition evidence missing backfill |
+| `doc_other_4228` | docs/reports/PROG-2-2210-web-source-assets.md | PROG-2-2210 網頁來源資產量測 |
+| `doc_other_4229` | docs/reports/q4-generals-bow-rule-and-route-1125.md | Q4 武將：持弓驗收規則 與 下一輪做法（11/25） |
+| `doc_other_4230` | docs/RFC_PROCESS.md | AI Atomic Framework — RFC 與社群貢獻流程 |
+| `doc_other_4231` | docs/tech/npc-brain-武將互動記憶系統.md | NPC Brain Memory System |
+| `doc_other_4232` | docs/tech/npc-brain-memory/api-contract.md | NPC Brain Memory System — API & Contract（§6-§8） |
+| `doc_other_4233` | docs/tech/npc-brain-memory/data-model.md | NPC Brain Memory System — Data Model（§4-§5） |
+| `doc_other_4234` | docs/tech/npc-brain-memory/ops.md | NPC Brain Memory System — Ops & Milestones（§9-§12） |
+| `doc_other_4235` | docs/ucuf-tech-shards/ucuf-core.md | UCUF 技術文件 — 現況與核心（實作現況 · 目錄 · §1–§6） |
+| `doc_other_4236` | docs/ucuf-tech-shards/ucuf-evolution.md | UCUF 技術文件 — 演進建議、遷移方案、規則引擎（§17–§19） |
+| `doc_other_4237` | docs/ucuf-tech-shards/ucuf-infra.md | UCUF 技術文件 — 遷移、規格、資源、日誌、診斷、測試（§7–§12） |
+| `doc_other_4238` | docs/ucuf-tech-shards/ucuf-runtime.md | UCUF 技術文件 — 記憶體、資料綁定、語系、效能（§13–§16） |
+| `doc_other_4239` | docs/ui-i18n/bloodline-overflow-report.md | 血脈頁語系譯文與寬度風險摘要（PROG-2-0742） |
+| `doc_other_4240` | docs/ui-vibe-pipeline-shards/ui-json-cocos.md | UI Vibe Pipeline — JSON 契約與 Cocos 模組（§4–§6） |
+| `doc_other_4241` | docs/ui-vibe-pipeline-shards/ui-pipeline-tail.md | UI Vibe Pipeline — 量產與管線（§10–§16） |
+| `doc_other_4242` | docs/ui-vibe-pipeline-shards/ui-skill-ops.md | UI Vibe Pipeline — Skill 與分工（§7 · When to Use · Procedure · References · §8–§9） |
+| `doc_other_4243` | docs/web-playtest-online.md | 線上試玩版無頭實玩驗收（playtest-online） |

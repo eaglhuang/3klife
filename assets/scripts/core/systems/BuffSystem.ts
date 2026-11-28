@@ -1,6 +1,7 @@
 // @spec-source → 見 docs/cross-reference-index.md
 import { StatusEffect } from "../config/Constants";
 import { applyBuffStack } from "../../battle/shared/BuffStackHeal";
+import { planDebuffAdmission } from "../../battle/shared/StatusDebuffCap";
 
 interface BuffEntry {
   effect: StatusEffect;
@@ -31,6 +32,10 @@ export class BuffSystem {
     }
 
     const list = this.buffs.get(unitId)!;
+    // PROG-2-10253：同一單位減益最多 6 個（doc_spec_1361 §7.2）；已滿時取代回合最短者，否則忽略
+    const admission = planDebuffAdmission(list, effect, turns);
+    if (!admission.admit) { if (list.length === 0) this.buffs.delete(unitId); return; }
+    if (admission.evictIndex >= 0) list.splice(admission.evictIndex, 1);
     const existing = list.find(b => b.effect === effect);
 
     const next = applyBuffStack(existing ?? null, turns);

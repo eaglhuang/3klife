@@ -79,7 +79,7 @@ export const attackVfxStats = { activeFx: 0, particles: 0, peakFx: 0, peakPartic
 
 interface Fx {
   active: boolean; kind: string; t: number; seed: number;
-  ax: number; ay: number; bx: number; by: number; ang: number; dist: number; flip: number;
+  ax: number; ay: number; bx: number; by: number; ang: number; angC: number; dist: number; flip: number;
   p: Params; pal: AtkPalette; sig: Params | null; sigName: string; particles: number; total: number;
   /** 不透明度倍率（來自 JSON alphaMul，預設 1） */
   alphaMul: number;
@@ -205,6 +205,8 @@ function scaleParams(p: Params): Params {
   scaledCache.set(p, r);
   return r;
 }
+/** 刀光寬度剖面：k=0（尾）→1（前緣），兩端為 0（收尖），峰值偏向前緣。 */
+const slashProfile = (k: number): number => Math.pow(Math.sin(Math.PI * Math.pow(clamp01(k), 1.4)), 1.7); // 次方 >1：兩端收得更尖更細
 const hash = (n: number): number => { const s = Math.sin(n * 127.1 + 311.7) * 43758.5453; return s - Math.floor(s); };
 const clamp01 = (v: number): number => (v < 0 ? 0 : v > 1 ? 1 : v);
 const easeOut = (u: number): number => 1 - (1 - u) * (1 - u);
@@ -296,7 +298,7 @@ export class AttackVfxPlayer {
       let slot: Fx | null = null;
       for (const f of this.pool) { if (f.active) { used += f.particles; activeN++; } else if (!slot) slot = f; }
       if (activeN >= cfg.budget.maxEffects) { attackVfxStats.skipped++; return true; } // 已滿：略過但視為已處理，不退回舊特效疊畫
-      if (!slot) { slot = { active: false, kind: '', t: 0, seed: 0, ax: 0, ay: 0, bx: 0, by: 0, ang: 0, dist: 0, flip: 1, p, pal, sig: null, sigName: '', particles: 0, total: 0, alphaMul: 1 }; this.pool.push(slot); }
+      if (!slot) { slot = { active: false, kind: '', t: 0, seed: 0, ax: 0, ay: 0, bx: 0, by: 0, ang: 0, angC: 0, dist: 0, flip: 1, p, pal, sig: null, sigName: '', particles: 0, total: 0, alphaMul: 1 }; this.pool.push(slot); }
       const want = this.wantParticles(kind, p, sig);
       slot.particles = Math.max(0, Math.min(want, cfg.budget.maxParticles - used));
       slot.total = want;
@@ -308,8 +310,10 @@ export class AttackVfxPlayer {
       slot.ax = ax; slot.ay = ay;
       // 近戰類（刀光／盾擊／衝撞）的命中點：目標方向上 ratio 處；其餘種類 b 就是目標
       const near = kind === 'arcSlash' || kind === 'shieldWave' || kind === 'chargeRush';
-      slot.bx = near ? ax + dx * ratio : bx; slot.by = near ? ay + dy * ratio : by;
+      const rr = kind === 'arcSlash' && opt(p, 'hitOnTarget', 0) ? 1 : ratio;
+      slot.bx = near ? ax + dx * rr : bx; slot.by = near ? ay + dy * rr : by;
       slot.active = true;
+      slot.angC = slot.ang;
       this.ensureNode(parent);
       attackVfxStats.played++;
       return true;
@@ -456,18 +460,18 @@ export class AttackVfxPlayer {
   }
 
   /** 三層眩光圓點（填色）：外暈圓＋飽和圓＋白核圓；每層畫 PASS 次 */
-  private dot(g: Graphics, f: Fx, x: number, y: number, r: number, a: number): void {
-    for (let k = 0; k < PASS; k++) { g.fillColor = col(f.pal.glow, 255 * GL.outerAlpha * a); g.circle(x, y, r * 2.4); this.fil(g); }
+  private dot(g: Graphics, f: Fx, x: number, y: number, r: number, a: number, outer = 2.4): void {
+    for (let k = 0; k < PASS; k++) { g.fillColor = col(f.pal.glow, 255 * GL.outerAlpha * a); g.circle(x, y, r * outer); this.fil(g); }
     for (let k = 0; k < PASS; k++) { g.fillColor = colW(f.pal.main, GL.midWhiten, 255 * a); g.circle(x, y, r); this.fil(g); }
     for (let k = 0; k < PASS; k++) { g.fillColor = colW(f.pal.main, GL.coreWhiten, 255 * a); g.circle(x, y, r * 0.5); this.fil(g); }
   }
 
   /** 一段環帶（弧形刀光）：外徑固定，內徑從 in0 線性變到 in1，角度 a0→a1。 */
-  private strip(g: Graphics, cx: number, cy: number, rOut: number, in0: number, in1: number, a0: number, a1: number): void {
+  private strip(g: Graphics, cx: number, cy: number, rOut: number, in0: number, in1: number, a0: number, a1: number, rOut1 = rOut): void {
     const S = 3;
     for (let i = 0; i <= S; i++) {
       const a = a0 + (a1 - a0) * i / S;
-      const x = cx + Math.cos(a) * rOut, y = cy + Math.sin(a) * rOut;
+      const ro = rOut + (rOut1 - rOut) * i / S; const x = cx + Math.cos(a) * ro, y = cy + Math.sin(a) * ro;
       if (i === 0) g.moveTo(x, y); else g.lineTo(x, y);
     }
     for (let i = S; i >= 0; i--) {
@@ -477,7 +481,26 @@ export class AttackVfxPlayer {
     g.close(); this.fil(g);
   }
 
-  /** 命中星形閃光：k=0→1 在 flash.sec 內完成。中心亮點＋放射線（長短相間），回傳圖元數 */
+  /** 一根收尖的放射芒：根部寬 w、尖端為 0 的細長菱形（比等寬圓頭線條乾淨，不會像被切斷的短棒）。三層眩光。 */
+  private spike(g: Graphics, f: Fx, x: number, y: number, ang: number, len: number, w: number, a: number): void {
+    const ca = Math.cos(ang), sa = Math.sin(ang), nx = -sa, ny = ca;
+    for (let L = 0; L < 3; L++) {
+      const tk = L === 0 ? GL.outerWidthMul * 0.45 : L === 1 ? 1 : 0.4;
+      const lk = L === 0 ? 1.15 : L === 1 ? 1 : 0.85; // 外暈稍長、白核稍短，疊起來尖端漸層
+      g.fillColor = L === 0 ? col(f.pal.glow, 255 * GL.outerAlpha * a) : L === 1 ? colW(f.pal.main, GL.midWhiten, 255 * a) : colW(f.pal.main, GL.coreWhiten, 255 * a);
+      for (let k = 0; k < PASS; k++) {
+        const hw = Math.max(0.6, w * tk * 0.5);
+        g.moveTo(x - ca * len * 0.08 + nx * hw, y - sa * len * 0.08 + ny * hw);
+        g.lineTo(x + ca * len * lk * 0.22 + nx * hw * 0.8, y + sa * len * lk * 0.22 + ny * hw * 0.8);
+        g.lineTo(x + ca * len * lk, y + sa * len * lk);
+        g.lineTo(x + ca * len * lk * 0.22 - nx * hw * 0.8, y + sa * len * lk * 0.22 - ny * hw * 0.8);
+        g.lineTo(x - ca * len * 0.08 - nx * hw, y - sa * len * 0.08 - ny * hw);
+        g.close(); this.fil(g);
+      }
+    }
+  }
+
+  /** 命中星形閃光：k=0→1 在 flash.sec 內完成。中心亮點＋收尖放射芒（長短相間），回傳圖元數 */
   private flash(g: Graphics, f: Fx, x: number, y: number, k: number, scale: number): number {
     if (k <= 0 || k >= 1) return 0;
     const F = GL.flash; const fade = 1 - k * k; const e = easeOut(k);
@@ -485,11 +508,10 @@ export class AttackVfxPlayer {
     const rot = hash(f.seed) * Math.PI;
     for (let i = 0; i < n; i++) {
       const a = rot + i * Math.PI * 2 / n;
-      const l = len * (i & 1 ? 0.6 : 1);
-      this.line(g, f, x + Math.cos(a) * len * 0.08, y + Math.sin(a) * len * 0.08, x + Math.cos(a) * l, y + Math.sin(a) * l, F.widthPx * scale * (1 - k * 0.5), fade);
+      this.spike(g, f, x, y, a, len * (i & 1 ? 0.6 : 1), F.widthPx * scale * 1.6 * (1 - k * 0.5), fade);
     }
-    this.dot(g, f, x, y, F.coreRadiusPx * scale * (1.1 - 0.4 * k), fade);
-    return n + 3;
+    this.dot(g, f, x, y, F.coreRadiusPx * scale * (1.1 - 0.4 * k) * 0.6, fade, 1.5); // 小核心點：主角是放射芒，不是圓盤
+    return n * 3 + 3;
   }
 
   /** 命中火花＋光圈：k 由 0→1 展開。count 受粒子上限，回傳圖元數 */
@@ -501,7 +523,7 @@ export class AttackVfxPlayer {
       const len = lenPx * (0.7 + hash(f.seed + i * 3) * 0.6);
       const ca = Math.cos(a), sa = Math.sin(a);
       const r0 = len * 0.25 * easeOut(k), r1 = len * easeOut(k);
-      this.line(g, f, x + ca * r0, y + sa * r0, x + ca * r1, y + sa * r1, wPx * (1 - k * 0.5), fade, (i & 1) === 1);
+      this.spike(g, f, x + ca * r0, y + sa * r0, a, r1 - r0, wPx * (1 - k * 0.5) * 1.6, fade);
       prims++;
     }
     if (ringPx > 0) {
@@ -524,8 +546,7 @@ export class AttackVfxPlayer {
       const sx = f.bx + Math.cos(ang) * dist, sy = f.by + Math.sin(ang) * dist + rise * 0.3 * u;
       const s = size * (0.7 + 0.3 * hash(f.seed + i * 9.7)) * (1 - 0.4 * u) * (0.85 + 0.15 * Math.sin(t * 16 + i * 2));
       const alt = (i & 1) === 1;
-      this.line(g, f, sx - s, sy, sx + s, sy, 2.4, fade, alt);
-      this.line(g, f, sx, sy - s, sx, sy + s, 2.4, fade, alt);
+      for (let q = 0; q < 4; q++) this.spike(g, f, sx, sy, q * Math.PI / 2, s * 1.1, 4, fade); // 四芒閃星：四根收尖芒
       this.dot(g, f, sx, sy, s * 0.22, fade);
       prims += 3;
     }
@@ -536,8 +557,11 @@ export class AttackVfxPlayer {
   private drawArcSlash(g: Graphics, f: Fx, t: number, u: number): number {
     const p = f.p; let prims = 0;
     const R = num(p, 'radiusPx'), thick = num(p, 'thickPx'), K = num(p, 'trailSegments');
-    const cx = f.bx - Math.cos(f.ang) * R * num(p, 'centerBack');
-    const cy = f.by - Math.sin(f.ang) * R * num(p, 'centerBack');
+    // 揮砍方向加一點隨機偏角（上下左右都有變體）；弧心放在「目標往攻擊者退 R×centerBack」處，centerBack=1 時弧頂正好壓在被擊單位身上
+    const angC = f.ang + (hash(f.seed * 1.7) - 0.5) * opt(p, 'tiltRad', 0.9);
+    const cx = f.bx - Math.cos(angC) * R * num(p, 'centerBack');
+    const cy = f.by - Math.sin(angC) * R * num(p, 'centerBack');
+    f.angC = angC;
     prims += this.slashPass(g, f, cx, cy, R, thick, K, u, 1, f.flip);
     // 劍：第二道反向短弧，慢半拍跟上（雙弧）
     if (p.doubleArc) {
@@ -574,29 +598,51 @@ export class AttackVfxPlayer {
     return prims;
   }
 
-  /** 一道弧形刀光（外暈＋本體＋白芯三層）。flip 決定劈的方向。 */
+  /**
+   * 一道弧形刀光（外暈＋本體＋白芯三層）。flip 決定劈的方向。
+   * 形狀：細長月牙——外緣是一道圓弧，內緣依寬度剖面往內收，兩端寬度都收到 0（尖端），中段最寬；
+   * 動態：前緣 headFrac 內劃到終點，尾端晚 tailLagSec 才跟上（所以尾端消失比前緣晚），中間的帶子由尾亮度漸層（尾透明→前緣亮白）。
+   */
   private slashPass(g: Graphics, f: Fx, cx: number, cy: number, R: number, thick: number, K: number, u: number, alpha: number, flip: number): number {
     const p = f.p; let prims = 0;
-    const sweep = num(p, 'sweepDeg') * DEG, trail = num(p, 'trailDeg') * DEG;
-    const h = clamp01(u / num(p, 'headFrac'));
-    const e = easeOut(h);
-    const aStart = f.ang + flip * sweep / 2, aEnd = f.ang - flip * sweep / 2;
-    const aHead = aStart + (aEnd - aStart) * e;
-    const covered = Math.abs(aHead - aStart);
-    const aTail = aHead - Math.sign(aEnd - aStart) * Math.min(trail, covered);
+    const sweep = num(p, 'sweepDeg') * DEG;
+    const dur = num(p, 'durationSec');
+    const headFrac = num(p, 'headFrac');
+    const lagFrac = opt(p, 'tailLagSec', 0.08) / dur;
+    const hp = easeOut(clamp01(u / headFrac));
+    const tp = easeOut(clamp01((u - lagFrac) / headFrac));
+    if (hp - tp <= 0.002) return 0;
+    const aC = f.angC;
+    const aStart = aC + flip * sweep / 2, aEnd = aC - flip * sweep / 2;
+    const aHead = aStart + (aEnd - aStart) * hp;
+    const aTail = aStart + (aEnd - aStart) * tp;
     const fs = num(p, 'fadeStart');
     const fade = u > fs ? 1 - (u - fs) / (1 - fs) : 1;
     if (fade <= 0) return 0;
     for (let L = 0; L < 3; L++) {
       const tk = L === 0 ? GL.stripOuterMul : L === 1 ? 1 : GL.stripCoreMul;
       const la = L === 0 ? GL.outerAlpha : 1;
+      const rOut = R + thick * 0.06 * tk;
       for (let j = 0; j < K; j++) {
         const k0 = j / K, k1 = (j + 1) / K;
         const a0 = aTail + (aHead - aTail) * k0, a1 = aTail + (aHead - aTail) * k1;
-        const al = 255 * la * fade * alpha * Math.pow(k1, 1.2);
-        g.fillColor = L === 0 ? col(f.pal.glow, al) : L === 1 ? colW(f.pal.main, GL.midWhiten, al) : colW(f.pal.main, GL.coreWhiten, al);
-        for (let k = 0; k < PASS; k++) this.strip(g, cx, cy, R + thick * 0.12 * tk, R + thick * 0.12 * tk - thick * tk * Math.pow(k0, 0.8), R + thick * 0.12 * tk - thick * tk * Math.pow(k1, 0.8), a0, a1);
-        prims++;
+        // 顏色：尾端透明→前緣亮；前緣最後一段再往白拉（最前緣亮白細線）
+        const al = 255 * la * fade * alpha * Math.pow(k1, 1.4);
+        const w0 = thick * tk * slashProfile(k0), w1 = thick * tk * slashProfile(k1);
+        const fill = (a: number): void => { g.fillColor = L === 0 ? col(f.pal.glow, a) : L === 1 ? colW(f.pal.main, GL.midWhiten + (k1 > 0.8 ? 0.35 : 0), a) : colW(f.pal.main, GL.coreWhiten, a); };
+        if (L === 2) {
+          fill(al);
+          for (let k = 0; k < PASS; k++) this.strip(g, cx, cy, rOut, rOut - w0, rOut - w1, a0, a1);
+          prims++;
+        } else {
+          // 外緣（前緣側）不透明、內側一半只留淡淡的暈：弧身看起來是亮線＋柔光，不是實心月牙
+          const sp = 0.5;
+          fill(al);
+          for (let k = 0; k < PASS; k++) this.strip(g, cx, cy, rOut, rOut - w0 * sp, rOut - w1 * sp, a0, a1);
+          fill(al * 0.22);
+          for (let k = 0; k < PASS; k++) this.strip(g, cx, cy, rOut - w0 * sp, rOut - w0, rOut - w1, a0, a1, rOut - w1 * sp);
+          prims += 2;
+        }
       }
     }
     return prims;
@@ -657,13 +703,10 @@ export class AttackVfxPlayer {
     const ca = Math.cos(f.ang), sa = Math.sin(f.ang);
     const hx = f.ax + (f.bx - f.ax) * k, hy = f.ay + (f.by - f.ay) * k;
     if (t < flight + 0.08) {
-      const S = num(p, 'trailSegments'); const len = Math.min(num(p, 'trailLenPx'), f.dist * k + 8);
+      const len = Math.min(num(p, 'trailLenPx'), f.dist * k + 8);
       const post = t > flight ? 1 - (t - flight) / 0.08 : 1;
-      for (let i = 0; i < S; i++) {
-        const k0 = i / S, k1 = (i + 1) / S; // k0 靠尾端
-        this.line(g, f, hx - ca * len * (1 - k0), hy - sa * len * (1 - k0), hx - ca * len * (1 - k1), hy - sa * len * (1 - k1), num(p, 'trailWidthPx') * (0.15 + 0.85 * k1), post * (0.25 + 0.75 * k1));
-        prims++;
-      }
+      // 箭尾：一條尾端收尖的漸細楔形（頭寬尾尖），取代舊的粗圓頭分段線
+      this.spike(g, f, hx, hy, f.ang + Math.PI, len, num(p, 'trailWidthPx'), post); prims += 3;
       const n = Math.min(num(p, 'glints'), f.particles);
       for (let i = 0; i < n; i++) {
         const back = (0.15 + hash(f.seed + i) * 0.8) * len;
@@ -671,7 +714,7 @@ export class AttackVfxPlayer {
         const life = 1 - (back / len) * 0.8;
         this.dot(g, f, hx - ca * back - sa * wob, hy - sa * back + ca * wob, Math.max(2, num(p, 'glintSizePx') * life), life * post); prims++;
       }
-      this.dot(g, f, hx, hy, num(p, 'glintSizePx') * 1.6, post); prims++; // 箭頭亮點
+      this.dot(g, f, hx, hy, num(p, 'glintSizePx') * 0.9, post); prims++; // 箭頭亮點（小）
     }
     prims += this.flash(g, f, f.bx, f.by, (t - flight) / GL.flash.sec, opt(p, 'flashScale', 1));
     const hk = clamp01((t - flight) / (num(p, 'durationSec') - flight));
@@ -732,7 +775,8 @@ export class AttackVfxPlayer {
         const side = (i - (n - 1) / 2) * num(p, 'speedLineGapPx');
         const len = num(p, 'speedLineLenPx') * (0.55 + hash(f.seed + i) * 0.45);
         const s1 = head - hash(f.seed + i * 5) * 16, s0 = Math.max(0, s1 - len);
-        this.line(g, f, f.ax + ca * s0 + nx * side, f.ay + sa * s0 + ny * side, f.ax + ca * s1 + nx * side, f.ay + sa * s1 + ny * side, num(p, 'speedLineWidthPx'), fade, (i & 1) === 1); prims++;
+        // 速度線：頭端最寬、尾端收尖（舊版圓頭等寬線條像斷掉的棒子）
+        this.spike(g, f, f.ax + ca * s1 + nx * side, f.ay + sa * s1 + ny * side, f.ang + Math.PI, s1 - s0, num(p, 'speedLineWidthPx') * 1.4, fade); prims += 3;
       }
     }
     // 揚塵扇形：騎兵腳下前方、一般混合（不用加色，才不會發白）。畫在另一個 Graphics
@@ -831,7 +875,9 @@ export class AttackVfxPlayer {
       const fade = 1 - burstK;
       const br = num(p, 'burstRingPx') * (0.2 + 0.8 * easeOut(burstK));
       this.ring(g, f, f.bx, f.by, br, br, 6, fade);
-      g.fillColor = col(f.pal.glow, 130 * fade); g.circle(f.bx, f.by, num(p, 'burstRingPx') * 0.7 * easeOut(burstK)); this.fil(g); prims += 2;
+      const dr = num(p, 'burstRingPx') * 0.7 * easeOut(burstK); // 柔光盤：外大淡、內小稍亮，邊緣不再是硬圓
+      g.fillColor = col(f.pal.glow, 45 * fade); g.circle(f.bx, f.by, dr); this.fil(g);
+      g.fillColor = col(f.pal.glow, 60 * fade); g.circle(f.bx, f.by, dr * 0.6); this.fil(g); prims += 3;
       const n = Math.min(num(p, 'burstRays'), f.particles);
       for (let i = 0; i < n; i++) {
         const a = i * Math.PI * 2 / n + f.seed;
