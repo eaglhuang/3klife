@@ -443,7 +443,7 @@ export class BattleController {
 
   /**
    * 義兄弟同陣士氣（動態關係規格 §3.1，PROG-2-10204）：部隊的來源武將與出戰名單內另一位武將互為義兄弟時，
-   * 部署時士氣至少 +20（走 Morale 既有機制：不疊加、3 回合後清除）。出戰名單 = 場景注入名單 ∪ 我方主將 ∪ 場上我方部隊的來源武將。
+   * 部署時士氣至少 +20（走 Morale 士氣下限：不疊加、整場常駐不衰減）。出戰名單 = 場景注入名單 ∪ 我方主將 ∪ 場上我方部隊的來源武將。
    */
   private applySwornDeployMorale(unit: TroopUnit): void {
     const source = this.sourceTemplateOfUnit(unit.id);

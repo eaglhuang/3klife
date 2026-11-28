@@ -99,6 +99,8 @@ export class TroopUnit {
 
   /** 士氣剩餘回合（PROG-2-0770，暫定 3 回合）；0 表示無鼓舞 */
   public moraleTurns = 0;
+  /** 士氣下限（義兄弟同陣整場常駐）；計時結束時士氣回到此值，預設 0 */
+  public moraleFloor = 0;
   /** 本回合自動前進的格數（神威符強擊突刺，PROG-2-1573）；每次移動階段開始歸零 */
   public chargeCells = 0;
   /** 連擊目標與層數（工甲符工甲連弩，PROG-2-1581）：連續攻擊同一目標時累加，換目標歸零 */

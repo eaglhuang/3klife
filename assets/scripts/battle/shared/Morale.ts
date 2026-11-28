@@ -15,6 +15,8 @@ export interface MoraleCarrier {
   readonly faction: Faction;
   morale: number;
   moraleTurns: number;
+  /** 士氣下限（義兄弟同陣整場常駐，PROG-2-10204 後續）：計時結束時回到此值而非 0；未設視為 0 */
+  moraleFloor?: number;
 }
 
 /**
@@ -33,7 +35,7 @@ export function castMorale(unit: MoraleCarrier, bonus: number): void {
     unit.moraleTurns = MORALE_DURATION_TURNS;
     return;
   }
-  unit.morale = bonus;
+  unit.morale = Math.max(bonus, unit.moraleFloor ?? 0);
   unit.moraleTurns = MORALE_DURATION_TURNS;
 }
 
@@ -52,7 +54,7 @@ export function advanceMorale(unit: MoraleCarrier): boolean {
   }
   unit.moraleTurns -= 1;
   if (unit.moraleTurns === 0) {
-    unit.morale = 0;
+    unit.morale = unit.moraleFloor ?? 0;
     return false;
   }
   return true;
@@ -74,10 +76,11 @@ export function advanceMoraleOf(units: Iterable<MoraleCarrier>, faction: Faction
 }
 
 /**
- * 士氣保底（義兄弟同陣，動態關係規格 §3.1）：士氣至少為 floor 並重新計時；
- * 已經比 floor 高就不降、不疊加（PROG-2-10204）。
+ * 士氣保底（義兄弟同陣，動態關係規格 §3.1）：士氣至少為 floor，且整場常駐——
+ * 不開始計時、其他鼓舞到期後回到 floor 而非 0；已經比 floor 高就不降、不疊加（PROG-2-10204）。
+ * 陣亡或移出戰場仍走 clearMorale，與其他士氣一致。
  */
 export function applyMoraleFloor(unit: MoraleCarrier, floor: number): void {
-  unit.morale = Math.max(unit.morale, floor);
-  unit.moraleTurns = MORALE_DURATION_TURNS;
+  unit.moraleFloor = Math.max(unit.moraleFloor ?? 0, floor);
+  unit.morale = Math.max(unit.morale, unit.moraleFloor);
 }

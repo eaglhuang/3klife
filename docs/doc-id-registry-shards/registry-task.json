@@ -17910,7 +17910,19 @@
     "category": "task"
   },
   {
-    "id": "doc_task_3314",
+    "id": "doc_task_3308",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10233.md",
+    "title": "[PROG-2-10233] Q 頭表情系統核心",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3315",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10221.md",
+    "title": "[PROG-2-10221] 結義戰場效果補強：士氣整場常駐、生死相隨九宮格、傭兵結義 id 同一套",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3317",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10231.md",
     "title": "[PROG-2-10231] 生活層 Q 頭兩人切磋",
     "category": "task"
