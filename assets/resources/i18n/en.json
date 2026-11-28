@@ -1213,6 +1213,7 @@
   "sortie.issue.UNKNOWN_GENERAL": "The loadout includes a general not in the roster",
   "battle.skill_name.generic-all-out-charge": "All-Out Charge",
   "battle.skill_name.zhang-fei-roar": "Army-Shaking Roar",
+  "battle.skill_name.summon-militia": "Summon Militia",
   "battle.skill_name.guo-jia-legacy": "Final Stratagem",
   "battle.skill_name.da-qiao-beauty": "National Beauty",
   "battle.skill_name.cao-ren-steadfast": "Steadfast Hold",
@@ -3354,5 +3355,8 @@
   "battle.skill_name.tally-changban-root": "Changban Roar",
   "battle.skill_effect.tally-changban-root": "【Control】Changban Roar：A roar that roots nearby enemies in place",
   "battle.skill_name.tally-changban-push": "Changban Shockwave",
-  "battle.skill_effect.tally-changban-push": "【Control】Changban Shockwave：Blast nearby enemies back by one tile"
+  "battle.skill_effect.tally-changban-push": "【Control】Changban Shockwave：Blast nearby enemies back by one tile",
+  "ui.marriage.tag.oath_matchmaker": "Sworn {0} Matchmaker +{1}%",
+  "ui.marriage.tag.rival_mutation": "Rival Synergy +{0}% Mutation",
+  "ui.marriage.tag.comrade_bonus": "Comrade Bond +{0}%"
 }

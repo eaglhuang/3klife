@@ -18024,7 +18024,13 @@
     "category": "task"
   },
   {
-    "id": "doc_task_3350",
+    "id": "doc_task_3349",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10271.md",
+    "title": "PROG-2-10271：方案 C — 結緣選角畫面顯示關係標籤與加成",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3352",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10250.md",
     "title": "[PROG-2-10250] 戰場 draw call 合批（目標 <60）與頓格設定開關",
     "category": "task"

@@ -1213,6 +1213,7 @@
   "sortie.issue.UNKNOWN_GENERAL": "编制中有不在名册的武将",
   "battle.skill_name.generic-all-out-charge": "全军突击",
   "battle.skill_name.zhang-fei-roar": "震军怒喝",
+  "battle.skill_name.summon-militia": "召唤民兵",
   "battle.skill_name.guo-jia-legacy": "遗计",
   "battle.skill_name.da-qiao-beauty": "国色",
   "battle.skill_name.cao-ren-steadfast": "稳固",
@@ -3354,5 +3355,8 @@
   "battle.skill_name.tally-changban-root": "长坂雄咆",
   "battle.skill_effect.tally-changban-root": "【控制】长坂雄咆：一声怒吼吓得周围敌军定在原地",
   "battle.skill_name.tally-changban-push": "长坂震退",
-  "battle.skill_effect.tally-changban-push": "【控制】长坂震退：震飞周围敌军，把他们推开一格"
+  "battle.skill_effect.tally-changban-push": "【控制】长坂震退：震飞周围敌军，把他们推开一格",
+  "ui.marriage.tag.oath_matchmaker": "义{0}作媒 +{1}%",
+  "ui.marriage.tag.rival_mutation": "宿敌交融・狼性突变+{0}%",
+  "ui.marriage.tag.comrade_bonus": "同袍默契 +{0}%"
 }

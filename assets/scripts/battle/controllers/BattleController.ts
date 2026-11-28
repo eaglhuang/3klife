@@ -43,6 +43,7 @@ import { desertVitalityDrain } from '../../core/systems/DesertVitality';
 import { type HistoricalPairTable } from '../../core/systems/HistoricalPairs';
 import { hasSwornBrotherInLineup, kinAuraUnitIds, kinLevelBetween, SWORN_DEPLOY_MORALE, type KinLevel, type KinPairLike } from '../../core/systems/KinBattleEffects';
 import { applyMoraleFloor } from '../shared/Morale';
+import { isSummonExpired, pickSummonCell, summonAiValue, summonExpireTurn, type SummonSpec } from '../shared/SummonRule';
 import { detectRelationEvents, RelationEventLedger, type RelationEventHit } from '../../core/systems/RelationEvents';
 import { BattleCombatResolver } from '../runtime/BattleCombatResolver';
 import { BattleGeneralDuelFlow } from '../runtime/BattleGeneralDuelFlow';
@@ -258,9 +259,33 @@ export class BattleController {
       getAncestorSignatureSkillId: (ancestorTemplateId) => findAncestorSignatureSkillId(ancestorTemplateId),
       isUnitActionBlocked: (unitId) => this.turnManager.isUnitActionBlockedThisTurn(unitId),
       getUnitSourceGeneralId: (unitId) => this.sourceTemplateOfUnit(unitId),
+      spawnSummon: (faction, spec, lane, depth, casterUnitId) => this.spawnSummonUnit(faction, spec, lane, depth, casterUnitId),
     },
     this.skillSourceTranslator,
   );
+
+  /**
+   * 生成召喚物（PROG-2-10253，doc_spec_1359）：以民兵規格（攻防 40%）建立一隊小兵，標記施放者與到期回合，
+   * 生成當回合不可行動；固定出生路，之後走既有「同路正面交戰」流程，不換路。
+   */
+  private spawnSummonUnit(faction: Faction, spec: SummonSpec, lane: number, depth: number, casterUnitId: string | null): TroopUnit | null {
+    const unit = this.unitSpawner.spawnUnit(spec.troop as TroopType, faction, lane, depth, undefined, { militia: true });
+    const turn = services().battle.getSnapshot().turn;
+    unit.summonedBy = casterUnitId ?? faction;
+    unit.summonExpireTurn = summonExpireTurn(turn, spec.durationTurns);
+    this.turnManager.markUnitActionBlocked(unit.id);
+    return unit;
+  }
+
+  /** 到期的召喚物離場（回合開始時呼叫）：不算陣亡、不給 SP、不計擊殺；走 UnitDied 讓畫面淡出 */
+  private expireSummons(turn: number): void {
+    const svc = services();
+    for (const unit of Array.from(this.state.units.values())) {
+      if (unit.summonedBy === null || !isSummonExpired(unit.summonExpireTurn, turn)) continue;
+      unit.currentHp = 0;
+      this.combatResolver.onUnitKilled(unit, null, svc);
+    }
+  }
 
   /** 我方每回合可部署幾隊（教學戰較少；戰敗敗因診斷用，PROG-2-9712） */
   public get playerDeployLimitPerTurn(): number {
@@ -1143,10 +1168,23 @@ export class BattleController {
       }
     }
 
+    // 召喚類（PROG-2-10253，doc_spec_1359 §2.5）：依戰況算打分；0 分（不用條件）者連低 IQ 的隨機池都不進
+    const summonValues = new Map<string, number>();
+    for (const candidate of candidates) {
+      if (candidate.category !== 'summon') continue;
+      const battleSkillId = this.tacticDefinitionMap.get(candidate.tacticId)?.battleSkillId ?? null;
+      const spec = battleSkillId ? resolveBattleSkillProfile(battleSkillId)?.summon : undefined;
+      const value = spec ? this.enemySummonValue(spec) : 0;
+      summonValues.set(candidate.tacticId, value);
+      metrics[candidate.tacticId] = { summonValue: value };
+    }
+    const pickable = candidates.filter(candidate => candidate.category !== 'summon' || (summonValues.get(candidate.tacticId) ?? 0) > 0);
+    if (pickable.length === 0) { this.enemyTacticDeclinedFlag = true; return null; }
+
     // 依 AI 智力分級挑技（PROG-2-1466）：低 IQ 隨機、中 IQ 最高傷害、高 IQ 以上與未套難度表走情境打分
     const tacticId = pickTacticByIq(
       this.state.aiTacticIq,
-      fillTacticNumbers(candidates, metrics),
+      fillTacticNumbers(pickable, metrics),
       situation,
       () => services().session.randomSource(),
     );
@@ -1213,6 +1251,33 @@ export class BattleController {
   public spendEnemyTacticPoints(tacticId: string | null): void {
     if (!this.enemyTacticPoints || !tacticId) return;
     this.enemyTacticPoints.current = Math.max(0, this.enemyTacticPoints.current - getTacticTpCost(tacticId));
+  }
+
+  /** 敵方召喚打分（summonAiValue）：把戰場狀態整理成 SummonAiSituation */
+  private enemySummonValue(spec: SummonSpec): number {
+    const enemyCell = this.enemyGeneralUnitId ? this.state.units.get(this.enemyGeneralUnitId) : undefined;
+    if (!enemyCell) return 0;
+    const own = this.livingUnitsOf(Faction.Enemy);
+    const opp = this.livingUnitsOf(Faction.Player);
+    const ownTroops = own.filter(u => u.id !== this.enemyGeneralUnitId);
+    const oppTroops = opp.filter(u => u.id !== this.playerGeneralUnitId);
+    const lanes = GAME_CONFIG.GRID_LANES;
+    const depths = GAME_CONFIG.GRID_DEPTH;
+    const cell = pickSummonCell(Faction.Enemy, enemyCell.lane, enemyCell.depth, { lanes, depths }, (l, d) => {
+      const c = this.state.getCell(l, d);
+      return !!c && !c.occupantId;
+    });
+    const ownLanes = new Set(ownTroops.map(u => u.lane));
+    const pressure = oppTroops.some(u => u.depth >= depths - 3); // 敵方底線在最大深度；我方兵推到前 2 格內
+    return summonAiValue(spec, {
+      hasFreeCell: cell !== null,
+      aliveSummons: own.filter(u => u.summonedBy !== null).length,
+      ownTroops: ownTroops.length,
+      opposingTroops: oppTroops.length,
+      emptyOwnLanes: lanes - ownLanes.size,
+      laneUnderPressure: pressure,
+      highIq: this.state.aiTacticIq !== 'LOW',
+    });
   }
 
   /** 最近一次 chooseEnemyTactic 是否「有候選但沒有值得放的」（PROG-2-9848）；供回合結算改普攻。 */
@@ -1933,6 +1998,7 @@ export class BattleController {
     if (this.enemyTacticPoints) this.enemyTacticPoints.current = Math.min(this.enemyTacticPoints.max, this.enemyTacticPoints.current + TACTIC_REGEN_PER_TURN);
     svc.battle.nextTurn();
     this.state.tickControlledUnits();
+    this.expireSummons(svc.battle.getSnapshot().turn);
     this.updateLastSpurtMode();
     this.burnLastSpurtStamina();
     this.updateWisdomMeter();

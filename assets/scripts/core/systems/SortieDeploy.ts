@@ -577,6 +577,8 @@ export const TACTIC_LIBRARY_TO_SPEC_ID: Readonly<Record<string, string>> = {
     'tactic-tpl-wei-zhen-reset': 'TAC_SEVEN_IN_OUT',
     'tactic-tpl-zhang-he-adaptive-camp': 'TAC_SEVEN_IN_OUT',
     'tactic-tpl-diao-chan-charm': 'TAC_DISCORD',
+    // 召喚民兵（PROG-2-10253）：召喚短命盾兵補路，TP 成本比照最接近的 TAC_SHIELD（暫定）
+    'tactic-summon-militia': 'TAC_SHIELD',
 };
 
 /** 戰場 id 先經對照轉成規格 id；本來就是規格 id 或查無對照時原樣回傳 */
