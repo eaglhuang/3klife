@@ -9,7 +9,7 @@
  */
 import { TestSuite, assert } from './TestRunner';
 import {
-    DEFAULT_BATTLE_JUICE, HitStopGate, applyJuicePrefs, parseJuicePrefs, LEGACY_HIT_STOP_SEC, LEGACY_SHAKE, UltimateWindow, attackEaseFor, attackLungeTotalSec, easeValue, flashCurveFor, floatPopMul,
+    DEFAULT_BATTLE_JUICE, HitStopGate, burstColor, sparkSpecFor, applyJuicePrefs, parseJuicePrefs, LEGACY_HIT_STOP_SEC, LEGACY_SHAKE, UltimateWindow, attackEaseFor, attackLungeTotalSec, easeValue, flashCurveFor, floatPopMul, floatOffset,
     fxSpecFor, hitStopSecFor, knockbackMul, moveEaseFor, parseBattleJuice, resolveHitKind, sampleAttackLunge, sampleRing, sampleShake, shakeEnvelope,
     shakeParamsFor, shakeRemainingStrength, shakeTierFor, shouldReplaceShake,
     type BattleJuiceConfig, type EaseName, type RingSample,
@@ -20,6 +20,28 @@ const clone = (): BattleJuiceConfig => JSON.parse(JSON.stringify(DEFAULT_BATTLE_
 
 export function createBattleJuiceSuite(): TestSuite {
     const suite = new TestSuite('BattleJuice (戰場打擊感 PROG-2-10239)');
+
+    suite.test('爆點色階：暖白→橙→暗紅單調變化，端點精確', () => {
+        const pal = DEFAULT_BATTLE_JUICE.burstPalette;
+        const out: [number, number, number] = [0, 0, 0];
+        burstColor(0, pal, out);
+        assert.equals(JSON.stringify(out), JSON.stringify(pal.white));
+        burstColor(0.45, pal, out);
+        assert.equals(JSON.stringify(out), JSON.stringify(pal.orange));
+        burstColor(1, pal, out);
+        assert.equals(JSON.stringify(out), JSON.stringify(pal.red));
+        burstColor(0.2, pal, out);
+        assert.isTrue(out[1] < pal.white[1] && out[1] > pal.orange[1]);
+    });
+
+    suite.test('火花規格：依命中種類取，數量與時長隨種類遞增、主體 0.25～0.35 秒', () => {
+        const n = sparkSpecFor('normal'), c = sparkSpecFor('crit'), u = sparkSpecFor('ultimate');
+        assert.isTrue(n.count < c.count && c.count < u.count);
+        for (const sp of [n, c, u]) assert.isTrue(sp.sec >= 0.25 && sp.sec <= 0.35);
+        const bad = parseBattleJuice({ sparks: { crit: { count: -4, sec: 99 } } });
+        assert.equals(DEFAULT_BATTLE_JUICE.sparks.crit.count, bad.sparks.crit.count);
+        assert.equals(DEFAULT_BATTLE_JUICE.sparks.crit.sec, bad.sparks.crit.sec);
+    });
 
     suite.test('解析：空輸入與壞輸入都回預設', () => {
         assert.equals(JSON.stringify(DEFAULT_BATTLE_JUICE), JSON.stringify(parseBattleJuice(null)));
@@ -123,11 +145,22 @@ export function createBattleJuiceSuite(): TestSuite {
     });
 
     suite.test('跳字倍率：暴擊最大；關閉時全為 1', () => {
-        assert.isTrue(floatPopMul('crit').peak >= floatPopMul('normal').peak);
+        // 實際峰值＝樣式表 peakScale × 倍率：爆擊約 1.3 倍（0.12 秒內縮回），不再放大到 2 倍以上蓋住單位
+        assert.isTrue(near(2.0 * floatPopMul('crit').peak, 1.3), `爆擊有效峰值=${2.0 * floatPopMul('crit').peak}`);
+        assert.isTrue(floatPopMul('crit').popIn < 1, '彈出更快');
         const off = clone();
         off.floatPop.enabled = false;
         const m = floatPopMul('crit', off);
         assert.isTrue(m.peak === 1 && m.popIn === 1);
+    });
+
+    suite.test('跳字偏移：偏頭頂右上（x>0、y>0），爆擊比一般更遠；關閉回 0', () => {
+        const n = floatOffset('normal'), c = floatOffset('crit');
+        assert.isTrue(n.x > 0 && n.y > 0 && c.x >= n.x && c.y >= n.y);
+        const off = clone();
+        off.floatPop.enabled = false;
+        const z = floatOffset('crit', off);
+        assert.isTrue(z.x === 0 && z.y === 0);
     });
 
     suite.test('擊退倍率：關閉為 1、開啟用 ratioMul', () => {
