@@ -124,7 +124,7 @@ import { OverlayCandidate, pickTopOverlay } from '../core/OverlayStack';
 import { DomesticPanelController } from '../core/DomesticPanelController';
 import { FAST_FORWARD_MAX_SEASONS, FAST_FORWARD_REASON_TEXT, fastForwardSeasons } from '../../core/systems/SeasonFastForward';
 import { BREEDING_MIN_AGE } from '../../core/systems/BreedingSystem';
-import { RECRUIT_ROWS_PER_PAGE, RecruitHallController } from '../core/RecruitHallController';
+import { RECRUIT_ROWS_PER_PAGE, RecruitHallController, recruitHallAccess } from '../core/RecruitHallController';
 import { loadGeneralAvatar, loadGeneralPortrait } from '../core/GeneralAvatarLoader';
 import { bindAvatarTalk, setAvatarTalkProvider, showAvatarBubbleText } from '../core/AvatarTalkBubble';
 import { startFunLobbyDirector } from '../fun/FunLobbyDirector';
@@ -251,7 +251,7 @@ import type { MentorCard } from '../../core/models/MentorCard';
 import { mergeMentorCards, supportRowsAsMentorCards } from '../../core/systems/SupportCardMentorBridge';
 import { ADMISSION_TOKEN_ID } from '../../shared/item/ItemConfig';
 import { gachaCostOf, parseGachaMainPools, pickPullCurrency, type GachaApi, type GachaCurrencyId, type GachaMainPoolConfig } from '../../core/gacha/GachaApi';
-import { gachaApiView, gachaAutoSizeNodes, gachaHeroIdOf, gachaWalletLabelTexts } from '../core/GachaApiTexts';
+import { gachaApiView, gachaAutoSizeNodes, gachaHeroIdOf, gachaLoadingView, gachaWalletLabelTexts } from '../core/GachaApiTexts';
 import { buildPoolDetailRows, checkGachaAffordable, planGachaButton, syncMainPoolCosts, type GachaButtonKind } from '../../core/gacha/GachaButtonRules';
 import { bindGachaPoolDetail, setGachaTexts, textLabelOf, updateGachaWalletStrip, raiseGachaWalletStrip } from '../core/GachaScreenExtras';
 import { GachaPoolSwitcher } from '../core/GachaPoolSwitcher';
@@ -2890,7 +2890,7 @@ export class LobbyScene extends Component {
                 handler: () => { domestic.cycleGovernor(taskId); this._refreshDomestic(); },
             })),
             { buttonId: 'btnFastForward', handler: () => { void this._onClickFastForward(); } },
-            { buttonId: 'btnOpenRecruit', handler: () => { this._closeDomestic(); this._openRecruitHall(); } },
+            { buttonId: 'btnOpenRecruit', handler: () => { if (this._guardRecruitHallAccess()) { this._closeDomestic(); this._openRecruitHall(); } } },
             { buttonId: 'btnOpenRival', handler: () => { this._closeDomestic(); this._openRivalDiplomacy(); } },
             { buttonId: 'btnOpenWarehouse', handler: () => { this._closeDomestic(); this._openWarehouse(); } },
             { buttonId: 'btnOpenJournalHub', handler: () => { this._closeDomestic(); this._openJournalHub(); } },
@@ -6008,7 +6008,16 @@ export class LobbyScene extends Component {
         this._ultimateCodex?.close();
     }
 
+    /** 招賢館官職門檻：大廳選單與內政畫面入口共用 recruitHallAccess；擋下時提示並回傳 false */
+    private _guardRecruitHallAccess(): boolean {
+        const officer = services().session.officerState;
+        const access = recruitHallAccess(officer.currentTier, officer.officerExp);
+        if (!access.allowed) this._showToast(access.message);
+        return access.allowed;
+    }
+
     private _openRecruitHall(): void {
+        if (!this._guardRecruitHallAccess()) return;
         const host = this._recruitHost;
         if (!host) {
             this._showNotOpenYet();
@@ -8768,7 +8777,7 @@ export class LobbyScene extends Component {
                 switchLazySlot: (slot, fragment) => host.switchLazySlot(slot, fragment),
                 applyTabRegionsForFragment: (fragment) => host.applyTabRegionsForFragment(fragment),
                 mountSection: (anchor, fragment, replace) => host.mountSection(anchor, fragment, replace),
-            }, GACHA_POOLS, (pool) => this._onGachaPoolShown(host, pool));
+            }, GACHA_POOLS, (pool) => this._onGachaPoolShown(host, pool), undefined, (pool) => this._applyGachaLoadingState(host, pool));
         if (!reuse) {
             // 畫面已重建：作廢舊 switcher 在途的切換，避免它把舊池內容掛回新畫面
             this._gachaPoolSwitcher?.cancel();
@@ -8810,6 +8819,17 @@ export class LobbyScene extends Component {
             destinyWidget.top = 92;
             destinyWidget.updateAlignment();
         }
+    }
+
+    /** 資料載入前把模板寫死的保底進度與機率蓋成載入狀態，保底條歸零（#2811 第 6 項） */
+    private _applyGachaLoadingState(host: UIScreenPreviewHost, pool: GachaPoolDef): void {
+        const binder = host.binder;
+        if (!binder) return;
+        const view = gachaLoadingView(pool);
+        setGachaTexts(binder, view.texts);
+        const track = binder.getNode(GACHA_NODES.pityTrack)?.getComponent(UITransform);
+        const fill = binder.getNode(GACHA_NODES.pityFill)?.getComponent(UITransform);
+        if (track && fill) fill.setContentSize(0, fill.height);
     }
 
     /** 切池完成（內容已載入）：刷新天命入口、餘額，以及該池的附加區塊資料。 */

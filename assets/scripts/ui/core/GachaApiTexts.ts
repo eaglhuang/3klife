@@ -153,6 +153,28 @@ export function gachaApiView(
     return { texts, actives, pityRatio: meterMax > 0 ? Math.min(1, meterCur / meterMax) : 0, mainCurrency };
 }
 
+/** 資料載入完成前的佔位字（#2811 第 6 項）：原稿模板寫死的保底、機率不可先露出 */
+export const GACHA_LOADING_TEXT = '載入中…';
+export const GACHA_LOADING_PLACEHOLDER = '--';
+
+/**
+ * 載入狀態：把原稿模板寫死的保底進度、保底說明、各池機率格蓋成佔位字，保底條歸零。
+ * 真資料（gachaApiView）回來後會整批覆寫這些節點；沒回來就一直是載入狀態，不會露出誤導選擇的數字。
+ */
+export function gachaLoadingView(pool: GachaPoolDef): { texts: Record<string, string>; actives: Record<string, boolean>; pityRatio: number } {
+    const texts: Record<string, string> = {
+        [GACHA_NODES.pityFillLabel]: GACHA_LOADING_TEXT,
+        [GACHA_NODES.pityRemain]: GACHA_LOADING_PLACEHOLDER,
+        [pool.guarantee]: GACHA_LOADING_TEXT,
+    };
+    for (let i = 0; i < GACHA_RATE_ROWS; i++) {
+        const nodes = GACHA_RATE_NODES(i);
+        texts[nodes.rarity] = GACHA_LOADING_PLACEHOLDER;
+        texts[nodes.pct] = GACHA_LOADING_PLACEHOLDER;
+    }
+    return { texts, actives: {}, pityRatio: 0 };
+}
+
 /** 相容舊呼叫：只要文字 */
 export function gachaApiTexts(
     pool: GachaPoolDef,
