@@ -3189,5 +3189,13 @@
   "life.proto.btn.season": "季節：{0} ▶",
   "life.proto.stats": "Q頭 {0}　シンボル {1}　部品 {2}",
   "ui.battle.kin_rescue.float": "生死を共に！",
-  "ui.battle.kin_rescue.log": "{0}が{1}をかばい、{2}ダメージを肩代わりした"
+  "ui.battle.kin_rescue.log": "{0}が{1}をかばい、{2}ダメージを肩代わりした",
+  "life.street_first.progress": "発見 {0}/{1}",
+  "life.street_first.complete": "三人とも見つけた！通りにもすっかり慣れたね。ささやかな褒美をどうぞ。",
+  "life.street_first.guide_intro.m": "ついてきて、この通りは任せて！誰が何をしているか見つけたら教えてね。",
+  "life.street_first.guide_intro.f": "ついてきて、この通りは任せて！誰が何をしているか見つけたら教えてね。",
+  "life.street_first.found.m": "{0}を見つけた！彼は自分の用事に忙しそうだ。",
+  "life.street_first.found.f": "{0}を見つけた！彼女は自分の用事に忙しそうだ。",
+  "life.street_first.gift_unlocked.m": "彼に贈り物ができるようになった。好きそうな物を選ぼう！",
+  "life.street_first.gift_unlocked.f": "彼女に贈り物ができるようになった。好きそうな物を選ぼう！"
 }

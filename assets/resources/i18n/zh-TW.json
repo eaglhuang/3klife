@@ -3258,5 +3258,13 @@
   "life.proto.btn.season": "季節：{0} ▶",
   "life.proto.stats": "Q頭 {0}　符號 {1}　符號元件 {2}",
   "ui.battle.kin_rescue.float": "生死相隨！",
-  "ui.battle.kin_rescue.log": "{0}與{1}生死相隨，替其分攤 {2} 點傷害"
+  "ui.battle.kin_rescue.log": "{0}與{1}生死相隨，替其分攤 {2} 點傷害",
+  "life.street_first.progress": "已找到 {0}/{1}",
+  "life.street_first.complete": "三位都找到啦！大街逛熟了，小獎勵收下～",
+  "life.street_first.guide_intro.m": "跟我來，大街我熟！看到誰在忙什麼，記得跟我說一聲。",
+  "life.street_first.guide_intro.f": "跟我來，大街我熟！看到誰在忙什麼，記得跟我說一聲。",
+  "life.street_first.found.m": "找到{0}了！他正忙著自己的事呢。",
+  "life.street_first.found.f": "找到{0}了！她正忙著自己的事呢。",
+  "life.street_first.gift_unlocked.m": "以後可以送禮物給他了，挑個他喜歡的吧！",
+  "life.street_first.gift_unlocked.f": "以後可以送禮物給她了，挑個她喜歡的吧！"
 }

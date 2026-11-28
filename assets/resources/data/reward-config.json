@@ -3,6 +3,13 @@
   "pools": [],
   "bundles": [
     {
+      "id": "BUNDLE_STREET_FIRST_VISIT",
+      "kind": "reward",
+      "effects": [{ "kind": "currency", "id": "silver", "amount": 50 }],
+      "sources": ["life_street_first_visit"],
+      "presentation": { "type": "instant", "args": {}, "skippable": true }
+    },
+    {
       "id": "BUNDLE_MILESTONE_KILL_100",
       "kind": "reward",
       "effects": [{ "kind": "item", "itemId": "ITEM_BATTLE_NOTE", "qty": 1, "itemSource": "TASK" }],

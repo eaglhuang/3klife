@@ -3257,5 +3257,13 @@
   "life.proto.btn.season": "Season: {0} ▶",
   "life.proto.stats": "Heads {0}  Symbols {1}  Sprites {2}",
   "ui.battle.kin_rescue.float": "Bound in life and death!",
-  "ui.battle.kin_rescue.log": "{0} stepped in for {1}, taking {2} damage"
+  "ui.battle.kin_rescue.log": "{0} stepped in for {1}, taking {2} damage",
+  "life.street_first.progress": "Found {0}/{1}",
+  "life.street_first.complete": "All three found! You know the street now. Here is a little reward.",
+  "life.street_first.guide_intro.m": "Follow me, I know this street! Tell me when you spot someone busy.",
+  "life.street_first.guide_intro.f": "Follow me, I know this street! Tell me when you spot someone busy.",
+  "life.street_first.found.m": "Found {0}! He is busy with his own thing.",
+  "life.street_first.found.f": "Found {0}! She is busy with her own thing.",
+  "life.street_first.gift_unlocked.m": "You can now give him gifts. Pick something he likes!",
+  "life.street_first.gift_unlocked.f": "You can now give her gifts. Pick something she likes!"
 }
