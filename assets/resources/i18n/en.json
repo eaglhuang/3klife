@@ -3354,5 +3354,8 @@
   "battle.skill_name.tally-changban-root": "Changban Roar",
   "battle.skill_effect.tally-changban-root": "【Control】Changban Roar：A roar that roots nearby enemies in place",
   "battle.skill_name.tally-changban-push": "Changban Shockwave",
-  "battle.skill_effect.tally-changban-push": "【Control】Changban Shockwave：Blast nearby enemies back by one tile"
+  "battle.skill_effect.tally-changban-push": "【Control】Changban Shockwave：Blast nearby enemies back by one tile",
+  "ui.marriage.tag.oath_matchmaker": "Sworn {0} Matchmaker +{1}%",
+  "ui.marriage.tag.rival_mutation": "Rival Synergy +{0}% Mutation",
+  "ui.marriage.tag.comrade_bonus": "Comrade Bond +{0}%"
 }

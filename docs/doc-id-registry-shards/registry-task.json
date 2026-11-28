@@ -18022,5 +18022,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10269.md",
     "title": "[PROG-2-10269] 修 #2811 第 6、9 項",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3349",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10271.md",
+    "title": "PROG-2-10271：方案 C — 結緣選角畫面顯示關係標籤與加成",
+    "category": "task"
   }
 ]
