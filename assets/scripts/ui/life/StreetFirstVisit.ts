@@ -33,7 +33,7 @@ export interface StreetFirstVisitConfig {
     unlockFeature: string;
     rewardBundleId: string;
     escort: { stops: string[]; secondsPerStop: number };
-    i18n: { progress: string; complete: string; guideIntro: string; found: string; giftUnlocked: string };
+    i18n: { progress: string; targets: string; complete: string; guideIntro: string; found: string; giftUnlocked: string };
 }
 
 export const DEFAULT_STREET_FIRST_VISIT_CONFIG: StreetFirstVisitConfig = firstVisitData as unknown as StreetFirstVisitConfig;

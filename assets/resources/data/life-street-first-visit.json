@@ -12,6 +12,7 @@
   },
   "i18n": {
     "progress": "life.street_first.progress",
+    "targets": "life.street_first.targets",
     "complete": "life.street_first.complete",
     "guideIntro": "life.street_first.guide_intro",
     "found": "life.street_first.found",
