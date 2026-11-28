@@ -17886,9 +17886,21 @@
     "category": "task"
   },
   {
-    "id": "doc_task_3299",
+    "id": "doc_task_3300",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10223.md",
+    "title": "[PROG-2-10223] 血統與結緣體驗強化四項",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3303",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10221.md",
     "title": "[PROG-2-10221] 結義戰場效果補強：士氣整場常駐、生死相隨九宮格、傭兵結義 id 同一套",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3304",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10225.md",
+    "title": "[PROG-2-10225] 年末典禮觀眾台詞：第 4～5 名勉勵與結義彩蛋",
     "category": "task"
   }
 ]
