@@ -20838,12 +20838,67 @@
         "trace_artifacts": [],
         "metrics_summary": []
       }
+    },
+    {
+      "doc_id": "doc_task_3319",
+      "id": "PROG-2-10226",
+      "title": "市井大街場景交付補件",
+      "owner": "codex-gpt-6.2-sol",
+      "priority": "P1",
+      "status": "in-progress",
+      "type": "implementation",
+      "phase": "M0",
+      "created": "2026-11-28",
+      "created_by_agent": "codex-gpt-6.2-sol",
+      "started_at": "2026-11-28T11:53:00+08:00",
+      "started_by_agent": "codex-gpt-6.2-sol",
+      "chain_id": "",
+      "chain_step": "",
+      "sensor_triggered_by": "",
+      "description": "延續 PR #2772，以既有春季白天左右底圖完成 4096×1536 全景、正式熱區圖與行走遮罩，並以程式調色與疊層產生冬日和夜晚樣張。",
+      "related": [],
+      "depends": [],
+      "acceptance": [
+        "全景輸出為 4096×1536 且左右接縫連續",
+        "熱區圖與行走遮罩遵循既有尺寸與色碼規格",
+        "冬日與夜晚樣張以春季白天底圖程式調色加疊層，不重繪整張場景",
+        "素材依 PR #2772 既有目錄規範交付並完成自檢"
+      ],
+      "deliverables": [
+        "artwork/life-scenes/market-street/market_street_full_4096x1536.png",
+        "assets/resources/life/mkt/mkt_hotspots.png",
+        "assets/resources/life/mkt/mkt_walkmask.png",
+        "artwork/life-scenes/market-street/samples/mkt_winter_day_sample.png",
+        "artwork/life-scenes/market-street/samples/mkt_night_sample.png"
+      ],
+      "notes": "2026-11-28 | 狀態: in-progress | 驗證: 尺寸、metadata、encoding 與 PR diff pass | 變更: 完成全景、熱區、行走遮罩及冬夜樣張 | 阻塞: 等待 CI/PM 審核",
+      "brief": {
+        "style": "classic",
+        "label": "",
+        "summary": "",
+        "position": "",
+        "prereq": ""
+      },
+      "contracts": {
+        "input": [],
+        "output": [],
+        "validation_cmd": "",
+        "rollback_hint": "",
+        "execution_steps": []
+      },
+      "harness_evidence": {
+        "artifact_paths": [],
+        "validation_evidence": [],
+        "handoff_diff_status": "",
+        "trace_artifacts": [],
+        "metrics_summary": []
+      }
     }
   ],
   "summary": {
-    "done": 383,
+    "done": 384,
     "in_progress": 7,
     "open": 91,
-    "total": 481
+    "total": 482
   }
 }
