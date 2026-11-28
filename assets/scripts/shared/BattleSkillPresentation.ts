@@ -98,6 +98,17 @@ const PRESENTATION_BY_SKILL_ID: Record<string, PresentationRow> = {
   'tally-wei-zhen-hua-xia': { categoryId: 'awe', categoryZh: '威震' },
   'tally-wushuang': { categoryId: 'breakthrough', categoryZh: '衝陣' },
   'zhao-yun-immortal': { categoryId: 'invincible', categoryZh: '無敵' },
+  // PROG-2-10246：武將天生戰法模板用到、原本沒有招式名的虎符／專屬招式
+  'wei-zhen-reset': { categoryId: 'reset', categoryZh: '重置' },
+  'tally-fire-god-hunt': { categoryId: 'fire', categoryZh: '火攻' },
+  'tally-link': { categoryId: 'chain', categoryZh: '連環' },
+  'tally-poison-arrow': { categoryId: 'pierce', categoryZh: '貫穿' },
+  'tally-hundred-steps': { categoryId: 'pierce', categoryZh: '貫穿' },
+  'tally-defense-pierce': { categoryId: 'pierce', categoryZh: '貫穿' },
+  'you-qi-counter': { categoryId: 'defense', categoryZh: '防禦' },
+  'tally-counter-weak': { categoryId: 'defense', categoryZh: '防禦' },
+  'tally-changban-root': { categoryId: 'control', categoryZh: '控制' },
+  'tally-changban-push': { categoryId: 'control', categoryZh: '控制' },
 };
 
 /** 所有有招式表的 battleSkillId（測試用：每個可施放 id 都應能解出招式名與效果說明） */
