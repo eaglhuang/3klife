@@ -139,3 +139,4 @@
 | `doc_task_3343` | docs/agent-briefs/tasks/PROG/PROG-2-10254.md | [PROG-2-10254] 修 playtest-online 在 12:00 發版時失敗的 7 步 |
 | `doc_task_3344` | docs/agent-briefs/tasks/PROG/PROG-2-10264.md | [PROG-2-10264] 規格書：街上偶遇他國武將＋武將作息表 |
 | `doc_task_3345` | docs/agent-briefs/tasks/PROG/PROG-2-10253.md | [PROG-2-10253] 戰場技能補齊 |
+| `doc_task_3346` | docs/agent-briefs/tasks/PROG/PROG-2-10258.md | [PROG-2-10258] 市井大街 Q 頭生活雛形 |

@@ -8,22 +8,6 @@
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
-| `doc_other_3981` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0094-commit-range-guard-map.task.md | TASK-RFT-0094 - Split Commit Range Guard |
-| `doc_other_3982` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0095-upgrade-proposal-map.task.md | TASK-RFT-0095 - Split Upgrade Proposal Command |
-| `doc_other_3983` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0096-core-spec-parser-final-600.task.md | TASK-RFT-0096 - Split Core Spec Parser Under 600 Lines |
-| `doc_other_3984` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0097-global-physical-line-budget-gate.task.md | TASK-RFT-0097 - Establish Global Physical-Line-Budget Gate |
-| `doc_other_3985` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0098-touched-file-physical-line-admission.task.md | TASK-RFT-0098 - Touched-File Physical-Line Admission Gate |
-| `doc_other_3986` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0099-semantic-atomization-metrics.task.md | TASK-RFT-0099 - Semantic Atomization Metrics for RFT Gate Evidence |
-| `doc_other_3987` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0100-continuation-card-generation.task.md | TASK-RFT-0100 - Automatic RFT Continuation-Card Generation |
-| `doc_other_3988` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0101-rehabilitate-git-governance-transaction-facade-after-preservation-wip.task.md | TASK-RFT-0101 Rehabilitate git-governance transaction facade after preservation WIP |
-| `doc_other_3989` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0102-git-governance-typed-implementation-modules.task.md | TASK-RFT-0102 - Expand git-governance implementation carrier into typed bounded modules |
-| `doc_other_3990` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0103-pre-commit-hook-parity-contract.task.md | TASK-RFT-0103 - Align pre-commit hook parity test with unique staged task context |
-| `doc_other_3991` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0104-tasks-legacy-semantic-modules.task.md | TASK-RFT-0104 - Extract bounded semantic modules from tasks legacy implementation |
-| `doc_other_3992` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0105-closure-packet-semantic-modules.task.md | TASK-RFT-0105 - Extract bounded semantic modules from closure-packet schema implementation |
-| `doc_other_3993` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0106-task-ledger-validator-semantic-modules.task.md | TASK-RFT-0106 - Extract bounded semantic modules from task-ledger validator implementation |
-| `doc_other_3994` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0107-extract-bounded-semantic-modules-from-tasks-legacy-implementation.task.md | TASK-RFT-0107 Extract bounded semantic modules from tasks legacy implementation |
-| `doc_other_3995` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0108-extract-bounded-semantic-modules-from-evidence-bundle-io-implementation.task.md | TASK-RFT-0108 Extract bounded semantic modules from evidence bundle IO implementation |
-| `doc_other_3996` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0109-extract-bounded-semantic-modules-from-pre-commit-hook-implementation.task.md | TASK-RFT-0109 Extract bounded semantic modules from pre-commit hook implementation |
 | `doc_other_3997` | docs/ai_atomic_framework/shards/atm-roadmap-foundations.md | AI Atomic Framework Roadmap — 名詞定義・分層・自舉・Genesis（§4–§7） |
 | `doc_other_3998` | docs/ai_atomic_framework/shards/atm-roadmap-intro.md | AI Atomic Framework Roadmap — 核心結論・問題背景（§0–§1） |
 | `doc_other_3999` | docs/ai_atomic_framework/shards/atm-roadmap-milestones.md | AI Atomic Framework Roadmap — 里程碑 Phase 0-7 詳細規格（§8+） |

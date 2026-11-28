@@ -12,12 +12,5 @@
     "title": "Server 文件索引總覽",
     "category": "server",
     "subtype": "ops"
-  },
-  {
-    "id": "doc_server_other_0001",
-    "path": "server/README.dev.md",
-    "title": "Server Dev Workflow",
-    "category": "server",
-    "subtype": "other"
   }
 ]
