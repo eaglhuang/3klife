@@ -242,6 +242,7 @@ export const geometry = { Ray: class { o = new Vec3(); d = new Vec3(); } };
 export const gfx = {
     CullMode: { NONE: 0 },
     BlendFactor: { ZERO: 0, ONE: 1, SRC_ALPHA: 2, ONE_MINUS_SRC_ALPHA: 3, SRC_COLOR: 4, ONE_MINUS_SRC_COLOR: 5 },
+    BufferTextureCopy: class { texOffset = { x: 0, y: 0, z: 0 }; texExtent = { width: 0, height: 0, depth: 1 }; },
 };
 // 裝飾器同時支援 @x 與 @x(...) 兩種寫法，型別放寬為 any（mock 僅供型別檢查）
 export const _decorator: {
@@ -339,6 +340,8 @@ export class ImageAsset { [key: string]: any; }
 export class Texture2D {
     [key: string]: any;
     declare static PixelFormat: any;
+    declare static Filter: any;
+    declare static WrapMode: any;
 }
 export class SpriteFrame { [key: string]: any; }
 export class Material { [key: string]: any; }
@@ -429,6 +432,7 @@ export const view = {
 /** Spine 組件最小型別替身（只供 SpineGeneralOverlay 型別檢查；測試以執行期 stub 替換實作）。 */
 export namespace sp {
     export class SkeletonData {
+        [key: string]: any;
         addRef(): void { /* mock */ }
         decRef(): void { /* mock */ }
         getRuntimeData(): { findAnimation(name: string): unknown; findSkin(name: string): unknown } { return { findAnimation: () => null, findSkin: () => null }; }

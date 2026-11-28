@@ -17,4 +17,3 @@
 |--------|--------|------|------|
 | `doc_server_data_0001` | data | docs/RAG_ETL_管線應用分析.md | RAG ETL 管線應用分析 |
 | `doc_server_ops_0003` | ops | server/server_docs_reference.md | Server 文件索引總覽 |
-| `doc_server_other_0001` | other | server/README.dev.md | Server Dev Workflow |
