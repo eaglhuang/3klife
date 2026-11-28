@@ -11,6 +11,8 @@ import {
     crowdTurn,
     normalizeCrowdGender,
     pickCeremonyCrowd,
+    pickNearPodiumLine,
+    pickOathCongratsLine,
     resolveCrowdLine,
     resolveCrowdVoiceLine,
     type CeremonyCrowdConfig,
@@ -165,6 +167,66 @@ export function createYearEndCeremonyCrowdSuite(): TestSuite {
         equal(crowd[0].age, 22);
         equal(crowd[1].type, undefined);
         equal(crowd[1].age, undefined);
+    });
+
+    suite.test('第 4～5 名勉勵：依實際和第 3 名的分差、門檻與名次區間決定', () => {
+        const board = (rank: number, score: number) => ({
+            entries: [
+                { rank: 3, score: 1000, isPlayer: false },
+                { rank, score, isPlayer: true },
+            ],
+        });
+        const nearKeys = config.nearPodiumKeys!;
+        equal(pickNearPodiumLine(board(4, 900), config, 0)?.deltaScore, 100);
+        equal(pickNearPodiumLine(board(5, 750), config, 1)?.deltaScore, 250);
+        equal(pickNearPodiumLine(board(5, 750), config, 1)?.key, nearKeys[1]);
+        equal(pickNearPodiumLine(board(5, 749), config, 0), null);
+        equal(pickNearPodiumLine(board(2, 1200), config, 0), null);
+        equal(pickNearPodiumLine(board(6, 990), config, 0), null);
+        equal(pickNearPodiumLine(board(4, 999.2), config, 0)?.deltaScore, 1);
+        equal(pickNearPodiumLine({ entries: [{ rank: 4, score: 10, isPlayer: true }] }, config, 0), null);
+        equal(pickNearPodiumLine(board(4, 900), { ...config, nearPodiumMaxDeltaScore: 50 }, 0), null);
+        equal(pickNearPodiumLine(board(4, 900), { ...config, nearPodiumRanks: [5] }, 0), null);
+        equal(pickNearPodiumLine(board(4, 900), { ...config, nearPodiumKeys: [] }, 0), null);
+    });
+
+    suite.test('結義彩蛋：只有結義兄弟觀眾觸發，稱謂依性別與年齡，可由資料關閉', () => {
+        const crowd = [
+            { generalId: 'cao-cao', name: '曹操', gender: 'M' as const, age: 40 },
+            { generalId: 'guan-yu', name: '關羽', gender: 'M' as const, age: 30 },
+            { generalId: 'da-qiao', name: '大喬', gender: 'F' as const, age: 18 },
+        ];
+        const rel = config.oathRelationKeys!;
+        const base = { crowd, winnerId: 'liu-bei', winnerAge: 25, brotherIds: ['guan-yu', 'da-qiao'], turn: 0 };
+        equal(pickOathCongratsLine({ ...base, memberIndex: 0 }, config), null);
+        const elder = pickOathCongratsLine({ ...base, memberIndex: 1 }, config);
+        equal(elder?.relationKey, rel.elderM);
+        equal(elder?.key, config.oathCongratsKeys![0]);
+        equal(pickOathCongratsLine({ ...base, memberIndex: 2, turn: 4 }, config)?.relationKey, rel.youngerF);
+        equal(pickOathCongratsLine({ ...base, memberIndex: 2, turn: 4 }, config)?.key, config.oathCongratsKeys![1]);
+        equal(pickOathCongratsLine(base, config)?.memberIndex, 1);
+        equal(pickOathCongratsLine({ ...base, winnerAge: undefined, memberIndex: 2 }, config)?.relationKey, rel.elderF);
+        equal(pickOathCongratsLine({ ...base, brotherIds: [], memberIndex: 1 }, config), null);
+        equal(pickOathCongratsLine({ ...base, winnerId: 'guan-yu', memberIndex: 1 }, config), null);
+        equal(pickOathCongratsLine({ ...base, memberIndex: 1 }, { ...config, oathEasterEggPriority: false }), null);
+    });
+
+    suite.test('四語系：勉勵與結義台詞鍵齊全，佔位 {0}{1}（結義再加 {2}）', () => {
+        const nearKeys = config.nearPodiumKeys!;
+        const oathKeys = config.oathCongratsKeys!;
+        ok(nearKeys.length >= 3 && oathKeys.length >= 3);
+        for (const locale of LOCALES) {
+            const table = readJson<Record<string, string>>(`assets/resources/i18n/${locale}.json`);
+            for (const key of nearKeys) {
+                const text = table[key];
+                ok(typeof text === 'string' && text.includes('{0}') && text.includes('{1}') && !/\{[2-9]\}/.test(text), `${locale} ${key}`);
+            }
+            for (const key of oathKeys) {
+                const text = table[key];
+                ok(typeof text === 'string' && text.includes('{0}') && text.includes('{1}') && text.includes('{2}'), `${locale} ${key}`);
+            }
+            for (const key of Object.values(config.oathRelationKeys!)) ok(!!table[key], `${locale} 缺 ${key}`);
+        }
     });
 
     return suite;
