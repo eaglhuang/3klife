@@ -8,6 +8,7 @@
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
+| `doc_other_3709` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0368-let-one-command-satisfy-every-emergency-permission-it-needs.task.md | ATM-GOV-0368 Let one command satisfy every emergency permission it needs |
 | `doc_other_3710` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0369-make-cross-task-mutation-ownership-require-current-authority-snapshots.task.md | ATM-GOV-0369 Make cross-task mutation ownership require current authority snapshots |
 | `doc_other_3711` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0370-bind-runner-publication-outputs-to-producer-authority-before-taskflow-close-bundling.task.md | ATM-GOV-0370 Bind runner publication outputs to producer authority before taskflow close bundling |
 | `doc_other_3712` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0371-fail-closed-when-governed-commit-tree-diverges-from-sealed-candidate.task.md | ATM-GOV-0371 Fail closed when governed commit tree diverges from sealed candidate |
@@ -294,4 +295,3 @@
 | `doc_other_3993` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0106-task-ledger-validator-semantic-modules.task.md | TASK-RFT-0106 - Extract bounded semantic modules from task-ledger validator implementation |
 | `doc_other_3994` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0107-extract-bounded-semantic-modules-from-tasks-legacy-implementation.task.md | TASK-RFT-0107 Extract bounded semantic modules from tasks legacy implementation |
 | `doc_other_3995` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0108-extract-bounded-semantic-modules-from-evidence-bundle-io-implementation.task.md | TASK-RFT-0108 Extract bounded semantic modules from evidence bundle IO implementation |
-| `doc_other_3996` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0109-extract-bounded-semantic-modules-from-pre-commit-hook-implementation.task.md | TASK-RFT-0109 Extract bounded semantic modules from pre-commit hook implementation |

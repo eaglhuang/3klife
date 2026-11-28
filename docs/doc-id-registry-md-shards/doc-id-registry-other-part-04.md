@@ -8,6 +8,7 @@
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
+| `doc_other_3135` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0114-build-dry-run-capable-paired-benchmark-executor.task.md | TASK-PRF-0114 Build dry-run capable paired benchmark executor |
 | `doc_other_3136` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0115-isolate-cli-sweep-build-outputs-and-reduce-required-ci-wall-time.task.md | TASK-PRF-0115 Isolate CLI sweep build outputs and reduce required CI wall time |
 | `doc_other_3137` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0116-reconcile-current-product-ci-failure-dispositions-from-raw-lifecycle-evidence.task.md | TASK-PRF-0116 Reconcile current Product CI failure dispositions from raw lifecycle evidence |
 | `doc_other_3138` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0117-reseal-the-frozen-runner-from-the-current-committed-source.task.md | TASK-PRF-0117 Reseal the frozen runner from the current committed source |
@@ -294,4 +295,3 @@
 | `doc_other_3419` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0008-structured-file-fixture-suite.task.md | TASK-GIT-0008 |
 | `doc_other_3420` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0009-post-push-fail-fallback.task.md | TASK-GIT-0009 |
 | `doc_other_3421` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0010-operator-policy-and-bypass-audit.task.md | TASK-GIT-0010 |
-| `doc_other_3422` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0011-adopter-docs-and-runbook.task.md | TASK-GIT-0011 |

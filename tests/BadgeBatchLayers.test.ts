@@ -81,14 +81,14 @@ export function createBadgeBatchLayersSuite(): TestSuite {
 
     suite.test('UnitRenderer：部隊徽章走合批圖層、文字 BITMAP 點陣快取、位置更新後才 sync', () => {
         const src = read('assets/scripts/battle/views/UnitRenderer.ts');
-        assert.isTrue(src.includes('this.buildBadge(labelNode, 170, 34, unit.type, badgeLayers)'));
+        assert.isTrue(src.includes('this.buildUnitHud(labelNode, unit.type, unit.faction, badgeLayers, hudScale)'));
         // 武將名牌維持 Graphics 版（不傳 layers）
-        assert.isTrue(src.includes('this.buildBadge(labelNode, GENERAL_PLATE_WIDTH, GENERAL_PLATE_HEIGHT, null, null, true)'));
+        assert.isTrue(src.includes('this.buildBadge(labelNode, GENERAL_PLATE_WIDTH, GENERAL_PLATE_HEIGHT)'));
         // PROG-2-9718：改走 setCacheModeDeferred（固定外框的強制重排延後），仍是 BITMAP
-        assert.equals(2, src.split(', Label.CacheMode.BITMAP)').length - 1);
+        assert.equals(3, src.split(', Label.CacheMode.BITMAP)').length - 1);
         // 快取模式要在 SHRINK 之後才切，否則節點會先被縮成空字串的寬度
         const shrinkHp = src.indexOf('this.shrinkToFit(hpLabel);');
-        assert.isTrue(shrinkHp > 0 && src.indexOf('for (const l of [attackLabel, typeLabel, hpLabel]) setCacheModeDeferred(l, Label.CacheMode.BITMAP);') > shrinkHp);
+        assert.isTrue(shrinkHp > 0 && src.indexOf('for (const l of [typeLabel, hpLabel]) setCacheModeDeferred(l, Label.CacheMode.BITMAP);') > shrinkHp);
         const late = src.slice(src.indexOf('  lateUpdate(dt = 0): void {'));
         assert.isTrue(late.indexOf('this.badgeLayers?.sync()') > late.indexOf('this.tileBuffMarkers.update(dt)'));
         assert.isTrue(late.indexOf('this.badgeLayers?.sync()') > late.indexOf('this.avoidGeneralPlates(dt)'));
@@ -97,12 +97,12 @@ export function createBadgeBatchLayersSuite(): TestSuite {
         assert.isTrue(create > 0 && create < src.indexOf('const labelNode = new Node(`UnitLabel_${unit.id}`);'));
     });
 
-    suite.test('徽章底圖 160x80、不打包進動態圖集、不裁切', () => {
+    suite.test('徽章底圖 400x160、不打包進動態圖集、不裁切', () => {
         const meta = JSON.parse(read('assets/resources/sprites/battle/battle_badge_atlas.png.meta'));
         const sf = Object.values(meta.subMetas as Record<string, { importer: string; userData: Record<string, unknown> }>)
             .find(m => m.importer === 'sprite-frame')!;
-        assert.equals(160, sf.userData.width);
-        assert.equals(80, sf.userData.height);
+        assert.equals(400, sf.userData.width);
+        assert.equals(160, sf.userData.height);
         assert.equals(false, sf.userData.packable);
         assert.equals('none', sf.userData.trimType);
     });

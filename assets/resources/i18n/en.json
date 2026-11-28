@@ -265,6 +265,8 @@
   "battle.review.close": "Close",
   "battle.settings.title": "Settings",
   "battle.settings.resume": "Resume",
+  "battle.settings.hitstop.on": "Hit stop: On",
+  "battle.settings.hitstop.off": "Hit stop: Off",
   "battle.ultimate.select_title": "Choose Ultimate",
   "battle.unit_info.base_stats": "Base Stats",
   "battle.unit_info.traits": "Troop Traits",

@@ -8,6 +8,7 @@
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
+| `doc_other_3996` | docs/ai_atomic_framework/rft-hardening/tasks/TASK-RFT-0109-extract-bounded-semantic-modules-from-pre-commit-hook-implementation.task.md | TASK-RFT-0109 Extract bounded semantic modules from pre-commit hook implementation |
 | `doc_other_3997` | docs/ai_atomic_framework/shards/atm-roadmap-foundations.md | AI Atomic Framework Roadmap — 名詞定義・分層・自舉・Genesis（§4–§7） |
 | `doc_other_3998` | docs/ai_atomic_framework/shards/atm-roadmap-intro.md | AI Atomic Framework Roadmap — 核心結論・問題背景（§0–§1） |
 | `doc_other_3999` | docs/ai_atomic_framework/shards/atm-roadmap-milestones.md | AI Atomic Framework Roadmap — 里程碑 Phase 0-7 詳細規格（§8+） |
@@ -255,3 +256,18 @@
 | `doc_other_4241` | docs/reports/q4-generals-bow-rule-and-route-1125.md | Q4 武將：持弓驗收規則 與 下一輪做法（11/25） |
 | `doc_other_4242` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-16.md | Doc ID Registry Markdown Index — Spec / Index / Task |
 | `doc_other_4243` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-17.md | Doc ID Registry Markdown Index — Spec / Index / Task |
+| `doc_other_4244` | .github/ISSUE_TEMPLATE/bug_report.md | 問題描述 |
+| `doc_other_4245` | .github/ISSUE_TEMPLATE/feature_request.md | 功能描述 |
+| `doc_other_4246` | .github/ISSUE_TEMPLATE/rfc.md | RFC 摘要 |
+| `doc_other_4247` | .github/prompts/atm-atom-map-refactor.prompt.md | ATM Atom Map Refactor |
+| `doc_other_4248` | .github/prompts/atm-create.prompt.md | ATM Create |
+| `doc_other_4249` | .github/prompts/atm-evidence.prompt.md | ATM Evidence |
+| `doc_other_4250` | .github/prompts/atm-governance-router.prompt.md | ATM Governance Router |
+| `doc_other_4251` | .github/prompts/atm-handoff.prompt.md | ATM Handoff |
+| `doc_other_4252` | .github/prompts/atm-internal-build-sync.prompt.md | ATM Internal Build Sync |
+| `doc_other_4253` | .github/prompts/atm-lock.prompt.md | ATM Lock |
+| `doc_other_4254` | .github/prompts/atm-next.prompt.md | ATM Next |
+| `doc_other_4255` | .github/prompts/atm-orient.prompt.md | ATM Orient |
+| `doc_other_4256` | .github/prompts/atm-task-intent-resolver.prompt.md | ATM Task Intent Resolver |
+| `doc_other_4257` | .github/prompts/atm-upgrade-scan.prompt.md | ATM Upgrade Scan |
+| `doc_other_4258` | .github/pull_request_template.md | Pull Request |
