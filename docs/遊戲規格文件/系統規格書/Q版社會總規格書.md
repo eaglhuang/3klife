@@ -221,7 +221,7 @@
 | 動作 | `q-motion-clips.json`、`q-anim-budget.json`、`q-actor-sockets.json` |
 | 表情 | `q-face-anchors.json`、`q-face-parts.atlas`、`q-expression-presets.json` |
 | 生活 | `life-profile.json`、`life-factors.json`、`life-scenes.json`、`life-roster.json`、`q-symbol-groups.json`、`q-rare-gestures.json`、`life-gift-events.json`、`life-friendship-actions.json`、`life-injury.json` |
-| 社會 | `life-intel-levels.json`、`life-intel-sources.json`、`life-interaction-quota.json`、`life-ui-layout.json`、`life-area-maps.json`（大圖路徑、導航圖、熱區色碼、光照乘色 `lighting`、季節補丁座標，第 10 章與 QLIFE-01 第 3.5 節）|
+| 社會 | `life-intel-levels.json`、`life-intel-sources.json`、`life-interaction-quota.json`、`life-street-open.json`、`life-street-first-visit.json`、`life-ui-layout.json`、`life-area-maps.json`（大圖路徑、導航圖、熱區色碼、光照乘色 `lighting`、季節補丁座標，第 10 章與 QLIFE-01 第 3.5 節）|
 
 ### 7.2 需要走共用 API 的重要數值（共用框架總綱第 5 章硬規則）
 
@@ -298,11 +298,41 @@ v2 圖上可辨認的店面（照 v2 的密度與招牌）：客棧、酒館、�
 |---|---|
 | 開放條件 | 第一場戰鬥已完成，且遊戲季數 ≥ `openSeasonMin`（預設第 1 季）；條件放 `life-street-open.json`：`{ openAfterFirstBattle, openSeasonMin, tutorialEscortRequired }` |
 | 程式旗標 | `assets/scripts/ui/life/StreetOpenGate.ts` 的 `isStreetOpen(facts, config)`（純邏輯）；PROG-2-10219 已落地 |
-| 教學演出 | 家臣帶逛的教學演出**本次不做，列為待辦**（見下）；演出完成前 `tutorialEscortRequired` 維持 `false`，演出做好再改 `true`，並由教學流程設 `tutorialDone` |
+| 教學演出 | 家臣帶逛＋找 3 位家臣的首訪任務，見 9.5.1（PROG-2-10229）；`tutorialEscortRequired` 已改 `true`，帶路走完才算大街開放 |
 
-**待辦（未開卡）**：
-1. 家臣帶主角逛市井大街的教學演出（第一場戰鬥結算後觸發；挑哪位家臣、逛哪幾站、台詞，由總 PM 開卡時定）。
-2. 把 `isStreetOpen` 接到大廳入口（目前只有純邏輯與測試，未接任何畫面）。
+#### 9.5.1 首訪任務流程（PROG-2-10229 已實作純邏輯）
+
+狀態機：**未開放 → 帶路 → 尋找中 → 完成**（`StreetFirstVisit.ts`，資料 `life-street-first-visit.json`）。
+
+| 階段 | 觸發 | 內容 |
+|---|---|---|
+| 未開放 | 預設 | `isStreetOpen` 除「教學已播」外的條件（第一場戰鬥完成、季數 ≥ `openSeasonMin`）成立才進下一階段 |
+| 帶路 | 條件成立且有家臣 | 由一位家臣帶主角逛一次，沿 `escort.stops`（預設酒樓、茶館、鐵匠鋪三站）走，每站 `secondsPerStop` 秒；演出只做簡單位移，不做逐幀；走完才算大街開放（`tutorialDone`） |
+| 尋找中 | 帶路走完 | 開始小目標「找到 3 位家臣」，找到＝在大街看到他並看清他在做什麼（走 5.2 情報等級的看得到規則）；右上顯示「已找到 n/3」 |
+| 完成 | 找滿目標 | 出完成提示、發獎勵、解鎖送禮 |
+
+**帶路家臣怎麼挑**：只從我方家臣挑，取**與主角親密度最高**者；同分取 id 字典序小者（結果固定可重現）；沒有任何家臣時不開始（等有家臣再觸發）。
+
+**3 位目標怎麼挑**：
+1. 排除帶路者。
+2. 先取其餘家臣，依親密度高到低（同分 id 小者先）。
+3. 家臣不足 3 位時，用**他國遊歷武將**補，同樣依親密度高到低。使用者已裁決前期多放他國武將遊歷（審-6），所以街上一定找得到人。
+4. 全部加起來仍不足 3 位，就有幾位找幾位；0 位則帶路走完直接完成。
+5. 目標在進入「尋找中」那一刻定案，之後親密度變動不重挑；重複找、找非目標、找帶路者都不計數。
+
+**進度提示 UI**：右上角文字「已找到 n/3」（i18n `life.street_first.progress`，`{0}` 已找到、`{1}` 目標數），只在尋找中顯示；完成後出一行完成提示（約 3 秒自動消失）。位置用錨點＋相對偏移，不寫死螢幕大小。掛點：`cocos/StreetFirstVisitHud.ts`。
+
+**獎勵**：走共用獎勵框架，套件 id `BUNDLE_STREET_FIRST_VISIT`，內容在 `reward-config.json`（目前暫定家族銀兩 50，數值可由企劃直接改 JSON）。只在完成那一次回傳 `rewardBundleId`，由呼叫端交給獎勵框架發放，邏輯層不發獎、不重複給。
+
+**完成後解鎖送禮**：`giftUnlocked` 轉為 true；送禮功能本身依友誼框架（`life-gift-events.json`），未解鎖前送禮入口隱藏。
+
+**台詞**（白話、帶性別參數、四語系 zh-TW／zh-CN／en／ja）：key 規則 `<基底>.<m|f>`，性別為說話者或被提到的武將；`{0}` 為武將名。基底有 `life.street_first.guide_intro`（帶路家臣開場）、`found`（找到某位時，他／她）、`gift_unlocked`（解鎖送禮）；`progress`、`complete` 不分性別。
+
+**存檔**：`StreetFirstVisitState`（階段、帶路者、目標、已找到）屬重要進度，單機版也走本機 adapter 存取（共用框架總綱第 5 章）。
+
+**驗收**：單元測試 `tests/StreetFirstVisit.test.ts`（挑人、不足補位、狀態機順序、獎勵只給一次、接開放旗標、四語系台詞）。
+
+**尚未做**：把 `isStreetOpen` 與首訪任務接到大廳入口（本次只做純邏輯與最小 HUD 掛點）；家臣親密度與性別的實際資料來源由接入時帶入 `StreetCandidate`。
 
 ## 10. 給 Codex 的市井大街美術需求
 
@@ -520,7 +550,7 @@ v2 圖上可辨認的店面（照 v2 的密度與招牌）：客棧、酒館、�
 | 審-5 | 不對稱頭翻轉 | 照常水平翻轉，接受眼罩換邊；僅限生活層，戰場與立繪仍左眼 | QACT-01 3.1；QFACE-01 2.1 |
 | 審-6 | 前期街上冷清 | 多放他國武將遊歷事件，不做無名路人 | QLIFE-01 2.4 |
 | 審-7 | 家臣身分遮蔽 | 家臣身分永遠可見，位置與活動才依情報等級 | 本書第 5 章 |
-| 追-1 | 市井大街開放時機（11/28 後續）| 第一季中段教學開放：第一場戰鬥後由家臣帶主角逛一次；教學演出待辦 | 本書 9.5 |
+| 追-1 | 市井大街開放時機（11/28 後續）| 第一季中段教學開放：第一場戰鬥後由家臣帶主角逛一次；首訪任務見 9.5.1 | 本書 9.5 |
 
 ## 14. 本書對應的文件地圖
 

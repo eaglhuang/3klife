@@ -17886,6 +17886,12 @@
     "category": "task"
   },
   {
+    "id": "doc_task_3299",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10229.md",
+    "title": "[PROG-2-10229] 市井大街首訪任務",
+    "category": "task"
+  },
+  {
     "id": "doc_task_3300",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10223.md",
     "title": "[PROG-2-10223] 血統與結緣體驗強化四項",
@@ -17904,7 +17910,13 @@
     "category": "task"
   },
   {
-    "id": "doc_task_3311",
+    "id": "doc_task_3308",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10233.md",
+    "title": "[PROG-2-10233] Q 頭表情系統核心",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3315",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10221.md",
     "title": "[PROG-2-10221] 結義戰場效果補強：士氣整場常駐、生死相隨九宮格、傭兵結義 id 同一套",
     "category": "task"
