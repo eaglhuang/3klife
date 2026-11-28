@@ -7906,5 +7906,11 @@
     "path": "docs/遊戲規格文件/系統規格書/Q版社會總規格書.md",
     "title": "Q版社會總規格書（QSOC-01）",
     "category": "spec"
+  },
+  {
+    "id": "doc_spec_1358",
+    "path": "docs/遊戲規格文件/系統規格書/羈絆戰場效果整併方案規格書.md",
+    "title": "羈絆戰場效果整併方案規格書",
+    "category": "spec"
   }
 ]
