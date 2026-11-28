@@ -11,7 +11,7 @@
  * 底圖全是純色方塊（Codex 大圖還沒交）。節點全部重用：Q 頭走物件池、符號走子精靈池、列表列走列池。
  * 除錯：左上兩顆按鈕切時段、切季節；右上下方一行統計（Q 頭數、符號數）。
  */
-import { _decorator, Color, Component, Label, Node, UIOpacity, UITransform, Widget } from 'cc';
+import { _decorator, Color, Component, EventTouch, Label, Node, UIOpacity, UITransform, Vec3, Widget } from 'cc';
 import streetJson from '../../../../resources/data/life-proto-street.json';
 import symbolJson from '../../../../resources/data/q-symbol-groups.json';
 import clipsJson from '../../../../resources/data/q-motion-clips.json';
@@ -53,11 +53,29 @@ import { LifePanelView } from './LifePanelView';
 import type { Translate } from './LifePanelView';
 import { fitLabel, hexToColor, makeBox, makeLabel, newUiNode, placeBox, setBoxColor } from './LifeUiKit';
 import { SpriteTintTargetBox } from './LifeTintTargets';
+import { StreetFirstVisitHud } from './StreetFirstVisitHud';
+import { DEFAULT_STREET_FIRST_VISIT_CONFIG, streetLineKey } from '../StreetFirstVisit';
+import type { StreetFirstVisit, StreetCandidate } from '../StreetFirstVisit';
+import { saveStreetFirstVisit } from '../StreetEntry';
+import type { StreetRewardOutcome, StreetRoster } from '../StreetEntry';
+import type { StreetOpenFacts } from '../StreetOpenGate';
 
 const { ccclass } = _decorator;
 
 const STAR_COUNT = 20;
 const SLOT_COUNT = 7;
+
+/** 從大廳「出去逛逛」進來時帶的真實資料（沒帶＝舊的開發原型，用假名冊） */
+export interface StreetSceneOptions {
+    /** 真實名冊（玩家家臣＋他國遊歷訪客）；沒帶用 life-roster.json */
+    roster?: StreetRoster;
+    /** 首訪任務；沒帶就不跑任務 */
+    visit?: StreetFirstVisit;
+    /** 開放條件事實（開始帶路用） */
+    facts?: StreetOpenFacts;
+    /** 任務完成時發獎（走共用獎勵框架）；回傳領到的銀兩 */
+    claimReward?: () => Promise<StreetRewardOutcome>;
+}
 
 interface Actor {
     id: string;
@@ -97,6 +115,11 @@ export class LifeProtoScene extends Component {
     private t: Translate = (k) => k;
     private onExit: () => void = () => undefined;
     private built = false;
+    private opts: StreetSceneOptions = {};
+    private hud: StreetFirstVisitHud | null = null;
+    private escortActor: Actor | null = null;
+    private btnBack: Node | null = null;
+    private btnBackLabel: Label | null = null;
 
     // 引擎
     private lifeData!: LifeData;
@@ -160,9 +183,10 @@ export class LifeProtoScene extends Component {
     private maxPairs = 0;
 
     /** 由 LifeProtoEntry 呼叫：傳入翻譯函式與離開回呼，然後建好全部節點 */
-    public init(t: Translate, onExit: () => void): void {
+    public init(t: Translate, onExit: () => void, options: StreetSceneOptions = {}): void {
         this.t = t;
         this.onExit = onExit;
+        this.opts = options;
         this.buildAll();
     }
 
@@ -186,7 +210,9 @@ export class LifeProtoScene extends Component {
             profiles: profileJson as unknown as LifeData['profiles'],
             factors: factorsJson as unknown as LifeData['factors'],
             scenes: scenesJson as unknown as LifeData['scenes'],
-            roster: rosterJson as unknown as LifeData['roster'],
+            roster: this.opts.roster
+                ? { schema: 'life-roster.v1', includeKinds: ['retainer', 'visitor'], generals: this.opts.roster.lifeRoster }
+                : rosterJson as unknown as LifeData['roster'],
         }, cfg.venues);
         this.states = defaultStatesFromRoster(this.lifeData);
         this.quarter = cfg.clock.startQuarter;
@@ -197,7 +223,7 @@ export class LifeProtoScene extends Component {
         this.worldNode.getComponent(UITransform)!.setAnchorPoint(0.5, 0.5);
         this.skyBox = makeBox(this.worldNode, 'Sky', hexToColor('CFE6F5'));
         this.skyBox.on(Node.EventType.TOUCH_START, () => undefined); // 擋住底下大廳的點擊
-        this.skyBox.on(Node.EventType.TOUCH_END, () => undefined);
+        this.skyBox.on(Node.EventType.TOUCH_END, (e: EventTouch) => this.onStreetTap(e));
         this.groundBox = makeBox(this.worldNode, 'Ground', hexToColor(cfg.ground.spring));
         this.tint.add(this.skyBox, hexToColor('CFE6F5'));
         this.tint.add(this.groundBox, hexToColor(cfg.ground.spring));
@@ -274,7 +300,9 @@ export class LifeProtoScene extends Component {
         this.applySnapshot(true);
         this.syncClockUi();
         this.panel.setSize(this.w, this.h);
+        this.buildStreetExtras();
         this.built = true;
+        this.startFirstVisit();
         (globalThis as Record<string, unknown>)['__lifeProto'] = { stats: () => this.stats(), scene: this };
     }
 
@@ -431,7 +459,7 @@ export class LifeProtoScene extends Component {
         const symbolOf = (act: string): string => symbolJson.activities[act as keyof typeof symbolJson.activities]?.symbol ?? 'S50';
         return this.actors.map((a) => ({
             generalId: a.id,
-            name: this.cfg.names[a.id] ?? a.id,
+            name: this.nameOf(a.id),
             pinyin: a.id.replace(/_/g, ''),
             faction: this.lifeData.roster.generals.find((g) => g.id === a.id)?.faction ?? '',
             office: '',
@@ -440,6 +468,150 @@ export class LifeProtoScene extends Component {
             sceneId: snap?.choices[a.id]?.sceneId ?? a.sceneId,
             activityId: symbolOf(activityOf(this.cfg, a.sceneId, slotOfSeq(this.slotSeq))),
         }));
+    }
+
+    // ───────────────────────────── 首訪任務（大廳「出去逛逛」入口） ─────────────────────────────
+
+    private nameOf(id: string): string {
+        return this.opts.roster?.names[id] ?? this.cfg.names[id] ?? id;
+    }
+
+    private candidateOf(id: string): StreetCandidate | undefined {
+        return this.opts.roster?.candidates.find((c) => c.id === id);
+    }
+
+    /** 回大廳鈕與首訪 HUD（只有從大廳進來才有） */
+    private buildStreetExtras(): void {
+        if (!this.opts.visit) return;
+        const btn = makeBox(this.node, 'StreetBackToLobby', new Color(70, 110, 170, 235));
+        const label = makeLabel(btn, 'Text', 26, new Color(255, 255, 255, 255));
+        label.string = this.t('life.street_entry.back');
+        btn.on(Node.EventType.TOUCH_END, () => this.onExit());
+        this.btnBack = btn;
+        this.btnBackLabel = label;
+        this.hud = new StreetFirstVisitHud(this.node, this.opts.visit, this.t);
+        this.relayout();
+        // 淡入蓋板留在最上面
+        this.fadeBox.setSiblingIndex(this.node.children.length - 1);
+    }
+
+    private startFirstVisit(): void {
+        const visit = this.opts.visit;
+        const hud = this.hud;
+        const roster = this.opts.roster;
+        if (!visit || !hud || !roster) return;
+        if (visit.phase === 'locked' && this.opts.facts) visit.tryStartEscort(this.opts.facts, roster.candidates);
+        if (visit.phase === 'escort') this.beginEscort(visit, hud, roster);
+        hud.refresh((id) => this.nameOf(id));
+        saveStreetFirstVisit(visit);
+    }
+
+    private beginEscort(visit: StreetFirstVisit, hud: StreetFirstVisitHud, roster: StreetRoster): void {
+        const guide = this.actors.find((a) => a.id === visit.state.guideId);
+        if (!guide) {
+            // 帶路的人這次沒排進畫面：直接當逛完
+            this.finishEscort(visit, hud, roster);
+            return;
+        }
+        const points: Vec3[] = [];
+        for (const stop of DEFAULT_STREET_FIRST_VISIT_CONFIG.escort.stops) {
+            const cell = cellOf(this.layout, stop);
+            if (cell) points.push(new Vec3(cell.yard.x + cell.yard.w / 2, cell.yard.y + cell.yard.h * 0.4, 0));
+        }
+        const gender = this.candidateOf(guide.id)?.gender ?? 'm';
+        hud.showLine(this.t(streetLineKey('life.street_first.guide_intro', gender)));
+        this.escortActor = guide;
+        guide.arrived = true;
+        this.setActivity(guide, null);
+        hud.startEscort(guide.view.root, points, () => this.finishEscort(visit, hud, roster));
+    }
+
+    private finishEscort(visit: StreetFirstVisit, hud: StreetFirstVisitHud, roster: StreetRoster): void {
+        const guide = this.escortActor;
+        this.escortActor = null;
+        if (guide) {
+            guide.walker = createWalker(guide.view.root.position.x, guide.view.root.position.y);
+            guide.clip = '';
+            guide.arrived = true;
+        }
+        const done = visit.finishEscort(roster.candidates);
+        saveStreetFirstVisit(visit);
+        hud.refresh((id) => this.nameOf(id));
+        if (done) this.onVisitCompleted(visit, hud);
+    }
+
+    /** 點到大街上的武將：目標且還沒找到的算「找到」，其他只顯示一句提示 */
+    private onStreetTap(e: EventTouch): void {
+        const visit = this.opts.visit;
+        const hud = this.hud;
+        if (!visit || !hud || visit.phase !== 'searching') return;
+        const ui = this.node.getComponent(UITransform);
+        if (!ui) return;
+        const loc = e.getUILocation();
+        const local = ui.convertToNodeSpaceAR(new Vec3(loc.x, loc.y, 0));
+        const hit = this.actorAt(local.x, local.y);
+        if (!hit) return;
+        const name = this.nameOf(hit.id);
+        const res = visit.markFound(hit.id);
+        if (!res.newlyFound) {
+            if (!visit.state.foundIds.includes(hit.id)) hud.showLine(this.t('life.street_entry.not_target', name));
+            return;
+        }
+        const gender = this.candidateOf(hit.id)?.gender ?? 'm';
+        hud.showLine(this.t(streetLineKey('life.street_first.found', gender), name));
+        hud.refresh((id) => this.nameOf(id));
+        this.flashActor(hit);
+        saveStreetFirstVisit(visit);
+        if (res.completed) this.onVisitCompleted(visit, hud);
+    }
+
+    private flashActor(a: Actor): void {
+        const h = this.layout.headH;
+        placeBox(this.highlightBox, a.walker.x - h, a.walker.y - h * 0.3, h * 2, h * 2);
+        setBoxColor(this.highlightBox, new Color(255, 240, 120, 255));
+        this.highlightBox.active = true;
+        this.highlightLeft = 1.6;
+    }
+
+    private actorAt(x: number, y: number): Actor | null {
+        const h = this.layout.headH;
+        let best: Actor | null = null;
+        let bestD = Infinity;
+        for (const a of this.actors) {
+            const dx = x - a.walker.x;
+            const dy = y - (a.walker.y + h * 0.6);
+            if (Math.abs(dx) > h * 0.9 || Math.abs(dy) > h * 1.1) continue;
+            const d = dx * dx + dy * dy;
+            if (d < bestD) { best = a; bestD = d; }
+        }
+        return best;
+    }
+
+    private onVisitCompleted(visit: StreetFirstVisit, hud: StreetFirstVisitHud): void {
+        hud.showComplete();
+        const claim = this.opts.claimReward;
+        const guideGender = this.candidateOf(visit.state.guideId ?? '')?.gender ?? 'm';
+        const giftLine = this.t(streetLineKey('life.street_first.gift_unlocked', guideGender));
+        if (!claim) { hud.showLine(giftLine); return; }
+        void claim().then((r) => {
+            if (r.ok && !r.replayed && r.silver > 0) hud.showLine(this.t('life.street_entry.reward', String(r.silver)));
+            hud.showLine(giftLine);
+        });
+    }
+
+    /** 驗收用：武將目前在畫面上的位置（UI 座標：原點左下，與 EventTouch.getUILocation 同一套） */
+    public debugActorUiPoint(id: string): { x: number; y: number } | null {
+        const a = this.actors.find((x) => x.id === id);
+        if (!a) return null;
+        return { x: a.walker.x + this.w / 2, y: a.walker.y + this.layout.headH * 0.6 + this.h / 2 };
+    }
+
+    /** 驗收用：首訪任務目前狀態與提示字 */
+    public debugVisit(): { phase: string; found: number; required: number; targets: string[]; foundIds: string[]; guide: string | null; toast: string } | null {
+        const v = this.opts.visit;
+        if (!v) return null;
+        const s = v.state;
+        return { phase: s.phase, found: s.foundIds.length, required: s.targetIds.length, targets: [...s.targetIds], foundIds: [...s.foundIds], guide: s.guideId, toast: this.hud?.toastText ?? '' };
     }
 
     // ───────────────────────────── 時鐘、切換 ─────────────────────────────
@@ -547,6 +719,14 @@ export class LifeProtoScene extends Component {
         fitLabel(this.placeholderHint, w, h * 0.08, 0);
         this.placeholderHint.node.setPosition(0, h * 0.36, 0);
         if (this.fadeBox) placeBox(this.fadeBox, -w / 2, -h / 2, w, h);
+        this.hud?.layout(w, h);
+        if (this.btnBack && this.btnBackLabel) {
+            // 右下角（手機拇指點得到）：寬高隨畫面比例，不低於 56
+            const bw = Math.max(180, Math.min(w * 0.14, 260));
+            const bh = Math.max(56, h * 0.07);
+            placeBox(this.btnBack, w / 2 - bw - w * 0.02, -h / 2 + h * 0.03, bw, bh);
+            fitLabel(this.btnBackLabel, bw, bh, 6);
+        }
         // 除錯按鈕：左上，高 ≥ 56
         const bh = Math.max(56, h * 0.06);
         const bw = Math.max(220, Math.min(w * 0.22, 300));
@@ -603,6 +783,7 @@ export class LifeProtoScene extends Component {
             if (this.autoAcc >= SLOT_REAL_SECONDS) this.advanceSlot(false);
         }
 
+        this.hud?.tick(dt);
         this.stepActors(dt);
         this.anim.update(dt);
         this.symbols.tick(dt);
@@ -631,6 +812,17 @@ export class LifeProtoScene extends Component {
         const slot = slotOfSeq(this.slotSeq);
         let arrivedAny = false;
         for (const a of this.actors) {
+            if (a === this.escortActor) {
+                // 帶路中：位置由首訪 HUD 控制，這裡只同步走路動作與符號位置
+                const p = a.view.root.position;
+                if (p.x !== a.walker.x) a.dir = p.x < a.walker.x ? -1 : 1;
+                a.walker.x = p.x;
+                a.walker.y = p.y;
+                if (a.clip !== 'walk') { a.clip = 'walk'; this.anim.play(a.handle, 'walk'); }
+                this.anim.setFacing(a.handle, a.dir);
+                this.symbols.system.move(a.symId, p.x, p.y + L.headH * 1.45, L.headH);
+                continue;
+            }
             const cell = L.cells[a.cellIndex];
             const stationary = isStationary(activityOf(cfg, a.sceneId, slot)) && a.arrived;
             const before = a.walker.phase;
