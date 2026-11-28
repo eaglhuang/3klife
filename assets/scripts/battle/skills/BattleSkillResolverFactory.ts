@@ -17,6 +17,7 @@ import { SlowSkillResolver } from './resolvers/SlowSkillResolver';
 import { FireGodHuntSkillResolver } from './resolvers/FireGodHuntSkillResolver';
 import { FormationZoneSkillResolver } from './resolvers/FormationZoneSkillResolver';
 import { VitalityRestoreSkillResolver } from './resolvers/VitalityRestoreSkillResolver';
+import { SummonSkillResolver } from './resolvers/SummonSkillResolver';
 
 export function createDefaultBattleSkillExecutor(): BattleSkillExecutor {
   return new BattleSkillExecutor([
@@ -37,5 +38,6 @@ export function createDefaultBattleSkillExecutor(): BattleSkillExecutor {
     new SlowSkillResolver(),
     new FireGodHuntSkillResolver(),
     new FormationZoneSkillResolver(),
+    new SummonSkillResolver(),
   ]);
 }
