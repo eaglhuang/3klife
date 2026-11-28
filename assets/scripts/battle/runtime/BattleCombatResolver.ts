@@ -94,6 +94,12 @@ export function generalMinDamage(effectiveAttack: number): number {
   return Math.max(1, Math.round(Math.max(0, effectiveAttack) * GAME_CONFIG.generalMinDamageRatio));
 }
 
+/** 生死相隨援護的掃描格（九宮格：先正交後斜角，PROG-2-10204 後續） */
+const KIN_RESCUE_OFFSETS = [
+  { dl: 0, dd: 1 }, { dl: 0, dd: -1 }, { dl: 1, dd: 0 }, { dl: -1, dd: 0 },
+  { dl: 1, dd: 1 }, { dl: 1, dd: -1 }, { dl: -1, dd: 1 }, { dl: -1, dd: -1 },
+];
+
 export class BattleCombatResolver {
   /** 命中判定用亂數；測試可換成固定序列（PROG-2-0080） */
   /** 命中與暴擊的擲骰走戰場種子亂數源（Q25），不用 Math.random */
@@ -623,8 +629,7 @@ export class BattleCombatResolver {
 
   /** 與目標四方向相鄰的我方非主將、存活部隊，且通過 accept 條件（固定掃描順序，取第一個） */
   private findCombinedHelper(attacker: TroopUnit, defender: TroopUnit, accept: (unit: TroopUnit) => boolean): TroopUnit | null {
-    const offsets = [{ dl: 0, dd: 1 }, { dl: 0, dd: -1 }, { dl: 1, dd: 0 }, { dl: -1, dd: 0 }];
-    for (const { dl, dd } of offsets) {
+    for (const { dl, dd } of KIN_RESCUE_OFFSETS) {
       const cell = this.context.state.getCell(defender.lane + dl, defender.depth + dd);
       if (!cell?.occupantId) continue;
       const unit = this.context.state.units.get(cell.occupantId);
@@ -854,16 +859,14 @@ export class BattleCombatResolver {
     return rescuedDamage;
   }
 
-  /** 與受擊者四方向相鄰的同陣營非主將存活部隊，且通過 accept（固定掃描順序，取第一個；與 findCombinedHelper 同一套相鄰） */
+  /** 與受擊者九宮格（含斜角）相鄰的同陣營非主將存活部隊，且通過 accept（固定掃描順序：先正交後斜角，取第一個） */
   private findKinRescuer(unit: TroopUnit, accept: (other: TroopUnit) => boolean): TroopUnit | null {
-    const offsets = [{ dl: 0, dd: 1 }, { dl: 0, dd: -1 }, { dl: 1, dd: 0 }, { dl: -1, dd: 0 }];
-    for (const { dl, dd } of offsets) {
+    for (const { dl, dd } of KIN_RESCUE_OFFSETS) {
       const cell = this.context.state.getCell(unit.lane + dl, unit.depth + dd);
       if (!cell?.occupantId) continue;
       const other = this.context.state.units.get(cell.occupantId);
       if (!other || other.id === unit.id || other.faction !== unit.faction) continue;
       if (other.isDead() || this.isGeneralUnit(other.id)) continue;
-      if (!isOrthogonallyAdjacent(other.lane, other.depth, unit.lane, unit.depth)) continue;
       if (accept(other)) return other;
     }
     return null;

@@ -1,11 +1,11 @@
 /**
  * KinBattleEffects.test.ts — 結義戰場效果（PROG-2-10204）
- * 義兄弟同陣士氣 +20、生死相隨援護（50% 介入、分攤 30%）、動態義兄弟合攻。
+ * 義兄弟同陣士氣 +20（整場常駐）、生死相隨援護（九宮格、50% 介入、分攤 30%）、動態義兄弟合攻。
  */
 import { EVENT_NAMES, Faction, TroopType } from '../assets/scripts/core/config/Constants';
 import { BattleController } from '../assets/scripts/battle/controllers/BattleController';
 import { BattleCombatResolver } from '../assets/scripts/battle/runtime/BattleCombatResolver';
-import { MORALE_DURATION_TURNS } from '../assets/scripts/battle/shared/Morale';
+import { MORALE_DURATION_TURNS, advanceMorale, castMorale, clearMorale } from '../assets/scripts/battle/shared/Morale';
 import { GeneralUnit } from '../assets/scripts/core/models/GeneralUnit';
 import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
@@ -67,13 +67,29 @@ export function createKinBattleEffectsSuite(): TestSuite {
     const suite = new TestSuite('KinBattleEffects (結義戰場效果 PROG-2-10204)');
 
     // ── 義兄弟同陣士氣 ──
-    suite.test('動態義兄弟同在出戰名單：部署時士氣 +20 並計時', () => {
+    suite.test('動態義兄弟同在出戰名單：部署時士氣 +20，整場常駐不計時', () => {
         const ctrl = openBattle(OATH);
         ctrl.sortieLineupIds = ['liu-bei', 'merc-a', 'zhao-yun'];
         const out = ctrl.tryDeployTroop(TroopType.Infantry, 0, undefined, { tally: { cardUid: 'merc-a', templateId: 'x' } });
         assert.isTrue(out.ok);
         assert.equals(20, out.unit!.morale);
-        assert.equals(MORALE_DURATION_TURNS, out.unit!.moraleTurns);
+        assert.equals(0, out.unit!.moraleTurns, '常駐：不開始 3 回合計時');
+        assert.equals(20, out.unit!.moraleFloor);
+    });
+
+    suite.test('常駐：回合頭遞減不影響；其他鼓舞到期後回到 +20 而非 0；陣亡仍清除', () => {
+        const ctrl = openBattle(OATH);
+        ctrl.sortieLineupIds = ['liu-bei', 'zhao-yun'];
+        const u = ctrl.tryDeployTroop(TroopType.Infantry, 0, undefined, { tally: { cardUid: 'merc-a', templateId: 'x' } }).unit!;
+        for (let i = 0; i < 5; i++) advanceMorale(u);
+        assert.equals(20, u.morale, '回合推進不衰減');
+        castMorale(u, 10);
+        assert.equals(20, u.morale, '較低鼓舞不壓過下限，也不疊加');
+        castMorale(u, 35);
+        for (let i = 0; i < MORALE_DURATION_TURNS; i++) advanceMorale(u);
+        assert.equals(20, u.morale, '大鼓舞到期回到下限');
+        clearMorale(u);
+        assert.equals(0, u.morale, '退場照舊清除');
     });
 
     suite.test('史實義兄弟（劉備／關羽）同陣也加成；來源武將對不上義兄弟不加', () => {
@@ -171,6 +187,25 @@ export function createKinBattleEffectsSuite(): TestSuite {
         resolverOf(ctrl).hitRandom = () => 0;
         damage(ctrl, a, 100);
         assert.equals(100, far.currentHp);
+    });
+
+    suite.test('斜角相鄰（九宮格）也援護；隔兩格（含斜向）不援護', () => {
+        const ctrl = openBattle(COMRADE);
+        const a = troop('ua', Faction.Player, 1, 2, 'zhao-yun');
+        const diag = troop('ub', Faction.Player, 2, 3, 'ma-chao');
+        ctrl.state.addUnit(a);
+        ctrl.state.addUnit(diag);
+        resolverOf(ctrl).hitRandom = () => 0;
+        damage(ctrl, a, 100);
+        assert.equals(70, diag.currentHp, '斜角戰友承 30%');
+        const ctrl2 = openBattle(COMRADE);
+        const a2 = troop('ua', Faction.Player, 1, 2, 'zhao-yun');
+        const far = troop('ub', Faction.Player, 3, 4, 'ma-chao');
+        ctrl2.state.addUnit(a2);
+        ctrl2.state.addUnit(far);
+        resolverOf(ctrl2).hitRandom = () => 0;
+        damage(ctrl2, a2, 100);
+        assert.equals(100, far.currentHp, '兩格外不援護');
     });
 
     suite.test('不遞迴：援護者承受的 30% 即使致命，也不再被第三人援護；援護者自己會死照算', () => {
