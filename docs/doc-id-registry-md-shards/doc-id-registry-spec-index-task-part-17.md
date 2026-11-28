@@ -142,3 +142,4 @@
 | `doc_task_3346` | docs/agent-briefs/tasks/PROG/PROG-2-10258.md | [PROG-2-10258] 市井大街 Q 頭生活雛形 |
 | `doc_task_3347` | docs/agent-briefs/tasks/PROG/PROG-2-10266.md | [PROG-2-10266] 戰場小兵頭頂 HUD 改單行 A 款＋兵種剪影圖示＋戰場 draw call 量測與圖集合批＋頓格開關 |
 | `doc_task_3348` | docs/agent-briefs/tasks/PROG/PROG-2-10269.md | [PROG-2-10269] 修 #2811 第 6、9 項 |
+| `doc_task_3351` | docs/agent-briefs/tasks/PROG/PROG-2-10274.md | 基本資訊 |

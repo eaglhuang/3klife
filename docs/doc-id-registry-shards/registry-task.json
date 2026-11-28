@@ -18022,5 +18022,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10269.md",
     "title": "[PROG-2-10269] 修 #2811 第 6、9 項",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3351",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10274.md",
+    "title": "基本資訊",
+    "category": "task"
   }
 ]
