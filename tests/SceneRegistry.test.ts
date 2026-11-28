@@ -303,5 +303,21 @@ export function createSceneRegistrySuite(): TestSuite {
         assert.isTrue(layoutData.panelParts.row.minPx >= 56);
     });
 
+    suite.test('馬市對應：兩棟馬市熱區都進 mkt_horse，驛站只是馬市（一）的子活動，總數仍 72', () => {
+        const reg = new SceneRegistry();
+        assert.equals('mkt_horse', reg.sceneOfHotspot('horse_market_a') as string);
+        assert.equals('mkt_horse', reg.sceneOfHotspot('horse_market_b') as string);
+        assert.equals('mkt_horse', reg.parentSceneOf('mkt_post') as string);
+        assert.isTrue(reg.parentSceneOf('mkt_horse') === undefined, '馬市本身不是子活動');
+        assert.isTrue(reg.sceneOfHotspot('post') === undefined, '驛站沒有獨立熱區');
+        assert.equals(72, reg.sceneCount);
+        const data = readJson<LifeAreaMapsData>('assets/resources/data/life-area-maps.json');
+        for (const sceneId of Object.values(data.hotspotToScene ?? {})) assert.isTrue(reg.hasScene(sceneId), sceneId);
+        assert.equals(25, Object.keys(data.hotspotToScene ?? {}).length);
+        const bad = JSON.parse(JSON.stringify(data)) as LifeAreaMapsData;
+        bad.areas.find((a) => a.id === 'mkt')!.scenes.find((s) => s.id === 'mkt_post')!.subActivityOf = 'nope';
+        assert.isTrue(validateAreaMaps(bad).length > 0, '母場景不存在要被驗出');
+    });
+
     return suite;
 }

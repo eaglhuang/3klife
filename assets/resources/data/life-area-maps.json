@@ -200,7 +200,8 @@
         {
           "id": "mkt_post",
           "nameKey": "life.scene.mkt_post",
-          "hasArt": false
+          "hasArt": false,
+          "subActivityOf": "mkt_horse"
         },
         {
           "id": "mkt_horse",
@@ -412,5 +413,32 @@
         }
       ]
     }
-  ]
+  ],
+  "hotspotToScene": {
+    "inn": "mkt_inn",
+    "tavern": "mkt_tavern",
+    "clinic": "mkt_clinic",
+    "pharmacy": "mkt_pharmacy",
+    "rouge": "mkt_rouge",
+    "bank": "mkt_bank",
+    "smithy": "mkt_smithy",
+    "escort": "mkt_escort",
+    "teahouse": "mkt_teahouse",
+    "opera": "mkt_theater",
+    "matchmaker": "mkt_match",
+    "pawnshop": "mkt_pawn",
+    "mercenary": "mkt_guild",
+    "cloth": "mkt_tailor",
+    "carpentry": "mkt_carpenter",
+    "general_store": "mkt_grocery",
+    "bookstore": "mkt_bookshop",
+    "storyteller": "mkt_story",
+    "gambling": "mkt_gamble",
+    "bathhouse": "mkt_bath",
+    "plaza": "mkt_street",
+    "stall_left": "mkt_street",
+    "stall_right": "mkt_street",
+    "horse_market_a": "mkt_horse",
+    "horse_market_b": "mkt_horse"
+  }
 }
