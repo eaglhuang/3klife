@@ -74,5 +74,13 @@ export function createUnitHudSuite(): TestSuite {
         assert.isTrue(c.r > 70 && c.g > 150, '補償後比原色亮');
     });
 
+    suite.test('狀態圖示合批（PROG-2-10274）：圓底走圖集圓章在 bg 層、字走 BITMAP 在 text 層；UnitRenderer 傳入兩個圖層', () => {
+        const bar = read('assets/scripts/battle/views/UnitStatusIconBar.ts');
+        assert.isTrue(bar.includes('frames.disc') && bar.includes('Label.CacheMode.BITMAP'));
+        assert.isTrue(bar.includes('this.layers.bg') && bar.includes('this.layers.text'));
+        const src = read('assets/scripts/battle/views/UnitRenderer.ts');
+        assert.isTrue(src.includes('{ bg: badge.bgParent, text: badge.textParent }'));
+    });
+
     return suite;
 }

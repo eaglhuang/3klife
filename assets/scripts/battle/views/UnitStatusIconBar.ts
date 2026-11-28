@@ -9,7 +9,9 @@
  *
  * Unity 對照：Buff 圖示列的 HorizontalLayoutGroup＋對象池。
  */
-import { Color, Graphics, Label, Layers, Node, tween, Tween, UIOpacity, UITransform, Vec3, isValid } from 'cc';
+import { Color, Graphics, Label, Layers, Node, Sprite, tween, Tween, UIOpacity, UITransform, Vec3, isValid } from 'cc';
+import { setCacheModeDeferred } from '../../ui/core/LabelLayoutDeferral';
+import { BADGE_ATLAS_SCALE, loadBadgeAtlasFrames } from '../../ui/shared/TroopTypeBadge';
 import {
   STATUS_ICON_MAX_VISIBLE,
   type StatusIconEntry,
@@ -69,8 +71,13 @@ export const STATUS_HALO_BUFF = new Color(255, 214, 90, 255);
 export const STATUS_HALO_DEBUFF = new Color(176, 80, 230, 255);
 
 interface IconSlot {
+  /** 圓底節點（合批時在 bg 圖層下）；彈出動畫縮放它 */
   node: Node;
-  graphics: Graphics;
+  /** 文字節點（合批時在 text 圖層下，與 node 同位置同縮放）；沒合批時就是 node 本身 */
+  textNode: Node;
+  /** 合批：圓底用徽章圖集的圓章精靈；沒合批用 Graphics 畫 */
+  disc: Sprite | null;
+  graphics: Graphics | null;
   label: Label;
   /** 右下角剩餘回合數、右上角層數「×N」（PROG-2-9731）；字級顏色讀 data/battle-ui-feedback.json */
   turnsLabel: Label;
@@ -86,8 +93,18 @@ export interface StatusBarApplyResult {
   changed: boolean;
 }
 
+/** 合批用的兩個圖層代理（BadgeBatchLayers.proxyFor）：圓底進 bg、字進 text，同圖同材質的元素才連得起來（PROG-2-10274） */
+export interface StatusBarLayers {
+  bg: Node;
+  text: Node;
+}
+
+/** 圖集圓章是金圈深底；減益用偏紅的相乘色把金圈染紅（增益維持原色）。 */
+const DEBUFF_DISC_TINT = new Color(255, 120, 150, 255);
+
 export class UnitStatusIconBar {
   private root: Node | null = null;
+  private textRoot: Node | null = null;
   private readonly slots: IconSlot[] = [];
   private overflowLabel: Label | null = null;
   private lastSignature = '';
@@ -99,7 +116,7 @@ export class UnitStatusIconBar {
    * @param startX 圖示列起點 x（名牌右緣之外）
    * @param y 圖示列中心 y
    */
-  constructor(private readonly parent: Node, private readonly startX: number, private readonly y: number) {}
+  constructor(private readonly parent: Node, private readonly startX: number, private readonly y: number, private readonly layers: StatusBarLayers | null = null) {}
 
   /** 依新清單更新圖示；簽名相同直接略過（事件驅動，不重畫） */
   public apply(list: UnitStatusIconList): StatusBarApplyResult {
@@ -109,6 +126,7 @@ export class UnitStatusIconBar {
     if (list.icons.length === 0 && !this.root) return { changed: true };
     const root = this.ensureRoot();
     root.active = list.icons.length > 0;
+    if (this.textRoot) this.textRoot.active = root.active;
 
     this.shownKinds = [];
     for (let i = 0; i < STATUS_ICON_MAX_VISIBLE; i++) {
@@ -153,14 +171,16 @@ export class UnitStatusIconBar {
       const kind = this.shownKinds[i];
       if (!kind) continue;
       if (kinds && kinds.indexOf(kind) < 0) continue;
-      const node = this.slots[i]?.node;
-      if (!node || !isValid(node)) continue;
-      Tween.stopAllByTarget(node);
-      node.setScale(0.3, 0.3, 1);
-      tween(node)
-        .to(POP_UP_SEC, { scale: new Vec3(1.35, 1.35, 1) })
-        .to(POP_BACK_SEC, { scale: new Vec3(1, 1, 1) })
-        .start();
+      const slot = this.slots[i];
+      if (!slot || !isValid(slot.node)) continue;
+      for (const node of slot.textNode === slot.node ? [slot.node] : [slot.node, slot.textNode]) {
+        Tween.stopAllByTarget(node);
+        node.setScale(0.3, 0.3, 1);
+        tween(node)
+          .to(POP_UP_SEC, { scale: new Vec3(1.35, 1.35, 1) })
+          .to(POP_BACK_SEC, { scale: new Vec3(1, 1, 1) })
+          .start();
+      }
     }
   }
 
@@ -168,8 +188,14 @@ export class UnitStatusIconBar {
     if (this.root && isValid(this.root)) return this.root;
     const node = new Node('StatusIcons');
     node.layer = this.parent.layer;
-    this.parent.addChild(node);
+    (this.layers ? this.layers.bg : this.parent).addChild(node);
     this.root = node;
+    if (this.layers) {
+      const textRoot = new Node('StatusIconsText');
+      textRoot.layer = this.parent.layer;
+      this.layers.text.addChild(textRoot);
+      this.textRoot = textRoot;
+    }
     return node;
   }
 
@@ -181,12 +207,35 @@ export class UnitStatusIconBar {
     node.layer = this.parent.layer;
     root.addChild(node);
     node.addComponent(UITransform).setContentSize(ICON_SIZE, ICON_SIZE);
-    node.setPosition(this.startX + ICON_SIZE / 2 + index * (ICON_SIZE + ICON_GAP), this.y, 0);
-    const graphics = node.addComponent(Graphics);
+    const slotPos = new Vec3(this.startX + ICON_SIZE / 2 + index * (ICON_SIZE + ICON_GAP), this.y, 0);
+    node.setPosition(slotPos);
+    let graphics: Graphics | null = null;
+    let disc: Sprite | null = null;
+    let textHolder = node;
+    if (this.layers && this.textRoot) {
+      // 合批：圓底用圖集圓章（2 倍解析度、節點縮 0.5 還原）；字放在 text 圖層下同位置的另一個節點
+      const discNode = new Node('Disc');
+      discNode.layer = this.parent.layer;
+      node.addChild(discNode);
+      discNode.setScale(BADGE_ATLAS_SCALE, BADGE_ATLAS_SCALE, 1);
+      discNode.addComponent(UITransform).setContentSize(ICON_SIZE / BADGE_ATLAS_SCALE, ICON_SIZE / BADGE_ATLAS_SCALE);
+      const sprite = discNode.addComponent(Sprite);
+      disc = sprite;
+      sprite.type = Sprite.Type.SIMPLE;
+      sprite.sizeMode = Sprite.SizeMode.CUSTOM;
+      void loadBadgeAtlasFrames().then((frames) => { if (frames && isValid(discNode)) sprite.spriteFrame = frames.disc; });
+      textHolder = new Node(`StatusIconText_${index}`);
+      textHolder.layer = this.parent.layer;
+      this.textRoot.addChild(textHolder);
+      textHolder.addComponent(UITransform).setContentSize(ICON_SIZE, ICON_SIZE);
+      textHolder.setPosition(slotPos);
+    } else {
+      graphics = node.addComponent(Graphics);
+    }
 
     const textNode = new Node('Glyph');
     textNode.layer = this.parent.layer;
-    node.addChild(textNode);
+    textHolder.addChild(textNode);
     textNode.addComponent(UITransform).setContentSize(ICON_SIZE, ICON_SIZE);
     const label = textNode.addComponent(Label);
     label.fontSize = GLYPH_FONT_SIZE;
@@ -199,9 +248,10 @@ export class UnitStatusIconBar {
     label.verticalAlign = Label.VerticalAlign.CENTER;
     label.overflow = Label.Overflow.NONE;
 
-    const turnsLabel = this.makeBadgeLabel(node, 'Turns', Label.HorizontalAlign.RIGHT, 4, -ICON_SIZE * 0.3);
-    const stackLabel = this.makeBadgeLabel(node, 'Stacks', Label.HorizontalAlign.RIGHT, 4, ICON_SIZE * 0.34);
-    const slot: IconSlot = { node, graphics, label, turnsLabel, stackLabel, drawnKey: '' };
+    if (this.layers) setCacheModeDeferred(label, Label.CacheMode.BITMAP);
+    const turnsLabel = this.makeBadgeLabel(textHolder, 'Turns', Label.HorizontalAlign.RIGHT, 4, -ICON_SIZE * 0.3);
+    const stackLabel = this.makeBadgeLabel(textHolder, 'Stacks', Label.HorizontalAlign.RIGHT, 4, ICON_SIZE * 0.34);
+    const slot: IconSlot = { node, textNode: textHolder, disc, graphics, label, turnsLabel, stackLabel, drawnKey: '' };
     this.slots[index] = slot;
     return slot;
   }
@@ -221,6 +271,7 @@ export class UnitStatusIconBar {
     label.verticalAlign = Label.VerticalAlign.CENTER;
     label.overflow = Label.Overflow.NONE;
     node.active = false;
+    if (this.layers) setCacheModeDeferred(label, Label.CacheMode.BITMAP);
     return label;
   }
 
@@ -246,7 +297,7 @@ export class UnitStatusIconBar {
     const root = this.ensureRoot();
     const node = new Node('StatusOverflow');
     node.layer = this.parent.layer;
-    root.addChild(node);
+    (this.textRoot ?? root).addChild(node);
     node.addComponent(UITransform).setContentSize(40, ICON_SIZE);
     const label = node.addComponent(Label);
     label.fontSize = 28;
@@ -260,6 +311,7 @@ export class UnitStatusIconBar {
     label.verticalAlign = Label.VerticalAlign.CENTER;
     label.overflow = Label.Overflow.NONE;
     node.active = false;
+    if (this.layers) setCacheModeDeferred(label, Label.CacheMode.BITMAP);
     this.overflowLabel = label;
     return label;
   }
@@ -269,8 +321,11 @@ export class UnitStatusIconBar {
     const key = `${entry.kind}`;
     if (slot.drawnKey === key) return;
     slot.drawnKey = key;
-    slot.graphics.clear();
-    drawStatusIconDisc(slot.graphics, ICON_SIZE / 2, entry.isDebuff);
+    if (slot.graphics) {
+      slot.graphics.clear();
+      drawStatusIconDisc(slot.graphics, ICON_SIZE / 2, entry.isDebuff);
+    }
+    if (slot.disc) slot.disc.color = entry.isDebuff ? DEBUFF_DISC_TINT : Color.WHITE;
     slot.label.string = entry.glyph;
     slot.label.color = statusIconTextColor(entry.isDebuff);
   }

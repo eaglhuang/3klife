@@ -186,6 +186,8 @@ interface BadgeView {
   bottomNameLabel: Label | null;  // 下排兵種名稱（將軍無用）
   /** 底框圖層代理節點（合批用；血條精靈掛這裡）。無合批圖層時就是名牌節點本身。 */
   bgParent: Node;
+  /** 字圖層代理節點（合批用）；沒合批時是名牌節點本身。 */
+  textParent: Node;
 }
 
 /** PROG-2-9715：主將出陣從待命點衝到出陣格的秒數（約一格半距離，比小兵前進稍快，表現「衝出去」） */
@@ -2245,7 +2247,7 @@ export class UnitRenderer extends Component {
       labelOpacity: badge.opacity,
       bottomNameLabel: badge.bottomNameLabel,
       hpBar,
-      statusBar: new UnitStatusIconBar(labelNode, UNIT_STATUS_ICON_X, UNIT_STATUS_ICON_Y),
+      statusBar: new UnitStatusIconBar(labelNode, UNIT_STATUS_ICON_X, UNIT_STATUS_ICON_Y, badgeLayers ? { bg: badge.bgParent, text: badge.textParent } : null),
       statusKinds: null,
       persistKind: null,
       pendingStatusPulse: null,
@@ -2531,7 +2533,7 @@ export class UnitRenderer extends Component {
     nameNode.addComponent(UITransform).setContentSize(100, 20);
     const nameLabel = nameNode.addComponent(Label);
     nameLabel.string = "";
-    return { rootNode, attackLabel, typeLabel, hpLabel, opacity, bottomNameLabel: nameLabel, bgParent };
+    return { rootNode, attackLabel, typeLabel, hpLabel, opacity, bottomNameLabel: nameLabel, bgParent, textParent };
   }
 
   /** 推進各單位的掉血殘影並重畫（PROG-2-9412）；沒有殘影的單位不動。 */
@@ -2762,7 +2764,7 @@ export class UnitRenderer extends Component {
     // 以擴充屬性保存引用，供 updateUnitView 快速更新
     (rootNode as any)._bottomNameLabel = nameStrLabel;
 
-    return { rootNode, attackLabel, typeLabel, hpLabel, opacity, bottomNameLabel: nameStrLabel, bgParent: rootNode };
+    return { rootNode, attackLabel, typeLabel, hpLabel, opacity, bottomNameLabel: nameStrLabel, bgParent: rootNode, textParent: rootNode };
   }
 
   private findUnitById(unitId: string): TroopUnit | null {
