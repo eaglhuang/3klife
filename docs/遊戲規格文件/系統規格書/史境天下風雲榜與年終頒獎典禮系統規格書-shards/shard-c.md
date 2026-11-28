@@ -97,3 +97,20 @@
 | **W1c** | `PROG-2-9603` | **可插拔排行榜核心引擎**（`IRankingBoardProvider`、`RankingBoardRegistry`、首發 4 個 Provider（kills／governance／charm／rookie；mentor 為第二階段儲備）、`annual-ranking-config.json`、去年快照比對、無 LLM 評語組裝） | W1a、W1b、FND-M |
 | **W2** | `PROG-2-9604` | **心智誇耀與白因子寫回 ＋ 歷年史冊存檔**（`MindEvent` 寫入、`annualHonorSeeds` 對接 `WhiteAchievementCriteria`、`annualCeremonyArchive` 讀寫） | W1c、RWD-M、SKL-M |
 | **W3** | `PROG-2-9605` | **年終頒獎典禮劇本與大合照 UI**（`CeremonyScriptAssembler` 對接 STY-M、`hologram`/`groupPhoto` CueHandler、雙層梯形大合照 `RenderTexture` 定格背景與史冊查詢畫面） | W1c、W2、STY-M |
+
+
+---
+
+## 增補：核准體驗強化規格（2026-11-28）
+
+### 1. 第 4～5 名觀眾勉勵台詞
+- **觸發條件**：玩家家族於年度天下名門榜排名第 4 或第 5 名（差一步上領獎台）。
+- **效果**：台下觀眾隨機講出激勵台詞，點出「明年再多拿 `{deltaScore}` 分就能進前三」。
+- **資料驅動（JSON）**：名次區間與差額門檻定義於 `assets/resources/data/master/ceremony-crowd-lines.json`（`nearPodiumRanks: [4, 5]`）。
+- **台詞 i18n**：走 `ui.ceremony.crowd_near_podium.*`，需帶入 `{selfPronoun}`（性別自稱）與 `{deltaScore}`。
+
+### 2. 典禮觀眾結義彩蛋台詞
+- **觸發條件**：典禮領獎台得獎者與台下某位觀禮武將具備「結義」關係。
+- **效果**：點擊該觀禮武將時，優先播放專屬結義祝賀台詞。
+- **資料驅動（JSON）**：彩蛋權重與優先級定義於 `assets/resources/data/master/ceremony-crowd-lines.json`（`oathEasterEggPriority: true`）。
+- **台詞 i18n**：走 `ui.ceremony.crowd_oath_congrats.*`，需帶入 `{selfPronoun}`、`{winnerName}` 與 `{oathRelation}`（義兄／義弟／義姊／義妹）。
