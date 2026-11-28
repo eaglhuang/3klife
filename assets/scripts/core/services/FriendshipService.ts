@@ -33,6 +33,8 @@ export class FriendshipService implements IFriendshipService {
     private _friendships: Map<string, number> = new Map();
     /** 武將↔武將配對友誼（只存與我方接觸者）；鍵為兩 id 排序後以 | 相接 */
     private _pairs: Map<string, number> = new Map();
+    /** 割袍斷義鎖死的配對：數值固定，addPair 不再改動（doc_spec_0743 §4，PROG-2-10207） */
+    private _lockedPairs: Set<string> = new Set();
     private _listeners: Set<FriendshipChangeListener> = new Set();
     private _maxCap: number = 100;
     private _minCap: number = -100;
@@ -102,9 +104,29 @@ export class FriendshipService implements IFriendshipService {
     /** 增減配對友誼（夾制於 [-100, 100]），回傳新值；不發玩家友誼變更事件 */
     public addPair(a: string, b: string, delta: number, _reason: string): number {
         if (!a || !b || a === b || !Number.isFinite(delta) || delta === 0) return this.getPair(a, b);
+        if (this._lockedPairs.has(FriendshipService._pairKey(a, b))) return this.getPair(a, b);
         const next = Math.max(this._minCap, Math.min(this._maxCap, this.getPair(a, b) + delta));
         this._pairs.set(FriendshipService._pairKey(a, b), next);
         return next;
+    }
+
+    /** 鎖死配對並設為指定值（夾在上下限內）；之後 addPair 不再改動。 */
+    public lockPair(a: string, b: string, value: number): number {
+        if (!a || !b || a === b) return 0;
+        const key = FriendshipService._pairKey(a, b);
+        const clamped = Math.max(this._minCap, Math.min(this._maxCap, value));
+        this._pairs.set(key, clamped);
+        this._lockedPairs.add(key);
+        return clamped;
+    }
+
+    public isPairLocked(a: string, b: string): boolean {
+        return this._lockedPairs.has(FriendshipService._pairKey(a, b));
+    }
+
+    /** 讀檔後依盟約狀態重新上鎖（鎖定集合本身不存，來源是 SwornState.severedPairs）。 */
+    public setLockedPairs(keys: readonly string[]): void {
+        this._lockedPairs = new Set(keys);
     }
 
     public exportPairs(): Record<string, number> {

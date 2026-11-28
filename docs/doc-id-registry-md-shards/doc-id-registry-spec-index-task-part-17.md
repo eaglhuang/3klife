@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-11-27
+> 生成日期: 2026-11-28
 > 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 17/17 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -108,7 +108,11 @@
 | `doc_task_3266` | docs/agent-briefs/tasks/PROG/PROG-2-10201.md | [PROG-2-10201] 補完：大廳傭兵結義系統（條件清單、儀式演出、i18n、義兄弟羈絆預覽） |
 | `doc_task_3269` | docs/agent-briefs/tasks/PROG/PROG-2-10200.md | [PROG-2-10200] 日夜四季全域規則＋市井大街熱區裁定回寫 |
 | `doc_task_3270` | docs/agent-briefs/tasks/PROG/PROG-2-10203.md | [PROG-2-10203] 武將生活系統四份規格審查 |
+| `doc_task_3272` | docs/agent-briefs/tasks/PROG/PROG-2-10207.md | [PROG-2-10207] 補完：大廳結義 5 項（桃園盟約、割袍斷義、名酒宴飲、離隊留念、成長快照） |
 | `doc_task_3273` | docs/agent-briefs/tasks/PROG/PROG-2-10213.md | [PROG-2-10213] WP3 武將作息與喜好引擎 |
 | `doc_task_3275` | docs/agent-briefs/tasks/PROG/PROG-2-10211.md | [PROG-2-10211] WP5 日夜四季調色與疊層程式框架 |
 | `doc_task_3280` | docs/agent-briefs/tasks/PROG/PROG-2-10209.md | [PROG-2-10209] Q 動畫管理器核心＋基本動作片段 |
-| `doc_task_3282` | docs/agent-briefs/tasks/PROG/PROG-2-10204.md | [PROG-2-10204] 戰場結義效果：義兄弟同陣士氣＋生死相隨援護＋動態義兄弟合攻 |
+| `doc_task_3283` | docs/agent-briefs/tasks/PROG/PROG-2-10210.md | [PROG-2-10210] WP2 頭上生活符號系統 |
+| `doc_task_3285` | docs/agent-briefs/tasks/PROG/PROG-2-10212.md | [PROG-2-10212] WP4 場景註冊表＋任意場景切換 UI |
+| `doc_task_3286` | docs/agent-briefs/tasks/PROG/PROG-2-10214.md | [PROG-2-10214] 生活層第一個看得到的原型 |
+| `doc_task_3288` | docs/agent-briefs/tasks/PROG/PROG-2-10204.md | [PROG-2-10204] 戰場結義效果：義兄弟同陣士氣＋生死相隨援護＋動態義兄弟合攻 |

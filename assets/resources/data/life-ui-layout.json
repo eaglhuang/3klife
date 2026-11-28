@@ -1,0 +1,25 @@
+{
+  "schema": "life-ui-layout.v1",
+  "note": "生活層 UI 版面（QSOC-01 第 4.5 節）。座標全是錨點＋相對比例：offset 的 x 乘螢幕寬、y 乘螢幕高；sizeRel 乘短邊；minPx 是最小像素（拇指可點下限）。portraitOverride 在螢幕高 > 寬時覆蓋同名元件的欄位。",
+  "referenceDesign": { "landscape": [1920, 1080], "portrait": [480, 854] },
+  "components": {
+    "mapFab": { "anchor": "bottomLeft", "offset": [0.03, 0.04], "sizeRel": 0.075, "minPx": 64, "mirrorable": true },
+    "scenePanel": { "anchor": "bottom", "heightRel": 0.6, "radius": 16, "tabs": ["map", "recent", "favorites", "find"], "tabsAt": "bottom", "collapsible": true },
+    "slotBadge": { "anchor": "topRight", "offset": [0.02, 0.03], "sizeRel": 0.06, "minPx": 56, "widthRel": 0.16 },
+    "interactMenu": { "anchor": "actor", "radiusH": 0.9, "minPx": 44, "note": "點 Q 頭彈出的圓形互動選單（QLIFE-01 第 6 章），跟著頭走、相對頭高 H，不寫死像素" },
+    "companions": { "anchor": "topLeft", "offset": [0.02, 0.12], "sizeRel": 0.05, "minPx": 44, "max": 2 }
+  },
+  "panelParts": {
+    "tabBar": { "heightRel": 0.1, "minPx": 56 },
+    "searchBox": { "heightRel": 0.09, "minPx": 56 },
+    "row": { "heightRel": 0.085, "minPx": 56 },
+    "backToLobby": { "heightRel": 0.09, "minPx": 56, "widthRel": 0.3 },
+    "padding": 0.02
+  },
+  "map": { "areaGridColumns": 3, "areaCellAspect": 1.0 },
+  "limits": { "recentMax": 8, "favoritesMax": 12, "companionsMax": 2 },
+  "transition": { "fadeOutSec": 0.25, "fadeInSec": 0.25, "maxTotalSec": 0.8 },
+  "portraitOverride": {
+    "scenePanel": { "heightRel": 0.7, "tabsAt": "top" }
+  }
+}

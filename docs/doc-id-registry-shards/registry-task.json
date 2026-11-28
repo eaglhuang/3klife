@@ -17820,6 +17820,12 @@
     "category": "task"
   },
   {
+    "id": "doc_task_3272",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10207.md",
+    "title": "[PROG-2-10207] 補完：大廳結義 5 項（桃園盟約、割袍斷義、名酒宴飲、離隊留念、成長快照）",
+    "category": "task"
+  },
+  {
     "id": "doc_task_3273",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10213.md",
     "title": "[PROG-2-10213] WP3 武將作息與喜好引擎",
@@ -17838,7 +17844,25 @@
     "category": "task"
   },
   {
-    "id": "doc_task_3282",
+    "id": "doc_task_3283",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10210.md",
+    "title": "[PROG-2-10210] WP2 頭上生活符號系統",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3285",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10212.md",
+    "title": "[PROG-2-10212] WP4 場景註冊表＋任意場景切換 UI",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3286",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10214.md",
+    "title": "[PROG-2-10214] 生活層第一個看得到的原型",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3288",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10204.md",
     "title": "[PROG-2-10204] 戰場結義效果：義兄弟同陣士氣＋生死相隨援護＋動態義兄弟合攻",
     "category": "task"

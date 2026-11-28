@@ -21,12 +21,14 @@ export const DYNAMIC_RELATION_DECAY_RATE = 2;
 /** 暫定（規格未寫）：一次互動回補的親密度（PROG-2-0521） */
 export const DYNAMIC_RELATION_INTERACT_GAIN = 10;
 
-export type DynamicRelationEventKind = 'battle-comrade' | 'mercenary-oath' | 'bonding' | 'parentage';
+export type DynamicRelationEventKind = 'battle-comrade' | 'mercenary-oath' | 'sworn-pact' | 'bonding' | 'parentage';
 
 /** 事件 → 關係型別（規格 §5：戰場共鬥→戰友、結義傭兵→義兄弟、結緣→夫妻；WBS 另列親子） */
 export const DYNAMIC_RELATION_BY_EVENT: Readonly<Record<DynamicRelationEventKind, DynamicRelationType>> = {
     'battle-comrade': 'COMRADE',
     'mercenary-oath': 'DYNAMIC_SWORN',
+    /** 桃園結義盟約（doc_spec_0743 §3，PROG-2-10207）：盟約成員兩兩記為義兄弟 */
+    'sworn-pact': 'DYNAMIC_SWORN',
     bonding: 'SPOUSE',
     parentage: 'PARENT_CHILD',
 };
