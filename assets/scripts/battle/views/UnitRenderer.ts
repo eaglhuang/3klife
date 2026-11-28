@@ -4,7 +4,8 @@ import { UCUFLogger, LogCategory } from "../../core/utils/UCUFLogger";
 import { perfBegin, perfEnd, perfFrame } from "./BattlePerfProbe";
 import { BadgeBatchLayers } from "./BadgeBatchLayers";
 import { setCacheModeDeferred } from "../../ui/core/LabelLayoutDeferral";
-import { BADGE_ATLAS_SCALE, TroopTypeBadge, loadBadgeAtlasFrames } from "../../ui/shared/TroopTypeBadge";
+import { TroopTypeBadge } from "../../ui/shared/TroopTypeBadge";
+import { UNIT_HP_BAR_H, UNIT_HP_BAR_W, UNIT_HP_BAR_Y, UNIT_HUD_FONT, UNIT_HUD_ICON_D, UNIT_HUD_ICON_X, UNIT_HUD_NUM_W, UNIT_HUD_NUM_X, UNIT_HUD_ROW_H, UNIT_HUD_W, hudScaleFor } from "../shared/UnitHudLayout";
 import { troopTypeGlyph } from "../../shared/TallyCardContract";
 import { awaitWithTimeout } from "../../core/utils/AwaitGuard";
 import {
@@ -26,7 +27,6 @@ import {
   Node,
   Prefab,
   Sprite,
-  SpriteFrame,
   SkinnedMeshRenderer,
   Texture2D,
   primitives,
@@ -42,7 +42,6 @@ import {
   Vec3,
   VerticalTextAlignment,
   resources,
-  Rect,
   JsonAsset,
 } from "cc";
 import { BattleTactic, EVENT_NAMES, Faction, GAME_CONFIG, TroopType } from "../../core/config/Constants";
@@ -193,13 +192,6 @@ const GENERAL_DASH_WAIT_SEC = 3;
 /** 單挑場邊位置離最外側那路的距離（以路寬計，PROG-2-9719）。 */
 const DUEL_SIDELINE_LANES = 1.1;
 
-/** 頭頂血條尺寸（名牌座標，名牌本身縮 0.7；PROG-2-1874） */
-const HP_BAR_WIDTH = 150;
-/** 頭頂狀態小圖示列：排在血條正上方，從名牌底板（寬 180）左緣開始，3 格不超出名牌寬度、不擠到隔壁路 */
-const STATUS_ICON_START_X = -90;
-/** 圖示列中心 y：名牌半高 39 + 血條（間距 4、高 8）+ 間距 4 + 圖示半高（PROG-2-9436：48/2） */
-const STATUS_ICON_Y = 39 + 4 + 8 + 4 + STATUS_ICON_SIZE / 2;
-const HP_BAR_HEIGHT = 8;
 /** 掉血殘影色：暖白偏金，在藍、紅血條上都看得清楚（PROG-2-9412）。 */
 const HP_BAR_CHIP_COLOR = new Color(255, 232, 190, 235);
 const HP_BAR_BACK_COLOR = new Color(22, 15, 9, 220);
@@ -210,6 +202,12 @@ const HP_BAR_COLOR = {
   enemy: new Color(230, 70, 60, 255),
 } as const;
 
+/** 部隊頭頂 HUD 的版面常數與畫面比例（純資料，見 shared/UnitHudLayout；PROG-2-10266） */
+const UNIT_STATUS_ICON_Y = UNIT_HUD_ROW_H / 2 + 4 + STATUS_ICON_SIZE / 2;
+const UNIT_STATUS_ICON_X = -UNIT_HUD_W / 2;
+/** 描邊色：我軍深藍、敵軍深紅；圓章染色同向 */
+const UNIT_HUD_OUTLINE = { player: new Color(6, 20, 64, 255), enemy: new Color(80, 8, 8, 255) } as const;
+const UNIT_HUD_DISC_TINT = { player: new Color(150, 195, 255, 255), enemy: new Color(255, 150, 140, 255) } as const;
 /**
  * 頭頂名牌徽章風格（PROG-2-9705，對齊格子 buff 徽章）：深色底＋金圈、兵種放金圈圓章、字一律黑描邊。
  * 顏色取自 TileBuffMarkers 的金圈與描邊色，兩邊看起來是同一套 UI。
@@ -265,6 +263,8 @@ export class UnitRenderer extends Component {
 
   @property({ tooltip: "頭頂資訊距離單位的高度" })
   public labelHeight = 0.55;
+  /** 部隊頭頂 HUD 的投影高度：數字列貼近頭頂（PROG-2-10266，約 8px 內） */
+  public unitLabelHeight = 0.42;
 
   @property({ tooltip: "主將 cube 相對小兵尺寸倍率" })
   public generalScaleMultiplier = 1.5;
@@ -306,7 +306,6 @@ export class UnitRenderer extends Component {
   private readonly troopConfigCache = new TroopSpineConfigCache();
   private readonly badgeSolver = new BadgeAvoidSolver();
   /** 部隊框節點集合（弱參照），供 topUnitLabelIndex 由尾端找最上層部隊框 */
-  private readonly unitLabelNodes = new WeakSet<Node>();
   private readonly badgeEntryPool: StackBadgeEntry[] = [];
   private readonly hasSpineFailed = (path: string): boolean => this.spineUnits.hasFailed(path);
   /** 部隊框避讓武將本體（PROG-2-10118）：本體矩形暫存、各框目前的透明度比例（1 = 不透明，不在表內） */
@@ -1329,7 +1328,7 @@ export class UnitRenderer extends Component {
       if (unit) {
         this.updateFloodRaft(view, unit);
       }
-      this.projectWorldLabel(view.worldNode, view.labelNode, this.labelHeight);
+      this.projectWorldLabel(view.worldNode, view.labelNode, this.unitLabelHeight);
       if (unit) {
         const isGeneral = this.isGeneralAvatarUnit(unit);
         const general = isGeneral ? this.latestState?.getGeneral(unit.faction) : null;
@@ -1924,7 +1923,7 @@ export class UnitRenderer extends Component {
     const labelNode = new Node(`GeneralLabel_${faction}`);
     labelNode.layer = this.canvasNode?.layer ?? Layers.Enum.UI_2D;
     this.uiRoot?.addChild(labelNode);
-    const badge = this.buildBadge(labelNode, GENERAL_PLATE_WIDTH, GENERAL_PLATE_HEIGHT, null, null, true);
+    const badge = this.buildBadge(labelNode, GENERAL_PLATE_WIDTH, GENERAL_PLATE_HEIGHT);
     // 武將 HUD 標籤陣營色：玩家藍、敵軍紅
     badge.typeLabel.color = faction === Faction.Enemy
       ? new Color(255, 130, 130, 255)
@@ -1971,10 +1970,8 @@ export class UnitRenderer extends Component {
 
   /** uiRoot 底下最上層的部隊框兄弟索引；沒有回 -1（PROG-2-10155：由尾端往前找，不再逐框 getSiblingIndex）。 */
   private topUnitLabelIndex(): number {
-    const children = this.uiRoot?.children;
-    if (!children) return -1;
-    for (let i = children.length - 1; i >= 0; i -= 1) if (this.unitLabelNodes.has(children[i])) return i;
-    return -1;
+    const hud = this.hudRoot;
+    return hud && hud.isValid && hud.parent === this.uiRoot && hud.children.length > 0 ? hud.getSiblingIndex() : -1;
   }
 
   /**
@@ -2103,7 +2100,7 @@ export class UnitRenderer extends Component {
     const halfH = tf.contentSize.height / 2;
     let ext: LocalExtent = { left: -halfW, right: halfW, top: halfH, bottom: -halfH };
     const bar = view.hpBar?.node;
-    if (bar?.active) ext = { ...ext, top: Math.max(ext.top, bar.position.y + HP_BAR_HEIGHT / 2) };
+    if (bar?.active) ext = { ...ext, top: Math.max(ext.top, bar.position.y + UNIT_HP_BAR_H / 2) };
     return unionExtent(ext, view.statusBar?.localExtent() ?? null);
   }
 
@@ -2111,12 +2108,9 @@ export class UnitRenderer extends Component {
   private markBadgeHit(unitId: string): void {
     this.lastHitAt.set(unitId, this.badgeClock);
     const label = this.unitViews.get(unitId)?.labelNode;
-    if (!label?.isValid || label.parent !== this.uiRoot) return;
-    let topUnitIndex = -1;
-    this.unitViews.forEach((view) => {
-      if (view.labelNode.parent === this.uiRoot) topUnitIndex = Math.max(topUnitIndex, view.labelNode.getSiblingIndex());
-    });
-    if (label.getSiblingIndex() < topUnitIndex) label.setSiblingIndex(topUnitIndex);
+    if (!label?.isValid || !this.hudRoot || label.parent !== this.hudRoot) return;
+    const last = this.hudRoot.children.length - 1;
+    if (label.getSiblingIndex() < last) label.setSiblingIndex(last);
     this.badgeLayers?.bringToFront(label);
   }
 
@@ -2239,10 +2233,10 @@ export class UnitRenderer extends Component {
     const badgeLayers = this.ensureBadgeLayers();
     const labelNode = new Node(`UnitLabel_${unit.id}`);
     labelNode.layer = this.canvasNode?.layer ?? Layers.Enum.UI_2D;
-    this.uiRoot?.addChild(labelNode);
-    this.unitLabelNodes.add(labelNode);
-    const badge = this.buildBadge(labelNode, 170, 34, unit.type, badgeLayers);
-    const hpBar = this.buildHpBar(labelNode, 34 + 5);
+    this.ensureHudRoot()?.addChild(labelNode);
+    const hudScale = hudScaleFor(this.uiRoot?.getComponent(UITransform)?.width ?? 0, this.uiRoot?.getComponent(UITransform)?.height ?? 0);
+    const badge = this.buildUnitHud(labelNode, unit.type, unit.faction, badgeLayers, hudScale);
+    const hpBar = this.buildUnitHpBar(labelNode);
 
     // 敵軍單位：HUD 上方標籤顯示紅色，不需修改 badge.hpLabel（已是豉紅）
     if (unit.faction === Faction.Enemy) {
@@ -2267,7 +2261,7 @@ export class UnitRenderer extends Component {
       labelOpacity: badge.opacity,
       bottomNameLabel: badge.bottomNameLabel,
       hpBar,
-      statusBar: new UnitStatusIconBar(labelNode, STATUS_ICON_START_X, STATUS_ICON_Y),
+      statusBar: new UnitStatusIconBar(labelNode, UNIT_STATUS_ICON_X, UNIT_STATUS_ICON_Y),
       statusKinds: null,
       persistKind: null,
       pendingStatusPulse: null,
@@ -2344,7 +2338,7 @@ export class UnitRenderer extends Component {
     // worldNode 統一控制所有單位面向（cube placeholder 與 formation 模式皆相同）
     // formationRoot 不再負責旋轉，各 soldier 以 0° local rotation 繼承 worldNode 方向
     this.alignNodeToFactionFacing(view.worldNode, unit.faction);
-    this.projectWorldLabel(view.worldNode, view.labelNode, this.labelHeight);
+    this.projectWorldLabel(view.worldNode, view.labelNode, this.unitLabelHeight);
   }
 
   // ── PROG-2-9731 戰場 UI 演出（名牌戰鬥淡出、毒上身、治療光）──────────────
@@ -2491,7 +2485,7 @@ export class UnitRenderer extends Component {
       if (!isValid(label)) return null;
       const k = label.scale.x || 1;
       const p = label.position;
-      return this.tileBuffFlyTo.set(p.x + (STATUS_ICON_START_X + STATUS_ICON_SIZE / 2) * k, p.y + STATUS_ICON_Y * k, 0);
+      return this.tileBuffFlyTo.set(p.x + (UNIT_STATUS_ICON_X + STATUS_ICON_SIZE / 2) * k, p.y + UNIT_STATUS_ICON_Y * k, 0);
     };
     this.tileBuffMarkers.flyPickup(from, badge, target, () => {
       if (!isValid(view.labelNode)) return;
@@ -2500,15 +2494,71 @@ export class UnitRenderer extends Component {
     });
   }
 
-  /** 頭頂血條節點：放在名牌上緣之上（主戰場UI規格書 §3.1，PROG-2-1874） */
-  private buildHpBar(labelNode: Node, badgeHalfHeight: number): Graphics {
+  /** 細血條：貼在數字列下方，受傷才顯示（drawHpBar 控制）。 */
+  private buildUnitHpBar(labelNode: Node): Graphics {
     const barNode = new Node("HpBar");
     barNode.layer = labelNode.layer;
     labelNode.addChild(barNode);
-    barNode.addComponent(UITransform).setContentSize(HP_BAR_WIDTH, HP_BAR_HEIGHT);
-    barNode.setPosition(0, badgeHalfHeight + 4 + HP_BAR_HEIGHT / 2, 0);
+    barNode.addComponent(UITransform).setContentSize(UNIT_HP_BAR_W, UNIT_HP_BAR_H);
+    barNode.setPosition(0, UNIT_HP_BAR_Y, 0);
     barNode.active = false;
     return barNode.addComponent(Graphics);
+  }
+
+  /**
+   * 部隊頭頂 HUD（PROG-2-10266）：[兵種圓章] 兵數 單行，無底板。沿用 BadgeBatchLayers 三層（圓章底／剪影／字），
+   * 兵種剪影與圓章同在 battle_badge_atlas，數字走 BITMAP 點陣快取。攻擊值與兵種名稱不顯示
+   * （節點放在停用的 Unused 下，updateUnitView 照常寫字不報錯），兵種名稱改由點選資訊面板顯示。
+   */
+  private buildUnitHud(rootNode: Node, troopType: TroopType, faction: Faction, layers: BadgeBatchLayers | null, scale: number): BadgeView {
+    const side = faction === Faction.Enemy ? "enemy" : "player";
+    rootNode.addComponent(UITransform).setContentSize(UNIT_HUD_W, UNIT_HUD_ROW_H);
+    const opacity = rootNode.addComponent(UIOpacity);
+    opacity.opacity = 255;
+    rootNode.setScale(scale, scale, 1);
+    const bgParent = layers ? layers.proxyFor(rootNode, "bg") : rootNode;
+    const textParent = layers ? layers.proxyFor(rootNode, "text") : rootNode;
+    const iconParent = layers ? layers.proxyFor(rootNode, "icon") : rootNode;
+    const clear = new Color(0, 0, 0, 0);
+    const white = new Color(245, 245, 245, 255);
+
+    const hpLabel = this.createBadgeSegment(textParent, "HpBadge", UNIT_HUD_NUM_X, UNIT_HUD_NUM_W, UNIT_HUD_FONT + 6, clear, white, UNIT_HUD_FONT);
+    hpLabel.node.parent!.setPosition(UNIT_HUD_NUM_X, 0, 0);
+    hpLabel.outlineColor = UNIT_HUD_OUTLINE[side];
+    hpLabel.outlineWidth = 4;
+    this.shrinkToFit(hpLabel);
+
+    const typeLabel = this.createBadgeSegment(textParent, "TypeBadge", UNIT_HUD_ICON_X, UNIT_HUD_ICON_D, UNIT_HUD_ICON_D, clear, white, 20);
+    typeLabel.node.parent!.setPosition(UNIT_HUD_ICON_X, 0, 0);
+    this.shrinkToFit(typeLabel);
+    const iconNode = new Node("TypeIcon");
+    iconNode.layer = iconParent.layer;
+    iconParent.addChild(iconNode);
+    const iconSize = UNIT_HUD_ICON_D * 0.8;
+    iconNode.addComponent(UITransform).setContentSize(iconSize, iconSize);
+    iconNode.setPosition(UNIT_HUD_ICON_X, 0, 0);
+    const icon = iconNode.addComponent(Sprite);
+    icon.type = Sprite.Type.SIMPLE;
+    icon.sizeMode = Sprite.SizeMode.CUSTOM;
+    TroopTypeBadge.attach(icon, { size: UNIT_HUD_ICON_D, discParent: bgParent, glyph: typeLabel }).setType(troopType);
+    const disc = bgParent.getChildByName("TypeDisc")?.getComponent(Sprite);
+    if (disc) disc.color = UNIT_HUD_DISC_TINT[side];
+
+    // 點陣快取：打包進動態圖集，與其他徽章文字共用貼圖可合批；不用 CHAR（字元圖集是全專案共用的稀缺預算）
+    for (const l of [typeLabel, hpLabel]) setCacheModeDeferred(l, Label.CacheMode.BITMAP);
+
+    const unused = new Node("Unused");
+    unused.layer = rootNode.layer;
+    unused.active = false;
+    rootNode.addChild(unused);
+    const attackLabel = this.createBadgeSegment(unused, "AttackBadge", 0, 40, 20, clear, white, 16);
+    const nameNode = new Node("NameLabel");
+    nameNode.layer = rootNode.layer;
+    unused.addChild(nameNode);
+    nameNode.addComponent(UITransform).setContentSize(100, 20);
+    const nameLabel = nameNode.addComponent(Label);
+    nameLabel.string = "";
+    return { rootNode, attackLabel, typeLabel, hpLabel, opacity, bottomNameLabel: nameLabel };
   }
 
   /** 推進各單位的掉血殘影並重畫（PROG-2-9412）；沒有殘影的單位不動。 */
@@ -2525,30 +2575,27 @@ export class UnitRenderer extends Component {
     g.node.active = state.visible;
     if (!state.visible) return;
     // PROG-2-10239：血量、殘影（取 1/4 像素精度）與色調都沒變就不重畫；每次重畫都會配置圓角路徑與顏色
+    const BW = UNIT_HP_BAR_W;
+    const BH = UNIT_HP_BAR_H;
     const chip = chipRatio !== undefined && chipRatio > state.ratio ? Math.min(1, chipRatio) : -1;
-    const wPx = Math.round(state.ratio * HP_BAR_WIDTH * 4);
-    const cPx = chip < 0 ? -1 : Math.round(chip * HP_BAR_WIDTH * 4);
+    const wPx = Math.round(state.ratio * BW * 4);
+    const cPx = chip < 0 ? -1 : Math.round(chip * BW * 4);
     const drawn = hpBarDrawn.get(g);
     if (drawn && drawn.w === wPx && drawn.c === cPx && drawn.tone === state.tone) return;
     if (drawn) { drawn.w = wPx; drawn.c = cPx; drawn.tone = state.tone; } else hpBarDrawn.set(g, { w: wPx, c: cPx, tone: state.tone });
-    const x = -HP_BAR_WIDTH / 2;
-    const y = -HP_BAR_HEIGHT / 2;
+    const x = -BW / 2;
+    const y = -BH / 2;
     g.clear();
     g.fillColor = HP_BAR_BACK_COLOR;
-    g.roundRect(x - 2, y - 2, HP_BAR_WIDTH + 4, HP_BAR_HEIGHT + 4, 3);
+    g.rect(x - 1.5, y - 1.5, BW + 3, BH + 3);
     g.fill();
-    // 金色細框（PROG-2-9705），與名牌金圈同色
-    g.lineWidth = 1.5;
-    g.strokeColor = BADGE_RING;
-    g.roundRect(x - 2, y - 2, HP_BAR_WIDTH + 4, HP_BAR_HEIGHT + 4, 3);
-    g.stroke();
     if (chipRatio !== undefined && chipRatio > state.ratio) {
       g.fillColor = HP_BAR_CHIP_COLOR;
-      g.rect(x, y, HP_BAR_WIDTH * Math.min(1, chipRatio), HP_BAR_HEIGHT);
+      g.rect(x, y, BW * Math.min(1, chipRatio), BH);
       g.fill();
     }
     g.fillColor = HP_BAR_COLOR[state.tone];
-    g.rect(x, y, HP_BAR_WIDTH * state.ratio, HP_BAR_HEIGHT);
+    g.rect(x, y, BW * state.ratio, BH);
     g.fill();
   }
 
@@ -2603,36 +2650,40 @@ export class UnitRenderer extends Component {
     view.vitalityText.color = ring.band === "exhausted" ? new Color(170, 170, 170, 255) : new Color(r, gr, b, 255);
   }
 
+  /**
+   * 部隊頭頂 HUD 專用根節點（PROG-2-10266）：永遠排在 uiRoot 最底（索引 0），之後建立的特效、跳字、武將名牌都在它之上，
+   * 特效不會被 HUD 蓋住；與 uiRoot 同座標同尺寸。uiRoot 換了（重建戰場）就重建。
+   */
+  private hudRoot: Node | null = null;
+  private ensureHudRoot(): Node | null {
+    const ui = this.uiRoot;
+    if (!ui) return null;
+    if (!this.hudRoot || !this.hudRoot.isValid || this.hudRoot.parent !== ui) {
+      const n = new Node("UnitHudRoot");
+      n.layer = this.canvasNode?.layer ?? Layers.Enum.UI_2D;
+      const tf = n.addComponent(UITransform);
+      const uiTf = ui.getComponent(UITransform);
+      if (uiTf) tf.setContentSize(uiTf.contentSize);
+      ui.addChild(n);
+      n.setSiblingIndex(0);
+      this.hudRoot = n;
+    }
+    return this.hudRoot;
+  }
+
   /** 部隊徽章合批圖層（PROG-2-9713）：uiRoot 換了（重建戰場）就重建 */
   private ensureBadgeLayers(): BadgeBatchLayers | null {
     if (!this.uiRoot) return null;
-    if (!this.badgeLayers || !this.badgeLayers.isValid || this.badgeLayers.bg.parent !== this.uiRoot) {
-      this.badgeLayers = new BadgeBatchLayers(this.uiRoot, this.canvasNode?.layer ?? Layers.Enum.UI_2D);
+    const hud = this.ensureHudRoot();
+    if (!hud) return null;
+    if (!this.badgeLayers || !this.badgeLayers.isValid || this.badgeLayers.bg.parent !== hud) {
+      this.badgeLayers = new BadgeBatchLayers(hud, this.canvasNode?.layer ?? Layers.Enum.UI_2D);
     }
     return this.badgeLayers;
   }
 
-  /** 底框精靈（九宮格，2 倍解析度縮 0.5）；底圖載好才指定 SpriteFrame；圓章改由 TroopTypeBadge 繪製（PROG-2-9724） */
-  private addBadgeBgSprite(parent: Node, w: number, h: number): void {
-    const node = new Node("Bg");
-    node.layer = parent.layer;
-    parent.addChild(node);
-    node.setScale(BADGE_ATLAS_SCALE, BADGE_ATLAS_SCALE, 1);
-    node.addComponent(UITransform).setContentSize(w / BADGE_ATLAS_SCALE, h / BADGE_ATLAS_SCALE);
-    const sprite = node.addComponent(Sprite);
-    sprite.sizeMode = Sprite.SizeMode.CUSTOM;
-    sprite.type = Sprite.Type.SLICED;
-    void loadBadgeAtlasFrames().then((frames) => {
-      if (frames && sprite.isValid) sprite.spriteFrame = frames.bg;
-    });
-  }
-
-  /**
-   * layers 有給（部隊徽章）時走分層合批：底框／圓章是共用底圖精靈、文字是 BITMAP 點陣快取，各自掛到共用圖層的代理節點；
-   * rootNode 只保留位置、縮放、透明度與尺寸。沒給（武將名牌）時維持原本的 Graphics 版（PROG-2-9713）。
-   */
-  private buildBadge(rootNode: Node, width: number, height: number, troopType: TroopType | null = null,
-    layers: BadgeBatchLayers | null = null, singleRow = false): BadgeView {
+  /** 武將名牌（單排、Graphics 版）；部隊頭頂 HUD 改走 buildUnitHud（PROG-2-10266）。 */
+  private buildBadge(rootNode: Node, width: number, height: number): BadgeView {
     const rootTf = rootNode.addComponent(UITransform);
     rootTf.setContentSize(width, height * 2 + 10);
     const opacity = rootNode.addComponent(UIOpacity);
@@ -2641,16 +2692,12 @@ export class UnitRenderer extends Component {
     // 將 HUD 縮小 (原本尺寸偏大)
     rootNode.setScale(0.7, 0.7, 1);
 
-    const bgParent = layers ? layers.proxyFor(rootNode, "bg") : rootNode;
-    const textParent = layers ? layers.proxyFor(rootNode, "text") : rootNode;
+    const textParent = rootNode;
     const bw = width + 10;
     // 單排名牌（武將）：沒有下排名稱，底板只包上排，位置仍以原上排為準（PROG-2-10080）
-    const bh = singleRow ? height + 14 : height * 2 + 10;
-    const bgCenterY = singleRow ? height / 2 + 2 : 0;
-    if (layers) {
-      // 底框：與 Graphics 版同色同尺寸；外框描邊外擴 1.5，所以精靈比框大 3
-      this.addBadgeBgSprite(bgParent, bw + 3, bh + 3);
-    } else {
+    const bh = height + 14;
+    const bgCenterY = height / 2 + 2;
+    {
       // 背景底板：提升頭頂資訊可讀性
       const bgNode = new Node("Bg");
       bgNode.layer = rootNode.layer;
@@ -2709,30 +2756,8 @@ export class UnitRenderer extends Component {
       18,
     );
     typeLabel.node.parent!.setPosition(0, topRowY, 0);
-    // 兵種圓章：金圈深底圓（畫在兵種剪影／單字後面），由 TroopTypeBadge 統一繪製（PROG-2-9724）
     const discR = segmentHeight / 2 + 1;
-    if (troopType) {
-      // 底圖圓章直徑 40 ＝部隊徽章 discR 18 的 2 倍解析度換算
-      const discSize = (discR / 18) * 40;
-      const iconParent = layers ? layers.proxyFor(rootNode, "icon") : typeLabel.node.parent!;
-      const iconNode = new Node("TypeIcon");
-      iconNode.layer = iconParent.layer;
-      iconParent.addChild(iconNode);
-
-      const iconTf = iconNode.addComponent(UITransform);
-      const iconSize = Math.max(18, Math.min(segmentHeight - 6, centerWidth - 8));
-      iconTf.setContentSize(iconSize, iconSize);
-      iconNode.setPosition(0, layers ? topRowY : 0, 0);
-
-      const icon = iconNode.addComponent(Sprite);
-      icon.type = Sprite.Type.SIMPLE;
-      icon.sizeMode = Sprite.SizeMode.CUSTOM;
-      icon.color = new Color(255, 255, 255, 255);
-
-      // 剪影載入前先顯示單字；剪影到了才換圖（同一顆圓章）
-      const badge = TroopTypeBadge.attach(icon, { size: discSize, discParent: layers ? bgParent : undefined, glyph: typeLabel });
-      badge.setType(troopType);
-    } else {
+    {
       const discNode = new Node("TypeDisc");
       discNode.layer = rootNode.layer;
       const typeSeg = typeLabel.node.parent!;

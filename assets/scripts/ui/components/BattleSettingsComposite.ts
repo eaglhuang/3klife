@@ -12,7 +12,8 @@ import { CompositePanel } from '../core/CompositePanel';
 import { UITemplateBinder } from '../core/UITemplateBinder';
 import { EVENT_NAMES } from '../../core/config/Constants';
 import { services } from '../../core/managers/ServiceLoader';
-import { audioToggleText, retreatButtonText, retreatClick } from '../../core/systems/BattleSettingsView';
+import { audioToggleText, hitStopToggleKey, loadJuicePrefs, retreatButtonText, retreatClick, saveJuicePrefs, toggleHitStopPref } from '../../core/systems/BattleSettingsView';
+import { applyJuicePrefs, parseBattleJuice, setBattleJuice } from '../../battle/shared/BattleJuice';
 
 const { ccclass } = _decorator;
 
@@ -21,6 +22,7 @@ export class BattleSettingsComposite extends CompositePanel {
     private _isMounted = false;
     private _bgmLabel: Label | null = null;
     private _sfxLabel: Label | null = null;
+    private _hitStopLabel: Label | null = null;
     private _retreatLabel: Label | null = null;
     private _retreatArmedAt: number | null = null;
 
@@ -57,9 +59,11 @@ export class BattleSettingsComposite extends CompositePanel {
         if (!this.node.getComponent(BlockInputEvents)) this.node.addComponent(BlockInputEvents);
         this._bgmLabel = binder.getNode('BtnBgm')?.getChildByName('Label')?.getComponent(Label) ?? null;
         this._sfxLabel = binder.getNode('BtnSfx')?.getChildByName('Label')?.getComponent(Label) ?? null;
+        this._hitStopLabel = binder.getNode('BtnHitStop')?.getChildByName('Label')?.getComponent(Label) ?? null;
         this._retreatLabel = binder.getNode('BtnRetreat')?.getChildByName('Label')?.getComponent(Label) ?? null;
         binder.getNode('BtnBgm')?.on(Button.EventType.CLICK, this._onBgmClick, this);
         binder.getNode('BtnSfx')?.on(Button.EventType.CLICK, this._onSfxClick, this);
+        binder.getNode('BtnHitStop')?.on(Button.EventType.CLICK, this._onHitStopClick, this);
         binder.getNode('BtnRetreat')?.on(Button.EventType.CLICK, this._onRetreatClick, this);
         binder.getNode('BtnResume')?.on(Button.EventType.CLICK, this.hide, this);
     }
@@ -68,6 +72,7 @@ export class BattleSettingsComposite extends CompositePanel {
         const audio = services().audio;
         if (this._bgmLabel) this._bgmLabel.string = audioToggleText('bgm', audio.isBgmMuted());
         if (this._sfxLabel) this._sfxLabel.string = audioToggleText('sfx', audio.isSfxMuted());
+        if (this._hitStopLabel) this._hitStopLabel.string = services().i18n.t(hitStopToggleKey(loadJuicePrefs().hitStop));
         if (this._retreatLabel) this._retreatLabel.string = retreatButtonText(this._retreatArmedAt !== null);
     }
 
@@ -80,6 +85,16 @@ export class BattleSettingsComposite extends CompositePanel {
     private _onSfxClick(): void {
         const audio = services().audio;
         audio.setSfxMuted(!audio.isSfxMuted());
+        this._render();
+    }
+
+    /** 命中頓格開關：存偏好並立刻套到目前戰鬥（重讀 battle-juice.json 疊上偏好；讀不到沿用預設）。 */
+    private _onHitStopClick(): void {
+        const prefs = toggleHitStopPref(loadJuicePrefs());
+        saveJuicePrefs(prefs);
+        void services().resource.loadJson<unknown>('data/battle-juice', { tags: ['battle'] })
+            .catch(() => null)
+            .then((raw) => setBattleJuice(applyJuicePrefs(parseBattleJuice(raw), prefs)));
         this._render();
     }
 
