@@ -17998,5 +17998,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10264.md",
     "title": "[PROG-2-10264] 規格書：街上偶遇他國武將＋武將作息表",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3345",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10253.md",
+    "title": "[PROG-2-10253] 戰場技能補齊",
+    "category": "task"
   }
 ]
