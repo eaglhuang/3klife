@@ -8,7 +8,8 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { TestSuite, assert } from './TestRunner';
 import { hudScaleFor, UNIT_HUD_BASE_SCALE, UNIT_HUD_W, UNIT_HUD_ROW_H, UNIT_HP_BAR_Y } from '../assets/scripts/battle/shared/UnitHudLayout';
-import { BADGE_ATLAS_ICON_CELLS } from '../assets/scripts/ui/shared/TroopTypeBadge';
+import { compensateIvory } from '../assets/scripts/battle/views/UnitHpBarSprites';
+import { BADGE_ATLAS_ICON_CELLS, BADGE_ATLAS_SOLID_RECT } from '../assets/scripts/ui/shared/TroopTypeBadge';
 import { TROOP_TYPE_GLYPH } from '../assets/scripts/shared/TallyCardContract';
 
 const root = path.join(__dirname, '..');
@@ -53,6 +54,24 @@ export function createUnitHudSuite(): TestSuite {
         assert.isTrue(src.includes('buildUnitHud(') && src.includes('hudScaleFor('), '缺單行 HUD 或畫面比例');
         assert.isFalse(src.includes('__hudMode'), '實驗開關未移除');
         assert.isFalse(src.includes('addBadgeBgSprite'), '舊雙排底框未移除');
+    });
+
+    suite.test('血條改精靈（PROG-2-10274）：掛在 bg 代理下與圓章同圖合批，UnitRenderer 不再用 Graphics 畫單位血條', () => {
+        const src = read('assets/scripts/battle/views/UnitRenderer.ts');
+        assert.isTrue(src.includes('new UnitHpBarSprites(labelNode, badge.bgParent)'));
+        assert.isFalse(src.includes('buildUnitHpBar') || src.includes('hpBarDrawn'), '舊 Graphics 血條已移除');
+        const bar = read('assets/scripts/battle/views/UnitHpBarSprites.ts');
+        assert.isFalse(bar.includes('addComponent(Graphics)') || /import {[^}]*Graphics/.test(bar), '血條不可再用 Graphics（會斷合批）');
+    });
+
+    suite.test('實心色塊在象牙色剪影內（醫兵十字）且周圍留 2 像素；象牙補償不超 255 並保留 alpha', () => {
+        const [x, y, w, h] = BADGE_ATLAS_SOLID_RECT;
+        const [mx, my] = BADGE_ATLAS_ICON_CELLS.medic;
+        assert.isTrue(x - 2 >= mx * 80 && x + w + 2 <= (mx + 1) * 80 && y - 2 >= my * 80 && y + h + 2 <= (my + 1) * 80, '色塊含 2 像素邊距在醫兵格內');
+        const c = compensateIvory({ r: 70, g: 150, b: 255, a: 200 } as never);
+        assert.equals(255, c.b);
+        assert.equals(200, c.a);
+        assert.isTrue(c.r > 70 && c.g > 150, '補償後比原色亮');
     });
 
     return suite;
