@@ -17950,5 +17950,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10239.md",
     "title": "[PROG-2-10239] 戰場量測與打擊感 Juice",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3330",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10243.md",
+    "title": "[PROG-2-10243] 戰場打擊感 Juice 第二批（閃白擊退、三段緩動、衝擊環、刀光殘影、輝光）",
+    "category": "task"
   }
 ]

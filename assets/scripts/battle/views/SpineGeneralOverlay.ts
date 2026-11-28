@@ -10,7 +10,8 @@ import { DuelExchange, DuelPresentationCore } from '../shared/DuelPresentationCo
 
 /** 場邊單挑雙方各離中心的距離（overlay 像素，PROG-2-9719）。 */
 const DUEL_SIDELINE_GAP = 70;
-import { getHitFlashCurve, hitFeedbackTotalSec, hitFlashStrength, parseHitFlashCurve, sampleHitRecoil, sampleHitShake, setHitFlashCurve } from './BattlePresentationTiming';
+import { getHitFlashCurve, hitFeedbackTotalSec, hitFlashStrength, parseHitFlashCurve, sampleHitRecoil, sampleHitShake, setHitFlashCurve, type HitFlashCurve } from './BattlePresentationTiming';
+import { attackLungeTotalSec, sampleAttackLunge, type AttackEase } from '../shared/BattleJuice';
 
 /** 2D 節點繞 z 軸傾斜（度）；角度沒變就不寫，省得每幀弄髒節點變換。 */
 const paintedTilt = new WeakMap<Node, number>();
@@ -35,7 +36,9 @@ interface Entry {
   members: number;
   /** 受擊回饋進行中的狀態（PROG-2-9401）；結束後為 null。只疊加在畫面位置與顏色上，不碰移動與動作狀態。 */
   /** frame：受擊後第幾格；holdEnd：全白停留最後一格時的 elapsed（PROG-2-9483） */
-  hit: { elapsed: number; amplitude: number; flash: boolean; push: number; frame: number; holdEnd: number } | null;
+  hit: { elapsed: number; amplitude: number; flash: boolean; push: number; frame: number; holdEnd: number; curve: HitFlashCurve | null } | null;
+  /** 攻擊三段緩動（預備→出手→收招，PROG-2-10243）進行中的時鐘與參數；結束後為 null。只疊加畫面位移。 */
+  lunge: { t: number; p: AttackEase; total: number } | null;
   /** 命中頓格剩餘秒數（PROG-2-9412）；大於 0 時骨架動畫與動作計時都停住。 */
   freeze: number;
   /** 目前畫在骨架上的閃白強度（0 = 正常色）；只在數值改變時才寫 color，省得每幀弄髒渲染資料。 */
@@ -161,7 +164,7 @@ export class SpineUnitOverlay {
     let entry = this.entries.get(id);
     if (entry && entry.config.path !== config.path) { this.remove(id); entry = undefined; }
     if (!entry) {
-      entry = { config, core: new UnitPresentationCore(config, { x, y }, facing), node: null, revision: -1, facing, loading: false, ready: [], visible, followers: [], members, hit: null, freeze: 0, flashPainted: 0, stepClock: 0, deploy: null, charge: null, drift: null };
+      entry = { config, core: new UnitPresentationCore(config, { x, y }, facing), node: null, revision: -1, facing, loading: false, ready: [], visible, followers: [], members, hit: null, lunge: null, freeze: 0, flashPainted: 0, stepClock: 0, deploy: null, charge: null, drift: null };
       this.entries.set(id, entry);
       if (this.pendingDeploys.delete(id)) entry.deploy = { t: 0 };
     }
@@ -272,9 +275,10 @@ export class SpineUnitOverlay {
         // 受擊當格不加時間（frame 0、elapsed 0），之後每格往前；停留期間記下最後一格的時間，退色從這裡起算
         if (entry.hit.frame >= 0) entry.hit.elapsed += dt;
         entry.hit.frame += 1;
-        if (entry.hit.frame < getHitFlashCurve().holdFrames) entry.hit.holdEnd = entry.hit.elapsed;
+        if (entry.hit.frame < (entry.hit.curve ?? getHitFlashCurve()).holdFrames) entry.hit.holdEnd = entry.hit.elapsed;
       }
       if (entry.drift) entry.drift.t += Math.max(0, dt);
+      if (entry.lunge) { if (entry.freeze <= 0) entry.lunge.t += Math.max(0, dt); if (entry.lunge.t >= entry.lunge.total) entry.lunge = null; }
       if (entry.charge) { entry.charge.t += Math.max(0, dt); if (entry.charge.t >= entry.charge.dur) entry.charge = null; }
       const landingPrev = this.advanceDeploy(entry, dt);
       const frozen = entry.freeze > 0;
@@ -362,11 +366,20 @@ export class SpineUnitOverlay {
    * 所以不會打斷移動、也不會把單位拉回舊位置；結束時偏移自然歸零。
    * @param amplitudePx 抖動最大位移（畫面像素），0 表示只閃色不抖
    * @param pushPx 受擊後退距離（畫面像素，往面向的反方向推），0 表示不後退（PROG-2-9412）
+   * @param curve 這一下專用的閃白曲線（爆擊、奧義停更久，PROG-2-10243）；null 沿用全域曲線
    */
-  public hit(id: string, amplitudePx: number, flash = true, pushPx = 0): boolean {
+  public hit(id: string, amplitudePx: number, flash = true, pushPx = 0, curve: HitFlashCurve | null = null): boolean {
     const entry = this.entries.get(id);
     if (!entry?.node?.isValid) return false;
-    entry.hit = { elapsed: 0, amplitude: Math.max(0, amplitudePx), flash, push: Math.max(0, pushPx), frame: -1, holdEnd: 0 };
+    entry.hit = { elapsed: 0, amplitude: Math.max(0, amplitudePx), flash, push: Math.max(0, pushPx), frame: -1, holdEnd: 0, curve };
+    return true;
+  }
+
+  /** 攻擊三段緩動（PROG-2-10243）：預備後拉→出手前衝→收招回位，純畫面位移，不影響動作狀態與結算。 */
+  public lunge(id: string, p: AttackEase): boolean {
+    const entry = this.entries.get(id);
+    if (!entry?.node?.isValid) return false;
+    entry.lunge = { t: 0, p, total: attackLungeTotalSec(p) };
     return true;
   }
 
@@ -542,7 +555,9 @@ export class SpineUnitOverlay {
     const hit = entry.hit;
     const chargePose = entry.charge ? sampleChargePose(entry.charge.t, entry.charge.dur) : { scale: 1, shakeX: 0 };
     const shakeX = (hit ? sampleHitShake(hit.elapsed, hit.amplitude) : 0) + chargePose.shakeX;
-    const flash = hit?.flash ? hitFlashStrength(hit.frame, hit.elapsed - hit.holdEnd) : 0;
+    const flash = hit?.flash ? hitFlashStrength(hit.frame, hit.elapsed - hit.holdEnd, hit.curve ?? undefined) : 0;
+    // 攻擊三段緩動：往面向方向的位移（預備時為負＝往後拉）
+    const lungeX = entry.lunge ? state.facing * sampleAttackLunge(entry.lunge.t, entry.lunge.p) : 0;
     // 受擊後退：往面向的反方向推（單位都面向敵方），隊員跟著帶頭者位置走，所以整隊一起退
     const recoilX = hit && hit.push > 0 ? -state.facing * hit.push * sampleHitRecoil(hit.elapsed) : 0;
     if (hit && hit.elapsed >= hitFeedbackTotalSec()) entry.hit = null;
@@ -554,7 +569,7 @@ export class SpineUnitOverlay {
     // 部署落地：往上的位移與壓扁縮放（腳點為骨架原點，縮放不會讓腳離地）
     const landing = this.landingSample(entry, 0);
     const drift = entry.drift ? floodDriftSample(entry.drift.t) : null;
-    node.setPosition(state.foot.x - offset.x * entry.config.displayScale * state.facing + shakeX + recoilX,
+    node.setPosition(state.foot.x - offset.x * entry.config.displayScale * state.facing + shakeX + recoilX + lungeX,
       state.foot.y - offset.y * entry.config.displayScale + leaderBob + landing.dy + (drift?.dy ?? 0), 0);
     const tilt = drift?.angle ?? 0;
     setTilt(node, tilt);

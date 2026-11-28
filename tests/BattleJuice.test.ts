@@ -9,9 +9,10 @@
  */
 import { TestSuite, assert } from './TestRunner';
 import {
-    DEFAULT_BATTLE_JUICE, HitStopGate, LEGACY_HIT_STOP_SEC, LEGACY_SHAKE, UltimateWindow, floatPopMul, hitStopSecFor, knockbackMul,
-    parseBattleJuice, resolveHitKind, sampleShake, shakeEnvelope, shakeParamsFor, shakeRemainingStrength, shakeTierFor, shouldReplaceShake,
-    type BattleJuiceConfig,
+    DEFAULT_BATTLE_JUICE, HitStopGate, applyJuicePrefs, parseJuicePrefs, LEGACY_HIT_STOP_SEC, LEGACY_SHAKE, UltimateWindow, attackEaseFor, attackLungeTotalSec, easeValue, flashCurveFor, floatPopMul,
+    fxSpecFor, hitStopSecFor, knockbackMul, moveEaseFor, parseBattleJuice, resolveHitKind, sampleAttackLunge, sampleRing, sampleShake, shakeEnvelope,
+    shakeParamsFor, shakeRemainingStrength, shakeTierFor, shouldReplaceShake,
+    type BattleJuiceConfig, type EaseName, type RingSample,
 } from '../assets/scripts/battle/shared/BattleJuice';
 
 const near = (a: number, b: number, eps = 1e-9): boolean => Math.abs(a - b) <= eps;
@@ -132,9 +133,9 @@ export function createBattleJuiceSuite(): TestSuite {
     suite.test('擊退倍率：關閉為 1、開啟用 ratioMul', () => {
         const c = clone();
         c.knockback.ratioMul = 1.5;
-        assert.isTrue(near(knockbackMul(c), 1.5));
+        assert.isTrue(near(knockbackMul('normal', c), 1.5));
         c.knockback.enabled = false;
-        assert.isTrue(near(knockbackMul(c), 1));
+        assert.isTrue(near(knockbackMul('normal', c), 1));
     });
 
     suite.test('全場頓格限流：間隔內不放行、間隔後放行', () => {
@@ -154,6 +155,103 @@ export function createBattleJuiceSuite(): TestSuite {
         assert.isTrue(!w.isActive(104));
         w.reset();
         assert.isTrue(!w.isActive(101));
+    });
+
+    // ───────── PROG-2-10243 第二批 ─────────
+
+    suite.test('閃白曲線：依命中種類取不同曲線；關閉回 null（沿用舊曲線）', () => {
+        const c = clone();
+        assert.isTrue(flashCurveFor('normal', c)!.holdFrames === 2);
+        assert.isTrue(flashCurveFor('crit', c)!.holdFrames > flashCurveFor('normal', c)!.holdFrames);
+        assert.isTrue(flashCurveFor('ultimate', c)!.fadeSec > flashCurveFor('crit', c)!.fadeSec);
+        c.flash.enabled = false;
+        assert.isTrue(flashCurveFor('crit', c) === null);
+    });
+
+    suite.test('擊退倍率：爆擊、奧義退更遠；關閉全為 1', () => {
+        const c = clone();
+        assert.isTrue(near(knockbackMul('normal', c), 1));
+        assert.isTrue(knockbackMul('crit', c) > 1 && knockbackMul('ultimate', c) > knockbackMul('crit', c));
+        c.knockback.enabled = false;
+        assert.isTrue(near(knockbackMul('ultimate', c), 1));
+    });
+
+    suite.test('緩動函式：端點為 0 與 1、範圍外夾住、單調', () => {
+        const names: EaseName[] = ['linear', 'quadIn', 'quadOut', 'quadInOut', 'sineIn', 'sineOut', 'sineInOut', 'cubicIn', 'cubicOut', 'cubicInOut', 'backOut'];
+        for (const n of names) {
+            assert.isTrue(near(easeValue(n, 0), 0, 1e-9), n + ' 起點');
+            assert.isTrue(near(easeValue(n, 1), 1, 1e-9), n + ' 終點');
+            assert.isTrue(near(easeValue(n, -3), 0) && near(easeValue(n, 9), 1), n + ' 夾住');
+        }
+        assert.isTrue(easeValue('quadIn', 0.5) < 0.5 && easeValue('quadOut', 0.5) > 0.5);
+        assert.isTrue(easeValue('backOut', 0.8) > 1, 'backOut 會過衝');
+    });
+
+    suite.test('攻擊三段：預備往後（負）→ 出手到最前 → 收招回 0', () => {
+        const a = DEFAULT_BATTLE_JUICE.ease.attack;
+        assert.isTrue(near(sampleAttackLunge(0, a), 0));
+        assert.isTrue(sampleAttackLunge(a.windUpSec, a) < 0, '預備段結束應在後方');
+        assert.isTrue(near(sampleAttackLunge(a.windUpSec, a), -a.windUpPx, 1e-6));
+        assert.isTrue(near(sampleAttackLunge(a.windUpSec + a.strikeSec + a.holdSec * 0.5, a), a.forwardPx, 1e-6));
+        assert.isTrue(near(sampleAttackLunge(attackLungeTotalSec(a), a), 0));
+        assert.isTrue(near(sampleAttackLunge(attackLungeTotalSec(a) + 5, a), 0));
+        assert.isTrue(attackLungeTotalSec(a) > a.windUpSec + a.strikeSec);
+    });
+
+    suite.test('攻擊三段與移動緩動：關閉時回舊版（無三段、移動 linear）', () => {
+        const c = clone();
+        assert.isTrue(attackEaseFor(c) !== null);
+        assert.equals(moveEaseFor(false, c), 'sineInOut');
+        assert.equals(moveEaseFor(true, c), 'linear');
+        c.ease.enabled = false;
+        assert.isTrue(attackEaseFor(c) === null);
+        assert.equals(moveEaseFor(false, c), 'linear');
+    });
+
+    suite.test('衝擊環：半徑外擴、越擴越淡越細，結束歸零；大小隨命中種類遞增', () => {
+        const out: RingSample = { radius: 0, alpha: 0, width: 0 };
+        const spec = fxSpecFor('impactRing', 'crit');
+        const r0 = sampleRing(0, spec, out).radius;
+        const a0 = out.alpha; const w0 = out.width;
+        const r1 = sampleRing(0.6, spec, out).radius;
+        assert.isTrue(r1 > r0 && out.alpha < a0 && out.width < w0);
+        assert.isTrue(near(sampleRing(1, spec, out).alpha, 0));
+        assert.isTrue(fxSpecFor('impactRing', 'ultimate').radiusPx > fxSpecFor('impactRing', 'crit').radiusPx);
+        assert.isTrue(fxSpecFor('impactRing', 'crit').radiusPx > fxSpecFor('impactRing', 'normal').radiusPx);
+    });
+
+    suite.test('解析：第二批欄位錯誤逐項退回預設（未知緩動名、壞顏色、超範圍數值）', () => {
+        const c = parseBattleJuice({
+            ease: { attack: { windUpEase: 'bounce', forwardPx: 9999, strikeSec: 0.1 }, move: { startEase: 'cubicOut' } },
+            impactRing: { normal: { color: [300, 0, 0], radiusPx: 50 }, maxActive: 3 },
+            flash: { crit: { holdFrames: 5 } },
+            bladeTrail: { enabled: false },
+            afterimage: { count: 'x' },
+        });
+        const d = DEFAULT_BATTLE_JUICE;
+        assert.equals(c.ease.attack.windUpEase, d.ease.attack.windUpEase);
+        assert.isTrue(c.ease.attack.forwardPx === d.ease.attack.forwardPx);
+        assert.isTrue(near(c.ease.attack.strikeSec, 0.1));
+        assert.equals(c.ease.move.startEase, 'cubicOut');
+        assert.equals(JSON.stringify(c.impactRing.normal.color), JSON.stringify(d.impactRing.normal.color));
+        assert.isTrue(c.impactRing.normal.radiusPx === 50 && c.impactRing.maxActive === 3);
+        assert.isTrue(c.flash.crit.holdFrames === 5 && c.flash.crit.fadeSec === d.flash.crit.fadeSec);
+        assert.isTrue(c.bladeTrail.enabled === false);
+        assert.isTrue(c.afterimage.count === d.afterimage.count);
+    });
+
+    suite.test('玩家偏好：預設全開；壞字串回預設；偏好只會關閉不會打開', () => {
+        const d = parseJuicePrefs(null);
+        assert.isTrue(d.hitStop && d.cameraShake);
+        assert.isTrue(parseJuicePrefs('{bad').hitStop === true);
+        const off = parseJuicePrefs('{"hitStop":false}');
+        assert.isTrue(off.hitStop === false && off.cameraShake === true);
+        const c = applyJuicePrefs(DEFAULT_BATTLE_JUICE, off);
+        assert.isTrue(c.hitStop.enabled === false && c.cameraShake.enabled === true);
+        assert.isTrue(hitStopSecFor('crit', c) === LEGACY_HIT_STOP_SEC, '關閉頓格回舊版固定值');
+        const jsonOff = clone(); jsonOff.cameraShake.enabled = false;
+        assert.isTrue(applyJuicePrefs(jsonOff, parseJuicePrefs(null)).cameraShake.enabled === false);
+        assert.isTrue(DEFAULT_BATTLE_JUICE.hitStop.enabled === true, '不改傳入物件');
     });
 
     return suite;
