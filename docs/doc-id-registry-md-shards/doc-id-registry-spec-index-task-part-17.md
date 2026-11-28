@@ -8,7 +8,6 @@
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
-| `doc_task_3108` | docs/agent-briefs/tasks/PROG/PROG-2-10045.md | [PROG-2-10045] 戰場 HUD／飄字打磨批次 |
 | `doc_task_3109` | docs/agent-briefs/tasks/PROG/PROG-2-10046.md | [PROG-2-10046] 年終頒獎典禮三幕式面板掛進遊戲 |
 | `doc_task_3110` | docs/agent-briefs/tasks/PROG/PROG-2-10044.md | PROG-2-10044 年終頒獎典禮三幕式 UI 元件 |
 | `doc_task_3111` | docs/agent-briefs/tasks/PROG/PROG-2-10031.md | [PROG-2-10031] 揚塵再加大加深與獎勵跳字間距略放大 |
@@ -115,4 +114,5 @@
 | `doc_task_3283` | docs/agent-briefs/tasks/PROG/PROG-2-10210.md | [PROG-2-10210] WP2 頭上生活符號系統 |
 | `doc_task_3285` | docs/agent-briefs/tasks/PROG/PROG-2-10212.md | [PROG-2-10212] WP4 場景註冊表＋任意場景切換 UI |
 | `doc_task_3286` | docs/agent-briefs/tasks/PROG/PROG-2-10214.md | [PROG-2-10214] 生活層第一個看得到的原型 |
-| `doc_task_3287` | docs/agent-briefs/tasks/PROG/PROG-2-10215.md | [PROG-2-10215] 戰法音效回饋修正：回復／水淹 |
+| `doc_task_3290` | docs/agent-briefs/tasks/PROG/PROG-2-9843.md | [PROG-2-9843] 戰法詳情子視窗補招式描述文字 |
+| `doc_task_3291` | docs/agent-briefs/tasks/PROG/PROG-2-10215.md | [PROG-2-10215] 戰法音效回饋修正：回復／水淹 |
