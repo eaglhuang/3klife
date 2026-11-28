@@ -4,6 +4,7 @@ import { calmAdjustedAura, calmReductionOf, furyModifiersOf } from '../../core/s
 import { critLine, SP_FULL_LINE } from '../../core/systems/NumericalScriptLines';
 import { EVENT_NAMES, Faction, GAME_CONFIG, SP_PER_KILL, StatusEffect, TerrainType, WEAK_ATTACK_MULTIPLIER, Weather } from '../../core/config/Constants';
 import { comboChanceOfPair } from '../../core/systems/ComboAttackKin';
+import { KIN_RESCUE_CHANCE, kinRescueSplit } from '../../core/systems/KinBattleEffects';
 import type { HistoricalRelation } from '../../core/systems/KinRelation';
 import { services } from '../../core/managers/ServiceLoader';
 import type { TroopUnit } from '../../core/models/TroopUnit';
@@ -75,6 +76,8 @@ export interface BattleCombatResolverContext {
   setEnemyGeneralUnitId(unitId: string | null): void;
   /** 兩個部隊背後武將的史實關係；沒提供時不觸發史實合攻（PROG-2-1065） */
   relationsBetween?(attackerId: string, helperId: string): readonly HistoricalRelation[];
+  /** 兩個部隊背後武將是否為戰友／義兄弟（生死相隨資格，PROG-2-10204）；沒提供時不觸發援護 */
+  isKinBonded?(unitIdA: string, unitIdB: string): boolean;
   /** 死亡觸發掛勾 id 對應的 USPECIAL 規則（ULT-10，PROG-2-1979）；沒提供時陣亡只清掛勾不結算 */
   getUltimateSpecialRule?(ultimateId: string): UltimateSpecialRuleDef | null | undefined;
   /** 兵種動態相剋是否啟用（doc_spec_0309 §3，PROG-2-9368）；沒提供時視為關閉。教學戰由呼叫端回 false */
@@ -730,6 +733,8 @@ export class BattleCombatResolver {
       skipGuard?: boolean;
       /** 本擊為暴擊：只帶給直接受擊者的 UnitDamaged，連鎖分攤不算（PROG-2-1875） */
       isCrit?: boolean;
+      /** 本擊已是生死相隨的分攤傷害，不再被援護（避免連鎖，PROG-2-10204） */
+      skipKinRescue?: boolean;
     },
   ): void {
     const svc = services();
@@ -744,6 +749,8 @@ export class BattleCombatResolver {
       if (guard.isDead()) this.onUnitKilled(guard, null, svc);
       return;
     }
+    // 生死相隨（PROG-2-10204）：致命傷害時相鄰戰友／義兄弟有機率介入，分攤一部分傷害
+    if (!options.skipKinRescue) damage = this.resolveKinRescue(unit, damage, attackerFaction, options, svc);
     // 護盾吸收量（PROG-2-9437）：只給畫面決定跳字與格擋演出，不改結算
     const shieldBefore = (unit as { shield?: number }).shield ?? 0;
     unit.takeDamage(damage);
@@ -803,6 +810,63 @@ export class BattleCombatResolver {
         this.onUnitKilled(linkedUnit, null, svc);
       }
     }
+  }
+
+  /**
+   * 生死相隨（動態關係規格 §3.1，PROG-2-10204）：unit 這一擊會致命（傷害 ≥ 兵力＋護盾）時，
+   * 找相鄰（與合攻同一套四方向）的我方戰友／義兄弟部隊，50% 介入承受 30% 傷害；回傳被救者實際承受的傷害。
+   * 每次致命傷害最多一人援護；援護傷害帶 skipKinRescue，援護者不會再被援護（不連鎖）；援護者自己死亡照常結算。
+   */
+  private resolveKinRescue(
+    unit: TroopUnit,
+    damage: number,
+    attackerFaction: Faction | null,
+    options: { attackerId: string | null; attackerLane: number | null; attackerDepth: number | null },
+    svc: ReturnType<typeof services>,
+  ): number {
+    const isKinBonded = this.context.isKinBonded;
+    if (!isKinBonded || damage <= 0 || unit.isDead()) return damage;
+    if (damage < unit.currentHp + ((unit as { shield?: number }).shield ?? 0)) return damage;
+    const { helperDamage, rescuedDamage } = kinRescueSplit(damage);
+    if (helperDamage < 1) return damage;
+    const helper = this.findKinRescuer(unit, (other) => isKinBonded(unit.id, other.id));
+    if (!helper) return damage;
+    if (this.hitRandom() >= KIN_RESCUE_CHANCE) return damage;
+    svc.event.emit(EVENT_NAMES.KinRescue, {
+      rescuedId: unit.id,
+      helperId: helper.id,
+      helperName: helper.name,
+      rescuedName: unit.name,
+      sharedDamage: helperDamage,
+      lane: helper.lane,
+      depth: helper.depth,
+    });
+    this.applyUnitDamage(helper, helperDamage, attackerFaction, {
+      attackerId: options.attackerId,
+      attackerLane: options.attackerLane,
+      attackerDepth: options.attackerDepth,
+      damageSource: 'kin-rescue',
+      allowDamageLink: false,
+      skipGuard: true,
+      skipKinRescue: true,
+    });
+    if (helper.isDead()) this.onUnitKilled(helper, null, svc);
+    return rescuedDamage;
+  }
+
+  /** 與受擊者四方向相鄰的同陣營非主將存活部隊，且通過 accept（固定掃描順序，取第一個；與 findCombinedHelper 同一套相鄰） */
+  private findKinRescuer(unit: TroopUnit, accept: (other: TroopUnit) => boolean): TroopUnit | null {
+    const offsets = [{ dl: 0, dd: 1 }, { dl: 0, dd: -1 }, { dl: 1, dd: 0 }, { dl: -1, dd: 0 }];
+    for (const { dl, dd } of offsets) {
+      const cell = this.context.state.getCell(unit.lane + dl, unit.depth + dd);
+      if (!cell?.occupantId) continue;
+      const other = this.context.state.units.get(cell.occupantId);
+      if (!other || other.id === unit.id || other.faction !== unit.faction) continue;
+      if (other.isDead() || this.isGeneralUnit(other.id)) continue;
+      if (!isOrthogonallyAdjacent(other.lane, other.depth, unit.lane, unit.depth)) continue;
+      if (accept(other)) return other;
+    }
+    return null;
   }
 
   public onGeneralUnitKilled(faction: Faction, svc: ReturnType<typeof services>): void {

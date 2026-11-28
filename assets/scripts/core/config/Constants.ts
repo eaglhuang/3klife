@@ -243,6 +243,8 @@ export const EVENT_NAMES = {
   UnitAttackMissed:  "unit-attack-missed",
   /** 史實合攻觸發（KIN-09 演出）：payload { attackerId, helperId, targetId }，於追加傷害前發出 */
   KinComboAttack:    "kin-combo-attack-triggered",
+  /** 生死相隨（PROG-2-10204）：戰友／義兄弟相鄰，致命傷害時援護者介入。payload { rescuedId, helperId, rescuedName, helperName, sharedDamage, lane, depth } */
+  KinRescue:         "kin-rescue-triggered",
   UnitDied:          "unit-died",
   UnitMoved:         "unit-moved",
   UnitHealed:        "unit-healed",
