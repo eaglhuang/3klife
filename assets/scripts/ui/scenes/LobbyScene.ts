@@ -311,7 +311,7 @@ import { JealousyPopupPanel } from '../components/JealousyPopupPanel';
 import { BondingJealousyRuntime, pairSynergyK, seedOfText } from '../../core/systems/BondingJealousyRuntime';
 import { YearEndCeremonyPanel } from '../components/YearEndCeremonyPanel';
 import { buildYearEndCeremonyResult } from '../../core/systems/YearEndCeremonyRuntime';
-import { pickCeremonyCrowd } from '../../core/systems/YearEndCeremonyCrowd';
+import { pickCeremonyCrowd, type CeremonyCrowdConfig } from '../../core/systems/YearEndCeremonyCrowd';
 import { buildFameBoard, type CeremonyBoard } from '../../core/systems/YearEndCeremonyPodium';
 import { claimYearEndRewards } from '../../core/systems/YearEndCeremonyReward';
 import { Year1GoalsPanel } from '../components/Year1GoalsPanel';
@@ -320,6 +320,7 @@ import { claimYear1GoalReward } from '../../core/systems/Year1GoalsReward';
 import type { YearEndRankingResult } from '../../core/systems/YearEndRankingService';
 import ceremonyRankingConfig from '../../../resources/data/master/year-end-ranking-config.json';
 import ceremonyCrowdConfig from '../../../resources/data/master/ceremony-crowd-lines.json';
+import { swornBrothersOf } from '../../core/systems/SwornPact';
 import { BloodlineEpithetService } from '../../core/systems/BloodlineEpithetService';
 import { JealousyAndDynastyService } from '../../core/systems/JealousyAndDynastyService';
 import bondingConfig from '../../../resources/data/master/bonding-config.json';
@@ -3969,6 +3970,15 @@ export class LobbyScene extends Component {
             ceremonyCrowdConfig.cheerKeys,
             ceremonyCrowdConfig.lineIntervalSeconds,
             { win: ceremonyCrowdConfig.winRelayKeys, lose: ceremonyCrowdConfig.loseRelayKeys },
+        );
+        // 觀眾彩蛋（shard-c 增補）：第 4～5 名勉勵；本府主角得獎時，結義兄弟觀眾說專屬祝賀
+        const leadId = session.resolveLeadGeneralId(session.roster[0]?.id ?? '');
+        const leadEntry = session.roster.find((g) => g.id === leadId);
+        panel.setCrowdExtras(
+            ceremonyCrowdConfig as CeremonyCrowdConfig,
+            leadEntry
+                ? { winnerId: leadId, winnerName: leadEntry.name, winnerAge: (leadEntry as { age?: number }).age, brotherIds: swornBrothersOf(session.swornState(), leadId) }
+                : undefined,
         );
         panel.setOnFinished(() => { void session.markYearEndCeremonySeen().catch(() => undefined); });
         panel.setPortraits({

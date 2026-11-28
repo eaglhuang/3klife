@@ -119,4 +119,7 @@
 | `doc_task_3294` | docs/agent-briefs/tasks/PROG/PROG-2-10204.md | [PROG-2-10204] 戰場結義效果：義兄弟同陣士氣＋生死相隨援護＋動態義兄弟合攻 |
 | `doc_task_3295` | docs/agent-briefs/tasks/PROG/PROG-2-10219.md | [PROG-2-10219] 生活層程式對齊 11/28 使用者裁決 |
 | `doc_task_3297` | docs/agent-briefs/tasks/PROG/PROG-2-10217.md | [PROG-2-10217] 羈絆戰場效果整併方案規格書 |
-| `doc_task_3299` | docs/agent-briefs/tasks/PROG/PROG-2-10221.md | [PROG-2-10221] 結義戰場效果補強：士氣整場常駐、生死相隨九宮格、傭兵結義 id 同一套 |
+| `doc_task_3300` | docs/agent-briefs/tasks/PROG/PROG-2-10223.md | [PROG-2-10223] 血統與結緣體驗強化四項 |
+| `doc_task_3303` | docs/agent-briefs/tasks/PROG/PROG-2-10221.md | [PROG-2-10221] 結義戰場效果補強：士氣整場常駐、生死相隨九宮格、傭兵結義 id 同一套 |
+| `doc_task_3304` | docs/agent-briefs/tasks/PROG/PROG-2-10225.md | [PROG-2-10225] 年末典禮觀眾台詞：第 4～5 名勉勵與結義彩蛋 |
+| `doc_task_3305` | docs/agent-briefs/tasks/PROG/PROG-2-10227.md | [PROG-2-10227] 羈絆戰場效果整併實作：單一等級模型、兄弟齊心光環、九宮格合攻與援護 |
