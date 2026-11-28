@@ -1,0 +1,25 @@
+{
+  "master": "6719538af",
+  "completed": false,
+  "errorCount": 1,
+  "cliExit": 1,
+  "passed": [
+    "login-actual-mouse",
+    "onboarding-three-next-clicks"
+  ],
+  "failed": "Gacha screen: no visible mercenary pool after BtnPoolNext navigation",
+  "unverified": [
+    "domestic",
+    "lifespan",
+    "tutorial-battle",
+    "sortie",
+    "sandtable",
+    "mission-board",
+    "bloodline-tree"
+  ],
+  "limitations": [
+    "先前工具節點大小寫錯誤已修正，非遊戲缺陷",
+    "名稱或入口若不同請PM提供正式路徑",
+    "沒有修改遊戲程式"
+  ]
+}
