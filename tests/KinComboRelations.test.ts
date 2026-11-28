@@ -22,11 +22,11 @@ export function createKinComboRelationsSuite(): TestSuite {
         assert.isTrue(Math.abs(comboChanceOfLevel(kinLevelBetween(TABLE, [], 'guan-yu', 'liu-bei')) - 0.26) < 1e-9);
     });
 
-    suite.test('沒有史實關係的武將對不觸發（NONE，觸發率 0）；史實夫妻等級為 SPOUSE 但合攻 0', () => {
+    suite.test('沒有史實關係的武將對不觸發（NONE，觸發率 0）；史實夫妻等級為 SPOUSE、合攻 26%', () => {
         assert.equals('NONE', kinLevelBetween(TABLE, [], 'lu-bu', 'diao-chan'));
         assert.equals(0, comboChanceOfLevel('NONE'));
         assert.equals('SPOUSE', kinLevelBetween(TABLE, [], 'zhou-yu', 'xiao-qiao'));
-        assert.equals(0, comboChanceOfLevel(kinLevelBetween(TABLE, [], 'zhou-yu', 'xiao-qiao')));
+        assert.isTrue(Math.abs(comboChanceOfLevel(kinLevelBetween(TABLE, [], 'zhou-yu', 'xiao-qiao')) - 0.26) < 1e-9);
     });
 
     suite.test('缺模板 id、或沒有配對表時為 NONE', () => {

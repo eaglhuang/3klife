@@ -3,6 +3,6 @@
   "note": "羈絆戰場效果四種數值（義兄弟／夫妻／戰友）；程式只讀此檔，不寫死（整併方案規格書 §2.6）。",
   "sworn": { "deployMorale": 20 },
   "aura": { "radius": 3, "attackDefenseRatio": 0.25, "critBonus": 0.15 },
-  "combo": { "baseChance": 0.2, "swornMod": 1.3, "comradeMod": 1, "followUpRatio": 0.5 },
+  "combo": { "baseChance": 0.2, "swornMod": 1.3, "spouseMod": 1.3, "comradeMod": 1, "followUpRatio": 0.5 },
   "rescue": { "chance": 0.5, "shareRatio": 0.3 }
 }
