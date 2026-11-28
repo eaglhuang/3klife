@@ -3279,5 +3279,13 @@
   "ui.marriage.gender.female": "女",
   "ui.marriage.oath_matchmaker_bonus": "{oathRole}{mediatorName}说媒：提亲成功率 +{bonusPct}%",
   "ui.marriage.oath_role.male": "义兄",
-  "ui.marriage.oath_role.female": "义姊"
+  "ui.marriage.oath_role.female": "义姊",
+  "life.street_first.progress": "已找到 {0}/{1}",
+  "life.street_first.complete": "三位都找到啦！大街逛熟了，小奖励收下～",
+  "life.street_first.guide_intro.m": "跟我来，大街我熟！看到谁在忙什么，记得跟我说一声。",
+  "life.street_first.guide_intro.f": "跟我来，大街我熟！看到谁在忙什么，记得跟我说一声。",
+  "life.street_first.found.m": "找到{0}了！他正忙着自己的事呢。",
+  "life.street_first.found.f": "找到{0}了！她正忙着自己的事呢。",
+  "life.street_first.gift_unlocked.m": "以后可以送礼物给他了，挑个他喜欢的吧！",
+  "life.street_first.gift_unlocked.f": "以后可以送礼物给她了，挑个她喜欢的吧！"
 }
