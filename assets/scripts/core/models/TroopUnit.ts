@@ -1,6 +1,7 @@
 // @spec-source → 見 docs/cross-reference-index.md
 import { Faction, TroopType } from "../config/Constants";
 import type { GeneralGeneConfig } from "./GeneralUnit";
+import { KIN_BATTLE_CONFIG } from "../systems/KinBattleConfig";
 
 export function resolveTroopDisplayName(type: TroopType): string {
   if (type === TroopType.Cavalry) return '騎兵';
@@ -99,6 +100,8 @@ export class TroopUnit {
 
   /** 士氣剩餘回合（PROG-2-0770，暫定 3 回合）；0 表示無鼓舞 */
   public moraleTurns = 0;
+  /** 士氣下限（義兄弟同陣整場常駐）；計時結束時士氣回到此值，預設 0 */
+  public moraleFloor = 0;
   /** 本回合自動前進的格數（神威符強擊突刺，PROG-2-1573）；每次移動階段開始歸零 */
   public chargeCells = 0;
   /** 連擊目標與層數（工甲符工甲連弩，PROG-2-1581）：連續攻擊同一目標時累加，換目標歸零 */
@@ -111,13 +114,20 @@ export class TroopUnit {
   /** 單騎破陣（PROG-2-0794）：回合開始重算，無相鄰友軍時 ×1.3；預設 1 不影響既有數值 */
   public soloBreachMultiplier = 1;
 
+  /** 兄弟齊心光環（doc_spec_1358）：身邊 3 格內有義兄弟時為 true，物攻物防 +25%、暴擊 +15%；由戰場端重算 */
+  public kinAura = false;
+
   public getEffectiveAttack(): number {
-    return Math.max(1, (this.attack + this.attackBonus) * this.getTallyAffinityMod() * (1 + this.morale / 100) * this.soloBreachMultiplier);
+    return Math.max(1, (this.attack + this.attackBonus) * this.getTallyAffinityMod() * (1 + this.morale / 100) * this.soloBreachMultiplier * this.kinAuraMultiplier());
   }
 
   /** 防禦（不含盾牆、地形等戰鬥中的加成）；虎符適性乘數在這裡套用 */
   public getEffectiveDefense(): number {
-    return this.defense * this.getTallyAffinityMod();
+    return this.defense * this.getTallyAffinityMod() * this.kinAuraMultiplier();
+  }
+
+  private kinAuraMultiplier(): number {
+    return this.kinAura ? 1 + KIN_BATTLE_CONFIG.aura.attackDefenseRatio : 1;
   }
 
   /** 目前站位的虎符適性乘數；不是虎符部隊時為 1 */

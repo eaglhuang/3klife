@@ -46,7 +46,7 @@ export const DEFAULT_SFX_VOICE_POOL: SfxVoicePoolConfig = {
     sfx_atk_blade: 420, sfx_atk_thrust: 400, sfx_atk_bow: 480, sfx_atk_arrow_whoosh: 500, sfx_atk_shield: 400, sfx_atk_charge: 550,
     sfx_hit_blade: 400, sfx_hit_pierce: 350, sfx_hit_arrow: 300, sfx_hit_clash: 450, sfx_hit_wood: 400, sfx_hit_body_a: 450, sfx_hit_body_b: 450,
     // 戰法分組音效（PROG-2-10190）：占槽時間取實際長度的一部分，長音（水／風）不長期霸佔槽
-    tactic_fire: 1200, tactic_water: 1400, tactic_wind: 1300, tactic_heal: 1000, tactic_haste: 600, tactic_morale: 1300, tactic_stun: 1000,
+    tactic_fire: 1200, tactic_water: 2400, tactic_wind: 1300, tactic_heal: 1700, tactic_haste: 600, tactic_morale: 1300, tactic_stun: 1000, tactic_splash_a: 500, tactic_splash_b: 500, tactic_heal_sparkle: 500,
   },
   duck: { perVoice: 0.06, minScale: 0.6 },
 };

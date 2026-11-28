@@ -3,9 +3,9 @@ import { TroopCounterAnnouncer } from '../../core/systems/TroopCounterScripts';
 import { calmAdjustedAura, calmReductionOf, furyModifiersOf } from '../../core/systems/WhiteFactorTraits';
 import { critLine, SP_FULL_LINE } from '../../core/systems/NumericalScriptLines';
 import { EVENT_NAMES, Faction, GAME_CONFIG, SP_PER_KILL, StatusEffect, TerrainType, WEAK_ATTACK_MULTIPLIER, Weather } from '../../core/config/Constants';
-import { comboChanceOfPair } from '../../core/systems/ComboAttackKin';
-import { KIN_RESCUE_CHANCE, kinRescueSplit } from '../../core/systems/KinBattleEffects';
-import type { HistoricalRelation } from '../../core/systems/KinRelation';
+import { comboChanceOfLevel } from '../../core/systems/ComboAttackKin';
+import { KIN_BATTLE_CONFIG } from '../../core/systems/KinBattleConfig';
+import { KIN_LEVEL_RANK, KIN_RESCUE_CHANCE, kinRescueSplit, type KinLevel } from '../../core/systems/KinBattleEffects';
 import { services } from '../../core/managers/ServiceLoader';
 import type { TroopUnit } from '../../core/models/TroopUnit';
 import type { GeneralUnit } from '../../core/models/GeneralUnit';
@@ -74,10 +74,10 @@ export interface BattleCombatResolverContext {
   getEnemyGeneralUnitId(): string | null;
   setPlayerGeneralUnitId(unitId: string | null): void;
   setEnemyGeneralUnitId(unitId: string | null): void;
-  /** 兩個部隊背後武將的史實關係；沒提供時不觸發史實合攻（PROG-2-1065） */
-  relationsBetween?(attackerId: string, helperId: string): readonly HistoricalRelation[];
-  /** 兩個部隊背後武將是否為戰友／義兄弟（生死相隨資格，PROG-2-10204）；沒提供時不觸發援護 */
-  isKinBonded?(unitIdA: string, unitIdB: string): boolean;
+  /** 兩個部隊背後武將的羈絆等級（doc_spec_1358）；沒提供時不觸發合攻與援護 */
+  kinLevelBetween?(unitIdA: string, unitIdB: string): KinLevel;
+  /** 重算「兄弟齊心」光環旗標（結算每次出手前呼叫，位置與存活可能已變）；沒提供時無光環 */
+  refreshKinAura?(): void;
   /** 死亡觸發掛勾 id 對應的 USPECIAL 規則（ULT-10，PROG-2-1979）；沒提供時陣亡只清掛勾不結算 */
   getUltimateSpecialRule?(ultimateId: string): UltimateSpecialRuleDef | null | undefined;
   /** 兵種動態相剋是否啟用（doc_spec_0309 §3，PROG-2-9368）；沒提供時視為關閉。教學戰由呼叫端回 false */
@@ -93,6 +93,13 @@ export const FORTIFIED_DEFENSE_MULTIPLIER = 1.2;
 export function generalMinDamage(effectiveAttack: number): number {
   return Math.max(1, Math.round(Math.max(0, effectiveAttack) * GAME_CONFIG.generalMinDamageRatio));
 }
+
+/** 九宮格鄰格偏移（合攻與生死相隨共用）：固定掃描順序 lane 再 depth，同一局重播結果一致（doc_spec_1358 §2.4） */
+const NEIGHBOR_OFFSETS_9 = [
+  { dl: -1, dd: -1 }, { dl: -1, dd: 0 }, { dl: -1, dd: 1 },
+  { dl: 0, dd: -1 }, { dl: 0, dd: 1 },
+  { dl: 1, dd: -1 }, { dl: 1, dd: 0 }, { dl: 1, dd: 1 },
+];
 
 export class BattleCombatResolver {
   /** 命中判定用亂數；測試可換成固定序列（PROG-2-0080） */
@@ -339,7 +346,9 @@ export class BattleCombatResolver {
       // 單挑勝方全軍暴擊加成（doc_spec_0314 §4.1，PROG-2-9369）
       + duelVictoryCritBonus(this.context.state.getDuelVictoryBuff?.(attacker.faction))
       // 戰中升階「天下無雙」全軍暴擊加成（doc_spec_0309 §4.2，PROG-2-9394）
-      + (this.context.state.ascensionCritBonus?.get(attacker.faction) ?? 0));
+      + (this.context.state.ascensionCritBonus?.get(attacker.faction) ?? 0)
+      // 兄弟齊心光環暴擊加成（doc_spec_1358 §2.2 ②）：同名只算一次，不隨兄弟人數增加
+      + (attacker.kinAura ? KIN_BATTLE_CONFIG.aura.critBonus : 0));
     let isCrit = false;
     if (rollCrit(critRate, this.hitRandom)) {
       damage = critDamageOf(damage);
@@ -375,6 +384,7 @@ export class BattleCombatResolver {
   }
 
   private resolveHit(attacker: TroopUnit, defender: TroopUnit, svc: ReturnType<typeof services>): void {
+    this.context.refreshKinAura?.();
     const tacticBehavior = resolveBattleTacticBehavior(this.context.state.battleTactic);
     const attackerGeneral = this.context.state.getGeneral(attacker.faction);
     const aCell = this.context.state.getCell(attacker.lane, attacker.depth);
@@ -489,7 +499,9 @@ export class BattleCombatResolver {
       // 單挑勝方全軍暴擊加成（doc_spec_0314 §4.1，PROG-2-9369）
       + duelVictoryCritBonus(this.context.state.getDuelVictoryBuff?.(attacker.faction))
       // 戰中升階「天下無雙」全軍暴擊加成（doc_spec_0309 §4.2，PROG-2-9394）
-      + (this.context.state.ascensionCritBonus?.get(attacker.faction) ?? 0));
+      + (this.context.state.ascensionCritBonus?.get(attacker.faction) ?? 0)
+      // 兄弟齊心光環暴擊加成（doc_spec_1358 §2.2 ②）：同名只算一次，不隨兄弟人數增加
+      + (attacker.kinAura ? KIN_BATTLE_CONFIG.aura.critBonus : 0));
     let isCrit = false;
     if (counter?.forceCrit || rollCrit(critRate, this.hitRandom)) {
       damage = critDamageOf(damage);
@@ -577,21 +589,21 @@ export class BattleCombatResolver {
   }
 
   /**
-   * 史實合攻（PM 裁定，PROG-2-1065）：與目標相鄰、且與攻擊方有史實關係的我方部隊，以基礎 20% 觸發（義兄弟 ×1.3），
-   * 追加一次 50% 傷害，不觸發反擊、不擲命中。沒有史實關係的相鄰友軍不觸發。
+   * 羈絆合攻（doc_spec_1358 §2.2）：目標九宮格（含斜角）內的我方義兄弟或戰友部隊，依等級觸發（義兄弟 26%、戰友 20%、夫妻 0），
+   * 多位符合時取等級最高者；追加一次 50% 傷害，不觸發反擊、不擲命中，單次攻擊最多一位合攻者。
    */
   private resolveKinComboFollowUp(attacker: TroopUnit, defender: TroopUnit, svc: ReturnType<typeof services>): void {
-    const relationsBetween = this.context.relationsBetween;
-    if (!relationsBetween || defender.isDead() || attacker.isDead()) return;
-    const helper = this.findCombinedHelper(attacker, defender, (unit) => relationsBetween(attacker.id, unit.id).length > 0);
+    const levelOf = this.context.kinLevelBetween;
+    if (!levelOf || defender.isDead() || attacker.isDead()) return;
+    const helper = this.pickKinNeighbor(defender, attacker.faction, attacker.id, (unit) => levelOf(attacker.id, unit.id), ['SWORN', 'COMRADE']);
     if (!helper) return;
-    const chance = comboChanceOfPair(relationsBetween(attacker.id, helper.id));
+    const chance = comboChanceOfLevel(levelOf(attacker.id, helper.id));
     if (this.hitRandom() >= chance) return;
     svc.event.emit(EVENT_NAMES.KinComboAttack, { attackerId: attacker.id, helperId: helper.id, targetId: defender.id });
     this.applyCombinedFollowUpDamage(helper, defender, svc, 'kin-combo-attack');
   }
 
-  /** 合攻追加傷害：助攻方對目標的傷害 × 50%，不擲命中、不反擊 */
+  /** 合攻追加傷害：助攻方對目標的傷害 × 追加比例（海戰 NAVAL 常數、羈絆合攻讀資料檔，皆 50%），不擲命中、不反擊 */
   private applyCombinedFollowUpDamage(
     helper: TroopUnit,
     defender: TroopUnit,
@@ -610,7 +622,7 @@ export class BattleCombatResolver {
       attackerAptitudeMultiplier: this.getUnitAptitude(helper).attackMultiplier,
       defenderAptitudeMultiplier: this.getUnitAptitude(defender).defenseMultiplier,
     });
-    const damage = this.applyTallyPhysicalDamageMod(Math.max(1, Math.floor(baseDamage * NAVAL_COMBINED_DAMAGE_RATIO)), helper, defender);
+    const damage = this.applyTallyPhysicalDamageMod(Math.max(1, Math.floor(baseDamage * (damageSource === 'kin-combo-attack' ? KIN_BATTLE_CONFIG.combo.followUpRatio : NAVAL_COMBINED_DAMAGE_RATIO))), helper, defender);
 
     this.applyUnitDamage(defender, damage, helper.faction, {
       attackerId: helper.id,
@@ -621,19 +633,51 @@ export class BattleCombatResolver {
     });
   }
 
-  /** 與目標四方向相鄰的我方非主將、存活部隊，且通過 accept 條件（固定掃描順序，取第一個） */
+  /** 與目標四方向相鄰的我方非主將、存活部隊（海戰合攻用，維持四方向；固定掃描順序，取第一個） */
   private findCombinedHelper(attacker: TroopUnit, defender: TroopUnit, accept: (unit: TroopUnit) => boolean): TroopUnit | null {
-    const offsets = [{ dl: 0, dd: 1 }, { dl: 0, dd: -1 }, { dl: 1, dd: 0 }, { dl: -1, dd: 0 }];
-    for (const { dl, dd } of offsets) {
-      const cell = this.context.state.getCell(defender.lane + dl, defender.depth + dd);
-      if (!cell?.occupantId) continue;
-      const unit = this.context.state.units.get(cell.occupantId);
-      if (!unit || unit.id === attacker.id || unit.faction !== attacker.faction) continue;
-      if (unit.isDead() || this.isGeneralUnit(unit.id)) continue;
+    for (const unit of this.neighborUnits(defender, attacker.faction, attacker.id)) {
       if (!isOrthogonallyAdjacent(unit.lane, unit.depth, defender.lane, defender.depth)) continue;
       if (accept(unit)) return unit;
     }
     return null;
+  }
+
+  /** center 九宮格（8 格，含斜角）內的同陣營非主將存活部隊，依固定掃描順序；排除 excludeId 與 center 自己 */
+  private neighborUnits(center: TroopUnit, faction: Faction, excludeId: string): TroopUnit[] {
+    const result: TroopUnit[] = [];
+    for (const { dl, dd } of NEIGHBOR_OFFSETS_9) {
+      const cell = this.context.state.getCell(center.lane + dl, center.depth + dd);
+      if (!cell?.occupantId) continue;
+      const unit = this.context.state.units.get(cell.occupantId);
+      if (!unit || unit.id === excludeId || unit.id === center.id || unit.faction !== faction) continue;
+      if (unit.isDead() || this.isGeneralUnit(unit.id)) continue;
+      result.push(unit);
+    }
+    return result;
+  }
+
+  /**
+   * 合攻助攻者與援護者共用的挑選（doc_spec_1358 §2.4）：九宮格內等級在 allowed 內者，取等級最高；
+   * 同等級取固定掃描順序第一個。
+   */
+  private pickKinNeighbor(
+    center: TroopUnit,
+    faction: Faction,
+    excludeId: string,
+    levelOf: (unit: TroopUnit) => KinLevel,
+    allowed: readonly KinLevel[],
+  ): TroopUnit | null {
+    let best: TroopUnit | null = null;
+    let bestRank = 0;
+    for (const unit of this.neighborUnits(center, faction, excludeId)) {
+      const level = levelOf(unit);
+      if (!allowed.includes(level)) continue;
+      if (KIN_LEVEL_RANK[level] > bestRank) {
+        best = unit;
+        bestRank = KIN_LEVEL_RANK[level];
+      }
+    }
+    return best;
   }
 
   public resolveActionResetAfterAttack(
@@ -814,7 +858,7 @@ export class BattleCombatResolver {
 
   /**
    * 生死相隨（動態關係規格 §3.1，PROG-2-10204）：unit 這一擊會致命（傷害 ≥ 兵力＋護盾）時，
-   * 找相鄰（與合攻同一套四方向）的我方戰友／義兄弟部隊，50% 介入承受 30% 傷害；回傳被救者實際承受的傷害。
+   * 找九宮格（含斜角，與合攻同一套）內的我方義兄弟／夫妻／戰友部隊（等級高者優先），50% 介入承受 30% 傷害；回傳被救者實際承受的傷害。
    * 每次致命傷害最多一人援護；援護傷害帶 skipKinRescue，援護者不會再被援護（不連鎖）；援護者自己死亡照常結算。
    */
   private resolveKinRescue(
@@ -824,12 +868,12 @@ export class BattleCombatResolver {
     options: { attackerId: string | null; attackerLane: number | null; attackerDepth: number | null },
     svc: ReturnType<typeof services>,
   ): number {
-    const isKinBonded = this.context.isKinBonded;
-    if (!isKinBonded || damage <= 0 || unit.isDead()) return damage;
+    const levelOf = this.context.kinLevelBetween;
+    if (!levelOf || damage <= 0 || unit.isDead()) return damage;
     if (damage < unit.currentHp + ((unit as { shield?: number }).shield ?? 0)) return damage;
     const { helperDamage, rescuedDamage } = kinRescueSplit(damage);
     if (helperDamage < 1) return damage;
-    const helper = this.findKinRescuer(unit, (other) => isKinBonded(unit.id, other.id));
+    const helper = this.pickKinNeighbor(unit, unit.faction, unit.id, (other) => levelOf(unit.id, other.id), ['SWORN', 'SPOUSE', 'COMRADE']);
     if (!helper) return damage;
     if (this.hitRandom() >= KIN_RESCUE_CHANCE) return damage;
     svc.event.emit(EVENT_NAMES.KinRescue, {
@@ -852,21 +896,6 @@ export class BattleCombatResolver {
     });
     if (helper.isDead()) this.onUnitKilled(helper, null, svc);
     return rescuedDamage;
-  }
-
-  /** 與受擊者四方向相鄰的同陣營非主將存活部隊，且通過 accept（固定掃描順序，取第一個；與 findCombinedHelper 同一套相鄰） */
-  private findKinRescuer(unit: TroopUnit, accept: (other: TroopUnit) => boolean): TroopUnit | null {
-    const offsets = [{ dl: 0, dd: 1 }, { dl: 0, dd: -1 }, { dl: 1, dd: 0 }, { dl: -1, dd: 0 }];
-    for (const { dl, dd } of offsets) {
-      const cell = this.context.state.getCell(unit.lane + dl, unit.depth + dd);
-      if (!cell?.occupantId) continue;
-      const other = this.context.state.units.get(cell.occupantId);
-      if (!other || other.id === unit.id || other.faction !== unit.faction) continue;
-      if (other.isDead() || this.isGeneralUnit(other.id)) continue;
-      if (!isOrthogonallyAdjacent(other.lane, other.depth, unit.lane, unit.depth)) continue;
-      if (accept(other)) return other;
-    }
-    return null;
   }
 
   public onGeneralUnitKilled(faction: Faction, svc: ReturnType<typeof services>): void {

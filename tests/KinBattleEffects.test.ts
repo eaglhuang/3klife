@@ -1,17 +1,17 @@
 /**
  * KinBattleEffects.test.ts — 結義戰場效果（PROG-2-10204）
- * 義兄弟同陣士氣 +20、生死相隨援護（50% 介入、分攤 30%）、動態義兄弟合攻。
+ * 義兄弟同陣士氣 +20（整場常駐）、生死相隨援護（九宮格、50% 介入、分攤 30%）、動態義兄弟合攻。
  */
 import { EVENT_NAMES, Faction, TroopType } from '../assets/scripts/core/config/Constants';
 import { BattleController } from '../assets/scripts/battle/controllers/BattleController';
 import { BattleCombatResolver } from '../assets/scripts/battle/runtime/BattleCombatResolver';
-import { MORALE_DURATION_TURNS } from '../assets/scripts/battle/shared/Morale';
+import { MORALE_DURATION_TURNS, advanceMorale, castMorale, clearMorale } from '../assets/scripts/battle/shared/Morale';
 import { GeneralUnit } from '../assets/scripts/core/models/GeneralUnit';
 import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
-import { HistoricalPairTable, combatRelationsBetween } from '../assets/scripts/core/systems/HistoricalPairs';
-import { comboChanceOfPair } from '../assets/scripts/core/systems/ComboAttackKin';
-import { kinRescueSplit, type KinPairLike } from '../assets/scripts/core/systems/KinBattleEffects';
+import { HistoricalPairTable } from '../assets/scripts/core/systems/HistoricalPairs';
+import { comboChanceOfLevel } from '../assets/scripts/core/systems/ComboAttackKin';
+import { kinLevelBetween, kinRescueSplit, type KinPairLike } from '../assets/scripts/core/systems/KinBattleEffects';
 import type { TallyBattleInfo } from '../assets/scripts/core/systems/TigerTallyStar';
 import { TestSuite, assert } from './TestRunner';
 
@@ -67,13 +67,29 @@ export function createKinBattleEffectsSuite(): TestSuite {
     const suite = new TestSuite('KinBattleEffects (結義戰場效果 PROG-2-10204)');
 
     // ── 義兄弟同陣士氣 ──
-    suite.test('動態義兄弟同在出戰名單：部署時士氣 +20 並計時', () => {
+    suite.test('動態義兄弟同在出戰名單：部署時士氣 +20，整場常駐不計時', () => {
         const ctrl = openBattle(OATH);
         ctrl.sortieLineupIds = ['liu-bei', 'merc-a', 'zhao-yun'];
         const out = ctrl.tryDeployTroop(TroopType.Infantry, 0, undefined, { tally: { cardUid: 'merc-a', templateId: 'x' } });
         assert.isTrue(out.ok);
         assert.equals(20, out.unit!.morale);
-        assert.equals(MORALE_DURATION_TURNS, out.unit!.moraleTurns);
+        assert.equals(0, out.unit!.moraleTurns, '常駐：不開始 3 回合計時');
+        assert.equals(20, out.unit!.moraleFloor);
+    });
+
+    suite.test('常駐：回合頭遞減不影響；其他鼓舞到期後回到 +20 而非 0；陣亡仍清除', () => {
+        const ctrl = openBattle(OATH);
+        ctrl.sortieLineupIds = ['liu-bei', 'zhao-yun'];
+        const u = ctrl.tryDeployTroop(TroopType.Infantry, 0, undefined, { tally: { cardUid: 'merc-a', templateId: 'x' } }).unit!;
+        for (let i = 0; i < 5; i++) advanceMorale(u);
+        assert.equals(20, u.morale, '回合推進不衰減');
+        castMorale(u, 10);
+        assert.equals(20, u.morale, '較低鼓舞不壓過下限，也不疊加');
+        castMorale(u, 35);
+        for (let i = 0; i < MORALE_DURATION_TURNS; i++) advanceMorale(u);
+        assert.equals(20, u.morale, '大鼓舞到期回到下限');
+        clearMorale(u);
+        assert.equals(0, u.morale, '退場照舊清除');
     });
 
     suite.test('史實義兄弟（劉備／關羽）同陣也加成；來源武將對不上義兄弟不加', () => {
@@ -173,6 +189,25 @@ export function createKinBattleEffectsSuite(): TestSuite {
         assert.equals(100, far.currentHp);
     });
 
+    suite.test('斜角相鄰（九宮格）也援護；隔兩格（含斜向）不援護', () => {
+        const ctrl = openBattle(COMRADE);
+        const a = troop('ua', Faction.Player, 1, 2, 'zhao-yun');
+        const diag = troop('ub', Faction.Player, 2, 3, 'ma-chao');
+        ctrl.state.addUnit(a);
+        ctrl.state.addUnit(diag);
+        resolverOf(ctrl).hitRandom = () => 0;
+        damage(ctrl, a, 100);
+        assert.equals(70, diag.currentHp, '斜角戰友承 30%');
+        const ctrl2 = openBattle(COMRADE);
+        const a2 = troop('ua', Faction.Player, 1, 2, 'zhao-yun');
+        const far = troop('ub', Faction.Player, 3, 4, 'ma-chao');
+        ctrl2.state.addUnit(a2);
+        ctrl2.state.addUnit(far);
+        resolverOf(ctrl2).hitRandom = () => 0;
+        damage(ctrl2, a2, 100);
+        assert.equals(100, far.currentHp, '兩格外不援護');
+    });
+
     suite.test('不遞迴：援護者承受的 30% 即使致命，也不再被第三人援護；援護者自己會死照算', () => {
         const ctrl = openBattle([...COMRADE, { uidA: 'ma-chao', uidB: 'guan-yu', type: 'COMRADE' }]);
         const a = troop('ua', Faction.Player, 1, 2, 'zhao-yun');
@@ -219,30 +254,28 @@ export function createKinBattleEffectsSuite(): TestSuite {
         ctrl.state.addUnit(c);
         resolverOf(ctrl).hitRandom = () => 0;
         damage(ctrl, a, 100);
-        assert.equals(70, b.currentHp);
-        assert.equals(100, c.currentHp);
+        assert.equals(100, b.currentHp, '同等級時固定掃描順序（lane 再 depth）：後掃到的不分攤');
+        assert.equals(70, c.currentHp, '先掃到的 (1,1) 戰友承 30%');
     });
 
     // ── 合攻關係來源 ──
-    suite.test('combatRelationsBetween：動態義兄弟視同義兄弟（合攻 20%x1.3=26%）；戰友不給合攻；與史實並存取 Max', () => {
-        const dyn = combatRelationsBetween(null, 'merc-a', 'zhao-yun', OATH);
-        assert.equals(1, dyn.length);
-        assert.equals(0.26, Math.round(comboChanceOfPair(dyn) * 100) / 100);
-        assert.equals(0, combatRelationsBetween(null, 'zhao-yun', 'ma-chao', COMRADE).length, '戰友不觸發合攻');
-        assert.equals(0, comboChanceOfPair(combatRelationsBetween(HISTORIC, 'a', 'b', [])), '無關係為 0');
-        const both = combatRelationsBetween(HISTORIC, 'liu-bei', 'guan-yu', [{ uidA: 'liu-bei', uidB: 'guan-yu', type: 'DYNAMIC_SWORN' }]);
-        assert.equals(2, both.length);
-        assert.equals(0.26, Math.round(comboChanceOfPair(both) * 100) / 100, '多重關係 Max 不累乘');
-        assert.equals(1, combatRelationsBetween(HISTORIC, 'liu-bei', 'guan-yu').length, '舊簽名行為不變');
+    suite.test('kinLevelBetween：動態義兄弟視同義兄弟（合攻 26%）；戰友 20%；夫妻 0；與史實並存取最高', () => {
+        assert.equals('SWORN', kinLevelBetween(null, OATH, 'merc-a', 'zhao-yun'));
+        assert.equals(0.26, Math.round(comboChanceOfLevel(kinLevelBetween(null, OATH, 'merc-a', 'zhao-yun')) * 100) / 100);
+        assert.equals(0.2, comboChanceOfLevel(kinLevelBetween(null, COMRADE, 'zhao-yun', 'ma-chao')), '戰友合攻 20%');
+        assert.equals('SPOUSE', kinLevelBetween(null, [{ uidA: 'a', uidB: 'b', type: 'SPOUSE' }], 'a', 'b'));
+        assert.equals(0, comboChanceOfLevel('SPOUSE'), '夫妻合攻 0');
+        assert.equals('NONE', kinLevelBetween(HISTORIC, [], 'a', 'b'), '無關係');
+        assert.equals('SWORN', kinLevelBetween(HISTORIC, [{ uidA: 'liu-bei', uidB: 'guan-yu', type: 'COMRADE' }], 'liu-bei', 'guan-yu'), '史實義兄弟壓過動態戰友');
     });
 
-    suite.test('BattleController.relationsBetweenUnits 認動態義兄弟', () => {
+    suite.test('BattleController.kinLevelBetweenUnits 認動態義兄弟與戰友', () => {
         const ctrl = openBattle(OATH);
         ctrl.state.addUnit(troop('ua', Faction.Player, 1, 2, 'merc-a'));
         ctrl.state.addUnit(troop('ub', Faction.Player, 2, 2, 'zhao-yun'));
-        assert.equals(1, ctrl.relationsBetweenUnits('ua', 'ub').length);
+        assert.equals('SWORN', ctrl.kinLevelBetweenUnits('ua', 'ub'));
         ctrl.dynamicRelations = [];
-        assert.equals(0, ctrl.relationsBetweenUnits('ua', 'ub').length);
+        assert.equals('NONE', ctrl.kinLevelBetweenUnits('ua', 'ub'));
     });
 
     return suite;

@@ -3971,14 +3971,15 @@ export class LobbyScene extends Component {
             ceremonyCrowdConfig.lineIntervalSeconds,
             { win: ceremonyCrowdConfig.winRelayKeys, lose: ceremonyCrowdConfig.loseRelayKeys },
         );
-        // 觀眾彩蛋（shard-c 增補）：第 4～5 名勉勵；本府主角得獎時，結義兄弟觀眾說專屬祝賀
-        const leadId = session.resolveLeadGeneralId(session.roster[0]?.id ?? '');
-        const leadEntry = session.roster.find((g) => g.id === leadId);
+        // 觀眾彩蛋（shard-c 增補）：第 4～5 名勉勵；本府武將得獎時（以得獎者自己的 id 查），其結義兄弟觀眾說專屬祝賀
         panel.setCrowdExtras(
             ceremonyCrowdConfig as CeremonyCrowdConfig,
-            leadEntry
-                ? { winnerId: leadId, winnerName: leadEntry.name, winnerAge: (leadEntry as { age?: number }).age, brotherIds: swornBrothersOf(session.swornState(), leadId) }
-                : undefined,
+            (winnerId) => {
+                const winner = session.roster.find((g) => g.id === winnerId);
+                return winner
+                    ? { winnerName: winner.name, winnerAge: (winner as { age?: number }).age, brotherIds: swornBrothersOf(session.swornState(), winnerId) }
+                    : null;
+            },
         );
         panel.setOnFinished(() => { void session.markYearEndCeremonySeen().catch(() => undefined); });
         panel.setPortraits({

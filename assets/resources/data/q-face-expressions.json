@@ -1,0 +1,87 @@
+{
+  "schema": "q-face-expressions.v1",
+  "atlas": {
+    "cellSize": 32,
+    "columns": 16,
+    "setStride": 32,
+    "partSets": ["std_male_a", "std_male_b", "std_female", "std_youth", "std_elder", "std_scholar"],
+    "parts": {
+      "eye_open":   { "cell": 0,  "shape": "ring" },
+      "eye_blink":  { "cell": 1,  "shape": "bar" },
+      "eye_squint": { "cell": 2,  "shape": "arc_down" },
+      "eye_happy":  { "cell": 3,  "shape": "arc_up" },
+      "eye_angry":  { "cell": 4,  "shape": "slash" },
+      "eye_sad":    { "cell": 5,  "shape": "droop" },
+      "eye_wide":   { "cell": 6,  "shape": "disc", "scale": 1.15 },
+      "eye_dizzy":  { "cell": 7,  "shape": "spiral" },
+      "eye_half":   { "cell": 8,  "shape": "half" },
+      "eye_heart":  { "cell": 9,  "shape": "heart" },
+      "eye_side":   { "cell": 10, "shape": "ring_side" },
+      "mouth_closed": { "cell": 11, "shape": "bar" },
+      "mouth_open_s": { "cell": 12, "shape": "ellipse_s" },
+      "mouth_open_m": { "cell": 13, "shape": "ellipse_m" },
+      "mouth_open_l": { "cell": 14, "shape": "ellipse_l" },
+      "mouth_smile":  { "cell": 15, "shape": "arc_down" },
+      "mouth_frown":  { "cell": 16, "shape": "arc_up" },
+      "mouth_o":      { "cell": 17, "shape": "ring" },
+      "mouth_wavy":   { "cell": 18, "shape": "wave" },
+      "blush":        { "cell": 19, "shape": "disc" },
+      "mark_sweat":   { "cell": 20, "shape": "drop" },
+      "mark_vein":    { "cell": 21, "shape": "cross" },
+      "mark_tear":    { "cell": 22, "shape": "drop" },
+      "mark_star":    { "cell": 23, "shape": "star" },
+      "eye_star":     { "cell": 24, "shape": "star" },
+      "mouth_tongue": { "cell": 25, "shape": "ellipse_s" }
+    }
+  },
+  "blink": {
+    "minSec": 2.5,
+    "maxSec": 6,
+    "durationSec": 0.1,
+    "blinkableEyes": ["eye_open", "eye_wide", "eye_side"],
+    "blinkEye": "eye_blink"
+  },
+  "speak": {
+    "beatMinSec": 0.12,
+    "beatMaxSec": 0.2,
+    "closedMouth": "mouth_closed",
+    "intensity": {
+      "low": ["mouth_closed", "mouth_open_s"],
+      "mid": ["mouth_closed", "mouth_open_s", "mouth_open_m", "mouth_open_s"],
+      "high": ["mouth_open_m", "mouth_open_l", "mouth_open_m", "mouth_open_s"]
+    }
+  },
+  "easing": { "blushSec": 0.3, "tintSec": 0.25, "eyeScaleSec": 0.1 },
+  "presets": {
+    "neutral":   { "eye": "eye_open",  "mouth": "mouth_closed" },
+    "happy":     { "eye": "eye_happy", "mouth": "mouth_smile" },
+    "laugh":     { "eye": "eye_happy", "mouth": "mouth_open_l" },
+    "angry":     { "eye": "eye_angry", "mouth": "mouth_frown", "marks": ["mark_vein"] },
+    "sad":       { "eye": "eye_sad",   "mouth": "mouth_frown", "marks": ["mark_tear"] },
+    "surprised": { "eye": "eye_wide",  "mouth": "mouth_o",     "marks": ["mark_sweat"] },
+    "drunk":     { "eye": "eye_half",  "mouth": "mouth_smile", "blush": 0.8 },
+    "shy":       { "eye": "eye_side",  "mouth": "mouth_closed", "blush": 0.6 },
+    "sleepy":    { "eye": "eye_half",  "mouth": "mouth_closed" },
+    "smug":      { "eye": "eye_squint", "mouth": "mouth_smile" },
+    "dizzy":     { "eye": "eye_dizzy", "mouth": "mouth_wavy" },
+    "love":      { "eye": "eye_heart", "mouth": "mouth_smile", "blush": 0.5 }
+  },
+  "activityMap": {
+    "idle": "neutral",
+    "sleep": "sleepy",
+    "drink": "drunk",
+    "train": "angry",
+    "read": "neutral",
+    "tea": "happy",
+    "chat": "happy",
+    "fight": "angry",
+    "love": "love",
+    "flirt": "shy"
+  },
+  "moods": {
+    "happy":  { "tint": "#FFFFFF", "brightBoost": 0.06, "preset": "happy" },
+    "calm":   { "tint": "#FFFFFF", "brightBoost": 0, "preset": "neutral" },
+    "angry":  { "tint": "#FFC8BC", "brightBoost": 0, "preset": "angry" },
+    "gloomy": { "tint": "#B8BFC9", "brightBoost": 0, "preset": "sad" }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "schema": "q-face-anchors.v1",
+  "defaults": {
+    "partSet": "std_male_a",
+    "eyeL": { "x": 0.34, "y": 0.45 },
+    "eyeR": { "x": 0.66, "y": 0.45 },
+    "mouth": { "x": 0.5, "y": 0.68 },
+    "blushL": { "x": 0.24, "y": 0.58 },
+    "blushR": { "x": 0.76, "y": 0.58 }
+  },
+  "generals": {
+    "zhang_fei": { "partSet": "std_male_b" },
+    "xiahou_dun": { "eyeL": { "disabled": true }, "flags": { "asymmetric": true } }
+  }
+}

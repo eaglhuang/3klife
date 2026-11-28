@@ -23,7 +23,7 @@ import {
 } from '../../core/systems/YearEndCeremonyPodium';
 import { selfOf } from '../../core/mind/SpeakerVoice';
 import { CeremonyPodiumView } from './CeremonyPodiumView';
-import { crowdTurn, pickNearPodiumLine, pickOathCongratsLine, resolveCrowdVoiceLine, type CeremonyCrowdConfig, type CrowdMember } from '../../core/systems/YearEndCeremonyCrowd';
+import { crowdTurn, pickNearPodiumLine, pickOathCongratsLine, pickOathWinnerEntry, resolveCrowdVoiceLine, type CeremonyCrowdConfig, type CrowdMember } from '../../core/systems/YearEndCeremonyCrowd';
 import { CEREMONY_RIBBON_COUNT, planRelay, planRibbons, relayTriggerRank, type RelayKind, type RelayStep } from '../../core/systems/CeremonyHype';
 import { CeremonyRibbonPool } from './CeremonyRibbonPool';
 import type { ThemeService } from '../core/ThemeService';
@@ -41,6 +41,9 @@ const CROWD_HOP_PX = 18;
 const CROWD_PAT_PX = 10;
 
 export type { CeremonyAct };
+
+/** 以得獎武將 id 查名字、年齡與生效盟約中的結義兄弟；查不到回 null */
+export type OathWinnerResolver = (winnerId: string) => { winnerName: string; winnerAge?: number; brotherIds: readonly string[] } | null;
 
 /**
  * 年終頒獎典禮三幕式 UI 元件（PROG-2-10044 元件；PROG-2-10046 掛載改版；PROG-2-10153 改 A 版領獎台）
@@ -109,7 +112,7 @@ export class YearEndCeremonyPanel extends Component {
     private _crowdIntervalSeconds = 2.6;
     private _crowdTurn = 0;
     private _extrasConfig: CeremonyCrowdConfig | null = null;
-    private _oath: { winnerId: string; winnerName: string; winnerAge?: number; brotherIds: readonly string[] } | null = null;
+    private _oath: OathWinnerResolver | null = null;
     private _crowdTimer = 0;
     private _nameTagStyle: NameTagStyle | null = null;
     /** 載圖序號：重開典禮時，舊的非同步載入結果丟棄 */
@@ -175,7 +178,7 @@ export class YearEndCeremonyPanel extends Component {
     /** 觀眾彩蛋：第 4～5 名勉勵、結義祝賀（規格 shard-c 增補）；oath 沒給就不播結義台詞 */
     public setCrowdExtras(
         config: CeremonyCrowdConfig,
-        oath?: { winnerId: string; winnerName: string; winnerAge?: number; brotherIds: readonly string[] },
+        oath?: OathWinnerResolver,
     ): void {
         this._extrasConfig = config;
         this._oath = oath ?? null;
@@ -430,17 +433,20 @@ export class YearEndCeremonyPanel extends Component {
     private _tapCrowdExtras(memberIndex: number, board: CeremonyBoard, playerRank: number, turn: number): boolean {
         const config = this._extrasConfig;
         if (!config) return false;
-        if (this._oath && playerRank >= 1 && playerRank <= 3) {
+        // 得獎者以本榜得獎項自己的武將 id 查結義關係（非主角得獎時不可用主角代替）
+        const winner = this._oath && playerRank >= 1 && playerRank <= 3 ? pickOathWinnerEntry(board.entries) : null;
+        const info = winner ? this._oath!(winner.generalId) : null;
+        if (winner && info) {
             const oath = pickOathCongratsLine({
                 crowd: this._crowd,
-                winnerId: this._oath.winnerId,
-                winnerAge: this._oath.winnerAge,
-                brotherIds: this._oath.brotherIds,
+                winnerId: winner.generalId,
+                winnerAge: info.winnerAge,
+                brotherIds: info.brotherIds,
                 memberIndex,
                 turn,
             }, config);
             if (oath) {
-                this.speak(memberIndex, oath.key, 'hop', [this._oath.winnerName, this._t(oath.relationKey)]);
+                this.speak(memberIndex, oath.key, 'hop', [info.winnerName, this._t(oath.relationKey)]);
                 return true;
             }
         }

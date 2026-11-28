@@ -9,18 +9,7 @@ import { BattleState } from '../assets/scripts/battle/models/BattleState';
 import { BattleCombatResolver } from '../assets/scripts/battle/runtime/BattleCombatResolver';
 import { TroopUnit } from '../assets/scripts/core/models/TroopUnit';
 import { services } from '../assets/scripts/core/managers/ServiceLoader';
-import type { HistoricalRelation } from '../assets/scripts/core/systems/KinRelation';
 import { TestSuite, assert } from './TestRunner';
-
-const SWORN: HistoricalRelation = {
-    relationId: 'HIST_SWORN_TEST',
-    templateA: 'liu-bei',
-    templateB: 'guan-yu',
-    type: 'SWORN',
-    epBonus: 0,
-    extraEffects: { comboAttackRateMod: 1.3 },
-    loreKey: 'LORE_TEST',
-};
 
 function troop(id: string, faction: Faction, lane: number, depth: number, attackRange: number): TroopUnit {
     const unit = new TroopUnit(id, TroopType.Infantry, faction, { hp: 1000, attack: 60, defense: 10, moveRange: 0, attackRange });
@@ -45,7 +34,7 @@ function runTurns(turns: number, helperCell: [number, number] | null, relation: 
         getEnemyGeneralUnitId: () => null,
         setPlayerGeneralUnitId: () => undefined,
         setEnemyGeneralUnitId: () => undefined,
-        relationsBetween: (a, b) => (relation && [a, b].sort().join('|') === ['attacker', 'helper'].sort().join('|') ? [SWORN] : []),
+        kinLevelBetween: (a, b) => (relation && [a, b].sort().join('|') === ['attacker', 'helper'].sort().join('|') ? 'SWORN' : 'NONE'),
     });
     resolver.hitRandom = () => 0;
     const svc = services();
