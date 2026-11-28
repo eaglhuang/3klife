@@ -267,6 +267,7 @@ export const js = {
 
 export const sys = {
     isBrowser: false,
+    isMobile: false,
     NetworkType: { NONE: 0, LAN: 1, WWAN: 2 },
     isNative: false,
     getNetworkType(): number { return 1; },

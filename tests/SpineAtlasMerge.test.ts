@@ -3,7 +3,7 @@
  * 重點：region 的 bounds 要依所在頁平移、其他屬性原樣保留、不支援的格式回傳 null（呼叫端退回原資料）。
  */
 import { assert, TestSuite } from './TestRunner';
-import { mergeAtlasText } from '../assets/scripts/battle/views/SpineAtlasMerge';
+import { isSpineAtlasMergeEnabled, mergeAtlasText, setSpineAtlasMergeEnabled } from '../assets/scripts/battle/views/SpineAtlasMerge';
 
 const ATLAS = [
   'a.png', 'size: 512,512', 'filter: Linear,Linear', 'pma: false',
@@ -43,6 +43,14 @@ export function createSpineAtlasMergeSuite(): TestSuite {
     assert.isTrue(mergeAtlasText(ATLAS, PAGES, 512) === null, '合併後超過單邊上限');
     assert.isTrue(mergeAtlasText(ATLAS, [{ name: 'x.png', width: 512, height: 512 }, { name: 'y.png', width: 512, height: 512 }]) === null, '頁名對不上');
     assert.isTrue(mergeAtlasText(ATLAS, [PAGES[0]]) === null, '單頁不合併');
+  });
+
+  suite.test('開關：手動設定優先，null 回到預設（測試環境非瀏覽器＝關）', () => {
+    setSpineAtlasMergeEnabled(null);
+    assert.isTrue(!isSpineAtlasMergeEnabled(), '非桌機瀏覽器預設關閉');
+    setSpineAtlasMergeEnabled(true);
+    assert.isTrue(isSpineAtlasMergeEnabled(), '手動開');
+    setSpineAtlasMergeEnabled(null);
   });
 
   return suite;

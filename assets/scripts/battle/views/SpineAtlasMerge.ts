@@ -6,19 +6,33 @@
  * 101 具單位的 Spine 部分約 510 次 draw，騎兵就佔 480。
  * 做法：載入後把各頁貼圖用 GPU 拷貝併成單頁、改寫 atlas 文字（bounds 平移）、產生合併版 SkeletonData，
  * 骨骼、動畫、slot 順序、美術資產都不動，畫面等價，一具騎兵降為 1 次 draw。
- * 可由 setSpineAtlasMergeEnabled(false) 整個關閉、門檻 SPINE_ATLAS_MERGE_MIN_PAGES 可調；任何一步失敗都回傳原資料。
+ * 預設只在桌機瀏覽器啟用，可由 setSpineAtlasMergeEnabled／網址 ?spineMerge=0|1 切換、門檻 SPINE_ATLAS_MERGE_MIN_PAGES 可調；任何一步失敗都回傳原資料。
  */
-import { Texture2D, director, gfx, sp } from 'cc';
+import { Texture2D, director, gfx, sp, sys } from 'cc';
 
 /** 骨架貼圖頁數達到這個數字才合併；單頁骨架本來就只有 1 次 draw，不處理。 */
 export const SPINE_ATLAS_MERGE_MIN_PAGES = 3;
 /** 合併後單邊上限（像素）；超過就放棄合併（手機貼圖上限保守取 2048）。 */
 export const SPINE_ATLAS_MERGE_MAX_SIZE = 2048;
 
-let mergeEnabled = true;
-/** 整個功能的總開關（除錯／回退用）；預設開。 */
-export function setSpineAtlasMergeEnabled(enabled: boolean): void { mergeEnabled = enabled; }
-export function isSpineAtlasMergeEnabled(): boolean { return mergeEnabled; }
+/**
+ * 預設值：只在桌機瀏覽器啟用。合併貼圖與原貼圖戰鬥中並存（每個騎兵骨架約 +16MB），
+ * 手機記憶體優先，原生與手機瀏覽器預設關閉；根治靠離線重打包圖集（見 PR 說明）。
+ */
+export function defaultSpineAtlasMergeEnabled(): boolean {
+  try { return !!sys?.isBrowser && !sys.isNative && !sys.isMobile; } catch { return false; }
+}
+let mergeOverride: boolean | null = null;
+/** 手動切換（設定／除錯用）；傳 null 回到預設。網址參數 ?spineMerge=1|0 優先於預設、低於這個手動設定。 */
+export function setSpineAtlasMergeEnabled(enabled: boolean | null): void { mergeOverride = enabled; }
+export function isSpineAtlasMergeEnabled(): boolean {
+  if (mergeOverride !== null) return mergeOverride;
+  try {
+    const q = typeof location !== 'undefined' ? /[?&]spineMerge=([01])/.exec(location.search) : null;
+    if (q) return q[1] === '1';
+  } catch { /* 無 location 環境 */ }
+  return defaultSpineAtlasMergeEnabled();
+}
 
 export interface AtlasPageSize { name: string; width: number; height: number }
 export interface MergedAtlasText {
@@ -132,7 +146,7 @@ function buildMerged(source: sp.SkeletonData): MergedEntry | null {
  * 每次成功取得要配對一次 releaseMergedSkeleton，用引用計數決定何時銷毀合併貼圖。
  */
 export function acquireMergedSkeleton(source: sp.SkeletonData): sp.SkeletonData {
-  if (!mergeEnabled || unmergeable.has(source)) return source;
+  if (!isSpineAtlasMergeEnabled() || unmergeable.has(source)) return source;
   let entry = mergedBySource.get(source);
   if (!entry) {
     const built = buildMerged(source);
