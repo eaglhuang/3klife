@@ -16722,12 +16722,6 @@
     "category": "task"
   },
   {
-    "id": "doc_task_2980",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9843.md",
-    "title": "[PROG-2-9843] 戰法詳情子視窗補招式描述文字",
-    "category": "task"
-  },
-  {
     "id": "doc_task_2981",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9845.md",
     "title": "[PROG-2-9845] 騎術系統與馬廄規格（ridingTier 三級、名駒、馬廄與配種）",
@@ -17865,6 +17859,12 @@
     "id": "doc_task_3289",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10216.md",
     "title": "[PROG-2-10216] 11/28 使用者裁決回寫規格",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3290",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9843.md",
+    "title": "[PROG-2-9843] 戰法詳情子視窗補招式描述文字",
     "category": "task"
   }
 ]
