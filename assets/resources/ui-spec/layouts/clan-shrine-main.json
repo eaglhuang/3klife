@@ -27,7 +27,7 @@
           "vCenter": true
         },
         "width": 720,
-        "height": 720,
+        "height": 980,
         "skinSlot": "clan.shrine.card.bg",
         "children": [
           {
@@ -184,6 +184,86 @@
                 },
                 "height": 28,
                 "text": "親子談話",
+                "styleSlot": "clan.shrine.label.button"
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "ClanShrineInfantLineLabel",
+            "id": "shrineInfantLine",
+            "widget": {
+              "top": 588,
+              "left": 24,
+              "right": 24
+            },
+            "height": 84,
+            "text": "",
+            "styleSlot": "clan.shrine.label.line"
+          },
+          {
+            "type": "button",
+            "name": "ClanShrineInfantPatButton",
+            "id": "btnInfantPat",
+            "widget": {
+              "top": 680,
+              "left": 24,
+              "right": 24
+            },
+            "height": 44,
+            "skinSlot": "clan.shrine.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "ClanShrineInfantPatButtonLabel",
+                "id": "btnInfantPatLabel",
+                "widget": {
+                  "top": 8,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "摸摸頭",
+                "styleSlot": "clan.shrine.label.button"
+              }
+            ]
+          },
+          {
+            "type": "label",
+            "name": "ClanShrinePrenatalLineLabel",
+            "id": "shrinePrenatalLine",
+            "widget": {
+              "top": 736,
+              "left": 24,
+              "right": 24
+            },
+            "height": 56,
+            "text": "",
+            "styleSlot": "clan.shrine.label.line"
+          },
+          {
+            "type": "button",
+            "name": "ClanShrinePrenatalBlessButton",
+            "id": "btnPrenatalBlessing",
+            "widget": {
+              "top": 800,
+              "left": 24,
+              "right": 24
+            },
+            "height": 44,
+            "skinSlot": "clan.shrine.button.bg",
+            "children": [
+              {
+                "type": "label",
+                "name": "ClanShrinePrenatalBlessButtonLabel",
+                "id": "btnPrenatalBlessingLabel",
+                "widget": {
+                  "top": 8,
+                  "left": 8,
+                  "right": 8
+                },
+                "height": 28,
+                "text": "胎教祈福",
                 "styleSlot": "clan.shrine.label.button"
               }
             ]

@@ -8,9 +8,12 @@
  * 「親子談話」（每名孩子每年一次，經 family.talkToChild）與「換一位」按鈕。
  */
 import { CLAN_PRESTIGE_TIER_NAMES } from '../../core/systems/GenerationalLegacy';
-import type { FamilyChildLedgerResult, FamilyTalkToChildResult } from '../../shared/api/ApiCommands';
+import type { FamilyChildLedgerResult, FamilyInfantCareResult, FamilyPatInfantResult, FamilyPrenatalBlessingResult, FamilyPrenatalStatusResult, FamilyTalkToChildResult } from '../../shared/api/ApiCommands';
 import { clanShrineView, type ClanShrineView } from './ClanShrineView';
 import { childTalkView, CHILD_NEXT_BUTTON_ID, CHILD_TALK_BUTTON_ID, clampChildIndex, type ChildTalkTranslate } from './ChildTalkView';
+import { infantPatReplyLine } from '../../core/systems/BloodlineInfantCare';
+import { prenatalBlessingDoneLine } from '../../core/systems/MarriagePrenatalBlessing';
+import { infantPrenatalView, INFANT_PAT_BUTTON_ID, PRENATAL_BLESS_BUTTON_ID } from './InfantPrenatalView';
 import type { MentorHoldingsButtonBinding, MentorHoldingsHostLike } from './MentorHoldingsController';
 
 export interface ClanShrineDeps<H extends MentorHoldingsHostLike> {
@@ -34,6 +37,13 @@ export interface ClanShrineChildDeps {
     /** 談話（family.talkToChild）；失敗回 reason */
     talk(childId: string): Promise<{ ok: true; result: FamilyTalkToChildResult } | { ok: false; reason: 'already-talked' | 'unknown-child' | 'error' }>;
     t: ChildTalkTranslate;
+    /** 幼兒近況與摸頭、待產倒數與胎教祈福（PROG-2-10235；可省略） */
+    care?: {
+        infantCare(): Promise<FamilyInfantCareResult | null>;
+        patInfant(childId: string): Promise<FamilyPatInfantResult | null>;
+        prenatalStatus(): Promise<FamilyPrenatalStatusResult | null>;
+        prenatalBlessing(motherId: string): Promise<FamilyPrenatalBlessingResult | null>;
+    };
 }
 
 export class ClanShrineController<H extends MentorHoldingsHostLike> {
@@ -42,6 +52,9 @@ export class ClanShrineController<H extends MentorHoldingsHostLike> {
     private _childIndex = 0;
     private _lastTalk: { childId: string; line: string } | null = null;
     private _talking = false;
+    private _infant: FamilyInfantCareResult | null = null;
+    private _prenatal: FamilyPrenatalStatusResult | null = null;
+    private _lastPat: { childId: string; line: string } | null = null;
 
     constructor(private readonly _deps: ClanShrineDeps<H>) {}
 
@@ -52,6 +65,10 @@ export class ClanShrineController<H extends MentorHoldingsHostLike> {
             ...(this._deps.child ? [
                 { buttonId: CHILD_TALK_BUTTON_ID, handler: () => { void this.talkToCurrentChild(); } },
                 { buttonId: CHILD_NEXT_BUTTON_ID, handler: () => { this.nextChild(); } },
+                ...(this._deps.child.care ? [
+                    { buttonId: INFANT_PAT_BUTTON_ID, handler: () => { void this.patCurrentInfant(); } },
+                    { buttonId: PRENATAL_BLESS_BUTTON_ID, handler: () => { void this.blessPrenatal(); } },
+                ] : []),
             ] : []),
         ]);
         this.setOpen(false);
@@ -83,10 +100,13 @@ export class ClanShrineController<H extends MentorHoldingsHostLike> {
             return;
         }
         const talk = childTalkView({ snapshot: this._children, index: this._childIndex, lastTalk: this._lastTalk, t: child.t });
+        const care = child.care
+            ? infantPrenatalView({ infant: this._infant, childId: this._children?.children[clampChildIndex(this._childIndex, this._children.children.length)]?.id ?? null, lastPat: this._lastPat, prenatal: this._prenatal, t: child.t })
+            : { texts: {}, actives: {}, enabled: {} };
         this._deps.apply(this._host, {
-            texts: { ...base.texts, ...talk.texts },
-            actives: { ...base.actives, ...talk.actives },
-            enabled: { ...base.enabled, ...talk.enabled },
+            texts: { ...base.texts, ...talk.texts, ...care.texts },
+            actives: { ...base.actives, ...talk.actives, ...care.actives },
+            enabled: { ...base.enabled, ...talk.enabled, ...care.enabled },
         });
     }
 
@@ -95,6 +115,10 @@ export class ClanShrineController<H extends MentorHoldingsHostLike> {
         const child = this._deps.child;
         if (!child) return;
         this._children = await child.snapshot();
+        if (child.care) {
+            this._infant = await child.care.infantCare();
+            this._prenatal = await child.care.prenatalStatus();
+        }
         this._childIndex = clampChildIndex(this._childIndex, this._children?.children.length ?? 0);
         this.refresh();
     }
@@ -127,6 +151,40 @@ export class ClanShrineController<H extends MentorHoldingsHostLike> {
         } finally {
             this._talking = false;
         }
+    }
+
+    /** 幼兒摸頭：親子好感 +1（每季每名一次）；成功顯示孩子的回應 */
+    public async patCurrentInfant(): Promise<boolean> {
+        const child = this._deps.child;
+        const target = this._children?.children[clampChildIndex(this._childIndex, this._children.children.length)];
+        if (!child?.care || !target) return false;
+        const out = await child.care.patInfant(target.id);
+        if (!out?.ok) {
+            this._deps.toast(child.t('ui.bloodline.infant_pat_limit'));
+            await this.refreshChildren();
+            return false;
+        }
+        const info = this._infant?.infants.find((c) => c.id === target.id);
+        this._lastPat = { childId: target.id, line: out.replyKey ? infantPatReplyLine((key) => child.t(key), out.replyKey, target.name, info?.gender) : '' };
+        this._deps.toast(out.favorGain > 0 ? child.t('ui.bloodline.infant_pat_gain', String(out.favorGain)) : child.t('ui.bloodline.infant_pat_shared'));
+        await this.refreshChildren();
+        return true;
+    }
+
+    /** 待產中的母親做胎教祈福：扣家族銀兩、每次待產限 1 次 */
+    public async blessPrenatal(): Promise<boolean> {
+        const child = this._deps.child;
+        const mother = this._prenatal?.mothers[0];
+        if (!child?.care || !mother) return false;
+        const out = await child.care.prenatalBlessing(mother.id);
+        if (!out?.ok) {
+            this._deps.toast(child.t(out?.reason === 'silver-low' ? 'ui.marriage.prenatal_bless_silver_low' : 'ui.marriage.prenatal_bless_done_btn'));
+            await this.refreshChildren();
+            return false;
+        }
+        this._deps.toast(prenatalBlessingDoneLine((key) => child.t(key), mother.name, mother.gender));
+        await this.refreshChildren();
+        return true;
     }
 
     /** 領今天的供奉；不符資格時只提示 */

@@ -3289,5 +3289,13 @@
   "life.street_first.gift_unlocked.m": "You can now give him gifts. Pick something he likes!",
   "life.street_first.gift_unlocked.f": "You can now give her gifts. Pick something she likes!",
   "battle.kin_aura.name": "Brotherly Accord",
-  "battle.kin_aura.desc": "Sworn brothers within 3 tiles: ATK/DEF +25%, crit +15%"
+  "battle.kin_aura.desc": "Sworn brothers within 3 tiles: ATK/DEF +25%, crit +15%",
+  "ui.bloodline.infant_pat_btn": "Pat head",
+  "ui.bloodline.infant_pat_done_btn": "Patted this season",
+  "ui.bloodline.infant_pat_gain": "Parent-child bond +{0}",
+  "ui.bloodline.infant_pat_limit": "Already patted this season. Try again next season.",
+  "ui.marriage.prenatal_bless_btn": "Prenatal blessing ({0} silver)",
+  "ui.marriage.prenatal_bless_done_btn": "Blessed",
+  "ui.marriage.prenatal_bless_silver_low": "Not enough family silver for the blessing.",
+  "ui.bloodline.infant_pat_shared": "This season's bond reward was already claimed (shared with tapping the portrait)."
 }
