@@ -247,8 +247,8 @@
   },
   {
     "id": "doc_spec_0042",
-    "path": "docs/遊戲規格文件/系統規格書/轉蛋系統.md",
-    "title": "轉蛋系統規格書",
+    "path": "docs/遊戲規格文件/系統規格書/轉蛋系統-shards/core.md",
+    "title": "轉蛋系統規格書 — A–E 系統描述、目的、商業、TA、功能清單",
     "category": "spec"
   },
   {
@@ -1453,260 +1453,44 @@
   },
   {
     "id": "doc_spec_0245",
-    "path": "docs/遊戲規格文件/正式規格矛盾審查-shards/s2.md",
-    "title": "正式規格矛盾審查 — 2. 仍待處理",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0246",
-    "path": "docs/遊戲規格文件/正式規格矛盾審查-shards/s3.md",
-    "title": "正式規格矛盾審查 — 3. 審查結論",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0247",
-    "path": "docs/遊戲規格文件/正式規格矛盾審查.md",
-    "title": "正式規格矛盾審查",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0248",
     "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/specs/01_權威與衝突帳.md",
     "title": "血統與全玩法版本權威與衝突帳",
     "category": "spec"
   },
   {
-    "id": "doc_spec_0249",
+    "id": "doc_spec_0246",
     "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/specs/02_全玩法接口矩陣.md",
     "title": "全玩法接口矩陣與血統家系整合規格",
     "category": "spec"
   },
   {
-    "id": "doc_spec_0250",
+    "id": "doc_spec_0247",
     "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/specs/03_38功能與待決補件追蹤.md",
     "title": "R5 38功能與待決補件追蹤",
     "category": "spec"
   },
   {
-    "id": "doc_spec_0251",
+    "id": "doc_spec_0248",
     "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/specs/04_共同資料事件時鐘契約.md",
     "title": "血統與全玩法共同資料事件時鐘契約",
     "category": "spec"
   },
   {
-    "id": "doc_spec_0252",
+    "id": "doc_spec_0249",
     "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/specs/05_跨玩法驗收案例.md",
     "title": "R5 跨玩法驗收案例",
     "category": "spec"
   },
   {
-    "id": "doc_spec_0253",
+    "id": "doc_spec_0250",
     "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/validation/內容審核記錄.md",
     "title": "本輪內容審核記錄",
     "category": "spec"
   },
   {
-    "id": "doc_spec_0254",
+    "id": "doc_spec_0251",
     "path": "docs/遊戲規格文件/系統規格書/血統與家系-R5/completion_package/validation/版本漂移記錄.md",
     "title": "成稿前最新分支差異",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0255",
-    "path": "docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統-shards/fj.md",
-    "title": "家族關係（史實相性）系統 — F–J",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0256",
-    "path": "docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統.md",
-    "title": "家族關係（史實相性）系統",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0257",
-    "path": "docs/遊戲規格文件/系統規格書/培育系統-shards/shard-b.md",
-    "title": "培育系統規格（分片索引） — F 數值模型與公式（含 F-7 戰法槽位）",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0258",
-    "path": "docs/遊戲規格文件/系統規格書/培育系統-shards/shard-c.md",
-    "title": "培育系統規格（分片索引） — G–J 劇本／字串／Data Schema／名詞",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0259",
-    "path": "docs/遊戲規格文件/系統規格書/培育系統-shards/shard-d.md",
-    "title": "培育系統規格（分片索引） — N 血脈補遺／MCQ 決策／雙層數值",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0260",
-    "path": "docs/遊戲規格文件/系統規格書/培育系統.md",
-    "title": "培育系統規格（分片索引）",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0261",
-    "path": "docs/遊戲規格文件/系統規格書/教官系統（支援卡）-shards/shard-b.md",
-    "title": "教官系統（支援卡）規格（分片索引） — F 公式相關（支援卡 UI／TP／靈感機率／星等突破／爆發）",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0262",
-    "path": "docs/遊戲規格文件/系統規格書/教官系統（支援卡）-shards/shard-c.md",
-    "title": "教官系統（支援卡）規格（分片索引） — G–J 劇本／字串／Data Schema／名詞",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0263",
-    "path": "docs/遊戲規格文件/系統規格書/教官系統（支援卡）-shards/shard-d.md",
-    "title": "教官系統（支援卡）規格（分片索引） — K–M 師友羈絆／好友借用／溢出轉化／MCQ 決策記錄",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0264",
-    "path": "docs/遊戲規格文件/系統規格書/教官系統（支援卡）.md",
-    "title": "教官系統（支援卡）規格（分片索引）",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0265",
-    "path": "docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-b.md",
-    "title": "結緣系統（配種）規格（分片索引） — F–J 公式／劇本／字串／Data Schema／名詞",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0266",
-    "path": "docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-c.md",
-    "title": "結緣系統（配種）規格（分片索引） — K–L 近親繁殖範圍／精力值與生育限制",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0267",
-    "path": "docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-d.md",
-    "title": "結緣系統（配種）規格（分片索引） — M 血統模擬器／MCQ 決策記錄",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0268",
-    "path": "docs/遊戲規格文件/系統規格書/結緣系統（配種）.md",
-    "title": "結緣系統（配種）規格（分片索引）",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0269",
-    "path": "docs/遊戲規格文件/系統規格書/戰法系統-shards/fh.md",
-    "title": "戰法系統 — F、H 公式與 UI 約束",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0270",
-    "path": "docs/遊戲規格文件/系統規格書/戰法系統-shards/g.md",
-    "title": "戰法系統 — G 戰法大清單",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0271",
-    "path": "docs/遊戲規格文件/系統規格書/戰法系統-shards/g5.md",
-    "title": "戰法系統 — G-5 天賦戰法初始庫",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0272",
-    "path": "docs/遊戲規格文件/系統規格書/戰法系統.md",
-    "title": "戰法系統",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0273",
-    "path": "docs/遊戲規格文件/系統規格書/戰法場景規格書-shards/df.md",
-    "title": "戰法場景規格書 — D–F",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0274",
-    "path": "docs/遊戲規格文件/系統規格書/戰法場景規格書-shards/meta.md",
-    "title": "戰法場景規格書 — MCQ 與實作紀錄",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0275",
-    "path": "docs/遊戲規格文件/系統規格書/戰法場景規格書.md",
-    "title": "戰法場景規格書",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0276",
-    "path": "docs/遊戲規格文件/系統規格書/bloodline-symbol-slot-contract-v1.md",
-    "title": "血脈符號插槽契約 v1（bloodline-symbol-slot-contract-v1）",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0277",
-    "path": "docs/遊戲規格文件/整併疑問書-shards/q01-13.md",
-    "title": "整併疑問書 — Q1–Q13 與已裁決紀錄",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0278",
-    "path": "docs/遊戲規格文件/整併疑問書-shards/q14-30.md",
-    "title": "整併疑問書 — Q14–Q30",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0279",
-    "path": "docs/遊戲規格文件/整併疑問書-shards/q14-30/q14-30-part-1.md",
-    "title": "整併疑問書 — Q14–Q30",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0280",
-    "path": "docs/遊戲規格文件/整併疑問書-shards/q14-30/q14-30-part-2.md",
-    "title": "Q21. EP 評級門檻要以哪一套為正式標準？ C",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0281",
-    "path": "docs/遊戲規格文件/整併疑問書-shards/q14-30/q14-30-part-3.md",
-    "title": "Q27. 近親判定要以 `Bloodline_ID` 還是「共同祖先代數」作為正式權威？ C",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0282",
-    "path": "docs/遊戲規格文件/整併疑問書-shards/q31-40.md",
-    "title": "整併疑問書 — Q31–Q40",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0283",
-    "path": "docs/遊戲規格文件/整併疑問書-shards/q41-52.md",
-    "title": "整併疑問書 — Q41–Q52",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0284",
-    "path": "docs/遊戲規格文件/整併疑問書-shards/q53-63.md",
-    "title": "整併疑問書 — Q53–Q63",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0285",
-    "path": "docs/遊戲規格文件/整併疑問書-shards/q64-74.md",
-    "title": "整併疑問書 — Q64–Q74",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0286",
-    "path": "docs/遊戲規格文件/整併疑問書-shards/q75-plus.md",
-    "title": "整併疑問書 — Q75 起",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_0287",
-    "path": "docs/遊戲規格文件/整併疑問書.md",
-    "title": "整併疑問書",
     "category": "spec"
   },
   {
@@ -6493,14 +6277,14 @@
   },
   {
     "id": "doc_spec_1111",
-    "path": "docs/遊戲規格文件/系統規格書/城防城牆垛口外側懸掛生鐵滾動齒輪橫筒彈落登城長梯第五階狀態機規格書.md",
-    "title": "城防城牆垛口外側懸掛生鐵滾動齒輪橫筒彈落登城長梯第五階狀態機規格書",
+    "path": "docs/遊戲規格文件/系統規格書/野戰先鋒步兵大盾加裝生鐵拒馬倒角卡鎖敵騎兵長矛第三階狀態機規格書.md",
+    "title": "野戰先鋒步兵大盾加裝生鐵拒馬倒角卡鎖敵騎兵長矛第三階狀態機規格書",
     "category": "spec"
   },
   {
     "id": "doc_spec_1112",
-    "path": "docs/遊戲規格文件/系統規格書/野戰精銳步兵雙手長柄月牙雙股戟格擋重兵與順勢卸力反制第五階狀態機規格書.md",
-    "title": "野戰精銳步兵雙手長柄月牙雙股戟格擋重兵與順勢卸力反制第五階狀態機規格書",
+    "path": "docs/遊戲規格文件/系統規格書/戰場陣地部署重型拒馬連環生鐵鏈條防騎兵衝撞第四階狀態機規格書.md",
+    "title": "戰場陣地部署重型拒馬連環生鐵鏈條防騎兵衝撞第四階狀態機規格書",
     "category": "spec"
   },
   {
@@ -6511,14 +6295,14 @@
   },
   {
     "id": "doc_spec_1114",
-    "path": "docs/遊戲規格文件/系統規格書/城防城牆垛口外側懸掛絞盤牽引重型生鐵倒鉤翻板清掃雲梯隊列第五階狀態機規格書.md",
-    "title": "城防城牆垛口外側懸掛絞盤牽引重型生鐵倒鉤翻板清掃雲梯隊列第五階狀態機規格書",
+    "path": "docs/遊戲規格文件/系統規格書/野戰先鋒步兵大盾加裝生鐵拒馬倒角卡鎖敵騎兵長矛第四階狀態機規格書.md",
+    "title": "野戰先鋒步兵大盾加裝生鐵拒馬倒角卡鎖敵騎兵長矛第四階狀態機規格書",
     "category": "spec"
   },
   {
     "id": "doc_spec_1115",
-    "path": "docs/遊戲規格文件/系統規格書/野戰精銳步兵雙手長柄鉤鐮雙尖大槍挑飛兵刃與沉腰直刺第五階狀態機規格書.md",
-    "title": "野戰精銳步兵雙手長柄鉤鐮雙尖大槍挑飛兵刃與沉腰直刺第五階狀態機規格書",
+    "path": "docs/遊戲規格文件/系統規格書/戰場陣地部署重型拒馬連環生鐵鏈條防騎兵衝撞第五階狀態機規格書.md",
+    "title": "戰場陣地部署重型拒馬連環生鐵鏈條防騎兵衝撞第五階狀態機規格書",
     "category": "spec"
   },
   {
@@ -6529,14 +6313,14 @@
   },
   {
     "id": "doc_spec_1117",
-    "path": "docs/遊戲規格文件/系統規格書/城防城牆垛口外側懸掛生鐵滾動地刺橫樑阻截突入平台第五階狀態機規格書.md",
-    "title": "城防城牆垛口外側懸掛生鐵滾動地刺橫樑阻截突入平台第五階狀態機規格書",
+    "path": "docs/遊戲規格文件/系統規格書/野戰先鋒步兵大盾加裝生鐵拒馬倒角卡鎖敵騎兵長矛第五階狀態機規格書.md",
+    "title": "野戰先鋒步兵大盾加裝生鐵拒馬倒角卡鎖敵騎兵長矛第五階狀態機規格書",
     "category": "spec"
   },
   {
     "id": "doc_spec_1118",
-    "path": "docs/遊戲規格文件/系統規格書/野戰精銳步兵雙手長柄鉤鐮雙股破甲錐卡鎖重兵與沉肩反刺第五階狀態機規格書.md",
-    "title": "野戰精銳步兵雙手長柄鉤鐮雙股破甲錐卡鎖重兵與沉肩反刺第五階狀態機規格書",
+    "path": "docs/遊戲規格文件/系統規格書/戰場營寨大門加裝雙重淬火生鐵橫閂與防衝撞斜撐第一階狀態機規格書.md",
+    "title": "戰場營寨大門加裝雙重淬火生鐵橫閂與防衝撞斜撐第一階狀態機規格書",
     "category": "spec"
   },
   {
@@ -6547,14 +6331,14 @@
   },
   {
     "id": "doc_spec_1120",
-    "path": "docs/遊戲規格文件/系統規格書/城防城牆垛口外側懸掛生鐵滾動防護圓筒阻隔登城攀爬第五階狀態機規格書.md",
-    "title": "城防城牆垛口外側懸掛生鐵滾動防護圓筒阻隔登城攀爬第五階狀態機規格書",
+    "path": "docs/遊戲規格文件/系統規格書/野戰精銳弩兵床弩加裝生鐵三腳地錨支架防後坐力偏移第一階狀態機規格書.md",
+    "title": "野戰精銳弩兵床弩加裝生鐵三腳地錨支架防後坐力偏移第一階狀態機規格書",
     "category": "spec"
   },
   {
     "id": "doc_spec_1121",
-    "path": "docs/遊戲規格文件/系統規格書/野戰精銳步兵雙手長柄月牙雙頭長矛防禦架開重擊與轉身回防第五階狀態機規格書.md",
-    "title": "野戰精銳步兵雙手長柄月牙雙頭長矛防禦架開重擊與轉身回防第五階狀態機規格書",
+    "path": "docs/遊戲規格文件/系統規格書/戰場營寨大門加裝雙重淬火生鐵橫閂與防衝撞斜撐第二階狀態機規格書.md",
+    "title": "戰場營寨大門加裝雙重淬火生鐵橫閂與防衝撞斜撐第二階狀態機規格書",
     "category": "spec"
   },
   {
@@ -6619,8 +6403,8 @@
   },
   {
     "id": "doc_spec_1132",
-    "path": "docs/遊戲規格文件/系統規格書/野戰先鋒步兵大盾加裝生鐵拒馬倒角卡鎖敵騎兵長矛第三階狀態機規格書.md",
-    "title": "野戰先鋒步兵大盾加裝生鐵拒馬倒角卡鎖敵騎兵長矛第三階狀態機規格書",
+    "path": "docs/遊戲規格文件/系統規格書/野戰精銳弩兵床弩加裝生鐵三腳地錨支架防後坐力偏移第五階狀態機規格書.md",
+    "title": "野戰精銳弩兵床弩加裝生鐵三腳地錨支架防後坐力偏移第五階狀態機規格書",
     "category": "spec"
   },
   {
@@ -6637,14 +6421,14 @@
   },
   {
     "id": "doc_spec_1135",
-    "path": "docs/遊戲規格文件/系統規格書/野戰先鋒步兵大盾加裝生鐵拒馬倒角卡鎖敵騎兵長矛第四階狀態機規格書.md",
-    "title": "野戰先鋒步兵大盾加裝生鐵拒馬倒角卡鎖敵騎兵長矛第四階狀態機規格書",
+    "path": "docs/遊戲規格文件/系統規格書/野戰重裝弩兵大盾底端生鐵雙尖地樁踏張自固第一階狀態機規格書.md",
+    "title": "野戰重裝弩兵大盾底端生鐵雙尖地樁踏張自固第一階狀態機規格書",
     "category": "spec"
   },
   {
     "id": "doc_spec_1136",
-    "path": "docs/遊戲規格文件/系統規格書/戰場夜戰順風施放連環風力飛石旋盤戰車扇面拋射生石灰白霧遮蔽城防視線第五階狀態機規格書.md",
-    "title": "戰場夜戰順風施放連環風力飛石旋盤戰車扇面拋射生石灰白霧遮蔽城防視線第五階狀態機規格書",
+    "path": "docs/遊戲規格文件/系統規格書/戰場營寨箭樓部署生鐵聚光銅鏡照射防夜間偷襲第二階狀態機規格書.md",
+    "title": "戰場營寨箭樓部署生鐵聚光銅鏡照射防夜間偷襲第二階狀態機規格書",
     "category": "spec"
   },
   {
@@ -6655,14 +6439,14 @@
   },
   {
     "id": "doc_spec_1138",
-    "path": "docs/遊戲規格文件/系統規格書/野戰先鋒步兵大盾加裝生鐵拒馬倒角卡鎖敵騎兵長矛第五階狀態機規格書.md",
-    "title": "野戰先鋒步兵大盾加裝生鐵拒馬倒角卡鎖敵騎兵長矛第五階狀態機規格書",
+    "path": "docs/遊戲規格文件/系統規格書/野戰重裝弩兵大盾底端生鐵雙尖地樁踏張自固第二階狀態機規格書.md",
+    "title": "野戰重裝弩兵大盾底端生鐵雙尖地樁踏張自固第二階狀態機規格書",
     "category": "spec"
   },
   {
     "id": "doc_spec_1139",
-    "path": "docs/遊戲規格文件/系統規格書/戰場夜戰順風施放連環風力飛石旋盤戰車低平彈道直射破除陷馬坑偽裝網第五階狀態機規格書.md",
-    "title": "戰場夜戰順風施放連環風力飛石旋盤戰車低平彈道直射破除陷馬坑偽裝網第五階狀態機規格書",
+    "path": "docs/遊戲規格文件/系統規格書/戰場營寨箭樓部署生鐵聚光銅鏡照射防夜間偷襲第三階狀態機規格書.md",
+    "title": "戰場營寨箭樓部署生鐵聚光銅鏡照射防夜間偷襲第三階狀態機規格書",
     "category": "spec"
   },
   {
@@ -6679,8 +6463,8 @@
   },
   {
     "id": "doc_spec_1142",
-    "path": "docs/遊戲規格文件/系統規格書/戰場夜戰順風施放連環風力飛石旋盤戰車橫向散佈煙霧引導衝鋒第五階狀態機規格書.md",
-    "title": "戰場夜戰順風施放連環風力飛石旋盤戰車橫向散佈煙霧引導衝鋒第五階狀態機規格書",
+    "path": "docs/遊戲規格文件/系統規格書/戰場營寨箭樓部署生鐵聚光銅鏡照射防夜間偷襲第四階狀態機規格書.md",
+    "title": "戰場營寨箭樓部署生鐵聚光銅鏡照射防夜間偷襲第四階狀態機規格書",
     "category": "spec"
   },
   {
@@ -6696,141 +6480,15 @@
     "category": "spec"
   },
   {
-    "id": "doc_spec_1145",
-    "path": "docs/遊戲規格文件/系統規格書/戰場夜戰順風施放連環風力飛石旋盤戰車平射清理阻礙工事第五階狀態機規格書.md",
-    "title": "戰場夜戰順風施放連環風力飛石旋盤戰車平射清理阻礙工事第五階狀態機規格書",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1146",
-    "path": "docs/遊戲規格文件/系統規格書/戰場營寨大門加裝雙重淬火生鐵橫閂與防衝撞斜撐第二階狀態機規格書.md",
-    "title": "戰場營寨大門加裝雙重淬火生鐵橫閂與防衝撞斜撐第二階狀態機規格書",
-    "category": "spec"
-  },
-  {
     "id": "doc_spec_1147",
     "path": "docs/遊戲規格文件/系統規格書/綠粉因子戰法TP折扣與地形戰場效果連動規格書.md",
     "title": "綠粉因子戰法TP折扣與地形戰場效果連動規格書",
     "category": "spec"
   },
   {
-    "id": "doc_spec_1148",
-    "path": "docs/遊戲規格文件/系統規格書/戰場夜戰順風施放連環風力飛石旋盤戰車扇面拋射生鐵破甲菱形釘封鎖敵軍步陣退路第五階狀態機規格書.md",
-    "title": "戰場夜戰順風施放連環風力飛石旋盤戰車扇面拋射生鐵破甲菱形釘封鎖敵軍步陣退路第五階狀態機規格書",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1149",
-    "path": "docs/遊戲規格文件/系統規格書/戰場營寨大門加裝雙重淬火生鐵橫閂與防衝撞斜撐第三階狀態機規格書.md",
-    "title": "戰場營寨大門加裝雙重淬火生鐵橫閂與防衝撞斜撐第三階狀態機規格書",
-    "category": "spec"
-  },
-  {
     "id": "doc_spec_1150",
     "path": "docs/遊戲規格文件/系統規格書/學府培育畢業評級模型與三份成績單定型規格書.md",
     "title": "學府培育畢業評級模型與三份成績單定型規格書",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1151",
-    "path": "docs/遊戲規格文件/系統規格書/戰場陣地部署重型拒馬連環生鐵鏈條防騎兵衝撞第一階狀態機規格書.md",
-    "title": "戰場陣地部署重型拒馬連環生鐵鏈條防騎兵衝撞第一階狀態機規格書",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1152",
-    "path": "docs/遊戲規格文件/系統規格書/戰場營寨大門加裝雙重淬火生鐵橫閂與防衝撞斜撐第四階狀態機規格書.md",
-    "title": "戰場營寨大門加裝雙重淬火生鐵橫閂與防衝撞斜撐第四階狀態機規格書",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1153",
-    "path": "docs/遊戲規格文件/系統規格書/野戰精銳弩兵床弩加裝生鐵三腳地錨支架防後坐力偏移第五階狀態機規格書.md",
-    "title": "野戰精銳弩兵床弩加裝生鐵三腳地錨支架防後坐力偏移第五階狀態機規格書",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1154",
-    "path": "docs/遊戲規格文件/系統規格書/戰場陣地部署重型拒馬連環生鐵鏈條防騎兵衝撞第二階狀態機規格書.md",
-    "title": "戰場陣地部署重型拒馬連環生鐵鏈條防騎兵衝撞第二階狀態機規格書",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1155",
-    "path": "docs/遊戲規格文件/系統規格書/戰場營寨大門加裝雙重淬火生鐵橫閂與防衝撞斜撐第五階狀態機規格書.md",
-    "title": "戰場營寨大門加裝雙重淬火生鐵橫閂與防衝撞斜撐第五階狀態機規格書",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1156",
-    "path": "docs/遊戲規格文件/系統規格書/野戰重裝弩兵大盾底端生鐵雙尖地樁踏張自固第一階狀態機規格書.md",
-    "title": "野戰重裝弩兵大盾底端生鐵雙尖地樁踏張自固第一階狀態機規格書",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1157",
-    "path": "docs/遊戲規格文件/系統規格書/戰場陣地部署重型拒馬連環生鐵鏈條防騎兵衝撞第三階狀態機規格書.md",
-    "title": "戰場陣地部署重型拒馬連環生鐵鏈條防騎兵衝撞第三階狀態機規格書",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1158",
-    "path": "docs/遊戲規格文件/系統規格書/戰場營寨箭樓部署生鐵聚光銅鏡照射防夜間偷襲第一階狀態機規格書.md",
-    "title": "戰場營寨箭樓部署生鐵聚光銅鏡照射防夜間偷襲第一階狀態機規格書",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1159",
-    "path": "docs/遊戲規格文件/系統規格書/野戰重裝弩兵大盾底端生鐵雙尖地樁踏張自固第二階狀態機規格書.md",
-    "title": "野戰重裝弩兵大盾底端生鐵雙尖地樁踏張自固第二階狀態機規格書",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1160",
-    "path": "docs/遊戲規格文件/系統規格書/戰場陣地部署重型拒馬連環生鐵鏈條防騎兵衝撞第四階狀態機規格書.md",
-    "title": "戰場陣地部署重型拒馬連環生鐵鏈條防騎兵衝撞第四階狀態機規格書",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1161",
-    "path": "docs/遊戲規格文件/系統規格書/戰場營寨箭樓部署生鐵聚光銅鏡照射防夜間偷襲第二階狀態機規格書.md",
-    "title": "戰場營寨箭樓部署生鐵聚光銅鏡照射防夜間偷襲第二階狀態機規格書",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1162",
-    "path": "docs/遊戲規格文件/系統規格書/野戰精銳弩兵床弩加裝生鐵三腳地錨支架防後坐力偏移第一階狀態機規格書.md",
-    "title": "野戰精銳弩兵床弩加裝生鐵三腳地錨支架防後坐力偏移第一階狀態機規格書",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1163",
-    "path": "docs/遊戲規格文件/系統規格書/戰場陣地部署重型拒馬連環生鐵鏈條防騎兵衝撞第五階狀態機規格書.md",
-    "title": "戰場陣地部署重型拒馬連環生鐵鏈條防騎兵衝撞第五階狀態機規格書",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1164",
-    "path": "docs/遊戲規格文件/系統規格書/戰場營寨箭樓部署生鐵聚光銅鏡照射防夜間偷襲第三階狀態機規格書.md",
-    "title": "戰場營寨箭樓部署生鐵聚光銅鏡照射防夜間偷襲第三階狀態機規格書",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1165",
-    "path": "docs/遊戲規格文件/系統規格書/野戰精銳弩兵床弩加裝生鐵三腳地錨支架防後坐力偏移第二階狀態機規格書.md",
-    "title": "野戰精銳弩兵床弩加裝生鐵三腳地錨支架防後坐力偏移第二階狀態機規格書",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1166",
-    "path": "docs/遊戲規格文件/系統規格書/戰場營寨大門加裝雙重淬火生鐵橫閂與防衝撞斜撐第一階狀態機規格書.md",
-    "title": "戰場營寨大門加裝雙重淬火生鐵橫閂與防衝撞斜撐第一階狀態機規格書",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1167",
-    "path": "docs/遊戲規格文件/系統規格書/戰場營寨箭樓部署生鐵聚光銅鏡照射防夜間偷襲第四階狀態機規格書.md",
-    "title": "戰場營寨箭樓部署生鐵聚光銅鏡照射防夜間偷襲第四階狀態機規格書",
     "category": "spec"
   },
   {
@@ -6864,51 +6522,9 @@
     "category": "spec"
   },
   {
-    "id": "doc_spec_1173",
-    "path": "docs/遊戲規格文件/系統規格書/轉蛋系統-shards/core.md",
-    "title": "轉蛋系統規格書 — A–E 系統描述、目的、商業、TA、功能清單",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1174",
-    "path": "docs/遊戲規格文件/系統規格書/轉蛋系統-shards/formula.md",
-    "title": "轉蛋系統規格書 — F–G 公式與劇本／主視覺",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1175",
-    "path": "docs/遊戲規格文件/系統規格書/轉蛋系統-shards/rulings.md",
-    "title": "轉蛋系統規格書 — L 與 MCQ 裁決紀錄",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1176",
-    "path": "docs/遊戲規格文件/系統規格書/轉蛋系統-shards/schema.md",
-    "title": "轉蛋系統規格書 — H–I 字串與 Data Schema",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1177",
-    "path": "docs/遊戲規格文件/系統規格書/轉蛋系統-shards/terms.md",
-    "title": "轉蛋系統規格書 — J–K 名詞定義與傳承邊界",
-    "category": "spec"
-  },
-  {
     "id": "doc_spec_1178",
     "path": "docs/遊戲規格文件/系統規格書/大廳任務完整循環規格書.md",
     "title": "大廳任務完整循環規格書（產生、派遣、進行、結算、刷新）",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1179",
-    "path": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計.md",
-    "title": "學府修業畫面與接線設計（分片索引）",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1180",
-    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書.md",
-    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引）",
     "category": "spec"
   },
   {
@@ -6960,279 +6576,9 @@
     "category": "spec"
   },
   {
-    "id": "doc_spec_1189",
-    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-a.md",
-    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 0–1 結論、定位與三節點因果、新玩家節奏",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1190",
-    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-b.md",
-    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 2 首子誕生驚喜流程、命名與綽號、出生禮",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1191",
-    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-c.md",
-    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 3–4 時間流速與成長節點與時間線、觸發與外界時間與防重讀",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1192",
-    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-d.md",
-    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 5 選路、心願路線、職業屬性與專長",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1193",
-    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-e.md",
-    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 6 大富翁盤面",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1194",
-    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-f.md",
-    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 7 產出、稀有度、寶物與道具清單、因子印記互動",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1195",
-    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-g.md",
-    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 8–9 對抓周與學府的回寫、少年名將適用性",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1196",
-    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-h.md",
-    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 10–11 畫面演出與資產、資料結構",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1197",
-    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-i.md",
-    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 12–13 衝突與待裁決選擇題、實作卡拆分",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1198",
-    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-j.md",
-    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 14 中期一年一回合與 AI 委託",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1199",
-    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-k.md",
-    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 15 分齡加速成長（上）原則、母乳與乳母、時光藥水、節點與年齡呈現、後期淡出",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1200",
-    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-l.md",
-    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 16 分齡加速成長（下）特殊食物、廚師與家族酒店接口、10 歲起派內政、歲月補償",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1201",
-    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-m.md",
-    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 17 自動開寶模式（第二個孩子起）",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1202",
-    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-n.md",
-    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 18 共用 base 框架對應與建議新增共用框架候選",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1203",
-    "path": "docs/遊戲規格文件/系統規格書/血統與家系漸進揭露里程碑總綱規格書-shards/shard-b.md",
-    "title": "血統與家系漸進揭露里程碑總綱規格書（分片索引） — F–J 公式／劇本／字串／Data Schema／名詞",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1204",
-    "path": "docs/遊戲規格文件/系統規格書/血統與家系漸進揭露里程碑總綱規格書-shards/shard-c.md",
-    "title": "血統與家系漸進揭露里程碑總綱規格書（分片索引） — K 四階段揭露與後續分冊對應索引",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1205",
-    "path": "docs/遊戲規格文件/系統規格書/血統與家系漸進揭露里程碑總綱規格書.md",
-    "title": "血統與家系漸進揭露里程碑總綱規格書（分片索引）",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1206",
-    "path": "docs/遊戲規格文件/系統規格書/家業經營與世家系統規格書-shards/shard-a.md",
-    "title": "家業經營與世家系統規格書（分片索引） — 0–2 結論、定位與節奏、與既有系統分界",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1207",
-    "path": "docs/遊戲規格文件/系統規格書/家業經營與世家系統規格書-shards/shard-b.md",
-    "title": "家業經營與世家系統規格書（分片索引） — 3 依賴的共用框架（六套 base 對照與候選）",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1208",
-    "path": "docs/遊戲規格文件/系統規格書/家業經營與世家系統規格書-shards/shard-c.md",
-    "title": "家業經營與世家系統規格書（分片索引） — 4–5 幕府等級與解鎖、家業通則",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1209",
-    "path": "docs/遊戲規格文件/系統規格書/家業經營與世家系統規格書-shards/shard-d.md",
-    "title": "家業經營與世家系統規格書（分片索引） — 6 六大家業逐項",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1210",
-    "path": "docs/遊戲規格文件/系統規格書/家業經營與世家系統規格書-shards/shard-e.md",
-    "title": "家業經營與世家系統規格書（分片索引） — 7 廚房與菜色產出（成長膳，接 9198）",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1211",
-    "path": "docs/遊戲規格文件/系統規格書/家業經營與世家系統規格書-shards/shard-f.md",
-    "title": "家業經營與世家系統規格書（分片索引） — 8–9 出海貿易、世家包裝與郡望連動",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1212",
-    "path": "docs/遊戲規格文件/系統規格書/家業經營與世家系統規格書-shards/shard-g.md",
-    "title": "家業經營與世家系統規格書（分片索引） — 10–11 人力取捨與退役、畫面與美術需求",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1213",
-    "path": "docs/遊戲規格文件/系統規格書/家業經營與世家系統規格書-shards/shard-h.md",
-    "title": "家業經營與世家系統規格書（分片索引） — 12 資料結構",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1214",
-    "path": "docs/遊戲規格文件/系統規格書/家業經營與世家系統規格書-shards/shard-i.md",
-    "title": "家業經營與世家系統規格書（分片索引） — 13–14 衝突與待裁決選擇題、實作卡拆分",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1215",
-    "path": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計-shards/shard-a.md",
-    "title": "學府修業畫面與接線設計（分片索引） — 0–1 結論、新舊分工、舊存檔遷移",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1216",
-    "path": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計-shards/shard-b.md",
-    "title": "學府修業畫面與接線設計（分片索引） — 2–3 引擎 API 速查、畫面總覽與記憶體限制",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1217",
-    "path": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計-shards/shard-c.md",
-    "title": "學府修業畫面與接線設計（分片索引） — 4 入學、修業主畫面、打斷宿主、結業串接",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1218",
-    "path": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計-shards/shard-d.md",
-    "title": "學府修業畫面與接線設計（分片索引） — 5–8 外界凍結、驗收、任務拆分、未決事項",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1219",
-    "path": "docs/遊戲規格文件/系統規格書/轉職與宿命系統-shards/shard-b.md",
-    "title": "轉職與宿命系統規格（分片索引） — F–J 公式／劇本／字串／Data Schema／名詞",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1220",
-    "path": "docs/遊戲規格文件/系統規格書/轉職與宿命系統-shards/shard-c.md",
-    "title": "轉職與宿命系統規格（分片索引） — MCQ 決策記錄（Q61–Q65）",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1221",
-    "path": "docs/遊戲規格文件/系統規格書/轉職與宿命系統.md",
-    "title": "轉職與宿命系統規格（分片索引）",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1222",
-    "path": "docs/遊戲規格文件/系統規格書/關卡設計系統-shards/shard-b.md",
-    "title": "關卡設計系統規格（分片索引） — F–J 視覺分層／主題關卡／攝影機／互動物件／共識摘要",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1223",
-    "path": "docs/遊戲規格文件/系統規格書/關卡設計系統-shards/shard-c.md",
-    "title": "關卡設計系統規格（分片索引） — MCQ 決策記錄／Boss AI 與特殊挑戰機制",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1224",
-    "path": "docs/遊戲規格文件/系統規格書/關卡設計系統.md",
-    "title": "關卡設計系統規格（分片索引）",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1226",
-    "path": "docs/遊戲規格文件/系統規格書/共用框架總綱規格書-shards/shard-b.md",
-    "title": "共用框架總綱規格書（分片索引） — 5 共通網路協定層（核心原則）",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1227",
-    "path": "docs/遊戲規格文件/系統規格書/共用框架總綱規格書-shards/shard-c.md",
-    "title": "共用框架總綱規格書（分片索引） — 6–8 依賴關係、文件連結、檢查清單",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1228",
-    "path": "docs/遊戲規格文件/系統規格書/共用框架總綱規格書-shards/shard-d.md",
-    "title": "共用框架總綱規格書（分片索引） — 9–11 實作卡總順序、待決大方向、新增框架候選",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1229",
-    "path": "docs/遊戲規格文件/系統規格書/共用框架總綱規格書-shards/shard-e.md",
-    "title": "共用框架總綱規格書（分片索引） — 12 一年循環 MVP 切分（PROG-2-9213）",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1230",
-    "path": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計-shards/shard-e.md",
-    "title": "學府修業畫面與接線設計（分片索引） — 9 依賴的共用框架與共通 API",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1231",
-    "path": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計-shards/shard-f.md",
-    "title": "學府修業畫面與接線設計（分片索引） — 10 學府實作卡拆分建議（依共用框架）、11 待決選擇題",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1232",
-    "path": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計-shards/shard-g.md",
-    "title": "學府修業畫面與接線設計（分片索引） — 12 學府人源缺口方案（待決選擇題 Q13）",
-    "category": "spec"
-  },
-  {
     "id": "doc_spec_1233",
     "path": "docs/遊戲規格文件/系統規格書/首子誕生與少年名將開場流程規格書.md",
     "title": "首子誕生與少年名將開場流程規格書（分片索引）",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1234",
-    "path": "docs/遊戲規格文件/系統規格書/首子誕生與少年名將開場流程規格書-shards/shard-a.md",
-    "title": "首子誕生與少年名將開場流程規格書（分片索引） — 0 結論、1 開場總順序、2 少年名將挑選、3 首子與貂蟬結緣的關係、4 首子流程時間點",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1235",
-    "path": "docs/遊戲規格文件/系統規格書/首子誕生與少年名將開場流程規格書-shards/shard-b.md",
-    "title": "首子誕生與少年名將開場流程規格書（分片索引） — 5 取名與綽號、6 出生禮（共用框架對應）、7 周歲抓周、8 存檔與 API、9 驗收、10 衝突與待決",
     "category": "spec"
   },
   {
@@ -7458,12 +6804,6 @@
     "category": "spec"
   },
   {
-    "id": "doc_spec_1273",
-    "path": "docs/遊戲規格文件/系統規格書/世界觀與故事總綱規格書.md",
-    "title": "世界觀與故事總綱規格書（分片索引）",
-    "category": "spec"
-  },
-  {
     "id": "doc_spec_1274",
     "path": "docs/遊戲規格文件/系統規格書/世界觀與故事總綱規格書-shards/shard-a.md",
     "title": "世界觀與故事總綱規格書（分片索引） — 0–4 結論、一頁版故事大綱、世界設定、主線長期謎題、舊設定作廢清單",
@@ -7644,114 +6984,6 @@
     "category": "spec"
   },
   {
-    "id": "doc_spec_1308",
-    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-a.md",
-    "title": "名詞定義文件（分片索引） — 前言覆寫裁定與命名規則",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1309",
-    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-a/shard-a-part-1.md",
-    "title": "名詞定義文件（分片索引） — 前言覆寫裁定與命名規則",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1310",
-    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-a/shard-a-part-2.md",
-    "title": "命名統一規則",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1311",
-    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-a/shard-a-part-3.md",
-    "title": "shard-a-part-3",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1312",
-    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-b.md",
-    "title": "名詞定義文件（分片索引） — 全系統名詞總表",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1313",
-    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-b/shard-b-part-1.md",
-    "title": "名詞定義文件（分片索引） — 全系統名詞總表",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1314",
-    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-b/shard-b-part-2.md",
-    "title": "英靈世家系統",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1315",
-    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-b/shard-b-part-3.md",
-    "title": "因子爆發系統",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1316",
-    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-b/shard-b-part-4.md",
-    "title": "武將日誌與離線互動系統",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1317",
-    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-b/shard-b-part-5.md",
-    "title": "大廳系統",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1318",
-    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-b/shard-b-part-6.md",
-    "title": "資源循環系統",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1319",
-    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-b/shard-b-part-7.md",
-    "title": "血統正規化",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1320",
-    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-c.md",
-    "title": "名詞定義文件（分片索引） — MCQ 決策記錄（Q61–Q65）",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1321",
-    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-c/shard-c-part-1.md",
-    "title": "名詞定義文件（分片索引） — MCQ 決策記錄（Q61–Q65）",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1322",
-    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-c/shard-c-part-2.md",
-    "title": "🗳 MCQ 決策記錄（Q65）",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1324",
-    "path": "docs/遊戲規格文件/系統規格書/共用框架總綱規格書-shards/shard-f.md",
-    "title": "共用框架總綱規格書（分片索引） — 14 UI 主題系統與語系（PROG-2-9832）",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1325",
-    "path": "docs/遊戲規格文件/系統規格書/戰場適性系統-shards/shard-d.md",
-    "title": "戰場適性系統規格書（分片索引） — K–Q 天氣代碼、季節機率、劇情固定、排程、戰前顯示、JSON、驗收（PROG-2-9735）",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1328",
-    "path": "docs/遊戲規格文件/系統規格書/騎術系統與馬廄規格書.md",
-    "title": "騎術系統與馬廄規格書（分片索引）",
-    "category": "spec"
-  },
-  {
     "id": "doc_spec_1329",
     "path": "docs/遊戲規格文件/系統規格書/騎術系統與馬廄規格書-shards/shard-a.md",
     "title": "騎術系統與馬廄規格書（分片索引） — 1–4 定位、三級騎術、取得途徑、名駒（收服養成羈絆）",
@@ -7761,12 +6993,6 @@
     "id": "doc_spec_1330",
     "path": "docs/遊戲規格文件/系統規格書/騎術系統與馬廄規格書-shards/shard-b.md",
     "title": "騎術系統與馬廄規格書（分片索引） — 5–8 馬廄與配種、共用框架對應、介面演出、驗收拆卡",
-    "category": "spec"
-  },
-  {
-    "id": "doc_spec_1331",
-    "path": "docs/遊戲規格文件/系統規格書/友誼行為權重表規格書.md",
-    "title": "友誼行為權重表規格書（草案）",
     "category": "spec"
   },
   {
@@ -7854,12 +7080,6 @@
     "category": "spec"
   },
   {
-    "id": "doc_spec_1349",
-    "path": "docs/遊戲規格文件/系統規格書/共用框架總綱規格書.md",
-    "title": "共用框架總綱規格書（分片索引）",
-    "category": "spec"
-  },
-  {
     "id": "doc_spec_1350",
     "path": "docs/遊戲規格文件/系統規格書/神秘圖鑑總規格書.md",
     "title": "神秘圖鑑總規格書（含記憶碎片、近現代道具、集體覺醒）",
@@ -7941,6 +7161,786 @@
     "id": "doc_spec_1363",
     "path": "docs/遊戲規格文件/系統規格書/Q版武將作息表與喜好查看規格書.md",
     "title": "Q版武將作息表與喜好查看規格書（QSCHED-01）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1364",
+    "path": "docs/遊戲規格文件/正式規格矛盾審查-shards/s2.md",
+    "title": "正式規格矛盾審查 — 2. 仍待處理",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1365",
+    "path": "docs/遊戲規格文件/正式規格矛盾審查-shards/s3.md",
+    "title": "正式規格矛盾審查 — 3. 審查結論",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1366",
+    "path": "docs/遊戲規格文件/正式規格矛盾審查.md",
+    "title": "正式規格矛盾審查",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1367",
+    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-a.md",
+    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 0–1 結論、定位與三節點因果、新玩家節奏",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1368",
+    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-b.md",
+    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 2 首子誕生驚喜流程、命名與綽號、出生禮",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1369",
+    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-c.md",
+    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 3–4 時間流速與成長節點與時間線、觸發與外界時間與防重讀",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1370",
+    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-d.md",
+    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 5 選路、心願路線、職業屬性與專長",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1371",
+    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-e.md",
+    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 6 大富翁盤面",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1372",
+    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-f.md",
+    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 7 產出、稀有度、寶物與道具清單、因子印記互動",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1373",
+    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-g.md",
+    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 8–9 對抓周與學府的回寫、少年名將適用性",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1374",
+    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-h.md",
+    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 10–11 畫面演出與資產、資料結構",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1375",
+    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-i.md",
+    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 12–13 衝突與待裁決選擇題、實作卡拆分",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1376",
+    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-j.md",
+    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 14 中期一年一回合與 AI 委託",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1377",
+    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-k.md",
+    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 15 分齡加速成長（上）原則、母乳與乳母、時光藥水、節點與年齡呈現、後期淡出",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1378",
+    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-l.md",
+    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 16 分齡加速成長（下）特殊食物、廚師與家族酒店接口、10 歲起派內政、歲月補償",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1379",
+    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-m.md",
+    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 17 自動開寶模式（第二個孩子起）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1380",
+    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書-shards/shard-n.md",
+    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引） — 18 共用 base 框架對應與建議新增共用框架候選",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1381",
+    "path": "docs/遊戲規格文件/系統規格書/子嗣十歲歷練四路大富翁與職業屬性規格書.md",
+    "title": "子嗣十歲歷練四路大富翁與職業屬性規格書（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1382",
+    "path": "docs/遊戲規格文件/系統規格書/友誼行為權重表規格書.md",
+    "title": "友誼行為權重表規格書（草案）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1383",
+    "path": "docs/遊戲規格文件/系統規格書/世界觀與故事總綱規格書.md",
+    "title": "世界觀與故事總綱規格書（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1384",
+    "path": "docs/遊戲規格文件/系統規格書/共用框架總綱規格書-shards/shard-b.md",
+    "title": "共用框架總綱規格書（分片索引） — 5 共通網路協定層（核心原則）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1385",
+    "path": "docs/遊戲規格文件/系統規格書/共用框架總綱規格書-shards/shard-c.md",
+    "title": "共用框架總綱規格書（分片索引） — 6–8 依賴關係、文件連結、檢查清單",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1386",
+    "path": "docs/遊戲規格文件/系統規格書/共用框架總綱規格書-shards/shard-d.md",
+    "title": "共用框架總綱規格書（分片索引） — 9–11 實作卡總順序、待決大方向、新增框架候選",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1387",
+    "path": "docs/遊戲規格文件/系統規格書/共用框架總綱規格書-shards/shard-e.md",
+    "title": "共用框架總綱規格書（分片索引） — 12 一年循環 MVP 切分（PROG-2-9213）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1388",
+    "path": "docs/遊戲規格文件/系統規格書/共用框架總綱規格書-shards/shard-f.md",
+    "title": "共用框架總綱規格書（分片索引） — 14 UI 主題系統與語系（PROG-2-9832）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1389",
+    "path": "docs/遊戲規格文件/系統規格書/共用框架總綱規格書.md",
+    "title": "共用框架總綱規格書（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1390",
+    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-a.md",
+    "title": "名詞定義文件（分片索引） — 前言覆寫裁定與命名規則",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1391",
+    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-a/shard-a-part-1.md",
+    "title": "名詞定義文件（分片索引） — 前言覆寫裁定與命名規則",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1392",
+    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-a/shard-a-part-2.md",
+    "title": "命名統一規則",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1393",
+    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-a/shard-a-part-3.md",
+    "title": "shard-a-part-3",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1394",
+    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-b.md",
+    "title": "名詞定義文件（分片索引） — 全系統名詞總表",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1395",
+    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-b/shard-b-part-1.md",
+    "title": "名詞定義文件（分片索引） — 全系統名詞總表",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1396",
+    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-b/shard-b-part-2.md",
+    "title": "英靈世家系統",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1397",
+    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-b/shard-b-part-3.md",
+    "title": "因子爆發系統",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1398",
+    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-b/shard-b-part-4.md",
+    "title": "武將日誌與離線互動系統",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1399",
+    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-b/shard-b-part-5.md",
+    "title": "大廳系統",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1400",
+    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-b/shard-b-part-6.md",
+    "title": "資源循環系統",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1401",
+    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-b/shard-b-part-7.md",
+    "title": "血統正規化",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1402",
+    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-c.md",
+    "title": "名詞定義文件（分片索引） — MCQ 決策記錄（Q61–Q65）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1403",
+    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-c/shard-c-part-1.md",
+    "title": "名詞定義文件（分片索引） — MCQ 決策記錄（Q61–Q65）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1404",
+    "path": "docs/遊戲規格文件/系統規格書/名詞定義文件-shards/shard-c/shard-c-part-2.md",
+    "title": "🗳 MCQ 決策記錄（Q65）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1405",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系漸進揭露里程碑總綱規格書-shards/shard-b.md",
+    "title": "血統與家系漸進揭露里程碑總綱規格書（分片索引） — F–J 公式／劇本／字串／Data Schema／名詞",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1406",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系漸進揭露里程碑總綱規格書-shards/shard-c.md",
+    "title": "血統與家系漸進揭露里程碑總綱規格書（分片索引） — K 四階段揭露與後續分冊對應索引",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1407",
+    "path": "docs/遊戲規格文件/系統規格書/血統與家系漸進揭露里程碑總綱規格書.md",
+    "title": "血統與家系漸進揭露里程碑總綱規格書（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1408",
+    "path": "docs/遊戲規格文件/系統規格書/城防城牆垛口外側懸掛生鐵滾動地刺橫樑阻截突入平台第五階狀態機規格書.md",
+    "title": "城防城牆垛口外側懸掛生鐵滾動地刺橫樑阻截突入平台第五階狀態機規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1409",
+    "path": "docs/遊戲規格文件/系統規格書/城防城牆垛口外側懸掛生鐵滾動防護圓筒阻隔登城攀爬第五階狀態機規格書.md",
+    "title": "城防城牆垛口外側懸掛生鐵滾動防護圓筒阻隔登城攀爬第五階狀態機規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1410",
+    "path": "docs/遊戲規格文件/系統規格書/城防城牆垛口外側懸掛生鐵滾動齒輪橫筒彈落登城長梯第五階狀態機規格書.md",
+    "title": "城防城牆垛口外側懸掛生鐵滾動齒輪橫筒彈落登城長梯第五階狀態機規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1411",
+    "path": "docs/遊戲規格文件/系統規格書/城防城牆垛口外側懸掛絞盤牽引重型生鐵倒鉤翻板清掃雲梯隊列第五階狀態機規格書.md",
+    "title": "城防城牆垛口外側懸掛絞盤牽引重型生鐵倒鉤翻板清掃雲梯隊列第五階狀態機規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1412",
+    "path": "docs/遊戲規格文件/系統規格書/首子誕生與少年名將開場流程規格書-shards/shard-a.md",
+    "title": "首子誕生與少年名將開場流程規格書（分片索引） — 0 結論、1 開場總順序、2 少年名將挑選、3 首子與貂蟬結緣的關係、4 首子流程時間點",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1413",
+    "path": "docs/遊戲規格文件/系統規格書/首子誕生與少年名將開場流程規格書-shards/shard-b.md",
+    "title": "首子誕生與少年名將開場流程規格書（分片索引） — 5 取名與綽號、6 出生禮（共用框架對應）、7 周歲抓周、8 存檔與 API、9 驗收、10 衝突與待決",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1414",
+    "path": "docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統-shards/fj.md",
+    "title": "家族關係（史實相性）系統 — F–J",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1415",
+    "path": "docs/遊戲規格文件/系統規格書/家族關係（史實相性）系統.md",
+    "title": "家族關係（史實相性）系統",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1416",
+    "path": "docs/遊戲規格文件/系統規格書/家業經營與世家系統規格書-shards/shard-a.md",
+    "title": "家業經營與世家系統規格書（分片索引） — 0–2 結論、定位與節奏、與既有系統分界",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1417",
+    "path": "docs/遊戲規格文件/系統規格書/家業經營與世家系統規格書-shards/shard-b.md",
+    "title": "家業經營與世家系統規格書（分片索引） — 3 依賴的共用框架（六套 base 對照與候選）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1418",
+    "path": "docs/遊戲規格文件/系統規格書/家業經營與世家系統規格書-shards/shard-c.md",
+    "title": "家業經營與世家系統規格書（分片索引） — 4–5 幕府等級與解鎖、家業通則",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1419",
+    "path": "docs/遊戲規格文件/系統規格書/家業經營與世家系統規格書-shards/shard-d.md",
+    "title": "家業經營與世家系統規格書（分片索引） — 6 六大家業逐項",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1420",
+    "path": "docs/遊戲規格文件/系統規格書/家業經營與世家系統規格書-shards/shard-e.md",
+    "title": "家業經營與世家系統規格書（分片索引） — 7 廚房與菜色產出（成長膳，接 9198）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1421",
+    "path": "docs/遊戲規格文件/系統規格書/家業經營與世家系統規格書-shards/shard-f.md",
+    "title": "家業經營與世家系統規格書（分片索引） — 8–9 出海貿易、世家包裝與郡望連動",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1422",
+    "path": "docs/遊戲規格文件/系統規格書/家業經營與世家系統規格書-shards/shard-g.md",
+    "title": "家業經營與世家系統規格書（分片索引） — 10–11 人力取捨與退役、畫面與美術需求",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1423",
+    "path": "docs/遊戲規格文件/系統規格書/家業經營與世家系統規格書-shards/shard-h.md",
+    "title": "家業經營與世家系統規格書（分片索引） — 12 資料結構",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1424",
+    "path": "docs/遊戲規格文件/系統規格書/家業經營與世家系統規格書-shards/shard-i.md",
+    "title": "家業經營與世家系統規格書（分片索引） — 13–14 衝突與待裁決選擇題、實作卡拆分",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1425",
+    "path": "docs/遊戲規格文件/系統規格書/培育系統-shards/shard-b.md",
+    "title": "培育系統規格（分片索引） — F 數值模型與公式（含 F-7 戰法槽位）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1426",
+    "path": "docs/遊戲規格文件/系統規格書/培育系統-shards/shard-c.md",
+    "title": "培育系統規格（分片索引） — G–J 劇本／字串／Data Schema／名詞",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1427",
+    "path": "docs/遊戲規格文件/系統規格書/培育系統-shards/shard-d.md",
+    "title": "培育系統規格（分片索引） — N 血脈補遺／MCQ 決策／雙層數值",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1428",
+    "path": "docs/遊戲規格文件/系統規格書/培育系統.md",
+    "title": "培育系統規格（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1429",
+    "path": "docs/遊戲規格文件/系統規格書/教官系統（支援卡）-shards/shard-b.md",
+    "title": "教官系統（支援卡）規格（分片索引） — F 公式相關（支援卡 UI／TP／靈感機率／星等突破／爆發）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1430",
+    "path": "docs/遊戲規格文件/系統規格書/教官系統（支援卡）-shards/shard-c.md",
+    "title": "教官系統（支援卡）規格（分片索引） — G–J 劇本／字串／Data Schema／名詞",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1431",
+    "path": "docs/遊戲規格文件/系統規格書/教官系統（支援卡）-shards/shard-d.md",
+    "title": "教官系統（支援卡）規格（分片索引） — K–M 師友羈絆／好友借用／溢出轉化／MCQ 決策記錄",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1432",
+    "path": "docs/遊戲規格文件/系統規格書/教官系統（支援卡）.md",
+    "title": "教官系統（支援卡）規格（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1433",
+    "path": "docs/遊戲規格文件/系統規格書/野戰精銳步兵雙手長柄月牙雙股戟格擋重兵與順勢卸力反制第五階狀態機規格書.md",
+    "title": "野戰精銳步兵雙手長柄月牙雙股戟格擋重兵與順勢卸力反制第五階狀態機規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1434",
+    "path": "docs/遊戲規格文件/系統規格書/野戰精銳步兵雙手長柄月牙雙頭長矛防禦架開重擊與轉身回防第五階狀態機規格書.md",
+    "title": "野戰精銳步兵雙手長柄月牙雙頭長矛防禦架開重擊與轉身回防第五階狀態機規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1435",
+    "path": "docs/遊戲規格文件/系統規格書/野戰精銳步兵雙手長柄鉤鐮雙尖大槍挑飛兵刃與沉腰直刺第五階狀態機規格書.md",
+    "title": "野戰精銳步兵雙手長柄鉤鐮雙尖大槍挑飛兵刃與沉腰直刺第五階狀態機規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1436",
+    "path": "docs/遊戲規格文件/系統規格書/野戰精銳步兵雙手長柄鉤鐮雙股破甲錐卡鎖重兵與沉肩反刺第五階狀態機規格書.md",
+    "title": "野戰精銳步兵雙手長柄鉤鐮雙股破甲錐卡鎖重兵與沉肩反刺第五階狀態機規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1437",
+    "path": "docs/遊戲規格文件/系統規格書/野戰精銳弩兵床弩加裝生鐵三腳地錨支架防後坐力偏移第二階狀態機規格書.md",
+    "title": "野戰精銳弩兵床弩加裝生鐵三腳地錨支架防後坐力偏移第二階狀態機規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1438",
+    "path": "docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-b.md",
+    "title": "結緣系統（配種）規格（分片索引） — F–J 公式／劇本／字串／Data Schema／名詞",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1439",
+    "path": "docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-c.md",
+    "title": "結緣系統（配種）規格（分片索引） — K–L 近親繁殖範圍／精力值與生育限制",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1440",
+    "path": "docs/遊戲規格文件/系統規格書/結緣系統-shards/shard-d.md",
+    "title": "結緣系統（配種）規格（分片索引） — M 血統模擬器／MCQ 決策記錄",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1441",
+    "path": "docs/遊戲規格文件/系統規格書/結緣系統（配種）.md",
+    "title": "結緣系統（配種）規格（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1442",
+    "path": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計-shards/shard-a.md",
+    "title": "學府修業畫面與接線設計（分片索引） — 0–1 結論、新舊分工、舊存檔遷移",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1443",
+    "path": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計-shards/shard-b.md",
+    "title": "學府修業畫面與接線設計（分片索引） — 2–3 引擎 API 速查、畫面總覽與記憶體限制",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1444",
+    "path": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計-shards/shard-c.md",
+    "title": "學府修業畫面與接線設計（分片索引） — 4 入學、修業主畫面、打斷宿主、結業串接",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1445",
+    "path": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計-shards/shard-d.md",
+    "title": "學府修業畫面與接線設計（分片索引） — 5–8 外界凍結、驗收、任務拆分、未決事項",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1446",
+    "path": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計-shards/shard-e.md",
+    "title": "學府修業畫面與接線設計（分片索引） — 9 依賴的共用框架與共通 API",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1447",
+    "path": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計-shards/shard-f.md",
+    "title": "學府修業畫面與接線設計（分片索引） — 10 學府實作卡拆分建議（依共用框架）、11 待決選擇題",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1448",
+    "path": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計-shards/shard-g.md",
+    "title": "學府修業畫面與接線設計（分片索引） — 12 學府人源缺口方案（待決選擇題 Q13）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1449",
+    "path": "docs/遊戲規格文件/系統規格書/學府修業畫面與接線設計.md",
+    "title": "學府修業畫面與接線設計（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1450",
+    "path": "docs/遊戲規格文件/系統規格書/戰法系統-shards/fh.md",
+    "title": "戰法系統 — F、H 公式與 UI 約束",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1451",
+    "path": "docs/遊戲規格文件/系統規格書/戰法系統-shards/g.md",
+    "title": "戰法系統 — G 戰法大清單",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1452",
+    "path": "docs/遊戲規格文件/系統規格書/戰法系統-shards/g5.md",
+    "title": "戰法系統 — G-5 天賦戰法初始庫",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1453",
+    "path": "docs/遊戲規格文件/系統規格書/戰法系統.md",
+    "title": "戰法系統",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1454",
+    "path": "docs/遊戲規格文件/系統規格書/戰法場景規格書-shards/df.md",
+    "title": "戰法場景規格書 — D–F",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1455",
+    "path": "docs/遊戲規格文件/系統規格書/戰法場景規格書-shards/meta.md",
+    "title": "戰法場景規格書 — MCQ 與實作紀錄",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1456",
+    "path": "docs/遊戲規格文件/系統規格書/戰法場景規格書.md",
+    "title": "戰法場景規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1457",
+    "path": "docs/遊戲規格文件/系統規格書/戰場夜戰順風施放連環風力飛石旋盤戰車平射清理阻礙工事第五階狀態機規格書.md",
+    "title": "戰場夜戰順風施放連環風力飛石旋盤戰車平射清理阻礙工事第五階狀態機規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1458",
+    "path": "docs/遊戲規格文件/系統規格書/戰場夜戰順風施放連環風力飛石旋盤戰車低平彈道直射破除陷馬坑偽裝網第五階狀態機規格書.md",
+    "title": "戰場夜戰順風施放連環風力飛石旋盤戰車低平彈道直射破除陷馬坑偽裝網第五階狀態機規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1459",
+    "path": "docs/遊戲規格文件/系統規格書/戰場夜戰順風施放連環風力飛石旋盤戰車扇面拋射生石灰白霧遮蔽城防視線第五階狀態機規格書.md",
+    "title": "戰場夜戰順風施放連環風力飛石旋盤戰車扇面拋射生石灰白霧遮蔽城防視線第五階狀態機規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1460",
+    "path": "docs/遊戲規格文件/系統規格書/戰場夜戰順風施放連環風力飛石旋盤戰車扇面拋射生鐵破甲菱形釘封鎖敵軍步陣退路第五階狀態機規格書.md",
+    "title": "戰場夜戰順風施放連環風力飛石旋盤戰車扇面拋射生鐵破甲菱形釘封鎖敵軍步陣退路第五階狀態機規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1461",
+    "path": "docs/遊戲規格文件/系統規格書/戰場夜戰順風施放連環風力飛石旋盤戰車橫向散佈煙霧引導衝鋒第五階狀態機規格書.md",
+    "title": "戰場夜戰順風施放連環風力飛石旋盤戰車橫向散佈煙霧引導衝鋒第五階狀態機規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1462",
+    "path": "docs/遊戲規格文件/系統規格書/戰場陣地部署重型拒馬連環生鐵鏈條防騎兵衝撞第一階狀態機規格書.md",
+    "title": "戰場陣地部署重型拒馬連環生鐵鏈條防騎兵衝撞第一階狀態機規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1463",
+    "path": "docs/遊戲規格文件/系統規格書/戰場陣地部署重型拒馬連環生鐵鏈條防騎兵衝撞第二階狀態機規格書.md",
+    "title": "戰場陣地部署重型拒馬連環生鐵鏈條防騎兵衝撞第二階狀態機規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1464",
+    "path": "docs/遊戲規格文件/系統規格書/戰場陣地部署重型拒馬連環生鐵鏈條防騎兵衝撞第三階狀態機規格書.md",
+    "title": "戰場陣地部署重型拒馬連環生鐵鏈條防騎兵衝撞第三階狀態機規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1465",
+    "path": "docs/遊戲規格文件/系統規格書/戰場適性系統-shards/shard-d.md",
+    "title": "戰場適性系統規格書（分片索引） — K–Q 天氣代碼、季節機率、劇情固定、排程、戰前顯示、JSON、驗收（PROG-2-9735）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1466",
+    "path": "docs/遊戲規格文件/系統規格書/戰場營寨大門加裝雙重淬火生鐵橫閂與防衝撞斜撐第三階狀態機規格書.md",
+    "title": "戰場營寨大門加裝雙重淬火生鐵橫閂與防衝撞斜撐第三階狀態機規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1467",
+    "path": "docs/遊戲規格文件/系統規格書/戰場營寨大門加裝雙重淬火生鐵橫閂與防衝撞斜撐第五階狀態機規格書.md",
+    "title": "戰場營寨大門加裝雙重淬火生鐵橫閂與防衝撞斜撐第五階狀態機規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1468",
+    "path": "docs/遊戲規格文件/系統規格書/戰場營寨大門加裝雙重淬火生鐵橫閂與防衝撞斜撐第四階狀態機規格書.md",
+    "title": "戰場營寨大門加裝雙重淬火生鐵橫閂與防衝撞斜撐第四階狀態機規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1469",
+    "path": "docs/遊戲規格文件/系統規格書/戰場營寨箭樓部署生鐵聚光銅鏡照射防夜間偷襲第一階狀態機規格書.md",
+    "title": "戰場營寨箭樓部署生鐵聚光銅鏡照射防夜間偷襲第一階狀態機規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1470",
+    "path": "docs/遊戲規格文件/系統規格書/轉蛋系統-shards/formula.md",
+    "title": "轉蛋系統規格書 — F–G 公式與劇本／主視覺",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1471",
+    "path": "docs/遊戲規格文件/系統規格書/轉蛋系統-shards/rulings.md",
+    "title": "轉蛋系統規格書 — L 與 MCQ 裁決紀錄",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1472",
+    "path": "docs/遊戲規格文件/系統規格書/轉蛋系統-shards/schema.md",
+    "title": "轉蛋系統規格書 — H–I 字串與 Data Schema",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1473",
+    "path": "docs/遊戲規格文件/系統規格書/轉蛋系統-shards/terms.md",
+    "title": "轉蛋系統規格書 — J–K 名詞定義與傳承邊界",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1474",
+    "path": "docs/遊戲規格文件/系統規格書/轉蛋系統.md",
+    "title": "轉蛋系統規格書",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1475",
+    "path": "docs/遊戲規格文件/系統規格書/轉職與宿命系統-shards/shard-b.md",
+    "title": "轉職與宿命系統規格（分片索引） — F–J 公式／劇本／字串／Data Schema／名詞",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1476",
+    "path": "docs/遊戲規格文件/系統規格書/轉職與宿命系統-shards/shard-c.md",
+    "title": "轉職與宿命系統規格（分片索引） — MCQ 決策記錄（Q61–Q65）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1477",
+    "path": "docs/遊戲規格文件/系統規格書/轉職與宿命系統.md",
+    "title": "轉職與宿命系統規格（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1478",
+    "path": "docs/遊戲規格文件/系統規格書/騎術系統與馬廄規格書.md",
+    "title": "騎術系統與馬廄規格書（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1479",
+    "path": "docs/遊戲規格文件/系統規格書/關卡設計系統-shards/shard-b.md",
+    "title": "關卡設計系統規格（分片索引） — F–J 視覺分層／主題關卡／攝影機／互動物件／共識摘要",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1480",
+    "path": "docs/遊戲規格文件/系統規格書/關卡設計系統-shards/shard-c.md",
+    "title": "關卡設計系統規格（分片索引） — MCQ 決策記錄／Boss AI 與特殊挑戰機制",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1481",
+    "path": "docs/遊戲規格文件/系統規格書/關卡設計系統.md",
+    "title": "關卡設計系統規格（分片索引）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1482",
+    "path": "docs/遊戲規格文件/系統規格書/bloodline-symbol-slot-contract-v1.md",
+    "title": "血脈符號插槽契約 v1（bloodline-symbol-slot-contract-v1）",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1483",
+    "path": "docs/遊戲規格文件/整併疑問書-shards/q01-13.md",
+    "title": "整併疑問書 — Q1–Q13 與已裁決紀錄",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1484",
+    "path": "docs/遊戲規格文件/整併疑問書-shards/q14-30.md",
+    "title": "整併疑問書 — Q14–Q30",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1485",
+    "path": "docs/遊戲規格文件/整併疑問書-shards/q14-30/q14-30-part-1.md",
+    "title": "整併疑問書 — Q14–Q30",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1486",
+    "path": "docs/遊戲規格文件/整併疑問書-shards/q14-30/q14-30-part-2.md",
+    "title": "Q21. EP 評級門檻要以哪一套為正式標準？ C",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1487",
+    "path": "docs/遊戲規格文件/整併疑問書-shards/q14-30/q14-30-part-3.md",
+    "title": "Q27. 近親判定要以 `Bloodline_ID` 還是「共同祖先代數」作為正式權威？ C",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1488",
+    "path": "docs/遊戲規格文件/整併疑問書-shards/q31-40.md",
+    "title": "整併疑問書 — Q31–Q40",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1489",
+    "path": "docs/遊戲規格文件/整併疑問書-shards/q41-52.md",
+    "title": "整併疑問書 — Q41–Q52",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1490",
+    "path": "docs/遊戲規格文件/整併疑問書-shards/q53-63.md",
+    "title": "整併疑問書 — Q53–Q63",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1491",
+    "path": "docs/遊戲規格文件/整併疑問書-shards/q64-74.md",
+    "title": "整併疑問書 — Q64–Q74",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1492",
+    "path": "docs/遊戲規格文件/整併疑問書-shards/q75-plus.md",
+    "title": "整併疑問書 — Q75 起",
+    "category": "spec"
+  },
+  {
+    "id": "doc_spec_1493",
+    "path": "docs/遊戲規格文件/整併疑問書.md",
+    "title": "整併疑問書",
     "category": "spec"
   }
 ]
