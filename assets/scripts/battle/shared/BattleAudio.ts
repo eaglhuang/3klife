@@ -6,7 +6,7 @@ import { attackSfxFor } from './AttackSfxMapping';
 import { SfxThrottle, parseSfxThrottleConfig } from './SfxThrottle';
 import {
   BattleAudioLayersConfig, DEFAULT_BATTLE_AUDIO_LAYERS, DieBoomStagger, FootstepCapState, HitSfxState,
-  createFootstepCapState, createHitSfxState, footstepClipFor, footstepDelayMs, jitterFootstepVolume, parseBattleAudioLayersConfig, pickTacticSfx, pickUnitAttackSfx, tryAcquireFootstep,
+  createFootstepCapState, createHitSfxState, footstepClipFor, footstepDelayMs, jitterFootstepVolume, parseBattleAudioLayersConfig, pickTacticLayers, pickTacticSfx, pickUnitAttackSfx, tryAcquireFootstep,
 } from './BattleAudioLayers';
 import { SfxVoicePool, SFX_CATEGORIES, type SfxCategory } from './SfxVoicePool';
 import { BattleBgmController, type BgmPort, type BgmTimerPort } from './BattleBgm';
@@ -228,16 +228,34 @@ export function playTacticSfx(group: string, volume = 1.0): string | null {
   ensureAudioLayersConfig();
   const picked = pickTacticSfx(group, battleAudioLayers, Math.random, sfxPickState);
   if (!picked) return null;
-  playBattleClip(picked.clip, picked.volume * volume, 'tactic');
+  const slot = playBattleClip(picked.clip, picked.volume * volume, 'tactic');
+  // PROG-2-10215：額外疊層（水淹水花、回復閃光）算同一施放群組：主音過了發聲池才疊，疊層不另占名額、沿用主音的人多降音量
+  if (slot) {
+    for (const l of pickTacticLayers(group, battleAudioLayers, Math.random)) {
+      setTimeout(() => playTacticLayerClip(l.clip, l.volume * volume * slot.volumeScale), l.delayMs);
+      tacticLayerCount.scheduled++;
+    }
+  }
   return picked.clip;
 }
 
+/** 戰法額外疊層播放計數（證據用） */
+export const tacticLayerCount = { scheduled: 0, played: 0 };
+
+function playTacticLayerClip(clipName: string, volume: number): void {
+  try {
+    installBattleSfxGate();
+    services().audio.playSfx(clipName, volume);
+    tacticLayerCount.played++;
+  } catch { /* 靜音 */ }
+}
+
 /** 直接用 clip 名稱播（受擊分層、腳步變調版本用）；閘門與靜音規則同 playBattleAudio。 */
-export function playBattleClip(clipName: string, volume = 1.0, category: SfxCategory = 'other'): void {
+export function playBattleClip(clipName: string, volume = 1.0, category: SfxCategory = 'other'): { volumeScale: number } | null {
   // PROG-2-10134：先過發聲池（同時發聲上限、優先級、類別每秒上限、人多降音量），過了才交給統一閘門
   const t = nowMs();
   const slot = sfxPool.acquire(category, clipName, t);
-  if (!slot.ok) return;
+  if (!slot.ok) return null;
   // PROG-2-9439／9481：節流改在 AudioSystem 的統一閘門做，這裡只確保閘門已裝上，不再自己判斷（避免算兩次）
   // 音效系統未就緒或缺檔都靜音略過，不可丟例外（PROG-2-9357）
   try {
@@ -245,6 +263,7 @@ export function playBattleClip(clipName: string, volume = 1.0, category: SfxCate
     services().audio.playSfx(clipName, volume * slot.volumeScale);
     recordPlayCost(clipName, nowMs() - t);
   } catch { /* 靜音 */ }
+  return { volumeScale: slot.volumeScale };
 }
 
 /** 發聲池與出手音輪播狀態（PROG-2-10134）：預先配置一次，戰場內重用，不每次新建 */

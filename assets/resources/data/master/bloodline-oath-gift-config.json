@@ -1,0 +1,7 @@
+{
+  "giftTriggerChance": 0.65,
+  "statBonus": 1,
+  "statVsTagWeight": 0.5,
+  "triggerStages": ["birth", "zhouzhua"],
+  "maxGiftsPerChild": 1
+}
