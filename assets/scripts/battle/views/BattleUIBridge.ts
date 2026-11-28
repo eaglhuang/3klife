@@ -403,6 +403,7 @@ export class BattleUIBridge {
       svc.event.on(EVENT_NAMES.UnitAttackMissed,        this._onUnitAttackMissed.bind(this)),
       svc.event.on(EVENT_NAMES.UnitDamageBlocked,       this._onUnitDamageBlocked.bind(this)),
       svc.event.on(EVENT_NAMES.KinComboAttack,          this._onKinComboAttack.bind(this)),
+      svc.event.on(EVENT_NAMES.KinRescue,               this._onKinRescue.bind(this)),
       svc.event.on(EVENT_NAMES.RelationEventTriggered,  this._onRelationEventTriggered.bind(this)),
       svc.event.on(EVENT_NAMES.LastSpurtEntered,        this._onLastSpurtEntered.bind(this)),
       svc.event.on(EVENT_NAMES.StaminaExhausted,        this._onStaminaExhausted.bind(this)),
@@ -851,6 +852,17 @@ export class BattleUIBridge {
     this.appendLog(`${side}${helper.name} 與${attacker.name}史實合攻，追擊${target.name}`);
     this._enqueueCombatVisual(`kin-combo:${data.helperId}`, async () => {
       await (c.unitRenderer?.playAttackAnimationAsync(data.helperId, target.lane, target.depth) ?? Promise.resolve());
+    });
+  }
+
+  /** 生死相隨（PROG-2-10204）：記一行戰報，援護者頭上浮「生死相隨！」字（現有飄字機制，不新增美術） */
+  private _onKinRescue(data?: { rescuedId: string; helperId: string; rescuedName: string; helperName: string; sharedDamage: number; lane: number; depth: number }): void {
+    if (!data) return;
+    const c = this.ctx;
+    const t = (key: string, ...args: Array<string | number>) => services().i18n.t(key, ...args.map(String));
+    this.appendLog(t('ui.battle.kin_rescue.log', data.helperName, data.rescuedName, data.sharedDamage));
+    this._enqueueCombatVisual(`kin-rescue:${data.helperId}`, async () => {
+      c.unitRenderer?.playBuffConsumeValue(data.lane, data.depth, t('ui.battle.kin_rescue.float'));
     });
   }
 

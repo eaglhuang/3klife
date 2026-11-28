@@ -3246,5 +3246,7 @@
   "life.proto.enter": "生活層（開發）",
   "life.proto.btn.slot": "時段：{0} ▶",
   "life.proto.btn.season": "季節：{0} ▶",
-  "life.proto.stats": "Q頭 {0}　符號 {1}　符號元件 {2}"
+  "life.proto.stats": "Q頭 {0}　符號 {1}　符號元件 {2}",
+  "ui.battle.kin_rescue.float": "生死相隨！",
+  "ui.battle.kin_rescue.log": "{0}與{1}生死相隨，替其分攤 {2} 點傷害"
 }

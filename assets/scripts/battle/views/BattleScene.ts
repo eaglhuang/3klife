@@ -201,6 +201,8 @@ export class BattleScene extends Component {
       // 史實合攻（PROG-2-1065）：部隊來源武將的史實關係表；載入失敗時不觸發史實合攻
       await services().loadHistoricalPairs();
       this.ctrl.historicalPairs = services().historicalPairTable();
+      // 結義效果（PROG-2-10204）：動態關係快照（義兄弟／戰友）供士氣、援護、合攻讀取
+      this.ctrl.dynamicRelations = services().session.dynamicRelations.snapshot();
       await this.ctrl.loadData();
       SceneLoadProgress.step();
       UCUFLogger.info(LogCategory.BATTLE, "[BattleScene] BattleController 資料載入完成");
@@ -350,6 +352,10 @@ export class BattleScene extends Component {
       // 手牌綁到玩家持有的卡片實例（PROG-2-0579）：出陣 uid 才對得上星級與戰後經驗的鍵
       const initialCards = bindHeldTallyInstances(buildTallyCards(battleParams.selectedCardIds), services().session.tallyCards);
       this.battleScenePanel?.setCards(initialCards);
+      // 出戰名單：本場手牌虎符的來源武將 id + 主將，供義兄弟同陣士氣判定（PROG-2-10204）
+      this.ctrl.sortieLineupIds = [pg.id, ...initialCards
+        .map((card) => (card.instanceUid ? services().session.tallyCards[card.instanceUid]?.templateId : undefined))
+        .filter((id): id is string => !!id)];
       this.battleScenePanel?.setUltimateSkills(buildUltimateSkills(pg));
       SceneLoadProgress.step();
       this.battleScenePanel?.setTacticSummary(buildTacticSummary(pg).label, this.ctrl.getPlayerTacticPointState());
