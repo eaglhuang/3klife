@@ -5,6 +5,7 @@ import { dustBeatsFor, floodDriftSample, stepBobOffset } from '../shared/MoveFee
 import { sampleChargePose } from '../shared/SkillCastPresentation';
 import { DeployLandingSample, deployLandingTotalSec, landingCrossed, memberDeployDelay, sampleDeployLanding } from '../shared/DeployLanding';
 import { UnitSpineConfig } from '../shared/UnitPresentationConfig';
+import { acquireMergedSkeleton, releaseMergedSkeleton } from './SpineAtlasMerge';
 import { AttackStyle, pickAttackClip } from '../shared/AttackStyle';
 import { DuelExchange, DuelPresentationCore } from '../shared/DuelPresentationCore';
 
@@ -163,6 +164,11 @@ export class SpineUnitOverlay {
   private readonly nodePool = new Map<string, Node[]>();
   /** 戰前預載的骨架資料（PROG-2-10078）：持有一份引用，場景內不會被資源回收；clear() 時釋放。 */
   private readonly preloaded = new Map<string, sp.SkeletonData>();
+  /**
+   * 多頁圖集合併（PROG-2-10270）：原始骨架資料 → 單位實際使用的合併版。節點一律用合併版（頁數少的骨架原樣回傳），
+   * 每個原始資料在本疊層只取一次引用，clear() 時歸還，最後一個使用者離開才銷毀合併貼圖。
+   */
+  private readonly mergedData = new Map<sp.SkeletonData, sp.SkeletonData>();
   private duel: { core: DuelPresentationCore; ids: [string, string]; resolve: (played: boolean) => void } | null = null;
   /** 地面層容器（格子 buff 標記、揚塵）：每幀排序後固定送回最底，依序排在 index 0、1…（PROG-2-9708） */
   private groundNodes: () => ReadonlyArray<Node | null> = () => [];
@@ -201,7 +207,7 @@ export class SpineUnitOverlay {
         if (err || !data) { resolve(); return; }
         data.addRef();
         this.preloaded.set(config.path, data);
-        if (prewarmNodes) this.prewarmNodes(config.path, data, 1 + (config.squad?.length ?? 0));
+        if (prewarmNodes) this.prewarmNodes(config.path, this.renderDataOf(data), 1 + (config.squad?.length ?? 0));
         resolve();
       });
     }));
@@ -509,6 +515,19 @@ export class SpineUnitOverlay {
     this.nodePool.clear();
     for (const data of this.preloaded.values()) data.decRef();
     this.preloaded.clear();
+    // 節點都銷毀後才歸還合併貼圖
+    for (const source of this.mergedData.keys()) releaseMergedSkeleton(source);
+    this.mergedData.clear();
+  }
+
+  /** 單位實際渲染用的骨架資料（多頁圖集已合併成單頁；其餘原樣）。 */
+  private renderDataOf(source: sp.SkeletonData): sp.SkeletonData {
+    let merged = this.mergedData.get(source);
+    if (!merged) {
+      merged = acquireMergedSkeleton(source);
+      if (merged !== source) this.mergedData.set(source, merged); // 沒合併的不記，clear() 也就不用歸還
+    }
+    return merged;
   }
 
   /** 目前池內閒置節點數（測試與除錯用）；不帶路徑回傳全部。 */
@@ -753,11 +772,12 @@ export class SpineUnitOverlay {
         this.finishLoading(entry, false);
         return;
       }
-      const node = this.createNode(entry.config.path, parent, `SpineUnit_${id}`, data);
+      const renderData = this.renderDataOf(data);
+      const node = this.createNode(entry.config.path, parent, `SpineUnit_${id}`, renderData);
       entry.node = node;
       // 隊員直接沿用同一份 data（Cocos 對同一路徑只留一份骨架與貼圖），所以多兩個人只多節點與動畫狀態
       for (let i = 0; i < (entry.config.squad?.length ?? 0); i += 1) {
-        entry.followers.push(this.createNode(entry.config.path, parent, `SpineUnit_${id}_m${i + 1}`, data));
+        entry.followers.push(this.createNode(entry.config.path, parent, `SpineUnit_${id}_m${i + 1}`, renderData));
       }
       // 基礎染色（敵方騎兵紅色調）：池內節點取出時已被重設成白，這裡改回本單位的基礎色
       for (const n of [node, ...entry.followers]) {

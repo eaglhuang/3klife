@@ -18034,5 +18034,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10250.md",
     "title": "[PROG-2-10250] 戰場 draw call 合批（目標 <60）與頓格設定開關",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3353",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10270.md",
+    "title": "[PROG-2-10270] 戰場 Spine 多頁圖集執行期合併",
+    "category": "task"
   }
 ]

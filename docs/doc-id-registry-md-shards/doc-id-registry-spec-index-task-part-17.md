@@ -144,3 +144,4 @@
 | `doc_task_3348` | docs/agent-briefs/tasks/PROG/PROG-2-10269.md | [PROG-2-10269] 修 #2811 第 6、9 項 |
 | `doc_task_3349` | docs/agent-briefs/tasks/PROG/PROG-2-10271.md | PROG-2-10271：方案 C — 結緣選角畫面顯示關係標籤與加成 |
 | `doc_task_3352` | docs/agent-briefs/tasks/PROG/PROG-2-10250.md | [PROG-2-10250] 戰場 draw call 合批（目標 <60）與頓格設定開關 |
+| `doc_task_3353` | docs/agent-briefs/tasks/PROG/PROG-2-10270.md | [PROG-2-10270] 戰場 Spine 多頁圖集執行期合併 |

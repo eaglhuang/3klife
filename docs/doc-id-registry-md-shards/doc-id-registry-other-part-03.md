@@ -8,6 +8,21 @@
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
+| `doc_other_2833` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0027-dev-runner-guidance.task.md | TASK-AAO-0027 — dev runner 提示 |
+| `doc_other_2834` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0028-batch-playbook-docs.task.md | TASK-AAO-0028 — batch playbook 文件化 |
+| `doc_other_2835` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0029-task-lifecycle-deprecation.task.md | TASK-AAO-0029 — Low-level task lifecycle deprecation |
+| `doc_other_2836` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0030-crlf-policy.task.md | TASK-AAO-0030 — CRLF policy |
+| `doc_other_2837` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0031-background-work-pause-advisory.task.md | TASK-AAO-0031 — Background work pause advisory |
+| `doc_other_2838` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0032-artifact-commit-policy.task.md | TASK-AAO-0032 — Artifact commit policy 收斂 |
+| `doc_other_2839` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0033-aao-final-dogfood-sync.task.md | TASK-AAO-0033 — Final dogfood rerun 與雙 repo sync |
+| `doc_other_2840` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0034-next-selector-routing-memory.task.md | TASK-AAO-0034 — next explicit selector 與 routing memory |
+| `doc_other_2841` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0035-command-surface-consolidation-help-examples.task.md | TASK-AAO-0035 — Command surface consolidation 與 help examples |
+| `doc_other_2842` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0036-aao-acceptance-test-plan-premises.task.md | TASK-AAO-0036 — AAO acceptance test plan 與前提固化 |
+| `doc_other_2843` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0037-batch-checkpoint-commit-window.task.md | TASK-AAO-0037 — Batch checkpoint commit window |
+| `doc_other_2844` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0038-task-import-contract-fidelity.task.md | TASK-AAO-0038 — Task import contract fidelity |
+| `doc_other_2845` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0039-planning-only-ledger-audit-boundary.task.md | TASK-AAO-0039 — Planning-only ledger audit boundary |
+| `doc_other_2846` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0040-sandbox-git-process-diagnostic.task.md | TASK-AAO-0040 — Sandbox git process diagnostics |
+| `doc_other_2847` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0041-batch-checkpoint-hold.task.md | TASK-AAO-0041 — batch checkpoint --hold |
 | `doc_other_2848` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0042-batch-repair-continue.task.md | TASK-AAO-0042 — batch repair / continue |
 | `doc_other_2849` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0043-planning-repo-root-resolver.task.md | TASK-AAO-0043 — planning repo root resolver |
 | `doc_other_2850` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0044-batch-skip-resume.task.md | TASK-AAO-0044 — batch skip / resume |
@@ -280,18 +295,3 @@
 | `doc_other_3117` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0096-converge-adopter-workflows-and-retire-redundant-command-implementations.task.md | TASK-PRF-0096 Converge adopter workflows and retire redundant command implementations |
 | `doc_other_3118` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0097-reduce-runtime-dependency-closure-with-measured-feature-retirement.task.md | TASK-PRF-0097 Reduce runtime dependency closure with measured feature retirement |
 | `doc_other_3119` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0098-simplify-evidence-ownership-while-preserving-deviation-traceability.task.md | TASK-PRF-0098 Simplify evidence ownership while preserving deviation traceability |
-| `doc_other_3120` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0099-deliver-bounded-quickfix-workflow-with-fewer-operator-decisions.task.md | TASK-PRF-0099 Deliver bounded quickfix workflow with fewer operator decisions |
-| `doc_other_3121` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0100-verify-convergence-release-against-fixed-product-acceptance.task.md | TASK-PRF-0100 Verify convergence release against fixed product acceptance |
-| `doc_other_3122` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0101-integrate-millisecond-cost-score-into-product-proof.task.md | TASK-PRF-0101 Integrate millisecond cost score into product proof |
-| `doc_other_3123` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0102-instrument-mandatory-atm-gates-with-millisecond-telemetry.task.md | TASK-PRF-0102 Instrument mandatory ATM gates with millisecond telemetry |
-| `doc_other_3124` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0103-short-circuit-doctor-integration-parity-checks.task.md | TASK-PRF-0103 Short-circuit doctor integration parity checks |
-| `doc_other_3125` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0104-run-30-run-millisecond-gate-latency-benchmark.task.md | TASK-PRF-0104 Run 30-run millisecond gate latency benchmark |
-| `doc_other_3126` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0105-optimize-highest-cumulative-route-resolution-latency-hotspot.task.md | TASK-PRF-0105 Optimize highest cumulative route-resolution latency hotspot |
-| `doc_other_3127` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0106-reduce-governance-readiness-git-process-startup.task.md | TASK-PRF-0106 Reduce governance readiness Git process startup |
-| `doc_other_3128` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0107-restore-installable-npm-chart-lifecycle-without-inflating-the-bundle.task.md | TASK-PRF-0107 Restore installable npm chart lifecycle without inflating the bundle |
-| `doc_other_3129` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0108-eliminate-duplicate-package-dist-build-during-onefile-root-drop-assembly.task.md | TASK-PRF-0108 Eliminate duplicate package-dist build during onefile/root-drop assembly |
-| `doc_other_3130` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0109-defer-full-framework-status-from-normal-next-guidance.task.md | TASK-PRF-0109 Defer full framework status from normal next guidance |
-| `doc_other_3131` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0110-preserve-multi-agent-parallelism-while-shrinking-public-command-runtime.task.md | TASK-PRF-0110 Preserve multi-agent parallelism while shrinking public command runtime |
-| `doc_other_3132` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0111-complete-full-atm-command-and-mandatory-gate-millisecond-coverage.task.md | TASK-PRF-0111 Complete full ATM command and mandatory-gate millisecond coverage |
-| `doc_other_3133` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0112-next-readiness-git.task.md | TASK-PRF-0112 Integrate deferred next readiness probes and bounded Git scans |
-| `doc_other_3134` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0113-npm-trusted-publishing.task.md | TASK-PRF-0113 Move the npm release workflow to Trusted Publishing without token fallback |
