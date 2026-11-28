@@ -20,6 +20,12 @@ import { DEFAULT_BATTLE_BGM, parseBattleBgmConfig, type BattleBgmConfig } from '
 export type HitTier = 'light' | 'heavy' | 'block' | 'lethal';
 export type Range = readonly [number, number];
 
+/**
+ * 戰法額外疊層（PROG-2-10215）：同一次施放在主音之外，再於 delayMs 範圍內隨機偏移疊 count 聲（clips 隨機挑一）。
+ * 例：水淹疊 3～5 聲水花、回復疊 2～3 聲閃光風鈴。額外疊層算同一施放群組，不另占發聲池名額。
+ */
+export interface TacticExtraLayer { clips: string[]; volume: Range; delayMs: Range; count: Range }
+
 /** clipVolumeScale：個別 clip 的音量倍率（借用別層音檔時壓低），沒列＝1。 */
 export interface HitTierSpec { clips: string[]; volume: Range; clipVolumeScale?: Record<string, number> }
 
@@ -54,7 +60,7 @@ export interface BattleAudioLayersConfig {
   /** 小兵出手音（PROG-2-10134）：以攻擊音效鍵（unit-attack-*）為 key，每鍵多個 clip 輪播、各自音量範圍 */
   attack: { clips: Record<string, string[]>; volume: Record<string, Range> };
   /** 戰法分組音效（PROG-2-10190）：以特效分組（fire／water／wind／heal／haste／morale／stun）為 key，每組多個 clip 輪播、各自音量範圍 */
-  tactic: { clips: Record<string, string[]>; volume: Record<string, Range> };
+  tactic: { clips: Record<string, string[]>; volume: Record<string, Range>; layers: Record<string, TacticExtraLayer[]> };
   /** 發聲池（PROG-2-10134）：同時發聲上限、優先級、類別每秒上限、人多降音量 */
   pool: SfxVoicePoolConfig;
   /** 戰前預載清單（PROG-2-10134）：這些 clip 在載入戰場時先解碼／暖機，避免第一次播放延遲 */
@@ -120,8 +126,13 @@ export const DEFAULT_BATTLE_AUDIO_LAYERS: BattleAudioLayersConfig = {
       haste: ['tactic_haste'], morale: ['tactic_morale'], stun: ['tactic_stun'],
     },
     volume: {
-      fire: [0.7, 0.85], water: [0.7, 0.85], wind: [0.65, 0.8], heal: [0.7, 0.85],
+      fire: [0.7, 0.85], water: [0.75, 0.9], wind: [0.65, 0.8], heal: [0.8, 0.95],
       haste: [0.65, 0.8], morale: [0.7, 0.85], stun: [0.7, 0.85],
+    },
+    // PROG-2-10215：水淹＝水花 3～5 聲連續潑濺、回復＝閃光風鈴 2～3 聲
+    layers: {
+      water: [{ clips: ['tactic_splash_a', 'tactic_splash_b'], volume: [0.5, 0.75], delayMs: [120, 1500], count: [3, 5] }],
+      heal: [{ clips: ['tactic_heal_sparkle'], volume: [0.4, 0.6], delayMs: [300, 1100], count: [2, 3] }],
     },
   },
   pool: DEFAULT_SFX_VOICE_POOL,
@@ -131,6 +142,7 @@ export const DEFAULT_BATTLE_AUDIO_LAYERS: BattleAudioLayersConfig = {
     'sfx_hit_blade', 'sfx_hit_pierce', 'sfx_hit_arrow', 'sfx_hit_clash', 'sfx_hit_wood', 'sfx_hit_body_a', 'sfx_hit_body_b',
     'hit_light', 'hit_heavy', 'hit_lethal', 'cc0_block_metal_bright', 'cc0_hit_flesh', 'die', 'boom',
     'tactic_fire', 'tactic_water', 'tactic_wind', 'tactic_heal', 'tactic_haste', 'tactic_morale', 'tactic_stun',
+    'tactic_splash_a', 'tactic_splash_b', 'tactic_heal_sparkle',
   ],
   bgm: DEFAULT_BATTLE_BGM,
 };
@@ -143,6 +155,15 @@ function range(v: unknown, fallback: Range): Range {
   if (!Array.isArray(v) || v.length !== 2) return fallback;
   const a = num(v[0], NaN, 0, 1);
   const b = num(v[1], NaN, 0, 1);
+  if (Number.isNaN(a) || Number.isNaN(b) || a > b) return fallback;
+  return [a, b];
+}
+
+/** 不限 0～1 的範圍（毫秒、次數用）：[min,max]，min≥0 且 min≤max，否則用預設。 */
+function rangeAny(v: unknown, fallback: Range): Range {
+  if (!Array.isArray(v) || v.length !== 2) return fallback;
+  const a = num(v[0], NaN, 0, 60000);
+  const b = num(v[1], NaN, 0, 60000);
   if (Number.isNaN(a) || Number.isNaN(b) || a > b) return fallback;
   return [a, b];
 }
@@ -242,7 +263,20 @@ function parseTactic(v: unknown, fallback: BattleAudioLayersConfig['tactic']): B
   const volume: Record<string, Range> = { ...fallback.volume };
   if (src.clips && typeof src.clips === 'object') for (const [k, list] of Object.entries(src.clips as Record<string, unknown>)) { const l = strList(list, []); if (l.length) clips[k] = l; }
   if (src.volume && typeof src.volume === 'object') for (const [k, r] of Object.entries(src.volume as Record<string, unknown>)) volume[k] = range(r, volume[k] ?? [0.7, 0.85]);
-  return { clips, volume };
+  const layers: Record<string, TacticExtraLayer[]> = { ...fallback.layers };
+  if (src.layers && typeof src.layers === 'object') {
+    for (const [k, list] of Object.entries(src.layers as Record<string, unknown>)) {
+      if (!Array.isArray(list)) continue;
+      const parsed: TacticExtraLayer[] = [];
+      for (const it of list as Record<string, any>[]) {
+        const c = strList(it?.clips, []);
+        if (c.length === 0) continue;
+        parsed.push({ clips: c, volume: range(it?.volume, [0.5, 0.7]), delayMs: rangeAny(it?.delayMs, [100, 1000]), count: rangeAny(it?.count, [1, 1]) });
+      }
+      layers[k] = parsed; // 設成空陣列即關閉該組疊層
+    }
+  }
+  return { clips, volume, layers };
 }
 
 function parseAttack(v: unknown, fallback: BattleAudioLayersConfig['attack']): BattleAudioLayersConfig['attack'] {
@@ -341,6 +375,28 @@ export function pickTacticSfx(group: string, cfg: BattleAudioLayersConfig = DEFA
   const raw = list[Math.min(list.length - 1, Math.floor(rand() * list.length))];
   if (state) state.lastClip[stateKey] = raw;
   return { clip: resolveClipName(raw, cfg), volume: pickInRange(cfg.tactic.volume[group] ?? [0.7, 0.85], rand) };
+}
+
+export interface PickedTacticLayer extends PickedSfx { delayMs: number }
+
+/**
+ * 戰法額外疊層排程（PROG-2-10215）：每個疊層設定依 count 範圍取整數聲數，各自在 delayMs 範圍隨機偏移，
+ * 同一疊層相鄰兩聲至少隔 minGapMs（避開統一閘門的同 clip 60ms 合併）；結果依延遲排序。該組沒設定回空陣列。
+ */
+export function pickTacticLayers(group: string, cfg: BattleAudioLayersConfig = DEFAULT_BATTLE_AUDIO_LAYERS, rand: () => number = Math.random, minGapMs = 90): PickedTacticLayer[] {
+  const out: PickedTacticLayer[] = [];
+  for (const layer of cfg.tactic.layers[group] ?? []) {
+    const n = Math.max(0, Math.round(pickInRange(layer.count, rand)));
+    const delays: number[] = [];
+    for (let i = 0; i < n; i++) delays.push(pickInRange(layer.delayMs, rand));
+    delays.sort((a, b) => a - b);
+    for (let i = 1; i < delays.length; i++) if (delays[i] - delays[i - 1] < minGapMs) delays[i] = delays[i - 1] + minGapMs;
+    for (const d of delays) {
+      const clip = layer.clips[Math.min(layer.clips.length - 1, Math.floor(rand() * layer.clips.length))];
+      out.push({ clip: resolveClipName(clip, cfg), volume: pickInRange(layer.volume, rand), delayMs: Math.round(d) });
+    }
+  }
+  return out.sort((a, b) => a.delayMs - b.delayMs);
 }
 
 /** 輕擊音這一刻能不能播（windowMs 內最多 maxPerWindow 聲）；能播就登記。非輕擊層不節流，永遠 true。 */

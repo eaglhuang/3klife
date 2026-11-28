@@ -217,12 +217,15 @@
       "sfx_hit_body_a": 450,
       "sfx_hit_body_b": 450,
       "tactic_fire": 1200,
-      "tactic_water": 1400,
+      "tactic_water": 2400,
       "tactic_wind": 1300,
-      "tactic_heal": 1000,
+      "tactic_heal": 1700,
       "tactic_haste": 600,
       "tactic_morale": 1300,
-      "tactic_stun": 1000
+      "tactic_stun": 1000,
+      "tactic_splash_a": 500,
+      "tactic_splash_b": 500,
+      "tactic_heal_sparkle": 500
     },
     "duck": {
       "perVoice": 0.06,
@@ -261,7 +264,10 @@
     "tactic_heal",
     "tactic_haste",
     "tactic_morale",
-    "tactic_stun"
+    "tactic_stun",
+    "tactic_splash_a",
+    "tactic_splash_b",
+    "tactic_heal_sparkle"
   ],
   "bgm": {
     "enabled": true,
@@ -313,16 +319,16 @@
         0.85
       ],
       "water": [
-        0.7,
-        0.85
+        0.75,
+        0.9
       ],
       "wind": [
         0.65,
         0.8
       ],
       "heal": [
-        0.7,
-        0.85
+        0.8,
+        0.95
       ],
       "haste": [
         0.65,
@@ -335,6 +341,47 @@
       "stun": [
         0.7,
         0.85
+      ]
+    },
+    "layers": {
+      "water": [
+        {
+          "clips": [
+            "tactic_splash_a",
+            "tactic_splash_b"
+          ],
+          "volume": [
+            0.5,
+            0.75
+          ],
+          "delayMs": [
+            120,
+            1500
+          ],
+          "count": [
+            3,
+            5
+          ]
+        }
+      ],
+      "heal": [
+        {
+          "clips": [
+            "tactic_heal_sparkle"
+          ],
+          "volume": [
+            0.4,
+            0.6
+          ],
+          "delayMs": [
+            300,
+            1100
+          ],
+          "count": [
+            2,
+            3
+          ]
+        }
       ]
     }
   }

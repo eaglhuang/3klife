@@ -17886,15 +17886,27 @@
     "category": "task"
   },
   {
-    "id": "doc_task_3310",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10231.md",
-    "title": "[PROG-2-10231] 生活層 Q 頭兩人切磋",
+    "id": "doc_task_3300",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10223.md",
+    "title": "[PROG-2-10223] 血統與結緣體驗強化四項",
     "category": "task"
   },
   {
-    "id": "doc_task_3311",
+    "id": "doc_task_3306",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10215.md",
+    "title": "[PROG-2-10215] 戰法音效回饋修正：回復／水淹",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3307",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10225.md",
     "title": "[PROG-2-10225] 年末典禮觀眾台詞：第 4～5 名勉勵與結義彩蛋",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3312",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10231.md",
+    "title": "[PROG-2-10231] 生活層 Q 頭兩人切磋",
     "category": "task"
   }
 ]
