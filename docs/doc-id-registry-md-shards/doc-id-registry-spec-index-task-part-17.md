@@ -116,3 +116,4 @@
 | `doc_task_3286` | docs/agent-briefs/tasks/PROG/PROG-2-10214.md | [PROG-2-10214] 生活層第一個看得到的原型 |
 | `doc_task_3289` | docs/agent-briefs/tasks/PROG/PROG-2-10216.md | [PROG-2-10216] 11/28 使用者裁決回寫規格 |
 | `doc_task_3290` | docs/agent-briefs/tasks/PROG/PROG-2-9843.md | [PROG-2-9843] 戰法詳情子視窗補招式描述文字 |
+| `doc_task_3291` | docs/agent-briefs/tasks/PROG/PROG-2-10219.md | [PROG-2-10219] 生活層程式對齊 11/28 使用者裁決 |

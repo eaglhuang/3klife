@@ -17866,5 +17866,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9843.md",
     "title": "[PROG-2-9843] 戰法詳情子視窗補招式描述文字",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3291",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10219.md",
+    "title": "[PROG-2-10219] 生活層程式對齊 11/28 使用者裁決",
+    "category": "task"
   }
 ]

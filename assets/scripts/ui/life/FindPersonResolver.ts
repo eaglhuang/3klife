@@ -14,6 +14,9 @@ export type IntelLevel = 0 | 1 | 2 | 3 | 4 | 5;
 /** intel 值門檻（QSOC-01 第 5.2 節，PM 暫定；正式值日後由 life-intel-levels.json 提供） */
 export const DEFAULT_INTEL_THRESHOLDS: readonly number[] = [0, 10, 25, 45, 65, 85];
 
+/** 自家家臣在此等級（含）以下，位置與活動都不可見 */
+export const VASSAL_HIDDEN_MAX_LEVEL = 2;
+
 /** 友誼達此值（含）以上視為熟人 */
 export const ACQUAINTANCE_FRIENDSHIP = 30;
 
@@ -32,6 +35,8 @@ export interface FindPersonEntry {
     activityId: string;
     /** 下一時段預測場景 */
     nextSceneId?: string;
+    /** 自家家臣（QSOC-01 第 5.2 節，使用者 11/28 裁決：身分永遠可見，位置與活動仍受情報等級限制） */
+    isOwnVassal?: boolean;
 }
 
 /** 要跳去哪：focus=center 鏡頭置中、actor 對焦該武將、none 不特別對焦 */
@@ -54,7 +59,7 @@ export interface FindResultView {
     showAvatar: boolean;
     /** Lv4 以上才有 */
     activityId?: string;
-    /** Lv5 才有 */
+    /** Lv5 才有（下一時段預測） */
     nextSceneNameKey?: string;
     /** null＝這個等級沒有可跳的地方（Lv0） */
     jump: FindJumpTarget | null;
@@ -112,8 +117,11 @@ export class FindPersonResolver {
             showAvatar: false,
             jump: null,
         };
+        if (entry.isOwnVassal) view.showAvatar = true; // 家臣的臉與名永遠可見
+        // 家臣在情報 Lv0～2：查不到所在場景、也看不到活動（熟人加成不適用；以玩家自身情報等級為準）
+        const hidden = entry.isOwnVassal === true && base <= VASSAL_HIDDEN_MAX_LEVEL;
         const scene = this._registry.getScene(entry.sceneId);
-        if (level === 0 || !scene) return view;
+        if (level === 0 || !scene || hidden) return view;
 
         if (level === 1) {
             const area = this._registry.getArea(scene.areaId);
@@ -128,7 +136,7 @@ export class FindPersonResolver {
         view.locationTextKey = 'life.panel.find.inScene';
         view.locationArgKeys = [scene.nameKey];
         view.questionMark = level === 2;
-        view.showAvatar = level >= 3;
+        view.showAvatar = level >= 3 || entry.isOwnVassal === true;
         view.jump = { sceneId: scene.id, focus: level >= 3 ? 'actor' : 'none' };
         if (level >= 4) view.activityId = entry.activityId;
         if (level >= 5 && entry.nextSceneId) {
