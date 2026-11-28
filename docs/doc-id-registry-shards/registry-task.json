@@ -17880,7 +17880,13 @@
     "category": "task"
   },
   {
-    "id": "doc_task_3298",
+    "id": "doc_task_3297",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10217.md",
+    "title": "[PROG-2-10217] 羈絆戰場效果整併方案規格書",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3299",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10221.md",
     "title": "[PROG-2-10221] 結義戰場效果補強：士氣整場常駐、生死相隨九宮格、傭兵結義 id 同一套",
     "category": "task"
