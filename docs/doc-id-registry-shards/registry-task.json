@@ -17860,5 +17860,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10214.md",
     "title": "[PROG-2-10214] 生活層第一個看得到的原型",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3289",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10216.md",
+    "title": "[PROG-2-10216] 11/28 使用者裁決回寫規格",
+    "category": "task"
   }
 ]

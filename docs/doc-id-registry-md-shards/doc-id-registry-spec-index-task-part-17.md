@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-11-27
+> 生成日期: 2026-11-28
 > 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 17/17 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -114,3 +114,5 @@
 | `doc_task_3280` | docs/agent-briefs/tasks/PROG/PROG-2-10209.md | [PROG-2-10209] Q 動畫管理器核心＋基本動作片段 |
 | `doc_task_3283` | docs/agent-briefs/tasks/PROG/PROG-2-10210.md | [PROG-2-10210] WP2 頭上生活符號系統 |
 | `doc_task_3285` | docs/agent-briefs/tasks/PROG/PROG-2-10212.md | [PROG-2-10212] WP4 場景註冊表＋任意場景切換 UI |
+| `doc_task_3286` | docs/agent-briefs/tasks/PROG/PROG-2-10214.md | [PROG-2-10214] 生活層第一個看得到的原型 |
+| `doc_task_3289` | docs/agent-briefs/tasks/PROG/PROG-2-10216.md | [PROG-2-10216] 11/28 使用者裁決回寫規格 |
