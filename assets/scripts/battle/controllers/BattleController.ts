@@ -41,6 +41,8 @@ import { executeBattleSpecialResolvePhase } from '../runtime/phases/BattleSpecia
 import { executeBattleTileEffectPhase } from '../runtime/phases/BattleTileEffectPhase';
 import { desertVitalityDrain } from '../../core/systems/DesertVitality';
 import { combatRelationsBetween, type HistoricalPairTable } from '../../core/systems/HistoricalPairs';
+import { areKinBonded, hasSwornBrotherInLineup, SWORN_DEPLOY_MORALE, type KinPairLike } from '../../core/systems/KinBattleEffects';
+import { applyMoraleFloor } from '../shared/Morale';
 import { detectRelationEvents, RelationEventLedger, type RelationEventHit } from '../../core/systems/RelationEvents';
 import type { HistoricalRelation } from '../../core/systems/KinRelation';
 import { BattleCombatResolver } from '../runtime/BattleCombatResolver';
@@ -199,6 +201,10 @@ export class BattleController {
   public tallyInfoOf: (tallyId: string) => { star: number; templateId: string; sourceTemplateId?: string | null; infusionLevel?: number } | null = () => null;
   /** 史實配對表（KIN-02）；合攻判定讀它，未設定時不觸發史實合攻（PROG-2-1065） */
   public historicalPairs: HistoricalPairTable | null = null;
+  /** 動態人際關係快照（結義＝DYNAMIC_SWORN、共鬥＝COMRADE）；由場景載入時注入 session.dynamicRelations.snapshot()，預設空（PROG-2-10204） */
+  public dynamicRelations: ReadonlyArray<KinPairLike> = [];
+  /** 本場出戰名單的武將 id（義兄弟同陣士氣用）；場景注入，預設空，部署時另會併入主將與場上已有部隊的來源武將 */
+  public sortieLineupIds: ReadonlyArray<string> = [];
   /** 本場出陣過的虎符 id（PROG-2-0573：戰後依此結算戰鬥經驗） */
   private readonly _deployedTallyIds = new Set<string>();
   /** 出征軍勢 / 糧草帳本；null = 舊版 demo 戰鬥（不扣軍勢） */
@@ -215,6 +221,9 @@ export class BattleController {
     state: this.state,
     turnManager: this.turnManager,
     relationsBetween: (attackerId, helperId) => this.relationsBetweenUnits(attackerId, helperId),
+    // 生死相隨只給我方（動態關係屬於玩家的武將；敵軍部隊不吃這張表）
+    isKinBonded: (unitIdA, unitIdB) => this.state.units.get(unitIdA)?.faction === Faction.Player
+      && areKinBonded(this.historicalPairs, this.dynamicRelations, this.sourceTemplateOfUnit(unitIdA), this.sourceTemplateOfUnit(unitIdB)),
     getUltimateSpecialRule: (ultimateId) => findUltimateSpecialRule(ultimateId),
     isTroopCounterTacticsEnabled: () => GAME_CONFIG.troopCounterTacticsEnabled && !this._tutorialBattle,
     onTroopDefeated: (defeated) => this.awardTroopDefeatFame(defeated.unitId, defeated.faction),
@@ -386,7 +395,7 @@ export class BattleController {
    */
   /** 合攻判定用：兩個部隊背後武將的史實關係（PROG-2-1065）；敵軍與無虎符部隊沒有來源武將，回傳空陣列 */
   public relationsBetweenUnits(attackerId: string, helperId: string): HistoricalRelation[] {
-    return combatRelationsBetween(this.historicalPairs, this.sourceTemplateOfUnit(attackerId), this.sourceTemplateOfUnit(helperId));
+    return combatRelationsBetween(this.historicalPairs, this.sourceTemplateOfUnit(attackerId), this.sourceTemplateOfUnit(helperId), this.dynamicRelations);
   }
 
   /** 本場戰役已觸發的關係事件（KIN-08 戰場端，PROG-2-1420）；預設一場一份，場景可綁定 session 帳本以存檔（PROG-2-1415） */
@@ -430,6 +439,26 @@ export class BattleController {
   private sourceTemplateOfUnit(unitId: string): string | null {
     const tallyId = this.state.units.get(unitId)?.tallyId;
     return tallyId ? (this.tallyInfoOf(tallyId)?.sourceTemplateId ?? null) : null;
+  }
+
+  /**
+   * 義兄弟同陣士氣（動態關係規格 §3.1，PROG-2-10204）：部隊的來源武將與出戰名單內另一位武將互為義兄弟時，
+   * 部署時士氣至少 +20（走 Morale 既有機制：不疊加、3 回合後清除）。出戰名單 = 場景注入名單 ∪ 我方主將 ∪ 場上我方部隊的來源武將。
+   */
+  private applySwornDeployMorale(unit: TroopUnit): void {
+    const source = this.sourceTemplateOfUnit(unit.id);
+    if (!source) return;
+    const lineup = new Set<string>(this.sortieLineupIds);
+    const commander = this.state.getGeneral(Faction.Player);
+    if (commander) lineup.add(commander.id);
+    for (const other of this.state.units.values()) {
+      if (other.faction !== Faction.Player || other.id === unit.id) continue;
+      const otherSource = this.sourceTemplateOfUnit(other.id);
+      if (otherSource) lineup.add(otherSource);
+    }
+    if (hasSwornBrotherInLineup(this.historicalPairs, this.dynamicRelations, source, lineup)) {
+      applyMoraleFloor(unit, SWORN_DEPLOY_MORALE);
+    }
   }
 
   private bindTallyAffinity(unit: TroopUnit, ref: TallyDeployRef): void {
@@ -508,7 +537,10 @@ export class BattleController {
     // 部隊帶上主將的因子資料（genes 已由 buildBattleConfig 展開進戰場武將），供因子戰法與地形規則讀取
     unit.factorGenes = this.state.getGeneral(Faction.Player)?.genes ?? [];
     unit.factorEffects = factorBattleEffectsOf(unit.factorGenes, this.factorEffectMap);
-    if (options.tally) this.bindTallyAffinity(unit, options.tally);
+    if (options.tally) {
+      this.bindTallyAffinity(unit, options.tally);
+      this.applySwornDeployMorale(unit);
+    }
     this.turnManager.notePlayerDeployment();
     this.turnManager.markUnitDeployed(unit.id);
     this.checkBattleRelationEvents();

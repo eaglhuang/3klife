@@ -112,5 +112,28 @@ export function createFindPersonResolverSuite(): TestSuite {
         }
     });
 
+    suite.test('自家家臣：身分永遠可見；情報 Lv0～2 看不到活動也查不到場景（11/28 裁決）', () => {
+        const vassal: FindPersonEntry = { ...stranger, isOwnVassal: true, friendship: 50, hasBond: true };
+        for (const intel of [0, 10, 25]) {
+            const v = resolver.resolve(vassal, intel);
+            assert.equals('陌生人', v.name);
+            assert.isTrue(v.showAvatar, `intel ${intel} 臉可見`);
+            assert.isTrue(v.jump === null, `intel ${intel} 不可跳場景`);
+            assert.isTrue(v.activityId === undefined, `intel ${intel} 無活動`);
+            assert.equals('life.panel.find.cityOnly', v.locationTextKey);
+            assert.equals(0, v.locationArgKeys.length);
+        }
+        const open = resolver.resolve(vassal, 65);
+        assert.isTrue(open.jump !== null && open.jump.sceneId === 'mkt_tavern', 'Lv4 看得到場景');
+        assert.equals('S04', open.activityId);
+        assert.isTrue(resolver.resolve({ ...vassal, isOwnVassal: false }, 25).jump !== null, '非家臣照舊');
+    });
+
+    suite.test('Lv5 只有下一時段預測，不帶說溜嘴機率欄位', () => {
+        const v = resolver.resolve(stranger, 90) as unknown as Record<string, unknown>;
+        assert.equals('life.scene.home_general', v.nextSceneNameKey as string);
+        assert.isTrue(!('slipChance' in v) && !('slipBonus' in v), '無說溜嘴加成欄位');
+    });
+
     return suite;
 }

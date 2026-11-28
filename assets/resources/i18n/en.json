@@ -1608,6 +1608,16 @@
   "ui.ceremony.crowd.lose.2": "(snickers) Shh, not so loud. Next year's champion might just be you.",
   "ui.ceremony.crowd.lose.3": "(hands over seeds) Here, have a snack to calm down. It is on {0}.",
   "ui.ceremony.crowd.say": "{0}: {1}",
+  "ui.ceremony.crowd_near_podium.1": "{0} did the math: just {1} more points next year and you're in the top three. Keep going!",
+  "ui.ceremony.crowd_near_podium.2": "{0} believes in you. One step from the stage! Grab {1} more points next year and the podium has your name on it.",
+  "ui.ceremony.crowd_near_podium.3": "{0} counted for you: only {1} points short! One more push next year and the top three is yours.",
+  "ui.ceremony.crowd_oath_congrats.1": "Congratulations, {1}! {0} is your {2}, so tonight we drink!",
+  "ui.ceremony.crowd_oath_congrats.2": "{1} won! {0}, your {2}, is bursting with pride. That peach garden wine was worth it!",
+  "ui.ceremony.crowd_oath_congrats.3": "{0} always knew {1} could do it. As your {2}, the first applause is mine!",
+  "ui.ceremony.crowd_oath_relation.elder_m": "sworn elder brother",
+  "ui.ceremony.crowd_oath_relation.elder_f": "sworn elder sister",
+  "ui.ceremony.crowd_oath_relation.younger_m": "sworn younger brother",
+  "ui.ceremony.crowd_oath_relation.younger_f": "sworn younger sister",
   "ui.tally.card.grain": "Food {0}",
   "ui.tally.card.resonance": "Bond +{0}%",
   "ui.tally.card.owner": "Held by {0}",
@@ -3245,5 +3255,7 @@
   "life.proto.enter": "Life layer (dev)",
   "life.proto.btn.slot": "Slot: {0} ▶",
   "life.proto.btn.season": "Season: {0} ▶",
-  "life.proto.stats": "Heads {0}  Symbols {1}  Sprites {2}"
+  "life.proto.stats": "Heads {0}  Symbols {1}  Sprites {2}",
+  "ui.battle.kin_rescue.float": "Bound in life and death!",
+  "ui.battle.kin_rescue.log": "{0} stepped in for {1}, taking {2} damage"
 }

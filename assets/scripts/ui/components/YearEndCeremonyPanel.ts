@@ -23,7 +23,7 @@ import {
 } from '../../core/systems/YearEndCeremonyPodium';
 import { selfOf } from '../../core/mind/SpeakerVoice';
 import { CeremonyPodiumView } from './CeremonyPodiumView';
-import { crowdTurn, resolveCrowdVoiceLine, type CrowdMember } from '../../core/systems/YearEndCeremonyCrowd';
+import { crowdTurn, pickNearPodiumLine, pickOathCongratsLine, resolveCrowdVoiceLine, type CeremonyCrowdConfig, type CrowdMember } from '../../core/systems/YearEndCeremonyCrowd';
 import { CEREMONY_RIBBON_COUNT, planRelay, planRibbons, relayTriggerRank, type RelayKind, type RelayStep } from '../../core/systems/CeremonyHype';
 import { CeremonyRibbonPool } from './CeremonyRibbonPool';
 import type { ThemeService } from '../core/ThemeService';
@@ -108,6 +108,8 @@ export class YearEndCeremonyPanel extends Component {
     private _crowdCheerKeys: readonly string[] = [];
     private _crowdIntervalSeconds = 2.6;
     private _crowdTurn = 0;
+    private _extrasConfig: CeremonyCrowdConfig | null = null;
+    private _oath: { winnerId: string; winnerName: string; winnerAge?: number; brotherIds: readonly string[] } | null = null;
     private _crowdTimer = 0;
     private _nameTagStyle: NameTagStyle | null = null;
     /** 載圖序號：重開典禮時，舊的非同步載入結果丟棄 */
@@ -168,6 +170,15 @@ export class YearEndCeremonyPanel extends Component {
         this._winRelayKeys = relayKeys?.win ?? [];
         this._loseRelayKeys = relayKeys?.lose ?? [];
         this._crowdIntervalSeconds = intervalSeconds > 0 ? intervalSeconds : 2.6;
+    }
+
+    /** 觀眾彩蛋：第 4～5 名勉勵、結義祝賀（規格 shard-c 增補）；oath 沒給就不播結義台詞 */
+    public setCrowdExtras(
+        config: CeremonyCrowdConfig,
+        oath?: { winnerId: string; winnerName: string; winnerAge?: number; brotherIds: readonly string[] },
+    ): void {
+        this._extrasConfig = config;
+        this._oath = oath ?? null;
     }
 
     protected onLoad(): void {
@@ -407,10 +418,40 @@ export class YearEndCeremonyPanel extends Component {
         const board = this._view?.board;
         if (!board || !this._crowd[memberIndex]) return;
         const playerRank = playerRankOnBoard(board);
-        const key = audienceLineKey({ boardId: board.id, playerRank, turn: this._audienceTurn++ });
+        const turn = this._audienceTurn++;
         this._relayQueue = [];
         this._crowdTimer = 0;
+        if (this._tapCrowdExtras(memberIndex, board, playerRank, turn)) return;
+        const key = audienceLineKey({ boardId: board.id, playerRank, turn });
         this.speak(memberIndex, key, key.includes('.roast.') ? 'pat' : 'hop', audienceLineArgs(board, playerRank, this._t));
+    }
+
+    /** 結義祝賀優先（本府得獎、點到結義兄弟）；其次本府第 4～5 名的勉勵（隔一次點擊穿插）；有播就回 true */
+    private _tapCrowdExtras(memberIndex: number, board: CeremonyBoard, playerRank: number, turn: number): boolean {
+        const config = this._extrasConfig;
+        if (!config) return false;
+        if (this._oath && playerRank >= 1 && playerRank <= 3) {
+            const oath = pickOathCongratsLine({
+                crowd: this._crowd,
+                winnerId: this._oath.winnerId,
+                winnerAge: this._oath.winnerAge,
+                brotherIds: this._oath.brotherIds,
+                memberIndex,
+                turn,
+            }, config);
+            if (oath) {
+                this.speak(memberIndex, oath.key, 'hop', [this._oath.winnerName, this._t(oath.relationKey)]);
+                return true;
+            }
+        }
+        if (board.id === 'house' && turn % 2 === 0) {
+            const near = pickNearPodiumLine(board, config, turn >> 1);
+            if (near) {
+                this.speak(memberIndex, near.key, 'pat', [String(near.deltaScore)]);
+                return true;
+            }
+        }
+        return false;
     }
 
     /** 時間軸事件：音效交給宿主；名次揭曉改由各榜自己的時間軸排（syncBoard） */

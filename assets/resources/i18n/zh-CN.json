@@ -1608,6 +1608,16 @@
   "ui.ceremony.crowd.lose.2": "（偷笑）嘘，别笑太大声，明年的榜首说不定就是你。",
   "ui.ceremony.crowd.lose.3": "（递上瓜子）来，吃点东西压压惊，{0}请客。",
   "ui.ceremony.crowd.say": "{0}：{1}",
+  "ui.ceremony.crowd_near_podium.1": "{0}掐指一算，明年再多拿 {1} 分就能进前三，加油！",
+  "ui.ceremony.crowd_near_podium.2": "{0}看好你，差一步就上台啦！明年再多拿 {1} 分，领奖台就有你的位置。",
+  "ui.ceremony.crowd_near_podium.3": "{0}帮你数过了：只差 {1} 分！明年再拼一把，前三名等你。",
+  "ui.ceremony.crowd_oath_congrats.1": "恭喜{1}！{0}是你的{2}，今天这杯酒一定要干！",
+  "ui.ceremony.crowd_oath_congrats.2": "{1}得奖了！{0}这个{2}与有荣焉，桃园那碗酒没白喝！",
+  "ui.ceremony.crowd_oath_congrats.3": "{0}就知道{1}行的，身为{2}先替你鼓个掌！",
+  "ui.ceremony.crowd_oath_relation.elder_m": "义兄",
+  "ui.ceremony.crowd_oath_relation.elder_f": "义姐",
+  "ui.ceremony.crowd_oath_relation.younger_m": "义弟",
+  "ui.ceremony.crowd_oath_relation.younger_f": "义妹",
   "ui.tally.card.grain": "粮 {0}",
   "ui.tally.card.resonance": "共鸣 +{0}%",
   "ui.tally.card.owner": "持有 {0}",
@@ -3245,5 +3255,7 @@
   "life.proto.enter": "生活层（开发）",
   "life.proto.btn.slot": "时段：{0} ▶",
   "life.proto.btn.season": "季节：{0} ▶",
-  "life.proto.stats": "Q头 {0}　符号 {1}　符号元件 {2}"
+  "life.proto.stats": "Q头 {0}　符号 {1}　符号元件 {2}",
+  "ui.battle.kin_rescue.float": "生死相随！",
+  "ui.battle.kin_rescue.log": "{0}与{1}生死相随，替其分摊 {2} 点伤害"
 }

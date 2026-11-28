@@ -11,6 +11,7 @@ const EXACT_LABELS: Readonly<Record<string, string>> = {
   'troop-counter': '拒馬反擊',
   'tally-splash': '虎符濺射',
   'tally-guard': '虎符護衛代擋',
+  'kin-rescue': '生死相隨分攤',
   'naval-combined-attack': '水軍合擊',
   'kin-combo-attack': '血親合擊',
   'mass-debuff-dot': '持續傷害',

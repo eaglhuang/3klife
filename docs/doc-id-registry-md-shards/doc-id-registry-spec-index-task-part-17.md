@@ -116,4 +116,8 @@
 | `doc_task_3286` | docs/agent-briefs/tasks/PROG/PROG-2-10214.md | [PROG-2-10214] 生活層第一個看得到的原型 |
 | `doc_task_3289` | docs/agent-briefs/tasks/PROG/PROG-2-10216.md | [PROG-2-10216] 11/28 使用者裁決回寫規格 |
 | `doc_task_3290` | docs/agent-briefs/tasks/PROG/PROG-2-9843.md | [PROG-2-9843] 戰法詳情子視窗補招式描述文字 |
-| `doc_task_3293` | docs/agent-briefs/tasks/PROG/PROG-2-10215.md | [PROG-2-10215] 戰法音效回饋修正：回復／水淹 |
+| `doc_task_3294` | docs/agent-briefs/tasks/PROG/PROG-2-10204.md | [PROG-2-10204] 戰場結義效果：義兄弟同陣士氣＋生死相隨援護＋動態義兄弟合攻 |
+| `doc_task_3295` | docs/agent-briefs/tasks/PROG/PROG-2-10219.md | [PROG-2-10219] 生活層程式對齊 11/28 使用者裁決 |
+| `doc_task_3297` | docs/agent-briefs/tasks/PROG/PROG-2-10217.md | [PROG-2-10217] 羈絆戰場效果整併方案規格書 |
+| `doc_task_3301` | docs/agent-briefs/tasks/PROG/PROG-2-10215.md | [PROG-2-10215] 戰法音效回饋修正：回復／水淹 |
+| `doc_task_3302` | docs/agent-briefs/tasks/PROG/PROG-2-10225.md | [PROG-2-10225] 年末典禮觀眾台詞：第 4～5 名勉勵與結義彩蛋 |

@@ -25,6 +25,22 @@ export interface CeremonyCrowdConfig {
     readonly winRelayKeys: readonly string[];
     /** 玩家落榜時拍肩、偷笑的台詞鍵 */
     readonly loseRelayKeys: readonly string[];
+    /** 第 4～5 名勉勵台詞：觸發名次（規格 shard-c 增補 §1，預設 [4, 5]） */
+    readonly nearPodiumRanks?: readonly number[];
+    /** 與第 3 名的最大分差，deltaScore 超過就不說勉勵（預設 250） */
+    readonly nearPodiumMaxDeltaScore?: number;
+    readonly nearPodiumKeys?: readonly string[];
+    /** 結義彩蛋：點到結義觀眾時是否優先播專屬祝賀（預設 true） */
+    readonly oathEasterEggPriority?: boolean;
+    readonly oathCongratsKeys?: readonly string[];
+    readonly oathRelationKeys?: OathRelationKeys;
+}
+
+export interface OathRelationKeys {
+    readonly elderM: string;
+    readonly elderF: string;
+    readonly youngerM: string;
+    readonly youngerF: string;
 }
 
 export interface CrowdRosterEntry {
@@ -113,4 +129,75 @@ export function resolveCrowdLine(t: (key: string, ...args: string[]) => string, 
  */
 export function resolveCrowdVoiceLine(t: (key: string, ...args: string[]) => string, key: string, member: CrowdMember, ...extra: string[]): string {
     return t(key, selfOf({ gender: member.gender === 'F' ? '女' : '男', type: member.type, age: member.age }), ...extra);
+}
+
+const DEFAULT_NEAR_PODIUM_RANKS: readonly number[] = [4, 5];
+const DEFAULT_NEAR_PODIUM_MAX_DELTA = 250;
+
+export interface NearPodiumBoard {
+    readonly entries: ReadonlyArray<{ readonly rank: number; readonly score: number; readonly isPlayer: boolean }>;
+}
+
+export interface NearPodiumPick {
+    readonly key: string;
+    /** 與第 3 名的實際分差（至少 1，避免說出「多拿 0 分」） */
+    readonly deltaScore: number;
+}
+
+/**
+ * 第 4～5 名勉勵台詞（shard-c 增補 §1）：本府在 nearPodiumRanks 內、且與第 3 名分差 <= nearPodiumMaxDeltaScore 才回傳；
+ * 句序由 turn 輪替。找不到第 3 名、分差為負或鍵表為空都回 null。
+ */
+export function pickNearPodiumLine(board: NearPodiumBoard, config: CeremonyCrowdConfig, turn: number): NearPodiumPick | null {
+    const keys = config.nearPodiumKeys ?? [];
+    if (keys.length === 0) return null;
+    const player = board.entries.find((e) => e.isPlayer);
+    const third = board.entries.find((e) => e.rank === 3);
+    if (!player || !third) return null;
+    if (!(config.nearPodiumRanks ?? DEFAULT_NEAR_PODIUM_RANKS).includes(player.rank)) return null;
+    const gap = third.score - player.score;
+    if (!Number.isFinite(gap) || gap < 0) return null;
+    const deltaScore = Math.max(1, Math.ceil(gap));
+    if (deltaScore > (config.nearPodiumMaxDeltaScore ?? DEFAULT_NEAR_PODIUM_MAX_DELTA)) return null;
+    const n = Math.max(0, Math.floor(turn));
+    return { key: keys[n % keys.length], deltaScore };
+}
+
+export interface OathCongratsContext {
+    readonly crowd: readonly CrowdMember[];
+    /** 領獎的本府主角（結義關係的另一端） */
+    readonly winnerId: string;
+    readonly winnerAge?: number;
+    /** winnerId 生效盟約中的結義兄弟 id（SwornPact.swornBrothersOf） */
+    readonly brotherIds: readonly string[];
+    /** 本次點擊的觀眾（有給就只判斷這位，沒給則挑第一位結義觀眾） */
+    readonly memberIndex?: number;
+    readonly turn: number;
+}
+
+export interface OathCongratsPick {
+    readonly memberIndex: number;
+    readonly key: string;
+    /** 觀眾相對得獎者的稱謂 i18n 鍵（義兄／義弟／義姊／義妹） */
+    readonly relationKey: string;
+}
+
+/**
+ * 結義彩蛋（shard-c 增補 §2）：得獎者與觀眾是結義兄弟時回傳專屬祝賀；稱謂依觀眾性別與年齡（較年長為兄姊，
+ * 年齡缺值視為兄姊）。oathEasterEggPriority 為 false、鍵表缺漏或非結義觀眾回 null。
+ */
+export function pickOathCongratsLine(ctx: OathCongratsContext, config: CeremonyCrowdConfig): OathCongratsPick | null {
+    const keys = config.oathCongratsKeys ?? [];
+    const rel = config.oathRelationKeys;
+    if (config.oathEasterEggPriority === false || keys.length === 0 || !rel) return null;
+    const brothers = new Set(ctx.brotherIds);
+    const isBrother = (m: CrowdMember | undefined): boolean => !!m && m.generalId !== ctx.winnerId && brothers.has(m.generalId);
+    const memberIndex = ctx.memberIndex !== undefined ? ctx.memberIndex : ctx.crowd.findIndex((m) => isBrother(m));
+    const member = ctx.crowd[memberIndex];
+    if (!isBrother(member)) return null;
+    const elder = member.age === undefined || ctx.winnerAge === undefined || member.age >= ctx.winnerAge;
+    const female = member.gender === 'F';
+    const relationKey = elder ? (female ? rel.elderF : rel.elderM) : (female ? rel.youngerF : rel.youngerM);
+    const n = Math.max(0, Math.floor(ctx.turn));
+    return { memberIndex, key: keys[n % keys.length], relationKey };
 }
