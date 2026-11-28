@@ -7,8 +7,11 @@
  */
 import { assert, TestSuite } from './TestRunner';
 import {
-    audioToggleText, parseAudioPrefs, retreatButtonText, retreatClick,
+    audioToggleText, hitStopToggleKey, parseAudioPrefs, retreatButtonText, retreatClick, toggleHitStopPref,
 } from '../assets/scripts/core/systems/BattleSettingsView';
+import { DEFAULT_JUICE_PREFS } from '../assets/scripts/battle/shared/BattleJuice';
+import * as fs from 'fs';
+import * as path from 'path';
 
 export function createBattleSettingsViewSuite(): TestSuite {
     const suite = new TestSuite('BattleSettingsView (戰場設定面板 PROG-2-1890)');
@@ -40,6 +43,25 @@ export function createBattleSettingsViewSuite(): TestSuite {
         const late = retreatClick(1000, 61000);
         assert.equals(true, late.confirmed);
         assert.equals(null, late.armedAt);
+    });
+
+    suite.test('命中頓格開關（PROG-2-10266）：預設開、切換只動頓格、鍵名對應開關狀態', () => {
+        assert.equals(true, DEFAULT_JUICE_PREFS.hitStop);
+        const off = toggleHitStopPref({ hitStop: true, cameraShake: true });
+        assert.equals(false, off.hitStop);
+        assert.equals(true, off.cameraShake);
+        assert.equals(true, toggleHitStopPref(off).hitStop);
+        assert.equals('battle.settings.hitstop.on', hitStopToggleKey(true));
+        assert.equals('battle.settings.hitstop.off', hitStopToggleKey(false));
+    });
+
+    suite.test('命中頓格開關：四語系鍵齊備、面板版面有 BtnHitStop', () => {
+        const root = path.join(__dirname, '..');
+        for (const lang of ['zh-TW', 'zh-CN', 'en', 'ja']) {
+            const j = JSON.parse(fs.readFileSync(path.join(root, `assets/resources/i18n/${lang}.json`), 'utf8')) as Record<string, string>;
+            for (const k of ['battle.settings.hitstop.on', 'battle.settings.hitstop.off']) assert.isTrue(typeof j[k] === 'string' && j[k].length > 0, `${lang} 缺 ${k}`);
+        }
+        assert.isTrue(fs.readFileSync(path.join(root, 'assets/resources/ui-spec/layouts/battle-settings-main.json'), 'utf8').includes('BtnHitStop'));
     });
 
     return suite;

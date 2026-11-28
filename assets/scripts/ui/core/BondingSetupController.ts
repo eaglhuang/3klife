@@ -18,6 +18,7 @@ import { factorLabelOf, readableFactorName } from '../../core/systems/FactorDisp
 import { formatRosterCareerMarksLine } from './AcademyInheritView';
 import { kinshipLampLine, outcrossRecoveryLine } from '../../core/systems/BloodFatigue';
 import { evaluateMarriageVitality, marriageVitalityBadgeLine } from '../../core/systems/MarriageVitality';
+import { buildMarriageRelationTags, formatMarriageRelationTagsLine } from '../../core/systems/MarriageRelationTags';
 import { ancestorSeatVisible, diversityVisible, factorDetailVisible, formulaDetailVisible, G1_EP_DETAIL_MASK, g1EpEstimateText, G1_FACTOR_TEXT, KIN_TEXT_WARNING, kinshipScanVisible, MILESTONE_G1_HINT, type MilestoneStage } from '../../core/systems/FamilyMilestone';
 import { PEDIGREE_SLOTS } from '../../core/services/BloodlineGraph';
 import { DIVERSITY_HINT } from '../../core/systems/DiversityFactor';
@@ -532,6 +533,18 @@ export class BondingSetupController {
         }), (key, ...args) => this._t(key, ...args));
         if (vitalityBadge) {
             texts.conceptionLabel += `｜${vitalityBadge}`;
+        }
+        const relationTagsLine = formatMarriageRelationTagsLine(
+            buildMarriageRelationTags({
+                isOathBrotherOrSister: Boolean((father as { swornIds?: string[] }).swornIds?.includes(mother.id) || (mother as { swornIds?: string[] }).swornIds?.includes(father.id)),
+                oathGender: (mother as { gender?: string }).gender === 'F' ? 'F' : 'M',
+                isRival: Boolean((father as { rivalIds?: string[] }).rivalIds?.includes(mother.id) || (mother as { rivalIds?: string[] }).rivalIds?.includes(father.id)),
+                isComrade: Boolean((father as { comradeIds?: string[] }).comradeIds?.includes(mother.id) || (mother as { comradeIds?: string[] }).comradeIds?.includes(father.id)),
+            }),
+            (key, ...args) => this._t(key, ...args),
+        );
+        if (relationTagsLine) {
+            texts.conceptionLabel += `｜${relationTagsLine}`;
         }
         const sage = this._sageRemarks(father.id, mother.id);
         texts.sageRemarkLines = sage.hint;

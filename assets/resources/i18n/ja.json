@@ -255,6 +255,8 @@
   "battle.review.close": "閉じる",
   "battle.settings.title": "設定",
   "battle.settings.resume": "戦闘を続ける",
+  "battle.settings.hitstop.on": "ヒットストップ：オン",
+  "battle.settings.hitstop.off": "ヒットストップ：オフ",
   "battle.ultimate.select_title": "奥義を選択",
   "battle.unit_info.base_stats": "基本能力",
   "battle.unit_info.traits": "兵種特性",
@@ -3284,5 +3286,8 @@
   "battle.skill_name.tally-changban-root": "長坂の咆哮",
   "battle.skill_effect.tally-changban-root": "【制圧】長坂の咆哮：咆哮で周囲の敵を足止めする",
   "battle.skill_name.tally-changban-push": "長坂震退",
-  "battle.skill_effect.tally-changban-push": "【制圧】長坂震退：周囲の敵を1マス弾き飛ばす"
+  "battle.skill_effect.tally-changban-push": "【制圧】長坂震退：周囲の敵を1マス弾き飛ばす",
+  "ui.marriage.tag.oath_matchmaker": "義{0}仲介 +{1}%",
+  "ui.marriage.tag.rival_mutation": "宿敵融合・狼性変異+{0}%",
+  "ui.marriage.tag.comrade_bonus": "戦友の絆 +{0}%"
 }

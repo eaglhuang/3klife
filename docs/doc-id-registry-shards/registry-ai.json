@@ -1,5 +1,107 @@
 [
   {
+    "id": "doc_ai_0001",
+    "path": ".agents/rules/cocos-guide.md",
+    "title": "Cocos Creator Project Guidelines",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0002",
+    "path": ".agents/workflows/sanguo-progress-advance.md",
+    "title": "Sanguo Progress Advance Workflow（sanguo-progress-advance）",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0003",
+    "path": ".agents/workflows/ucuf-develop.md",
+    "title": "UCUF 開發 Workflow（ucuf-develop）",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0004",
+    "path": ".agents/workflows/ucuf-verify.md",
+    "title": "UCUF 驗證 Workflow（ucuf-verify）",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0005",
+    "path": ".agents/workflows/ui-design-to-code.md",
+    "title": "Context Budget Guard",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0006",
+    "path": ".agents/workflows/ui-generate-brief.md",
+    "title": "Context Budget Guard",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0007",
+    "path": ".agents/workflows/ui-generate-reference.md",
+    "title": "Context Budget Guard",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0008",
+    "path": ".github/copilot-instructions.md",
+    "title": "語言與推理規範",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0009",
+    "path": ".github/instructions/agent-collaboration.instructions.md",
+    "title": "Agent Collaboration Protocol",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0010",
+    "path": ".github/instructions/artifacts-guard.instructions.md",
+    "title": "Artifacts 目錄安全規則",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0011",
+    "path": ".github/instructions/docs-guard.instructions.md",
+    "title": "Docs 目錄讀取規則",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0012",
+    "path": ".github/instructions/fragment-guard.instructions.md",
+    "title": "Fragment Guard",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0013",
+    "path": ".github/instructions/image-view-guard.instructions.md",
+    "title": "Image View Guard",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0014",
+    "path": ".github/instructions/project-conventions.instructions.md",
+    "title": "架構原則與開發慣例",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0015",
+    "path": ".github/instructions/token-guard.instructions.md",
+    "title": "Token Guard",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0016",
+    "path": ".github/instructions/ui-factory-routing.instructions.md",
+    "title": "UI Factory Routing",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0017",
+    "path": ".github/instructions/ui-pipeline.instructions.md",
+    "title": "UI 開發流程指引",
+    "category": "ai"
+  },
+  {
     "id": "doc_ai_0018",
     "path": "AGENTS.md",
     "title": "ATM Governance Entry",
@@ -54,9 +156,99 @@
     "category": "ai"
   },
   {
+    "id": "doc_ai_0031",
+    "path": ".agents/workflows/ui-i18n-translate.md",
+    "title": "Context Budget Guard",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0032",
+    "path": ".agents/workflows/ui-scaffold.md",
+    "title": "Context Budget Guard",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0033",
+    "path": ".agents/workflows/ui-verify.md",
+    "title": "Context Budget Guard",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0034",
+    "path": ".github/instructions/ucuf-compliance.instructions.md",
+    "title": "UCUF CompositePanel 合規指令",
+    "category": "ai"
+  },
+  {
     "id": "doc_ai_0035",
     "path": "docs/agent-briefs/atm-task-template.md",
     "title": "ATM 任務卡模板",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0036",
+    "path": ".github/instructions/atm-atom-map-refactor.instructions.md",
+    "title": "ATM Atom Map Refactor",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0037",
+    "path": ".github/instructions/atm-create.instructions.md",
+    "title": "ATM Create",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0038",
+    "path": ".github/instructions/atm-evidence.instructions.md",
+    "title": "ATM Evidence",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0039",
+    "path": ".github/instructions/atm-governance-router.instructions.md",
+    "title": "ATM Governance Router",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0040",
+    "path": ".github/instructions/atm-handoff.instructions.md",
+    "title": "ATM Handoff",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0041",
+    "path": ".github/instructions/atm-internal-build-sync.instructions.md",
+    "title": "ATM Internal Build Sync",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0042",
+    "path": ".github/instructions/atm-lock.instructions.md",
+    "title": "ATM Lock",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0043",
+    "path": ".github/instructions/atm-next.instructions.md",
+    "title": "ATM Next",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0044",
+    "path": ".github/instructions/atm-orient.instructions.md",
+    "title": "ATM Orient",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0045",
+    "path": ".github/instructions/atm-task-intent-resolver.instructions.md",
+    "title": "ATM Task Intent Resolver",
+    "category": "ai"
+  },
+  {
+    "id": "doc_ai_0046",
+    "path": ".github/instructions/atm-upgrade-scan.instructions.md",
+    "title": "ATM Upgrade Scan",
     "category": "ai"
   },
   {

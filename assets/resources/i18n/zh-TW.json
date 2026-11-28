@@ -267,6 +267,8 @@
   "battle.review.close": "關閉",
   "battle.settings.title": "設定",
   "battle.settings.resume": "繼續戰鬥",
+  "battle.settings.hitstop.on": "命中頓格：開",
+  "battle.settings.hitstop.off": "命中頓格：關",
   "battle.ultimate.select_title": "選擇奧義",
   "battle.unit_info.base_stats": "基礎數值",
   "battle.unit_info.traits": "兵種特性",
@@ -3353,5 +3355,8 @@
   "battle.skill_name.tally-changban-root": "長坂雄咆",
   "battle.skill_effect.tally-changban-root": "【控制】長坂雄咆：一聲怒吼嚇得周圍敵軍定在原地",
   "battle.skill_name.tally-changban-push": "長坂震退",
-  "battle.skill_effect.tally-changban-push": "【控制】長坂震退：震飛周圍敵軍，把他們推開一格"
+  "battle.skill_effect.tally-changban-push": "【控制】長坂震退：震飛周圍敵軍，把他們推開一格",
+  "ui.marriage.tag.oath_matchmaker": "義{0}作媒 +{1}%",
+  "ui.marriage.tag.rival_mutation": "宿敵交融・狼性突變+{0}%",
+  "ui.marriage.tag.comrade_bonus": "同袍默契 +{0}%"
 }

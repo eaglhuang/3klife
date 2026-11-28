@@ -265,6 +265,8 @@
   "battle.review.close": "[ZH-CN] 關閉",
   "battle.settings.title": "[ZH-CN] 設定",
   "battle.settings.resume": "[ZH-CN] 繼續戰鬥",
+  "battle.settings.hitstop.on": "命中顿帧：开",
+  "battle.settings.hitstop.off": "命中顿帧：关",
   "battle.ultimate.select_title": "[ZH-CN] 選擇奧義",
   "battle.unit_info.base_stats": "[ZH-CN] 基礎數值",
   "battle.unit_info.traits": "[ZH-CN] 兵種特性",
@@ -3352,5 +3354,8 @@
   "battle.skill_name.tally-changban-root": "长坂雄咆",
   "battle.skill_effect.tally-changban-root": "【控制】长坂雄咆：一声怒吼吓得周围敌军定在原地",
   "battle.skill_name.tally-changban-push": "长坂震退",
-  "battle.skill_effect.tally-changban-push": "【控制】长坂震退：震飞周围敌军，把他们推开一格"
+  "battle.skill_effect.tally-changban-push": "【控制】长坂震退：震飞周围敌军，把他们推开一格",
+  "ui.marriage.tag.oath_matchmaker": "义{0}作媒 +{1}%",
+  "ui.marriage.tag.rival_mutation": "宿敌交融・狼性突变+{0}%",
+  "ui.marriage.tag.comrade_bonus": "同袍默契 +{0}%"
 }

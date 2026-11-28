@@ -8,6 +8,22 @@
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
+| `doc_other_3407` | docs/ai_atomic_framework/framework-drafts/release-trust-ops.md | Release Trust Continuous Verification |
+| `doc_other_3408` | docs/ai_atomic_framework/framework-function-atomization-manifest-shards/manifest-inventory.md | Framework Function Atomization Manifest — Function Inventory 與 Gate |
+| `doc_other_3409` | docs/ai_atomic_framework/framework-function-atomization-manifest-shards/manifest-machine-readable.md | Framework Function Atomization Manifest — Machine-Readable Inventory |
+| `doc_other_3410` | docs/ai_atomic_framework/framework-function-atomization-manifest.md | Framework Function Atomization Manifest |
+| `doc_other_3411` | docs/ai_atomic_framework/git-boundary-admission/git-boundary-admission-plan.md | ATM Git Boundary Admission Plan |
+| `doc_other_3412` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0001-pre-push-admission-architecture-contract.task.md | TASK-GIT-0001 |
+| `doc_other_3413` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0002-git-diff-to-mutation-request-converter.task.md | TASK-GIT-0002 |
+| `doc_other_3414` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0003-format-adapter-remote-diff-bridge.task.md | TASK-GIT-0003 |
+| `doc_other_3415` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0004-git-admission-cli.task.md | TASK-GIT-0004 |
+| `doc_other_3416` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0005-pre-push-hook-installer.task.md | TASK-GIT-0005 |
+| `doc_other_3417` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0006-git-boundary-evidence-envelope.task.md | TASK-GIT-0006 |
+| `doc_other_3418` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0007-neutral-steward-git-apply-dry-run.task.md | TASK-GIT-0007 |
+| `doc_other_3419` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0008-structured-file-fixture-suite.task.md | TASK-GIT-0008 |
+| `doc_other_3420` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0009-post-push-fail-fallback.task.md | TASK-GIT-0009 |
+| `doc_other_3421` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0010-operator-policy-and-bypass-audit.task.md | TASK-GIT-0010 |
+| `doc_other_3422` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0011-adopter-docs-and-runbook.task.md | TASK-GIT-0011 |
 | `doc_other_3423` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0012-end-to-end-dogfood-and-paper-evidence.task.md | TASK-GIT-0012 |
 | `doc_other_3424` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0013-agent-raw-git-deny-and-atm-git-tool-gate.task.md | TASK-GIT-0013 |
 | `doc_other_3425` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0014-atm-git-push-wrapper-and-tool-only-push-lane.task.md | TASK-GIT-0014 |
@@ -279,19 +295,3 @@
 | `doc_other_3691` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0350-unify-current-task-close-evidence-bundle-classification.task.md | ATM-GOV-0350 Unify current-task close evidence bundle classification |
 | `doc_other_3692` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0351-make-deferred-foreign-index-commit-failures-transactionally-reversible.task.md | ATM-GOV-0351 make deferred foreign index commit failures transactionally reversible |
 | `doc_other_3693` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0352-disclose-close-window-staged-index-blockers-at-taskflow-close-dry-run.task.md | ATM-GOV-0352 Disclose close-window staged-index blockers at taskflow close dry-run |
-| `doc_other_3694` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0353-memoize-planning-root-resolution-per-process-for-next-route-latency.task.md | ATM-GOV-0353 Memoize planning root resolution per process for next route latency |
-| `doc_other_3695` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0354-resolve-validator-contract-anchors-from-owning-surfaces-not-frozen-paths.task.md | ATM-GOV-0354 Resolve validator contract anchors from owning surfaces not frozen paths |
-| `doc_other_3696` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0355-make-neutral-steward-patch-application-real-and-fail-closed.task.md | ATM-GOV-0355 Make neutral steward patch application real and fail closed |
-| `doc_other_3697` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0356-repair-standard-profile-fixtures-and-gate-ordering-diagnostics.task.md | ATM-GOV-0356 Repair standard profile fixtures and gate ordering diagnostics |
-| `doc_other_3698` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0357-land-validator-contract-subject-resolver-deliverables.task.md | ATM-GOV-0357 Land validator contract subject resolver deliverables |
-| `doc_other_3699` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0358-consume-successor-evidence-in-canonical-four-plan-certificate.task.md | ATM-GOV-0358 Consume successor evidence in canonical four-plan certificate |
-| `doc_other_3700` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0359-compile-runbook-item-and-wave-exit-evidence.task.md | ATM-GOV-0359 Compile complete runbook item and wave-exit evidence |
-| `doc_other_3701` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0360-bind-the-four-plan-independent-certificate-to-observed-evidence-and-the-live-remote.task.md | ATM-GOV-0360 Bind the four-plan independent certificate to observed evidence and the live remote |
-| `doc_other_3702` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0361-independently-recompute-four-plan-objective-backlog-and-charter-verdict.task.md | ATM-GOV-0361 Independently recompute four-plan objective backlog and charter verdict |
-| `doc_other_3703` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0362-independently-recompute-runbook-wave-exits-and-live-remote-release-verdict.task.md | ATM-GOV-0362 Independently recompute runbook wave exits and live remote release verdict |
-| `doc_other_3704` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0363-make-governed-operations-own-and-clean-their-transient-residue.task.md | ATM-GOV-0363 Make governed operations own and clean their transient residue |
-| `doc_other_3705` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0364-remove-the-governance-round-trip-tax-on-a-single-task-card.task.md | ATM-GOV-0364 Remove the governance round-trip tax on a single task card |
-| `doc_other_3706` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0365-land-subcommand-help-dispatch-and-the-round-trip-backlog-dispositions.task.md | ATM-GOV-0365 Land the scope-amendment disposition |
-| `doc_other_3707` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0366-disclose-the-owner-lane-source-in-lane-capability-refusals.task.md | ATM-GOV-0366 Disclose the owner-lane source in lane capability refusals |
-| `doc_other_3708` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0367-record-the-close-write-rollback-that-an-identical-retry-resolves.task.md | ATM-GOV-0367 Record the close-write rollback that an identical retry resolves |
-| `doc_other_3709` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0368-let-one-command-satisfy-every-emergency-permission-it-needs.task.md | ATM-GOV-0368 Let one command satisfy every emergency permission it needs |
