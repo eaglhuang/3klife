@@ -138,3 +138,4 @@
 | `doc_task_3340` | docs/agent-briefs/tasks/PROG/PROG-2-10246.md | [PROG-2-10246] 武將天生戰法／奧義模板＋覆寫資料落地 |
 | `doc_task_3343` | docs/agent-briefs/tasks/PROG/PROG-2-10254.md | [PROG-2-10254] 修 playtest-online 在 12:00 發版時失敗的 7 步 |
 | `doc_task_3344` | docs/agent-briefs/tasks/PROG/PROG-2-10264.md | [PROG-2-10264] 規格書：街上偶遇他國武將＋武將作息表 |
+| `doc_task_3345` | docs/agent-briefs/tasks/PROG/PROG-2-10271.md | PROG-2-10271：方案 C — 結緣選角畫面顯示關係標籤與加成 |

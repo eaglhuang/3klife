@@ -3318,7 +3318,7 @@
   "battle.skill_effect.tally-changban-root": "【控制】长坂雄咆：一声怒吼吓得周围敌军定在原地",
   "battle.skill_name.tally-changban-push": "长坂震退",
   "battle.skill_effect.tally-changban-push": "【控制】长坂震退：震飞周围敌军，把他们推开一格",
-  "ui.marriage.tag.oath_matchmaker": "义兄作媒 +{0}%",
+  "ui.marriage.tag.oath_matchmaker": "义{0}作媒 +{1}%",
   "ui.marriage.tag.rival_mutation": "宿敌交融・狼性突变+{0}%",
   "ui.marriage.tag.comrade_bonus": "同袍默契 +{0}%"
 }

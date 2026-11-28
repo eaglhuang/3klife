@@ -4,6 +4,7 @@
 
 export interface MarriageRelationTagInput {
     isOathBrotherOrSister: boolean;
+    oathGender?: 'M' | 'F';
     isRival: boolean;
     isComrade: boolean;
     oathBonusPct?: number;
@@ -26,9 +27,10 @@ const MAX_VISIBLE_TAGS = 2;
 export function buildMarriageRelationTags(input: MarriageRelationTagInput): MarriageRelationTagSummary {
     const all: MarriageRelationTagItem[] = [];
     if (input.isOathBrotherOrSister) {
+        const genderWord = input.oathGender === 'F' ? '姊' : '兄';
         all.push({
             key: 'ui.marriage.tag.oath_matchmaker',
-            args: [String(input.oathBonusPct ?? 10)],
+            args: [genderWord, String(input.oathBonusPct ?? 10)],
         });
     }
     if (input.isRival) {

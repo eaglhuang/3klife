@@ -3250,7 +3250,7 @@
   "battle.skill_effect.tally-changban-root": "【制圧】長坂の咆哮：咆哮で周囲の敵を足止めする",
   "battle.skill_name.tally-changban-push": "長坂震退",
   "battle.skill_effect.tally-changban-push": "【制圧】長坂震退：周囲の敵を1マス弾き飛ばす",
-  "ui.marriage.tag.oath_matchmaker": "義兄弟仲介 +{0}%",
+  "ui.marriage.tag.oath_matchmaker": "義{0}仲介 +{1}%",
   "ui.marriage.tag.rival_mutation": "宿敵融合・狼性変異+{0}%",
   "ui.marriage.tag.comrade_bonus": "戦友の絆 +{0}%"
 }

@@ -5,7 +5,7 @@ import {
 } from '../assets/scripts/core/systems/MarriageRelationTags';
 
 const mockT = (key: string, ...args: string[]): string => {
-    if (key === 'ui.marriage.tag.oath_matchmaker') return `義兄作媒 +${args[0]}%`;
+    if (key === 'ui.marriage.tag.oath_matchmaker') return `義${args[0]}作媒 +${args[1]}%`;
     if (key === 'ui.marriage.tag.rival_mutation') return `宿敵交融・狼性突變+${args[0]}%`;
     if (key === 'ui.marriage.tag.comrade_bonus') return `同袍默契 +${args[0]}%`;
     return key;

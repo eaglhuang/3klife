@@ -537,6 +537,7 @@ export class BondingSetupController {
         const relationTagsLine = formatMarriageRelationTagsLine(
             buildMarriageRelationTags({
                 isOathBrotherOrSister: Boolean((father as { swornIds?: string[] }).swornIds?.includes(mother.id) || (mother as { swornIds?: string[] }).swornIds?.includes(father.id)),
+                oathGender: (mother as { gender?: string }).gender === 'F' ? 'F' : 'M',
                 isRival: Boolean((father as { rivalIds?: string[] }).rivalIds?.includes(mother.id) || (mother as { rivalIds?: string[] }).rivalIds?.includes(father.id)),
                 isComrade: Boolean((father as { comradeIds?: string[] }).comradeIds?.includes(mother.id) || (mother as { comradeIds?: string[] }).comradeIds?.includes(father.id)),
             }),
