@@ -17928,9 +17928,21 @@
     "category": "task"
   },
   {
-    "id": "doc_task_3323",
+    "id": "doc_task_3322",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10227.md",
+    "title": "[PROG-2-10227] 羈絆戰場效果整併實作：單一等級模型、兄弟齊心光環、九宮格合攻與援護",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3324",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10235.md",
     "title": "[PROG-2-10235] 血統與結緣四項 UI 掛點與 GameSession 接線",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3325",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10238.md",
+    "title": "[PROG-2-10238] 修正年末典禮結義彩蛋祝賀對象",
     "category": "task"
   }
 ]

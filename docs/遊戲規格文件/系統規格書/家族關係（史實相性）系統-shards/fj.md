@@ -139,3 +139,4 @@ if (ENEMY_PAIR_TABLE[father.Template_ID][mother.Template_ID]):
 | 關係圖鑑 | 記錄玩家已解鎖的所有史實與動態關係的收集系統 |
 | 家風傳承 | 同族三代以上共享 5+ 標籤時觸發的永久被動 Buff |
 | 合攻觸發 | 具有特定關係的武將在棋盤相鄰格時可發動的聯合攻擊 |
+| 兄弟齊心 | 義兄弟 3 格內（切比雪夫距離）攻防 +25%、暴擊 +15% 的戰場光環；單一羈絆戰場效果模型見 doc_spec_1358，數值在 kin-battle-effects.json，多語鍵 battle.kin_aura.name／desc |

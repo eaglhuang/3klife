@@ -3288,6 +3288,8 @@
   "life.street_first.found.f": "Found {0}! She is busy with her own thing.",
   "life.street_first.gift_unlocked.m": "You can now give him gifts. Pick something he likes!",
   "life.street_first.gift_unlocked.f": "You can now give her gifts. Pick something she likes!",
+  "battle.kin_aura.name": "Brotherly Accord",
+  "battle.kin_aura.desc": "Sworn brothers within 3 tiles: ATK/DEF +25%, crit +15%",
   "ui.bloodline.infant_pat_btn": "Pat head",
   "ui.bloodline.infant_pat_done_btn": "Patted this season",
   "ui.bloodline.infant_pat_gain": "Parent-child bond +{0}",

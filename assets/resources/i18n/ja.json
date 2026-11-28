@@ -3220,6 +3220,8 @@
   "life.street_first.found.f": "{0}を見つけた！彼女は自分の用事に忙しそうだ。",
   "life.street_first.gift_unlocked.m": "彼に贈り物ができるようになった。好きそうな物を選ぼう！",
   "life.street_first.gift_unlocked.f": "彼女に贈り物ができるようになった。好きそうな物を選ぼう！",
+  "battle.kin_aura.name": "兄弟一心",
+  "battle.kin_aura.desc": "義兄弟が3マス以内：攻防+25%、会心+15%",
   "ui.bloodline.infant_pat_btn": "頭をなでる",
   "ui.bloodline.infant_pat_done_btn": "今季はなでた",
   "ui.bloodline.infant_pat_gain": "親子の絆 +{0}",
