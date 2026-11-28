@@ -26,7 +26,12 @@ interface PickupView {
   getFoot: () => { x: number; y: number } | null;
   lastX: number;
   lastY: number;
+  /** 距離上次重畫累計的秒數（PROG-2-10239：重畫限 30Hz，位置仍逐幀跟隨）。 */
+  drawAcc: number;
 }
+
+/** 吃 buff 特效的重畫間隔（秒）。每次重畫都會配置圓／橢圓貝茲路徑，60fps 時減半；30fps 以下的裝置不受影響。 */
+const PICKUP_REDRAW_SEC = 1 / 30 - 0.001;
 
 export class UnitBuffPickupVfx {
   private table: PickupSlotTable | null = null;
@@ -77,6 +82,7 @@ export class UnitBuffPickupVfx {
     view.ground.active = true;
     view.spark.active = true;
     view.spark.setSiblingIndex(view.spark.parent ? view.spark.parent.children.length - 1 : 0);
+    view.drawAcc = 0;
     drawPickupFrame(view.groundG, view.sparkG, cfg, kind, isDebuff, view.tierIndex, 0);
   }
 
@@ -94,6 +100,9 @@ export class UnitBuffPickupVfx {
       if (foot) { view.lastX = foot.x; view.lastY = foot.y; }
       view.ground.setPosition(view.lastX, view.lastY, 0);
       view.spark.setPosition(view.lastX, view.lastY, 0);
+      view.drawAcc += dt;
+      if (view.drawAcc < PICKUP_REDRAW_SEC) continue;
+      view.drawAcc = 0;
       drawPickupFrame(view.groundG, view.sparkG, cfg, view.kind, view.isDebuff, view.tierIndex, slot.elapsed);
     }
     for (const slot of expired) this.hide(this.views[slot.index]);
@@ -124,6 +133,6 @@ export class UnitBuffPickupVfx {
     };
     const ground = make('BuffPickupGround', this.getGroundParent() ?? root);
     const spark = make('BuffPickupSparks', root);
-    return { ground: ground.node, groundG: ground.g, spark: spark.node, sparkG: spark.g, kind: 'attack', isDebuff: false, tierIndex: 0, getFoot: () => null, lastX: 0, lastY: 0 };
+    return { ground: ground.node, groundG: ground.g, spark: spark.node, sparkG: spark.g, kind: 'attack', isDebuff: false, tierIndex: 0, getFoot: () => null, lastX: 0, lastY: 0, drawAcc: 0 };
   }
 }

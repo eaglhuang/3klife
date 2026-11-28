@@ -48,10 +48,10 @@ export function createComboAttackKinSuite(): TestSuite {
         assert.isTrue(near(comboAttackChanceWithKin(-0.2, [relation(1.3)]), 0));
     });
 
-    suite.test('依羈絆等級：義兄弟 26%、戰友 20%；夫妻、無關係 0（doc_spec_1358 §2.2）', () => {
+    suite.test('依羈絆等級：義兄弟 26%、夫妻 26%、戰友 20%；無關係 0（doc_spec_1358 §2.2）', () => {
         assert.isTrue(near(comboChanceOfLevel('SWORN'), 0.26));
         assert.isTrue(near(comboChanceOfLevel('COMRADE'), 0.2));
-        assert.isTrue(near(comboChanceOfLevel('SPOUSE'), 0));
+        assert.isTrue(near(comboChanceOfLevel('SPOUSE'), 0.26));
         assert.isTrue(near(comboChanceOfLevel('NONE'), 0));
     });
 

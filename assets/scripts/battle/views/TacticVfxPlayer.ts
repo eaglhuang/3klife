@@ -21,9 +21,10 @@
  */
 import { Color, gfx, Graphics, Node } from 'cc';
 import {
-  TACTIC_VFX_BUDGET, TACTIC_VFX_RECIPES, tacticVfxStats, grantTacticParticles, tacticHitTotalSec,
+  TACTIC_VFX_BUDGET, TACTIC_VFX_RECIPES, tacticVfxStats, grantTacticParticles, tacticHitTotalSec, extraTacticRecipeOf,
   type Rgb, type TacticVfxGroup, type TacticVfxRecipe,
 } from '../shared/TacticVfxGroups';
+import type { TacticHitMotif, TacticWindupMotif } from '../shared/TacticVfxExtraGroups';
 
 const TAU = Math.PI * 2;
 
@@ -44,6 +45,9 @@ interface Fx {
   /** 預算核可的粒子數 */
   n: number;
   recipe: TacticVfxRecipe;
+  /** 第二批分組（PROG-2-10236）的畫法動機；第一批為 null，走專屬畫法 */
+  windupMotif: TacticWindupMotif | null;
+  hitMotif: TacticHitMotif | null;
 }
 
 const clamp01 = (v: number): number => (v < 0 ? 0 : v > 1 ? 1 : v);
@@ -67,7 +71,7 @@ export class TacticVfxPlayer {
 
   constructor(private readonly getParent: () => Node | null, private readonly layer: () => number) {
     for (let i = 0; i < TACTIC_VFX_BUDGET.maxFx; i++) {
-      this.pool.push({ active: false, hit: false, group: 'fire', t: 0, dur: 1, x: 0, y: 0, facing: 1, scale: 1, seed: 0, n: 0, recipe: TACTIC_VFX_RECIPES.fire });
+      this.pool.push({ active: false, hit: false, group: 'fire', t: 0, dur: 1, x: 0, y: 0, facing: 1, scale: 1, seed: 0, n: 0, recipe: TACTIC_VFX_RECIPES.fire, windupMotif: null, hitMotif: null });
     }
     (globalThis as { __TACTIC_VFX_STATS__?: unknown }).__TACTIC_VFX_STATS__ = tacticVfxStats;
   }
@@ -100,6 +104,8 @@ export class TacticVfxPlayer {
     free.active = true; free.hit = hit; free.group = group; free.t = 0; free.dur = dur;
     free.x = x; free.y = y; free.facing = facing; free.scale = Math.max(0.4, Math.min(2.5, scale));
     free.seed = this.seedCounter++; free.n = granted; free.recipe = TACTIC_VFX_RECIPES[group];
+    const extra = extraTacticRecipeOf(group);
+    free.windupMotif = extra ? extra.windup : null; free.hitMotif = extra ? extra.hit : null;
     tacticVfxStats.played[group]++;
     return true;
   }
@@ -219,6 +225,7 @@ export class TacticVfxPlayer {
     const u = clamp01(f.t / f.dur);
     const S = f.scale;
     const a = Math.sin(u * Math.PI) * 0.9 + 0.1 * u;
+    if (f.windupMotif) { this.windupByMotif(g, f, f.windupMotif, u, S, a); return; }
     switch (f.group) {
       case 'fire':
         // 火星從四周湧向施放者並上飄
@@ -288,6 +295,7 @@ export class TacticVfxPlayer {
     const fade = f.t <= rc.hitSec ? 1 : 1 - clamp01((f.t - rc.hitSec) / Math.max(0.01, f.dur - rc.hitSec)); // 餘韻漸淡
     const S = f.scale;
     const a = fade;
+    if (f.hitMotif) { this.hitByMotif(g, f, f.hitMotif, burst, life, a, S); return; }
     switch (f.group) {
       case 'fire': this.hitFire(g, f, burst, life, a, S); break;
       case 'water': this.hitWater(g, f, burst, life, a, S); break;
@@ -452,6 +460,323 @@ export class TacticVfxPlayer {
       const ang = rnd(f.seed, i, 2) * TAU; const R = (10 + 30 * easeOut(p)) * S;
       if (p >= 1) continue;
       this.dot(g, f, f.x + Math.cos(ang) * R, f.y - 8 * S + Math.sin(ang) * R * 0.6, 1.8 * S, a * (1 - p));
+    }
+  }
+
+  // ───────────── 第二批分組（PROG-2-10236）：通用動機畫法，配色與粒子量取自配方；update 內不配置新物件 ─────────────
+
+  private windupByMotif(g: Graphics, f: Fx, motif: TacticWindupMotif, u: number, S: number, a: number): void {
+    switch (motif) {
+      case 'converge':
+        // 光點由四周匯向施放者並微微上飄
+        for (let i = 0; i < f.n; i++) {
+          const ang = rnd(f.seed, i, 1) * TAU; const R = (36 + 22 * rnd(f.seed, i, 2)) * S * (1 - easeOut(u));
+          this.dot(g, f, f.x + Math.cos(ang) * R, f.y - 6 * S + Math.sin(ang) * R * 0.6 + u * 14 * S, (2.4 - u) * S, a);
+        }
+        break;
+      case 'ring': {
+        // 向內收縮的光環＋繞行小點
+        const R = (48 - 32 * easeOut(u)) * S;
+        this.ring(g, f, f.x, f.y - 10 * S, R, R * 0.5, 2.2 * S, a);
+        for (let i = 0; i < f.n; i++) {
+          const ang = u * TAU * 1.2 + i * (TAU / f.n);
+          this.dot(g, f, f.x + Math.cos(ang) * R, f.y - 10 * S + Math.sin(ang) * R * 0.5, 1.8 * S, a);
+        }
+        break;
+      }
+      case 'streak':
+        // 往身後倒灌的速度線（衝出去的預備）
+        for (let i = 0; i < f.n; i++) {
+          const oy = (rnd(f.seed, i, 1) - 0.5) * 40 * S; const len = (14 + 18 * rnd(f.seed, i, 2)) * S;
+          const x1 = f.x - f.facing * (46 - 34 * u) * S;
+          this.line(g, f, x1, f.y + oy, x1 - f.facing * len, f.y + oy, 1.6 * S, a);
+        }
+        break;
+      case 'orbit':
+        // 繞身旋轉的弧線
+        for (let i = 0; i < Math.min(f.n, 5); i++) {
+          const R = (16 + 18 * (i % 3)) * S * (0.6 + 0.4 * u); const a0 = u * TAU * 1.5 + i * 1.3;
+          this.setStroke(g, f.recipe.main, a * 0.9, 2.2 * S); g.arc(f.x, f.y, R, a0, a0 + 0.9, true); g.stroke();
+        }
+        break;
+      case 'glint': {
+        // 兵器處亮起十字閃光：越蓄越大，邊緣射出短光線
+        const gx = f.x + f.facing * 14 * S; const gy = f.y + 6 * S; const r = (4 + 18 * easeOut(u)) * S;
+        this.line(g, f, gx - r, gy, gx + r, gy, 2 * S, a);
+        this.line(g, f, gx, gy - r, gx, gy + r, 2 * S, a);
+        this.dot(g, f, gx, gy, (2 + 3 * u) * S, a);
+        for (let i = 0; i < Math.min(f.n, 6); i++) {
+          const ang = rnd(f.seed, i, 1) * TAU; const r0 = r * 0.7; const r1 = r * (1.2 + 0.5 * rnd(f.seed, i, 2));
+          this.line(g, f, gx + Math.cos(ang) * r0, gy + Math.sin(ang) * r0, gx + Math.cos(ang) * r1, gy + Math.sin(ang) * r1, 1.2 * S, a * 0.8);
+        }
+        break;
+      }
+    }
+  }
+
+  private hitByMotif(g: Graphics, f: Fx, motif: TacticHitMotif, burst: number, life: number, a: number, S: number): void {
+    switch (motif) {
+      case 'bolts': this.hitBolts(g, f, burst, life, a, S); break;
+      case 'shards': this.hitShards(g, f, burst, life, a, S); break;
+      case 'bubbles': this.hitBubbles(g, f, burst, life, a, S); break;
+      case 'slashes': this.hitSlashes(g, f, burst, life, a, S); break;
+      case 'thrust': this.hitThrust(g, f, burst, life, a, S); break;
+      case 'rain': this.hitRain(g, f, burst, life, a, S); break;
+      case 'dash': this.hitDash(g, f, burst, life, a, S); break;
+      case 'mist': this.hitMist(g, f, burst, life, a, S); break;
+      case 'dome': this.hitDome(g, f, burst, life, a, S); break;
+      case 'chain': this.hitChain(g, f, burst, life, a, S); break;
+      case 'runes': this.hitRunes(g, f, burst, life, a, S); break;
+      case 'cycle': this.hitCycle(g, f, burst, life, a, S); break;
+      case 'quake': this.hitQuake(g, f, burst, life, a, S); break;
+    }
+  }
+
+  /** 雷：2～3 道鋸齒閃電從天劈下（每 1/30 秒換一次抖動），地面電環與火花 */
+  private hitBolts(g: Graphics, f: Fx, burst: number, life: number, a: number, S: number): void {
+    const bolts = Math.min(3, Math.ceil(f.n / 5));
+    const step = Math.floor(f.t * 30);
+    const flash = burst < 1 ? 1 - burst * 0.6 : Math.max(0, 0.4 - (life - 0.3) * 0.6);
+    for (let k = 0; k < bolts; k++) {
+      const bx = f.x + (k - (bolts - 1) / 2) * 18 * S;
+      let px = bx; let py = f.y + 70 * S;
+      for (let s = 1; s <= 5; s++) {
+        const nx = bx + (rnd(f.seed + step, k * 7 + s, 1) - 0.5) * 22 * S * (s < 5 ? 1 : 0.2);
+        const ny = f.y + 70 * S - s * 15 * S;
+        this.line(g, f, px, py, nx, ny, 2.4 * S, a * flash);
+        px = nx; py = ny;
+      }
+    }
+    const e = easeOut(clamp01(life * 1.6));
+    this.ring(g, f, f.x, f.y - 10 * S, (8 + 34 * e) * S, (8 + 34 * e) * 0.42 * S, 2.4 * S, a * (1 - clamp01(life * 1.6)));
+    for (let i = 0; i < f.n; i++) {
+      const p = clamp01(burst * (0.8 + 0.5 * rnd(f.seed, i, 1)));
+      const ang = rnd(f.seed, i, 2) * TAU; const R = (6 + 28 * easeOut(p)) * S;
+      this.dot(g, f, f.x + Math.cos(ang) * R, f.y - 8 * S + Math.sin(ang) * R * 0.6, 1.6 * S, a * (1 - p));
+    }
+  }
+
+  /** 冰：放射狀冰晶碎片＋地面霜盤，餘韻飄落雪點 */
+  private hitShards(g: Graphics, f: Fx, burst: number, life: number, a: number, S: number): void {
+    const e = easeOut(clamp01(life * 1.5));
+    this.setFill(g, f.recipe.glow, a * 0.22); g.ellipse(f.x, f.y - 12 * S, 26 * S * (0.4 + easeOut(burst)), 11 * S * (0.4 + easeOut(burst))); g.fill();
+    this.ring(g, f, f.x, f.y - 12 * S, 30 * S * e, 13 * S * e, 2 * S, a * (1 - clamp01(life * 1.5)));
+    const shards = Math.ceil(f.n * 0.6);
+    for (let i = 0; i < shards; i++) {
+      const ang = (i / shards) * TAU + rnd(f.seed, i, 1) * 0.5;
+      const r0 = 5 * S; const r1 = (10 + 26 * rnd(f.seed, i, 2)) * S * easeOut(clamp01(burst * 1.3));
+      const cx = f.x; const cy = f.y + 2 * S; const w = 0.2;
+      this.setFill(g, f.recipe.glow, a * 0.45);
+      g.moveTo(cx + Math.cos(ang - w) * r0, cy + Math.sin(ang - w) * r0 * 0.8); g.lineTo(cx + Math.cos(ang) * r1 * 1.15, cy + Math.sin(ang) * r1 * 1.15 * 0.8); g.lineTo(cx + Math.cos(ang + w) * r0, cy + Math.sin(ang + w) * r0 * 0.8); g.close(); g.fill();
+      this.setFill(g, f.recipe.main, a * 0.95);
+      g.moveTo(cx + Math.cos(ang - w * 0.7) * r0, cy + Math.sin(ang - w * 0.7) * r0 * 0.8); g.lineTo(cx + Math.cos(ang) * r1, cy + Math.sin(ang) * r1 * 0.8); g.lineTo(cx + Math.cos(ang + w * 0.7) * r0, cy + Math.sin(ang + w * 0.7) * r0 * 0.8); g.close(); g.fill();
+    }
+    for (let i = shards; i < f.n; i++) {
+      const p = clamp01(life * (0.8 + 0.4 * rnd(f.seed, i, 3)));
+      this.dot(g, f, f.x + (rnd(f.seed, i, 4) - 0.5) * 48 * S, f.y + 28 * S - p * 44 * S, 1.5 * S, a * Math.sin(p * Math.PI));
+    }
+  }
+
+  /** 毒：地面毒霧圓盤＋上浮的空心毒泡 */
+  private hitBubbles(g: Graphics, f: Fx, burst: number, life: number, a: number, S: number): void {
+    const grow = 0.5 + easeOut(burst) * 0.7;
+    this.setFill(g, f.recipe.glow, a * 0.3); g.ellipse(f.x, f.y - 12 * S, 28 * S * grow, 12 * S * grow); g.fill();
+    this.setFill(g, f.recipe.main, a * 0.14); g.ellipse(f.x, f.y - 12 * S, 18 * S, 8 * S); g.fill();
+    for (let i = 0; i < f.n; i++) {
+      const p = clamp01(life * (0.9 + 0.4 * rnd(f.seed, i, 1)) - rnd(f.seed, i, 2) * 0.25);
+      if (p <= 0) continue;
+      const x = f.x + (rnd(f.seed, i, 3) - 0.5) * 38 * S + Math.sin(p * 6 + i) * 3 * S;
+      const y = f.y - 10 * S + p * (28 + 30 * rnd(f.seed, i, 4)) * S;
+      const r = (2.2 + 2.6 * rnd(f.seed, i, 5)) * S * (0.6 + 0.4 * p);
+      const al = a * Math.sin(p * Math.PI);
+      this.setStroke(g, f.recipe.main, al, 1.6 * S); g.circle(x, y, r); g.stroke();
+      this.setFill(g, f.recipe.core, al * 0.9); g.circle(x - r * 0.3, y + r * 0.3, r * 0.25); g.fill();
+    }
+  }
+
+  /** 斬擊：三道交錯斬線依序劈出（左下到右上、再反向、再橫斬），命中點迸火花 */
+  private hitSlashes(g: Graphics, f: Fx, burst: number, life: number, a: number, S: number): void {
+    for (let k = 0; k < 3; k++) {
+      const p = clamp01((f.t - k * 0.07) / 0.16);
+      if (p <= 0) continue;
+      const dir = k % 2 === 0 ? 1 : -1; const dy = k === 2 ? 0 : 22 * S * dir;
+      const x0 = f.x - f.facing * 26 * S * dir; const y0 = f.y + dy;
+      const x1 = f.x + f.facing * 26 * S * dir; const y1 = f.y - dy;
+      const head = easeOut(p); const tail = Math.max(0, head - 0.55);
+      const fadeK = a * (1 - clamp01((f.t - k * 0.07 - 0.16) / 0.4));
+      this.line(g, f, x0 + (x1 - x0) * tail, y0 + (y1 - y0) * tail, x0 + (x1 - x0) * head, y0 + (y1 - y0) * head, (4 - k * 0.6) * S, fadeK);
+    }
+    for (let i = 0; i < f.n; i++) {
+      const p = clamp01((f.t - 0.05) * 3 * (0.8 + 0.5 * rnd(f.seed, i, 1)));
+      if (p <= 0 || p >= 1) continue;
+      const ang = rnd(f.seed, i, 2) * TAU; const R = (6 + 24 * easeOut(p)) * S;
+      this.dot(g, f, f.x + Math.cos(ang) * R, f.y + Math.sin(ang) * R * 0.7, 1.5 * S, a * (1 - p));
+    }
+  }
+
+  /** 突刺：三道平行槍影沿朝向直線穿出，尖端三角閃光＋衝擊環 */
+  private hitThrust(g: Graphics, f: Fx, burst: number, life: number, a: number, S: number): void {
+    const p = easeOut(clamp01(f.t / 0.18));
+    const tailK = clamp01((f.t - 0.12) / 0.3);
+    for (let k = 0; k < 3; k++) {
+      const oy = (k - 1) * 9 * S; const reach = (92 - Math.abs(k - 1) * 22) * S;
+      const xs = f.x - f.facing * 46 * S; const xh = xs + f.facing * reach * p; const xt = xs + f.facing * reach * tailK * 0.9;
+      this.line(g, f, xt, f.y + oy, xh, f.y + oy, (k === 1 ? 3.4 : 2) * S, a);
+      if (k === 1) {
+        this.setFill(g, f.recipe.core, a);
+        g.moveTo(xh + f.facing * 9 * S, f.y + oy); g.lineTo(xh - f.facing * 3 * S, f.y + oy + 5 * S); g.lineTo(xh - f.facing * 3 * S, f.y + oy - 5 * S); g.close(); g.fill();
+      }
+    }
+    const q = clamp01((f.t - 0.12) / 0.4);
+    if (q > 0 && q < 1) this.ring(g, f, f.x + f.facing * 18 * S, f.y, (6 + 22 * easeOut(q)) * S, (6 + 22 * easeOut(q)) * 0.6 * S, (3 - 2 * q) * S, a * (1 - q));
+    for (let i = 0; i < f.n; i++) {
+      const pp = clamp01((f.t - 0.1) * 3.2 * (0.8 + 0.4 * rnd(f.seed, i, 1)));
+      if (pp <= 0 || pp >= 1) continue;
+      this.dot(g, f, f.x + f.facing * (10 + 26 * pp) * S, f.y + (rnd(f.seed, i, 2) - 0.5) * 30 * S * pp, 1.5 * S, a * (1 - pp));
+    }
+  }
+
+  /** 箭雨：紅羽箭由上方斜落，插地後留一支短箭與落點小環 */
+  private hitRain(g: Graphics, f: Fx, burst: number, life: number, a: number, S: number): void {
+    for (let i = 0; i < f.n; i++) {
+      const t0 = rnd(f.seed, i, 1) * 0.3; const q = clamp01((f.t - t0) / 0.16);
+      if (q <= 0) continue;
+      const gx = f.x + (rnd(f.seed, i, 2) - 0.5) * 54 * S; const gy = f.y - 8 * S + (rnd(f.seed, i, 3) - 0.5) * 16 * S;
+      const slant = f.facing * 0.35; const len = 16 * S;
+      if (q < 1) {
+        // 箭頭從落點上方（朝施放方一側）斜落到落點
+        const rem = 70 * S * (1 - q); const hx = gx - slant * rem; const hy = gy + rem;
+        this.line(g, f, hx - slant * len, hy + len, hx, hy, 1.7 * S, a);
+      } else {
+        const stay = a * (1 - clamp01((f.t - t0 - 0.16) / 0.5));
+        this.line(g, f, gx - slant * len * 0.6, gy + len * 0.6, gx, gy, 1.7 * S, stay);
+        const r = clamp01((f.t - t0 - 0.16) / 0.25);
+        if (r < 1) this.ring(g, f, gx, gy - 2 * S, (2 + 7 * r) * S, (2 + 7 * r) * 0.45 * S, 1.2 * S, a * (1 - r));
+      }
+    }
+  }
+
+  /** 衝鋒：水平速度帶朝前掃過，後方揚起土塵，終點衝擊環 */
+  private hitDash(g: Graphics, f: Fx, burst: number, life: number, a: number, S: number): void {
+    const p = easeOut(clamp01(f.t / 0.22));
+    for (let k = 0; k < 3; k++) {
+      const oy = (k - 1) * 10 * S; const xs = f.x - f.facing * 52 * S; const xh = xs + f.facing * 104 * S * p;
+      this.line(g, f, xh - f.facing * (34 - k * 6) * S, f.y + oy, xh, f.y + oy, (k === 1 ? 3.6 : 2.2) * S, a * (1 - clamp01((f.t - 0.22) / 0.4)));
+    }
+    for (let i = 0; i < f.n; i++) {
+      const u0 = rnd(f.seed, i, 1); const q = clamp01(life * 1.5 - u0 * 0.5);
+      if (q <= 0 || q >= 1) continue;
+      const x = f.x - f.facing * (44 - 88 * u0) * S; const y = f.y - 12 * S + q * (10 + 14 * rnd(f.seed, i, 2)) * S;
+      this.setFill(g, f.recipe.glow, a * (1 - q) * 0.35); g.circle(x, y, (3 + 6 * q) * S); g.fill();
+      this.setFill(g, f.recipe.main, a * (1 - q) * 0.5); g.circle(x, y, (1.5 + 3 * q) * S); g.fill();
+    }
+    const q = clamp01((f.t - 0.16) / 0.4);
+    if (q > 0 && q < 1) this.ring(g, f, f.x + f.facing * 30 * S, f.y - 8 * S, (6 + 24 * easeOut(q)) * S, (6 + 24 * easeOut(q)) * 0.5 * S, (3.2 - 2.2 * q) * S, a * (1 - q));
+  }
+
+  /** 暗：地面紫黑霧盤向外鋪開，霧點盤旋，中心浮現一雙眼縫 */
+  private hitMist(g: Graphics, f: Fx, burst: number, life: number, a: number, S: number): void {
+    const e = easeOut(clamp01(life * 1.4));
+    this.setFill(g, f.recipe.glow, a * 0.3); g.ellipse(f.x, f.y - 12 * S, 34 * S * (0.4 + e), 14 * S * (0.4 + e)); g.fill();
+    this.setFill(g, f.recipe.main, a * 0.16); g.ellipse(f.x, f.y - 12 * S, 22 * S * (0.4 + e), 9 * S * (0.4 + e)); g.fill();
+    for (let i = 0; i < f.n; i++) {
+      const ang = rnd(f.seed, i, 1) * TAU + life * 3.2; const R = (8 + 24 * rnd(f.seed, i, 2)) * S * (0.4 + e);
+      this.dot(g, f, f.x + Math.cos(ang) * R, f.y - 10 * S + Math.sin(ang) * R * 0.42 + life * 12 * S, (1.6 + 1.4 * rnd(f.seed, i, 3)) * S, a * 0.8);
+    }
+    const eye = clamp01((life - 0.12) * 4) * (1 - clamp01((life - 0.7) * 3.3)) * a;
+    if (eye > 0) {
+      for (let s = -1; s <= 1; s += 2) {
+        this.setFill(g, f.recipe.core, eye);
+        g.moveTo(f.x + s * 5 * S, f.y + 12 * S); g.lineTo(f.x + s * 11 * S, f.y + 15 * S); g.lineTo(f.x + s * 11 * S, f.y + 11 * S); g.close(); g.fill();
+      }
+    }
+  }
+
+  /** 防禦：護盾穹頂自地面撐起，穹頂內三道放射紋，邊緣閃光點 */
+  private hitDome(g: Graphics, f: Fx, burst: number, life: number, a: number, S: number): void {
+    const R = (10 + 26 * easeOut(clamp01(burst * 1.2))) * S; const cy = f.y - 8 * S;
+    this.setFill(g, f.recipe.glow, a * 0.14); g.ellipse(f.x, cy, R, R * 0.4); g.fill();
+    this.setStroke(g, f.recipe.glow, a * 0.35, 7 * S); g.arc(f.x, cy, R, 0, Math.PI, true); g.stroke();
+    this.setStroke(g, f.recipe.main, a, 3 * S); g.arc(f.x, cy, R, 0, Math.PI, true); g.stroke();
+    this.setStroke(g, f.recipe.core, a * 0.8, 1.2 * S); g.arc(f.x, cy, R * 0.94, 0.15, Math.PI - 0.15, true); g.stroke();
+    this.ring(g, f, f.x, cy, R, R * 0.4, 1.8 * S, a * 0.8);
+    for (let k = 1; k <= 3; k++) {
+      const ang = (k / 4) * Math.PI;
+      this.line(g, f, f.x + Math.cos(ang) * R * 0.3, cy + Math.sin(ang) * R * 0.3, f.x + Math.cos(ang) * R * 0.92, cy + Math.sin(ang) * R * 0.92, 1 * S, a * 0.45);
+    }
+    for (let i = 0; i < f.n; i++) {
+      const ang = rnd(f.seed, i, 1) * Math.PI; const tw = Math.sin(f.t * 14 + i * 2.1) * 0.5 + 0.5;
+      this.dot(g, f, f.x + Math.cos(ang) * R, cy + Math.sin(ang) * R, 1.5 * S, a * tw);
+    }
+  }
+
+  /** 連環：四個鐵環一節扣一節橫貫格子，交錯立環／平環，連結處閃火花 */
+  private hitChain(g: Graphics, f: Fx, burst: number, life: number, a: number, S: number): void {
+    const links = 4; const shown = Math.ceil(links * easeOut(clamp01(burst * 1.4)));
+    const sway = Math.sin(f.t * 10) * 1.5 * S;
+    for (let k = 0; k < shown; k++) {
+      const cx = f.x + (k - (links - 1) / 2) * 14 * S; const cy = f.y - 2 * S + (k % 2 === 0 ? sway : -sway);
+      if (k % 2 === 0) this.ring(g, f, cx, cy, 8.5 * S, 5 * S, 2.4 * S, a);
+      else this.ring(g, f, cx, cy, 5 * S, 8.5 * S, 2.4 * S, a);
+      if (k > 0) this.dot(g, f, cx - 7 * S, cy, 1.6 * S, a * (1 - clamp01(life * 1.4)));
+    }
+    for (let i = 0; i < f.n; i++) {
+      const p = clamp01(life * (0.9 + 0.4 * rnd(f.seed, i, 1)));
+      this.dot(g, f, f.x + (rnd(f.seed, i, 2) - 0.5) * 60 * S, f.y + (rnd(f.seed, i, 3) - 0.5) * 20 * S + p * 18 * S, 1.3 * S, a * Math.sin(p * Math.PI));
+    }
+  }
+
+  /** 文擊／奇策：地面旋轉符文陣（雙環＋八道刻度），符點上升 */
+  private hitRunes(g: Graphics, f: Fx, burst: number, life: number, a: number, S: number): void {
+    const R = (10 + 24 * easeOut(clamp01(burst * 1.2))) * S; const cy = f.y - 10 * S; const spin = f.t * 2.4;
+    this.ring(g, f, f.x, cy, R, R * 0.42, 2 * S, a);
+    this.ring(g, f, f.x, cy, R * 0.62, R * 0.62 * 0.42, 1.4 * S, a * 0.8);
+    for (let i = 0; i < 8; i++) {
+      const ang = spin + (i / 8) * TAU; const cs = Math.cos(ang); const sn = Math.sin(ang);
+      this.line(g, f, f.x + cs * R * 0.62, cy + sn * R * 0.62 * 0.42, f.x + cs * R, cy + sn * R * 0.42, 1.4 * S, a * 0.9);
+    }
+    this.star(g, f, f.x, cy, 7 * S * (0.4 + easeOut(burst)), 3 * S * (0.4 + easeOut(burst)), a * 0.9, spin);
+    for (let i = 0; i < f.n; i++) {
+      const p = clamp01(life * (0.9 + 0.4 * rnd(f.seed, i, 1)) - rnd(f.seed, i, 2) * 0.2);
+      if (p <= 0) continue;
+      const ang = rnd(f.seed, i, 3) * TAU; const rr = R * 0.9 * rnd(f.seed, i, 4);
+      this.dot(g, f, f.x + Math.cos(ang) * rr, cy + Math.sin(ang) * rr * 0.42 + p * 34 * S, 1.6 * S, a * Math.sin(p * Math.PI));
+    }
+  }
+
+  /** 再動／重置：兩道旋轉的圓弧箭頭首尾相接，中心閃光，火花上浮 */
+  private hitCycle(g: Graphics, f: Fx, burst: number, life: number, a: number, S: number): void {
+    const R = (10 + 16 * easeOut(clamp01(burst * 1.2))) * S; const cy = f.y + 4 * S; const spin = f.t * 5;
+    for (let k = 0; k < 2; k++) {
+      const a0 = spin + k * Math.PI; const a1 = a0 + 2.4;
+      this.setStroke(g, f.recipe.glow, a * 0.35, 7 * S); g.arc(f.x, cy, R, a0, a1, true); g.stroke();
+      this.setStroke(g, f.recipe.main, a, 3 * S); g.arc(f.x, cy, R, a0, a1, true); g.stroke();
+      const hx = f.x + Math.cos(a1) * R; const hy = cy + Math.sin(a1) * R; const tx = -Math.sin(a1); const ty = Math.cos(a1);
+      this.setFill(g, f.recipe.core, a);
+      g.moveTo(hx + tx * 7 * S, hy + ty * 7 * S); g.lineTo(hx - tx + ty * 5 * S, hy - ty - tx * 5 * S); g.lineTo(hx - tx - ty * 5 * S, hy - ty + tx * 5 * S); g.close(); g.fill();
+    }
+    this.dot(g, f, f.x, cy, (3 + 3 * (1 - burst)) * S, a);
+    for (let i = 0; i < f.n; i++) {
+      const p = clamp01(life * (0.9 + 0.4 * rnd(f.seed, i, 1)));
+      this.dot(g, f, f.x + (rnd(f.seed, i, 2) - 0.5) * 40 * S, cy + p * 38 * S, 1.5 * S, a * Math.sin(p * Math.PI));
+    }
+  }
+
+  /** 震地：地面放射裂痕、衝擊環、碎石拋物線與塵 */
+  private hitQuake(g: Graphics, f: Fx, burst: number, life: number, a: number, S: number): void {
+    const e = easeOut(clamp01(burst * 1.3)); const cy = f.y - 10 * S;
+    for (let k = 0; k < 7; k++) {
+      const ang = (k / 7) * TAU + 0.3; const len = (14 + 18 * rnd(f.seed, k, 1)) * S * e;
+      const mx = f.x + Math.cos(ang) * len * 0.55 + (rnd(f.seed, k, 2) - 0.5) * 6 * S; const my = cy + Math.sin(ang) * len * 0.55 * 0.5;
+      this.line(g, f, f.x, cy, mx, my, 2 * S, a);
+      this.line(g, f, mx, my, f.x + Math.cos(ang) * len, cy + Math.sin(ang) * len * 0.5, 1.4 * S, a);
+    }
+    this.ring(g, f, f.x, cy, (8 + 36 * e) * S, (8 + 36 * e) * 0.45 * S, (4 - 3 * e) * S, a * (1 - e));
+    for (let i = 0; i < f.n; i++) {
+      const vx = (rnd(f.seed, i, 1) - 0.5) * 60 * S; const vy = (30 + 40 * rnd(f.seed, i, 2)) * S; const t = f.t * 1.3;
+      const y = cy + vy * t - 140 * S * t * t;
+      if (y < cy - 4 * S) continue;
+      this.dot(g, f, f.x + vx * t, y, (2 - life) * S, a);
     }
   }
 }

@@ -75,6 +75,7 @@ import { salvageGainItems } from '../../core/systems/StrategistHud';
 import { IBattleHUDLike, IBattleLogLike, IDuelChallengeLike, IResultPopupLike, IDeployRuntimeLike, IBattleScenePanelLike, IStrategistHudLike } from '../../shared/interfaces/IBattleUIComponents';
 
 import { isHeavyHit, BATTLE_TURN_FLOW_TIMING, BATTLE_VISUAL_TIMING } from './BattlePresentationTiming';
+import { battleUltimateWindow, getBattleJuice, juiceNowSec } from '../shared/BattleJuice';
 import { ATTACK_IMPACT_SEC } from '../shared/AttackShotStyle';
 import { attackStyleFor } from '../shared/AttackStyle';
 import { generalWeaponOf } from './AttackVfxPlayer';
@@ -1167,6 +1168,8 @@ export class BattleUIBridge {
   }
 
   private _presentGeneralSkillUsed(data: { faction: Faction; skillId?: string; skillName?: string; sourceType?: SkillSourceType; generalName?: string }): void {
+    // PROG-2-10239：奧義發動後一小段時間內的命中算「奧義命中」，頓格與鏡頭震動用較重的一級（只影響表現）
+    if (data.sourceType === SkillSourceType.Ultimate) battleUltimateWindow.mark(juiceNowSec(), getBattleJuice().hitStop.ultimateWindowSec);
     this.refreshBattleViews();
     this.ctx.unitRenderer?.playGeneralAttackPose(data.faction);
     const skillId = data.skillId ?? data.skillName ?? null;

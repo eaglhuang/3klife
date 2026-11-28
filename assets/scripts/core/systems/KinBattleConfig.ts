@@ -8,7 +8,7 @@ import data from '../../../resources/data/kin-battle-effects.json';
 export interface KinBattleConfig {
     sworn: { deployMorale: number };
     aura: { radius: number; attackDefenseRatio: number; critBonus: number };
-    combo: { baseChance: number; swornMod: number; comradeMod: number; followUpRatio: number };
+    combo: { baseChance: number; swornMod: number; spouseMod: number; comradeMod: number; followUpRatio: number };
     rescue: { chance: number; shareRatio: number };
 }
 

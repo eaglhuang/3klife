@@ -31,9 +31,8 @@ export function createTacticVfxGroupsSuite(): TestSuite {
         assert.equals('stun', tacticVfxGroupOf('diao-chan-charm'));
     });
 
-    suite.test('純傷害與不存在的戰法不歸類（沿用通用光效）', () => {
-        assert.equals(null, tacticVfxGroupOf('tally-charge'));
-        assert.equals(null, tacticVfxGroupOf('insp-lance-thrust'));
+    suite.test('殼戰法與不存在的戰法不歸類（沿用通用光效；純傷害招式第二批已有分組）', () => {
+        assert.equals(null, tacticVfxGroupOf('tally-nan-man')); // 殼 profile（效果未實作）沒有第二批分組
         assert.equals(null, tacticVfxGroupOf('no-such-skill'));
     });
 
