@@ -1,0 +1,364 @@
+{
+  "schema": "street-qhead-proto.v1",
+  "note": "市井大街 Q 頭生活雛形（PROG-2-10258）。座標單位：lanes／connectorsX／xMin／xMax／venues 為行走遮罩座標（1024x384），乘 world.maskScale 才是全景像素。走道由 mkt_walkmask.png 的白色橫帶預先轉出（y 為帶中心），連通巷是遮罩上貫穿各帶的縱向窄道。",
+  "world": {
+    "width": 4096,
+    "height": 1536,
+    "maskScale": 4,
+    "leftTex": "life/mkt/mkt_L1_left/spriteFrame",
+    "rightTex": "life/mkt/mkt_L1_right/spriteFrame"
+  },
+  "head": {
+    "sizePx": 124,
+    "lift": 34,
+    "bodyScale": 0.7
+  },
+  "lanes": [
+    {
+      "id": "front_top",
+      "y": 89
+    },
+    {
+      "id": "front_row2",
+      "y": 158
+    },
+    {
+      "id": "mid_stalls",
+      "y": 237
+    },
+    {
+      "id": "front_low",
+      "y": 314
+    }
+  ],
+  "connectorsX": [
+    180,
+    500,
+    740,
+    850
+  ],
+  "xMin": 24,
+  "xMax": 1000,
+  "venues": {
+    "mkt_inn": {
+      "lane": 0,
+      "x": 100
+    },
+    "mkt_tavern": {
+      "lane": 0,
+      "x": 230
+    },
+    "mkt_theater": {
+      "lane": 0,
+      "x": 323
+    },
+    "mkt_teahouse": {
+      "lane": 0,
+      "x": 420
+    },
+    "mkt_guild": {
+      "lane": 0,
+      "x": 947
+    },
+    "mkt_pawn": {
+      "lane": 1,
+      "x": 833
+    },
+    "mkt_clinic": {
+      "lane": 1,
+      "x": 733
+    },
+    "mkt_bookshop": {
+      "lane": 1,
+      "x": 947
+    },
+    "mkt_tailor": {
+      "lane": 1,
+      "x": 93
+    },
+    "mkt_smithy": {
+      "lane": 1,
+      "x": 200
+    },
+    "mkt_carpenter": {
+      "lane": 1,
+      "x": 293
+    },
+    "mkt_grocery": {
+      "lane": 1,
+      "x": 387
+    },
+    "mkt_gamble": {
+      "lane": 3,
+      "x": 243
+    },
+    "mkt_bath": {
+      "lane": 3,
+      "x": 370
+    },
+    "mkt_match": {
+      "lane": 3,
+      "x": 130
+    },
+    "mkt_street": {
+      "lane": 2,
+      "x": 510
+    }
+  },
+  "plazaVenue": "mkt_street",
+  "speed": {
+    "stroll": 175,
+    "transit": 230
+  },
+  "stroll": {
+    "idleMinSec": 1.5,
+    "idleMaxSec": 4,
+    "spreadPx": 150
+  },
+  "drink": {
+    "sipEverySec": 3.2,
+    "symbolActivity": "drink"
+  },
+  "jump": {
+    "everySecMin": 1.6,
+    "everySecMax": 3.4,
+    "clip": "jump"
+  },
+  "talk": {
+    "meetDistPx": 210,
+    "lineSec": 2.6,
+    "cooldownSec": 16,
+    "startDelaySec": 0.5
+  },
+  "bubble": {
+    "widthPx": 330,
+    "fontPx": 26,
+    "padPx": 16,
+    "gapPx": 10,
+    "tailPx": 14,
+    "maxLinesCjk": 3
+  },
+  "camera": {
+    "startVenue": "mkt_tavern",
+    "autoNudgePx": 0
+  },
+  "cast": [
+    {
+      "id": "zhang_fei",
+      "avatar": "sprites/generals/avatars/zhang_fei_avatar/texture",
+      "nameKey": "life.street.name.zhang_fei",
+      "crop": {
+        "scale": 1.35,
+        "dy": -0.08
+      },
+      "forceVenue": "mkt_tavern",
+      "role": "drinker"
+    },
+    {
+      "id": "guan_yu",
+      "avatar": "sprites/generals/avatars/guan_yu_avatar/texture",
+      "nameKey": "life.street.name.guan_yu",
+      "crop": {
+        "scale": 1.4,
+        "dy": -0.1
+      },
+      "forceVenue": "mkt_tavern",
+      "role": "drinker"
+    },
+    {
+      "id": "liu_bei",
+      "avatar": "sprites/generals/avatars/liu_bei_avatar/texture",
+      "nameKey": "life.street.name.liu_bei",
+      "crop": {
+        "scale": 1.4,
+        "dy": -0.12
+      },
+      "role": "stroller",
+      "forceVenue": "mkt_inn",
+      "firstGoto": "mkt_theater"
+    },
+    {
+      "id": "zhuge_liang",
+      "avatar": "sprites/generals/avatars/zhuge_liang_avatar/texture",
+      "nameKey": "life.street.name.zhuge_liang",
+      "crop": {
+        "scale": 1.4,
+        "dy": -0.12
+      },
+      "role": "stroller",
+      "forceVenue": "mkt_teahouse",
+      "firstGoto": "mkt_theater"
+    },
+    {
+      "id": "zhao_yun",
+      "avatar": "sprites/generals/avatars/zhao_yun_avatar/texture",
+      "nameKey": "life.street.name.zhao_yun",
+      "crop": {
+        "scale": 1.4,
+        "dy": -0.1
+      },
+      "forceVenue": "mkt_street",
+      "role": "jumper"
+    },
+    {
+      "id": "cao_cao",
+      "avatar": "sprites/generals/avatars/cao_cao_avatar/texture",
+      "nameKey": "life.street.name.cao_cao",
+      "crop": {
+        "scale": 1.4,
+        "dy": -0.1
+      },
+      "role": "stroller"
+    },
+    {
+      "id": "diao_chan",
+      "avatar": "sprites/generals/avatars/diao_chan_avatar/texture",
+      "nameKey": "life.street.name.diao_chan",
+      "crop": {
+        "scale": 1.4,
+        "dy": -0.1
+      },
+      "role": "stroller"
+    },
+    {
+      "id": "sun_shangxiang",
+      "avatar": "sprites/generals/avatars/sun_shang_xiang_avatar/texture",
+      "nameKey": "life.street.name.sun_shangxiang",
+      "crop": {
+        "scale": 1.4,
+        "dy": -0.1
+      },
+      "forceVenue": "mkt_teahouse",
+      "role": "jumper"
+    }
+  ],
+  "dialogues": [
+    {
+      "id": "zf_gy",
+      "pair": [
+        "zhang_fei",
+        "guan_yu"
+      ],
+      "lines": [
+        {
+          "who": 0,
+          "key": "life.street.dlg.zf_gy.0"
+        },
+        {
+          "who": 1,
+          "key": "life.street.dlg.zf_gy.1"
+        },
+        {
+          "who": 0,
+          "key": "life.street.dlg.zf_gy.2"
+        }
+      ]
+    },
+    {
+      "id": "lb_zg",
+      "pair": [
+        "liu_bei",
+        "zhuge_liang"
+      ],
+      "lines": [
+        {
+          "who": 0,
+          "key": "life.street.dlg.lb_zg.0"
+        },
+        {
+          "who": 1,
+          "key": "life.street.dlg.lb_zg.1"
+        },
+        {
+          "who": 0,
+          "key": "life.street.dlg.lb_zg.2"
+        }
+      ]
+    },
+    {
+      "id": "g1",
+      "lines": [
+        {
+          "who": 0,
+          "key": "life.street.dlg.g1.0"
+        },
+        {
+          "who": 1,
+          "key": "life.street.dlg.g1.1"
+        },
+        {
+          "who": 0,
+          "key": "life.street.dlg.g1.2"
+        }
+      ]
+    },
+    {
+      "id": "g2",
+      "lines": [
+        {
+          "who": 0,
+          "key": "life.street.dlg.g2.0"
+        },
+        {
+          "who": 1,
+          "key": "life.street.dlg.g2.1"
+        },
+        {
+          "who": 0,
+          "key": "life.street.dlg.g2.2"
+        }
+      ]
+    },
+    {
+      "id": "g3",
+      "lines": [
+        {
+          "who": 0,
+          "key": "life.street.dlg.g3.0"
+        },
+        {
+          "who": 1,
+          "key": "life.street.dlg.g3.1"
+        },
+        {
+          "who": 0,
+          "key": "life.street.dlg.g3.2"
+        }
+      ]
+    },
+    {
+      "id": "g4",
+      "lines": [
+        {
+          "who": 0,
+          "key": "life.street.dlg.g4.0"
+        },
+        {
+          "who": 1,
+          "key": "life.street.dlg.g4.1"
+        },
+        {
+          "who": 0,
+          "key": "life.street.dlg.g4.2"
+        }
+      ]
+    },
+    {
+      "id": "g5",
+      "lines": [
+        {
+          "who": 0,
+          "key": "life.street.dlg.g5.0"
+        },
+        {
+          "who": 1,
+          "key": "life.street.dlg.g5.1"
+        },
+        {
+          "who": 0,
+          "key": "life.street.dlg.g5.2"
+        }
+      ]
+    }
+  ]
+}

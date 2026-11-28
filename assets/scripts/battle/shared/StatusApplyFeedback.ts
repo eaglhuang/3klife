@@ -23,6 +23,7 @@ const STATUS_POLARITY: Readonly<Record<StatusEffect, StatusPolarity>> = {
   [StatusEffect.Slow]: 'debuff',
   [StatusEffect.Weak]: 'debuff',
   [StatusEffect.NoShoot]: 'debuff',
+  [StatusEffect.Fear]: 'debuff', // PROG-2-10253
   [StatusEffect.Invincible]: 'buff',
   [StatusEffect.Haste]: 'buff',
   [StatusEffect.Fortified]: 'buff',

@@ -8,8 +8,11 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import { assert, TestSuite } from './TestRunner';
 import { GachaPoolHostPort, GachaPoolSwitcher } from '../assets/scripts/ui/core/GachaPoolSwitcher';
+import { GACHA_LOADING_PLACEHOLDER, GACHA_LOADING_TEXT, gachaLoadingView } from '../assets/scripts/ui/core/GachaApiTexts';
 import {
     GACHA_CONTENT_SLOT,
+    GACHA_RATE_NODES,
+    GACHA_RATE_ROWS,
     GACHA_NODES,
     GACHA_POOL_INDEX,
     GACHA_POOLS,
@@ -51,6 +54,28 @@ function recorder(deferSlot = false): Recorder {
 
 export function createGachaPoolSwitcherSuite(): TestSuite {
     const suite = new TestSuite('GachaPoolSwitcher (轉蛋各池共用畫面 PROG-2-2237)');
+
+    suite.test('載入狀態：模板寫死的保底與機率在真資料回來前被蓋掉；連點只有最後一次留下（#2811 第 6 項）', async () => {
+        const rec = recorder(true);
+        const loading: string[] = [];
+        const switcher = new GachaPoolSwitcher(rec, GACHA_POOLS, undefined, undefined, (pool) => loading.push(pool.key));
+        const first = switcher.show(GACHA_POOL_INDEX.general);
+        // 內容還沒掛上就先蓋一次載入狀態（畫面可能留著模板或上一池數字）
+        assert.equals('general', loading.join(','));
+        const second = switcher.show(GACHA_POOL_INDEX.redFace);
+        rec.release.forEach((release) => release());
+        await Promise.all([first, second]);
+        // 被連點取代的第一次不再於內容掛上後重蓋；最後一次掛上後蓋兩次（內容掛上、附加區塊後）
+        assert.equals('general,legendary,legendary,legendary', loading.join(','));
+        const view = gachaLoadingView(GACHA_POOLS[GACHA_POOL_INDEX.general]);
+        assert.equals(GACHA_LOADING_TEXT, view.texts[GACHA_NODES.pityFillLabel]);
+        assert.equals(0, view.pityRatio);
+        for (let i = 0; i < GACHA_RATE_ROWS; i++) {
+            assert.equals(GACHA_LOADING_PLACEHOLDER, view.texts[GACHA_RATE_NODES(i).pct]);
+        }
+        const all = JSON.stringify(view.texts);
+        assert.equals(false, /62|90|1%|2%/.test(all), '載入狀態不含模板數字');
+    });
 
     suite.test('切到紅顏池：橫幅、右側內容、橫幅區塊、紅顏展示依序換好，最後才寫字', async () => {
         const rec = recorder();

@@ -51,6 +51,8 @@ interface Entry {
   charge: { t: number; dur: number } | null;
   /** 漂流（被水沖走／卡在水流格，PROG-2-10100）時鐘（秒）；null 表示沒在漂。只疊加沉浮與傾斜，不碰動作狀態。 */
   drift: { t: number } | null;
+  /** 減益持續視覺的身上濾鏡（PROG-2-10253，乘色）；null＝不染。疊在 config.tint 之上取代它，閃白仍照舊疊在這個基礎色上。 */
+  persistTint: Color | null;
 }
 
 /** 落腳通知：腳點（與單位節點同一座標系）、面向、是否為帶頭者。 */
@@ -68,6 +70,14 @@ const HIT_FLASH_TINT = { r: 255, g: 120, b: 110 };
 function baseColorOf(config: UnitSpineConfig): Color {
   const t = config.tint;
   return t ? new Color(t.r, t.g, t.b, 255) : Color.WHITE;
+}
+
+/** 單位目前的基礎色：減益濾鏡（有就用它，再乘上 config.tint）→ config.tint → 白 */
+function entryBaseColor(entry: { config: UnitSpineConfig; persistTint: Color | null }): Color {
+  const base = baseColorOf(entry.config);
+  const p = entry.persistTint;
+  if (!p) return base;
+  return new Color(Math.round(base.r * p.r / 255), Math.round(base.g * p.g / 255), Math.round(base.b * p.b / 255), 255);
 }
 
 /**
@@ -164,7 +174,7 @@ export class SpineUnitOverlay {
     let entry = this.entries.get(id);
     if (entry && entry.config.path !== config.path) { this.remove(id); entry = undefined; }
     if (!entry) {
-      entry = { config, core: new UnitPresentationCore(config, { x, y }, facing), node: null, revision: -1, facing, loading: false, ready: [], visible, followers: [], members, hit: null, lunge: null, freeze: 0, flashPainted: 0, stepClock: 0, deploy: null, charge: null, drift: null };
+      entry = { config, core: new UnitPresentationCore(config, { x, y }, facing), node: null, revision: -1, facing, loading: false, ready: [], visible, followers: [], members, hit: null, lunge: null, freeze: 0, flashPainted: 0, stepClock: 0, deploy: null, charge: null, drift: null, persistTint: null };
       this.entries.set(id, entry);
       if (this.pendingDeploys.delete(id)) entry.deploy = { t: 0 };
     }
@@ -394,6 +404,25 @@ export class SpineUnitOverlay {
     this.entries.forEach(entry => { entry.freeze = Math.max(entry.freeze, sec); });
   }
   public exists(id: string): boolean { return this.entries.has(id); }
+
+  /**
+   * 減益持續濾鏡（PROG-2-10253，規格 doc_spec_1361 §2.2）：只改骨架乘色，不加 shader；rgb 為 null 還原。
+   * 同一個值重複呼叫不動作；單位還沒載好時只記著，載好時由基礎色一併套上。
+   */
+  public setTint(id: string, rgb: readonly [number, number, number] | null): void {
+    const entry = this.entries.get(id);
+    if (!entry) return;
+    const cur = entry.persistTint;
+    if (!rgb && !cur) return;
+    if (rgb && cur && cur.r === rgb[0] && cur.g === rgb[1] && cur.b === rgb[2]) return;
+    entry.persistTint = rgb ? new Color(rgb[0], rgb[1], rgb[2], 255) : null;
+    const base = entryBaseColor(entry);
+    for (const n of [entry.node, ...entry.followers]) {
+      const skel = n?.isValid ? n.getComponent(sp.Skeleton) : null;
+      if (skel) skel.color = base;
+    }
+    entry.flashPainted = -1; // 下一幀把閃白強度連同新的基礎色重畫一次
+  }
   /** 這個單位的 Spine 節點是否已載好、畫得出來（PROG-2-9715：主將出陣衝刺要等載好才起跑） */
   public isShown(id: string): boolean { return !!this.entries.get(id)?.node?.isValid; }
   public revive(id: string): void {
@@ -604,7 +633,7 @@ export class SpineUnitOverlay {
       follower.setPosition(pos.x - slot.x * state.facing, pos.y + slot.y + followerBob - landing.dy + memberLanding.dy + (memberDrift ? memberDrift.dy - (drift?.dy ?? 0) : 0), 0);
       const memberTilt = memberDrift?.angle ?? 0;
       setTilt(follower, memberTilt);
-      if (flashChanged) this.setSkeletonFlash(followerSkel, flash, baseColorOf(entry.config));
+      if (flashChanged) this.setSkeletonFlash(followerSkel, flash, entryBaseColor(entry));
       follower.setScale(entry.config.displayScale * state.facing * memberLanding.scaleX, entry.config.displayScale * memberLanding.scaleY, 1);
       if (skinChanged) followerSkel.setSkin(skin);
       if (clipChanged && hasClip) {
@@ -682,7 +711,7 @@ export class SpineUnitOverlay {
   /** 把閃色強度畫到帶頭者骨架上；強度沒變就不動。回傳是否有變，讓 apply 的隊員迴圈跟著畫。 */
   private paintFlash(skeleton: sp.Skeleton, entry: Entry, strength: number): boolean {
     if (strength === entry.flashPainted) return false;
-    this.setSkeletonFlash(skeleton, strength, baseColorOf(entry.config));
+    this.setSkeletonFlash(skeleton, strength, entryBaseColor(entry));
     entry.flashPainted = strength;
     return true;
   }
@@ -733,7 +762,7 @@ export class SpineUnitOverlay {
       // 基礎染色（敵方騎兵紅色調）：池內節點取出時已被重設成白，這裡改回本單位的基礎色
       for (const n of [node, ...entry.followers]) {
         const skel = n.isValid ? n.getComponent(sp.Skeleton) : null;
-        if (skel) skel.color = baseColorOf(entry.config);
+        if (skel) skel.color = entryBaseColor(entry);
       }
       // 受擊閃白材質：載好就套到帶頭者與隊員；閃色強度歸零重畫，避免先前寫過的相乘暖色殘留
       ensureHitFlashMaterial(() => {
@@ -743,7 +772,7 @@ export class SpineUnitOverlay {
           const skel = n.isValid ? n.getComponent(sp.Skeleton) : null;
           if (!skel) continue;
           if (skel.customMaterial !== hitFlashMaterial) skel.customMaterial = hitFlashMaterial; // 池內重用的節點已套過，不重設以免重建材質實例
-          skel.color = baseColorOf(entry.config);
+          skel.color = entryBaseColor(entry);
         }
         entry.flashPainted = -1;
       });

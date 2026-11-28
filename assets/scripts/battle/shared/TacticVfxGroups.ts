@@ -51,7 +51,7 @@ export function tacticVfxGroupOf(battleSkillId: string): TacticVfxGroup | null {
     if (profile.effectKind === 'heal' || profile.effectKind === 'revive' || profile.effectKind === 'vitality') return 'heal';
     if (profile.statusEffect === StatusEffect.Haste) return 'haste';
     if (profile.effectKind === 'morale' || profile.effectKind === 'tile-buff') return 'morale';
-    if (profile.statusEffect === StatusEffect.Stun || profile.effectKind === 'root') return 'stun';
+    if (profile.statusEffect === StatusEffect.Stun || profile.statusEffect === StatusEffect.Rooted || profile.effectKind === 'root') return 'stun'; // PROG-2-10253：control＋Rooted（曹仁穩固）也歸控制組
     return null; // 沒歸類：沿用通用光效
 }
 
@@ -148,12 +148,16 @@ export interface TacticVfxStats {
     peakParticles: number;
     /** 目前節點數（固定 1 個 Graphics，不隨特效增加） */
     nodes: number;
+    /** 減益持續循環（PROG-2-10253）：目前／峰值同時播放的循環單位數、因預算被略過的次數 */
+    loopUnits: number;
+    peakLoopUnits: number;
+    loopSkipped: number;
 }
 
 export function createTacticVfxStats(): TacticVfxStats {
     const played = {} as Record<TacticVfxGroup, number>;
     for (const group of TACTIC_VFX_ALL_GROUPS) played[group] = 0;
-    return { played, skipped: 0, trimmed: 0, activeFx: 0, activeParticles: 0, peakFx: 0, peakParticles: 0, nodes: 0 };
+    return { played, skipped: 0, trimmed: 0, activeFx: 0, activeParticles: 0, peakFx: 0, peakParticles: 0, nodes: 0, loopUnits: 0, peakLoopUnits: 0, loopSkipped: 0 };
 }
 
 export const tacticVfxStats: TacticVfxStats = createTacticVfxStats();

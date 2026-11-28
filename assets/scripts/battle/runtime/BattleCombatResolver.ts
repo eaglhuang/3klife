@@ -2,7 +2,7 @@
 import { TroopCounterAnnouncer } from '../../core/systems/TroopCounterScripts';
 import { calmAdjustedAura, calmReductionOf, furyModifiersOf } from '../../core/systems/WhiteFactorTraits';
 import { critLine, SP_FULL_LINE } from '../../core/systems/NumericalScriptLines';
-import { EVENT_NAMES, Faction, GAME_CONFIG, SP_PER_KILL, StatusEffect, TerrainType, WEAK_ATTACK_MULTIPLIER, Weather } from '../../core/config/Constants';
+import { EVENT_NAMES, Faction, GAME_CONFIG, SP_PER_KILL, StatusEffect, TerrainType, Weather } from '../../core/config/Constants';
 import { comboChanceOfLevel } from '../../core/systems/ComboAttackKin';
 import { KIN_BATTLE_CONFIG } from '../../core/systems/KinBattleConfig';
 import { KIN_LEVEL_RANK, KIN_RESCUE_CHANCE, kinRescueSplit, type KinLevel } from '../../core/systems/KinBattleEffects';
@@ -62,6 +62,7 @@ import { settleDeathTriggers } from '../skills/special/SpecialRuleDispatch';
 import type { UltimateSpecialRuleDef } from '../../shared/SkillRuntimeContract';
 import { counterReflectDamage, evaluateTroopCounter, troopRangeBonus } from '../shared/TroopCounterTactics';
 import { duelVictoryCritBonus } from '../shared/DuelVictoryBuff';
+import { applyAttackerStatusPenalty } from '../shared/AttackerStatusPenalty';
 export interface BattleCombatAction {
   attackerId: string;
   targetId: string | null;
@@ -261,9 +262,7 @@ export class BattleCombatResolver {
       if (actionReset?.firstHitPending) {
         rawDamage = Math.max(1, Math.floor(rawDamage * actionReset.firstHitMultiplier));
       }
-      if (svc.buff.hasBuff(attacker.id, StatusEffect.Weak)) {
-        rawDamage = Math.max(1, Math.floor(rawDamage * WEAK_ATTACK_MULTIPLIER));
-      }
+      rawDamage = applyAttackerStatusPenalty(svc.buff, attacker.id, rawDamage);
     }
     // 主將 HP 以整數結算（HUD 不顯示小數）；命中至少 1 點，閃避已在上方提前返回
     const damage = Math.max(1, Math.round(rawDamage));
@@ -336,9 +335,7 @@ export class BattleCombatResolver {
     if (actionReset?.firstHitPending) {
       damage = Math.max(1, Math.floor(damage * actionReset.firstHitMultiplier));
     }
-    if (svc.buff.hasBuff(attacker.id, StatusEffect.Weak)) {
-      damage = Math.max(1, Math.floor(damage * WEAK_ATTACK_MULTIPLIER));
-    }
+    damage = applyAttackerStatusPenalty(svc.buff, attacker.id, damage);
 
     // 暴擊：與部隊路徑同一組暴擊率與倍率，擲骰走戰場亂數源
     const critRate = critRateOf((tacticBehavior.getCritBonus?.(attacker, this.context.state) ?? 0) + selfBurstCritBonus(attackerBurst)
@@ -456,9 +453,7 @@ export class BattleCombatResolver {
     if (actionReset?.firstHitPending) {
       damage = Math.max(1, Math.floor(damage * actionReset.firstHitMultiplier));
     }
-    if (svc.buff.hasBuff(attacker.id, StatusEffect.Weak)) {
-      damage = Math.max(1, Math.floor(damage * WEAK_ATTACK_MULTIPLIER));
-    }
+    damage = applyAttackerStatusPenalty(svc.buff, attacker.id, damage);
 
     // 兵種動態相剋（doc_spec_0309 §3，PROG-2-9368）：疊在五角剋制之上；同路才算正面，本回合有移動才算衝鋒
     const counter = this.context.isTroopCounterTacticsEnabled?.()
