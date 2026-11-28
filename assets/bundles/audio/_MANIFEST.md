@@ -28,6 +28,7 @@
 | sfx_atk_blade／sfx_atk_thrust／sfx_atk_bow／sfx_atk_arrow_whoosh／sfx_atk_shield／sfx_atk_charge .ogg | `"sfx_atk_*"` | 小兵出手音，依兵種（劈砍／槍刺／箭／盾擊／騎兵衝鋒）分檔（PROG-2-10134）；Freesound CC0，授權見 `clips/LICENSES-cc0.md` | ✅ 使用中 | `BattleAudio.ts` `playBattleAudio`（`pickUnitAttackSfx`），設定 `data/battle-audio-layers.json` 的 `attack` |
 | sfx_hit_blade／sfx_hit_pierce／sfx_hit_arrow／sfx_hit_clash／sfx_hit_wood／sfx_hit_body_a／sfx_hit_body_b .ogg | `"sfx_hit_*"` | 小兵受擊音，輕擊依攻擊方式分檔、重擊與擋下擴充（PROG-2-10134）；Freesound CC0 | ✅ 使用中 | `BattleUIBridge.ts` `_scheduleBattleUnitHitFeedback`（`pickHitSfx` 的 `byStyle`） |
 | tactic_fire／tactic_water／tactic_wind／tactic_heal／tactic_haste／tactic_morale／tactic_stun .ogg | `"tactic_*"` | 戰法分組特效音效（PROG-2-10190）：火＝點燃爆燃、水＝瀑布急流、風＝強風呼嘯、回復＝風鈴上行、加速＝咻、鼓舞＝三擊戰鼓、控制＝悶響鐵鍊落鎖；BigSoundBank CC0，已裁切轉單聲道 ogg；授權與來源見 `clips/LICENSES-cc0.md` | ✅ 使用中 | `BattleUIBridge.ts` `_presentGeneralSkillUsed` → `BattleAudio.ts` `playTacticSfx`（`battle-audio-layers.json` 的 `tactic` 區塊） |
+| tactic_heal_sparkle／tactic_splash_a／tactic_splash_b .ogg | `"tactic_*"` 疊層 | 戰法額外疊層（PROG-2-10215）：回復閃光風鈴（每次施放 2～3 聲）、水淹水花（每次施放 3～5 聲）；tactic_heal／tactic_water 同卡改為多層混音版（回復 1.7 秒、水淹 2.4 秒）；全由既有 CC0 素材＋程式合成混成，見 `clips/LICENSES-cc0.md` | ✅ 使用中 | `BattleAudio.ts` `playTacticSfx`（`battle-audio-layers.json` 的 `tactic.layers`） |
 | heal.mp3 | `"heal"` | 治療 | 🚧 WIP | — |
 | hurt.mp3 | `"hurt"` | 受擊 | 🚧 WIP | — |
 | laser.mp3 | `"laser"` | 雷射 | 🚧 WIP | — |
