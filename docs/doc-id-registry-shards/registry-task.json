@@ -17980,5 +17980,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10248.md",
     "title": "[PROG-2-10248] 戰場三份一頁規格草稿",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3342",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10254.md",
+    "title": "[PROG-2-10254] 修 playtest-online 在 12:00 發版時失敗的 7 步",
+    "category": "task"
   }
 ]
