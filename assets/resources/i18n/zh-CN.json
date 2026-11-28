@@ -3287,5 +3287,7 @@
   "life.street_first.found.m": "找到{0}了！他正忙着自己的事呢。",
   "life.street_first.found.f": "找到{0}了！她正忙着自己的事呢。",
   "life.street_first.gift_unlocked.m": "以后可以送礼物给他了，挑个他喜欢的吧！",
-  "life.street_first.gift_unlocked.f": "以后可以送礼物给她了，挑个她喜欢的吧！"
+  "life.street_first.gift_unlocked.f": "以后可以送礼物给她了，挑个她喜欢的吧！",
+  "battle.kin_aura.name": "兄弟齐心",
+  "battle.kin_aura.desc": "义兄弟 3 格内：攻防 +25%、暴击 +15%"
 }

@@ -40,11 +40,10 @@ import { executeBattleEnemyDeployPhase } from '../runtime/phases/BattleEnemyDepl
 import { executeBattleSpecialResolvePhase } from '../runtime/phases/BattleSpecialResolvePhase';
 import { executeBattleTileEffectPhase } from '../runtime/phases/BattleTileEffectPhase';
 import { desertVitalityDrain } from '../../core/systems/DesertVitality';
-import { combatRelationsBetween, type HistoricalPairTable } from '../../core/systems/HistoricalPairs';
-import { areKinBonded, hasSwornBrotherInLineup, SWORN_DEPLOY_MORALE, type KinPairLike } from '../../core/systems/KinBattleEffects';
+import { type HistoricalPairTable } from '../../core/systems/HistoricalPairs';
+import { hasSwornBrotherInLineup, kinAuraUnitIds, kinLevelBetween, SWORN_DEPLOY_MORALE, type KinLevel, type KinPairLike } from '../../core/systems/KinBattleEffects';
 import { applyMoraleFloor } from '../shared/Morale';
 import { detectRelationEvents, RelationEventLedger, type RelationEventHit } from '../../core/systems/RelationEvents';
-import type { HistoricalRelation } from '../../core/systems/KinRelation';
 import { BattleCombatResolver } from '../runtime/BattleCombatResolver';
 import { BattleGeneralDuelFlow } from '../runtime/BattleGeneralDuelFlow';
 import { BattleTileBuffLifecycleManager, DEFAULT_BATTLE_TILE_BUFF_CONFIG, type BattleTileBuffConfig } from '../runtime/BattleTileBuffLifecycleManager';
@@ -220,10 +219,8 @@ export class BattleController {
   private readonly combatResolver = new BattleCombatResolver({
     state: this.state,
     turnManager: this.turnManager,
-    relationsBetween: (attackerId, helperId) => this.relationsBetweenUnits(attackerId, helperId),
-    // 生死相隨只給我方（動態關係屬於玩家的武將；敵軍部隊不吃這張表）
-    isKinBonded: (unitIdA, unitIdB) => this.state.units.get(unitIdA)?.faction === Faction.Player
-      && areKinBonded(this.historicalPairs, this.dynamicRelations, this.sourceTemplateOfUnit(unitIdA), this.sourceTemplateOfUnit(unitIdB)),
+    kinLevelBetween: (unitIdA, unitIdB) => this.kinLevelBetweenUnits(unitIdA, unitIdB),
+    refreshKinAura: () => this.refreshKinAura(),
     getUltimateSpecialRule: (ultimateId) => findUltimateSpecialRule(ultimateId),
     isTroopCounterTacticsEnabled: () => GAME_CONFIG.troopCounterTacticsEnabled && !this._tutorialBattle,
     onTroopDefeated: (defeated) => this.awardTroopDefeatFame(defeated.unitId, defeated.faction),
@@ -393,9 +390,21 @@ export class BattleController {
    * 虎符部隊（TRP-13）：部隊記下虎符與主將，適性乘數每次結算時依當下格子的地形算。
    * 虎符目錄查不到或沒有適性資料時，乘數恆為 1。
    */
-  /** 合攻判定用：兩個部隊背後武將的史實關係（PROG-2-1065）；敵軍與無虎符部隊沒有來源武將，回傳空陣列 */
-  public relationsBetweenUnits(attackerId: string, helperId: string): HistoricalRelation[] {
-    return combatRelationsBetween(this.historicalPairs, this.sourceTemplateOfUnit(attackerId), this.sourceTemplateOfUnit(helperId), this.dynamicRelations);
+  /** 兩個部隊背後武將的羈絆等級（doc_spec_1358）：史實與動態並存取最高；敵軍與無虎符部隊沒有來源武將，回傳 NONE */
+  public kinLevelBetweenUnits(unitIdA: string, unitIdB: string): KinLevel {
+    // 羈絆（尤其動態關係）屬於玩家的武將；敵軍部隊不吃這張表
+    if (this.state.units.get(unitIdA)?.faction !== Faction.Player) return 'NONE';
+    return kinLevelBetween(this.historicalPairs, this.dynamicRelations, this.sourceTemplateOfUnit(unitIdA), this.sourceTemplateOfUnit(unitIdB));
+  }
+
+  /**
+   * 重算「兄弟齊心」光環旗標（doc_spec_1358 §2.2 ②）：身邊切比雪夫距離 ≤ 3 格有我方義兄弟部隊者，攻防 +25%、暴擊 +15%。
+   * 旗標是布林，同名只算一次；只寫旗標、不配置新物件，部署／回合開始／每次出手前才重算。
+   */
+  public refreshKinAura(): void {
+    const units = Array.from(this.state.units.values());
+    const carriers = kinAuraUnitIds(units.filter((u) => u.faction === Faction.Player), (a, b) => this.kinLevelBetweenUnits(a, b));
+    for (const unit of units) unit.kinAura = carriers.has(unit.id);
   }
 
   /** 本場戰役已觸發的關係事件（KIN-08 戰場端，PROG-2-1420）；預設一場一份，場景可綁定 session 帳本以存檔（PROG-2-1415） */
@@ -540,6 +549,7 @@ export class BattleController {
     if (options.tally) {
       this.bindTallyAffinity(unit, options.tally);
       this.applySwornDeployMorale(unit);
+      this.refreshKinAura();
     }
     this.turnManager.notePlayerDeployment();
     this.turnManager.markUnitDeployed(unit.id);
@@ -1936,6 +1946,7 @@ export class BattleController {
       this.state.getGeneral(Faction.Player)?.id ?? null,
       this.playerGeneralUnitId,
     );
+    this.refreshKinAura();
     this.tileBuffLifecycleManager.spawnTileBuffsForTurn();
   }
 

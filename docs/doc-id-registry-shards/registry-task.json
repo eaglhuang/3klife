@@ -17926,5 +17926,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10231.md",
     "title": "[PROG-2-10231] 生活層 Q 頭兩人切磋",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3322",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10227.md",
+    "title": "[PROG-2-10227] 羈絆戰場效果整併實作：單一等級模型、兄弟齊心光環、九宮格合攻與援護",
+    "category": "task"
   }
 ]
