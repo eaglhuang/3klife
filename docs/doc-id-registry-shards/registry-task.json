@@ -16723,14 +16723,20 @@
   },
   {
     "id": "doc_task_2980",
-    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9843.md",
-    "title": "[PROG-2-9843] 戰法詳情子視窗補招式描述文字",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9605.md",
+    "title": "任務卡：PROG-2-9605 史境天下風雲榜與媒人候選名額連動",
     "category": "task"
   },
   {
     "id": "doc_task_2981",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-9845.md",
     "title": "[PROG-2-9845] 騎術系統與馬廄規格（ridingTier 三級、名駒、馬廄與配種）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_2982",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9614.md",
+    "title": "任務卡：PROG-2-9614 第一年學府空轉引導與官職晉升解鎖彈窗共用元件",
     "category": "task"
   },
   {
@@ -17859,6 +17865,30 @@
     "id": "doc_task_3286",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10214.md",
     "title": "[PROG-2-10214] 生活層第一個看得到的原型",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3287",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9602.md",
+    "title": "PROG-2-9602 史境天下風雲榜與官職俸祿雙軌機制（方案B）",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3288",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9603.md",
+    "title": "PROG-2-9603 史境天下風雲榜世家聲望大廳快報彈窗與主題整合",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3289",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9604.md",
+    "title": "PROG-2-9604 家族子嗣血統遺傳Facade三介面與家門奇才判定實作",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3290",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-9843.md",
+    "title": "[PROG-2-9843] 戰法詳情子視窗補招式描述文字",
     "category": "task"
   }
 ]

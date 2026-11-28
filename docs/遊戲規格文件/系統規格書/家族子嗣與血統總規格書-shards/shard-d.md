@@ -308,11 +308,20 @@
 ### 1. 幼兒近況小卡（0～4 歲微互動）
 - **觸發條件**：子嗣年齡 `< 5` 歲（未滿 5 歲不進幕府大廳期間）。
 - **互動機制**：於族譜／內政側邊顯示「幼兒近況小卡」，每季自動刷新 1 句成長趣事；玩家點擊「摸頭」可觸發親子互動（每季限 1 次），親子好感 `+1`。
-- **資料驅動（JSON）**：數值與冷卻參數統一定義於 `assets/resources/data/master/bloodline-infant-care-config.json`（含 `maxInfantAge: 4`、`patFavorGain: 1`、`patLimitPerSeason: 1`）。
+- **資料驅動（JSON）**：數值與冷卻參數統一定義於 `assets/resources/data/master/bloodline-infant-care-config.json`：
+  - `maxInfantAge` (`number`, 預設 `4`)：幼兒近況小卡顯示年齡上限
+  - `patFavorGain` (`number`, 預設 `1`)：每次摸頭增加的親子好感
+  - `patLimitPerSeason` (`number`, 預設 `1`)：每季可摸頭次數上限
+  - `anecdoteRefreshPerSeason` (`boolean`, 預設 `true`)：是否每季自動刷新成長趣事
 - **台詞 i18n**：成長趣事與摸頭回應走 `ui.bloodline.infant_anecdote.*` 與 `ui.bloodline.infant_pat_reply.*`，皆需帶入性別參數（`{childName}`、`{genderLabel}`）。
 
 ### 2. 義叔／義母贈禮（結義連動血統）
 - **觸發時機**：子嗣誕生或 5 歲抓周時，若雙親任一方擁有結義兄弟／姊妹。
 - **效果**：隨機擇一結義親屬觸發 1 次「義叔／義母贈禮」，給予子嗣 `+1` 隨機基礎屬性，或附加 1 枚小名記憶標籤（二選一，機率與上限由 JSON 控制）。
-- **資料驅動（JSON）**：參數定義於 `assets/resources/data/master/bloodline-oath-gift-config.json`（`statBonus: 1`、`triggerStages: ["birth", "zhouzhua"]`、`maxGiftsPerChild: 1`）。
+- **資料驅動（JSON）**：參數定義於 `assets/resources/data/master/bloodline-oath-gift-config.json`：
+  - `giftTriggerChance` (`number`, 預設 `0.65`)：符合結義條件時觸發贈禮的機率（0～1）
+  - `statBonus` (`number`, 預設 `1`)：抽中屬性贈禮時增加的基礎屬性點數
+  - `statVsTagWeight` (`number`, 預設 `0.5`)：抽中「+1 屬性」相對於「小名記憶標籤」的機率權重
+  - `triggerStages` (`string[]`, 預設 `["birth", "zhouzhua"]`)：可觸發贈禮的生命階段
+  - `maxGiftsPerChild` (`number`, 預設 `1`)：每位子嗣最多觸發贈禮次數
 - **台詞 i18n**：贈禮祝詞走 `ui.bloodline.oath_gift.*`，需帶入贈禮者稱謂與性別參數（`{oathTitle}`、`{selfPronoun}`、`{childName}`）。

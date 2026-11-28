@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-11-27
+> 生成日期: 2026-11-28
 > 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 17/17 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -8,6 +8,7 @@
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
+| `doc_task_3107` | docs/agent-briefs/tasks/PROG/PROG-2-10043.md | [PROG-2-10043] 結緣提親機率面板與吃醋彈窗掛進遊戲 |
 | `doc_task_3108` | docs/agent-briefs/tasks/PROG/PROG-2-10045.md | [PROG-2-10045] 戰場 HUD／飄字打磨批次 |
 | `doc_task_3109` | docs/agent-briefs/tasks/PROG/PROG-2-10046.md | [PROG-2-10046] 年終頒獎典禮三幕式面板掛進遊戲 |
 | `doc_task_3110` | docs/agent-briefs/tasks/PROG/PROG-2-10044.md | PROG-2-10044 年終頒獎典禮三幕式 UI 元件 |
@@ -114,3 +115,8 @@
 | `doc_task_3280` | docs/agent-briefs/tasks/PROG/PROG-2-10209.md | [PROG-2-10209] Q 動畫管理器核心＋基本動作片段 |
 | `doc_task_3283` | docs/agent-briefs/tasks/PROG/PROG-2-10210.md | [PROG-2-10210] WP2 頭上生活符號系統 |
 | `doc_task_3285` | docs/agent-briefs/tasks/PROG/PROG-2-10212.md | [PROG-2-10212] WP4 場景註冊表＋任意場景切換 UI |
+| `doc_task_3286` | docs/agent-briefs/tasks/PROG/PROG-2-10214.md | [PROG-2-10214] 生活層第一個看得到的原型 |
+| `doc_task_3287` | docs/agent-briefs/tasks/PROG/PROG-2-9602.md | PROG-2-9602 史境天下風雲榜與官職俸祿雙軌機制（方案B） |
+| `doc_task_3288` | docs/agent-briefs/tasks/PROG/PROG-2-9603.md | PROG-2-9603 史境天下風雲榜世家聲望大廳快報彈窗與主題整合 |
+| `doc_task_3289` | docs/agent-briefs/tasks/PROG/PROG-2-9604.md | PROG-2-9604 家族子嗣血統遺傳Facade三介面與家門奇才判定實作 |
+| `doc_task_3290` | docs/agent-briefs/tasks/PROG/PROG-2-9843.md | [PROG-2-9843] 戰法詳情子視窗補招式描述文字 |

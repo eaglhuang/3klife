@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-11-27
+> 生成日期: 2026-11-28
 > 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 16/17 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -212,8 +212,9 @@
 | `doc_task_2977` | docs/agent-briefs/tasks/PROG/PROG-2-9738.md | [PROG-2-9738] 騎兵／騎馬武將套用 spine-trial 全套騎乘動作（攻擊／閃避／倒下／後退） |
 | `doc_task_2978` | docs/agent-briefs/tasks/PROG/PROG-2-9841.md | [PROG-2-9841] 技分頁戰法／奧義點擊開啟通用詳情子視窗 |
 | `doc_task_2979` | docs/agent-briefs/tasks/PROG/PROG-2-9847.md | [PROG-2-9847] 趙雲騎馬骨架接入戰場（ridingTier 依 riding-tiers.json） |
-| `doc_task_2980` | docs/agent-briefs/tasks/PROG/PROG-2-9843.md | [PROG-2-9843] 戰法詳情子視窗補招式描述文字 |
+| `doc_task_2980` | docs/agent-briefs/tasks/PROG/PROG-2-9605.md | 任務卡：PROG-2-9605 史境天下風雲榜與媒人候選名額連動 |
 | `doc_task_2981` | docs/agent-briefs/tasks/PROG/PROG-2-9845.md | [PROG-2-9845] 騎術系統與馬廄規格（ridingTier 三級、名駒、馬廄與配種） |
+| `doc_task_2982` | docs/agent-briefs/tasks/PROG/PROG-2-9614.md | 任務卡：PROG-2-9614 第一年學府空轉引導與官職晉升解鎖彈窗共用元件 |
 | `doc_task_2983` | docs/agent-briefs/tasks/PROG/PROG-2-9842.md | [PROG-2-9842] 十連結果卡片壓扁＋統計列漏算 N |
 | `doc_task_2984` | docs/agent-briefs/tasks/PROG/PROG-2-9848.md | [PROG-2-9848] 敵將戰法全 0 分／無傷害改普攻（不再硬放主技能） |
 | `doc_task_2985` | docs/agent-briefs/tasks/PROG/PROG-2-9851.md | [PROG-2-9851] 敵將扣 TP 保留 20／治療健康線 >70%／冷卻規格對齊 |
@@ -294,4 +295,3 @@
 | `doc_task_3104` | docs/agent-briefs/tasks/PROG/PROG-2-10035.md | [PROG-2-10035] 大廳任務類視窗套用戰場結算風格（settle 皮膚家族） |
 | `doc_task_3105` | docs/agent-briefs/tasks/PROG/PROG-2-10037.md | PROG-2-10037 結緣公式分項與小名三段揭曉可玩 UI 元件 |
 | `doc_task_3106` | docs/agent-briefs/tasks/PROG/PROG-2-10038.md | PROG-2-10038 吃醋三選項彈窗 UI 與 10033 i18n 補鍵 |
-| `doc_task_3107` | docs/agent-briefs/tasks/PROG/PROG-2-10043.md | [PROG-2-10043] 結緣提親機率面板與吃醋彈窗掛進遊戲 |
