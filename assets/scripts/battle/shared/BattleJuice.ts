@@ -88,6 +88,11 @@ export interface BattleJuiceConfig {
     critPeakMul: number;
     /** 彈出秒數倍率（<1 更快）。 */
     popInMul: number;
+    /** 跳字位置偏移（畫面像素，x 往右、y 往上）：偏被擊單位頭頂右上，不蓋身體；爆擊／重擊用 crit 組。 */
+    normalOffsetXPx: number;
+    normalOffsetYPx: number;
+    critOffsetXPx: number;
+    critOffsetYPx: number;
   };
 }
 
@@ -129,20 +134,20 @@ export const DEFAULT_BATTLE_JUICE: BattleJuiceConfig = {
   },
   glow: {
     enabled: true, maxActive: 8,
-    normal: { radiusPx: 20, sec: 0.04, widthPx: 0, color: [255, 250, 235], alpha: 0.9 },
-    crit: { radiusPx: 30, sec: 0.06, widthPx: 0, color: [255, 250, 230], alpha: 1 },
-    ultimate: { radiusPx: 44, sec: 0.08, widthPx: 0, color: [255, 245, 220], alpha: 1 },
+    normal: { radiusPx: 15, sec: 0.09, widthPx: 0, color: [255, 250, 235], alpha: 0.9 },
+    crit: { radiusPx: 21, sec: 0.14, widthPx: 0, color: [255, 250, 230], alpha: 1 },
+    ultimate: { radiusPx: 30, sec: 0.18, widthPx: 0, color: [255, 245, 220], alpha: 1 },
   },
   sparks: {
     enabled: true, maxActive: 6,
-    normal: { count: 5, speedPx: 150, gravityPx: 420, sec: 0.26, lenPx: 16, widthPx: 3.2, alpha: 0.95 },
-    crit: { count: 8, speedPx: 200, gravityPx: 460, sec: 0.32, lenPx: 20, widthPx: 3.8, alpha: 1 },
+    normal: { count: 6, speedPx: 150, gravityPx: 420, sec: 0.26, lenPx: 16, widthPx: 3.2, alpha: 0.95 },
+    crit: { count: 9, speedPx: 200, gravityPx: 460, sec: 0.32, lenPx: 20, widthPx: 3.8, alpha: 1 },
     ultimate: { count: 10, speedPx: 260, gravityPx: 480, sec: 0.35, lenPx: 24, widthPx: 4.4, alpha: 1 },
   },
   burstPalette: { white: [255, 244, 220], orange: [255, 150, 50], red: [150, 36, 20] },
   bladeTrail: { enabled: false, maxActive: 4, sec: 0.18, arcRadiusPx: 40, sweepDeg: 120, widthPx: 8, yOffsetPx: 26, color: [255, 255, 255], alpha: 0.75 },
   afterimage: { enabled: true, maxActive: 4, count: 3, sec: 0.22, spacingPx: 14, widthPx: 16, heightPx: 40, yOffsetPx: 24, color: [190, 225, 255], alpha: 0.32 },
-  floatPop: { enabled: true, normalPeakMul: 1.1, heavyPeakMul: 1.1, critPeakMul: 1.15, popInMul: 1 },
+  floatPop: { enabled: true, normalPeakMul: 0.85, heavyPeakMul: 0.7, critPeakMul: 0.65, popInMul: 0.55, normalOffsetXPx: 22, normalOffsetYPx: 30, critOffsetXPx: 44, critOffsetYPx: 46 },
 };
 
 let activeJuice: BattleJuiceConfig = DEFAULT_BATTLE_JUICE;
@@ -259,6 +264,10 @@ export function parseBattleJuice(raw: unknown): BattleJuiceConfig {
       heavyPeakMul: num(fp.heavyPeakMul, 0.5, 3, d.floatPop.heavyPeakMul),
       critPeakMul: num(fp.critPeakMul, 0.5, 3, d.floatPop.critPeakMul),
       popInMul: num(fp.popInMul, 0.2, 3, d.floatPop.popInMul),
+      normalOffsetXPx: num(fp.normalOffsetXPx, -200, 200, d.floatPop.normalOffsetXPx),
+      normalOffsetYPx: num(fp.normalOffsetYPx, -200, 200, d.floatPop.normalOffsetYPx),
+      critOffsetXPx: num(fp.critOffsetXPx, -200, 200, d.floatPop.critOffsetXPx),
+      critOffsetYPx: num(fp.critOffsetYPx, -200, 200, d.floatPop.critOffsetYPx),
     },
   };
 }
@@ -356,6 +365,13 @@ export function floatPopMul(kind: 'normal' | 'heavy' | 'crit', cfg: BattleJuiceC
   if (!f.enabled) return { peak: 1, popIn: 1 };
   const peak = kind === 'crit' ? f.critPeakMul : kind === 'heavy' ? f.heavyPeakMul : f.normalPeakMul;
   return { peak, popIn: f.popInMul };
+}
+
+/** 跳字位置偏移（畫面像素）；開關關閉回 0（舊版位置）。 */
+export function floatOffset(kind: 'normal' | 'heavy' | 'crit', cfg: BattleJuiceConfig = activeJuice): { x: number; y: number } {
+  const f = cfg.floatPop;
+  if (!f.enabled) return { x: 0, y: 0 };
+  return kind === 'normal' ? { x: f.normalOffsetXPx, y: f.normalOffsetYPx } : { x: f.critOffsetXPx, y: f.critOffsetYPx };
 }
 
 /** 受擊後退距離倍率（依命中種類：爆擊、奧義退更遠）；關閉時為 1（舊版距離）。 */

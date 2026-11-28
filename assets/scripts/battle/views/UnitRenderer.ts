@@ -66,7 +66,7 @@ import { SpineUnitOverlay } from "./SpineGeneralOverlay";
 import { GeneralPortraitStandee, STANDEE_HEIGHT_PX, needsStandeeFallback, shouldLoadHeroModel } from "./GeneralPortraitStandee";
 import { generalSpineConfig, resolveRidingTier, setMountedList, squadMemberCount, TroopSpineConfigCache, troopSpineConfig } from '../shared/UnitPresentationConfig';
 import { DuelExchange } from '../shared/DuelPresentationCore';
-import { applyJuicePrefs, attackEaseFor, battleHitStopGate, battleUltimateWindow, flashCurveFor, getBattleJuice, hitStopSecFor, juiceNowSec, knockbackMul, moveEaseFor, parseBattleJuice, resolveHitKind, setBattleJuice, shakeTierFor, type HitKind } from "../shared/BattleJuice";
+import { applyJuicePrefs, attackEaseFor, battleHitStopGate, battleUltimateWindow, flashCurveFor, getBattleJuice, floatOffset, hitStopSecFor, juiceNowSec, knockbackMul, moveEaseFor, parseBattleJuice, resolveHitKind, setBattleJuice, shakeTierFor, type HitKind } from "../shared/BattleJuice";
 import { BattleJuiceFx } from "./BattleJuiceFx";
 import { loadJuicePrefs } from "../../core/systems/BattleSettingsView";
 import { BATTLE_VISUAL_TIMING, buildHitShakeSteps, hitScaleNeighborDepth, planHitFeedback, planMoveSegment } from "./BattlePresentationTiming";
@@ -1147,7 +1147,8 @@ export class UnitRenderer extends Component {
       const sign = kind === "heal" ? "+" : "-";
       // 主戰場UI規格書 §3.2：暴擊用橘金放大字（PROG-2-1875）
       const dmgType: FloatTextType = unitValueFloatType(kind, unit.faction === Faction.Player, isCrit, heavy, damageSource);
-      this.spawnFloatText(`${sign}${value}`, dmgType, worldPos!, unit.id);
+      const fo = floatOffset(isCrit ? 'crit' : heavy ? 'heavy' : 'normal'); // 跳字偏頭頂右上，不蓋住被擊單位身體
+      this.spawnFloatText(`${sign}${value}`, dmgType, worldPos!, unit.id, fo);
 
       const currentView = this.unitViews.get(unit.id);
       if (currentView) {

@@ -220,179 +220,37 @@ export class BattleJuiceFx {
     g.stroke();
   }
 
-  /** 中心白熱閃光：極短（1～2 幀量級）。四層由外到內：暖橙淡暈→暖白→近白→純白核，疊成中心亮、邊緣柔的光團，不是一塊扁平圓盤。 */
+  /** 中心白熱閃光：極短（1～2 幀量級）。小而亮的白核＋8 根（長短相間）收尖放射芒，不是一塊圓盤；芒用漸細三角楔，外層暖橙、內層近白。 */
   private drawGlow(g: Graphics, s: Slot, u: number): void {
     const spec = fxSpecFor('glow', s.hit);
     const fade = Math.pow(1 - u, 1.2);
     const grow = 0.8 + 0.4 * easeValue('quadOut', u);
     const pal = getBattleJuice().burstPalette;
-    for (let k = 0; k < 4; k++) {
-      const layerScale = 1 - k * 0.24;
-      const rc = burstColor(0.4 * (1 - k / 3), pal, this.rgbTmp);
-      this.color.set(rc[0], rc[1], rc[2], 255 * spec.alpha * fade * (0.16 + 0.2 * k));
+    const R = spec.radiusPx * grow;
+    const rays = s.hit === 'normal' ? 6 : 8;
+    const rot = s.seed * Math.PI;
+    for (let L = 0; L < 2; L++) {
+      const rc = burstColor(L === 0 ? 0.42 : 0.08, pal, this.rgbTmp);
+      this.color.set(rc[0], rc[1], rc[2], 255 * spec.alpha * fade * (L === 0 ? 0.55 : 0.95));
       g.fillColor = this.color;
-      g.circle(s.x, s.y, spec.radiusPx * grow * layerScale);
-      g.fill();
-    }
-  }
-
-  /** 飛濺火花：一次爆出 N 顆帶重力的小碎光（單一槽位，不逐顆配置物件）。 */
-  public playSparks(x: number, y: number, kind: HitKind): boolean {
-    const c = getBattleJuice().sparks;
-    if (!c.enabled) return false;
-    if (!this.spawn(FxKind.Sparks, x, y, 1, sparkSpecFor(kind).sec, kind, c.maxActive)) return false;
-    juiceFxStats.sparks++;
-    return true;
-  }
-
-  /** 刀光拖尾：從攻擊者胸前往目標方向掃一道弧形劍光。 */
-  public playTrail(ax: number, ay: number, bx: number): boolean {
-    const c = getBattleJuice().bladeTrail;
-    if (!c.enabled) return false;
-    const dir = bx >= ax ? 1 : -1;
-    if (!this.spawn(FxKind.Trail, ax, ay + c.yOffsetPx, dir, c.sec, 'normal', c.maxActive)) return false;
-    juiceFxStats.trail++;
-    return true;
-  }
-
-  /** 攻擊殘影：攻擊者身後留幾格漸隱的色塊（不複製骨架）。 */
-  public playGhost(ax: number, ay: number, bx: number): boolean {
-    const c = getBattleJuice().afterimage;
-    if (!c.enabled) return false;
-    const dir = bx >= ax ? 1 : -1;
-    if (!this.spawn(FxKind.Ghost, ax, ay + c.yOffsetPx, dir, c.sec, 'normal', c.maxActive)) return false;
-    juiceFxStats.ghost++;
-    return true;
-  }
-
-  /**
-   * 預熱：戰場一開始就建好加色節點與材質、送出一次全透明的繪製，
-   * 讓繪圖管線（pipeline／著色器）在第一次命中前就編譯完，避免第一擊那一格卡頓。只做一次。
-   */
-  public prewarm(): void {
-    if (this.prewarmed) return;
-    const g = this.ensureGraphics();
-    if (!g) return;
-    this.prewarmed = true;
-    this.color.set(255, 255, 255, 0);
-    g.strokeColor = this.color;
-    g.fillColor = this.color;
-    g.lineWidth = 1;
-    g.circle(0, 0, 1);
-    g.fill();
-    g.moveTo(0, 0);
-    g.lineTo(1, 0);
-    g.stroke();
-    this.dirty = true; // 下一次 update 沒有特效時會自動 clear
-  }
-
-  /** 目前播放中的特效數（QA 用）。 */
-  public get active(): number { return this.activeCount; }
-
-  /** 每幀推進；沒有進行中的特效就什麼都不做。 */
-  public update(dt: number): void {
-    if (this.activeCount === 0) {
-      if (this.dirty && this.g) { this.g.clear(); this.dirty = false; }
-      return;
-    }
-    const g = this.ensureGraphics();
-    if (!g) return;
-    g.clear();
-    this.dirty = true;
-    const cfg = getBattleJuice();
-    const step = dt > 0 ? dt : 0;
-    for (let i = 0; i < SLOTS; i++) {
-      const s = this.slots[i];
-      if (!s.active) continue;
-      s.t += step;
-      if (s.t >= s.dur) { s.active = false; this.activeCount--; continue; }
-      const u = s.t / s.dur;
-      switch (s.kind) {
-        case FxKind.Ring: this.drawRing(g, s, u); break;
-        case FxKind.Glow: this.drawGlow(g, s, u); break;
-        case FxKind.Sparks: this.drawSparks(g, s, u); break;
-        case FxKind.Trail: this.drawTrail(g, s, u, cfg.bladeTrail); break;
-        default: this.drawGhost(g, s, u, cfg.afterimage); break;
+      for (let i = 0; i < rays; i++) {
+        const a = rot + i * Math.PI * 2 / rays;
+        const len = R * (i & 1 ? 1.6 : 2.5) * (L === 0 ? 1 : 0.7);
+        const hw = R * (L === 0 ? 0.2 : 0.11);
+        const ca = Math.cos(a), sa = Math.sin(a);
+        g.moveTo(s.x - sa * hw, s.y + ca * hw);
+        g.lineTo(s.x + ca * len, s.y + sa * len);
+        g.lineTo(s.x + sa * hw, s.y - ca * hw);
+        g.close();
+        g.fill();
       }
     }
-    if (this.activeCount === 0) { g.clear(); this.dirty = false; }
-  }
-
-  public destroy(): void {
-    if (this.node && isValid(this.node)) this.node.destroy();
-    this.node = null; this.g = null;
-    for (const s of this.slots) s.active = false;
-    this.activeCount = 0;
-  }
-
-  private spawn(kind: FxKind, x: number, y: number, dir: number, dur: number, hit: HitKind, maxActive: number): boolean {
-    let used = 0;
-    let free: Slot | null = null;
-    for (let i = 0; i < SLOTS; i++) {
-      const s = this.slots[i];
-      if (s.active) { if (s.kind === kind) used++; } else if (!free) free = s;
-    }
-    if (!free || used >= maxActive) return false;
-    free.active = true; free.kind = kind; free.x = x; free.y = y; free.dir = dir; free.t = 0; free.dur = dur; free.hit = hit; free.seed = this.seedCounter++ * 7.13;
-    this.activeCount++;
-    return true;
-  }
-
-  private ensureGraphics(): Graphics | null {
-    const parent = this.getParent();
-    if (!parent || !isValid(parent)) return null;
-    if (!this.node || !isValid(this.node)) {
-      const n = new Node('BattleJuiceFx');
-      n.layer = this.layer();
-      this.g = n.addComponent(Graphics);
-      this.g.lineJoin = Graphics.LineJoin.ROUND;
-      this.g.lineCap = Graphics.LineCap.ROUND;
-      this.node = n;
-      this.needAdditive = true;
-    }
-    if (this.node.parent !== parent) parent.addChild(this.node);
-    this.node.setSiblingIndex(parent.children.length - 1);
-    if (this.needAdditive && this.g) { this.needAdditive = false; this.applyAdditive(this.g); }
-    return this.g;
-  }
-
-  /** 把這個 Graphics 的混合改成加色（SRC_ALPHA, ONE）；做法同 AttackVfxPlayer，失敗退回一般混合。 */
-  private applyAdditive(g: Graphics): void {
-    try {
-      g.getMaterialInstance(0)?.overridePipelineStates({
-        blendState: { targets: [{ blend: true, blendSrc: gfx.BlendFactor.SRC_ALPHA, blendDst: gfx.BlendFactor.ONE, blendSrcAlpha: gfx.BlendFactor.SRC_ALPHA, blendDstAlpha: gfx.BlendFactor.ONE }] },
-      });
-    } catch (error) { console.warn('[BattleJuiceFx] 加色材質覆寫失敗，退回一般混合', error); }
-  }
-
-  private drawRing(g: Graphics, s: Slot, u: number): void {
-    const spec = fxSpecFor('impactRing', s.hit);
-    const r = sampleRing(u, spec, this.ring);
-    const rc = burstColor(u, getBattleJuice().burstPalette, this.rgbTmp);
-    // 兩道疊畫：寬而淡的外暈＋細而亮的環緣，邊緣才不會是一條硬邊；透視壓扁：橫向圓環在 3/4 視角下是扁橢圓
-    this.color.set(rc[0], rc[1], rc[2], 255 * r.alpha * 0.35);
-    g.strokeColor = this.color;
-    g.lineWidth = r.width * 2.6;
-    g.ellipse(s.x, s.y, r.radius, r.radius * 0.6);
-    g.stroke();
-    this.color.set(rc[0], rc[1], rc[2], 255 * r.alpha);
-    g.strokeColor = this.color;
-    g.lineWidth = r.width;
-    g.ellipse(s.x, s.y, r.radius, r.radius * 0.6);
-    g.stroke();
-  }
-
-  /** 中心白熱閃光：極短（1～2 幀量級），中心近白、外圍暖色，三層疊出柔邊。 */
-  private drawGlow(g: Graphics, s: Slot, u: number): void {
-    const spec = fxSpecFor('glow', s.hit);
-    const fade = Math.pow(1 - u, 1.2);
-    const grow = 0.8 + 0.4 * easeValue('quadOut', u);
-    for (let k = 0; k < 3; k++) {
-      const layerScale = 1 - k * 0.32;
-      const warm = k === 0 ? 0.35 : k === 1 ? 0.15 : 0;
-      this.color.set(spec.color[0], spec.color[1] * (1 - warm * 0.4), spec.color[2] * (1 - warm), 255 * spec.alpha * fade * (0.35 + 0.3 * k));
+    // 小白核：兩層柔邊小圓，只當星芒的中心點
+    for (let k = 0; k < 2; k++) {
+      const rc = burstColor(0.04 * (1 - k), pal, this.rgbTmp);
+      this.color.set(rc[0], rc[1], rc[2], 255 * spec.alpha * fade * (0.35 + 0.4 * k));
       g.fillColor = this.color;
-      g.circle(s.x, s.y, spec.radiusPx * grow * layerScale);
+      g.circle(s.x, s.y, R * (0.42 - k * 0.16));
       g.fill();
     }
   }

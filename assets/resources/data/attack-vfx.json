@@ -40,7 +40,7 @@
       "delaySec": 0.28,
       "durationSec": 0.25,
       "radiusPx": 95,
-      "thickPx": 20,
+      "thickPx": 16,
       "sweepDeg": 130,
       "trailDeg": 95,
       "centerBack": 1,
@@ -51,7 +51,7 @@
       "sparkLenPx": 52,
       "sparkWidthPx": 7,
       "ringPx": 44,
-      "flashScale": 1.1,
+      "flashScale": 0.9,
       "palette": { "main": "#FFB000", "glow": "#FF6A00", "core": "#FFF4D0", "accent": "#FFD000" }
     },
     "thrust": {
@@ -71,7 +71,7 @@
       "sparkLenPx": 52,
       "sparkWidthPx": 7,
       "ringPx": 44,
-      "flashScale": 1.1,
+      "flashScale": 0.9,
       "palette": { "main": "#00D0FF", "glow": "#0070FF", "core": "#E8FAFF", "accent": "#10F4FF" }
     },
     "bow": {
@@ -82,14 +82,14 @@
       "flightSec": 0.35,
       "trailLenPx": 220,
       "trailSegments": 7,
-      "trailWidthPx": 22,
+      "trailWidthPx": 14,
       "glints": 5,
       "glintSizePx": 6,
       "sparkCount": 7,
       "sparkLenPx": 46,
       "sparkWidthPx": 7,
       "ringPx": 46,
-      "flashScale": 1.1,
+      "flashScale": 0.9,
       "palette": { "main": "#A8FF00", "glow": "#00FF50", "core": "#F4FFE0", "accent": "#E0FF00" }
     },
     "shield": {
@@ -107,7 +107,7 @@
       "sparkCount": 8,
       "sparkLenPx": 44,
       "sparkWidthPx": 7,
-      "flashScale": 1.1,
+      "flashScale": 0.9,
       "palette": { "main": "#D000FF", "glow": "#7A00FF", "core": "#F8E8FF", "accent": "#FF00E0" }
     },
     "charge": {
@@ -146,7 +146,7 @@
       "delaySec": 0.12,
       "durationSec": 0.34,
       "radiusPx": 150,
-      "thickPx": 26,
+      "thickPx": 21,
       "sweepDeg": 165,
       "trailDeg": 120,
       "centerBack": 0.5,
@@ -185,7 +185,7 @@
       "delaySec": 0.1,
       "durationSec": 0.26,
       "radiusPx": 120,
-      "thickPx": 16,
+      "thickPx": 13,
       "sweepDeg": 130,
       "trailDeg": 90,
       "centerBack": 0.5,
@@ -208,7 +208,7 @@
       "flightSec": 0.3,
       "trailLenPx": 240,
       "trailSegments": 7,
-      "trailWidthPx": 22,
+      "trailWidthPx": 14,
       "glints": 6,
       "glintSizePx": 6,
       "sparkCount": 8,

@@ -9,7 +9,7 @@
  */
 import { TestSuite, assert } from './TestRunner';
 import {
-    DEFAULT_BATTLE_JUICE, HitStopGate, burstColor, sparkSpecFor, applyJuicePrefs, parseJuicePrefs, LEGACY_HIT_STOP_SEC, LEGACY_SHAKE, UltimateWindow, attackEaseFor, attackLungeTotalSec, easeValue, flashCurveFor, floatPopMul,
+    DEFAULT_BATTLE_JUICE, HitStopGate, burstColor, sparkSpecFor, applyJuicePrefs, parseJuicePrefs, LEGACY_HIT_STOP_SEC, LEGACY_SHAKE, UltimateWindow, attackEaseFor, attackLungeTotalSec, easeValue, flashCurveFor, floatPopMul, floatOffset,
     fxSpecFor, hitStopSecFor, knockbackMul, moveEaseFor, parseBattleJuice, resolveHitKind, sampleAttackLunge, sampleRing, sampleShake, shakeEnvelope,
     shakeParamsFor, shakeRemainingStrength, shakeTierFor, shouldReplaceShake,
     type BattleJuiceConfig, type EaseName, type RingSample,
@@ -145,11 +145,22 @@ export function createBattleJuiceSuite(): TestSuite {
     });
 
     suite.test('跳字倍率：暴擊最大；關閉時全為 1', () => {
-        assert.isTrue(floatPopMul('crit').peak >= floatPopMul('normal').peak);
+        // 實際峰值＝樣式表 peakScale × 倍率：爆擊約 1.3 倍（0.12 秒內縮回），不再放大到 2 倍以上蓋住單位
+        assert.isTrue(near(2.0 * floatPopMul('crit').peak, 1.3), `爆擊有效峰值=${2.0 * floatPopMul('crit').peak}`);
+        assert.isTrue(floatPopMul('crit').popIn < 1, '彈出更快');
         const off = clone();
         off.floatPop.enabled = false;
         const m = floatPopMul('crit', off);
         assert.isTrue(m.peak === 1 && m.popIn === 1);
+    });
+
+    suite.test('跳字偏移：偏頭頂右上（x>0、y>0），爆擊比一般更遠；關閉回 0', () => {
+        const n = floatOffset('normal'), c = floatOffset('crit');
+        assert.isTrue(n.x > 0 && n.y > 0 && c.x >= n.x && c.y >= n.y);
+        const off = clone();
+        off.floatPop.enabled = false;
+        const z = floatOffset('crit', off);
+        assert.isTrue(z.x === 0 && z.y === 0);
     });
 
     suite.test('擊退倍率：關閉為 1、開啟用 ratioMul', () => {

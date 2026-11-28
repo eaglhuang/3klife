@@ -77,8 +77,8 @@ export const FLOAT_TEXT_STYLES: Readonly<Record<FloatTextType, FloatTextStyle>> 
         startScale: 0.6, peakScale: 1.3, popInSec: 0.06, settleSec: 0.10, maxConcurrent: 12, randomOffsetX: 8,
         outlineColor: OUTLINE_DARK, outlineWidth: 3 },
     // 爆擊：金色大字，放大到 2 倍後回彈到 1（backOut 會稍微過衝再收）
-    dmg_crit: { color: { r: 255, g: 210, b: 40, a: 255 }, fontSize: 78, isBold: true, durationMs: 1100, risePixels: 120,
-        startScale: 0.5, peakScale: 2.0, popInSec: 0.09, settleSec: 0.16, maxConcurrent: 8, randomOffsetX: 10,
+    dmg_crit: { color: { r: 255, g: 210, b: 40, a: 255 }, fontSize: 66, isBold: true, durationMs: 1000, risePixels: 110,
+        startScale: 0.5, peakScale: 2.0, popInSec: 0.09, settleSec: 0.12, maxConcurrent: 8, randomOffsetX: 10,
         outlineColor: { r: 110, g: 45, b: 0, a: 255 }, outlineWidth: 4 },
     // 重擊（PROG-2-9412）：橘色、比一般大、比爆擊小，玩家一眼分得出「這下打得重」。
     // 避開地形適性飄字的綠 #48C774／藍 #3273DC／紅 #F14668，也不和爆擊金撞色。
