@@ -2,11 +2,12 @@
 import { GAME_CONFIG, StatusEffect, Weather } from '../../core/config/Constants';
 import { RULED_EXTRA_TALLY_SKILL_IDS, TIGER_TALLY_PENDING_SKILL_IDS } from '../../core/config/TigerTallySpecTactics';
 import { BattleSkillAutoAimMode, BattleSkillTargetMode, type SkillScalingStat } from '../../shared/SkillRuntimeContract';
+import type { SummonSpec } from '../shared/SummonRule';
 
 export type BattleSkillFalloffRule = 'none' | 'linear-step';
 export type BattleSkillEffectKind =
   | 'damage' | 'heal' | 'control' | 'link' | 'counter' | 'reset'
-  | 'push' | 'push-fire' | 'root' | 'slow' | 'dot' | 'morale' | 'tile-buff' | 'extra-attack' | 'vitality' | 'control-override' | 'revive' | 'discord';
+  | 'push' | 'push-fire' | 'root' | 'slow' | 'dot' | 'morale' | 'tile-buff' | 'extra-attack' | 'vitality' | 'control-override' | 'revive' | 'discord' | 'summon';
 
 export interface BattleSkillProfile {
   battleSkillId: string;
@@ -56,6 +57,8 @@ export interface BattleSkillProfile {
   slowAmount?: number;
   /** 鼓舞：士氣加成（規格 +20） */
   moraleBonus?: number;
+  /** 召喚（effectKind: 'summon'，doc_spec_1359）：召喚物兵種、隊數、存活回合、同時上限、攻防比例 */
+  summon?: SummonSpec;
   /** 全體友軍士氣拉滿至上限（白馬銀槍·不滅）；與傷害同一次結算 */
   maximizeMoraleOnAllies?: boolean;
   /** 施放者自身獲得無敵的回合數（白馬銀槍·不滅 1 回合）；無敵期間受到的傷害歸零 */
@@ -394,6 +397,16 @@ const PROFILE_BY_SKILL_ID: Record<string, BattleSkillProfile> = {
     coefficient: 0,
     moraleBonus: 15,
     battleLogKey: 'skill.da_qiao_beauty.buff',
+  },
+  // 召喚民兵（PROG-2-10253，doc_spec_1359）：施放者前方生成 1 隊盾兵民兵，存活 4 回合、同陣營最多 3 隊；固定出生路，不換路
+  'summon-militia': {
+    battleSkillId: 'summon-militia',
+    targetMode: BattleSkillTargetMode.Self,
+    manualTargeting: false,
+    effectKind: 'summon',
+    coefficient: 0,
+    summon: { troop: 'shield', count: 1, durationTurns: 4, maxAlive: 3, statScale: 0.4 },
+    battleLogKey: 'skill.summon_militia.cast',
   },
   // 曹仁．穩固：敵方單體最前排定身 1 回合（守將釘住正面）；沿用控制結算，狀態為 Rooted
   'cao-ren-steadfast': {

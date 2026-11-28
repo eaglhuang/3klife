@@ -925,7 +925,9 @@ export class BattleCombatResolver {
     svc.buff.clearUnit(unit.id);
     clearMorale(unit);
     svc.event.emit(EVENT_NAMES.UnitDied, { unitId: unit.id, name: unit.name, lane, depth, faction, type });
-    this.context.onTroopDefeated?.({ unitId: unit.id, faction });
+    // 召喚物（doc_spec_1359 §2.4）：陣亡不計擊殺名聲、不給擊殺 SP
+    const isSummon = unit.summonedBy !== null;
+    if (!isSummon) this.context.onTroopDefeated?.({ unitId: unit.id, faction });
     // USPECIAL 死亡觸發（ULT-10，PROG-2-1979）：取出即清，每個掛勾只觸發一次
     settleDeathTriggers(this.context.state, unit.id, faction, (id) => this.context.getUltimateSpecialRule?.(id));
     // 遺計定遼（奉孝符，PROG-2-1572）：陣亡時全場敵軍混亂（暈眩）
@@ -938,7 +940,7 @@ export class BattleCombatResolver {
       }
     }
 
-    if (killer) {
+    if (killer && !isSummon) {
       this.grantSp(killer.faction, SP_PER_KILL, svc);
     }
   }

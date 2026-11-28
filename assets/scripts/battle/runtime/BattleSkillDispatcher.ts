@@ -10,6 +10,7 @@ import {
   TerrainType,
 } from '../../core/config/Constants';
 import { TroopUnit } from '../../core/models/TroopUnit';
+import type { SummonSpec } from '../shared/SummonRule';
 import { BattleState } from '../models/BattleState';
 import { BattleCombatResolver } from './BattleCombatResolver';
 import { isBattleSkillImplemented, resolveBattleSkillProfile, resolveBattleSkillTargetMode } from '../skills/BattleSkillProfiles';
@@ -81,6 +82,8 @@ export interface BattleSkillDispatcherContext {
   getUltimateSpecialRule?(ultimateId: string): UltimateSpecialRuleDef | null | undefined;
   /** 團隊回復的已損 HP 比例（PM 11/22）；未提供視為 0 */
   getUltimateTeamHealMissingRatio?(ultimateId: string): number | undefined;
+  /** 生成召喚物（PROG-2-10253）；未提供時召喚招式施放失敗 */
+  spawnSummon?(casterFaction: Faction, spec: SummonSpec, lane: number, depth: number, casterUnitId: string | null): TroopUnit | null;
 }
 
 /** 負責技能分發與執行上下文建立（seed tactic、direct skill、skill request 執行、context builder） */
@@ -616,6 +619,7 @@ export class BattleSkillDispatcher {
       addFormationZone: (zone: FormationZone) => state.setFormationZone(zone),
       controlUnit: (unit: TroopUnit, casterFaction: Faction, turns: number) => state.controlUnit(unit, casterFaction, turns),
       reviveFallenFriendly: (casterFaction: Faction, hpRatio: number) => state.reviveFallenUnit(casterFaction, hpRatio),
+      spawnSummon: this.context.spawnSummon ? (casterFaction, spec, lane, depth, casterUnitId) => this.context.spawnSummon!(casterFaction, spec, lane, depth, casterUnitId) : undefined,
       addUnitDot: (unit: TroopUnit, ratio: number, turns: number) => {
         state.unitDots.set(unit.id, { unitId: unit.id, ratio, remainingTurns: turns });
         // PROG-2-9731：毒箭上身也送 BuffApplied（以前只寫狀態表，玩家看不到命中回饋）；由 BattleUIBridge 排進戰鬥動畫佇列

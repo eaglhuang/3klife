@@ -65,7 +65,7 @@ export function createFloatAvoidSuite(): TestSuite {
     });
 
     suite.test('爆擊大字正對標記：上限隨字寬放寬，仍挪得開', () => {
-        const halfW = floatHalfWidth('-188', FLOAT_TEXT_STYLES.dmg_crit);
+        const halfW = floatHalfWidth('-188888', FLOAT_TEXT_STYLES.dmg_crit);
         assert.isTrue(halfW + 48 + FLOAT_AVOID_MARGIN > FLOAT_AVOID_MAX_SHIFT, '這個案例需要超過固定上限才挪得開');
         const rects = [{ x: 0, y: 60, halfW: 48, halfH: 28 }];
         const dx = floatAvoidShift(0, 0, halfW, 40, 120, rects);

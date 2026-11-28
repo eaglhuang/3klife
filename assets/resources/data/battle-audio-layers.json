@@ -373,6 +373,9 @@
       ],
       "warcry": [
         "skill3"
+      ],
+      "summon": [
+        "teleport"
       ]
     },
     "volume": {
@@ -481,6 +484,10 @@
         0.8
       ],
       "warcry": [
+        0.65,
+        0.8
+      ],
+      "summon": [
         0.65,
         0.8
       ]

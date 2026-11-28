@@ -5,6 +5,7 @@ import { GeneralUnit } from '../../core/models/GeneralUnit';
 import { TroopUnit } from '../../core/models/TroopUnit';
 import type { BattleSkillRequest, SkillExecutionResult } from '../../shared/SkillRuntimeContract';
 import type { BattleSkillCellRef } from './BattleSkillTargetSelector';
+import type { SummonSpec } from '../shared/SummonRule';
 
 export interface BattleSkillExecutionContext {
   getFactionUnits(faction: Faction): TroopUnit[];
@@ -64,6 +65,11 @@ export interface BattleSkillExecutionContext {
   controlUnit?(unit: TroopUnit, casterFaction: Faction, turns: number): boolean;
   /** 復活施放者陣營的一名陣亡兵（PROG-2-1334 唯才是舉）；沒有可復活的兵或沒有空格時回 null；舊測試 context 可不提供 */
   reviveFallenFriendly?(casterFaction: Faction, hpRatio: number): TroopUnit | null;
+  /**
+   * 生成一隊召喚物（PROG-2-10253，doc_spec_1359）：由戰場控制器以民兵規格建立、標記施放者與到期回合、本回合不可行動；
+   * 格子由呼叫端（SummonSkillResolver）依 pickSummonCell 選好。失敗回 null；舊測試 context 可不提供。
+   */
+  spawnSummon?(casterFaction: Faction, spec: SummonSpec, lane: number, depth: number, casterUnitId: string | null): TroopUnit | null;
 }
 
 export interface BattleSkillResolver {

@@ -1188,6 +1188,22 @@
       "timing": "active-cast",
       "manualTargeting": false,
       "autoAimMode": "all-enemies"
+    },
+    {
+      "id": "tactic-summon-militia",
+      "displayName": "召喚民兵",
+      "category": "summon",
+      "rarityAccess": [],
+      "preferredStats": [
+        "lea"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "summon-militia",
+      "sourceType": "seed-tactic",
+      "targetMode": "self",
+      "timing": "active-cast",
+      "manualTargeting": false
     }
   ]
 }

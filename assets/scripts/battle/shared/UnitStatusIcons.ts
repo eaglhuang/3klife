@@ -17,7 +17,7 @@ export type StatusIconKind =
   | 'stun' | 'rooted' | 'controlled' | 'poison' | 'burn' | 'weak' | 'fear' | 'slow' | 'no-shoot'
   | 'defense-down' | 'attack-down' | 'accuracy-down' | 'hp-down' | 'morale-down'
   | 'invincible' | 'shield' | 'attack-up' | 'defense-up' | 'hp-up' | 'morale-up'
-  | 'haste' | 'crit-up' | 'kin-aura';
+  | 'haste' | 'crit-up' | 'kin-aura' | 'summoned';
 
 export interface StatusIconDef {
   /** 圓底中央的單一中文字 */
@@ -54,6 +54,7 @@ export const STATUS_ICON_DEFS: Readonly<Record<StatusIconKind, StatusIconDef>> =
   'haste':         { glyph: '疾', isDebuff: false, order: 6 },
   'crit-up':       { glyph: '暴', isDebuff: false, order: 7 },
   'kin-aura':      { glyph: '義', isDebuff: false, order: 8 },
+  'summoned':      { glyph: '召', isDebuff: false, order: 9 }, // PROG-2-10253：召喚物（doc_spec_1359 §4）
 };
 
 /** 頭頂最多同時顯示的圖示數；超過顯示「+N」 */
@@ -91,6 +92,8 @@ export interface UnitStatusSource {
   moraleTurns: number;
   /** 兄弟齊心光環（doc_spec_1358）：有就顯示「義」圖示 */
   kinAura?: boolean;
+  /** 召喚物（PROG-2-10253）：施放者單位 id；有值就顯示「召」圖示 */
+  summonedBy?: string | null;
 }
 
 /** 狀態來源（由呼叫端從 BattleState／BuffSystem 取出，缺的給 null／空陣列） */
@@ -163,6 +166,7 @@ export function computeUnitStatusIcons(unit: UnitStatusSource, ctx: UnitStatusCo
   else if (unit.maxHpBonus < 0) add('hp-down', null);
   if (unit.shield > 0) add('shield', null);
   if (unit.kinAura) add('kin-aura', null);
+  if (unit.summonedBy) add('summoned', null);
   if (unit.morale > 0) add('morale-up', unit.moraleTurns > 0 ? unit.moraleTurns : null);
   else if (unit.morale < 0) add('morale-down', unit.moraleTurns > 0 ? unit.moraleTurns : null);
 
