@@ -254,6 +254,8 @@
   "battle.review.close": "閉じる",
   "battle.settings.title": "設定",
   "battle.settings.resume": "戦闘を続ける",
+  "battle.settings.hitstop.on": "ヒットストップ：オン",
+  "battle.settings.hitstop.off": "ヒットストップ：オフ",
   "battle.ultimate.select_title": "奥義を選択",
   "battle.unit_info.base_stats": "基本能力",
   "battle.unit_info.traits": "兵種特性",

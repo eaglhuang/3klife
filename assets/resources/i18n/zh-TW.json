@@ -266,6 +266,8 @@
   "battle.review.close": "關閉",
   "battle.settings.title": "設定",
   "battle.settings.resume": "繼續戰鬥",
+  "battle.settings.hitstop.on": "命中頓格：開",
+  "battle.settings.hitstop.off": "命中頓格：關",
   "battle.ultimate.select_title": "選擇奧義",
   "battle.unit_info.base_stats": "基礎數值",
   "battle.unit_info.traits": "兵種特性",
