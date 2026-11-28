@@ -218,6 +218,8 @@ const BADGE_TYPE_DISC_FILL = new Color(42, 28, 16, 255);
 
 /** 名牌旁精力能量環半徑（PROG-2-1853） */
 const VITALITY_RING_RADIUS = 24;
+/** 命中點／特效瞄準的身體中心高度（畫面像素）：單位站位點在腳底，特效要打在身體上。 */
+const HIT_BODY_Y = 26;
 /** 武將名牌徽章尺寸（createGeneralView 的 buildBadge 參數；避讓計算共用） */
 const GENERAL_PLATE_WIDTH = 186;
 const GENERAL_PLATE_HEIGHT = 40;
@@ -326,6 +328,7 @@ export class UnitRenderer extends Component {
   private readonly slashShots = new SlashShotView(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   /** 攻擊特效試作（零貼圖單一 Graphics，JSON 驅動；?atkVfx=old 可退回舊特效） */
   /** PROG-2-10243：命中衝擊環／輝光、刀光拖尾、殘影（單一加色節點，開關在 battle-juice.json） */
+  private readonly vfxTarget = { x: 0, y: 0 };
   private readonly juiceFx = new BattleJuiceFx(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   private readonly attackVfx = new AttackVfxPlayer(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   /** 戰法分組特效（PROG-2-10138）：火／水／風／回復／加速／鼓舞／控制，單一加色 Graphics、預算見 TacticVfxGroups */
@@ -901,9 +904,10 @@ export class UnitRenderer extends Component {
     try {
       const p = this.overlayPoint(defenderNode.worldPosition);
       if (!p) return;
-      const y = p.y + 26;
+      const y = p.y + HIT_BODY_Y;
       this.juiceFx.playGlow(p.x, y, kind);
       this.juiceFx.playRing(p.x, y, kind);
+      this.juiceFx.playSparks(p.x, y, kind);
     } catch (error) { console.warn('[UnitRenderer] 命中衝擊特效略過', error); }
   }
 
@@ -1408,7 +1412,7 @@ export class UnitRenderer extends Component {
     }
     // 衝擊環／輝光／刀光／殘影任一項開著才預熱加色節點，全關就完全不建
     const j = getBattleJuice();
-    if (j.impactRing.enabled || j.glow.enabled || j.bladeTrail.enabled || j.afterimage.enabled) this.juiceFx.prewarm();
+    if (j.impactRing.enabled || j.glow.enabled || j.sparks.enabled || j.bladeTrail.enabled || j.afterimage.enabled) this.juiceFx.prewarm();
   }
 
   /** 讀高倍率攻擊提示門檻；讀不到就沿用預設（不影響戰鬥） */
@@ -1738,9 +1742,11 @@ export class UnitRenderer extends Component {
     try {
       const vfx = attackVfxFor(troopType);
       const from = attackerNode.worldPosition;
-      const a = this.overlayPoint(from); const ax = a?.x ?? 0; const ay = a?.y ?? 0;
+      // 特效瞄準身體中心而不是腳底（overlayPoint 是單位站位點），否則刀光會落在單位下方的空地
+      const a = this.overlayPoint(from); const ax = a?.x ?? 0; const ay = (a?.y ?? 0) + HIT_BODY_Y;
       const target = this.overlayPoint(targetPos);
-      if (a && target && this.tryAttackVfx(troopType, general, ax, ay, target.x, target.y, ratio, vfx.kind === 'arrow')) return;
+      if (a && target) { this.vfxTarget.x = target.x; this.vfxTarget.y = target.y + HIT_BODY_Y; }
+      if (a && target && this.tryAttackVfx(troopType, general, ax, ay, this.vfxTarget.x, this.vfxTarget.y, ratio, vfx.kind === 'arrow')) return;
       if (vfx.kind === 'arrow') {
         if (a && target) {
           this.arrowShots.shoot(ax, ay, target.x, target.y);
@@ -1761,7 +1767,9 @@ export class UnitRenderer extends Component {
     if (!node) return;
     try {
       const p = this.overlayPoint(node.worldPosition);
-      if (p) this.attackVfx.playCrit(p.x, p.y);
+      // 新的三層爆點（中心白熱＋外環＋火花）已涵蓋暴擊命中；舊的星芒只在爆點關閉時退回使用
+      const j = getBattleJuice();
+      if (p && !(j.impactRing.enabled || j.sparks.enabled || j.glow.enabled)) this.attackVfx.playCrit(p.x, p.y);
     } catch (error) { console.warn('[UnitRenderer] 暴擊特效略過', error); }
   }
 

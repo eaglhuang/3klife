@@ -17974,5 +17974,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10243.md",
     "title": "[PROG-2-10243] 戰場打擊感 Juice 第二批（閃白擊退、三段緩動、衝擊環、刀光殘影、輝光）",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3335",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10250.md",
+    "title": "[PROG-2-10250] 戰場 draw call 合批（目標 <60）與頓格設定開關",
+    "category": "task"
   }
 ]
