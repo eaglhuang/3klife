@@ -80,7 +80,7 @@ interface PlayOpts { loop?: boolean; speed?: number; seed?: number; fadeInSec?: 
 | `stretchApex` | (0.94, 1.08) | 彈到最高點 (scaleX, scaleY) |
 | `shadowScaleMin` | 0.78 | 彈到最高點影子縮到這個比例，落地回 1.0 |
 | `shadowAlphaMin` | 0.55 | 同上，影子也變淡 |
-| `faceFlip` | 依行進方向 | 水平翻轉整顆頭（不重畫，scaleX 取負）。**例外**：頭圖有左右不對稱固定特徵者（`flags.asymmetric`，如夏侯惇左眼眼罩，QFACE-01 第 2.1 節）**不做負 scale 翻轉**，朝向改用身體傾斜與位移表現，避免眼罩換邊（待使用者確認方案，見審查待問清單 Q5）；`idle` 的 `lookAround` 同此規則 |
+| `faceFlip` | 依行進方向 | 水平翻轉整顆頭（不重畫，scaleX 取負）。頭圖有左右不對稱固定特徵者（`flags.asymmetric`，如夏侯惇左眼眼罩，QFACE-01 第 2.1 節）**照常翻轉**，接受眼罩換邊（使用者 11/28 裁決，僅限生活層 Q 頭；戰場與立繪仍是左眼）；`idle` 的 `lookAround` 同此規則 |
 | `landEvent` | true | 落地發 `land` 事件（腳步聲、塵土符號） |
 | `ease` | `sineInOut` | 上升、下降各用一條曲線，落地前加速 |
 
@@ -139,7 +139,7 @@ interface PlayOpts { loop?: boolean; speed?: number; seed?: number; fadeInSec?: 
 | 閃避 | 對手武力＋智力高於自己時最多 15%，閃避時被打方側跳，跳字「閃」 |
 | 回合上限 | 12 回合；到上限看剩餘血量比 |
 | 亂數 | 用共通底層的確定性亂數（`seed` 由呼叫端給），相同種子相同過程，方便重播與驗證 |
-| 切磋 | 血量降到 30% 就「點到為止」自動收手（`outcomeTier=draw`）；呼叫端可關掉改成打到 0（生活層預設開哪一種，見 QLIFE-01 第 6.4 節與審查待問清單 Q1），但**這個模組本身不產生任何「死亡」結果**，只回報 `ko`（血量歸零）|
+| 切磋 | 血量降到 30% 就「點到為止」自動收手（`outcomeTier=draw`）；呼叫端可關掉改成打到 0（生活層由玩家邀約時自選，預設打到 0 的「認真切磋」，見 QLIFE-01 第 6.4 節），但**這個模組本身不產生任何「死亡」結果**，只回報 `ko`（血量歸零）|
 | 死鬥 | **只在雙方為宿敵關係時，由呼叫端開啟**；輸方 `outcomeTier=captured`，呼叫端走被擒處置（`doc_spec_0021` §L），**仍然不陣亡**。不存檔的小遊戲死鬥照舊（只回 `ko`）|
 | 後果分級 `outcomeTier` | 輸出欄位，四值：`draw`（點到為止／回合上限平手，無後果）、`lightInjury`（輸方輕傷）、`severeInjury`（輸方重傷，連輸才出現）、`captured`（宿敵死鬥輸方被擒）。模組只依輸入的「輸方目前傷勢」與「是否宿敵死鬥」算出分級，**不寫入任何狀態** |
 | 傷勢寫入 | **傷勢由呼叫端經伺服器 API 寫入**（`occupancy.acquire(kind=medical, sub=injured)`，冪等鍵 `duel:<seed>:<季>`，見 `doc_spec_1248`）；細則見 QLIFE-01 第 6.4.1 節。主角不受傷（代理頭只演出暈），家臣代打時由家臣承擔 |

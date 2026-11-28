@@ -271,5 +271,3 @@
 | `doc_other_4241` | docs/reports/q4-generals-bow-rule-and-route-1125.md | Q4 武將：持弓驗收規則 與 下一輪做法（11/25） |
 | `doc_other_4242` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-16.md | Doc ID Registry Markdown Index — Spec / Index / Task |
 | `doc_other_4243` | docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task-part-17.md | Doc ID Registry Markdown Index — Spec / Index / Task |
-| `doc_other_4244` | docs/學習文件/The Anatomy of an Agent Harness.md | Key Takeaways |
-| `doc_other_4245` | docs/ai_atomic_framework/arxiv-paper-v1/paper.v3.1.corrupted-backup-20260625.md | ATM嚗???靘???LLM 蝔?蝣澆?????∠?典???摮???CID Broker |
