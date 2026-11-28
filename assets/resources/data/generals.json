@@ -130,12 +130,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-cao-cao-tactics",
         "source": "inborn"
       },
       {
         "slotId": "slot-2",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-cao-cao-ult-control",
         "source": "inborn"
       }
     ],
@@ -313,12 +313,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-liu-bei-rally",
         "source": "inborn"
       },
       {
         "slotId": "slot-2",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-liu-bei-reset",
         "source": "inborn"
       }
     ],
@@ -499,12 +499,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-sun-quan-tide",
         "source": "inborn"
       },
       {
         "slotId": "slot-2",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-inspire",
         "source": "inborn"
       }
     ],
@@ -685,12 +685,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-zhuge-liang-storm",
         "source": "inborn"
       },
       {
         "slotId": "slot-2",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-empty-fort",
         "source": "inborn"
       }
     ],
@@ -871,12 +871,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-fire-attack",
         "source": "inborn"
       },
       {
         "slotId": "slot-2",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-chain-link",
         "source": "inborn"
       }
     ],
@@ -1097,12 +1097,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-guan-yu-slash",
         "source": "inborn"
       },
       {
         "slotId": "slot-2",
-        "tacticId": "tactic-cavalry-shock",
+        "tacticId": "tactic-insp-wei-might",
         "source": "inborn"
       }
     ],
@@ -1327,12 +1327,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-zhang-fei-roar",
         "source": "inborn"
       },
       {
         "slotId": "slot-2",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-cavalry-charge",
         "source": "inborn"
       }
     ],
@@ -1536,12 +1536,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-cavalry-shock",
+        "tacticId": "tactic-insp-dragon-gall",
         "source": "inborn"
       },
       {
         "slotId": "slot-2",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-zhao-yun-immortal",
         "source": "inborn"
       }
     ],
@@ -1752,12 +1752,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-lu-bu-rampage",
         "source": "inborn"
       },
       {
         "slotId": "slot-2",
-        "tacticId": "tactic-cavalry-shock",
+        "tacticId": "tactic-insp-taunt",
         "source": "inborn"
       }
     ],
@@ -1928,12 +1928,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-sima-yi-shadow",
         "source": "inborn"
       },
       {
         "slotId": "slot-2",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-sow-discord",
         "source": "inborn"
       }
     ],
@@ -2107,11 +2107,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-sworn-fury",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-you-qi-counter",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-guan-yu-slash",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -2245,11 +2258,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-sun-ce-conqueror",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-shield",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-lu-bu-rampage",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -2383,11 +2409,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-tally-hundred-steps",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-lance-thrust",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-tally-hundred-steps",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -2521,11 +2560,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-cavalry-charge",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-lance-thrust",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-tally-charge",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -2659,11 +2711,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-tally-fire-god-hunt",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-slow",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-zhou-yu-inferno",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "NAVY": "A",
       "SIEGE": "B",
@@ -2797,11 +2862,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-tally-hundred-steps",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-you-qi-counter",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-lu-bu-rampage",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "NAVY": "A",
@@ -2935,11 +3013,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-wei-might",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-night-raid",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-tally-wei-zhen-hua-xia",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -3073,11 +3164,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-tally-changban-root",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-haste",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-liu-bei-rally",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "SIEGE": "A",
       "INFANTRY": "B",
@@ -3211,11 +3315,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-shield",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-tally-changban-root",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-you-qi-counter",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -3349,11 +3466,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-chain-link",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-red-cliff",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-lian-huan-chain",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -3487,12 +3617,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-guo-jia-foresight",
         "source": "inborn"
       },
       {
         "slotId": "slot-2",
-        "tacticId": "tactic-archer-volley",
+        "tacticId": "tactic-tpl-sima-yi-shadow",
         "source": "inborn"
       }
     ],
@@ -3666,11 +3796,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-inspire",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-heal",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-liu-bei-rally",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -3804,11 +3947,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-tally-fire-god-hunt",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-tally-link",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-guo-jia-foresight",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -3942,7 +4098,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-tally-changban-push",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-slow",
         "source": "inborn"
       }
     ],
@@ -4088,11 +4249,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-shield",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-inspire",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-liu-bei-rally",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "SIEGE": "A",
       "INFANTRY": "B",
@@ -4226,11 +4400,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-liu-bei-rally",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-zhao-yun-immortal",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-liu-bei-rally",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -4364,7 +4551,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-xiahou-dun-eye-devour",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-you-qi-counter",
         "source": "inborn"
       }
     ],
@@ -4510,11 +4702,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-haste",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-tally-hundred-steps",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-tally-hundred-steps",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -4648,7 +4853,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-eight-array",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-inspire",
         "source": "inborn"
       }
     ],
@@ -4794,11 +5004,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-sworn-fury",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-shield",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-tally-wei-zhen-hua-xia",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "SIEGE": "A",
       "INFANTRY": "B",
@@ -4932,11 +5155,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-combo-attack",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-dragon-gall",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-tally-wei-zhen-hua-xia",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -5070,11 +5306,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-fire-attack",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-sima-yi-shadow",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-guo-jia-foresight",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -5208,11 +5457,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-sun-quan-tide",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-eight-array",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-tally-hundred-steps",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "NAVY": "A",
       "INFANTRY": "B",
@@ -5346,11 +5608,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-sun-quan-tide",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-combo-attack",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-cao-cao-tactics",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "NAVY": "A",
       "INFANTRY": "B",
@@ -5484,11 +5759,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-tally-poison-arrow",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-haste",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-sun-quan-tide",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "NAVY": "A",
       "SIEGE": "B",
@@ -5622,7 +5910,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-sun-quan-tide",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-tally-hundred-steps",
         "source": "inborn"
       }
     ],
@@ -5768,7 +6061,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-sun-quan-tide",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-combo-attack",
         "source": "inborn"
       }
     ],
@@ -5906,11 +6204,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-cavalry-charge",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-wei-might",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-tally-wei-zhen-hua-xia",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "NAVY": "A",
@@ -6044,7 +6355,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-night-raid",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-haste",
         "source": "inborn"
       }
     ],
@@ -6182,11 +6498,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-night-raid",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-haste",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-cao-cao-tactics",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "NAVY": "A",
       "SIEGE": "B",
@@ -6320,11 +6649,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-sow-discord",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-heal",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-sima-yi-shadow",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "NAVY": "A",
       "SIEGE": "B",
@@ -6458,11 +6800,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-tally-hundred-steps",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-haste",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-tally-hundred-steps",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "NAVY": "A",
       "SIEGE": "B",
@@ -6596,7 +6951,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-sun-ce-conqueror",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-lance-thrust",
         "source": "inborn"
       }
     ],
@@ -6742,11 +7102,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-combo-attack",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-dragon-gall",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-tally-charge",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "NAVY": "A",
@@ -6880,7 +7253,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-eight-array",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-haste",
         "source": "inborn"
       }
     ],
@@ -7018,11 +7396,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-taunt",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-inspire",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-zhang-fei-roar",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -7156,11 +7547,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-liu-bei-rally",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-slow",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-cao-cao-ult-revive",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -7294,11 +7698,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-combo-attack",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-dragon-gall",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-guan-yu-slash",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "SIEGE": "B",
@@ -7432,7 +7849,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-combo-attack",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-dragon-gall",
         "source": "inborn"
       }
     ],
@@ -7570,11 +7992,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-sima-yi-shadow",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-shield",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-sima-yi-shadow",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -7708,11 +8143,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-taunt",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-sun-quan-tide",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-tally-wei-zhen-hua-xia",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "SIEGE": "B",
@@ -7846,11 +8294,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-chain-link",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-tally-link",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-lian-huan-chain",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "SIEGE": "A",
       "INFANTRY": "B",
@@ -7984,7 +8445,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-combo-attack",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-dragon-gall",
         "source": "inborn"
       }
     ],
@@ -8122,11 +8588,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-zhang-fei-roar",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-cao-cao-tactics",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-zhang-fei-roar",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -8260,11 +8739,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-cao-cao-revelry",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-heal",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-liu-bei-reset",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -8398,11 +8890,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-inspire",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-sun-quan-tide",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-liu-bei-rally",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "SIEGE": "B",
@@ -8536,11 +9041,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-taunt",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-sun-quan-tide",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-cao-cao-tactics",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -8674,11 +9192,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-shield",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-inspire",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-liu-bei-rally",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -8812,11 +9343,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-eight-array",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-haste",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-sun-quan-tide",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -8950,11 +9494,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-tally-changban-push",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-wei-might",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-eight-formation",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "SIEGE": "B",
@@ -9088,11 +9645,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-slow",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-guo-jia-foresight",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-sow-discord",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "NAVY": "A",
       "SIEGE": "B",
@@ -9226,7 +9796,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-inspire",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-eight-array",
         "source": "inborn"
       }
     ],
@@ -9364,11 +9939,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-inspire",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-slow",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-liu-bei-reset",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "NAVY": "A",
       "ENGINEER": "B",
@@ -9502,11 +10090,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-sun-quan-tide",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-combo-attack",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-cao-cao-tactics",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "NAVY": "A",
       "INFANTRY": "B",
@@ -9640,11 +10241,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-tally-hundred-steps",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-combo-attack",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-sun-quan-tide",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "NAVY": "A",
       "SIEGE": "B",
@@ -9778,11 +10392,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-sun-quan-tide",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-combo-attack",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-cao-cao-tactics",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "NAVY": "A",
       "SIEGE": "B",
@@ -9916,7 +10543,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-sworn-fury",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-shield",
         "source": "inborn"
       }
     ],
@@ -10054,11 +10686,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-cavalry-charge",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-wei-might",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-sun-ce-conqueror",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "SIEGE": "B",
@@ -10192,7 +10837,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-sima-yi-shadow",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-haste",
         "source": "inborn"
       }
     ],
@@ -10330,11 +10980,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-liu-bei-rally",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-zhao-yun-immortal",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-liu-bei-rally",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "SIEGE": "A",
       "ENGINEER": "B",
@@ -10468,11 +11131,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-sow-discord",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-cao-zhi-verse",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-sima-yi-shadow",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -10606,11 +11282,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-sima-yi-shadow",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-eight-array",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-lian-huan-chain",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "SIEGE": "A",
       "ENGINEER": "B",
@@ -10744,11 +11433,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-tally-counter-weak",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-tally-changban-push",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-you-qi-counter",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "SIEGE": "B",
@@ -10882,11 +11584,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-combo-attack",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-dragon-gall",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-zhao-yun-pierce",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "SIEGE": "B",
@@ -11020,11 +11735,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-sun-ce-conqueror",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-you-qi-counter",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-sun-ce-conqueror",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "SIEGE": "B",
@@ -11158,11 +11886,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-sun-ce-conqueror",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-you-qi-counter",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-lu-bu-rampage",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "SIEGE": "B",
@@ -11296,7 +12037,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-combo-attack",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-dragon-gall",
         "source": "inborn"
       }
     ],
@@ -11434,11 +12180,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-tally-hundred-steps",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-you-qi-counter",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-zhao-yun-pierce",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "SIEGE": "A",
       "ENGINEER": "B",
@@ -11572,11 +12331,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-shield",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-slow",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-liu-bei-rally",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "SIEGE": "A",
       "ENGINEER": "B",
@@ -11710,11 +12482,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-sun-ce-conqueror",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-you-qi-counter",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-guan-yu-slash",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -11848,11 +12633,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-tally-changban-push",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-haste",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-eight-formation",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "SIEGE": "B",
@@ -11986,7 +12784,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-tally-defense-pierce",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-taunt",
         "source": "inborn"
       }
     ],
@@ -12124,11 +12927,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-tally-changban-root",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-haste",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-liu-bei-rally",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -12262,11 +13078,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-eight-array",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-wei-might",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-zhang-fei-roar",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -12400,11 +13229,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-tally-changban-root",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-tally-changban-push",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-tally-wei-zhen-hua-xia",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "SIEGE": "B",
@@ -12538,11 +13380,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-sworn-fury",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-shield",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-zhao-yun-pierce",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "ENGINEER": "B",
@@ -12676,11 +13531,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-zhang-fei-roar",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-inspire",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-zhang-fei-roar",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -12814,11 +13682,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-wei-zhen-reset",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-empty-fort",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-cao-cao-revelry",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -12952,11 +13833,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-inspire",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-heal",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-liu-bei-reset",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "SIEGE": "A",
       "ENGINEER": "B",
@@ -13090,11 +13984,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-liu-bei-reset",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-shield",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-liu-bei-rally",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -13228,11 +14135,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-guo-jia-foresight",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-eight-array",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-zhuge-liang-storm",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -13366,11 +14286,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-tally-poison-arrow",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-shield",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-lian-huan-chain",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "SIEGE": "A",
       "ENGINEER": "B",
@@ -13504,11 +14437,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-sun-quan-tide",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-eight-array",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-sun-quan-tide",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -13642,11 +14588,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-sima-yi-shadow",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-haste",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-lian-huan-chain",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "NAVY": "A",
       "SIEGE": "B",
@@ -13780,11 +14739,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-liu-bei-rally",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-zhao-yun-immortal",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-liu-bei-rally",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "NAVY": "A",
       "ENGINEER": "B",
@@ -13918,11 +14890,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-sun-quan-tide",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-combo-attack",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-cao-cao-tactics",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "NAVY": "A",
       "ENGINEER": "B",
@@ -14056,11 +15041,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-tally-poison-arrow",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-haste",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-cao-cao-ult-control",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "NAVY": "A",
       "INFANTRY": "B",
@@ -14194,7 +15192,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-slow",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-shield",
         "source": "inborn"
       }
     ],
@@ -14332,11 +15335,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-tally-poison-arrow",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-shield",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-gan-ning-night-raid",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "NAVY": "A",
       "SIEGE": "B",
@@ -14470,11 +15486,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-sun-quan-tide",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-tally-link",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-sun-quan-tide",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "NAVY": "A",
       "SIEGE": "B",
@@ -14608,11 +15637,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-tally-hundred-steps",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-shield",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-cao-cao-tactics",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "NAVY": "A",
       "SIEGE": "B",
@@ -14746,11 +15788,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-tally-poison-arrow",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-shield",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-gan-ning-night-raid",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "NAVY": "A",
       "SIEGE": "B",
@@ -14884,11 +15939,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-inspire",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-shield",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-liu-bei-rally",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "NAVY": "A",
       "SIEGE": "B",
@@ -15022,11 +16090,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-river-ambush",
+        "tacticId": "tactic-tpl-sima-yi-shadow",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-guo-jia-foresight",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-cao-cao-ult-control",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "NAVY": "B",
@@ -15160,11 +16241,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-zhang-fei-roar",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-cao-cao-tactics",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-liu-bei-rally",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "SIEGE": "B",
@@ -15298,11 +16392,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-liu-bei-rally",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-cao-cao-tactics",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-zhang-fei-roar",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "SIEGE": "B",
@@ -15436,11 +16543,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-zhang-fei-roar",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-cao-cao-tactics",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-tally-wei-zhen-hua-xia",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "SIEGE": "B",
@@ -15574,11 +16694,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-sima-yi-shadow",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-tally-link",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-lian-huan-chain",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "SIEGE": "A",
       "ENGINEER": "B",
@@ -15712,7 +16845,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-guan-yu-slash",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-night-raid",
         "source": "inborn"
       }
     ],
@@ -15850,7 +16988,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-tally-defense-pierce",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-taunt",
         "source": "inborn"
       }
     ],
@@ -15988,11 +17131,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-guan-yu-slash",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-night-raid",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-tally-hundred-steps",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -16126,11 +17282,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-sow-discord",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-haste",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-sow-discord",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "SIEGE": "A",
       "ENGINEER": "B",
@@ -16264,11 +17433,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-cavalry-charge",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-wei-might",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-zhao-yun-pierce",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -16402,11 +17584,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-sow-discord",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-cao-zhi-verse",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-lian-huan-chain",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "SIEGE": "A",
       "ENGINEER": "B",
@@ -16540,11 +17735,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-chain-link",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-cao-zhi-verse",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-sow-discord",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "SIEGE": "A",
       "ENGINEER": "B",
@@ -16678,7 +17886,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-sima-yi-shadow",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-haste",
         "source": "inborn"
       }
     ],
@@ -16816,11 +18029,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-heal",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-haste",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-cao-cao-ult-revive",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -16954,11 +18180,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-sow-discord",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-haste",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-lian-huan-chain",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -17092,11 +18331,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-liu-bei-rally",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-slow",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-cao-cao-ult-revive",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -17230,11 +18482,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-sima-yi-shadow",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-heal",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-lian-huan-chain",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "SIEGE": "A",
       "ENGINEER": "B",
@@ -17368,11 +18633,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-tally-fire-god-hunt",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-sima-yi-shadow",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-cao-zhi-verse",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -17506,11 +18784,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-slow",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-eight-array",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-sow-discord",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -17644,11 +18935,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-tally-poison-arrow",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-cao-zhi-verse",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-cao-cao-ult-control",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "SIEGE": "B",
@@ -17782,11 +19086,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-tally-defense-pierce",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-taunt",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-lu-bu-rampage",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -17920,11 +19237,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-sworn-fury",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-shield",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-tally-wei-zhen-hua-xia",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -18058,11 +19388,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-inspire",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-sun-quan-tide",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-tally-wei-zhen-hua-xia",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "SIEGE": "B",
@@ -18196,11 +19539,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-combo-attack",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-dragon-gall",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-lu-bu-rampage",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -18334,11 +19690,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-eight-array",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-inspire",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-tally-wei-zhen-hua-xia",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -18472,11 +19841,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-tally-changban-push",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-tally-poison-arrow",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-lu-bu-rampage",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -18610,11 +19992,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-tally-hundred-steps",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-red-cliff",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-tally-fire-god-hunt",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -18748,11 +20143,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-tally-defense-pierce",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-taunt",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-tally-wei-zhen-hua-xia",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -18886,7 +20294,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-sworn-fury",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-shield",
         "source": "inborn"
       }
     ],
@@ -19024,11 +20437,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-sun-ce-conqueror",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-you-qi-counter",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-guan-yu-slash",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -19162,7 +20588,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-guan-yu-slash",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-night-raid",
         "source": "inborn"
       }
     ],
@@ -19300,7 +20731,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-eight-array",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-inspire",
         "source": "inborn"
       }
     ],
@@ -19438,11 +20874,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-eight-array",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-haste",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-cao-cao-tactics",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -19576,11 +21025,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-cavalry-charge",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-wei-might",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-tally-hundred-steps",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -19714,11 +21176,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-cavalry-charge",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-wei-might",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-sun-ce-conqueror",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -19852,11 +21327,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-lance-thrust",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-haste",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-guan-yu-slash",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -19990,11 +21478,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-zhuge-liang-storm",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-eight-array",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-zhuge-liang-storm",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -20128,11 +21629,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-sun-quan-tide",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-sima-yi-shadow",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-cao-cao-tactics",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -20263,7 +21777,18 @@
     "learnedTactics": [],
     "inspiredTactics": [],
     "lockedTactics": [],
-    "tacticSlots": [],
+    "tacticSlots": [
+      {
+        "slotId": "slot-1",
+        "tacticId": "tactic-insp-slow",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-shield",
+        "source": "inborn"
+      }
+    ],
     "ultimateSlots": [],
     "troopAptitude": {
       "ENGINEER": "A",
@@ -20398,7 +21923,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-zhang-he-adaptive-camp",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-heal",
         "source": "inborn"
       }
     ],
@@ -20536,11 +22066,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-night-raid",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-shield",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-sima-yi-shadow",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -20674,11 +22217,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-shield",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-tally-changban-push",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-you-qi-counter",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -20812,11 +22368,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-shield",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-tally-changban-push",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-zhang-fei-roar",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -20950,11 +22519,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-guo-jia-foresight",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-slow",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-cao-cao-tactics",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -21088,11 +22670,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-sima-yi-shadow",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-guo-jia-foresight",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-tally-poison-arrow",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "SIEGE": "B",
@@ -21226,11 +22821,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-sun-quan-tide",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-tally-link",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-tally-fire-god-hunt",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -21364,11 +22972,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-tally-changban-root",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-haste",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-liu-bei-rally",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "SIEGE": "B",
@@ -21502,11 +23123,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-slow",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-guo-jia-foresight",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-cao-cao-ult-control",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -21640,11 +23274,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-sima-yi-shadow",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-shield",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-sow-discord",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -21778,7 +23425,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-inspire",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-eight-array",
         "source": "inborn"
       }
     ],
@@ -21916,11 +23568,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-combo-attack",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-dragon-gall",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-lu-bu-rampage",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -22054,11 +23719,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-cao-cao-revelry",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-heal",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-liu-bei-reset",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -22192,7 +23870,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-cavalry-charge",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-wei-might",
         "source": "inborn"
       }
     ],
@@ -22330,7 +24013,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-tally-hundred-steps",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-you-qi-counter",
         "source": "inborn"
       }
     ],
@@ -22465,7 +24153,18 @@
     "learnedTactics": [],
     "inspiredTactics": [],
     "lockedTactics": [],
-    "tacticSlots": [],
+    "tacticSlots": [
+      {
+        "slotId": "slot-1",
+        "tacticId": "tactic-insp-lance-thrust",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-haste",
+        "source": "inborn"
+      }
+    ],
     "ultimateSlots": [],
     "troopAptitude": {},
     "terrainAptitude": {},
@@ -22579,7 +24278,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-sun-ce-conqueror",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-you-qi-counter",
         "source": "inborn"
       }
     ],
@@ -22717,11 +24421,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-inspire",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-heal",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-liu-bei-rally",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -22855,7 +24572,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-sun-ce-conqueror",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-you-qi-counter",
         "source": "inborn"
       }
     ],
@@ -22993,7 +24715,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-lance-thrust",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-haste",
         "source": "inborn"
       }
     ],
@@ -23131,11 +24858,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-chain-link",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-haste",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-lian-huan-chain",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -23269,7 +25009,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-sworn-fury",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-shield",
         "source": "inborn"
       }
     ],
@@ -23407,11 +25152,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-cao-cao-tactics",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-red-cliff",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-sun-quan-tide",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "NAVY": "B",
@@ -23545,11 +25303,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-tally-hundred-steps",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-you-qi-counter",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-tally-hundred-steps",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "NAVY": "A",
@@ -23683,7 +25454,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-sun-quan-tide",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-combo-attack",
         "source": "inborn"
       }
     ],
@@ -23821,7 +25597,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-sun-quan-tide",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-eight-array",
         "source": "inborn"
       }
     ],
@@ -23959,11 +25740,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-tally-hundred-steps",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-shield",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-cao-cao-tactics",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "NAVY": "A",
       "INFANTRY": "B",
@@ -24097,11 +25891,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-tally-hundred-steps",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-haste",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-tally-hundred-steps",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "NAVY": "A",
       "SIEGE": "B",
@@ -24235,7 +26042,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-tally-changban-push",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-wei-might",
         "source": "inborn"
       }
     ],
@@ -24373,11 +26185,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-eight-array",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-haste",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-tally-wei-zhen-hua-xia",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "SIEGE": "A",
       "ENGINEER": "B",
@@ -24511,11 +26336,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-guan-yu-slash",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-night-raid",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-sun-ce-conqueror",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -24649,7 +26487,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-tally-hundred-steps",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-you-qi-counter",
         "source": "inborn"
       }
     ],
@@ -24787,7 +26630,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-tally-hundred-steps",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-you-qi-counter",
         "source": "inborn"
       }
     ],
@@ -24925,7 +26773,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-shield",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-haste",
         "source": "inborn"
       }
     ],
@@ -25063,7 +26916,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-sun-ce-conqueror",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-you-qi-counter",
         "source": "inborn"
       }
     ],
@@ -25201,7 +27059,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-tally-defense-pierce",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-taunt",
         "source": "inborn"
       }
     ],
@@ -25339,11 +27202,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-guan-yu-slash",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-night-raid",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-tally-charge",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -25477,11 +27353,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-tally-fire-god-hunt",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-eight-array",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-cao-cao-tactics",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -25615,7 +27504,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-tally-defense-pierce",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-taunt",
         "source": "inborn"
       }
     ],
@@ -25753,11 +27647,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-sun-quan-tide",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-sow-discord",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-zhuge-liang-storm",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -25891,11 +27798,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-cao-zhi-verse",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-slow",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-zhou-yu-inferno",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -26029,11 +27949,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-cao-zhi-verse",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-red-cliff",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-cao-cao-tactics",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -26167,11 +28100,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-cao-zhi-verse",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-empty-fort",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-zhuge-liang-storm",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -26305,11 +28251,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-slow",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-tally-link",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-lian-huan-chain",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -26443,7 +28402,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-tally-poison-arrow",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-tally-link",
         "source": "inborn"
       }
     ],
@@ -26581,7 +28545,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-slow",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-haste",
         "source": "inborn"
       }
     ],
@@ -26719,7 +28688,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-sun-ce-conqueror",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-you-qi-counter",
         "source": "inborn"
       }
     ],
@@ -26857,7 +28831,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-tally-hundred-steps",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-you-qi-counter",
         "source": "inborn"
       }
     ],
@@ -26995,11 +28974,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-tally-poison-arrow",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-guo-jia-foresight",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-tally-poison-arrow",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "NAVY": "B",
@@ -27133,11 +29125,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-river-ambush",
+        "tacticId": "tactic-tpl-guo-jia-foresight",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-empty-fort",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-sun-quan-tide",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "NAVY": "B",
@@ -27271,11 +29276,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-river-ambush",
+        "tacticId": "tactic-insp-slow",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-tally-link",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-cao-cao-ult-control",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "NAVY": "B",
@@ -27409,7 +29427,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-tally-hundred-steps",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-eight-array",
         "source": "inborn"
       }
     ],
@@ -27547,11 +29570,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-haste",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-eight-array",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-cao-cao-revelry",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "NAVY": "A",
       "ENGINEER": "B",
@@ -27685,12 +29721,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-cao-zhi-verse",
         "source": "inborn"
       },
       {
         "slotId": "slot-2",
-        "tacticId": "tactic-archer-volley",
+        "tacticId": "tactic-tpl-sow-discord",
         "source": "inborn"
       }
     ],
@@ -27864,11 +29900,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-cao-cao-revelry",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-eight-array",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-liu-bei-rally",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -28002,11 +30051,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-tally-hundred-steps",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-you-qi-counter",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-guan-yu-slash",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "A",
       "CAVALRY": "B",
@@ -28140,7 +30202,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-insp-lance-thrust",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-haste",
         "source": "inborn"
       }
     ],
@@ -28278,7 +30345,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-tally-hundred-steps",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-you-qi-counter",
         "source": "inborn"
       }
     ],
@@ -28419,12 +30491,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-diao-chan-charm",
         "source": "inborn"
       },
       {
         "slotId": "slot-2",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-sow-discord",
         "source": "inborn"
       }
     ],
@@ -28598,11 +30670,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-zhao-yun-immortal",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-heal",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-cao-cao-ult-revive",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ARCHER": "B",
       "INFANTRY": "B",
@@ -28736,11 +30821,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-diao-chan-charm",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-heal",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-diao-chan-charm",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ARCHER": "B",
       "INFANTRY": "B",
@@ -28875,11 +30973,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-heal",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-sow-discord",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-xiahou-dun-eye-devour",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ARCHER": "B",
       "INFANTRY": "C",
@@ -29013,11 +31124,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-diao-chan-charm",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-sow-discord",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-zhao-yun-immortal",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ARCHER": "A",
       "CAVALRY": "B",
@@ -29150,11 +31274,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-liu-bei-rally",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-xiahou-dun-eye-devour",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-zhao-yun-immortal",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ARCHER": "B",
       "INFANTRY": "C",
@@ -29288,11 +31425,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-sow-discord",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-shield",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-diao-chan-charm",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "SIEGE": "B",
@@ -29425,7 +31575,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-cao-cao-ult-control",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-inspire",
         "source": "inborn"
       }
     ],
@@ -29562,11 +31717,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-diao-chan-charm",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-slow",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-cao-cao-ult-revive",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ARCHER": "B",
       "INFANTRY": "B",
@@ -29699,11 +31867,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-sow-discord",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-heal",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-xiahou-dun-eye-devour",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ARCHER": "B",
       "INFANTRY": "C",
@@ -29837,7 +32018,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-zhao-yun-immortal",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-haste",
         "source": "inborn"
       }
     ],
@@ -29974,7 +32160,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-zhao-yun-immortal",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-shield",
         "source": "inborn"
       }
     ],
@@ -30111,7 +32302,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-sow-discord",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-shield",
         "source": "inborn"
       }
     ],
@@ -30245,7 +32441,18 @@
     "learnedTactics": [],
     "inspiredTactics": [],
     "lockedTactics": [],
-    "tacticSlots": [],
+    "tacticSlots": [
+      {
+        "slotId": "slot-1",
+        "tacticId": "tactic-tpl-zhao-yun-immortal",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-inspire",
+        "source": "inborn"
+      }
+    ],
     "ultimateSlots": [],
     "troopAptitude": {
       "INFANTRY": "C",
@@ -30378,7 +32585,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-diao-chan-charm",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-haste",
         "source": "inborn"
       }
     ],
@@ -30515,11 +32727,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-diao-chan-charm",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-shield",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-liu-bei-rally",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "B",
       "ARCHER": "B",
@@ -30653,7 +32878,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-zhao-yun-immortal",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-xiahou-dun-eye-devour",
         "source": "inborn"
       }
     ],
@@ -30790,7 +33020,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-sow-discord",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-heal",
         "source": "inborn"
       }
     ],
@@ -30927,11 +33162,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-sow-discord",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-inspire",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-liu-bei-rally",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "ENGINEER": "A",
       "ARCHER": "B",
@@ -31061,7 +33309,18 @@
     "learnedTactics": [],
     "inspiredTactics": [],
     "lockedTactics": [],
-    "tacticSlots": [],
+    "tacticSlots": [
+      {
+        "slotId": "slot-1",
+        "tacticId": "tactic-insp-heal",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-sow-discord",
+        "source": "inborn"
+      }
+    ],
     "ultimateSlots": [],
     "troopAptitude": {
       "INFANTRY": "C",
@@ -31195,7 +33454,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-diao-chan-charm",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-slow",
         "source": "inborn"
       }
     ],
@@ -31333,7 +33597,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-sow-discord",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-heal",
         "source": "inborn"
       }
     ],
@@ -31471,7 +33740,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-sow-discord",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-haste",
         "source": "inborn"
       }
     ],
@@ -31608,11 +33882,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-cao-cao-ult-control",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-slow",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-xiahou-dun-eye-devour",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "INFANTRY": "C",
       "ARCHER": "C",
@@ -31746,7 +34033,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-cao-cao-ult-control",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-xiahou-dun-eye-devour",
         "source": "inborn"
       }
     ],
@@ -31884,7 +34176,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-heal",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-shield",
         "source": "inborn"
       }
     ],
@@ -32021,7 +34318,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-liu-bei-rally",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-haste",
         "source": "inborn"
       }
     ],
@@ -32158,7 +34460,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-heal",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-inspire",
         "source": "inborn"
       }
     ],
@@ -32296,11 +34603,24 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-insp-heal",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-shield",
         "source": "inborn"
       }
     ],
-    "ultimateSlots": [],
+    "ultimateSlots": [
+      {
+        "slot": 1,
+        "ultimateId": "ult-tpl-xiahou-dun-eye-devour",
+        "unlockReincarnation": 1,
+        "vitalityCostPct": 0.05,
+        "isExclusive": false
+      }
+    ],
     "troopAptitude": {
       "CAVALRY": "A",
       "INFANTRY": "B",
@@ -32434,7 +34754,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-zhao-yun-immortal",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-tpl-sow-discord",
         "source": "inborn"
       }
     ],
@@ -32571,7 +34896,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-sow-discord",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-slow",
         "source": "inborn"
       }
     ],
@@ -32709,7 +35039,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-liu-bei-rally",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-heal",
         "source": "inborn"
       }
     ],
@@ -32845,7 +35180,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-diao-chan-charm",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-haste",
         "source": "inborn"
       }
     ],
@@ -32985,7 +35325,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-fire-scheme",
+        "tacticId": "tactic-tpl-cao-cao-ult-control",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-slow",
         "source": "inborn"
       }
     ],
@@ -33126,7 +35471,12 @@
     "tacticSlots": [
       {
         "slotId": "slot-1",
-        "tacticId": "tactic-morale-rally",
+        "tacticId": "tactic-tpl-liu-bei-rally",
+        "source": "inborn"
+      },
+      {
+        "slotId": "slot-2",
+        "tacticId": "tactic-insp-haste",
         "source": "inborn"
       }
     ],
