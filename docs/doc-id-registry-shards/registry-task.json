@@ -17884,5 +17884,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10217.md",
     "title": "[PROG-2-10217] 羈絆戰場效果整併方案規格書",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3300",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10223.md",
+    "title": "[PROG-2-10223] 血統與結緣體驗強化四項",
+    "category": "task"
   }
 ]
