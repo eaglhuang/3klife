@@ -3289,5 +3289,13 @@
   "life.street_first.gift_unlocked.m": "以后可以送礼物给他了，挑个他喜欢的吧！",
   "life.street_first.gift_unlocked.f": "以后可以送礼物给她了，挑个她喜欢的吧！",
   "battle.kin_aura.name": "兄弟齐心",
-  "battle.kin_aura.desc": "义兄弟 3 格内：攻防 +25%、暴击 +15%"
+  "battle.kin_aura.desc": "义兄弟 3 格内：攻防 +25%、暴击 +15%",
+  "ui.bloodline.infant_pat_btn": "摸摸头",
+  "ui.bloodline.infant_pat_done_btn": "本季已摸过",
+  "ui.bloodline.infant_pat_gain": "亲子好感 +{0}",
+  "ui.bloodline.infant_pat_limit": "这季已经摸过了，下季再来",
+  "ui.marriage.prenatal_bless_btn": "胎教祈福（{0} 银两）",
+  "ui.marriage.prenatal_bless_done_btn": "已祈福",
+  "ui.marriage.prenatal_bless_silver_low": "家族银两不足，祈福先欠着",
+  "ui.bloodline.infant_pat_shared": "本季的亲子好感已领过了（与点头像互动共用）"
 }

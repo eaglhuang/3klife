@@ -9,6 +9,8 @@
  *  - 獎勵：每孩子每季第一次點擊給 BUNDLE_TODDLER_BOND（親子好感 +1），grantKey = fun01.{childId}.{seasonNo}。
  *  - 查不到台詞回 null（不畫對話框、不用萬用句硬補）。
  */
+import type { IApiClient } from '../../shared/api/IApiClient';
+import { claimFunReward, type FunClaimOutcome } from './FunReward';
 import type { FunState } from './FunState';
 import {
     FUN_TODDLER_MAX_AGE, funFill, funMatchesVoice, funPickWeighted, usableLine,
@@ -98,6 +100,14 @@ export function toddlerAgeBandOf(age: number, bands: Readonly<Record<ToddlerAgeB
 
 export function toddlerGrantKey(pool: Pick<ToddlerPool, 'reward'>, childId: string, seasonNo: number): string {
     return pool.reward.grantKeyFmt.split('{childId}').join(childId).split('{seasonNo}').join(String(seasonNo));
+}
+
+/**
+ * 領「孩子每季一筆」的親子好感獎勵：FUN-01 點頭像與幼兒近況摸頭兩個入口共用同一個 grantKey，
+ * 同季不論按幾次、重載幾次，reward.claim 都只入帳一次（後到者 replayed）。
+ */
+export function claimToddlerBond(api: Pick<IApiClient, 'cmd'>, pool: Pick<ToddlerPool, 'reward'>, childId: string, seasonNo: number): Promise<FunClaimOutcome> {
+    return claimFunReward(api, { bundleId: pool.reward.bundleId, grantKey: toddlerGrantKey(pool, childId, seasonNo), sourceKind: 'fun01', sourceRef: childId });
 }
 
 export interface ToddlerChild {

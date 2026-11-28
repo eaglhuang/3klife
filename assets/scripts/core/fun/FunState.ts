@@ -8,7 +8,12 @@
  *   moonParty             FUN-02：賓客名單（算出後寫入，閃退重進從頭重播但不重複入帳）
  *   recruitIntro          FUN-04：已播過自我介紹的武將
  *   dualToneAnnounced     FUN-04：古今雙口吻預告句是否已播過
+ *   infantPats            幼兒摸頭（PROG-2-10235）：最近一季各子嗣已摸次數
+ *   prenatal              待產胎教祈福（PROG-2-10235）：母親 id → 這次待產的祈福紀錄；產後清除
  */
+
+import type { InfantCareState } from '../systems/BloodlineInfantCare';
+import type { PrenatalBlessingState } from '../systems/MarriagePrenatalBlessing';
 
 export interface FunToddlerEntry {
     lastSeasonNo: number;
@@ -47,6 +52,8 @@ export interface FunState {
     moonParty: FunMoonPartyState | null;
     recruitIntro: Record<string, true>;
     dualToneAnnounced: boolean;
+    infantPats: InfantCareState;
+    prenatal: Record<string, PrenatalBlessingState>;
 }
 
 export function emptyFunState(): FunState {
@@ -57,6 +64,8 @@ export function emptyFunState(): FunState {
         moonParty: null,
         recruitIntro: {},
         dualToneAnnounced: false,
+        infantPats: { patSeason: -1, pats: {} },
+        prenatal: {},
     };
 }
 
@@ -117,6 +126,25 @@ export function normalizeFunState(raw: unknown): FunState {
         for (const [id, value] of Object.entries(src.recruitIntro as Record<string, unknown>)) if (value === true && id !== '') out.recruitIntro[id] = true;
     }
     out.dualToneAnnounced = src.dualToneAnnounced === true;
+    if (typeof src.infantPats === 'object' && src.infantPats !== null) {
+        const ip = src.infantPats as Record<string, unknown>;
+        out.infantPats.patSeason = int(ip.patSeason, -1);
+        if (typeof ip.pats === 'object' && ip.pats !== null) {
+            for (const [id, n] of Object.entries(ip.pats as Record<string, unknown>)) {
+                const count = int(n, 0);
+                if (id !== '' && count > 0) out.infantPats.pats[id] = count;
+            }
+        }
+    }
+    if (typeof src.prenatal === 'object' && src.prenatal !== null) {
+        for (const [id, value] of Object.entries(src.prenatal as Record<string, unknown>)) {
+            if (id === '' || typeof value !== 'object' || value === null) continue;
+            const v = value as Record<string, unknown>;
+            const uses = Math.max(0, int(v.uses, 0));
+            const delta = typeof v.rarityWeightDelta === 'number' && Number.isFinite(v.rarityWeightDelta) ? Math.max(0, v.rarityWeightDelta) : 0;
+            if (uses > 0) out.prenatal[id] = { uses, rarityWeightDelta: delta };
+        }
+    }
     return out;
 }
 
@@ -125,7 +153,9 @@ export function isEmptyFunState(state: Readonly<FunState>): boolean {
         && state.victoryChat.lastTalkerId === '' && state.victoryChat.dayNo < 0 && state.victoryChat.dayCount === 0 && state.victoryChat.pending === null
         && state.moonParty === null
         && Object.keys(state.recruitIntro).length === 0
-        && !state.dualToneAnnounced;
+        && !state.dualToneAnnounced
+        && Object.keys(state.infantPats.pats).length === 0
+        && Object.keys(state.prenatal).length === 0;
 }
 
 export function cloneFunState(state: Readonly<FunState>): FunState {

@@ -589,13 +589,13 @@ export class BattleCombatResolver {
   }
 
   /**
-   * 羈絆合攻（doc_spec_1358 §2.2）：目標九宮格（含斜角）內的我方義兄弟或戰友部隊，依等級觸發（義兄弟 26%、戰友 20%、夫妻 0），
+   * 羈絆合攻（doc_spec_1358 §2.2）：目標九宮格（含斜角）內的我方義兄弟、夫妻或戰友部隊，依等級觸發（義兄弟 26%、夫妻 26%、戰友 20%），
    * 多位符合時取等級最高者；追加一次 50% 傷害，不觸發反擊、不擲命中，單次攻擊最多一位合攻者。
    */
   private resolveKinComboFollowUp(attacker: TroopUnit, defender: TroopUnit, svc: ReturnType<typeof services>): void {
     const levelOf = this.context.kinLevelBetween;
     if (!levelOf || defender.isDead() || attacker.isDead()) return;
-    const helper = this.pickKinNeighbor(defender, attacker.faction, attacker.id, (unit) => levelOf(attacker.id, unit.id), ['SWORN', 'COMRADE']);
+    const helper = this.pickKinNeighbor(defender, attacker.faction, attacker.id, (unit) => levelOf(attacker.id, unit.id), ['SWORN', 'SPOUSE', 'COMRADE']);
     if (!helper) return;
     const chance = comboChanceOfLevel(levelOf(attacker.id, helper.id));
     if (this.hitRandom() >= chance) return;

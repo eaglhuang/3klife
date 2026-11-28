@@ -25,12 +25,13 @@ export function comboAttackChanceWithKin(baseChance: number, adjacentRelations: 
 }
 
 /**
- * 依羈絆等級算合攻觸發率（doc_spec_1358 §2.2）：義兄弟 20%×1.3＝26%、戰友 20%、夫妻與其餘關係 0。
+ * 依羈絆等級算合攻觸發率（doc_spec_1358 §2.2）：義兄弟與夫妻 20%×1.3＝26%（夫妻使用者裁決 11/28）、戰友 20%、其餘關係 0。
  * 多位相鄰羈絆取最高倍率（由呼叫端挑出最高等級），不累乘。
  */
 export function comboChanceOfLevel(level: KinLevel): number {
     const combo = KIN_BATTLE_CONFIG.combo;
     if (level === 'SWORN') return Math.min(1, combo.baseChance * combo.swornMod);
+    if (level === 'SPOUSE') return Math.min(1, combo.baseChance * combo.spouseMod);
     if (level === 'COMRADE') return Math.min(1, combo.baseChance * combo.comradeMod);
     return 0;
 }

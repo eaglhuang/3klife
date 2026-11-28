@@ -3290,5 +3290,13 @@
   "life.street_first.gift_unlocked.m": "以後可以送禮物給他了，挑個他喜歡的吧！",
   "life.street_first.gift_unlocked.f": "以後可以送禮物給她了，挑個她喜歡的吧！",
   "battle.kin_aura.name": "兄弟齊心",
-  "battle.kin_aura.desc": "義兄弟 3 格內：攻防 +25%、暴擊 +15%"
+  "battle.kin_aura.desc": "義兄弟 3 格內：攻防 +25%、暴擊 +15%",
+  "ui.bloodline.infant_pat_btn": "摸摸頭",
+  "ui.bloodline.infant_pat_done_btn": "本季已摸過",
+  "ui.bloodline.infant_pat_gain": "親子好感 +{0}",
+  "ui.bloodline.infant_pat_limit": "這季已經摸過了，下季再來",
+  "ui.marriage.prenatal_bless_btn": "胎教祈福（{0} 銀兩）",
+  "ui.marriage.prenatal_bless_done_btn": "已祈福",
+  "ui.marriage.prenatal_bless_silver_low": "家族銀兩不足，祈福先欠著",
+  "ui.bloodline.infant_pat_shared": "本季的親子好感已領過了（與點頭像互動共用）"
 }

@@ -71,14 +71,16 @@ export function createKinStackingCapSuite(): TestSuite {
     });
 
     // ── 規則 4：等級取最高 ──
-    suite.test('既是夫妻又是戰友：只算最高一種（夫妻合攻 0，不因戰友多拿 20%）', () => {
+    suite.test('既是夫妻又是戰友：只算最高一種（夫妻 26%，不因戰友多拿 20% 而累乘）', () => {
         const both = [SPOUSE_PAIR('a', 'c'), COMRADE_PAIR('a', 'c')];
-        // 戰友等級較低，同一對取夫妻（rank 2 > 1）→ 合攻資格只看 SWORN／COMRADE：夫妻不在其內
-        assert.equals(0, fight(both, [['c', 1, 3]], 0).events.length);
+        // 同一對取夫妻（rank 2 > 1）→ 26%：0.25 觸發、0.26 不觸發（未累乘）
+        assert.equals(1, fight(both, [['c', 1, 3]], 0.25).events.length);
+        assert.equals(0, fight(both, [['c', 1, 3]], 0.26).events.length);
     });
 
-    suite.test('夫妻與其他關係合攻一律 0', () => {
-        assert.equals(0, fight([SPOUSE_PAIR('a', 'c')], [['c', 1, 3]], 0).events.length);
+    suite.test('夫妻合攻 26%（使用者裁決 11/28）；其他關係合攻 0', () => {
+        assert.equals(1, fight([SPOUSE_PAIR('a', 'c')], [['c', 1, 3]], 0.25).events.length);
+        assert.equals(0, fight([SPOUSE_PAIR('a', 'c')], [['c', 1, 3]], 0.26).events.length);
         assert.equals(0, fight([{ uidA: 'a', uidB: 'c', type: 'PARENT_CHILD' }], [['c', 1, 3]], 0).events.length);
     });
 

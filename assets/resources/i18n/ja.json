@@ -3221,5 +3221,13 @@
   "life.street_first.gift_unlocked.m": "彼に贈り物ができるようになった。好きそうな物を選ぼう！",
   "life.street_first.gift_unlocked.f": "彼女に贈り物ができるようになった。好きそうな物を選ぼう！",
   "battle.kin_aura.name": "兄弟一心",
-  "battle.kin_aura.desc": "義兄弟が3マス以内：攻防+25%、会心+15%"
+  "battle.kin_aura.desc": "義兄弟が3マス以内：攻防+25%、会心+15%",
+  "ui.bloodline.infant_pat_btn": "頭をなでる",
+  "ui.bloodline.infant_pat_done_btn": "今季はなでた",
+  "ui.bloodline.infant_pat_gain": "親子の絆 +{0}",
+  "ui.bloodline.infant_pat_limit": "今季はもうなでました。来季また。",
+  "ui.marriage.prenatal_bless_btn": "胎教の祈願（銀{0}）",
+  "ui.marriage.prenatal_bless_done_btn": "祈願済み",
+  "ui.marriage.prenatal_bless_silver_low": "一族の銀が足りず、祈願は後回しです。",
+  "ui.bloodline.infant_pat_shared": "今季の親子の絆は受取済みです（アイコンのタップと共通）。"
 }
