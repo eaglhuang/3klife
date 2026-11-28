@@ -19,6 +19,7 @@ const LIBRARY_CATEGORY_TO_AI: Readonly<Record<string, TacticAiCategory>> = {
   scheme: 'single-damage',
   control: 'single-damage',
   duel: 'single-damage',
+  summon: 'summon',
 };
 
 export interface EnemyTacticSlot {

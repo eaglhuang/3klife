@@ -35,6 +35,11 @@ export class TroopUnit {
   
   public lane = 0;
   public depth = 0;
+
+  /** 召喚物（PROG-2-10253，doc_spec_1359）：施放者單位 id；null＝一般部隊。不持久化，戰場結束即清 */
+  public summonedBy: string | null = null;
+  /** 召喚物到期回合（currentTurn >= 此值即消失）；非召喚物為 null */
+  public summonExpireTurn: number | null = null;
   
   // 新增屬性：移動力與攻擊距離
   public readonly moveRange: number;

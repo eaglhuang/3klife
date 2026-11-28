@@ -8,7 +8,7 @@
  * Unity 對照：AI 的 Utility Scorer，每個 Action 依情境算分，取最高分執行。
  */
 
-export type TacticAiCategory = 'single-damage' | 'buff-heal' | 'tile-scene';
+export type TacticAiCategory = 'single-damage' | 'buff-heal' | 'tile-scene' | 'summon';
 
 export interface TacticAiCandidate {
     tacticId: string;
@@ -25,6 +25,8 @@ export interface TacticAiCandidate {
     denseArea?: boolean;
     /** tile-scene：天氣是否相容；不相容直接不選 */
     weatherCompatible?: boolean;
+    /** summon：召喚打分（summonAiValue，PROG-2-10253）；0 或沒填＝不選 */
+    summonValue?: number;
 }
 
 export interface TacticAiSituation {
@@ -63,6 +65,8 @@ export function scoreTacticCandidate(candidate: TacticAiCandidate, situation: Ta
             if (danger) return value + TACTIC_AI_DANGER_BONUS;
             return situation.allyLowestHpRate > TACTIC_AI_HEALTHY_HP_RATE ? value * TACTIC_AI_IDLE_DEMOTE : value;
         }
+        case 'summon':
+            return Math.max(0, candidate.summonValue ?? 0);
         case 'tile-scene': {
             if (candidate.weatherCompatible === false) return 0;
             return (candidate.hasChokePoint ? TACTIC_AI_SCENE_POINT : 0)

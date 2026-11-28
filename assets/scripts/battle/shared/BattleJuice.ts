@@ -27,6 +27,8 @@ export type EaseName = 'linear' | 'quadIn' | 'quadOut' | 'quadInOut' | 'sineIn' 
 export interface FlashCurveSpec { holdFrames: number; fadeSec: number; fadePower: number }
 /** 衝擊環／輝光共用的一組外觀參數。 */
 export interface FxSpec { radiusPx: number; sec: number; widthPx: number; color: Rgb; alpha: number }
+/** 飛濺火花一組參數：count 顆、初速 speedPx、重力 gravityPx（畫面像素／秒²，往下）、存活 sec、長寬。 */
+export interface SparkSpec { count: number; speedPx: number; gravityPx: number; sec: number; lenPx: number; widthPx: number; alpha: number }
 export interface AttackEase {
   windUpSec: number; strikeSec: number; holdSec: number; recoverSec: number;
   /** 預備往後拉的像素（攻擊方的反方向）。 */
@@ -70,6 +72,10 @@ export interface BattleJuiceConfig {
   impactRing: { enabled: boolean; maxActive: number; normal: FxSpec; crit: FxSpec; ultimate: FxSpec };
   /** 命中輝光（一團加色光暈，比衝擊環更短更亮）。 */
   glow: { enabled: boolean; maxActive: number; normal: FxSpec; crit: FxSpec; ultimate: FxSpec };
+  /** 命中爆點三層之一：飛濺火花／碎屑（帶重力下落）；與 impactRing（外圈）、glow（中心白熱）合成完整爆點。 */
+  sparks: { enabled: boolean; maxActive: number; normal: SparkSpec; crit: SparkSpec; ultimate: SparkSpec };
+  /** 爆點色階：暖白→橙→暗紅，隨存活時間漸變（衝擊環與火花共用）。 */
+  burstPalette: { white: Rgb; orange: Rgb; red: Rgb };
   /** 刀光拖尾：近戰攻擊時畫一道漸隱的弧形劍光（尾端淡、頭端亮）。 */
   bladeTrail: { enabled: boolean; maxActive: number; sec: number; arcRadiusPx: number; sweepDeg: number; widthPx: number; yOffsetPx: number; color: Rgb; alpha: number };
   /** 殘影：攻擊衝刺時留在身後的速度殘影（漸隱的色塊，不複製骨架）。 */
@@ -82,6 +88,11 @@ export interface BattleJuiceConfig {
     critPeakMul: number;
     /** 彈出秒數倍率（<1 更快）。 */
     popInMul: number;
+    /** 跳字位置偏移（畫面像素，x 往右、y 往上）：偏被擊單位頭頂右上，不蓋身體；爆擊／重擊用 crit 組。 */
+    normalOffsetXPx: number;
+    normalOffsetYPx: number;
+    critOffsetXPx: number;
+    critOffsetYPx: number;
   };
 }
 
@@ -123,13 +134,20 @@ export const DEFAULT_BATTLE_JUICE: BattleJuiceConfig = {
   },
   glow: {
     enabled: true, maxActive: 8,
-    normal: { radiusPx: 30, sec: 0.12, widthPx: 0, color: [255, 240, 210], alpha: 0.5 },
-    crit: { radiusPx: 46, sec: 0.16, widthPx: 0, color: [255, 215, 110], alpha: 0.7 },
-    ultimate: { radiusPx: 70, sec: 0.22, widthPx: 0, color: [255, 160, 80], alpha: 0.85 },
+    normal: { radiusPx: 15, sec: 0.09, widthPx: 0, color: [255, 250, 235], alpha: 0.9 },
+    crit: { radiusPx: 21, sec: 0.14, widthPx: 0, color: [255, 250, 230], alpha: 1 },
+    ultimate: { radiusPx: 30, sec: 0.18, widthPx: 0, color: [255, 245, 220], alpha: 1 },
   },
-  bladeTrail: { enabled: true, maxActive: 4, sec: 0.18, arcRadiusPx: 40, sweepDeg: 120, widthPx: 8, yOffsetPx: 26, color: [255, 255, 255], alpha: 0.75 },
+  sparks: {
+    enabled: true, maxActive: 6,
+    normal: { count: 6, speedPx: 150, gravityPx: 420, sec: 0.26, lenPx: 16, widthPx: 3.2, alpha: 0.95 },
+    crit: { count: 9, speedPx: 200, gravityPx: 460, sec: 0.32, lenPx: 20, widthPx: 3.8, alpha: 1 },
+    ultimate: { count: 10, speedPx: 260, gravityPx: 480, sec: 0.35, lenPx: 24, widthPx: 4.4, alpha: 1 },
+  },
+  burstPalette: { white: [255, 244, 220], orange: [255, 150, 50], red: [150, 36, 20] },
+  bladeTrail: { enabled: false, maxActive: 4, sec: 0.18, arcRadiusPx: 40, sweepDeg: 120, widthPx: 8, yOffsetPx: 26, color: [255, 255, 255], alpha: 0.75 },
   afterimage: { enabled: true, maxActive: 4, count: 3, sec: 0.22, spacingPx: 14, widthPx: 16, heightPx: 40, yOffsetPx: 24, color: [190, 225, 255], alpha: 0.32 },
-  floatPop: { enabled: true, normalPeakMul: 1.1, heavyPeakMul: 1.1, critPeakMul: 1.15, popInMul: 1 },
+  floatPop: { enabled: true, normalPeakMul: 0.85, heavyPeakMul: 0.7, critPeakMul: 0.65, popInMul: 0.55, normalOffsetXPx: 22, normalOffsetYPx: 30, critOffsetXPx: 44, critOffsetYPx: 46 },
 };
 
 let activeJuice: BattleJuiceConfig = DEFAULT_BATTLE_JUICE;
@@ -158,6 +176,11 @@ const fxSpec = (v: unknown, fb: FxSpec): FxSpec => {
   return { radiusPx: num(r.radiusPx, 1, 400, fb.radiusPx), sec: num(r.sec, 0.02, 3, fb.sec), widthPx: num(r.widthPx, 0, 60, fb.widthPx), color: rgb(r.color, fb.color), alpha: num(r.alpha, 0, 1, fb.alpha) };
 };
 
+const sparkSpec = (v: unknown, fb: SparkSpec): SparkSpec => {
+  const r = isRec(v) ? v : {};
+  return { count: Math.round(num(r.count, 0, 16, fb.count)), speedPx: num(r.speedPx, 0, 800, fb.speedPx), gravityPx: num(r.gravityPx, 0, 2000, fb.gravityPx), sec: num(r.sec, 0.05, 2, fb.sec), lenPx: num(r.lenPx, 2, 80, fb.lenPx), widthPx: num(r.widthPx, 0.5, 20, fb.widthPx), alpha: num(r.alpha, 0, 1, fb.alpha) };
+};
+
 /** 讀 data/battle-juice.json；缺漏或格式錯誤的欄位逐項用預設值，不丟例外。 */
 export function parseBattleJuice(raw: unknown): BattleJuiceConfig {
   const d = DEFAULT_BATTLE_JUICE;
@@ -177,6 +200,8 @@ export function parseBattleJuice(raw: unknown): BattleJuiceConfig {
   const em = isRec(ez.move) ? ez.move : {};
   const ir = isRec(src.impactRing) ? src.impactRing : {};
   const gl = isRec(src.glow) ? src.glow : {};
+  const sp = isRec(src.sparks) ? src.sparks : {};
+  const bp = isRec(src.burstPalette) ? src.burstPalette : {};
   const bt = isRec(src.bladeTrail) ? src.bladeTrail : {};
   const ai = isRec(src.afterimage) ? src.afterimage : {};
   const fp = isRec(src.floatPop) ? src.floatPop : {};
@@ -221,6 +246,8 @@ export function parseBattleJuice(raw: unknown): BattleJuiceConfig {
     },
     impactRing: { enabled: bool(ir.enabled, d.impactRing.enabled), maxActive: Math.round(num(ir.maxActive, 1, 32, d.impactRing.maxActive)), normal: fxSpec(ir.normal, d.impactRing.normal), crit: fxSpec(ir.crit, d.impactRing.crit), ultimate: fxSpec(ir.ultimate, d.impactRing.ultimate) },
     glow: { enabled: bool(gl.enabled, d.glow.enabled), maxActive: Math.round(num(gl.maxActive, 1, 32, d.glow.maxActive)), normal: fxSpec(gl.normal, d.glow.normal), crit: fxSpec(gl.crit, d.glow.crit), ultimate: fxSpec(gl.ultimate, d.glow.ultimate) },
+    sparks: { enabled: bool(sp.enabled, d.sparks.enabled), maxActive: Math.round(num(sp.maxActive, 1, 16, d.sparks.maxActive)), normal: sparkSpec(sp.normal, d.sparks.normal), crit: sparkSpec(sp.crit, d.sparks.crit), ultimate: sparkSpec(sp.ultimate, d.sparks.ultimate) },
+    burstPalette: { white: rgb(bp.white, d.burstPalette.white), orange: rgb(bp.orange, d.burstPalette.orange), red: rgb(bp.red, d.burstPalette.red) },
     bladeTrail: {
       enabled: bool(bt.enabled, d.bladeTrail.enabled), maxActive: Math.round(num(bt.maxActive, 1, 16, d.bladeTrail.maxActive)),
       sec: num(bt.sec, 0.02, 2, d.bladeTrail.sec), arcRadiusPx: num(bt.arcRadiusPx, 4, 200, d.bladeTrail.arcRadiusPx), sweepDeg: num(bt.sweepDeg, 10, 300, d.bladeTrail.sweepDeg),
@@ -237,6 +264,10 @@ export function parseBattleJuice(raw: unknown): BattleJuiceConfig {
       heavyPeakMul: num(fp.heavyPeakMul, 0.5, 3, d.floatPop.heavyPeakMul),
       critPeakMul: num(fp.critPeakMul, 0.5, 3, d.floatPop.critPeakMul),
       popInMul: num(fp.popInMul, 0.2, 3, d.floatPop.popInMul),
+      normalOffsetXPx: num(fp.normalOffsetXPx, -200, 200, d.floatPop.normalOffsetXPx),
+      normalOffsetYPx: num(fp.normalOffsetYPx, -200, 200, d.floatPop.normalOffsetYPx),
+      critOffsetXPx: num(fp.critOffsetXPx, -200, 200, d.floatPop.critOffsetXPx),
+      critOffsetYPx: num(fp.critOffsetYPx, -200, 200, d.floatPop.critOffsetYPx),
     },
   };
 }
@@ -336,6 +367,13 @@ export function floatPopMul(kind: 'normal' | 'heavy' | 'crit', cfg: BattleJuiceC
   return { peak, popIn: f.popInMul };
 }
 
+/** 跳字位置偏移（畫面像素）；開關關閉回 0（舊版位置）。 */
+export function floatOffset(kind: 'normal' | 'heavy' | 'crit', cfg: BattleJuiceConfig = activeJuice): { x: number; y: number } {
+  const f = cfg.floatPop;
+  if (!f.enabled) return { x: 0, y: 0 };
+  return kind === 'normal' ? { x: f.normalOffsetXPx, y: f.normalOffsetYPx } : { x: f.critOffsetXPx, y: f.critOffsetYPx };
+}
+
 /** 受擊後退距離倍率（依命中種類：爆擊、奧義退更遠）；關閉時為 1（舊版距離）。 */
 export function knockbackMul(kind: HitKind = 'normal', cfg: BattleJuiceConfig = activeJuice): number {
   const k = cfg.knockback;
@@ -403,6 +441,22 @@ export function moveEaseFor(wasMoving: boolean, cfg: BattleJuiceConfig = activeJ
 export function fxSpecFor(group: 'impactRing' | 'glow', kind: HitKind, cfg: BattleJuiceConfig = activeJuice): FxSpec {
   const g = cfg[group];
   return kind === 'ultimate' ? g.ultimate : kind === 'crit' ? g.crit : g.normal;
+}
+
+/** 火花規格（依命中種類）。 */
+export function sparkSpecFor(kind: HitKind, cfg: BattleJuiceConfig = activeJuice): SparkSpec {
+  const g = cfg.sparks;
+  return kind === 'ultimate' ? g.ultimate : kind === 'crit' ? g.crit : g.normal;
+}
+
+/** 爆點色階：u=0 暖白 → 0.45 橙 → 1 暗紅，寫進 out（不配置）。 */
+export function burstColor(u: number, pal: BattleJuiceConfig['burstPalette'], out: Rgb): Rgb {
+  const k = u <= 0 ? 0 : u >= 1 ? 1 : u;
+  const a = k < 0.45 ? pal.white : pal.orange;
+  const b = k < 0.45 ? pal.orange : pal.red;
+  const m = k < 0.45 ? k / 0.45 : (k - 0.45) / 0.55;
+  out[0] = a[0] + (b[0] - a[0]) * m; out[1] = a[1] + (b[1] - a[1]) * m; out[2] = a[2] + (b[2] - a[2]) * m;
+  return out;
 }
 
 export interface RingSample { radius: number; alpha: number; width: number }
