@@ -17860,5 +17860,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10214.md",
     "title": "[PROG-2-10214] 生活層第一個看得到的原型",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3287",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10215.md",
+    "title": "[PROG-2-10215] 戰法音效回饋修正：回復／水淹",
+    "category": "task"
   }
 ]
