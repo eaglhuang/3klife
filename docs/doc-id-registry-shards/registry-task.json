@@ -17902,5 +17902,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10225.md",
     "title": "[PROG-2-10225] 年末典禮觀眾台詞：第 4～5 名勉勵與結義彩蛋",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3299",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10229.md",
+    "title": "[PROG-2-10229] 市井大街首訪任務：家臣帶路、找到 3 位家臣、獎勵並解鎖送禮（QSOC 9.5）",
+    "category": "task"
   }
 ]
