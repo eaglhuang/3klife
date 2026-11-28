@@ -21,6 +21,8 @@ export const BADGE_ATLAS_ICON_CELLS: Readonly<Record<string, readonly [number, n
     cavalry: [2, 0], infantry: [3, 0], shield: [4, 0],
     archer: [0, 1], pikeman: [1, 1], engineer: [2, 1], medic: [3, 1], navy: [4, 1],
 };
+/** 實心色塊在底圖的位置 [x, y, w, h]：醫兵十字中央，周圍 2 像素都是同色，雙線性取樣不會滲到別色 */
+export const BADGE_ATLAS_SOLID_RECT: readonly [number, number, number, number] = [277, 95, 8, 8];
 const BADGE_ATLAS_INSET = 30;
 /** 底圖 2 倍解析度，節點縮 0.5 還原 */
 export const BADGE_ATLAS_SCALE = 0.5;
@@ -77,6 +79,8 @@ export interface BadgeAtlasFrames {
     disc: SpriteFrame;
     /** 兵種剪影（單色象牙白），key 見 BADGE_ATLAS_ICON_CELLS */
     icons: Record<string, SpriteFrame>;
+    /** 實心象牙色小塊（醫兵十字內 8x8）：血條等純色條用，與其他徽章元素同圖合批；乘 color 上色 */
+    solid: SpriteFrame;
 }
 
 let atlasLoad: Promise<BadgeAtlasFrames | null> | null = null;
@@ -100,7 +104,11 @@ export function loadBadgeAtlasFrames(): Promise<BadgeAtlasFrames | null> {
                 bg.insetRight = BADGE_ATLAS_INSET;
                 bg.insetTop = BADGE_ATLAS_INSET;
                 bg.insetBottom = BADGE_ATLAS_INSET;
-                return { bg, disc: cut(1), icons };
+                const solid = new SpriteFrame();
+                solid.packable = false;
+                solid.texture = base.texture;
+                solid.rect = new Rect(...BADGE_ATLAS_SOLID_RECT);
+                return { bg, disc: cut(1), icons, solid };
             })
             .catch(() => null);
     }

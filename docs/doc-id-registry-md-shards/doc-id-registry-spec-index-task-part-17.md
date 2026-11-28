@@ -145,3 +145,5 @@
 | `doc_task_3349` | docs/agent-briefs/tasks/PROG/PROG-2-10271.md | PROG-2-10271：方案 C — 結緣選角畫面顯示關係標籤與加成 |
 | `doc_task_3352` | docs/agent-briefs/tasks/PROG/PROG-2-10250.md | [PROG-2-10250] 戰場 draw call 合批（目標 <60）與頓格設定開關 |
 | `doc_task_3353` | docs/agent-briefs/tasks/PROG/PROG-2-10270.md | [PROG-2-10270] 戰場 Spine 多頁圖集執行期合併 |
+| `doc_task_3354` | docs/agent-briefs/tasks/PROG/PROG-2-10278.md | [PROG-2-10278] 規格書：生活層抓起放下 |
+| `doc_task_3355` | docs/agent-briefs/tasks/PROG/PROG-2-10274.md | 基本資訊 |

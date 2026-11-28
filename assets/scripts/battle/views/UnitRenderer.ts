@@ -5,7 +5,8 @@ import { perfBegin, perfEnd, perfFrame } from "./BattlePerfProbe";
 import { BadgeBatchLayers } from "./BadgeBatchLayers";
 import { setCacheModeDeferred } from "../../ui/core/LabelLayoutDeferral";
 import { TroopTypeBadge } from "../../ui/shared/TroopTypeBadge";
-import { UNIT_HP_BAR_H, UNIT_HP_BAR_W, UNIT_HP_BAR_Y, UNIT_HUD_FONT, UNIT_HUD_ICON_D, UNIT_HUD_ICON_X, UNIT_HUD_NUM_W, UNIT_HUD_NUM_X, UNIT_HUD_ROW_H, UNIT_HUD_W, hudScaleFor } from "../shared/UnitHudLayout";
+import { UnitHpBarSprites } from "./UnitHpBarSprites";
+import { UNIT_HP_BAR_H, UNIT_HUD_FONT, UNIT_HUD_ICON_D, UNIT_HUD_ICON_X, UNIT_HUD_NUM_W, UNIT_HUD_NUM_X, UNIT_HUD_ROW_H, UNIT_HUD_W, hudScaleFor } from "../shared/UnitHudLayout";
 import { troopTypeGlyph } from "../../shared/TallyCardContract";
 import { awaitWithTimeout } from "../../core/utils/AwaitGuard";
 import {
@@ -126,7 +127,7 @@ interface UnitView {
   labelOpacity: UIOpacity;
   bottomNameLabel: Label | null;
   /** 頭頂血條（主戰場UI規格書 §3.1，PROG-2-1874） */
-  hpBar: Graphics;
+  hpBar: UnitHpBarSprites;
   /** 上一次畫的血條狀態與掉血殘影（PROG-2-9412）；殘影由每幀 update 推進。 */
   hpState?: UnitHpBarState;
   hpChip?: HpChipState | null;
@@ -183,6 +184,10 @@ interface BadgeView {
   hpLabel: Label;
   opacity: UIOpacity;
   bottomNameLabel: Label | null;  // 下排兵種名稱（將軍無用）
+  /** 底框圖層代理節點（合批用；血條精靈掛這裡）。無合批圖層時就是名牌節點本身。 */
+  bgParent: Node;
+  /** 字圖層代理節點（合批用）；沒合批時是名牌節點本身。 */
+  textParent: Node;
 }
 
 /** PROG-2-9715：主將出陣從待命點衝到出陣格的秒數（約一格半距離，比小兵前進稍快，表現「衝出去」） */
@@ -191,16 +196,6 @@ const GENERAL_DASH_SEC = 0.55;
 const GENERAL_DASH_WAIT_SEC = 3;
 /** 單挑場邊位置離最外側那路的距離（以路寬計，PROG-2-9719）。 */
 const DUEL_SIDELINE_LANES = 1.1;
-
-/** 掉血殘影色：暖白偏金，在藍、紅血條上都看得清楚（PROG-2-9412）。 */
-const HP_BAR_CHIP_COLOR = new Color(255, 232, 190, 235);
-const HP_BAR_BACK_COLOR = new Color(22, 15, 9, 220);
-/** 血條上一次畫的內容（血量寬、殘影寬、色調；PROG-2-10239），沒變就不重畫。 */
-const hpBarDrawn = new WeakMap<Graphics, { w: number; c: number; tone: string }>();
-const HP_BAR_COLOR = {
-  player: new Color(70, 150, 255, 255),
-  enemy: new Color(230, 70, 60, 255),
-} as const;
 
 /** 部隊頭頂 HUD 的版面常數與畫面比例（純資料，見 shared/UnitHudLayout；PROG-2-10266） */
 const UNIT_STATUS_ICON_Y = UNIT_HUD_ROW_H / 2 + 4 + STATUS_ICON_SIZE / 2;
@@ -2236,7 +2231,7 @@ export class UnitRenderer extends Component {
     this.ensureHudRoot()?.addChild(labelNode);
     const hudScale = hudScaleFor(this.uiRoot?.getComponent(UITransform)?.width ?? 0, this.uiRoot?.getComponent(UITransform)?.height ?? 0);
     const badge = this.buildUnitHud(labelNode, unit.type, unit.faction, badgeLayers, hudScale);
-    const hpBar = this.buildUnitHpBar(labelNode);
+    const hpBar = new UnitHpBarSprites(labelNode, badge.bgParent);
 
     // 敵軍單位：HUD 上方標籤顯示紅色，不需修改 badge.hpLabel（已是豉紅）
     if (unit.faction === Faction.Enemy) {
@@ -2261,7 +2256,7 @@ export class UnitRenderer extends Component {
       labelOpacity: badge.opacity,
       bottomNameLabel: badge.bottomNameLabel,
       hpBar,
-      statusBar: new UnitStatusIconBar(labelNode, UNIT_STATUS_ICON_X, UNIT_STATUS_ICON_Y),
+      statusBar: new UnitStatusIconBar(labelNode, UNIT_STATUS_ICON_X, UNIT_STATUS_ICON_Y, badgeLayers ? { bg: badge.bgParent, text: badge.textParent } : null),
       statusKinds: null,
       persistKind: null,
       pendingStatusPulse: null,
@@ -2322,7 +2317,7 @@ export class UnitRenderer extends Component {
     const hpState = unitHpBarState(shownHp, unit.getEffectiveMaxHp(), unit.faction === Faction.Player);
     if (view.hpState) view.hpChip = hpChipOnChange(view.hpChip ?? null, view.hpState.ratio, hpState.ratio);
     view.hpState = hpState;
-    this.drawHpBar(view.hpBar, hpState, view.hpChip?.lag);
+    view.hpBar.draw(hpState, view.hpChip?.lag);
     this.refreshStatusIcons(view, unit);
 
     // 更新下排兵種名稱（小兵顯示完整對應名稱，將軍化身只顯示武將名；「將」徽章已另外標示，不加開發用括號字）
@@ -2494,17 +2489,6 @@ export class UnitRenderer extends Component {
     });
   }
 
-  /** 細血條：貼在數字列下方，受傷才顯示（drawHpBar 控制）。 */
-  private buildUnitHpBar(labelNode: Node): Graphics {
-    const barNode = new Node("HpBar");
-    barNode.layer = labelNode.layer;
-    labelNode.addChild(barNode);
-    barNode.addComponent(UITransform).setContentSize(UNIT_HP_BAR_W, UNIT_HP_BAR_H);
-    barNode.setPosition(0, UNIT_HP_BAR_Y, 0);
-    barNode.active = false;
-    return barNode.addComponent(Graphics);
-  }
-
   /**
    * 部隊頭頂 HUD（PROG-2-10266）：[兵種圓章] 兵數 單行，無底板。沿用 BadgeBatchLayers 三層（圓章底／剪影／字），
    * 兵種剪影與圓章同在 battle_badge_atlas，數字走 BITMAP 點陣快取。攻擊值與兵種名稱不顯示
@@ -2558,7 +2542,7 @@ export class UnitRenderer extends Component {
     nameNode.addComponent(UITransform).setContentSize(100, 20);
     const nameLabel = nameNode.addComponent(Label);
     nameLabel.string = "";
-    return { rootNode, attackLabel, typeLabel, hpLabel, opacity, bottomNameLabel: nameLabel };
+    return { rootNode, attackLabel, typeLabel, hpLabel, opacity, bottomNameLabel: nameLabel, bgParent, textParent };
   }
 
   /** 推進各單位的掉血殘影並重畫（PROG-2-9412）；沒有殘影的單位不動。 */
@@ -2566,37 +2550,8 @@ export class UnitRenderer extends Component {
     for (const view of this.unitViews.values()) {
       if (!view.hpChip || !view.hpState) continue;
       view.hpChip = stepHpChip(view.hpChip, view.hpState.ratio, dt);
-      if (view.hpBar?.isValid) this.drawHpBar(view.hpBar, view.hpState, view.hpChip?.lag);
+      if (view.hpBar?.isValid) view.hpBar.draw(view.hpState, view.hpChip?.lag);
     }
-  }
-
-  /** 受傷才顯示；我方藍、敵方紅。chipRatio：掉血殘影右端（PROG-2-9412），畫在主血條後面的淺色段。 */
-  private drawHpBar(g: Graphics, state: UnitHpBarState, chipRatio?: number): void {
-    g.node.active = state.visible;
-    if (!state.visible) return;
-    // PROG-2-10239：血量、殘影（取 1/4 像素精度）與色調都沒變就不重畫；每次重畫都會配置圓角路徑與顏色
-    const BW = UNIT_HP_BAR_W;
-    const BH = UNIT_HP_BAR_H;
-    const chip = chipRatio !== undefined && chipRatio > state.ratio ? Math.min(1, chipRatio) : -1;
-    const wPx = Math.round(state.ratio * BW * 4);
-    const cPx = chip < 0 ? -1 : Math.round(chip * BW * 4);
-    const drawn = hpBarDrawn.get(g);
-    if (drawn && drawn.w === wPx && drawn.c === cPx && drawn.tone === state.tone) return;
-    if (drawn) { drawn.w = wPx; drawn.c = cPx; drawn.tone = state.tone; } else hpBarDrawn.set(g, { w: wPx, c: cPx, tone: state.tone });
-    const x = -BW / 2;
-    const y = -BH / 2;
-    g.clear();
-    g.fillColor = HP_BAR_BACK_COLOR;
-    g.rect(x - 1.5, y - 1.5, BW + 3, BH + 3);
-    g.fill();
-    if (chipRatio !== undefined && chipRatio > state.ratio) {
-      g.fillColor = HP_BAR_CHIP_COLOR;
-      g.rect(x, y, BW * Math.min(1, chipRatio), BH);
-      g.fill();
-    }
-    g.fillColor = HP_BAR_COLOR[state.tone];
-    g.rect(x, y, BW * state.ratio, BH);
-    g.fill();
   }
 
   /** 名牌左側精力能量環（武將壽命系統 §UI，PROG-2-1853）：底環＋精力弧＋百分比 */
@@ -2818,7 +2773,7 @@ export class UnitRenderer extends Component {
     // 以擴充屬性保存引用，供 updateUnitView 快速更新
     (rootNode as any)._bottomNameLabel = nameStrLabel;
 
-    return { rootNode, attackLabel, typeLabel, hpLabel, opacity, bottomNameLabel: nameStrLabel };
+    return { rootNode, attackLabel, typeLabel, hpLabel, opacity, bottomNameLabel: nameStrLabel, bgParent: rootNode, textParent: rootNode };
   }
 
   private findUnitById(unitId: string): TroopUnit | null {
