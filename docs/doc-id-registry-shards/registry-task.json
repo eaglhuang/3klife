@@ -17980,5 +17980,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10248.md",
     "title": "[PROG-2-10248] 戰場三份一頁規格草稿",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3339",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10253.md",
+    "title": "[PROG-2-10253] 戰場技能補齊",
+    "category": "task"
   }
 ]
