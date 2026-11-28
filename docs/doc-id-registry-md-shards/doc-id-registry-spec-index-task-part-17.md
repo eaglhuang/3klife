@@ -133,4 +133,6 @@
 | `doc_task_3328` | docs/agent-briefs/tasks/PROG/PROG-2-10239.md | [PROG-2-10239] 戰場量測與打擊感 Juice |
 | `doc_task_3332` | docs/agent-briefs/tasks/PROG/PROG-2-10244.md | [PROG-2-10244] 夫妻戰場合攻改 26% |
 | `doc_task_3333` | docs/agent-briefs/tasks/PROG/PROG-2-10240.md | [PROG-2-10240] 武將技能特效第二批：減益／光聖／號令 |
-| `doc_task_3338` | docs/agent-briefs/tasks/PROG/PROG-2-10246.md | [PROG-2-10246] 武將天生戰法／奧義模板＋覆寫資料落地 |
+| `doc_task_3334` | docs/agent-briefs/tasks/PROG/PROG-2-10243.md | [PROG-2-10243] 戰場打擊感 Juice 第二批（閃白擊退、三段緩動、衝擊環、刀光殘影、輝光） |
+| `doc_task_3337` | docs/agent-briefs/tasks/PROG/PROG-2-10248.md | [PROG-2-10248] 戰場三份一頁規格草稿 |
+| `doc_task_3340` | docs/agent-briefs/tasks/PROG/PROG-2-10246.md | [PROG-2-10246] 武將天生戰法／奧義模板＋覆寫資料落地 |

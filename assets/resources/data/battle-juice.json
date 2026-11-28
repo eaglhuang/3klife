@@ -1,5 +1,5 @@
 {
-  "_comment": "戰場打擊感參數（PROG-2-10239）。純表現層，不改結算。每區 enabled=false 即回到舊版行為。hitStop：命中頓格秒數（普攻/暴擊/奧義），scope=pair 只停攻守雙方、all 停全場骨架動畫（minGapSec 限流）；cameraShake：輕/中/重三級，振幅隨 decayPower 次方衰減，heavy/crit/ultimate 指定各命中種類用哪一級（null=不震）；knockback：受擊後退距離倍率；floatPop：跳字彈出峰值與速度倍率。讀不到或欄位錯誤時逐項用程式預設。",
+  "_comment": "戰場打擊感參數（PROG-2-10239 第一批、PROG-2-10243 第二批）。純表現層，不改結算。每區 enabled=false 即回到舊版行為。第一批：hitStop 命中頓格秒數（scope=pair 只停攻守雙方、all 停全場，minGapSec 限流）；cameraShake 輕/中/重三級（heavy/crit/ultimate 指定各命中種類用哪一級，null=不震）；floatPop 跳字彈出倍率。第二批：flash 依命中種類覆寫閃白曲線（全白停幾格 holdFrames、退色 fadeSec、次方 fadePower）；knockback 擊退距離倍率（critMul／ultimateMul 為爆擊與奧義額外倍率）；ease 攻擊三段緩動（預備往後拉 windUp → 出手前衝 strike → 停頓 hold → 收招回位 recover，距離單位為畫面像素）與移動緩動（startEase 靜止起步、continueEase 行進中接續）；impactRing 命中衝擊環、glow 命中輝光（radiusPx 半徑、sec 秒數、widthPx 線寬、color RGB、alpha 峰值）；bladeTrail 刀光拖尾（近戰，弓兵不畫）；afterimage 攻擊殘影（身後漸隱色塊）。緩動名稱可用：linear、quadIn/Out/InOut、sineIn/Out/InOut、cubicIn/Out/InOut、backOut。讀不到或欄位錯誤時逐項用程式預設。",
   "hitStop": {
     "enabled": true,
     "normalSec": 0.05,
@@ -22,7 +22,65 @@
     "crit": "medium",
     "ultimate": "heavy"
   },
-  "knockback": { "enabled": true, "ratioMul": 1 },
+  "flash": {
+    "enabled": true,
+    "normal": { "holdFrames": 2, "fadeSec": 0.05, "fadePower": 2 },
+    "crit": { "holdFrames": 3, "fadeSec": 0.08, "fadePower": 2 },
+    "ultimate": { "holdFrames": 4, "fadeSec": 0.12, "fadePower": 1.5 }
+  },
+  "knockback": { "enabled": true, "ratioMul": 1, "critMul": 1.4, "ultimateMul": 2 },
+  "ease": {
+    "enabled": true,
+    "attack": {
+      "windUpSec": 0.06,
+      "strikeSec": 0.07,
+      "holdSec": 0.04,
+      "recoverSec": 0.16,
+      "windUpPx": 5,
+      "forwardPx": 11,
+      "windUpEase": "sineOut",
+      "strikeEase": "cubicIn",
+      "recoverEase": "backOut"
+    },
+    "move": { "startEase": "sineInOut", "continueEase": "linear" }
+  },
+  "impactRing": {
+    "enabled": true,
+    "maxActive": 8,
+    "normal": { "radiusPx": 44, "sec": 0.22, "widthPx": 4, "color": [255, 238, 200], "alpha": 0.8 },
+    "crit": { "radiusPx": 72, "sec": 0.3, "widthPx": 6, "color": [255, 210, 90], "alpha": 0.95 },
+    "ultimate": { "radiusPx": 108, "sec": 0.4, "widthPx": 8, "color": [255, 150, 70], "alpha": 1 }
+  },
+  "glow": {
+    "enabled": true,
+    "maxActive": 8,
+    "normal": { "radiusPx": 30, "sec": 0.12, "widthPx": 0, "color": [255, 240, 210], "alpha": 0.5 },
+    "crit": { "radiusPx": 46, "sec": 0.16, "widthPx": 0, "color": [255, 215, 110], "alpha": 0.7 },
+    "ultimate": { "radiusPx": 70, "sec": 0.22, "widthPx": 0, "color": [255, 160, 80], "alpha": 0.85 }
+  },
+  "bladeTrail": {
+    "enabled": true,
+    "maxActive": 4,
+    "sec": 0.18,
+    "arcRadiusPx": 40,
+    "sweepDeg": 120,
+    "widthPx": 8,
+    "yOffsetPx": 26,
+    "color": [255, 255, 255],
+    "alpha": 0.75
+  },
+  "afterimage": {
+    "enabled": true,
+    "maxActive": 4,
+    "count": 3,
+    "sec": 0.22,
+    "spacingPx": 14,
+    "widthPx": 16,
+    "heightPx": 40,
+    "yOffsetPx": 24,
+    "color": [190, 225, 255],
+    "alpha": 0.32
+  },
   "floatPop": {
     "enabled": true,
     "normalPeakMul": 1.1,

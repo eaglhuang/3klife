@@ -66,7 +66,9 @@ import { SpineUnitOverlay } from "./SpineGeneralOverlay";
 import { GeneralPortraitStandee, STANDEE_HEIGHT_PX, needsStandeeFallback, shouldLoadHeroModel } from "./GeneralPortraitStandee";
 import { generalSpineConfig, resolveRidingTier, setMountedList, squadMemberCount, TroopSpineConfigCache, troopSpineConfig } from '../shared/UnitPresentationConfig';
 import { DuelExchange } from '../shared/DuelPresentationCore';
-import { battleHitStopGate, battleUltimateWindow, getBattleJuice, hitStopSecFor, juiceNowSec, knockbackMul, parseBattleJuice, resolveHitKind, setBattleJuice, shakeTierFor, type HitKind } from "../shared/BattleJuice";
+import { applyJuicePrefs, attackEaseFor, battleHitStopGate, battleUltimateWindow, flashCurveFor, getBattleJuice, hitStopSecFor, juiceNowSec, knockbackMul, moveEaseFor, parseBattleJuice, resolveHitKind, setBattleJuice, shakeTierFor, type HitKind } from "../shared/BattleJuice";
+import { BattleJuiceFx } from "./BattleJuiceFx";
+import { loadJuicePrefs } from "../../core/systems/BattleSettingsView";
 import { BATTLE_VISUAL_TIMING, buildHitShakeSteps, hitScaleNeighborDepth, planHitFeedback, planMoveSegment } from "./BattlePresentationTiming";
 import { BuffGainEffectPool } from "./effects/BuffGainEffectPool";
 import { statBonusTone, statWithBonusText, type StatBonusTone } from "../shared/StatBonusText";
@@ -323,6 +325,8 @@ export class UnitRenderer extends Component {
   private readonly arrowShots = new ArrowShotView(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   private readonly slashShots = new SlashShotView(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   /** 攻擊特效試作（零貼圖單一 Graphics，JSON 驅動；?atkVfx=old 可退回舊特效） */
+  /** PROG-2-10243：命中衝擊環／輝光、刀光拖尾、殘影（單一加色節點，開關在 battle-juice.json） */
+  private readonly juiceFx = new BattleJuiceFx(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   private readonly attackVfx = new AttackVfxPlayer(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
   /** 戰法分組特效（PROG-2-10138）：火／水／風／回復／加速／鼓舞／控制，單一加色 Graphics、預算見 TacticVfxGroups */
   private readonly tacticVfx = new TacticVfxPlayer(() => this.uiRoot, () => this.canvasNode?.layer ?? Layers.Enum.UI_2D);
@@ -579,8 +583,9 @@ export class UnitRenderer extends Component {
       return;
     }
     // 揚塵改由步態落腳時發（SpineUnitOverlay 的落腳通知 → emitFootfallDust），強制位移走路也一樣會出塵
+    // PROG-2-10243：靜止起步用緩入緩出，行進中接續維持等速（避免每格抖一下）；關閉開關回到舊版等速
     tween(view.worldNode)
-      .to(plan.durationSec, { worldPosition: toPos })
+      .to(plan.durationSec, { worldPosition: toPos }, { easing: moveEaseFor(wasMoving) })
       .call(() => {
         this.movingUnits.delete(unit.id);
         view?.worldNode.setWorldPosition(toPos);
@@ -786,6 +791,7 @@ export class UnitRenderer extends Component {
     if (!attackerUnit) return;
 
     this.playAttackVfx(attackerNode, attackerUnit.type, this.getUnitWorldPosition(defenderLane, defenderDepth, attackerNode.worldPosition.y));
+    this.playAttackJuice(attackerId, attackerNode, attackerUnit.type, this.getUnitWorldPosition(defenderLane, defenderDepth, attackerNode.worldPosition.y));
     if (attackerUnit.type === TroopType.Cavalry) {
       const targetPos = this.getUnitWorldPosition(defenderLane, defenderDepth, attackerNode.worldPosition.y);
       if (targetPos) {
@@ -794,6 +800,28 @@ export class UnitRenderer extends Component {
       return;
     }
     this.bumpNodeForward(attackerNode, attackerUnit.faction, 0.38);
+  }
+
+  /**
+   * 攻擊打擊感（PROG-2-10243）：三段緩動位移（預備→出手→收招）、刀光拖尾、殘影。
+   * 弓兵不揮刀光也不衝刺；騎兵有自己的衝鋒位移，只加殘影。全部純表現，各自開關在 battle-juice.json。
+   */
+  private playAttackJuice(attackerId: string, attackerNode: Node, troopType: TroopType, targetPos: Vec3 | null): void {
+    try {
+      const ease = attackEaseFor();
+      const isArcher = troopType === TroopType.Archer;
+      const isCavalry = troopType === TroopType.Cavalry;
+      if (ease && !isArcher && !isCavalry) this.spineUnits.lunge(attackerId, ease);
+      if (isArcher) return;
+      // overlayPoint 回傳的是共用緩衝，第二次呼叫會蓋掉第一次，所以先把數字取出來
+      const a = this.overlayPoint(attackerNode.worldPosition);
+      if (!a) return;
+      const ax = a.x; const ay = a.y;
+      const b = targetPos ? this.overlayPoint(targetPos) : null;
+      if (!b) return;
+      if (!isCavalry) this.juiceFx.playTrail(ax, ay, b.x);
+      this.juiceFx.playGhost(ax, ay, b.x);
+    } catch (error) { console.warn('[UnitRenderer] 攻擊打擊感略過', error); }
   }
 
   public async playAttackAnimationAsync(attackerId: string, defenderLane: number, defenderDepth: number): Promise<void> {
@@ -811,6 +839,7 @@ export class UnitRenderer extends Component {
     if (!attackerUnit) return;
 
     this.playAttackVfx(attackerNode, attackerUnit.type, defenderNode.worldPosition);
+    this.playAttackJuice(attackerId, attackerNode, attackerUnit.type, defenderNode.worldPosition);
     if (attackerUnit.type === TroopType.Cavalry) {
       this.playCavalryChargeAnimation(attackerNode, defenderNode.worldPosition);
       return;
@@ -842,11 +871,12 @@ export class UnitRenderer extends Component {
     // 先打一次 Spine 疊層（小兵與武將化身都走這裡）；沒有 Spine 的單位走下面的 3D 後備
     // PROG-2-9412：Spine 單位另外往後推（以前的後退只動 3D 子節點，畫面上的小兵沒動），並與攻擊方一起頓格
     const shakePx = this.hitShakeAmplitudePx(defenderUnit.lane, defenderUnit.depth);
-    const pushPx = plan.shake ? shakePx / BATTLE_VISUAL_TIMING.hitShakeAmplitudeRatio * BATTLE_VISUAL_TIMING.hitRecoilRatio * knockbackMul() : 0;
-    const spineHit = this.spineUnits.hit(defenderId, plan.shake ? shakePx : 0, plan.flash, pushPx);
-    // PROG-2-10239：頓格依命中種類（普攻／暴擊／奧義）取秒數；純表現，只停骨架動畫
+    // PROG-2-10239：命中種類（普攻／暴擊／奧義）決定頓格秒數；PROG-2-10243 起也決定閃白、擊退距離與衝擊環大小
     const hitKind = resolveHitKind(opts?.crit === true, battleUltimateWindow.isActive(juiceNowSec()));
+    const pushPx = plan.shake ? shakePx / BATTLE_VISUAL_TIMING.hitShakeAmplitudeRatio * BATTLE_VISUAL_TIMING.hitRecoilRatio * knockbackMul(hitKind) : 0;
+    const spineHit = this.spineUnits.hit(defenderId, plan.shake ? shakePx : 0, plan.flash, pushPx, flashCurveFor(hitKind));
     this.applyHitStop(defenderId, _attackerId, hitKind);
+    this.playHitImpactFx(defenderNode, hitKind);
     if (!spineHit && plan.shake) this.shakeVisualChildren(defenderView!);
 
     this.recoilNode(defenderNode, defenderUnit.faction);
@@ -864,6 +894,17 @@ export class UnitRenderer extends Component {
       }, BATTLE_VISUAL_TIMING.hitRimFlashMs);
     }
     if (!opts?.lethal) this.playHitScreenShake(hitKind, opts?.heavy === true);
+  }
+
+  /** 命中衝擊環＋輝光（PROG-2-10243）：以受擊者身體中心為圓心，大小隨命中種類；兩者都是加色單節點繪製。 */
+  private playHitImpactFx(defenderNode: Node, kind: HitKind): void {
+    try {
+      const p = this.overlayPoint(defenderNode.worldPosition);
+      if (!p) return;
+      const y = p.y + 26;
+      this.juiceFx.playGlow(p.x, y, kind);
+      this.juiceFx.playRing(p.x, y, kind);
+    } catch (error) { console.warn('[UnitRenderer] 命中衝擊特效略過', error); }
   }
 
   /** 命中頓格（PROG-2-10239）：scope=pair 只停攻守雙方；scope=all 停全場骨架動畫（minGapSec 限流）。 */
@@ -1338,6 +1379,7 @@ export class UnitRenderer extends Component {
     this.arrowShots.update(dt);
     this.slashShots.update(dt);
     this.attackVfx.update(dt);
+    this.juiceFx.update(dt);
     this.tacticVfx.update(dt);
     perfEnd('fxShots', t); t = perfBegin();
 
@@ -1360,10 +1402,13 @@ export class UnitRenderer extends Component {
   private async loadBattleJuiceConfig(): Promise<void> {
     try {
       const raw = await services().resource.loadJson<unknown>("data/battle-juice", { tags: ["battle"] });
-      setBattleJuice(parseBattleJuice(raw));
+      setBattleJuice(applyJuicePrefs(parseBattleJuice(raw), loadJuicePrefs()));
     } catch {
-      setBattleJuice(parseBattleJuice(null));
+      setBattleJuice(applyJuicePrefs(parseBattleJuice(null), loadJuicePrefs()));
     }
+    // 衝擊環／輝光／刀光／殘影任一項開著才預熱加色節點，全關就完全不建
+    const j = getBattleJuice();
+    if (j.impactRing.enabled || j.glow.enabled || j.bladeTrail.enabled || j.afterimage.enabled) this.juiceFx.prewarm();
   }
 
   /** 讀高倍率攻擊提示門檻；讀不到就沿用預設（不影響戰鬥） */
@@ -1773,7 +1818,7 @@ export class UnitRenderer extends Component {
     this.spineUnits.abortDuel();
   }
 
-  onDestroy(): void { this.unsubVitality?.(); this.unsubVitality = null; this.spineUnits.clear(); this.generalStandees.clear(); this.moveDust.destroy(); this.attackVfx.destroy(); this.tacticVfx.destroy(); services().floatText?.setAvoidProvider(null); }
+  onDestroy(): void { this.unsubVitality?.(); this.unsubVitality = null; this.spineUnits.clear(); this.generalStandees.clear(); this.moveDust.destroy(); this.attackVfx.destroy(); this.juiceFx.destroy(); this.tacticVfx.destroy(); services().floatText?.setAvoidProvider(null); }
 
   private createGeneralView(faction: Faction): GeneralView {
     this.ensureRoots();
