@@ -59,12 +59,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-cao-cao-tactics",
           "source": "inborn"
         },
         {
           "slotId": "slot-2",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-cao-cao-ult-control",
           "source": "inborn"
         }
       ],
@@ -167,12 +167,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-liu-bei-rally",
           "source": "inborn"
         },
         {
           "slotId": "slot-2",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-liu-bei-reset",
           "source": "inborn"
         }
       ],
@@ -275,12 +275,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-sun-quan-tide",
           "source": "inborn"
         },
         {
           "slotId": "slot-2",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-inspire",
           "source": "inborn"
         }
       ],
@@ -383,12 +383,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-zhuge-liang-storm",
           "source": "inborn"
         },
         {
           "slotId": "slot-2",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-empty-fort",
           "source": "inborn"
         }
       ],
@@ -491,12 +491,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-fire-attack",
           "source": "inborn"
         },
         {
           "slotId": "slot-2",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-chain-link",
           "source": "inborn"
         }
       ],
@@ -594,12 +594,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-guan-yu-slash",
           "source": "inborn"
         },
         {
           "slotId": "slot-2",
-          "tacticId": "tactic-cavalry-shock",
+          "tacticId": "tactic-insp-wei-might",
           "source": "inborn"
         }
       ],
@@ -697,12 +697,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-zhang-fei-roar",
           "source": "inborn"
         },
         {
           "slotId": "slot-2",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-cavalry-charge",
           "source": "inborn"
         }
       ],
@@ -800,12 +800,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-cavalry-shock",
+          "tacticId": "tactic-insp-dragon-gall",
           "source": "inborn"
         },
         {
           "slotId": "slot-2",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-zhao-yun-immortal",
           "source": "inborn"
         }
       ],
@@ -903,12 +903,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-lu-bu-rampage",
           "source": "inborn"
         },
         {
           "slotId": "slot-2",
-          "tacticId": "tactic-cavalry-shock",
+          "tacticId": "tactic-insp-taunt",
           "source": "inborn"
         }
       ],
@@ -1011,12 +1011,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-sima-yi-shadow",
           "source": "inborn"
         },
         {
           "slotId": "slot-2",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-sow-discord",
           "source": "inborn"
         }
       ],
@@ -1117,11 +1117,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-sworn-fury",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-you-qi-counter",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-guan-yu-slash",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "xu-zhu",
@@ -1182,11 +1195,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-sun-ce-conqueror",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-shield",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-lu-bu-rampage",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "huang-zhong",
@@ -1247,11 +1273,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-tally-hundred-steps",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-lance-thrust",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-tally-hundred-steps",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "ma-chao",
@@ -1312,11 +1351,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-cavalry-charge",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-lance-thrust",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-tally-charge",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "lu-xun",
@@ -1377,11 +1429,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-tally-fire-god-hunt",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-slow",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-zhou-yu-inferno",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "taishi-ci",
@@ -1442,11 +1507,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-tally-hundred-steps",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-you-qi-counter",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-lu-bu-rampage",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "zhang-liao",
@@ -1507,11 +1585,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-wei-might",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-night-raid",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-tally-wei-zhen-hua-xia",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "xu-huang",
@@ -1572,11 +1663,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-tally-changban-root",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-haste",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-liu-bei-rally",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "cao-ren",
@@ -1637,11 +1741,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-shield",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-tally-changban-root",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-you-qi-counter",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "pang-tong",
@@ -1702,11 +1819,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-chain-link",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-red-cliff",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-lian-huan-chain",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "guo-jia",
@@ -1769,12 +1899,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-guo-jia-foresight",
           "source": "inborn"
         },
         {
           "slotId": "slot-2",
-          "tacticId": "tactic-archer-volley",
+          "tacticId": "tactic-tpl-sima-yi-shadow",
           "source": "inborn"
         }
       ],
@@ -1875,11 +2005,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-inspire",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-heal",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-liu-bei-rally",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "jia-xu",
@@ -1942,11 +2085,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-tally-fire-god-hunt",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-tally-link",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-guo-jia-foresight",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "zhang-he",
@@ -2007,7 +2163,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-tally-changban-push",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-slow",
           "source": "inborn"
         }
       ],
@@ -2080,11 +2241,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-shield",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-inspire",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-liu-bei-rally",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "cao-ang",
@@ -2145,11 +2319,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-liu-bei-rally",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-zhao-yun-immortal",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-liu-bei-rally",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "xiahou-dun",
@@ -2210,7 +2397,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-xiahou-dun-eye-devour",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-you-qi-counter",
           "source": "inborn"
         }
       ],
@@ -2283,11 +2475,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-haste",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-tally-hundred-steps",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-tally-hundred-steps",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "wei-yan",
@@ -2348,7 +2553,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-eight-array",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-inspire",
           "source": "inborn"
         }
       ],
@@ -2421,11 +2631,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-sworn-fury",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-shield",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-tally-wei-zhen-hua-xia",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "deng-ai",
@@ -2486,11 +2709,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-combo-attack",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-dragon-gall",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-tally-wei-zhen-hua-xia",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "zhong-hui",
@@ -2551,11 +2787,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-fire-attack",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-sima-yi-shadow",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-guo-jia-foresight",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "huang-gai",
@@ -2616,11 +2865,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-sun-quan-tide",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-eight-array",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-tally-hundred-steps",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "cheng-pu",
@@ -2681,11 +2943,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-sun-quan-tide",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-combo-attack",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-cao-cao-tactics",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "han-dang",
@@ -2746,11 +3021,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-tally-poison-arrow",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-haste",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-sun-quan-tide",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "gan-ning",
@@ -2811,7 +3099,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-sun-quan-tide",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-tally-hundred-steps",
           "source": "inborn"
         }
       ],
@@ -2884,7 +3177,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-sun-quan-tide",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-combo-attack",
           "source": "inborn"
         }
       ],
@@ -2949,11 +3247,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-cavalry-charge",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-wei-might",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-tally-wei-zhen-hua-xia",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "xu-sheng",
@@ -3014,7 +3325,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-night-raid",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-haste",
           "source": "inborn"
         }
       ],
@@ -3079,11 +3395,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-night-raid",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-haste",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-cao-cao-tactics",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "zhang-zhao",
@@ -3144,11 +3473,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-sow-discord",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-heal",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-sima-yi-shadow",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "lu-meng",
@@ -3209,11 +3551,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-tally-hundred-steps",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-haste",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-tally-hundred-steps",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "sun-ce",
@@ -3274,7 +3629,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-sun-ce-conqueror",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-lance-thrust",
           "source": "inborn"
         }
       ],
@@ -3347,11 +3707,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-combo-attack",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-dragon-gall",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-tally-charge",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "dong-zhuo",
@@ -3412,7 +3785,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-eight-array",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-haste",
           "source": "inborn"
         }
       ],
@@ -3477,11 +3855,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-taunt",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-inspire",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-zhang-fei-roar",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "liu-biao",
@@ -3542,11 +3933,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-liu-bei-rally",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-slow",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-cao-cao-ult-revive",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "ma-teng",
@@ -3607,11 +4011,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-combo-attack",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-dragon-gall",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-guan-yu-slash",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "gongsun-zan",
@@ -3672,7 +4089,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-combo-attack",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-dragon-gall",
           "source": "inborn"
         }
       ],
@@ -3737,11 +4159,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-sima-yi-shadow",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-shield",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-sima-yi-shadow",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "liu-zhang",
@@ -3802,11 +4237,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-taunt",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-sun-quan-tide",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-tally-wei-zhen-hua-xia",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "zhang-lu",
@@ -3867,11 +4315,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-chain-link",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-tally-link",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-lian-huan-chain",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "han-sui",
@@ -3932,7 +4393,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-combo-attack",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-dragon-gall",
           "source": "inborn"
         }
       ],
@@ -3997,11 +4463,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-zhang-fei-roar",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-cao-cao-tactics",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-zhang-fei-roar",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "kong-rong",
@@ -4062,11 +4541,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-cao-cao-revelry",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-heal",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-liu-bei-reset",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "liu-yan",
@@ -4127,11 +4619,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-inspire",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-sun-quan-tide",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-liu-bei-rally",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "cao-pi",
@@ -4192,11 +4697,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-taunt",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-sun-quan-tide",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-cao-cao-tactics",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "cao-xiu",
@@ -4257,11 +4775,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-shield",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-inspire",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-liu-bei-rally",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "sima-zhao",
@@ -4322,11 +4853,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-eight-array",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-haste",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-sun-quan-tide",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "sima-shi",
@@ -4387,11 +4931,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-tally-changban-push",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-wei-might",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-eight-formation",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "zhuge-jin",
@@ -4452,11 +5009,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-slow",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-guo-jia-foresight",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-sow-discord",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "zhuge-ke",
@@ -4517,7 +5087,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-inspire",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-eight-array",
           "source": "inborn"
         }
       ],
@@ -4582,11 +5157,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-inspire",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-slow",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-liu-bei-reset",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "zhu-ran",
@@ -4647,11 +5235,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-sun-quan-tide",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-combo-attack",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-cao-cao-tactics",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "pan-zhang",
@@ -4712,11 +5313,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-tally-hundred-steps",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-combo-attack",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-sun-quan-tide",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "ma-zhong",
@@ -4777,11 +5391,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-sun-quan-tide",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-combo-attack",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-cao-cao-tactics",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "liu-feng",
@@ -4842,7 +5469,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-sworn-fury",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-shield",
           "source": "inborn"
         }
       ],
@@ -4907,11 +5539,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-cavalry-charge",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-wei-might",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-sun-ce-conqueror",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "peng-yang",
@@ -4972,7 +5617,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-sima-yi-shadow",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-haste",
           "source": "inborn"
         }
       ],
@@ -5037,11 +5687,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-liu-bei-rally",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-zhao-yun-immortal",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-liu-bei-rally",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "huang-quan",
@@ -5102,11 +5765,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-sow-discord",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-cao-zhi-verse",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-sima-yi-shadow",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "li-yan",
@@ -5167,11 +5843,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-sima-yi-shadow",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-eight-array",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-lian-huan-chain",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "wang-ping",
@@ -5232,11 +5921,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-tally-counter-weak",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-tally-changban-push",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-you-qi-counter",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "zhang-yi",
@@ -5297,11 +5999,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-combo-attack",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-dragon-gall",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-zhao-yun-pierce",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "liao-hua",
@@ -5362,11 +6077,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-sun-ce-conqueror",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-you-qi-counter",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-sun-ce-conqueror",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "guan-xing",
@@ -5427,11 +6155,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-sun-ce-conqueror",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-you-qi-counter",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-lu-bu-rampage",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "zhang-bao",
@@ -5492,7 +6233,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-combo-attack",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-dragon-gall",
           "source": "inborn"
         }
       ],
@@ -5557,11 +6303,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-tally-hundred-steps",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-you-qi-counter",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-zhao-yun-pierce",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "cao-hong",
@@ -5622,11 +6381,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-shield",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-slow",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-liu-bei-rally",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "cao-zhang",
@@ -5687,11 +6459,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-sun-ce-conqueror",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-you-qi-counter",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-guan-yu-slash",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "man-chong",
@@ -5752,11 +6537,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-tally-changban-push",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-haste",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-eight-formation",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "wang-shuang",
@@ -5817,7 +6615,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-tally-defense-pierce",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-taunt",
           "source": "inborn"
         }
       ],
@@ -5882,11 +6685,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-tally-changban-root",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-haste",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-liu-bei-rally",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "chen-tai",
@@ -5947,11 +6763,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-eight-array",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-wei-might",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-zhang-fei-roar",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "wen-pin",
@@ -6012,11 +6841,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-tally-changban-root",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-tally-changban-push",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-tally-wei-zhen-hua-xia",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "le-jin",
@@ -6077,11 +6919,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-sworn-fury",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-shield",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-zhao-yun-pierce",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "li-dian",
@@ -6142,11 +6997,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-zhang-fei-roar",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-inspire",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-zhang-fei-roar",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "chen-qun",
@@ -6207,11 +7075,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-wei-zhen-reset",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-empty-fort",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-cao-cao-revelry",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "hua-xin",
@@ -6272,11 +7153,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-inspire",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-heal",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-liu-bei-reset",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "wang-lang",
@@ -6337,11 +7231,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-liu-bei-reset",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-shield",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-liu-bei-rally",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "xun-you",
@@ -6402,11 +7309,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-guo-jia-foresight",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-eight-array",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-zhuge-liang-storm",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "cheng-yu",
@@ -6467,11 +7387,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-tally-poison-arrow",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-shield",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-lian-huan-chain",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "liu-ye",
@@ -6532,11 +7465,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-sun-quan-tide",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-eight-array",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-sun-quan-tide",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "sun-shao",
@@ -6597,11 +7543,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-sima-yi-shadow",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-haste",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-lian-huan-chain",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "gu-yong",
@@ -6662,11 +7621,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-liu-bei-rally",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-zhao-yun-immortal",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-liu-bei-rally",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "zhu-jun",
@@ -6727,11 +7699,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-sun-quan-tide",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-combo-attack",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-cao-cao-tactics",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "lv-fan",
@@ -6792,11 +7777,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-tally-poison-arrow",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-haste",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-cao-cao-ult-control",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "sun-huan",
@@ -6857,7 +7855,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-slow",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-shield",
           "source": "inborn"
         }
       ],
@@ -6922,11 +7925,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-tally-poison-arrow",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-shield",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-gan-ning-night-raid",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "he-qi",
@@ -6987,11 +8003,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-sun-quan-tide",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-tally-link",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-sun-quan-tide",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "lu-kang",
@@ -7052,11 +8081,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-tally-hundred-steps",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-shield",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-cao-cao-tactics",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "zhu-huan",
@@ -7117,11 +8159,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-tally-poison-arrow",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-shield",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-gan-ning-night-raid",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "lu-yin",
@@ -7182,11 +8237,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-inspire",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-shield",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-liu-bei-rally",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "cheng-bing",
@@ -7247,11 +8315,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-river-ambush",
+          "tacticId": "tactic-tpl-sima-yi-shadow",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-guo-jia-foresight",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-cao-cao-ult-control",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "han-xuan",
@@ -7312,11 +8393,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-zhang-fei-roar",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-cao-cao-tactics",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-liu-bei-rally",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "jin-xuan",
@@ -7377,11 +8471,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-liu-bei-rally",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-cao-cao-tactics",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-zhang-fei-roar",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "liu-du",
@@ -7442,11 +8549,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-zhang-fei-roar",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-cao-cao-tactics",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-tally-wei-zhen-hua-xia",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "zhao-fan",
@@ -7507,11 +8627,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-sima-yi-shadow",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-tally-link",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-lian-huan-chain",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "wen-chou",
@@ -7572,7 +8705,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-guan-yu-slash",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-night-raid",
           "source": "inborn"
         }
       ],
@@ -7637,7 +8775,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-tally-defense-pierce",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-taunt",
           "source": "inborn"
         }
       ],
@@ -7702,11 +8845,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-guan-yu-slash",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-night-raid",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-tally-hundred-steps",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "zhang-jue",
@@ -7767,11 +8923,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-sow-discord",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-haste",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-sow-discord",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "zhang-liang-enemy",
@@ -7832,11 +9001,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-cavalry-charge",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-wei-might",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-zhao-yun-pierce",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "hua-tuo",
@@ -7897,11 +9079,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-sow-discord",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-cao-zhi-verse",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-lian-huan-chain",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "mi-zhu",
@@ -7962,11 +9157,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-chain-link",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-cao-zhi-verse",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-sow-discord",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "jian-yong",
@@ -8027,7 +9235,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-sima-yi-shadow",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-haste",
           "source": "inborn"
         }
       ],
@@ -8092,11 +9305,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-heal",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-haste",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-cao-cao-ult-revive",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "yin-mo",
@@ -8157,11 +9383,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-sow-discord",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-haste",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-lian-huan-chain",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "deng-zhi",
@@ -8222,11 +9461,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-liu-bei-rally",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-slow",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-cao-cao-ult-revive",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "yang-yi",
@@ -8287,11 +9539,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-sima-yi-shadow",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-heal",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-lian-huan-chain",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "fei-yi",
@@ -8352,11 +9617,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-tally-fire-god-hunt",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-sima-yi-shadow",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-cao-zhi-verse",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "dong-yun",
@@ -8417,11 +9695,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-slow",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-eight-array",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-sow-discord",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "xu-shu",
@@ -8482,11 +9773,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-tally-poison-arrow",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-cao-zhi-verse",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-cao-cao-ult-control",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "pang-de",
@@ -8547,11 +9851,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-tally-defense-pierce",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-taunt",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-lu-bu-rampage",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "zhang-xiu",
@@ -8612,11 +9929,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-sworn-fury",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-shield",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-tally-wei-zhen-hua-xia",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "zhang-xian",
@@ -8677,11 +10007,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-inspire",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-sun-quan-tide",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-tally-wei-zhen-hua-xia",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "liu-bao",
@@ -8742,11 +10085,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-combo-attack",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-dragon-gall",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-lu-bu-rampage",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "ke-bi-neng",
@@ -8807,11 +10163,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-eight-array",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-inspire",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-tally-wei-zhen-hua-xia",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "meng-huo",
@@ -8872,11 +10241,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-tally-changban-push",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-tally-poison-arrow",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-lu-bu-rampage",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "zhu-rong",
@@ -8937,11 +10319,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-tally-hundred-steps",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-red-cliff",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-tally-fire-god-hunt",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "wu-tugu",
@@ -9002,11 +10397,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-tally-defense-pierce",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-taunt",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-tally-wei-zhen-hua-xia",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "ahui-nan",
@@ -9067,7 +10475,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-sworn-fury",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-shield",
           "source": "inborn"
         }
       ],
@@ -9132,11 +10545,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-sun-ce-conqueror",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-you-qi-counter",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-guan-yu-slash",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "jin-huan-san-jie",
@@ -9197,7 +10623,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-guan-yu-slash",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-night-raid",
           "source": "inborn"
         }
       ],
@@ -9262,7 +10693,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-eight-array",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-inspire",
           "source": "inborn"
         }
       ],
@@ -9327,11 +10763,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-eight-array",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-haste",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-cao-cao-tactics",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "yuan-xi",
@@ -9392,11 +10841,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-cavalry-charge",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-wei-might",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-tally-hundred-steps",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "gao-lan",
@@ -9457,11 +10919,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-cavalry-charge",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-wei-might",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-sun-ce-conqueror",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "gao-gan",
@@ -9522,11 +10997,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-lance-thrust",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-haste",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-guan-yu-slash",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "tian-feng",
@@ -9587,11 +11075,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-zhuge-liang-storm",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-eight-array",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-zhuge-liang-storm",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "ju-shou",
@@ -9652,11 +11153,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-sun-quan-tide",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-sima-yi-shadow",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-cao-cao-tactics",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "guo-tu",
@@ -9714,7 +11228,18 @@
         "THUNDER": "D",
         "RAINY": "D"
       },
-      "tacticSlots": [],
+      "tacticSlots": [
+        {
+          "slotId": "slot-1",
+          "tacticId": "tactic-insp-slow",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-shield",
+          "source": "inborn"
+        }
+      ],
       "ultimateSlots": []
     },
     {
@@ -9776,7 +11301,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-zhang-he-adaptive-camp",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-heal",
           "source": "inborn"
         }
       ],
@@ -9841,11 +11371,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-night-raid",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-shield",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-sima-yi-shadow",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "han-hao",
@@ -9906,11 +11449,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-shield",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-tally-changban-push",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-you-qi-counter",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "wang-yi",
@@ -9971,11 +11527,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-shield",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-tally-changban-push",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-zhang-fei-roar",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "xi-zhi-cai",
@@ -10036,11 +11605,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-guo-jia-foresight",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-slow",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-cao-cao-tactics",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "mao-jie",
@@ -10101,11 +11683,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-sima-yi-shadow",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-guo-jia-foresight",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-tally-poison-arrow",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "lu-su",
@@ -10166,11 +11761,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-sun-quan-tide",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-tally-link",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-tally-fire-god-hunt",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "huo-yi",
@@ -10231,11 +11839,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-tally-changban-root",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-haste",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-liu-bei-rally",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "liao-li",
@@ -10296,11 +11917,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-slow",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-guo-jia-foresight",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-cao-cao-ult-control",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "du-qiong",
@@ -10361,11 +11995,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-sima-yi-shadow",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-shield",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-sow-discord",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "fei-guan",
@@ -10426,7 +12073,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-inspire",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-eight-array",
           "source": "inborn"
         }
       ],
@@ -10491,11 +12143,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-combo-attack",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-dragon-gall",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-lu-bu-rampage",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "jiang-wan",
@@ -10556,11 +12221,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-cao-cao-revelry",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-heal",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-liu-bei-reset",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "gou-fu",
@@ -10621,7 +12299,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-cavalry-charge",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-wei-might",
           "source": "inborn"
         }
       ],
@@ -10686,7 +12369,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-tally-hundred-steps",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-you-qi-counter",
           "source": "inborn"
         }
       ],
@@ -10727,7 +12415,18 @@
       "troopAptitude": {},
       "terrainAptitude": {},
       "weatherAptitude": {},
-      "tacticSlots": [],
+      "tacticSlots": [
+        {
+          "slotId": "slot-1",
+          "tacticId": "tactic-insp-lance-thrust",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-haste",
+          "source": "inborn"
+        }
+      ],
       "ultimateSlots": []
     },
     {
@@ -10789,7 +12488,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-sun-ce-conqueror",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-you-qi-counter",
           "source": "inborn"
         }
       ],
@@ -10854,11 +12558,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-inspire",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-heal",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-liu-bei-rally",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "zhang-yi-shu",
@@ -10919,7 +12636,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-sun-ce-conqueror",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-you-qi-counter",
           "source": "inborn"
         }
       ],
@@ -10984,7 +12706,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-lance-thrust",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-haste",
           "source": "inborn"
         }
       ],
@@ -11049,11 +12776,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-chain-link",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-haste",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-lian-huan-chain",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "guan-suo",
@@ -11114,7 +12854,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-sworn-fury",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-shield",
           "source": "inborn"
         }
       ],
@@ -11179,11 +12924,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-cao-cao-tactics",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-red-cliff",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-sun-quan-tide",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "chen-wu",
@@ -11244,11 +13002,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-tally-hundred-steps",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-you-qi-counter",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-tally-hundred-steps",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "sun-yi",
@@ -11309,7 +13080,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-sun-quan-tide",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-combo-attack",
           "source": "inborn"
         }
       ],
@@ -11374,7 +13150,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-sun-quan-tide",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-eight-array",
           "source": "inborn"
         }
       ],
@@ -11439,11 +13220,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-tally-hundred-steps",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-shield",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-cao-cao-tactics",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "lv-dai",
@@ -11504,11 +13298,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-tally-hundred-steps",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-haste",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-tally-hundred-steps",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "hu-zun",
@@ -11569,7 +13376,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-tally-changban-push",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-wei-might",
           "source": "inborn"
         }
       ],
@@ -11634,11 +13446,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-eight-array",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-haste",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-tally-wei-zhen-hua-xia",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "sun-li",
@@ -11699,11 +13524,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-guan-yu-slash",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-night-raid",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-sun-ce-conqueror",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "wang-hun",
@@ -11764,7 +13602,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-tally-hundred-steps",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-you-qi-counter",
           "source": "inborn"
         }
       ],
@@ -11829,7 +13672,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-tally-hundred-steps",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-you-qi-counter",
           "source": "inborn"
         }
       ],
@@ -11894,7 +13742,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-shield",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-haste",
           "source": "inborn"
         }
       ],
@@ -11959,7 +13812,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-sun-ce-conqueror",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-you-qi-counter",
           "source": "inborn"
         }
       ],
@@ -12024,7 +13882,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-tally-defense-pierce",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-taunt",
           "source": "inborn"
         }
       ],
@@ -12089,11 +13952,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-guan-yu-slash",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-night-raid",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-tally-charge",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "mi-heng",
@@ -12154,11 +14030,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-tally-fire-god-hunt",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-eight-array",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-cao-cao-tactics",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "tian-chou",
@@ -12219,7 +14108,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-tally-defense-pierce",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-taunt",
           "source": "inborn"
         }
       ],
@@ -12284,11 +14178,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-sun-quan-tide",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-sow-discord",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-zhuge-liang-storm",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "zuo-ci",
@@ -12349,11 +14256,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-cao-zhi-verse",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-slow",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-zhou-yu-inferno",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "yu-ji",
@@ -12414,11 +14334,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-cao-zhi-verse",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-red-cliff",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-cao-cao-tactics",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "liu-ba",
@@ -12479,11 +14412,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-cao-zhi-verse",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-empty-fort",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-zhuge-liang-storm",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "qin-mi",
@@ -12544,11 +14490,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-slow",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-tally-link",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-lian-huan-chain",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "yi-ji",
@@ -12609,7 +14568,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-tally-poison-arrow",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-tally-link",
           "source": "inborn"
         }
       ],
@@ -12674,7 +14638,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-slow",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-haste",
           "source": "inborn"
         }
       ],
@@ -12739,7 +14708,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-sun-ce-conqueror",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-you-qi-counter",
           "source": "inborn"
         }
       ],
@@ -12804,7 +14778,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-tally-hundred-steps",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-you-qi-counter",
           "source": "inborn"
         }
       ],
@@ -12869,11 +14848,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-tally-poison-arrow",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-guo-jia-foresight",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-tally-poison-arrow",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "wei-zhao",
@@ -12934,11 +14926,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-river-ambush",
+          "tacticId": "tactic-tpl-guo-jia-foresight",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-empty-fort",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-sun-quan-tide",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "xue-zong",
@@ -12999,11 +15004,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-river-ambush",
+          "tacticId": "tactic-insp-slow",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-tally-link",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-cao-cao-ult-control",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "zhu-yi",
@@ -13064,7 +15082,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-tally-hundred-steps",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-eight-array",
           "source": "inborn"
         }
       ],
@@ -13129,11 +15152,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-haste",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-eight-array",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-cao-cao-revelry",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "cao-zhi",
@@ -13196,12 +15232,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-cao-zhi-verse",
           "source": "inborn"
         },
         {
           "slotId": "slot-2",
-          "tacticId": "tactic-archer-volley",
+          "tacticId": "tactic-tpl-sow-discord",
           "source": "inborn"
         }
       ],
@@ -13302,11 +15338,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-cao-cao-revelry",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-eight-array",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-liu-bei-rally",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "chen-dao",
@@ -13367,11 +15416,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-tally-hundred-steps",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-you-qi-counter",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": []
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-guan-yu-slash",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ]
     },
     {
       "id": "wu-ban",
@@ -13432,7 +15494,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-insp-lance-thrust",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-haste",
           "source": "inborn"
         }
       ],
@@ -13497,7 +15564,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-tally-hundred-steps",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-you-qi-counter",
           "source": "inborn"
         }
       ],
@@ -13549,12 +15621,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-diao-chan-charm",
           "source": "inborn"
         },
         {
           "slotId": "slot-2",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-sow-discord",
           "source": "inborn"
         }
       ],
@@ -13656,11 +15728,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-zhao-yun-immortal",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-heal",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": [],
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-cao-cao-ult-revive",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ],
       "ancestor_chain": [
         "VIRT_DA_QIAO_01",
         "VIRT_DA_QIAO_02",
@@ -13722,11 +15807,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-diao-chan-charm",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-heal",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": [],
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-diao-chan-charm",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ],
       "ancestor_chain": [
         "VIRT_XIAO_QIAO_01",
         "VIRT_XIAO_QIAO_02",
@@ -13789,11 +15887,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-heal",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-sow-discord",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": [],
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-xiahou-dun-eye-devour",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ],
       "ancestor_chain": [
         "VIRT_ZHEN_JI_01",
         "VIRT_ZHEN_JI_02",
@@ -13855,11 +15966,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-diao-chan-charm",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-sow-discord",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": [],
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-zhao-yun-immortal",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ],
       "ancestor_chain": [
         "VIRT_SUN_SHANG_XIANG_01",
         "VIRT_SUN_SHANG_XIANG_02",
@@ -13920,11 +16044,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-liu-bei-rally",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-xiahou-dun-eye-devour",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": [],
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-zhao-yun-immortal",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ],
       "ancestor_chain": [
         "VIRT_CAI_YAN_01",
         "VIRT_CAI_YAN_02",
@@ -13986,11 +16123,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-sow-discord",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-shield",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": [],
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-diao-chan-charm",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ],
       "ancestor_chain": [
         "VIRT_HUANG_YUE_YING_01",
         "VIRT_HUANG_YUE_YING_02",
@@ -14051,7 +16201,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-cao-cao-ult-control",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-inspire",
           "source": "inborn"
         }
       ],
@@ -14116,11 +16271,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-diao-chan-charm",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-slow",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": [],
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-cao-cao-ult-revive",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ],
       "ancestor_chain": [
         "VIRT_XIN_XIAN_YING_01",
         "VIRT_XIN_XIAN_YING_02",
@@ -14181,11 +16349,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-sow-discord",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-heal",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": [],
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-xiahou-dun-eye-devour",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ],
       "ancestor_chain": [
         "VIRT_BU_LIAN_SHI_01",
         "VIRT_BU_LIAN_SHI_02",
@@ -14247,7 +16428,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-zhao-yun-immortal",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-haste",
           "source": "inborn"
         }
       ],
@@ -14312,7 +16498,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-zhao-yun-immortal",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-shield",
           "source": "inborn"
         }
       ],
@@ -14377,7 +16568,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-sow-discord",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-shield",
           "source": "inborn"
         }
       ],
@@ -14438,7 +16634,18 @@
         "NIGHT": "B",
         "THUNDER": "C"
       },
-      "tacticSlots": [],
+      "tacticSlots": [
+        {
+          "slotId": "slot-1",
+          "tacticId": "tactic-tpl-zhao-yun-immortal",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-inspire",
+          "source": "inborn"
+        }
+      ],
       "ultimateSlots": [],
       "ancestor_chain": [
         "VIRT_DONG_BAI_01",
@@ -14499,7 +16706,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-diao-chan-charm",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-haste",
           "source": "inborn"
         }
       ],
@@ -14565,11 +16777,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-diao-chan-charm",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-shield",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": [],
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-liu-bei-rally",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ],
       "ancestor_chain": [
         "VIRT_BIAN_FU_REN_01",
         "VIRT_BIAN_FU_REN_02",
@@ -14631,7 +16856,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-zhao-yun-immortal",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-xiahou-dun-eye-devour",
           "source": "inborn"
         }
       ],
@@ -14696,7 +16926,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-sow-discord",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-heal",
           "source": "inborn"
         }
       ],
@@ -14761,11 +16996,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-sow-discord",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-inspire",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": [],
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-liu-bei-rally",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ],
       "ancestor_chain": [
         "VIRT_WANG_YUAN_JI_01",
         "VIRT_WANG_YUAN_JI_02",
@@ -14823,7 +17071,18 @@
         "WINDY": "C",
         "THUNDER": "C"
       },
-      "tacticSlots": [],
+      "tacticSlots": [
+        {
+          "slotId": "slot-1",
+          "tacticId": "tactic-insp-heal",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-sow-discord",
+          "source": "inborn"
+        }
+      ],
       "ultimateSlots": [],
       "ancestor_chain": [
         "VIRT_XIAHOU_SHI_01",
@@ -14885,7 +17144,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-diao-chan-charm",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-slow",
           "source": "inborn"
         }
       ],
@@ -14951,7 +17215,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-sow-discord",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-heal",
           "source": "inborn"
         }
       ],
@@ -15017,7 +17286,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-sow-discord",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-haste",
           "source": "inborn"
         }
       ],
@@ -15082,11 +17356,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-cao-cao-ult-control",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-slow",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": [],
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-xiahou-dun-eye-devour",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ],
       "ancestor_chain": [
         "VIRT_CAO_JIE_01",
         "VIRT_CAO_JIE_02",
@@ -15148,7 +17435,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-cao-cao-ult-control",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-xiahou-dun-eye-devour",
           "source": "inborn"
         }
       ],
@@ -15214,7 +17506,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-heal",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-shield",
           "source": "inborn"
         }
       ],
@@ -15279,7 +17576,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-liu-bei-rally",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-haste",
           "source": "inborn"
         }
       ],
@@ -15344,7 +17646,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-heal",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-inspire",
           "source": "inborn"
         }
       ],
@@ -15411,11 +17718,24 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-insp-heal",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-shield",
           "source": "inborn"
         }
       ],
-      "ultimateSlots": [],
+      "ultimateSlots": [
+        {
+          "slot": 1,
+          "ultimateId": "ult-tpl-xiahou-dun-eye-devour",
+          "unlockReincarnation": 1,
+          "vitalityCostPct": 0.05,
+          "isExclusive": false
+        }
+      ],
       "ancestor_chain": [
         "VIRT_ZHU_RONG_FUREN_01",
         "VIRT_ZHU_RONG_FUREN_02",
@@ -15476,7 +17796,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-zhao-yun-immortal",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-tpl-sow-discord",
           "source": "inborn"
         }
       ],
@@ -15541,7 +17866,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-sow-discord",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-slow",
           "source": "inborn"
         }
       ],
@@ -15606,7 +17936,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-liu-bei-rally",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-heal",
           "source": "inborn"
         }
       ],
@@ -15674,7 +18009,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-diao-chan-charm",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-haste",
           "source": "inborn"
         }
       ],
@@ -15742,7 +18082,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-fire-scheme",
+          "tacticId": "tactic-tpl-cao-cao-ult-control",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-slow",
           "source": "inborn"
         }
       ],
@@ -15808,7 +18153,12 @@
       "tacticSlots": [
         {
           "slotId": "slot-1",
-          "tacticId": "tactic-morale-rally",
+          "tacticId": "tactic-tpl-liu-bei-rally",
+          "source": "inborn"
+        },
+        {
+          "slotId": "slot-2",
+          "tacticId": "tactic-insp-haste",
           "source": "inborn"
         }
       ],

@@ -1,0 +1,134 @@
+{
+  "version": 1,
+  "description": "武將天生戰法／奧義模板（PROG-2-10246）。pick 放 battleSkillId，依武將代號雜湊輪轉、跳過已滿員（每種上限 = 武將總數 × capRatio）者；特效／音效由 battleSkillId 自動對應。優先序：general-skill-overrides.json > 模板 > 原有天生戰法。",
+  "capRatio": 0.15,
+  "ultimateMinRarity": "epic",
+  "fallbackTactics": [
+    "insp-shield", "insp-haste", "mentor-morale", "insp-night-raid", "insp-combo-attack", "insp-lance-thrust",
+    "tally-charge", "guan-yu-slash", "insp-taunt", "mentor-slow", "you-qi-counter", "tally-hundred-steps",
+    "medical-aid", "tally-poison-arrow", "eight-formation", "lian-huan-chain", "sow-discord", "insp-dragon-gall"
+  ],
+  "fallbackUltimates": [
+    "guan-yu-slash", "tally-charge", "zhuge-liang-storm", "liu-bei-rally", "sima-yi-shadow", "tally-hundred-steps",
+    "zhao-yun-pierce", "zhang-fei-roar", "sun-quan-tide", "guo-jia-foresight", "cao-zhi-verse", "lu-bu-rampage"
+  ],
+  "templates": [
+    {
+      "templateId": "T09", "name": "紅顏·魅惑", "priority": 90,
+      "match": { "gender": ["女"] },
+      "slots": {
+        "tactic1": ["diao-chan-charm", "sow-discord", "cao-cao-ult-control", "medical-aid", "liu-bei-rally", "zhao-yun-immortal"],
+        "tactic2": ["medical-aid", "mentor-morale", "insp-shield", "mentor-slow", "insp-haste", "xiahou-dun-eye-devour", "sow-discord"],
+        "ultimate": ["diao-chan-charm", "cao-cao-ult-revive", "zhao-yun-immortal", "liu-bei-rally", "xiahou-dun-eye-devour"]
+      }
+    },
+    {
+      "templateId": "T08", "name": "主公·號令", "priority": 80,
+      "match": { "role": ["Commander", "Noble"] },
+      "slots": {
+        "tactic1": ["liu-bei-rally", "mentor-morale", "cao-cao-revelry", "insp-taunt", "zhang-fei-roar", "eight-formation"],
+        "tactic2": ["sun-quan-tide", "cao-cao-tactics", "mentor-morale", "insp-shield", "insp-haste", "liu-bei-reset"],
+        "ultimate": ["liu-bei-rally", "zhang-fei-roar", "tally-wei-zhen-hua-xia", "cao-cao-tactics", "sun-quan-tide"]
+      }
+    },
+    {
+      "templateId": "T10", "name": "仁輔·療護", "priority": 70,
+      "match": { "role": ["Support"], "topStat": "cha" },
+      "slots": {
+        "tactic1": ["medical-aid", "liu-bei-rally", "xiahou-dun-eye-devour", "mentor-morale", "cao-cao-revelry"],
+        "tactic2": ["insp-shield", "insp-haste", "mentor-slow", "zhao-yun-immortal", "eight-formation"],
+        "ultimate": ["liu-bei-rally", "xiahou-dun-eye-devour", "cao-cao-ult-revive", "liu-bei-reset"]
+      }
+    },
+    {
+      "templateId": "T07", "name": "內政謀·調度", "priority": 65,
+      "match": { "role": ["Support"], "topStat": "pol" },
+      "slots": {
+        "tactic1": ["mentor-morale", "insp-haste", "liu-bei-reset", "zhang-he-adaptive-camp", "cao-cao-revelry", "wei-zhen-reset"],
+        "tactic2": ["medical-aid", "eight-formation", "insp-shield", "mentor-slow", "empty-fort"],
+        "ultimate": ["liu-bei-reset", "zhang-he-adaptive-camp", "liu-bei-rally", "cao-cao-revelry"]
+      }
+    },
+    {
+      "templateId": "T05", "name": "軍師·火水風雷", "priority": 60,
+      "match": { "role": ["Support", "Advisor", "Planner"], "minStat": { "int": 85 } },
+      "slots": {
+        "tactic1": ["zhou-yu-inferno", "sun-quan-tide", "zhuge-liang-storm", "cao-cao-tactics", "tally-fire-god-hunt", "guo-jia-foresight", "cao-zhi-verse"],
+        "tactic2": ["lian-huan-chain", "tally-fire-chain", "mentor-slow", "empty-fort", "eight-formation", "sow-discord", "sima-yi-shadow", "tally-link"],
+        "ultimate": ["zhuge-liang-storm", "zhou-yu-inferno", "guo-jia-foresight", "cao-zhi-verse", "sun-quan-tide", "cao-cao-tactics", "tally-fire-god-hunt"]
+      }
+    },
+    {
+      "templateId": "T06", "name": "謀士·減益奇策", "priority": 55,
+      "match": { "role": ["Support", "Advisor", "Planner"] },
+      "slots": {
+        "tactic1": ["sima-yi-shadow", "sow-discord", "tally-poison-arrow", "mentor-slow", "lian-huan-chain", "insp-night-raid"],
+        "tactic2": ["guo-jia-foresight", "tally-link", "cao-zhi-verse", "medical-aid", "insp-haste", "eight-formation", "insp-shield"],
+        "ultimate": ["sima-yi-shadow", "sow-discord", "cao-cao-ult-control", "lian-huan-chain", "tally-poison-arrow"]
+      }
+    },
+    {
+      "templateId": "T02", "name": "騎將·衝鋒", "priority": 50,
+      "match": { "troopUniqueA": "CAVALRY" },
+      "slots": {
+        "tactic1": ["tally-charge", "zhao-yun-pierce", "tally-wushuang", "insp-dragon-gall"],
+        "tactic2": ["insp-lance-thrust", "insp-combo-attack", "insp-night-raid", "insp-sworn-fury"],
+        "ultimate": ["tally-charge", "zhao-yun-pierce", "tally-wushuang", "insp-dragon-gall"]
+      }
+    },
+    {
+      "templateId": "T03", "name": "弓將·箭雨", "priority": 49,
+      "match": { "troopUniqueA": "ARCHER" },
+      "slots": {
+        "tactic1": ["tally-hundred-steps", "tally-poison-arrow", "tally-defense-pierce"],
+        "tactic2": ["insp-haste", "insp-night-raid", "mentor-slow"],
+        "ultimate": ["tally-hundred-steps", "tally-defense-pierce"]
+      }
+    },
+    {
+      "templateId": "T04", "name": "水將·奇襲", "priority": 48,
+      "match": { "troopUniqueA": "NAVY" },
+      "slots": {
+        "tactic1": ["sun-quan-tide", "mentor-slow", "tally-hundred-steps", "insp-night-raid", "tally-poison-arrow"],
+        "tactic2": ["insp-shield", "insp-haste", "tally-link", "insp-combo-attack", "eight-formation"],
+        "ultimate": ["sun-quan-tide", "cao-cao-tactics", "gan-ning-night-raid", "tally-hundred-steps"]
+      }
+    },
+    {
+      "templateId": "T01", "name": "猛將·破陣", "priority": 40,
+      "match": { "role": ["Combat", "Warrior", "Hybrid"], "minStat": { "str": 88 } },
+      "slots": {
+        "tactic1": ["lu-bu-rampage", "sun-ce-conqueror", "guan-yu-slash", "insp-sworn-fury", "tally-wushuang", "insp-dragon-gall"],
+        "tactic2": ["insp-taunt", "insp-shield", "tally-charge", "zhang-fei-roar", "insp-combo-attack", "you-qi-counter"],
+        "ultimate": ["lu-bu-rampage", "guan-yu-slash", "sun-ce-conqueror", "zhang-fei-roar", "tally-wushuang"]
+      }
+    },
+    {
+      "templateId": "T11", "name": "守將·堅陣", "priority": 35,
+      "match": { "role": ["Combat", "Warrior", "Hybrid"], "topStat": "lea" },
+      "slots": {
+        "tactic1": ["insp-shield", "you-qi-counter", "tally-counter-weak", "eight-formation", "tally-changban-root", "zhang-fei-roar", "tally-changban-push"],
+        "tactic2": ["insp-taunt", "tally-changban-push", "insp-haste", "mentor-morale", "tally-wei-zhen-hua-xia", "mentor-slow"],
+        "ultimate": ["tally-wei-zhen-hua-xia", "you-qi-counter", "zhang-fei-roar", "eight-formation", "liu-bei-rally"]
+      }
+    },
+    {
+      "templateId": "T12", "name": "猛將·標準", "priority": 10,
+      "match": { "role": ["Combat", "Warrior", "Hybrid"] },
+      "slots": {
+        "tactic1": ["guan-yu-slash", "insp-combo-attack", "insp-lance-thrust", "tally-charge", "tally-defense-pierce", "insp-sworn-fury", "sun-ce-conqueror", "tally-hundred-steps"],
+        "tactic2": ["insp-dragon-gall", "insp-night-raid", "tally-hundred-steps", "you-qi-counter", "insp-shield", "insp-taunt", "tally-wei-zhen-hua-xia", "insp-haste"],
+        "ultimate": ["guan-yu-slash", "tally-charge", "zhao-yun-pierce", "tally-hundred-steps", "sun-ce-conqueror", "lu-bu-rampage", "tally-wei-zhen-hua-xia"]
+      }
+    },
+    {
+      "templateId": "T00", "name": "通用·兜底", "priority": 0,
+      "match": {},
+      "slots": {
+        "tactic1": ["insp-shield", "mentor-morale", "insp-combo-attack", "insp-lance-thrust", "medical-aid", "tally-charge"],
+        "tactic2": ["insp-haste", "insp-night-raid", "mentor-slow", "you-qi-counter", "eight-formation", "insp-taunt"],
+        "ultimate": ["liu-bei-rally", "guan-yu-slash", "zhuge-liang-storm", "sima-yi-shadow", "tally-charge"]
+      }
+    }
+  ]
+}

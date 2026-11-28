@@ -17982,7 +17982,25 @@
     "category": "task"
   },
   {
-    "id": "doc_task_3339",
+    "id": "doc_task_3340",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10246.md",
+    "title": "[PROG-2-10246] 武將天生戰法／奧義模板＋覆寫資料落地",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3343",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10254.md",
+    "title": "[PROG-2-10254] 修 playtest-online 在 12:00 發版時失敗的 7 步",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3344",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10264.md",
+    "title": "[PROG-2-10264] 規格書：街上偶遇他國武將＋武將作息表",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3345",
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10253.md",
     "title": "[PROG-2-10253] 戰場技能補齊",
     "category": "task"
