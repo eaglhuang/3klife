@@ -108,20 +108,20 @@
 
 1. 點場景 → 0.25 秒淡出 → 載入 → 0.25 秒淡入。
 2. 快取：最近 2 張大圖保留在記憶體，其餘釋放；預載「最近」第 1 筆。
-3. 互動成本見 4.4.1：每天有免費互動次數，用完可花銀兩；**切換場景本身不耗任何東西**。
+3. 互動成本見 4.4.1：每季有免費互動次數，用完可花銀兩；**切換場景本身不耗任何東西**。
 4. 切換歷史寫入「最近」；收藏存本機設定並走存檔 API。
 
-### 4.4.1 每日互動次數（使用者 11/28 裁決）
+### 4.4.1 每季互動次數（使用者 11/28 裁決）
 
-| 項目 | 規則（暫定，PM 可調） |
+| 項目 | 規則（PM 可調） |
 |---|---|
 | 範圍 | 生活層的主角互動：搭話、送禮、邀約同行、切磋單挑、搶物品、偷聽想法；切換場景、看畫面、點符號只看不算 |
-| 每日免費次數 | **6 次**／真實日（與大廳晨報同一個換日時間，由時間發動機提供，暫定 05:00 換日）|
-| 用完之後 | 可以花**銀兩**（家族私房，不是金）買額外互動：第 7 次 5 兩，之後每次 +2 兩，單次上限 15 兩；每日最多額外買 12 次 |
-| 走哪個框架 | 商店框架（SHP）：商品 `life_extra_interaction`；扣款走錢包，次數是每日重置的計數器（寫在伺服器權威的每日狀態，單機走本機 adapter）|
+| 每季免費次數 | **6 次**／遊戲一季（換季時重置，由時間發動機的換季事件觸發；不看真實日，也不看生活時鐘轉一圈）|
+| 用完之後 | 可以花**銀兩**（家族私房，不是金）買額外互動：第 7 次 5 兩，之後每次 +2 兩，單次上限 15 兩；每季最多額外買 12 次 |
+| 走哪個框架 | 商店框架（SHP）：商品 `life_extra_interaction`；扣款走錢包，次數是每季重置的計數器（寫在伺服器權威的季度狀態，單機走本機 adapter）|
 | 不衝突 | 友誼框架原有的「每武將每季次數上限」照舊（防刷），免費次數與付費次數都先過這道上限；被上限擋下的互動**不扣次數也不收銀兩** |
 | 不算互動 | 被動事件（武將主動找你、追逐小劇場的後續、歸還物品）不扣次數 |
-| 資料檔 | `life-interaction-quota.json`：`{ freePerDay, resetHour, extraPriceBase, extraPriceStep, extraPriceCap, extraDailyMax }` |
+| 資料檔 | `life-interaction-quota.json`：`{ freePerSeason, extraPriceBase, extraPriceStep, extraPriceCap, extraSeasonMax }`（`freePerSeason` 預設 6，換季重置，不再有 `resetHour`） |
 
 ### 4.5 版面資料檔（片段）
 
@@ -163,11 +163,11 @@
 | Lv2 | ≥ 25 | 知道在哪個**場景**；人影帶輪廓，不知道是誰 |
 | Lv3 | ≥ 45 | 看到**是誰**（頭像＋名字）|
 | Lv4 | ≥ 65 | 看到**在做什麼**（動態符號）；可偷聽想法 |
-| Lv5 | ≥ 85 | 看到**下一時段預測**去哪；偷聽說溜嘴機率 +50%（與 `doc_spec_1348「說溜嘴要稀有」` 的原則是否牴觸，待使用者確認，見審查待問清單 Q3）|
+| Lv5 | ≥ 85 | 看到**下一時段預測**去哪（使用者 11/28 裁決：不加偷聽說溜嘴機率，說溜嘴機率一律照 `doc_spec_1348`）|
 
-> 待確認：生活層看得到的武將以「我方家臣＋本城訪客」為主（QLIFE-01 2.4），自家家臣在 Lv0～2 也畫成剪影不太合理，是否改成「家臣身分永遠可見，位置與活動才受情報限制」，見審查待問清單 Q7。
+> 自家家臣的身分永遠可見（臉與名不受情報等級限制，使用者 11/28 裁決）；情報等級只限制家臣的**位置與活動**：Lv0～2 於場景內不顯示其活動符號，也無法查詢或預知他在哪個場景。
 >
-> 場景內的 Q 頭顯示：Lv0～2 的武將畫成「剪影＋?」，仍會走動（維持社會熱鬧感），但**不暴露身分與活動**；Lv3 顯示臉與名；Lv4 才顯示頭上符號。
+> 場景內的 Q 頭顯示：Lv0～2 的**非自家**武將（訪客、他國遊歷者）畫成「剪影＋?」，仍會走動（維持社會熱鬧感），但**不暴露身分與活動**；Lv3 顯示臉與名；Lv4 才顯示頭上符號；自家家臣一律顯示臉與名，其餘依上述位置與活動規則。
 
 ### 5.3 怎麼升
 
@@ -225,7 +225,7 @@
 
 ### 7.2 需要走共用 API 的重要數值（共用框架總綱第 5 章硬規則）
 
-單機也走本機 adapter：友誼、心情、羈絆點數、玩家情報值 `intel`（既有）、每日互動次數與付費、物品轉移（送禮、搶物品、歸還）、傷勢（單挑經 `occupancy.acquire(kind=medical, sub=injured)` 寫入，11/28 審查補列）、圖鑑收錄（舉止簿）、收藏場景、最近去過（可選存本機）、說溜嘴收錄。**純視覺的位置、動畫、符號不上 API**，由客戶端依 `seed` 重現。
+單機也走本機 adapter：友誼、心情、羈絆點數、玩家情報值 `intel`（既有）、每季互動次數與付費、物品轉移（送禮、搶物品、歸還）、傷勢（單挑經 `occupancy.acquire(kind=medical, sub=injured)` 寫入，11/28 審查補列）、圖鑑收錄（舉止簿）、收藏場景、最近去過（可選存本機）、說溜嘴收錄。**純視覺的位置、動畫、符號不上 API**，由客戶端依 `seed` 重現。
 
 ## 8. 實作順序建議（開卡由總 PM）
 
@@ -289,6 +289,20 @@ v2 圖上可辨認的店面（照 v2 的密度與招牌）：客棧、酒館、�
 | 8 | 互動 | 搭話、送禮、邀約、單挑各走一遍，友誼、物品、心情變化符合 QLIFE 第 6 章 |
 | 9 | 說溜嘴 | 偷聽（若 flag 開）出現至少一次說溜嘴並收錄 |
 | 10 | 玩家視角驗收 | 照規格清單逐項實點截圖，不能只看自動流程通過 |
+
+### 9.5 市井大街開放時機（使用者 11/28 裁決）
+
+**第一季中段教學開放**：玩家打完**第一場戰鬥**之後，由**家臣帶主角逛一次市井大街**（教學），之後大街常駐開放。
+
+| 項目 | 規則 |
+|---|---|
+| 開放條件 | 第一場戰鬥已完成，且遊戲季數 ≥ `openSeasonMin`（預設第 1 季）；條件放 `life-street-open.json`：`{ openAfterFirstBattle, openSeasonMin, tutorialEscortRequired }` |
+| 程式旗標 | `assets/scripts/ui/life/StreetOpenGate.ts` 的 `isStreetOpen(facts, config)`（純邏輯）；PROG-2-10219 已落地 |
+| 教學演出 | 家臣帶逛的教學演出**本次不做，列為待辦**（見下）；演出完成前 `tutorialEscortRequired` 維持 `false`，演出做好再改 `true`，並由教學流程設 `tutorialDone` |
+
+**待辦（未開卡）**：
+1. 家臣帶主角逛市井大街的教學演出（第一場戰鬥結算後觸發；挑哪位家臣、逛哪幾站、台詞，由總 PM 開卡時定）。
+2. 把 `isStreetOpen` 接到大廳入口（目前只有純邏輯與測試，未接任何畫面）。
 
 ## 10. 給 Codex 的市井大街美術需求
 
@@ -418,7 +432,7 @@ v2 圖上可辨認的店面（照 v2 的密度與招牌）：客棧、酒館、�
 | stall_left | 攤販市集（左組）| 255,128,255 |
 | stall_right | 攤販市集（右組）| 128,255,255 |
 
-**熱區 id 對生活場景 id（`life-area-maps.json` 的 `hotspotToScene`，11/28 審查補）**：多數是去掉 `mkt_` 前綴（`inn`→`mkt_inn`、`tavern`→`mkt_tavern`、`clinic`→`mkt_clinic`、`pharmacy`→`mkt_pharmacy`、`rouge`→`mkt_rouge`、`bank`→`mkt_bank`、`smithy`→`mkt_smithy`、`escort`→`mkt_escort`、`teahouse`→`mkt_teahouse`）；名稱不同者：`opera`→`mkt_theater`、`matchmaker`→`mkt_match`、`pawnshop`→`mkt_pawn`、`mercenary`→`mkt_guild`、`cloth`→`mkt_tailor`、`carpentry`→`mkt_carpenter`、`general_store`→`mkt_grocery`、`bookstore`→`mkt_bookshop`、`storyteller`→`mkt_story`、`gambling`→`mkt_gamble`、`bathhouse`→`mkt_bath`、`plaza`／`stall_left`／`stall_right`→`mkt_street`；**暫定**：`horse_market_a`→`mkt_horse`（驛站 `mkt_post` 併為同棟的子活動，不另開熱區）、`horse_market_b`→`mkt_horse`（兩個門口同一個場景），待使用者確認見審查待問清單 Q4。
+**熱區 id 對生活場景 id（`life-area-maps.json` 的 `hotspotToScene`，11/28 審查補）**：多數是去掉 `mkt_` 前綴（`inn`→`mkt_inn`、`tavern`→`mkt_tavern`、`clinic`→`mkt_clinic`、`pharmacy`→`mkt_pharmacy`、`rouge`→`mkt_rouge`、`bank`→`mkt_bank`、`smithy`→`mkt_smithy`、`escort`→`mkt_escort`、`teahouse`→`mkt_teahouse`）；名稱不同者：`opera`→`mkt_theater`、`matchmaker`→`mkt_match`、`pawnshop`→`mkt_pawn`、`mercenary`→`mkt_guild`、`cloth`→`mkt_tailor`、`carpentry`→`mkt_carpenter`、`general_store`→`mkt_grocery`、`bookstore`→`mkt_bookshop`、`storyteller`→`mkt_story`、`gambling`→`mkt_gamble`、`bathhouse`→`mkt_bath`、`plaza`／`stall_left`／`stall_right`→`mkt_street`；`horse_market_a`→`mkt_horse`（驛站 `mkt_post` 併為同棟的子活動，不另開熱區）、`horse_market_b`→`mkt_horse`（兩個門口同一個場景）（使用者 11/28 裁決）。
 
 店家 id 對照第 10.2 節（#1～#22 依序為 inn、tavern、opera、teahouse、matchmaker、pawnshop、bank、mercenary、cloth、smithy、carpentry、general_store、pharmacy、clinic、rouge、bookstore、storyteller、gambling、bathhouse、escort、horse_market_a、horse_market_b）。
 
@@ -484,16 +498,29 @@ v2 圖上可辨認的店面（照 v2 的密度與招牌）：客棧、酒館、�
 
 ## 13. 待使用者裁決
 
-**原六題已全部裁決。** 11/28 PM 審查（PROG-2-10203）另列 7 題新待問（切磋預設模式、每日定義、Lv5 說溜嘴、馬市驛站對應、不對稱頭翻轉、前期街上人數、家臣情報可見），待使用者回覆，清單在 `artifacts/life-sim-review-1128/questions.md`（不入庫）。原六題已全部由使用者本人定案（2026-11-28），裁決結果與落點：
+**原六題已全部裁決。** 11/28 PM 審查（PROG-2-10203）另列的 7 題（切磋預設模式、免費次數定義、Lv5 說溜嘴、馬市驛站對應、不對稱頭翻轉、前期街上人數、家臣情報可見）也已由使用者本人於 11/28 全數裁決，結果見本節末「審查 7 題」表。原六題已全部由使用者本人定案（2026-11-28），裁決結果與落點：
 
 | # | 原題 | 裁決 | 寫在哪裡 |
 |---|---|---|---|
 | Q1 | Q 版呈現層定位 | 只當呈現底層，不升框架、不需要伺服器 API | 本書第 12 章 |
-| Q2 | 互動要不要耗資源 | 每天有免費互動次數，用完可花銀兩 | 本書 4.4.1；QLIFE-01 第 6.0 節 |
+| Q2 | 互動要不要耗資源 | 每季有免費互動次數（6 次），用完可花銀兩 | 本書 4.4.1；QLIFE-01 第 6.0 節 |
 | Q3 | 搶物品後果 | 看關係：好友笑笑搶回、關係差生氣扣情誼、偶爾追逐小劇場 | QLIFE-01 第 6.5 節 |
 | Q4 | 單挑後果 | **有真實後果**（使用者本人裁決，已與戰場專家對齊（11/28 審查））：①重用現有傷勢，輸方進輕傷（`medical:injured`，休養 1 季、屬性 −10% 乘算），與 `doc_spec_0720` 戰場 WOUNDED 為同一狀態不疊加，連輸才進重傷（暫定 −20%，取較重者）；②只透過傷勢旗標影響下一場屬性，不改戰場 HP 與兵力，兩套單挑規則各自獨立，戰場 HP 不跨場持久；③只有宿敵關係才觸發死鬥，輸方走被擒處置（`doc_spec_0021` §L）仍不陣亡，其他切磋最重重傷，不存檔小遊戲死鬥照舊；④主角不受傷不死，家臣代打由家臣承擔；⑤輕傷、重傷都能出征與守城，只扣屬性，`injured` 不進出征互斥表；傷勢經伺服器 API 寫入 | QLIFE-01 第 6.4.1 節；QACT-01 第 4.2 節；人員占用第 3 章；0720 第 5 章 |
 | Q5 | 情報養成線 | 併入現有情報系統，同一個情報值 | 本書第 5 章 |
 | Q6 | 生活層武將範圍 | 我方家臣＋本城訪客 | QLIFE-01 第 2.4 節 |
+
+**審查 7 題（使用者本人 11/28 裁決）：**
+
+| # | 題目 | 裁決 | 寫在哪裡 |
+|---|---|---|---|
+| 審-1 | 切磋預設模式 | 邀約時自選「點到為止」（無後果）或「認真切磋」（打到 0，輸方受傷），預設認真 | QLIFE-01 6.4；QACT-01 4.2 |
+| 審-2 | 免費互動的「一天」 | 改成每遊戲一季 6 次，換季重置，次數放 JSON | 本書 4.4.1；QLIFE-01 6.0 |
+| 審-3 | Lv5 說溜嘴 +50% | 拿掉，Lv5 改給下一時段預測 | 本書第 5 章 |
+| 審-4 | 馬市與驛站對應 | 兩棟都對應 `mkt_horse`，驛站併成馬市（一）子活動，場景維持 72 個 | QLIFE-01 第 4 章；本書 10.5 |
+| 審-5 | 不對稱頭翻轉 | 照常水平翻轉，接受眼罩換邊；僅限生活層，戰場與立繪仍左眼 | QACT-01 3.1；QFACE-01 2.1 |
+| 審-6 | 前期街上冷清 | 多放他國武將遊歷事件，不做無名路人 | QLIFE-01 2.4 |
+| 審-7 | 家臣身分遮蔽 | 家臣身分永遠可見，位置與活動才依情報等級 | 本書第 5 章 |
+| 追-1 | 市井大街開放時機（11/28 後續）| 第一季中段教學開放：第一場戰鬥後由家臣帶主角逛一次；教學演出待辦 | 本書 9.5 |
 
 ## 14. 本書對應的文件地圖
 

@@ -46,3 +46,22 @@
 - **來源**：由 `consolidation-doubt-mcq.js rewrite-all` 自動寫入
 
 ---
+
+## 增補：核准體驗強化規格（2026-11-28）
+
+### 1. 待產倒數與胎教祈福
+- **顯示規則**：結緣受孕進入待產／調養期（預設 2 季）後，結緣面板顯示「待產倒數（剩 `{remainingSeasons}` 季）」。
+- **胎教祈福**：每次待產期間限執行 `1` 次，**僅能消耗銀兩**（不可用黃金或元寶），效果僅微調該胎小名稀有度權重（不直接加屬性或強制改命格）。
+- **資料驅動（JSON）**：費用與稀有度權重微調參數定義於 `assets/resources/data/master/marriage-prenatal-blessing-config.json`：
+  - `costSilver` (`number`, 預設 `120`)：每次胎教祈福消耗的銀兩
+  - `maxUsesPerPregnancy` (`number`, 預設 `1`)：每次待產期間可使用次數上限
+  - `nicknameRarityWeightDelta` (`number`, 預設 `0.08`)：高階小名稀有度權重微調增量
+- **台詞 i18n**：提示與祈福結果走 `ui.marriage.prenatal_countdown`、`ui.marriage.prenatal_blessing_done`，帶入 `{motherName}` 與性別／胎數參數。
+
+### 2. 義兄／義姊作媒（結義連動姻緣）
+- **觸發條件**：提親對象與我方任一在籍武將已締結「結義」關係。
+- **效果**：提親成功率額外 `+10%`（納入透明加法公式顯示列）。
+- **資料驅動（JSON）**：加成數值定義於 `assets/resources/data/master/marriage-oath-matchmaker-config.json`：
+  - `oathMatchmakerBonusPct` (`number`, 預設 `10`)：結義對象作媒時提供的提親成功率百分比加成
+  - `stackable` (`boolean`, 預設 `false`)：多位結義兄弟姊妹同時存在時是否疊加
+- **台詞 i18n**：媒妁加成說明走 `ui.marriage.oath_matchmaker_bonus`，帶入 `{mediatorName}` 與性別稱謂參數（`{oathRole}`）。

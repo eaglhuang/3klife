@@ -3245,5 +3245,7 @@
   "life.proto.enter": "Life layer (dev)",
   "life.proto.btn.slot": "Slot: {0} ▶",
   "life.proto.btn.season": "Season: {0} ▶",
-  "life.proto.stats": "Heads {0}  Symbols {1}  Sprites {2}"
+  "life.proto.stats": "Heads {0}  Symbols {1}  Sprites {2}",
+  "ui.battle.kin_rescue.float": "Bound in life and death!",
+  "ui.battle.kin_rescue.log": "{0} stepped in for {1}, taking {2} damage"
 }
