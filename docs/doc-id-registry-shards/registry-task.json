@@ -17914,5 +17914,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10233.md",
     "title": "[PROG-2-10233] Q 頭表情系統核心",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3316",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10226.md",
+    "title": "[PROG-2-10226] 市井大街場景交付補件",
+    "category": "task"
   }
 ]

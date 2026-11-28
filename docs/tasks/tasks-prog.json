@@ -20788,7 +20788,7 @@
       }
     },
     {
-      "doc_id": "doc_task_3313",
+      "doc_id": "doc_task_3316",
       "id": "PROG-2-10226",
       "title": "市井大街場景交付補件",
       "owner": "codex-gpt-6.2-sol",
@@ -20798,7 +20798,7 @@
       "phase": "M0",
       "created": "2026-11-28",
       "created_by_agent": "codex-gpt-6.2-sol",
-      "started_at": "2026-11-28T11:43:22+08:00",
+      "started_at": "2026-11-28T11:48:14+08:00",
       "started_by_agent": "codex-gpt-6.2-sol",
       "chain_id": "",
       "chain_step": "",
@@ -20819,7 +20819,7 @@
         "artwork/life-scenes/market-street/samples/mkt_winter_day_sample.png",
         "artwork/life-scenes/market-street/samples/mkt_night_sample.png"
       ],
-      "notes": "2026-11-28 | 狀態: in-progress | 驗證: 尺寸、路徑、metadata 與 PR diff pass | 變更: 接手 PR #2772，補齊全景、地圖與冬夜樣張 | 阻塞: 等待 CI/PM 審核",
+      "notes": "2026-11-28 | 狀態: in-progress | 驗證: 尺寸、metadata、encoding 與 PR diff pass | 變更: 完成全景、熱區、行走遮罩及冬夜樣張 | 阻塞: 等待 CI/PM 審核",
       "brief": {
         "style": "classic",
         "label": "",
