@@ -17890,5 +17890,17 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10223.md",
     "title": "[PROG-2-10223] 血統與結緣體驗強化四項",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3306",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10215.md",
+    "title": "[PROG-2-10215] 戰法音效回饋修正：回復／水淹",
+    "category": "task"
+  },
+  {
+    "id": "doc_task_3307",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10225.md",
+    "title": "[PROG-2-10225] 年末典禮觀眾台詞：第 4～5 名勉勵與結義彩蛋",
+    "category": "task"
   }
 ]
