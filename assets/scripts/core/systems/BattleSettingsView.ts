@@ -7,6 +7,8 @@
  * Unity 對照：像 OptionsMenu 的 ViewModel，只算字串與狀態，由 View 套到 Label 與 Button 上。
  */
 
+import { JUICE_PREFS_KEY, parseJuicePrefs, type JuicePrefs } from '../../battle/shared/BattleJuice';
+
 /** 音訊偏好（存在 localStorage，跨場景沿用） */
 export interface AudioPrefs {
     bgmMuted: boolean;
@@ -44,4 +46,27 @@ export function retreatClick(armedAt: number | null, now: number): { confirmed: 
 
 export function retreatButtonText(armed: boolean): string {
     return armed ? '確定撤退？再按一次' : '撤退（判定戰敗）';
+}
+
+// ───────── 打擊感偏好（PROG-2-10243）：命中頓格、鏡頭震動預設開啟，玩家可在設定面板關閉 ─────────
+// 存 localStorage（clientOwned 偏好，與音訊偏好同屬戰場設定）；設定面板按鈕只要呼叫 saveJuicePrefs 即可，
+// 下一場戰鬥載入設定時由 UnitRenderer 讀回並疊在 data/battle-juice.json 上。
+
+/** 讀玩家的打擊感偏好；讀不到或格式不對就是全部開啟。 */
+export function loadJuicePrefs(): JuicePrefs {
+    try {
+        return parseJuicePrefs((globalThis as any)?.localStorage?.getItem(JUICE_PREFS_KEY) ?? null);
+    } catch {
+        return parseJuicePrefs(null);
+    }
+}
+
+/** 存玩家的打擊感偏好；私密模式或無 localStorage 時只在本次執行有效（回傳 false）。 */
+export function saveJuicePrefs(prefs: JuicePrefs): boolean {
+    try {
+        (globalThis as any)?.localStorage?.setItem(JUICE_PREFS_KEY, JSON.stringify(prefs));
+        return true;
+    } catch {
+        return false;
+    }
 }
