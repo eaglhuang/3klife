@@ -356,6 +356,7 @@ export declare namespace AssetManager {
 }
 /* 單例或命名空間的佔位，mock 不提供實作（runtime 仍為 undefined，與舊行為一致） */
 export declare const director: any;
+export declare const Director: any;
 export declare const resources: {
     load(path: string, type: any, onComplete: (err: any, asset: any) => void): void;
     load(path: string, onComplete: (err: any, asset: any) => void): void;

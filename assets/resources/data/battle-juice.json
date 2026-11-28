@@ -1,0 +1,33 @@
+{
+  "_comment": "戰場打擊感參數（PROG-2-10239）。純表現層，不改結算。每區 enabled=false 即回到舊版行為。hitStop：命中頓格秒數（普攻/暴擊/奧義），scope=pair 只停攻守雙方、all 停全場骨架動畫（minGapSec 限流）；cameraShake：輕/中/重三級，振幅隨 decayPower 次方衰減，heavy/crit/ultimate 指定各命中種類用哪一級（null=不震）；knockback：受擊後退距離倍率；floatPop：跳字彈出峰值與速度倍率。讀不到或欄位錯誤時逐項用程式預設。",
+  "hitStop": {
+    "enabled": true,
+    "normalSec": 0.05,
+    "critSec": 0.08,
+    "ultimateSec": 0.12,
+    "maxSec": 0.2,
+    "scope": "pair",
+    "minGapSec": 0.35,
+    "ultimateWindowSec": 4
+  },
+  "cameraShake": {
+    "enabled": true,
+    "decayPower": 2,
+    "tiers": {
+      "light": { "strength": 0.035, "durationSec": 0.12, "frequencyHz": 22 },
+      "medium": { "strength": 0.07, "durationSec": 0.18, "frequencyHz": 20 },
+      "heavy": { "strength": 0.12, "durationSec": 0.28, "frequencyHz": 17 }
+    },
+    "heavy": "light",
+    "crit": "medium",
+    "ultimate": "heavy"
+  },
+  "knockback": { "enabled": true, "ratioMul": 1 },
+  "floatPop": {
+    "enabled": true,
+    "normalPeakMul": 1.1,
+    "heavyPeakMul": 1.1,
+    "critPeakMul": 1.15,
+    "popInMul": 1
+  }
+}
