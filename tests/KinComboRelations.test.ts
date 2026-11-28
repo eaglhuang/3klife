@@ -7,8 +7,9 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { assert, TestSuite } from './TestRunner';
-import { HistoricalPairTable, combatRelationsBetween } from '../assets/scripts/core/systems/HistoricalPairs';
-import { comboChanceOfPair } from '../assets/scripts/core/systems/ComboAttackKin';
+import { HistoricalPairTable } from '../assets/scripts/core/systems/HistoricalPairs';
+import { comboChanceOfLevel } from '../assets/scripts/core/systems/ComboAttackKin';
+import { kinLevelBetween } from '../assets/scripts/core/systems/KinBattleEffects';
 
 const ROOT = path.resolve(__dirname, '..');
 const TABLE = HistoricalPairTable.load(JSON.parse(fs.readFileSync(path.join(ROOT, 'assets/resources/data/historical-relations.json'), 'utf8'))).table;
@@ -17,21 +18,21 @@ export function createKinComboRelationsSuite(): TestSuite {
     const suite = new TestSuite('KinComboRelations (戰場合攻史實關係來源 PROG-2-1065)');
 
     suite.test('義兄弟（劉備、關羽）順序無關都查得到，合攻觸發率 26%', () => {
-        const relations = combatRelationsBetween(TABLE, 'guan-yu', 'liu-bei');
-        assert.equals(1, relations.length);
-        assert.isTrue(Math.abs(comboChanceOfPair(relations) - 0.26) < 1e-9);
+        assert.equals('SWORN', kinLevelBetween(TABLE, [], 'guan-yu', 'liu-bei'));
+        assert.isTrue(Math.abs(comboChanceOfLevel(kinLevelBetween(TABLE, [], 'guan-yu', 'liu-bei')) - 0.26) < 1e-9);
     });
 
-    suite.test('沒有史實關係的武將對不觸發（回傳空陣列，觸發率 0）', () => {
-        const relations = combatRelationsBetween(TABLE, 'lu-bu', 'diao-chan');
-        assert.equals(0, relations.length);
-        assert.equals(0, comboChanceOfPair(relations));
+    suite.test('沒有史實關係的武將對不觸發（NONE，觸發率 0）；史實夫妻等級為 SPOUSE 但合攻 0', () => {
+        assert.equals('NONE', kinLevelBetween(TABLE, [], 'lu-bu', 'diao-chan'));
+        assert.equals(0, comboChanceOfLevel('NONE'));
+        assert.equals('SPOUSE', kinLevelBetween(TABLE, [], 'zhou-yu', 'xiao-qiao'));
+        assert.equals(0, comboChanceOfLevel(kinLevelBetween(TABLE, [], 'zhou-yu', 'xiao-qiao')));
     });
 
-    suite.test('缺模板 id、或沒有配對表時回傳空陣列', () => {
-        assert.equals(0, combatRelationsBetween(TABLE, null, 'liu-bei').length);
-        assert.equals(0, combatRelationsBetween(TABLE, 'guan-yu', null).length);
-        assert.equals(0, combatRelationsBetween(null, 'guan-yu', 'liu-bei').length);
+    suite.test('缺模板 id、或沒有配對表時為 NONE', () => {
+        assert.equals('NONE', kinLevelBetween(TABLE, [], null, 'liu-bei'));
+        assert.equals('NONE', kinLevelBetween(TABLE, [], 'guan-yu', null));
+        assert.equals('NONE', kinLevelBetween(null, [], 'guan-yu', 'liu-bei'));
     });
 
     return suite;

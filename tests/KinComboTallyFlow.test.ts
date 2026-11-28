@@ -68,7 +68,7 @@ function damageWithTallies(linked: boolean): number {
 
     const resolver = new BattleCombatResolver({
         state: ctrl.state,
-        relationsBetween: (a, b) => ctrl.relationsBetweenUnits(a, b),
+        kinLevelBetween: (a, b) => ctrl.kinLevelBetweenUnits(a, b),
         getPlayerGeneralUnitId: () => null,
         getEnemyGeneralUnitId: () => null,
         setPlayerGeneralUnitId: () => undefined,
@@ -92,9 +92,7 @@ export function createKinComboTallyFlowSuite(): TestSuite {
         ctrl.tallyInfoOf = (tallyId) => (tallyId === liuCard.uid ? tallyBattleInfoOf(liuCard) : tallyId === guanCard.uid ? tallyBattleInfoOf(guanCard) : null);
         ctrl.state.addUnit(unit('a', Faction.Player, 2, 2, liuCard.uid));
         ctrl.state.addUnit(unit('b', Faction.Player, 2, 4, guanCard.uid));
-        const relations = ctrl.relationsBetweenUnits('a', 'b');
-        assert.equals(1, relations.length);
-        assert.equals('SWORN', relations[0].type);
+        assert.equals('SWORN', ctrl.kinLevelBetweenUnits('a', 'b'));
     });
 
     suite.test('戰死來源的虎符相鄰助攻：追加合攻傷害（與有史實關係但無虎符對照）', () => {

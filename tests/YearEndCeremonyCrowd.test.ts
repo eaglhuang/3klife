@@ -13,6 +13,7 @@ import {
     pickCeremonyCrowd,
     pickNearPodiumLine,
     pickOathCongratsLine,
+    pickOathWinnerEntry,
     resolveCrowdLine,
     resolveCrowdVoiceLine,
     type CeremonyCrowdConfig,
@@ -188,6 +189,32 @@ export function createYearEndCeremonyCrowdSuite(): TestSuite {
         equal(pickNearPodiumLine(board(4, 900), { ...config, nearPodiumMaxDeltaScore: 50 }, 0), null);
         equal(pickNearPodiumLine(board(4, 900), { ...config, nearPodiumRanks: [5] }, 0), null);
         equal(pickNearPodiumLine(board(4, 900), { ...config, nearPodiumKeys: [] }, 0), null);
+    });
+
+    suite.test('結義彩蛋：非主角得獎時祝賀對象是得獎者自己，主角得獎照舊', () => {
+        const crowd = [
+            { generalId: 'guan-yu', name: '關羽', gender: 'M' as const, age: 30 },
+            { generalId: 'zhang-fei', name: '張飛', gender: 'M' as const, age: 28 },
+        ];
+        // 主角劉備；非主角本府武將趙雲得獎，其結義兄弟是張飛（與劉備的兄弟關羽無關）
+        const brothersOf = (id: string): string[] => (id === 'liu-bei' ? ['guan-yu'] : id === 'zhao-yun' ? ['zhang-fei'] : []);
+        const fame = [
+            { rank: 1, isPlayer: false, generalId: 'lu-bu' },
+            { rank: 2, isPlayer: true, generalId: 'zhao-yun' },
+        ];
+        const winner = pickOathWinnerEntry(fame);
+        equal(winner?.generalId, 'zhao-yun');
+        const pick = pickOathCongratsLine({ crowd, winnerId: winner!.generalId, brotherIds: brothersOf(winner!.generalId), turn: 0 }, config);
+        equal(pick?.memberIndex, 1);
+        // 用主角 id 頂替會誤祝賀關羽（舊 bug）
+        equal(pickOathCongratsLine({ crowd, winnerId: winner!.generalId, brotherIds: brothersOf('liu-bei'), memberIndex: 1, turn: 0 }, config), null);
+        // 主角得獎：照舊以主角 id 查
+        const house = pickOathWinnerEntry([{ rank: 1, isPlayer: true, generalId: 'liu-bei' }, { rank: 2, isPlayer: false }]);
+        equal(house?.generalId, 'liu-bei');
+        equal(pickOathCongratsLine({ crowd, winnerId: house!.generalId, brotherIds: brothersOf(house!.generalId), turn: 0 }, config)?.memberIndex, 0);
+        // 本府沒進前三、或得獎項缺 id：不播
+        equal(pickOathWinnerEntry([{ rank: 4, isPlayer: true, generalId: 'zhao-yun' }]), null);
+        equal(pickOathWinnerEntry([{ rank: 1, isPlayer: true }]), null);
     });
 
     suite.test('結義彩蛋：只有結義兄弟觀眾觸發，稱謂依性別與年齡，可由資料關閉', () => {

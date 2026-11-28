@@ -35,6 +35,8 @@ export interface CeremonyEntry {
     readonly isPlayer: boolean;
     /** 頭像用的武將 id；缺值走性別剪影 */
     readonly portraitId?: string;
+    /** 得獎武將自己的 id（結義彩蛋用，不可拿頭像 id 或主角 id 代替）；名門榜的玩家項為主角 */
+    readonly generalId?: string;
     readonly gender: 'M' | 'F';
 }
 
@@ -59,7 +61,7 @@ export function buildHouseBoard(
         isPlayer: s.isPlayer,
         gender: 'M',
         ...(s.isPlayer
-            ? (portraits.player ? { portraitId: portraits.player } : {})
+            ? (portraits.player ? { portraitId: portraits.player, generalId: portraits.player } : {})
             : (portraits.npc?.[s.id.replace(/_y\d+$/, '')] ? { portraitId: portraits.npc[s.id.replace(/_y\d+$/, '')] } : {})),
     }));
     return { id: 'house', entries, seconds: CEREMONY_HOUSE_BOARD_SECONDS, playerInTop3: result.playerRank <= 3 };
@@ -88,6 +90,7 @@ export function buildFameBoard(
                 score: e.score ?? 0,
                 isPlayer: e.isPlayerOwned,
                 portraitId: who.portraitId ?? e.generalId,
+                generalId: e.generalId,
                 gender: who.gender ?? 'M',
             };
         });
