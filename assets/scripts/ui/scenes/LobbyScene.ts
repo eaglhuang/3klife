@@ -78,7 +78,7 @@ import type { DestinyShopBlockReason } from '../../core/systems/DestinyShop';
 import type { RewardGrantResult, RewardTallyView } from '../../shared/api/ApiCommands';
 import { PlayerRosterService } from '../../core/services/PlayerRosterService';
 import type { BloodlineStageAwakenedPayload, BloodlineStageCapRaisedPayload } from '../../core/managers/GameSession';
-import { GAME_SESSION_EVENTS, GameSession, type AddGeneralsResult, type ClanPrestigeChangedPayload, type ClanTierUpPayload, type MilestoneUpPayload, type CustomGoldFactorBornPayload, type LifeImprintedPayload, type RivalSeasonEventsPayload } from '../../core/managers/GameSession';
+import { GAME_SESSION_EVENTS, GameSession, type AddGeneralsResult, type ClanPrestigeChangedPayload, type OathGiftGivenPayload, type ClanTierUpPayload, type MilestoneUpPayload, type CustomGoldFactorBornPayload, type LifeImprintedPayload, type RivalSeasonEventsPayload } from '../../core/managers/GameSession';
 import { buildSageRemarks, remarkRandomOf } from '../../core/systems/SageRemarks';
 import { SAGES } from '../../core/systems/SageDivination';
 import { hallTimeLabelText, seasonDisplayText, seasonStartText } from '../core/SeasonTexts';
@@ -192,7 +192,10 @@ import { buildAcademyEmptyGuardViewState, academyEnrollCandidateAges } from '../
 import { academyEnrollRules } from '../../core/systems/nurture/AcademyEnrollRules';
 import { ClanShrineController } from '../core/ClanShrineController';
 import { ChildGrowthPopupController, type ChildGrowthResolveOutcome } from '../core/ChildGrowthPopupController';
-import type { FamilyChildLedgerResult, FamilyGrowthEventsResult, FamilyResolveGrowthEventResult, FamilyTalkToChildResult } from '../../shared/api/ApiCommands';
+import type { FamilyChildLedgerResult, FamilyInfantCareResult, FamilyPatInfantResult, FamilyPrenatalBlessingResult, FamilyPrenatalStatusResult, FamilyGrowthEventsResult, FamilyResolveGrowthEventResult, FamilyTalkToChildResult } from '../../shared/api/ApiCommands';
+import { claimToddlerBond, normalizeToddlerPool, TODDLER_POOL_JSON } from '../../core/fun/FunToddlerBark';
+import { oathGiftLine } from '../../core/systems/BloodlineOathGift';
+import { oathMatchmakerBonus, oathMatchmakerLine } from '../../core/systems/MarriageOathMatchmaker';
 import { OpeningOfferPopupController } from '../core/OpeningOfferPopupController';
 import { SeasonEventPopupController } from '../core/SeasonEventPopupController';
 import { canShowSeasonChronicle, SeasonChroniclePopupController } from '../core/SeasonChroniclePopupController';
@@ -1453,6 +1456,31 @@ export class LobbyScene extends Component {
                     return { ok: false, reason: res.reason === 'FAMILY_CHILD_TALKED' ? 'already-talked' : res.reason === 'FAMILY_CHILD_UNKNOWN' ? 'unknown-child' : 'error' };
                 },
                 t: this._panelT,
+                // 幼兒近況與摸頭、待產倒數與胎教祈福（PROG-2-10235）：全走 family.* 命令，次數與扣款由權威端判定
+                care: {
+                    infantCare: async () => {
+                        const res = await services().api.query<FamilyInfantCareResult>('family.infantCare', {});
+                        return isApiFail(res) ? null : res.result;
+                    },
+                    patInfant: async (childId) => {
+                        const res = await services().api.cmd<FamilyPatInfantResult>('family.patInfant', { childId });
+                        if (isApiFail(res)) return null;
+                        if (!res.result.ok) return res.result;
+                        // 親子好感與 FUN-01 點頭像共用「每孩子每季一筆」獎勵（同 grantKey），兩個入口同季只入帳一次
+                        const pool = normalizeToddlerPool(await services().resource.loadJson(TODDLER_POOL_JSON));
+                        if (!pool) return res.result;
+                        const bond = await claimToddlerBond(services().api, pool, childId, res.result.season);
+                        return { ...res.result, favorGain: bond.ok && !bond.replayed ? bond.applied : 0 };
+                    },
+                    prenatalStatus: async () => {
+                        const res = await services().api.query<FamilyPrenatalStatusResult>('family.prenatalStatus', {});
+                        return isApiFail(res) ? null : res.result;
+                    },
+                    prenatalBlessing: async (motherId) => {
+                        const res = await services().api.cmd<FamilyPrenatalBlessingResult>('family.prenatalBlessing', { motherId });
+                        return isApiFail(res) ? null : res.result;
+                    },
+                },
             },
         });
         await shrine.mount();
@@ -1460,6 +1488,11 @@ export class LobbyScene extends Component {
         this._sessionEventUnsubscribers.push(
             services().event.on(GAME_SESSION_EVENTS.ClanPrestigeChanged, (payload: ClanPrestigeChangedPayload) => { shrine.onPrestigeChanged(payload); }),
             services().event.on(GAME_SESSION_EVENTS.Loaded, () => { shrine.refresh(); }),
+            // 義叔贈禮：子嗣誕生或抓周時彈通知（贈禮已由權威端寫入子嗣資料）
+            services().event.on(GAME_SESSION_EVENTS.OathGiftGiven, (payload: OathGiftGivenPayload) => {
+                const lookup = (key: string): string => services().i18n.t(key);
+                this._showToast(oathGiftLine(lookup, payload.gift, payload.giverGender, payload.childName));
+            }),
         );
     }
 
@@ -3670,9 +3703,15 @@ export class LobbyScene extends Component {
         const k = pairSynergyK(session.familySynergy, father as { familyUid?: string } | undefined, mother as { familyUid?: string });
         const epithet = BloodlineEpithetService.drawBirthEpithet(seedOfText(`${bonding.fatherId ?? ''}|${motherId}`));
         panel.bindProposalData(state, k, epithet, 8);
+        // 義兄作媒（PROG-2-10235）：提親對象的結義兄弟姊妹在我方名冊內，成功率 +10%
+        const rosterIds = session.roster.filter((g) => g.id !== motherId).map((g) => g.id);
+        const matchmaker = oathMatchmakerBonus(session.swornState(), motherId, rosterIds);
+        panel.setMatchmakerBonus(matchmaker.bonusPct);
+        const mediator = session.roster.find((g) => g.id === matchmaker.mediatorIds[0]);
+        const matchmakerLine = mediator ? oathMatchmakerLine((key: string): string => services().i18n.t(key), matchmaker, mediator.name, mediator.gender) : '';
         host.binder.setTexts({
             bpTarget: this._panelT('ui.bonding.proposal.target', mother.name),
-            bpMessage: '',
+            bpMessage: matchmakerLine,
         });
         host.node.active = true;
         this._bringNodeToFront(host.node);

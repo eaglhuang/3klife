@@ -5,7 +5,7 @@
  * 帳本與事件進度屬於重要存檔狀態：客戶端只能經命令讀取與「選擇」，不直接碰 GameSession 欄位，也不得自帶數值；
  * 效果由權威端（單機＝GameSession）依事件表入帳，扣銀兩走家族銀兩帳本。
  */
-import type { FamilyChildLedgerResult, FamilyGrowthEventsResult, FamilyResolveGrowthEventResult, FamilyTalkToChildResult } from '../../../shared/api/ApiCommands';
+import type { FamilyChildLedgerResult, FamilyGrowthEventsResult, FamilyInfantCareResult, FamilyPatInfantResult, FamilyPrenatalBlessingResult, FamilyPrenatalStatusResult, FamilyResolveGrowthEventResult, FamilyTalkToChildResult } from '../../../shared/api/ApiCommands';
 import { ApiError, type ApiErrorKey } from '../../../shared/api/ApiErrors';
 import type { LocalApiAdapter } from './LocalApiAdapter';
 
@@ -25,6 +25,11 @@ export interface ChildGrowthHost {
     growthEvents(): FamilyGrowthEventsResult;
     resolveGrowthEvent(childId: string, eventId: string, optionId: string): GrowthEventResolveOutcome;
     talkToChild(childId: string): ChildTalkOutcome;
+    /** 幼兒近況與摸頭、待產倒數與胎教祈福（PROG-2-10235） */
+    infantCare(): FamilyInfantCareResult;
+    patInfant(childId: string): FamilyPatInfantResult;
+    prenatalStatus(): FamilyPrenatalStatusResult;
+    prenatalBlessing(motherId: string): FamilyPrenatalBlessingResult;
 }
 
 const RESOLVE_ARGS = ['childId', 'eventId', 'optionId'] as const;
@@ -78,4 +83,20 @@ export function registerChildGrowthCommands(adapter: LocalApiAdapter, getHost: (
         }
         return { result: out.result };
     });
+
+    adapter.register('family.infantCare', () => ({ result: requireHost().infantCare() }));
+
+    adapter.register('family.prenatalStatus', () => ({ result: requireHost().prenatalStatus() }));
+
+    const registerIdCommand = (name: 'family.patInfant' | 'family.prenatalBlessing', field: 'childId' | 'motherId', run: (id: string) => unknown): void => {
+        adapter.register(name, (args) => {
+            const extra = Object.keys(args).find((key) => key !== field);
+            if (extra) throw new ApiError('FORBIDDEN_FIELD', `命令不得帶欄位 ${extra}`);
+            const id = args[field];
+            if (typeof id !== 'string' || !id) throw new ApiError('INVALID_SCHEMA', `${field} 必須是非空字串`);
+            return { result: run(id) };
+        });
+    };
+    registerIdCommand('family.patInfant', 'childId', (id) => requireHost().patInfant(id));
+    registerIdCommand('family.prenatalBlessing', 'motherId', (id) => requireHost().prenatalBlessing(id));
 }

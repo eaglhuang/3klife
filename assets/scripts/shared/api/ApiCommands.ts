@@ -73,6 +73,11 @@ export const API_COMMANDS = Object.freeze({
     'family.resolveGrowthEvent': { kind: 'cmd', revGuard: false },
     // 親子談話（PROG-2-10070）：每名孩子每年一次，好感增量與話題由權威端依話題表決定，客戶端只送 childId
     'family.talkToChild': { kind: 'cmd', revGuard: false },
+    // 幼兒近況與摸頭、待產倒數與胎教祈福（PROG-2-10235）：次數、好感與扣款都由權威端判定，客戶端只送 id
+    'family.infantCare': { kind: 'query', revGuard: false },
+    'family.patInfant': { kind: 'cmd', revGuard: false },
+    'family.prenatalStatus': { kind: 'query', revGuard: false },
+    'family.prenatalBlessing': { kind: 'cmd', revGuard: false },
     // 偵錯（只有本機 adapter 掛處理器；網路 adapter 一律回 COMMAND_UNKNOWN，避免變成外掛入口）
     'debug.fastForward': { kind: 'cmd', revGuard: false },
     // 測試工具 2.0（PROG-2-9858）：資源、屬性、時間、存檔匯出入；同樣只有本機 adapter 掛處理器，且要綁定偵錯宿主才生效
@@ -717,6 +722,39 @@ export interface FamilyTalkToChildResult {
     /** 談完後的親子好感 */
     favor: number;
     interactionCountThisYear: number;
+}
+
+/** family.infantCare：0～4 歲子嗣本季近況（趣事鍵由客戶端以 id＋季數取得，文字走 i18n） */
+export interface FamilyInfantCareResult {
+    /** 目前總季數（趣事每季刷新的種子） */
+    season: number;
+    infants: Array<{ id: string; name: string; age: number; gender?: string; patsLeft: number; favor: number }>;
+}
+
+/** family.patInfant：只送 childId；好感增量與每季次數由權威端判定 */
+export interface FamilyPatInfantResult {
+    ok: boolean;
+    reason?: 'not-infant' | 'limit' | 'unknown-child';
+    /** 當下總季數（與 FUN-01 共用的每季獎勵 grantKey 用） */
+    season: number;
+    /** 權威端不直接加好感：好感走 FUN-01 同一筆每季獎勵，由客戶端 reward.claim 後填入實際增量 */
+    favorGain: number;
+    favor: number;
+    replyKey?: string;
+}
+
+/** family.prenatalStatus：待產中的母親與胎教祈福狀態 */
+export interface FamilyPrenatalStatusResult {
+    silver: number;
+    costSilver: number;
+    mothers: Array<{ id: string; name: string; gender?: string; remainingSeasons: number; blessed: boolean }>;
+}
+
+/** family.prenatalBlessing：只送 motherId；扣家族銀兩、每次待產限次由權威端判定 */
+export interface FamilyPrenatalBlessingResult {
+    ok: boolean;
+    reason?: 'silver-low' | 'limit' | 'not-pregnant';
+    silver: number;
 }
 
 /** family.growthEvents 的一筆待決事件（文字只給 i18n key，客戶端自己翻） */

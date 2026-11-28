@@ -11,6 +11,9 @@ import { applyBlessingToHighTierWeight, emptyPrenatalBlessingState, performPrena
 import { applyOathMatchmakerBonus, OATH_MATCHMAKER_CONFIG, oathMatchmakerBonus, oathMatchmakerLine } from '../assets/scripts/core/systems/MarriageOathMatchmaker';
 import { DEFAULT_OATH_CONFIG } from '../assets/scripts/core/systems/OathConfig';
 import { emptySwornState, formPact } from '../assets/scripts/core/systems/SwornPact';
+import { cloneFunState, emptyFunState, isEmptyFunState, normalizeFunState } from '../assets/scripts/core/fun/FunState';
+import { claimToddlerBond, normalizeToddlerPool, toddlerGrantKey } from '../assets/scripts/core/fun/FunToddlerBark';
+import { infantPrenatalView } from '../assets/scripts/ui/core/InfantPrenatalView';
 
 const LOCALES = ['zh-TW', 'zh-CN', 'en', 'ja'];
 
@@ -138,6 +141,76 @@ export function createFunBloodlineMarriageSuite(): TestSuite {
         const female = oathGiftLine((k) => zh[k], { kind: 'tag', giverId: 'g', stage: 'birth' }, '女', '小寶');
         const male = oathGiftLine((k) => zh[k], { kind: 'tag', giverId: 'g', stage: 'birth' }, '男', '小寶');
         assert.isTrue(female.includes('義母') && male.includes('義叔'));
+    });
+
+    suite.test('接線（PROG-2-10235）：funState 摸頭與祈福紀錄可存讀、壞資料不丟錯', () => {
+        const s = normalizeFunState({ infantPats: { patSeason: 7, pats: { c1: 1, bad: 0 } }, prenatal: { m1: { uses: 1, rarityWeightDelta: 0.08 }, m2: { uses: 0 } } });
+        assert.isFalse(isEmptyFunState(s));
+        assert.equals(7, s.infantPats.patSeason);
+        assert.equals(1, Object.keys(s.infantPats.pats).length);
+        assert.equals(1, Object.keys(s.prenatal).length);
+        const copy = cloneFunState(s);
+        copy.prenatal.m1.uses = 9;
+        assert.equals(1, s.prenatal.m1.uses);
+        assert.isTrue(isEmptyFunState(normalizeFunState(emptyFunState())));
+    });
+
+    suite.test('接線（PROG-2-10235）：檢視模型只在有幼兒／待產時顯示，摸過與祈福過鎖鈕', () => {
+        const zh = dict('zh-TW');
+        const t = (k: string, ...a: string[]): string => (zh[k] ?? k).replace(/\{(\d)\}/g, (_m, i: string) => a[Number(i)] ?? '');
+        const none = infantPrenatalView({ infant: null, childId: null, lastPat: null, prenatal: null, t });
+        assert.isFalse(none.actives.btnInfantPat);
+        assert.isFalse(none.actives.btnPrenatalBlessing);
+        const infant = { season: 3, infants: [{ id: 'c1', name: '小寶', age: 2, gender: '男', patsLeft: 1, favor: 50 }] };
+        const prenatal = { silver: 500, costSilver: 120, mothers: [{ id: 'm1', name: '貂蟬', gender: '女', remainingSeasons: 2, blessed: false }] };
+        const v = infantPrenatalView({ infant, childId: 'c1', lastPat: null, prenatal, t });
+        assert.isTrue(v.actives.btnInfantPat && v.enabled.btnInfantPat);
+        assert.isTrue(v.texts.shrinePrenatalLine.includes('2'));
+        assert.isTrue(v.texts.btnPrenatalBlessingLabel.includes('120'));
+        const done = infantPrenatalView({ infant: { ...infant, infants: [{ ...infant.infants[0], patsLeft: 0 }] }, childId: 'c1', lastPat: null, prenatal: { ...prenatal, mothers: [{ ...prenatal.mothers[0], blessed: true }] }, t });
+        assert.isFalse(done.enabled.btnInfantPat);
+        assert.isFalse(done.enabled.btnPrenatalBlessing);
+        const age5 = infantPrenatalView({ infant, childId: 'other', lastPat: null, prenatal: null, t });
+        assert.isFalse(age5.actives.btnInfantPat);
+    });
+
+    suite.test('接線（PROG-2-10235）：新增 UI 文字鍵四語齊備', () => {
+        for (const locale of LOCALES) {
+            const d = dict(locale);
+            for (const key of ['ui.bloodline.infant_pat_btn', 'ui.bloodline.infant_pat_done_btn', 'ui.bloodline.infant_pat_gain', 'ui.bloodline.infant_pat_limit', 'ui.marriage.prenatal_bless_btn', 'ui.marriage.prenatal_bless_done_btn', 'ui.marriage.prenatal_bless_silver_low']) {
+                assert.isTrue(typeof d[key] === 'string' && d[key].length > 0, `${locale} 缺 ${key}`);
+            }
+        }
+    });
+
+    suite.test('接線（PROG-2-10235）：摸頭與 FUN-01 點頭像共用每季同一筆獎勵，兩入口各按一次、同季重載都只入帳一次', async () => {
+        const raw = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../assets/resources/data/fun-toddler-bark.json'), 'utf8')) as unknown;
+        const pool = normalizeToddlerPool(raw);
+        assert.isTrue(pool !== null);
+        if (!pool) return;
+        // 模擬獎勵框架：同 grantKey 只入帳一次，之後回 replayed（即使「重新載入」＝存檔還在、客戶端重建）
+        const ledger = new Set<string>();
+        let applied = 0;
+        const api = {
+            cmd: async (_name: string, args: { grantKey: string }) => {
+                const replayed = ledger.has(args.grantKey);
+                if (!replayed) { ledger.add(args.grantKey); applied += 1; }
+                return { ok: true, result: { replayed, plan: replayed ? [] : [{ applied: { amount: 1 } }] } };
+            },
+        };
+        const fakeApi = api as unknown as Parameters<typeof claimToddlerBond>[0];
+        const a = await claimToddlerBond(fakeApi, pool, 'c1', 12); // 入口一：摸頭
+        const b = await claimToddlerBond(fakeApi, pool, 'c1', 12); // 入口二：FUN-01 點頭像
+        const reload = await claimToddlerBond(fakeApi, pool, 'c1', 12); // 同季重載後再按
+        assert.isTrue(a.ok && !a.replayed && a.applied === 1);
+        assert.isTrue(b.replayed && b.applied === 0);
+        assert.isTrue(reload.replayed && reload.applied === 0);
+        assert.equals(1, applied);
+        assert.equals(toddlerGrantKey(pool, 'c1', 12), [...ledger][0]);
+        // 換季或換孩子才是新的一筆
+        await claimToddlerBond(fakeApi, pool, 'c1', 13);
+        await claimToddlerBond(fakeApi, pool, 'c2', 12);
+        assert.equals(3, applied);
     });
 
     return suite;

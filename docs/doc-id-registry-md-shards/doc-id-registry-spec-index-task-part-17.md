@@ -120,3 +120,5 @@
 | `doc_task_3295` | docs/agent-briefs/tasks/PROG/PROG-2-10219.md | [PROG-2-10219] 生活層程式對齊 11/28 使用者裁決 |
 | `doc_task_3297` | docs/agent-briefs/tasks/PROG/PROG-2-10217.md | [PROG-2-10217] 羈絆戰場效果整併方案規格書 |
 | `doc_task_3300` | docs/agent-briefs/tasks/PROG/PROG-2-10223.md | [PROG-2-10223] 血統與結緣體驗強化四項 |
+| `doc_task_3321` | docs/agent-briefs/tasks/PROG/PROG-2-10235.md | [PROG-2-10235] 血統與結緣四項 UI 掛點與 GameSession 接線 |
+| `doc_task_3322` | docs/agent-briefs/tasks/PROG/PROG-2-10225.md | [PROG-2-10225] 年末典禮觀眾台詞：第 4～5 名勉勵與結義彩蛋 |

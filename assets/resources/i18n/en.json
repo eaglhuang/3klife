@@ -3279,5 +3279,13 @@
   "ui.marriage.gender.female": "female",
   "ui.marriage.oath_matchmaker_bonus": "{oathRole} {mediatorName} puts in a good word: proposal success +{bonusPct}%",
   "ui.marriage.oath_role.male": "Sworn Brother",
-  "ui.marriage.oath_role.female": "Sworn Sister"
+  "ui.marriage.oath_role.female": "Sworn Sister",
+  "ui.bloodline.infant_pat_btn": "Pat head",
+  "ui.bloodline.infant_pat_done_btn": "Patted this season",
+  "ui.bloodline.infant_pat_gain": "Parent-child bond +{0}",
+  "ui.bloodline.infant_pat_limit": "Already patted this season. Try again next season.",
+  "ui.marriage.prenatal_bless_btn": "Prenatal blessing ({0} silver)",
+  "ui.marriage.prenatal_bless_done_btn": "Blessed",
+  "ui.marriage.prenatal_bless_silver_low": "Not enough family silver for the blessing.",
+  "ui.bloodline.infant_pat_shared": "This season's bond reward was already claimed (shared with tapping the portrait)."
 }

@@ -267,6 +267,10 @@ import type { NurtureAwakeningHooks } from '../services/NurtureService';
 import { buildStarterRoster, pickStartingLead, STARTER_CORE_GENERAL_ID, StarterRosterOptions } from '../services/StarterRosterService';
 import { buildStarterYouth, getStarterYouthConfig } from '../services/StarterYouthService';
 import { buildStarterSeedling, getStarterSeedlingConfig } from '../services/StarterSeedlingService';
+import { patInfant as patInfantRule, patsLeft as infantPatsLeft, isInfant } from '../systems/BloodlineInfantCare';
+import { GIFT_STAT_KEYS, oathKinOfParents, rollOathGift, type GiftStage, type OathGift } from '../systems/BloodlineOathGift';
+import { performPrenatalBlessing, emptyPrenatalBlessingState, PRENATAL_BLESSING_CONFIG } from '../systems/MarriagePrenatalBlessing';
+import type { FamilyInfantCareResult, FamilyPatInfantResult, FamilyPrenatalBlessingResult, FamilyPrenatalStatusResult } from '../../shared/api/ApiCommands';
 import type { ChildGrowthHost, ChildTalkOutcome, GrowthEventResolveOutcome } from '../api/localserver/ChildGrowthCommands';
 import { childTalkTopicFor, loadChildTalkConfig, type ChildTalkConfig } from '../systems/ChildTalk';
 import { bloodlineSilverCost, emptyBloodlineEventState, loadBloodlineY3Y5Events, type BloodlineEventState, type BloodlineEventTable } from '../systems/BloodlineY3Y5Events';
@@ -516,6 +520,8 @@ export const GAME_SESSION_EVENTS = {
     ClanPrestigeChanged: 'game-session-clan-prestige-changed',
     /** payload: Year1GoalsChangedPayload（首年目標有新完成、衝刺結算或已領獎；大廳據此刷新進度條與領獎，PROG-2-10062） */
     Year1GoalsChanged: 'game-session-year1-goals-changed',
+    /** 義叔／義母贈禮（子嗣誕生或抓周時；payload: OathGiftGivenPayload，PROG-2-10235） */
+    OathGiftGiven: 'game-session-oath-gift-given',
     /** payload: GeneralConfig[]（本次新加入名冊的武將） */
     RosterChanged: 'game-session-roster-changed',
     /** payload: GeneralConfig[]（本次「招募」進名冊的新武將；結緣納配偶不算；新手樂趣 FUN-04 首次招募自我介紹用，PROG-2-10185） */
@@ -838,6 +844,15 @@ const TALLY_LOYALTY_INITIAL = 50;
 
 /** 試用券招募結果：沿用 TrialTicketResult，另加上 uid 重複的拒絕原因。 */
 export type HireTrialResult = Omit<TrialTicketResult, 'reason'> & { reason?: TrialTicketRejectReason | 'uid-taken' };
+
+/** 義叔贈禮通知內容（文字由大廳以 i18n 組） */
+export interface OathGiftGivenPayload {
+    childId: string;
+    childName: string;
+    giverName: string;
+    giverGender?: string;
+    gift: OathGift;
+}
 
 /** 退役或去世凝練生平印記（PROG-2-1794） */
 export interface ClanPrestigeChangedPayload {
@@ -2915,6 +2930,10 @@ export class GameSession implements AcademyRecordPort {
             },
             resolveGrowthEvent: (childId, eventId, optionId) => this.resolveBloodlineEvent(childId, eventId, optionId),
             talkToChild: (childId) => this.talkToChild(childId),
+            infantCare: () => this.infantCareView(),
+            patInfant: (childId) => this.patInfant(childId),
+            prenatalStatus: () => this.prenatalStatusView(),
+            prenatalBlessing: (motherId) => this.blessPrenatal(motherId),
         };
     }
 
@@ -2947,6 +2966,120 @@ export class GameSession implements AcademyRecordPort {
         this.recordChildInteraction();
         if (this._autoSave && this._save) void this.save();
         return { ok: true, result: { childId, topicId: topic.id, lineKey: topic.lineKey, favorDelta: favor - before, favor, interactionCountThisYear: childInteractionCountOf(next, year) } };
+    }
+
+    /** 幼兒近況（PROG-2-10235）：0～4 歲子嗣、本季摸頭剩餘次數與親子好感 */
+    public infantCareView(): FamilyInfantCareResult {
+        const season = this._clock.state.totalSeasonsElapsed;
+        const infants = this._familyChildren()
+            .filter((g) => isInfant(Math.floor((g.age ?? 0) + 1e-9)))
+            .map((g) => ({
+                id: g.id,
+                name: g.name,
+                age: Math.floor((g.age ?? 0) + 1e-9),
+                gender: g.gender,
+                patsLeft: infantPatsLeft(this._funState.infantPats, g.id, season),
+                favor: childFavorOf(this._childLedger, g.id),
+            }));
+        return { season, infants };
+    }
+
+    /** 摸頭：親子好感 +1（每季每名限一次），入帳後存檔 */
+    public patInfant(childId: string): FamilyPatInfantResult {
+        const child = this._familyChildren().find((g) => g.id === childId);
+        if (!child) return { ok: false, reason: 'unknown-child', season: this._clock.state.totalSeasonsElapsed, favorGain: 0, favor: 0 };
+        const season = this._clock.state.totalSeasonsElapsed;
+        const age = Math.floor((child.age ?? 0) + 1e-9);
+        const res = patInfantRule(this._funState.infantPats, this._childLedger, childId, age, season);
+        if (!res.ok) return { ok: false, reason: res.reason, season, favorGain: 0, favor: childFavorOf(this._childLedger, childId) };
+        // 親子好感不在這裡入帳：與 FUN-01 共用「每孩子每季一筆」獎勵（grantKey fun01.{childId}.{season}），由呼叫端經 reward.claim 領取，重送或重載同季只入帳一次
+        this._funState = { ...this._funState, infantPats: res.state };
+        this.recordChildInteraction();
+        if (this._autoSave && this._save) void this.save();
+        return { ok: true, season, favorGain: 0, favor: childFavorOf(this._childLedger, childId), replyKey: res.replyKey };
+    }
+
+    /** 待產倒數與祈福狀態（PROG-2-10235）：待產中的母親、剩餘季數、這次待產是否已祈福 */
+    public prenatalStatusView(): FamilyPrenatalStatusResult {
+        const mothers = this._rosterRead()
+            .filter((g) => ((g as { pregnancySeasonsLeft?: number }).pregnancySeasonsLeft ?? 0) > 0)
+            .map((g) => ({
+                id: g.id,
+                name: g.name,
+                gender: g.gender,
+                remainingSeasons: (g as { pregnancySeasonsLeft?: number }).pregnancySeasonsLeft ?? 0,
+                blessed: (this._funState.prenatal[g.id]?.uses ?? 0) >= PRENATAL_BLESSING_CONFIG.maxUsesPerPregnancy,
+            }));
+        return { silver: this.silverLedger.silverBalance(), costSilver: PRENATAL_BLESSING_CONFIG.costSilver, mothers };
+    }
+
+    /** 胎教祈福：扣家族銀兩、每次待產限 1 次；只記祈福紀錄（小名稀有度權重增量），不直接加屬性 */
+    public blessPrenatal(motherId: string): FamilyPrenatalBlessingResult {
+        const mother = this._rosterRead().find((g) => g.id === motherId);
+        if (!mother || ((mother as { pregnancySeasonsLeft?: number }).pregnancySeasonsLeft ?? 0) <= 0) return { ok: false, reason: 'not-pregnant', silver: this.silverLedger.silverBalance() };
+        const silver = this.silverLedger.silverBalance();
+        const prior = this._funState.prenatal[motherId] ?? emptyPrenatalBlessingState();
+        const res = performPrenatalBlessing(prior, silver);
+        if (!res.ok) return { ok: false, reason: res.reason, silver };
+        if (!this.silverLedger.spendSilver(silver - res.silver)) return { ok: false, reason: 'silver-low', silver };
+        this._funState = { ...this._funState, prenatal: { ...this._funState.prenatal, [motherId]: res.state } };
+        if (this._autoSave && this._save) void this.save();
+        return { ok: true, silver: this.silverLedger.silverBalance() };
+    }
+
+    /** 產後清掉不再待產的母親的祈福紀錄 */
+    private _pruneFinishedPrenatal(): void {
+        const pregnant = new Set(this._rosterRead().filter((g) => ((g as { pregnancySeasonsLeft?: number }).pregnancySeasonsLeft ?? 0) > 0).map((g) => g.id));
+        const stale = Object.keys(this._funState.prenatal).filter((id) => !pregnant.has(id));
+        if (stale.length === 0) return;
+        const next = { ...this._funState.prenatal };
+        for (const id of stale) delete next[id];
+        this._funState = { ...this._funState, prenatal: next };
+    }
+
+    /**
+     * 義叔贈禮（PROG-2-10235）：子嗣誕生或抓周時，雙親的結義兄弟姊妹有機會贈禮。
+     * 亂數只用 childId＋階段做雜湊，不動遊戲主亂數序列；每名子嗣每階段只擲一次（紀錄在子嗣資料 oathGiftStages）。
+     * 屬性禮直接加在子嗣屬性上，名頭禮只記在 oathGift；兩者都寫進子嗣資料並發 OathGiftGiven 事件。
+     */
+    private _rollOathGiftFor(childId: string, stage: GiftStage): void {
+        const roster = this._roster.getAll();
+        const child = roster.find((g) => g.id === childId) as (GeneralConfig & { fatherId?: string; motherId?: string; oathGift?: OathGift; oathGiftStages?: string[] }) | undefined;
+        if (!child || child.oathGiftStages?.includes(stage)) return;
+        const kin = oathKinOfParents(this._swornState, child.fatherId ?? null, child.motherId ?? null).filter((id) => roster.some((g) => g.id === id && !isGeneralDead(g)));
+        let n = 0;
+        const random = (): number => {
+            n += 1;
+            let h = 2166136261;
+            for (const ch of `${childId}|${stage}|${n}`) h = Math.imul(h ^ ch.charCodeAt(0), 16777619);
+            return ((h >>> 0) % 100000) / 100000;
+        };
+        const gift = rollOathGift({ stage, oathKinIds: kin, giftsGiven: child.oathGift ? 1 : 0, random });
+        const updated: Record<string, unknown> = { ...child, oathGiftStages: [...(child.oathGiftStages ?? []), stage] };
+        if (gift) {
+            updated.oathGift = gift;
+            if (gift.kind === 'stat' && gift.stat && GIFT_STAT_KEYS.includes(gift.stat) && typeof gift.bonus === 'number') {
+                const key = gift.stat;
+                const top = updated[key];
+                if (typeof top === 'number') updated[key] = top + gift.bonus;
+                const stats = updated.stats as Record<string, number> | undefined;
+                if (stats && typeof stats[key] === 'number') updated.stats = { ...stats, [key]: stats[key] + gift.bonus };
+                const layers = updated.dualLayerStats as Record<string, { base?: number; current?: number }> | undefined;
+                const layer = layers?.[key];
+                if (layers && layer) updated.dualLayerStats = { ...layers, [key]: { ...layer, ...(typeof layer.base === 'number' ? { base: layer.base + gift.bonus } : {}), ...(typeof layer.current === 'number' ? { current: layer.current + gift.bonus } : {}) } };
+            }
+        }
+        this._roster.replaceAll(roster.map((g) => (g.id === childId ? (updated as unknown as GeneralConfig) : g)));
+        if (!gift) return;
+        const giver = roster.find((g) => g.id === gift.giverId);
+        this._emit(GAME_SESSION_EVENTS.OathGiftGiven, { childId, childName: child.name, giverName: giver?.name ?? gift.giverId, giverGender: giver?.gender, gift } satisfies OathGiftGivenPayload);
+    }
+
+    /** 本季剛出生的子嗣（母親本季待產結束）各擲一次誕生贈禮 */
+    private _rollBirthOathGifts(bornMotherIds: readonly string[]): void {
+        if (bornMotherIds.length === 0) return;
+        const newborns = this._roster.getAll().filter((g) => bornMotherIds.includes((g as { motherId?: string }).motherId ?? '') && (g.age ?? 0) <= 1);
+        for (const baby of newborns) this._rollOathGiftFor(baby.id, 'birth');
     }
 
     /** 家族裡活著的孩子：家族登記的非配偶成員＋名冊上有父或母的武將（歲末成長事件與親子談話共用） */
@@ -4191,6 +4324,7 @@ export class GameSession implements AcademyRecordPort {
         if (!general || !updated) return { ok: false, reason: 'none' };
         this._roster.replaceAll(this._roster.getAll().map((g) => (g.id === general.id ? (updated as unknown as GeneralConfig) : g)));
         this._lineageQueue = this._lineageQueue.filter((m) => !(m.kind === 'grasp' && m.generalId === general.id));
+        this._rollOathGiftFor(general.id, 'zhouzhua');
         if (this._autoSave && this._save) await this.save();
         return { ok: true, line: `${general.name}${def.label}，志在${def.aspiration}：${def.note}` };
     }
@@ -6802,6 +6936,8 @@ export class GameSession implements AcademyRecordPort {
             lifecycle = settled.settlement;
         }
         this._roster.replaceAll(roster);
+        this._rollBirthOathGifts(bred.pregnancyEnded);
+        this._pruneFinishedPrenatal();
         const nursingLines = this._settleNursing(bred.pregnancyEnded, advance.current.totalSeasonsElapsed);
         const clanStipendLine = this._grantClanStipend();
         this._emitLifeImprints(deathImprints.imprinted);

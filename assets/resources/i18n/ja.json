@@ -3211,5 +3211,13 @@
   "ui.marriage.gender.female": "女性",
   "ui.marriage.oath_matchmaker_bonus": "{oathRole}{mediatorName}が仲立ち：縁談成功率 +{bonusPct}%",
   "ui.marriage.oath_role.male": "義兄",
-  "ui.marriage.oath_role.female": "義姉"
+  "ui.marriage.oath_role.female": "義姉",
+  "ui.bloodline.infant_pat_btn": "頭をなでる",
+  "ui.bloodline.infant_pat_done_btn": "今季はなでた",
+  "ui.bloodline.infant_pat_gain": "親子の絆 +{0}",
+  "ui.bloodline.infant_pat_limit": "今季はもうなでました。来季また。",
+  "ui.marriage.prenatal_bless_btn": "胎教の祈願（銀{0}）",
+  "ui.marriage.prenatal_bless_done_btn": "祈願済み",
+  "ui.marriage.prenatal_bless_silver_low": "一族の銀が足りず、祈願は後回しです。",
+  "ui.bloodline.infant_pat_shared": "今季の親子の絆は受取済みです（アイコンのタップと共通）。"
 }
