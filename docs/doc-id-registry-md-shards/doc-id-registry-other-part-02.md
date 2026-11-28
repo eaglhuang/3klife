@@ -8,6 +8,7 @@
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
+| `doc_other_0804` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0103-task-reservation-lifecycle.task.md | ATM-GOV-0103 Task Opening and Reservation Lifecycle |
 | `doc_other_0805` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0104-evidence-bound-gates.task.md | ATM-GOV-0104 Evidence-Bound Close and Commit/PR Gate |
 | `doc_other_0806` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0105-git-governance-contract.task.md | ATM-GOV-0105 Git Governance and Commit Trailer Validation |
 | `doc_other_0807` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0106-thin-guard-engine.task.md | ATM-GOV-0106 Thin Guard Engine for Mutation and Git Checks |
@@ -294,4 +295,3 @@
 | `doc_other_2845` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0039-planning-only-ledger-audit-boundary.task.md | TASK-AAO-0039 — Planning-only ledger audit boundary |
 | `doc_other_2846` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0040-sandbox-git-process-diagnostic.task.md | TASK-AAO-0040 — Sandbox git process diagnostics |
 | `doc_other_2847` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0041-batch-checkpoint-hold.task.md | TASK-AAO-0041 — batch checkpoint --hold |
-| `doc_other_2848` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0042-batch-repair-continue.task.md | TASK-AAO-0042 — batch repair / continue |

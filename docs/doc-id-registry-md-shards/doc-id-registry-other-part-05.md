@@ -8,6 +8,7 @@
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
+| `doc_other_3422` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0011-adopter-docs-and-runbook.task.md | TASK-GIT-0011 |
 | `doc_other_3423` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0012-end-to-end-dogfood-and-paper-evidence.task.md | TASK-GIT-0012 |
 | `doc_other_3424` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0013-agent-raw-git-deny-and-atm-git-tool-gate.task.md | TASK-GIT-0013 |
 | `doc_other_3425` | docs/ai_atomic_framework/git-boundary-admission/tasks/TASK-GIT-0014-atm-git-push-wrapper-and-tool-only-push-lane.task.md | TASK-GIT-0014 |
@@ -294,4 +295,3 @@
 | `doc_other_3706` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0365-land-subcommand-help-dispatch-and-the-round-trip-backlog-dispositions.task.md | ATM-GOV-0365 Land the scope-amendment disposition |
 | `doc_other_3707` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0366-disclose-the-owner-lane-source-in-lane-capability-refusals.task.md | ATM-GOV-0366 Disclose the owner-lane source in lane capability refusals |
 | `doc_other_3708` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0367-record-the-close-write-rollback-that-an-identical-retry-resolves.task.md | ATM-GOV-0367 Record the close-write rollback that an identical retry resolves |
-| `doc_other_3709` | docs/ai_atomic_framework/governance-optimization/tasks/ATM-GOV-0368-let-one-command-satisfy-every-emergency-permission-it-needs.task.md | ATM-GOV-0368 Let one command satisfy every emergency permission it needs |

@@ -8,6 +8,7 @@
 
 | doc_id | 路徑 | 標題 |
 |--------|------|------|
+| `doc_other_2848` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0042-batch-repair-continue.task.md | TASK-AAO-0042 — batch repair / continue |
 | `doc_other_2849` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0043-planning-repo-root-resolver.task.md | TASK-AAO-0043 — planning repo root resolver |
 | `doc_other_2850` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0044-batch-skip-resume.task.md | TASK-AAO-0044 — batch skip / resume |
 | `doc_other_2851` | docs/ai_atomic_framework/atm-agent-first-operability/tasks/TASK-AAO-0045-nonoverlap-subagent-execution-policy.task.md | TASK-AAO-0045 — non-overlap subagent execution policy |
@@ -294,4 +295,3 @@
 | `doc_other_3132` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0111-complete-full-atm-command-and-mandatory-gate-millisecond-coverage.task.md | TASK-PRF-0111 Complete full ATM command and mandatory-gate millisecond coverage |
 | `doc_other_3133` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0112-next-readiness-git.task.md | TASK-PRF-0112 Integrate deferred next readiness probes and bounded Git scans |
 | `doc_other_3134` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0113-npm-trusted-publishing.task.md | TASK-PRF-0113 Move the npm release workflow to Trusted Publishing without token fallback |
-| `doc_other_3135` | docs/ai_atomic_framework/atm-product-proof/tasks/TASK-PRF-0114-build-dry-run-capable-paired-benchmark-executor.task.md | TASK-PRF-0114 Build dry-run capable paired benchmark executor |
