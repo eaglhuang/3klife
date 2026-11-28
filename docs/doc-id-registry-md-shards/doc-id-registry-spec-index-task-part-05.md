@@ -1,6 +1,6 @@
 # Doc ID Registry Markdown Index — Spec / Index / Task
 
-> 生成日期: 2026-11-27
+> 生成日期: 2026-11-28
 > 這是 `doc-id-registry.md` 的「Spec / Index / Task」分片，第 5/17 part。完整分片索引見 `docs/doc-id-registry-md-shards/doc-id-registry-spec-index-task.md`。
 > 本檔由 `node tools_node/doc-id-registry.js` 自動生成。
 
@@ -178,3 +178,4 @@
 | `doc_spec_1355` | docs/遊戲規格文件/系統規格書/Q版表情系統規格書.md | Q版表情系統規格書（QFACE-01） |
 | `doc_spec_1356` | docs/遊戲規格文件/系統規格書/Q版生活系統規格書.md | Q版生活系統規格書（QLIFE-01） |
 | `doc_spec_1357` | docs/遊戲規格文件/系統規格書/Q版社會總規格書.md | Q版社會總規格書（QSOC-01） |
+| `doc_spec_1358` | docs/遊戲規格文件/系統規格書/羈絆戰場效果整併方案規格書.md | 羈絆戰場效果整併方案規格書 |
