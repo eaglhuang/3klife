@@ -127,3 +127,5 @@
 | `doc_task_3315` | docs/agent-briefs/tasks/PROG/PROG-2-10221.md | [PROG-2-10221] 結義戰場效果補強：士氣整場常駐、生死相隨九宮格、傭兵結義 id 同一套 |
 | `doc_task_3317` | docs/agent-briefs/tasks/PROG/PROG-2-10231.md | [PROG-2-10231] 生活層 Q 頭兩人切磋 |
 | `doc_task_3322` | docs/agent-briefs/tasks/PROG/PROG-2-10227.md | [PROG-2-10227] 羈絆戰場效果整併實作：單一等級模型、兄弟齊心光環、九宮格合攻與援護 |
+| `doc_task_3325` | docs/agent-briefs/tasks/PROG/PROG-2-10236.md | [PROG-2-10236] 武將技能特效盤點與第一批專屬特效 |
+| `doc_task_3326` | docs/agent-briefs/tasks/PROG/PROG-2-10238.md | [PROG-2-10238] 修正年末典禮結義彩蛋祝賀對象 |
