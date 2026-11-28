@@ -131,6 +131,8 @@ export const TACTIC_VFX_SKILL_GROUP: Readonly<Record<string, TacticVfxExtraGroup
     'mentor-morale': 'rally', 'liu-bei-rally': 'rally', 'cao-cao-revelry': 'rally',
     // 戰吼
     'zhang-fei-roar': 'warcry', 'insp-taunt': 'warcry',
+    // 3 招新 profile（PROG-2-10253）：遺計＝虛弱組、國色＝祝福組（morale 原會落到 rally／morale 組，故必須寫表）；穩固走 stun 判斷（Rooted），不寫表
+    'guo-jia-legacy': 'weaken', 'da-qiao-beauty': 'bless',
 });
 
 /** 第二批各組的音效：沿用既有音檔（不新增檔案、不改發聲池上限），音量範圍同第一批。與 battle-audio-layers.json 的 tactic 區塊一致。 */

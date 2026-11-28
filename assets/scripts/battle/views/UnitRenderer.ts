@@ -60,6 +60,7 @@ import { DEPLOY_LANDING_PUFFS, RiderDeployDrop, deployLandingDust, deployLanding
 import { playBattleAudio, playBattleFootstep } from "../shared/BattleAudio";
 import { MoveDustEmitter } from "./MoveDustEmitter";
 import { TacticVfxPlayer } from "./TacticVfxPlayer";
+import { STATUS_PERSIST_VFX, pickPersistKind, selectLoopUnits, type LoopCandidate } from "../shared/StatusPersistVfx";
 import type { TacticVfxGroup } from "../shared/TacticVfxGroups";
 import { SpineUnitOverlay } from "./SpineGeneralOverlay";
 import { GeneralPortraitStandee, STANDEE_HEIGHT_PX, needsStandeeFallback, shouldLoadHeroModel } from "./GeneralPortraitStandee";
@@ -133,6 +134,10 @@ interface UnitView {
   statusBar: UnitStatusIconBar;
   /** 上一次盤點的狀態種類；null 代表還沒畫過（出陣時不彈出） */
   statusKinds: StatusIconKind[] | null;
+  /** 主減益（有持續表現表者，PROG-2-10253）；null＝沒有。用來決定身上循環特效與顏色濾鏡 */
+  persistKind: StatusIconKind | null;
+  /** 已畫到 Spine 骨架上的濾鏡所對應的主減益；與 persistKind 不同時，下一幀 sync 後補畫（骨架可能還沒載好） */
+  persistPainted?: StatusIconKind | null;
   /** 外部（如踩到地形 buff 格）要求下一次刷新時補播彈出＋光環：'buff' | 'debuff' */
   pendingStatusPulse: 'buff' | 'debuff' | null;
   /** 攻擊 ≥ 紅色門檻時，攻擊數字後方的脈動光環（PROG-2-9422）；第一次需要時才建立，之後重用 */
@@ -440,6 +445,7 @@ export class UnitRenderer extends Component {
         view.labelNode.destroy();
         this.spineUnits.remove(unitId);
         this.generalStandees.remove(unitId);
+        if (view.persistKind) { this.tacticVfx.loopRelease(unitId, true); this.persistDirty = true; } // 陣亡：循環立即回收（PROG-2-10253）
         this.unitViews.delete(unitId);
         this.carriedUnits.delete(unitId);
         this.splashTimers.delete(unitId);
@@ -1342,6 +1348,10 @@ export class UnitRenderer extends Component {
             unit.faction === Faction.Enemy ? -1 : 1, moving && !drifting, dt, view.labelNode.active,
             isGeneral ? 1 : squadMemberCount(unit.currentHp, unit.getEffectiveMaxHp()));
           view.visualNode.active = !shown;
+          if (shown && view.persistPainted !== view.persistKind) {
+            this.spineUnits.setTint(unitId, view.persistKind ? (STATUS_PERSIST_VFX[view.persistKind]?.tint ?? null) : null);
+            view.persistPainted = view.persistKind;
+          }
         } else { this.spineUnits.remove(unitId); view.visualNode.active = true; }
       }
     });
@@ -1379,6 +1389,7 @@ export class UnitRenderer extends Component {
     this.slashShots.update(dt);
     this.attackVfx.update(dt);
     this.juiceFx.update(dt);
+    this.updatePersistLoops();
     this.tacticVfx.update(dt);
     perfEnd('fxShots', t); t = perfBegin();
 
@@ -1389,6 +1400,55 @@ export class UnitRenderer extends Component {
     this.badgeLayers?.sync();
     perfEnd('badgeSync', t);
     perfEnd('lateUpdate', tAll);
+  }
+
+  /** 減益持續循環（PROG-2-10253）：本輪被選中播循環的單位 id；只在主減益變動時重算 */
+  private readonly persistSelected: string[] = [];
+  private persistDirty = false;
+  private persistScale = 1;
+  private persistScaleFrame = 0;
+
+  /**
+   * 每幀把「被選中的減益單位」腳點登記給 TacticVfxPlayer 畫循環（名額 ≤ MAX_LOOP_UNITS，selectLoopUnits 取捨）。
+   * 取名額只在主減益變動時重算；每幀只做 ≤ 6 次投影，不配置新物件（投影緩衝重用）。
+   */
+  private updatePersistLoops(): void {
+    const state = this.latestState;
+    if (this.persistDirty && state) {
+      this.persistDirty = false;
+      const cands: LoopCandidate[] = [];
+      this.unitViews.forEach((view, unitId) => {
+        if (!view.persistKind || !view.labelNode.active) return;
+        const unit = state.units.get(unitId);
+        if (!unit || unit.isDead()) return;
+        const generalOf = this.isGeneralAvatarUnit(unit) ? (unit.faction === Faction.Player ? 'player' : 'enemy') : null;
+        cands.push({ id: unitId, kind: view.persistKind, generalOf, centerDist: Math.abs(unit.lane - (GAME_CONFIG.GRID_LANES - 1) / 2) + Math.abs(unit.depth - (GAME_CONFIG.GRID_DEPTH - 1) / 2) });
+      });
+      const picked = selectLoopUnits(cands);
+      this.persistSelected.length = 0;
+      for (const id of picked) this.persistSelected.push(id);
+    }
+    this.tacticVfx.loopBegin();
+    if (this.persistSelected.length > 0 && state) {
+      if (this.persistScaleFrame-- <= 0) {
+        this.persistScaleFrame = 20;
+        const first = this.unitViews.get(this.persistSelected[0]);
+        const unit = state.units.get(this.persistSelected[0]);
+        const w = unit ? this.getUnitWorldPosition(unit.lane, unit.depth) : null;
+        const p = w ? this.tacticFxPoint(w) : null;
+        if (p && first) this.persistScale = p.scale;
+      }
+      for (const id of this.persistSelected) {
+        const view = this.unitViews.get(id);
+        const unit = state.units.get(id);
+        if (!view?.persistKind || !unit || unit.isDead() || !view.labelNode.active) continue;
+        const world = view.worldNode.getWorldPosition(this.labelWorldPosBuf);
+        world.y -= this.unitHeight * 0.5;
+        const p = this.overlayPoint(world);
+        if (p) this.tacticVfx.loopOffer(id, view.persistKind, p.x, p.y, unit.faction === Faction.Player ? 1 : -1, this.persistScale);
+      }
+    }
+    this.tacticVfx.loopEnd();
   }
 
   /** 數值帶增減量時字串變長，單行縮字塞進徽章（PROG-2-1870） */
@@ -2194,6 +2254,7 @@ export class UnitRenderer extends Component {
       hpBar,
       statusBar: new UnitStatusIconBar(labelNode, UNIT_STATUS_ICON_X, UNIT_STATUS_ICON_Y),
       statusKinds: null,
+      persistKind: null,
       pendingStatusPulse: null,
       troopType: unit.type,
       usingTroopFormation: false,
@@ -2358,7 +2419,15 @@ export class UnitRenderer extends Component {
     const list = computeUnitStatusIcons(unit, ctx);
     const { changed } = view.statusBar.apply(list);
     const gained = changed ? newlyGainedKinds(view.statusKinds, list.allKinds) : [];
-    if (changed) view.statusKinds = list.allKinds;
+    if (changed) {
+      view.statusKinds = list.allKinds;
+      // PROG-2-10253：減益持續視覺——主減益換了才重算名額與顏色濾鏡（簽名不變不重畫）
+      const persist = pickPersistKind(list.allKinds);
+      if (persist !== view.persistKind) {
+        view.persistKind = persist;
+        this.persistDirty = true;
+      }
+    }
     const pending = view.pendingStatusPulse;
     view.pendingStatusPulse = null;
     if (gained.length === 0 && !pending) return;

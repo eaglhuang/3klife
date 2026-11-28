@@ -5,7 +5,8 @@
  * 黃金招募入冊、已在名冊與黃金不足擋下、內政畫面有入口。
  */
 import { TestSuite, assert } from './TestRunner';
-import { RECRUIT_GOLD_COST, RECRUIT_ROWS_PER_PAGE, RecruitHallController } from '../assets/scripts/ui/core/RecruitHallController';
+import { RECRUIT_GOLD_COST, RECRUIT_ROWS_PER_PAGE, RecruitHallController, recruitHallAccess } from '../assets/scripts/ui/core/RecruitHallController';
+import { installOfficerFeatureUnlocks, resetOfficerFeatureUnlocks } from '../assets/scripts/core/systems/OfficerFeatureUnlocks';
 import type { GeneralConfig } from '../assets/scripts/core/models/GeneralUnit';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -80,6 +81,29 @@ export function createRecruitHallSuite(): TestSuite {
         assert.equals(true, state.owned.has(candidates[RECRUIT_ROWS_PER_PAGE].id));
         assert.equals(false, await controller.recruitRow(1), '黃金不足');
         assert.equals(true, controller.getFlowView().texts.noticeLabel.includes('黃金不足'));
+    });
+
+    suite.test('官職門檻：大廳與內政兩入口共用 recruitHallAccess，未達第 2 階都擋、達到都開（#2811 第 9 項）', () => {
+        installOfficerFeatureUnlocks(readJson('assets/resources/data/officer-feature-unlocks.json'));
+        try {
+            const low = recruitHallAccess(1, 0);
+            assert.equals(false, low.allowed, '第 1 階擋下');
+            assert.equals(true, low.message.includes('招賢館') && low.message.includes('才開放'), '提示要寫明招賢館與開放條件');
+            assert.equals(true, low.message.includes('目前 0'), '提示帶目前官職經驗');
+            assert.equals(true, recruitHallAccess(2, 100).allowed, '第 2 階開放');
+            assert.equals(true, recruitHallAccess(5, 9999).allowed, '高階仍開放');
+            assert.equals('', recruitHallAccess(2).message);
+        } finally {
+            resetOfficerFeatureUnlocks();
+        }
+        assert.equals(true, recruitHallAccess(1).allowed, '資料沒載入視為全開，不把玩家鎖在功能外');
+    });
+
+    suite.test('兩個入口都經過同一個判斷：LobbyScene 內政入口與選單入口都呼叫 _guardRecruitHallAccess', () => {
+        const src = fs.readFileSync(path.join(ROOT, 'assets/scripts/ui/scenes/LobbyScene.ts'), 'utf8');
+        assert.equals(1, (src.match(/recruitHallAccess\(/g) ?? []).length, '全專案只有一處呼叫判斷函式');
+        assert.equals(true, /btnOpenRecruit.*_guardRecruitHallAccess\(\)/.test(src), '內政入口走判斷');
+        assert.equals(true, /private _openRecruitHall\(\): void \{\s*if \(!this\._guardRecruitHallAccess\(\)\) return;/.test(src), '選單入口走判斷');
     });
 
     return suite;

@@ -33,7 +33,7 @@ export interface TeamAuraParams {
 }
 
 /** 視為負面狀態的效果（條件型增傷用） */
-export const TEAM_AURA_DEBUFF_EFFECTS: readonly StatusEffect[] = [StatusEffect.Stun, StatusEffect.Rooted, StatusEffect.Slow, StatusEffect.Weak];
+export const TEAM_AURA_DEBUFF_EFFECTS: readonly StatusEffect[] = [StatusEffect.Stun, StatusEffect.Rooted, StatusEffect.Slow, StatusEffect.Weak, StatusEffect.Fear];
 
 /** 單一 aura 的上限，防止同家族疊出爆表結果 */
 export const TEAM_AURA_CAPS = { attackMultiplier: 2, defenseMultiplier: 2, damageReduction: 0.5, shieldPct: 0.5, vsDebuffedDamageBonus: 0.5, debuffResistChance: 0.6, counterRateBonus: 0.5 } as const;

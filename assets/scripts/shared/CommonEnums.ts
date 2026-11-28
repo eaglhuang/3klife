@@ -94,6 +94,8 @@ export enum StatusEffect {
     Fortified = "fortified",
     /** 封射（縱深突襲，doc_spec_0309 §3，PROG-2-9368）：遠程部隊不能射擊 */
     NoShoot = "no-shoot",
+    /** 恐懼（PROG-2-10253，doc_spec_1361 §7.1）：攻擊傷害 ×FEAR_ATTACK_MULTIPLIER；不改移動與交戰對象（不碰五路對撞） */
+    Fear = "fear",
 }
 
 export enum SceneName {
