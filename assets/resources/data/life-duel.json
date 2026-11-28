@@ -1,0 +1,40 @@
+{
+  "schema": "life-duel.v1",
+  "note": "生活層 Q 頭切磋數值（QACT-01 4.2、QLIFE-01 6.4／6.4.1，數值為 PM 暫定）。獨立於戰場單挑，只透過傷勢旗標影響戰場。",
+  "hpBase": 100,
+  "hpHighRankMul": 1.2,
+  "roundLimit": 12,
+  "friendlyStopRatio": 0.3,
+  "dmgMin": 8,
+  "dmgMax": 14,
+  "critChance": 0.1,
+  "critMul": 1.5,
+  "dodgeCap": 0.15,
+  "dodgeDiffFull": 60,
+  "perGeneralQuarterCap": 3,
+  "acceptRateLightInjuredDelta": -0.2,
+  "acceptRateArenaDelta": 0.2,
+  "injury": {
+    "light": { "restQuarters": 1, "statMul": 0.9 },
+    "severe": { "restQuarters": 2, "statMul": 0.8 }
+  },
+  "playback": {
+    "chargeSec": 0.3,
+    "rushSec": 0.18,
+    "hitstopSec": 0.08,
+    "knockbackSec": 0.25,
+    "shakeSec": 0.15,
+    "floatSec": 0.6,
+    "endPoseSec": 0.8,
+    "chargePullH": 0.4,
+    "knockbackH": 0.7,
+    "knockbackRotDeg": 15,
+    "shakePx": 4,
+    "floatRiseH": 1.2,
+    "floatPopScale": 1.3,
+    "hpBarFollowSec": 0.4,
+    "weaponReadyDeg": -60,
+    "weaponSwingDeg": 70,
+    "standoffH": 2.4
+  }
+}
