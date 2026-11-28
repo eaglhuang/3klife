@@ -17968,5 +17968,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10240.md",
     "title": "[PROG-2-10240] 武將技能特效第二批：減益／光聖／號令",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3338",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10246.md",
+    "title": "[PROG-2-10246] 武將天生戰法／奧義模板＋覆寫資料落地",
+    "category": "task"
   }
 ]

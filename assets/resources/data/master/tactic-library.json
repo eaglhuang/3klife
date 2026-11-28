@@ -698,6 +698,496 @@
       "manualTargeting": false,
       "autoAimMode": "frontmost-enemy",
       "descKey": "tactic.desc.tactic-insp-night-raid"
+    },
+    {
+      "id": "tactic-tpl-cao-cao-tactics",
+      "displayName": "兵不厭詐",
+      "category": "duel",
+      "rarityAccess": [],
+      "preferredStats": [
+        "int"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "cao-cao-tactics",
+      "sourceType": "seed-tactic",
+      "targetMode": "enemy-single",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "frontmost-enemy"
+    },
+    {
+      "id": "tactic-tpl-cao-cao-ult-control",
+      "displayName": "挾天子令",
+      "category": "control",
+      "rarityAccess": [],
+      "preferredStats": [
+        "str"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "cao-cao-ult-control",
+      "sourceType": "seed-tactic",
+      "targetMode": "enemy-single",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "frontmost-enemy"
+    },
+    {
+      "id": "tactic-tpl-liu-bei-rally",
+      "displayName": "仁德號召",
+      "category": "support",
+      "rarityAccess": [],
+      "preferredStats": [
+        "cha"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "liu-bei-rally",
+      "sourceType": "seed-tactic",
+      "targetMode": "ally-all",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "all-allies"
+    },
+    {
+      "id": "tactic-tpl-liu-bei-reset",
+      "displayName": "漢室餘暉",
+      "category": "support",
+      "rarityAccess": [],
+      "preferredStats": [
+        "str"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "liu-bei-reset",
+      "sourceType": "seed-tactic",
+      "targetMode": "ally-single",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "all-allies"
+    },
+    {
+      "id": "tactic-tpl-sun-quan-tide",
+      "displayName": "江潮列陣",
+      "category": "duel",
+      "rarityAccess": [],
+      "preferredStats": [
+        "int"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "sun-quan-tide",
+      "sourceType": "seed-tactic",
+      "targetMode": "adjacent-tiles",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "adjacent-ring"
+    },
+    {
+      "id": "tactic-tpl-zhuge-liang-storm",
+      "displayName": "諸葛風暴",
+      "category": "duel",
+      "rarityAccess": [],
+      "preferredStats": [
+        "int"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "zhuge-liang-storm",
+      "sourceType": "seed-tactic",
+      "targetMode": "area",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "densest-area"
+    },
+    {
+      "id": "tactic-tpl-guan-yu-slash",
+      "displayName": "月牙刀斬",
+      "category": "duel",
+      "rarityAccess": [],
+      "preferredStats": [
+        "str"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "guan-yu-slash",
+      "sourceType": "seed-tactic",
+      "targetMode": "line",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "densest-line"
+    },
+    {
+      "id": "tactic-tpl-zhang-fei-roar",
+      "displayName": "震軍怒喝",
+      "category": "control",
+      "rarityAccess": [],
+      "preferredStats": [
+        "str"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "zhang-fei-roar",
+      "sourceType": "seed-tactic",
+      "targetMode": "enemy-all",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "all-enemies"
+    },
+    {
+      "id": "tactic-tpl-zhao-yun-immortal",
+      "displayName": "白馬銀槍·不滅",
+      "category": "duel",
+      "rarityAccess": [],
+      "preferredStats": [
+        "str"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "zhao-yun-immortal",
+      "sourceType": "seed-tactic",
+      "targetMode": "enemy-all",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "all-enemies"
+    },
+    {
+      "id": "tactic-tpl-lu-bu-rampage",
+      "displayName": "天下無雙",
+      "category": "duel",
+      "rarityAccess": [],
+      "preferredStats": [
+        "str"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "lu-bu-rampage",
+      "sourceType": "seed-tactic",
+      "targetMode": "fan",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "densest-fan"
+    },
+    {
+      "id": "tactic-tpl-sima-yi-shadow",
+      "displayName": "司馬影策",
+      "category": "duel",
+      "rarityAccess": [],
+      "preferredStats": [
+        "int"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "sima-yi-shadow",
+      "sourceType": "seed-tactic",
+      "targetMode": "enemy-all",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "all-enemies"
+    },
+    {
+      "id": "tactic-tpl-sow-discord",
+      "displayName": "離間",
+      "category": "control",
+      "rarityAccess": [],
+      "preferredStats": [
+        "str"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "sow-discord",
+      "sourceType": "seed-tactic",
+      "targetMode": "enemy-single",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "frontmost-enemy"
+    },
+    {
+      "id": "tactic-tpl-you-qi-counter",
+      "displayName": "游騎反擊",
+      "category": "support",
+      "rarityAccess": [],
+      "preferredStats": [
+        "str"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "you-qi-counter",
+      "sourceType": "seed-tactic",
+      "targetMode": "ally-single",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "all-allies"
+    },
+    {
+      "id": "tactic-tpl-sun-ce-conqueror",
+      "displayName": "小霸王之威",
+      "category": "duel",
+      "rarityAccess": [],
+      "preferredStats": [
+        "str"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "sun-ce-conqueror",
+      "sourceType": "seed-tactic",
+      "targetMode": "fan",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "densest-fan"
+    },
+    {
+      "id": "tactic-tpl-tally-hundred-steps",
+      "displayName": "百步穿楊",
+      "category": "duel",
+      "rarityAccess": [],
+      "preferredStats": [
+        "str"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "tally-hundred-steps",
+      "sourceType": "seed-tactic",
+      "targetMode": "enemy-single",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "frontmost-enemy"
+    },
+    {
+      "id": "tactic-tpl-tally-fire-god-hunt",
+      "displayName": "火神狩獵",
+      "category": "scheme",
+      "rarityAccess": [],
+      "preferredStats": [
+        "str"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "tally-fire-god-hunt",
+      "sourceType": "seed-tactic",
+      "targetMode": "enemy-single",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "frontmost-enemy"
+    },
+    {
+      "id": "tactic-tpl-tally-changban-root",
+      "displayName": "長坂雄咆",
+      "category": "control",
+      "rarityAccess": [],
+      "preferredStats": [
+        "str"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "tally-changban-root",
+      "sourceType": "seed-tactic",
+      "targetMode": "self",
+      "timing": "active-cast",
+      "manualTargeting": false
+    },
+    {
+      "id": "tactic-tpl-guo-jia-foresight",
+      "displayName": "鬼謀先機",
+      "category": "duel",
+      "rarityAccess": [],
+      "preferredStats": [
+        "int"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "guo-jia-foresight",
+      "sourceType": "seed-tactic",
+      "targetMode": "area",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "densest-area"
+    },
+    {
+      "id": "tactic-tpl-tally-link",
+      "displayName": "連環同傷",
+      "category": "scheme",
+      "rarityAccess": [],
+      "preferredStats": [
+        "str"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "tally-link",
+      "sourceType": "seed-tactic",
+      "targetMode": "enemy-single",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "frontmost-enemy"
+    },
+    {
+      "id": "tactic-tpl-tally-changban-push",
+      "displayName": "長坂震退",
+      "category": "duel",
+      "rarityAccess": [],
+      "preferredStats": [
+        "str"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "tally-changban-push",
+      "sourceType": "seed-tactic",
+      "targetMode": "self",
+      "timing": "active-cast",
+      "manualTargeting": false
+    },
+    {
+      "id": "tactic-tpl-xiahou-dun-eye-devour",
+      "displayName": "拔矢啖睛",
+      "category": "support",
+      "rarityAccess": [],
+      "preferredStats": [
+        "cha"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "xiahou-dun-eye-devour",
+      "sourceType": "seed-tactic",
+      "targetMode": "ally-all",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "all-allies"
+    },
+    {
+      "id": "tactic-tpl-tally-poison-arrow",
+      "displayName": "毒箭",
+      "category": "scheme",
+      "rarityAccess": [],
+      "preferredStats": [
+        "str"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "tally-poison-arrow",
+      "sourceType": "seed-tactic",
+      "targetMode": "enemy-single",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "frontmost-enemy"
+    },
+    {
+      "id": "tactic-tpl-cao-cao-revelry",
+      "displayName": "對酒當歌",
+      "category": "support",
+      "rarityAccess": [],
+      "preferredStats": [
+        "str"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "cao-cao-revelry",
+      "sourceType": "seed-tactic",
+      "targetMode": "ally-all",
+      "timing": "active-cast",
+      "manualTargeting": false
+    },
+    {
+      "id": "tactic-tpl-cao-zhi-verse",
+      "displayName": "七步成章",
+      "category": "duel",
+      "rarityAccess": [],
+      "preferredStats": [
+        "int"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "cao-zhi-verse",
+      "sourceType": "seed-tactic",
+      "targetMode": "fan",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "densest-fan"
+    },
+    {
+      "id": "tactic-tpl-tally-counter-weak",
+      "displayName": "幼麒反擊",
+      "category": "support",
+      "rarityAccess": [],
+      "preferredStats": [
+        "str"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "tally-counter-weak",
+      "sourceType": "seed-tactic",
+      "targetMode": "ally-single",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "all-allies"
+    },
+    {
+      "id": "tactic-tpl-tally-defense-pierce",
+      "displayName": "陷陣破甲",
+      "category": "duel",
+      "rarityAccess": [],
+      "preferredStats": [
+        "str"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "tally-defense-pierce",
+      "sourceType": "seed-tactic",
+      "targetMode": "enemy-single",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "frontmost-enemy"
+    },
+    {
+      "id": "tactic-tpl-wei-zhen-reset",
+      "displayName": "威震再戰",
+      "category": "support",
+      "rarityAccess": [],
+      "preferredStats": [
+        "str"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "wei-zhen-reset",
+      "sourceType": "seed-tactic",
+      "targetMode": "ally-single",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "all-allies"
+    },
+    {
+      "id": "tactic-tpl-zhang-he-adaptive-camp",
+      "displayName": "巧變連營",
+      "category": "support",
+      "rarityAccess": [],
+      "preferredStats": [
+        "str"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "zhang-he-adaptive-camp",
+      "sourceType": "seed-tactic",
+      "targetMode": "ally-single",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "all-allies"
+    },
+    {
+      "id": "tactic-tpl-diao-chan-charm",
+      "displayName": "閉月傾城",
+      "category": "control",
+      "rarityAccess": [],
+      "preferredStats": [
+        "str"
+      ],
+      "aptitudeRules": [],
+      "sourceGeneIds": [],
+      "battleSkillId": "diao-chan-charm",
+      "sourceType": "seed-tactic",
+      "targetMode": "enemy-all",
+      "timing": "active-cast",
+      "manualTargeting": false,
+      "autoAimMode": "all-enemies"
     }
   ]
 }
