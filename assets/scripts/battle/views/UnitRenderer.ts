@@ -205,6 +205,12 @@ const HP_BAR_COLOR = {
   enemy: new Color(230, 70, 60, 255),
 } as const;
 
+/** HUD-SKETCH（實驗，不合併）：頭頂 HUD 草圖款式。0＝現行、1＝A 單行「圖示＋數字」、2＝B 數字置中＋左上小圖示＋底線血條；由 window.__hudMode 切換。 */
+function hudMode(): number {
+  const m = (globalThis as unknown as { __hudMode?: number }).__hudMode;
+  return m === 1 || m === 2 ? m : 0;
+}
+
 /**
  * 頭頂名牌徽章風格（PROG-2-9705，對齊格子 buff 徽章）：深色底＋金圈、兵種放金圈圓章、字一律黑描邊。
  * 顏色取自 TileBuffMarkers 的金圈與描邊色，兩邊看起來是同一套 UI。
@@ -2172,8 +2178,9 @@ export class UnitRenderer extends Component {
     labelNode.layer = this.canvasNode?.layer ?? Layers.Enum.UI_2D;
     this.uiRoot?.addChild(labelNode);
     this.unitLabelNodes.add(labelNode);
-    const badge = this.buildBadge(labelNode, 170, 34, unit.type, badgeLayers);
-    const hpBar = this.buildHpBar(labelNode, 34 + 5);
+    const hMode = badgeLayers ? hudMode() : 0;
+    const badge = hMode ? this.buildCompactBadge(labelNode, unit.type, unit.faction, badgeLayers!, hMode) : this.buildBadge(labelNode, 170, 34, unit.type, badgeLayers);
+    const hpBar = hMode ? this.buildCompactHpBar(labelNode, hMode) : this.buildHpBar(labelNode, 34 + 5);
 
     // 敵軍單位：HUD 上方標籤顯示紅色，不需修改 badge.hpLabel（已是豉紅）
     if (unit.faction === Faction.Enemy) {
@@ -2198,7 +2205,7 @@ export class UnitRenderer extends Component {
       labelOpacity: badge.opacity,
       bottomNameLabel: badge.bottomNameLabel,
       hpBar,
-      statusBar: new UnitStatusIconBar(labelNode, STATUS_ICON_START_X, STATUS_ICON_Y),
+      statusBar: new UnitStatusIconBar(labelNode, hMode ? -50 : STATUS_ICON_START_X, hMode === 1 ? 44 : hMode === 2 ? 56 : STATUS_ICON_Y),
       statusKinds: null,
       pendingStatusPulse: null,
       troopType: unit.type,
@@ -2422,6 +2429,83 @@ export class UnitRenderer extends Component {
     });
   }
 
+  /** HUD-SKETCH：極簡血條。A＝受傷才顯示、貼在數字列下方；B＝常駐底線。 */
+  private buildCompactHpBar(labelNode: Node, mode: number): Graphics {
+    const barNode = new Node("HpBar");
+    barNode.layer = labelNode.layer;
+    labelNode.addChild(barNode);
+    const a = mode === 1;
+    barNode.addComponent(UITransform).setContentSize(a ? 100 : 88, a ? 5 : 7);
+    barNode.setPosition(0, a ? -21 : -18, 0);
+    barNode.active = false;
+    return barNode.addComponent(Graphics);
+  }
+
+  /**
+   * HUD-SKETCH（實驗，不合併）：精簡頭頂數字列。沿用 BadgeBatchLayers 三層（圓章底／剪影／字），沒有底板；
+   * 攻擊值與兵種名稱不顯示（節點放在停用的 Unused 下，updateUnitView 照常寫字不報錯）。
+   * A：[圓章圖示] 數字 單行；B：數字置中大字、圖示縮在左上角、底線血條常駐。座標為名牌座標（rootNode 縮 0.7）。
+   */
+  private buildCompactBadge(rootNode: Node, troopType: TroopType, faction: Faction, layers: BadgeBatchLayers, mode: number): BadgeView {
+    const a = mode === 1;
+    const enemy = faction === Faction.Enemy;
+    rootNode.addComponent(UITransform).setContentSize(a ? 100 : 96, a ? 32 : 50);
+    const opacity = rootNode.addComponent(UIOpacity);
+    opacity.opacity = 255;
+    rootNode.setScale(0.7, 0.7, 1);
+    const bgParent = layers.proxyFor(rootNode, "bg");
+    const textParent = layers.proxyFor(rootNode, "text");
+    const iconParent = layers.proxyFor(rootNode, "icon");
+    const clear = new Color(0, 0, 0, 0);
+    const outline = enemy ? new Color(80, 8, 8, 255) : new Color(6, 20, 64, 255);
+
+    const fs = a ? 30 : 38;
+    const numX = a ? 15 : 0;
+    const numY = a ? 0 : 6;
+    const hpLabel = this.createBadgeSegment(textParent, "HpBadge", numX, a ? 62 : 70, fs + 6, clear, new Color(245, 245, 245, 255), fs);
+    hpLabel.node.parent!.setPosition(numX, numY, 0);
+    hpLabel.outlineColor = outline;
+    hpLabel.outlineWidth = 4;
+    this.shrinkToFit(hpLabel);
+
+    const iconD = a ? 30 : 30;
+    const iconX = a ? -35 : -46;
+    const iconY = a ? 0 : 24;
+    const typeLabel = this.createBadgeSegment(textParent, "TypeBadge", iconX, iconD, iconD, clear, new Color(245, 245, 245, 255), a ? 20 : 16);
+    typeLabel.node.parent!.setPosition(iconX, iconY, 0);
+    this.shrinkToFit(typeLabel);
+    const iconNode = new Node("TypeIcon");
+    iconNode.layer = iconParent.layer;
+    iconParent.addChild(iconNode);
+    const iconSize = iconD * 0.8;
+    iconNode.addComponent(UITransform).setContentSize(iconSize, iconSize);
+    iconNode.setPosition(iconX, iconY, 0);
+    const icon = iconNode.addComponent(Sprite);
+    icon.type = Sprite.Type.SIMPLE;
+    icon.sizeMode = Sprite.SizeMode.CUSTOM;
+    const tb = TroopTypeBadge.attach(icon, { size: iconD, discParent: bgParent, glyph: typeLabel });
+    tb.setType(troopType);
+    // 敵我底色：圓章整體染成藍／紅
+    const disc = bgParent.getChildByName("TypeDisc")?.getComponent(Sprite);
+    if (disc) disc.color = enemy ? new Color(255, 150, 140, 255) : new Color(150, 195, 255, 255);
+
+    for (const l of [typeLabel, hpLabel]) setCacheModeDeferred(l, Label.CacheMode.BITMAP);
+
+    // 不顯示的攻擊值／兵種名稱：放在停用節點下，維持 BadgeView 介面
+    const unused = new Node("Unused");
+    unused.layer = rootNode.layer;
+    unused.active = false;
+    rootNode.addChild(unused);
+    const attackLabel = this.createBadgeSegment(unused, "AttackBadge", 0, 40, 20, clear, new Color(255, 255, 255, 255), 16);
+    const nameNode = new Node("NameLabel");
+    nameNode.layer = rootNode.layer;
+    unused.addChild(nameNode);
+    nameNode.addComponent(UITransform).setContentSize(100, 20);
+    const nameLabel = nameNode.addComponent(Label);
+    nameLabel.string = "";
+    return { rootNode, attackLabel, typeLabel, hpLabel, opacity, bottomNameLabel: nameLabel };
+  }
+
   /** 頭頂血條節點：放在名牌上緣之上（主戰場UI規格書 §3.1，PROG-2-1874） */
   private buildHpBar(labelNode: Node, badgeHalfHeight: number): Graphics {
     const barNode = new Node("HpBar");
@@ -2444,33 +2528,40 @@ export class UnitRenderer extends Component {
 
   /** 受傷才顯示；我方藍、敵方紅。chipRatio：掉血殘影右端（PROG-2-9412），畫在主血條後面的淺色段。 */
   private drawHpBar(g: Graphics, state: UnitHpBarState, chipRatio?: number): void {
-    g.node.active = state.visible;
-    if (!state.visible) return;
+    const forceShow = hudMode() === 2; // HUD-SKETCH B：血條常駐
+    g.node.active = state.visible || forceShow;
+    if (!state.visible && !forceShow) return;
     // PROG-2-10239：血量、殘影（取 1/4 像素精度）與色調都沒變就不重畫；每次重畫都會配置圓角路徑與顏色
+    const hm = hudMode();
+    const gTf = hm ? g.node.getComponent(UITransform) : null;
+    const BW = gTf ? gTf.width : HP_BAR_WIDTH;
+    const BH = gTf ? gTf.height : HP_BAR_HEIGHT;
     const chip = chipRatio !== undefined && chipRatio > state.ratio ? Math.min(1, chipRatio) : -1;
-    const wPx = Math.round(state.ratio * HP_BAR_WIDTH * 4);
-    const cPx = chip < 0 ? -1 : Math.round(chip * HP_BAR_WIDTH * 4);
+    const wPx = Math.round(state.ratio * BW * 4);
+    const cPx = chip < 0 ? -1 : Math.round(chip * BW * 4);
     const drawn = hpBarDrawn.get(g);
     if (drawn && drawn.w === wPx && drawn.c === cPx && drawn.tone === state.tone) return;
     if (drawn) { drawn.w = wPx; drawn.c = cPx; drawn.tone = state.tone; } else hpBarDrawn.set(g, { w: wPx, c: cPx, tone: state.tone });
-    const x = -HP_BAR_WIDTH / 2;
-    const y = -HP_BAR_HEIGHT / 2;
+    const x = -BW / 2;
+    const y = -BH / 2;
     g.clear();
     g.fillColor = HP_BAR_BACK_COLOR;
-    g.roundRect(x - 2, y - 2, HP_BAR_WIDTH + 4, HP_BAR_HEIGHT + 4, 3);
+    if (hm) g.rect(x - 1.5, y - 1.5, BW + 3, BH + 3); else g.roundRect(x - 2, y - 2, BW + 4, BH + 4, 3);
     g.fill();
-    // 金色細框（PROG-2-9705），與名牌金圈同色
-    g.lineWidth = 1.5;
-    g.strokeColor = BADGE_RING;
-    g.roundRect(x - 2, y - 2, HP_BAR_WIDTH + 4, HP_BAR_HEIGHT + 4, 3);
-    g.stroke();
+    if (!hm) {
+      // 金色細框（PROG-2-9705），與名牌金圈同色
+      g.lineWidth = 1.5;
+      g.strokeColor = BADGE_RING;
+      g.roundRect(x - 2, y - 2, BW + 4, BH + 4, 3);
+      g.stroke();
+    }
     if (chipRatio !== undefined && chipRatio > state.ratio) {
       g.fillColor = HP_BAR_CHIP_COLOR;
-      g.rect(x, y, HP_BAR_WIDTH * Math.min(1, chipRatio), HP_BAR_HEIGHT);
+      g.rect(x, y, BW * Math.min(1, chipRatio), BH);
       g.fill();
     }
     g.fillColor = HP_BAR_COLOR[state.tone];
-    g.rect(x, y, HP_BAR_WIDTH * state.ratio, HP_BAR_HEIGHT);
+    g.rect(x, y, BW * state.ratio, BH);
     g.fill();
   }
 
