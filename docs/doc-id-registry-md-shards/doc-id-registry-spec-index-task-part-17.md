@@ -120,5 +120,6 @@
 | `doc_task_3295` | docs/agent-briefs/tasks/PROG/PROG-2-10219.md | [PROG-2-10219] 生活層程式對齊 11/28 使用者裁決 |
 | `doc_task_3297` | docs/agent-briefs/tasks/PROG/PROG-2-10217.md | [PROG-2-10217] 羈絆戰場效果整併方案規格書 |
 | `doc_task_3300` | docs/agent-briefs/tasks/PROG/PROG-2-10223.md | [PROG-2-10223] 血統與結緣體驗強化四項 |
-| `doc_task_3303` | docs/agent-briefs/tasks/PROG/PROG-2-10221.md | [PROG-2-10221] 結義戰場效果補強：士氣整場常駐、生死相隨九宮格、傭兵結義 id 同一套 |
-| `doc_task_3304` | docs/agent-briefs/tasks/PROG/PROG-2-10225.md | [PROG-2-10225] 年末典禮觀眾台詞：第 4～5 名勉勵與結義彩蛋 |
+| `doc_task_3306` | docs/agent-briefs/tasks/PROG/PROG-2-10215.md | [PROG-2-10215] 戰法音效回饋修正：回復／水淹 |
+| `doc_task_3307` | docs/agent-briefs/tasks/PROG/PROG-2-10225.md | [PROG-2-10225] 年末典禮觀眾台詞：第 4～5 名勉勵與結義彩蛋 |
+| `doc_task_3311` | docs/agent-briefs/tasks/PROG/PROG-2-10221.md | [PROG-2-10221] 結義戰場效果補強：士氣整場常駐、生死相隨九宮格、傭兵結義 id 同一套 |
