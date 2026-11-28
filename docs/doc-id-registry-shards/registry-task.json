@@ -17944,5 +17944,11 @@
     "path": "docs/agent-briefs/tasks/PROG/PROG-2-10238.md",
     "title": "[PROG-2-10238] 修正年末典禮結義彩蛋祝賀對象",
     "category": "task"
+  },
+  {
+    "id": "doc_task_3328",
+    "path": "docs/agent-briefs/tasks/PROG/PROG-2-10239.md",
+    "title": "[PROG-2-10239] 戰場量測與打擊感 Juice",
+    "category": "task"
   }
 ]

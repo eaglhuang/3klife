@@ -1,6 +1,7 @@
 import { UCUFLogger, LogCategory } from '../utils/UCUFLogger';
 // @spec-source → 見 docs/cross-reference-index.md
-import { Animation, Camera, Color, Layers, MeshRenderer, Node, ParticleSystem, Sprite, Vec3, director, tween, v3 } from "cc";
+import { Animation, Camera, Color, Director, Layers, MeshRenderer, Node, ParticleSystem, Sprite, Vec3, director, tween, v3 } from "cc";
+import { LEGACY_SHAKE, getBattleJuice, sampleShake, shakeParamsFor, shakeRemainingStrength, shouldReplaceShake, type ShakeOffset, type ShakeTier, type ShakeTierName } from "../../battle/shared/BattleJuice";
 import { VfxBlockEntry, VfxEffectDef } from "../config/VfxEffectConfig";
 import { PoolSystem } from "./PoolSystem";
 import { services } from "../managers/ServiceLoader";
@@ -22,6 +23,9 @@ import { VFX_BLOCK_REGISTRY } from '../config/vfx-block-registry';
  *   services().effect.playEffect("Boom", targetPos, 1.5, parentNode);
  *   services().effect.recycleEffect("FireAura", auraNode);
  */
+/** 攝影機元件（含 Component 的 node／isValid；測試用的 cc 型別宣告較精簡）。 */
+type CameraLike = Camera & { node: Node; isValid: boolean };
+
 export class EffectSystem {
     private poolSystem: PoolSystem | null = null;
     /** vfx-effects.json 的快取表（key = 效果 key，如 'battle_hit_default'）*/
@@ -573,8 +577,9 @@ export class EffectSystem {
         }
 
         // 重疊保護（PROG-2-9401）：上一段還在震時不再疊新的，否則新一段會把「震到一半的位置」當原點，鏡頭就漂走了
+        // PROG-2-10239：打擊感震動器（shaker）進行中時同樣不疊，兩條路徑共用同一個攝影機原點保護
         const nowMs = Date.now();
-        if (nowMs < this.cameraShakeEndMs) return;
+        if (nowMs < this.cameraShakeEndMs || this.shaker.node) return;
         this.cameraShakeEndMs = nowMs + duration * 1000;
 
         const origin = cameraNode.position.clone();
@@ -592,6 +597,66 @@ export class EffectSystem {
             .to(stepDuration, { position: origin });
 
         seq.start();
+    }
+
+    // ── 打擊感震動器（PROG-2-10239）：輕／中／重三級、含衰減；整個戰場共用這一個，逐幀位移不配置物件 ──
+    private readonly shaker = {
+        node: null as Node | null,
+        ox: 0, oy: 0, oz: 0,
+        elapsed: 0,
+        tier: LEGACY_SHAKE as ShakeTier,
+        decay: 2,
+        out: { x: 0, y: 0 } as ShakeOffset,
+    };
+    private shakeCamera: CameraLike | null = null;
+
+    /**
+     * 命中打擊感震動（輕／中／重）。參數在 data/battle-juice.json 的 cameraShake；
+     * enabled=false 時退回舊版固定震動（playCameraShake）。已有更強的震動進行中就忽略，不疊加。
+     */
+    public playHitCameraShake(tierName: ShakeTierName): void {
+        const cfg = getBattleJuice();
+        if (!cfg.cameraShake.enabled) { this.playCameraShake(LEGACY_SHAKE.strength, LEGACY_SHAKE.durationSec); return; }
+        const tier = shakeParamsFor(tierName, cfg);
+        const s = this.shaker;
+        if (s.node) {
+            // 進行中：只有更強才重新起震，原點沿用（鏡頭不會因為疊震而漂）
+            if (!shouldReplaceShake(shakeRemainingStrength(s.elapsed, s.tier, s.decay), tier)) return;
+            s.tier = tier; s.decay = cfg.cameraShake.decayPower; s.elapsed = 0;
+            return;
+        }
+        if (Date.now() < this.cameraShakeEndMs) return; // 舊版 tween 震動進行中
+        const cam = this.resolveShakeCamera();
+        if (!cam) return;
+        s.node = cam.node;
+        s.ox = cam.node.position.x; s.oy = cam.node.position.y; s.oz = cam.node.position.z;
+        s.tier = tier; s.decay = cfg.cameraShake.decayPower; s.elapsed = 0;
+        director.on(Director.EVENT_AFTER_UPDATE, this.tickShake, this);
+    }
+
+    private resolveShakeCamera(): CameraLike | null {
+        const cached = this.shakeCamera;
+        if (cached?.isValid && cached.node?.isValid) return cached;
+        const scene = director.getScene();
+        this.shakeCamera = scene ? (scene.getComponentInChildren(Camera) as CameraLike | null) : null;
+        return this.shakeCamera;
+    }
+
+    private readonly tickShake = (): void => {
+        const s = this.shaker;
+        const node = s.node;
+        if (!node?.isValid) { this.endShake(false); return; }
+        s.elapsed += director.getDeltaTime();
+        if (s.elapsed >= s.tier.durationSec) { this.endShake(true); return; }
+        sampleShake(s.elapsed, s.tier, s.decay, s.out);
+        node.setPosition(s.ox + s.out.x, s.oy + s.out.y, s.oz);
+    };
+
+    private endShake(restore: boolean): void {
+        const s = this.shaker;
+        if (restore && s.node?.isValid) s.node.setPosition(s.ox, s.oy, s.oz);
+        s.node = null;
+        director.off(Director.EVENT_AFTER_UPDATE, this.tickShake, this);
     }
 
     /** 查詢已注冊的效果定義（給開發工具或 debug 用）。 */

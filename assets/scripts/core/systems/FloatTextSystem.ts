@@ -1,5 +1,6 @@
 // @spec-source → 見 docs/cross-reference-index.md
 import { Camera, Color, Font, Label, Node, Tween, tween, UIOpacity, UITransform, Vec3 } from "cc";
+import { floatPopMul } from "../../battle/shared/BattleJuice";
 import {
     FLOAT_MISS_TEXT, FLOAT_TEXT_STYLES, FloatStaggerTracker, floatAvoidShift, floatEffectiveHeight, floatFitFontSize, floatHalfWidth,
     type FloatAvoidRect, type FloatTextStyle, type FloatTextType,
@@ -55,6 +56,10 @@ export class FloatTextSystem {
     private readonly stagger = new FloatStaggerTracker();
     /** 設定 Label 顏色時共用的暫存色，避免每次跳字 new Color */
     private readonly tmpColor = new Color();
+    private readonly tmpUiPos = new Vec3();
+    private readonly tmpScreenPos = new Vec3();
+    private readonly tmpUiWorldPos = new Vec3();
+    private uiCameraCache: (Camera & { isValid: boolean }) | null = null;
     /** 跳字要避開的標記（例如棋盤 buff 格圖示）；由戰場註冊，離開戰場時清掉（PROG-2-9415） */
     private avoidProvider: (() => readonly FloatAvoidRect[]) | null = null;
 
@@ -70,6 +75,7 @@ export class FloatTextSystem {
         this.uiRoot = uiRoot;
         this.worldCamera = worldCamera;
         this.canvasNode = canvasNode;
+        this.uiCameraCache = null;
     }
 
     /**
@@ -163,7 +169,10 @@ export class FloatTextSystem {
         // ── Tween 2（獨立）：彈出 → 回彈（只動 scale）。爆擊放大到峰值後用 backOut 回彈到 1 ──
         const scaleTween = tween(entry.node);
         if (config.popInSec > 0) {
-            scaleTween.to(config.popInSec, { scale: new Vec3(config.peakScale, config.peakScale, 1) }, { easing: 'quadOut' });
+            // PROG-2-10239：打擊感倍率（data/battle-juice.json floatPop；關閉時為 1，維持樣式表原值）
+            const pop = floatPopMul(type === 'dmg_crit' ? 'crit' : type === 'dmg_heavy' ? 'heavy' : 'normal');
+            const peak = type === 'dmg_player' || type === 'dmg_enemy' || type === 'dmg_crit' || type === 'dmg_heavy' ? config.peakScale * pop.peak : config.peakScale;
+            scaleTween.to(config.popInSec * (peak === config.peakScale ? 1 : pop.popIn), { scale: new Vec3(peak, peak, 1) }, { easing: 'quadOut' });
         }
         scaleTween.to(config.settleSec, { scale: new Vec3(1, 1, 1) }, { easing: config.popInSec > 0 ? 'backOut' : 'linear' }).start();
 
@@ -278,12 +287,13 @@ export class FloatTextSystem {
      * 邏輯與 UnitRenderer.toUiPosition() 完全一致，集中在此，不再分散。
      */
     private toUiPosition(worldPos: Vec3): Vec3 {
-        const uiPos = new Vec3();
-        const screenPos = new Vec3();
+        // PROG-2-10239：共用暫存向量，不每次跳字配置；回傳值只在呼叫端立刻取 x、y 使用，不保存參照
+        const uiPos = this.tmpUiPos;
+        const screenPos = this.tmpScreenPos;
         this.worldCamera!.worldToScreen(worldPos, screenPos);
-        const uiCamera = this.canvasNode!.getComponentInChildren(Camera);
+        const uiCamera = this.uiCameraCache?.isValid ? this.uiCameraCache : (this.uiCameraCache = this.canvasNode!.getComponentInChildren(Camera) as (Camera & { isValid: boolean }) | null);
         if (uiCamera) {
-            const uiWorldPos = new Vec3();
+            const uiWorldPos = this.tmpUiWorldPos;
             uiCamera.screenToWorld(screenPos, uiWorldPos);
             const uiTrans = this.uiRoot!.getComponent(UITransform);
             if (uiTrans) {

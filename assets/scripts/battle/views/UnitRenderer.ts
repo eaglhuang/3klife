@@ -66,6 +66,7 @@ import { SpineUnitOverlay } from "./SpineGeneralOverlay";
 import { GeneralPortraitStandee, STANDEE_HEIGHT_PX, needsStandeeFallback, shouldLoadHeroModel } from "./GeneralPortraitStandee";
 import { generalSpineConfig, resolveRidingTier, setMountedList, squadMemberCount, TroopSpineConfigCache, troopSpineConfig } from '../shared/UnitPresentationConfig';
 import { DuelExchange } from '../shared/DuelPresentationCore';
+import { battleHitStopGate, battleUltimateWindow, getBattleJuice, hitStopSecFor, juiceNowSec, knockbackMul, parseBattleJuice, resolveHitKind, setBattleJuice, shakeTierFor, type HitKind } from "../shared/BattleJuice";
 import { BATTLE_VISUAL_TIMING, buildHitShakeSteps, hitScaleNeighborDepth, planHitFeedback, planMoveSegment } from "./BattlePresentationTiming";
 import { BuffGainEffectPool } from "./effects/BuffGainEffectPool";
 import { statBonusTone, statWithBonusText, type StatBonusTone } from "../shared/StatBonusText";
@@ -194,6 +195,9 @@ const STATUS_ICON_Y = 39 + 4 + 8 + 4 + STATUS_ICON_SIZE / 2;
 const HP_BAR_HEIGHT = 8;
 /** 掉血殘影色：暖白偏金，在藍、紅血條上都看得清楚（PROG-2-9412）。 */
 const HP_BAR_CHIP_COLOR = new Color(255, 232, 190, 235);
+const HP_BAR_BACK_COLOR = new Color(22, 15, 9, 220);
+/** 血條上一次畫的內容（血量寬、殘影寬、色調；PROG-2-10239），沒變就不重畫。 */
+const hpBarDrawn = new WeakMap<Graphics, { w: number; c: number; tone: string }>();
 const HP_BAR_COLOR = {
   player: new Color(70, 150, 255, 255),
   enemy: new Color(230, 70, 60, 255),
@@ -396,6 +400,7 @@ export class UnitRenderer extends Component {
     // fire-and-forget: 特效 Pool 初始化是非同步（需載入資源），不阻塞主流程
     void this.setupAllEffectPools();
     void this.loadAttackSurgeConfig();
+    void this.loadBattleJuiceConfig();
   }
 
   /**
@@ -837,10 +842,11 @@ export class UnitRenderer extends Component {
     // 先打一次 Spine 疊層（小兵與武將化身都走這裡）；沒有 Spine 的單位走下面的 3D 後備
     // PROG-2-9412：Spine 單位另外往後推（以前的後退只動 3D 子節點，畫面上的小兵沒動），並與攻擊方一起頓格
     const shakePx = this.hitShakeAmplitudePx(defenderUnit.lane, defenderUnit.depth);
-    const pushPx = plan.shake ? shakePx / BATTLE_VISUAL_TIMING.hitShakeAmplitudeRatio * BATTLE_VISUAL_TIMING.hitRecoilRatio : 0;
+    const pushPx = plan.shake ? shakePx / BATTLE_VISUAL_TIMING.hitShakeAmplitudeRatio * BATTLE_VISUAL_TIMING.hitRecoilRatio * knockbackMul() : 0;
     const spineHit = this.spineUnits.hit(defenderId, plan.shake ? shakePx : 0, plan.flash, pushPx);
-    this.spineUnits.hitStop(defenderId, BATTLE_VISUAL_TIMING.hitStopSec);
-    if (_attackerId) this.spineUnits.hitStop(_attackerId, BATTLE_VISUAL_TIMING.hitStopSec);
+    // PROG-2-10239：頓格依命中種類（普攻／暴擊／奧義）取秒數；純表現，只停骨架動畫
+    const hitKind = resolveHitKind(opts?.crit === true, battleUltimateWindow.isActive(juiceNowSec()));
+    this.applyHitStop(defenderId, _attackerId, hitKind);
     if (!spineHit && plan.shake) this.shakeVisualChildren(defenderView!);
 
     this.recoilNode(defenderNode, defenderUnit.faction);
@@ -857,7 +863,20 @@ export class UnitRenderer extends Component {
         }
       }, BATTLE_VISUAL_TIMING.hitRimFlashMs);
     }
-    if (plan.screenShake) this.playHitScreenShake();
+    if (!opts?.lethal) this.playHitScreenShake(hitKind, opts?.heavy === true);
+  }
+
+  /** 命中頓格（PROG-2-10239）：scope=pair 只停攻守雙方；scope=all 停全場骨架動畫（minGapSec 限流）。 */
+  private applyHitStop(defenderId: string, attackerId: string | null, kind: HitKind): void {
+    const cfg = getBattleJuice();
+    const sec = hitStopSecFor(kind, cfg);
+    if (!(sec > 0)) return;
+    if (cfg.hitStop.enabled && cfg.hitStop.scope === 'all' && battleHitStopGate.allow(juiceNowSec(), cfg.hitStop.minGapSec)) {
+      this.spineUnits.hitStopAll(sec);
+      return;
+    }
+    this.spineUnits.hitStop(defenderId, sec);
+    if (attackerId) this.spineUnits.hitStop(attackerId, sec);
   }
 
   /** 一格在畫面上的寬度（像素），受擊抖動幅度以它為基準；算不出來就用 100。 */
@@ -878,10 +897,12 @@ export class UnitRenderer extends Component {
     return cellPx * BATTLE_VISUAL_TIMING.hitShakeAmplitudeRatio;
   }
 
-  /** 重擊／爆擊的輕微畫面震動；EffectSystem 內有重疊保護，連續重擊不會讓鏡頭漂移。 */
-  private playHitScreenShake(): void {
+  /** 重擊／爆擊／奧義的畫面震動（輕中重三級，PROG-2-10239）；EffectSystem 內有重疊保護，連續重擊不會讓鏡頭漂移。 */
+  private playHitScreenShake(kind: HitKind, heavy: boolean): void {
+    const tier = shakeTierFor(kind, heavy);
+    if (!tier) return;
     try {
-      services().effect.playCameraShake(BATTLE_VISUAL_TIMING.hitScreenShakeStrength, BATTLE_VISUAL_TIMING.hitScreenShakeSec);
+      services().effect.playHitCameraShake(tier);
     } catch (error) { console.warn('[UnitRenderer] 畫面震動略過', error); }
   }
 
@@ -1012,7 +1033,9 @@ export class UnitRenderer extends Component {
       const amplitude = cellWorld * BATTLE_VISUAL_TIMING.hitShakeAmplitudeRatio / (generalView.worldNode.worldScale.x || 1);
       if (generalView.modelRoot?.isValid && generalView.modelRoot.activeInHierarchy) this.shakeLocalNode(generalView.modelRoot, amplitude);
     }
-    if (plan.screenShake) this.playHitScreenShake();
+    const generalKind = resolveHitKind(opts?.crit === true, battleUltimateWindow.isActive(juiceNowSec()));
+    if (getBattleJuice().hitStop.enabled) this.applyHitStop(this.generalSpineId(defenderFaction), _attackerId, generalKind);
+    if (!opts?.lethal) this.playHitScreenShake(generalKind, opts?.heavy === true);
   }
 
   public async playGeneralHitAnimationAsync(defenderFaction: Faction, attackerId: string | null, opts?: { heavy?: boolean; lethal?: boolean; silent?: boolean; crit?: boolean }): Promise<void> {
@@ -1331,6 +1354,16 @@ export class UnitRenderer extends Component {
   private shrinkToFit(label: Label): void {
     label.enableWrapText = false;
     label.overflow = Label.Overflow.SHRINK;
+  }
+
+  /** 讀戰場打擊感參數（PROG-2-10239，data/battle-juice.json）；讀不到沿用預設（不影響戰鬥） */
+  private async loadBattleJuiceConfig(): Promise<void> {
+    try {
+      const raw = await services().resource.loadJson<unknown>("data/battle-juice", { tags: ["battle"] });
+      setBattleJuice(parseBattleJuice(raw));
+    } catch {
+      setBattleJuice(parseBattleJuice(null));
+    }
   }
 
   /** 讀高倍率攻擊提示門檻；讀不到就沿用預設（不影響戰鬥） */
@@ -2368,10 +2401,17 @@ export class UnitRenderer extends Component {
   private drawHpBar(g: Graphics, state: UnitHpBarState, chipRatio?: number): void {
     g.node.active = state.visible;
     if (!state.visible) return;
+    // PROG-2-10239：血量、殘影（取 1/4 像素精度）與色調都沒變就不重畫；每次重畫都會配置圓角路徑與顏色
+    const chip = chipRatio !== undefined && chipRatio > state.ratio ? Math.min(1, chipRatio) : -1;
+    const wPx = Math.round(state.ratio * HP_BAR_WIDTH * 4);
+    const cPx = chip < 0 ? -1 : Math.round(chip * HP_BAR_WIDTH * 4);
+    const drawn = hpBarDrawn.get(g);
+    if (drawn && drawn.w === wPx && drawn.c === cPx && drawn.tone === state.tone) return;
+    if (drawn) { drawn.w = wPx; drawn.c = cPx; drawn.tone = state.tone; } else hpBarDrawn.set(g, { w: wPx, c: cPx, tone: state.tone });
     const x = -HP_BAR_WIDTH / 2;
     const y = -HP_BAR_HEIGHT / 2;
     g.clear();
-    g.fillColor = new Color(22, 15, 9, 220);
+    g.fillColor = HP_BAR_BACK_COLOR;
     g.roundRect(x - 2, y - 2, HP_BAR_WIDTH + 4, HP_BAR_HEIGHT + 4, 3);
     g.fill();
     // 金色細框（PROG-2-9705），與名牌金圈同色
