@@ -165,7 +165,7 @@ export function pickNearPodiumLine(board: NearPodiumBoard, config: CeremonyCrowd
 
 export interface OathCongratsContext {
     readonly crowd: readonly CrowdMember[];
-    /** 領獎的本府主角（結義關係的另一端） */
+    /** 領獎的本府武將（結義關係的另一端；主角得獎就是主角，非主角得獎是得獎者本人） */
     readonly winnerId: string;
     readonly winnerAge?: number;
     /** winnerId 生效盟約中的結義兄弟 id（SwornPact.swornBrothersOf） */
@@ -173,6 +173,20 @@ export interface OathCongratsContext {
     /** 本次點擊的觀眾（有給就只判斷這位，沒給則挑第一位結義觀眾） */
     readonly memberIndex?: number;
     readonly turn: number;
+}
+
+/**
+ * 結義彩蛋的得獎者：本榜前三名中本府名次最高的那一項，用「得獎者自己的武將 id」；
+ * 沒有本府前三或該項沒有 generalId 就回 null（不拿主角 id 頂替）。
+ */
+export function pickOathWinnerEntry<E extends { readonly rank: number; readonly isPlayer: boolean; readonly generalId?: string }>(
+    entries: readonly E[],
+): (E & { readonly generalId: string }) | null {
+    let best: E | null = null;
+    for (const e of entries) {
+        if (e.isPlayer && e.rank >= 1 && e.rank <= 3 && (!best || e.rank < best.rank)) best = e;
+    }
+    return best && best.generalId ? (best as E & { readonly generalId: string }) : null;
 }
 
 export interface OathCongratsPick {
