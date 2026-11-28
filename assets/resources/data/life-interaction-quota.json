@@ -1,0 +1,9 @@
+{
+  "schema": "life-interaction-quota.v1",
+  "note": "生活層每季互動次數（QSOC-01 4.4.1，使用者 11/28 裁決）。換季重置；銀兩價格由商店框架 life_extra_interaction 扣款。",
+  "freePerSeason": 6,
+  "extraPriceBase": 5,
+  "extraPriceStep": 2,
+  "extraPriceCap": 15,
+  "extraSeasonMax": 12
+}
