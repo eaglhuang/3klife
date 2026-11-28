@@ -13,17 +13,18 @@ manifest: ../ui-quality-todo.json
 
 ## Summary
 
-- Total: 2703
-- done: 2214
+- Total: 2892
+- done: 2387
 - completed: 4
-- in-progress: 63
+- in-progress: 73
 - in-review: 259
-- open: 72
+- open: 77
 - blocked: 4
 - closed: 60
 - deferred: 2
 - partial: 19
 - ready: 6
+- todo: 1
 
 ## Tasks
 
